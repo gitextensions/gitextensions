@@ -33,7 +33,7 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
           <Source>Checkout</Source>
           <Value>Забрать</Value>
         </TranslationItem>
-        <TranslationItem Name="GeneralGB" Property="Text" type="unfinished">
+        <TranslationItem Name="GeneralGB" Property="Text">
           <Source>General</Source>
           <Value>Общие</Value>
         </TranslationItem>
@@ -90,7 +90,7 @@ This action will be performed without warning while checking out branch.</Source
           <Source>font name</Source>
           <Value>имя шрифта</Value>
         </TranslationItem>
-        <TranslationItem Name="diffFontChangeButton" Property="Text" type="unfinished">
+        <TranslationItem Name="diffFontChangeButton" Property="Text">
           <Source>font name</Source>
           <Value>имя шрифта</Value>
         </TranslationItem>
@@ -1532,7 +1532,7 @@ You will have push access. {2}</Source>
           <Source>You need to choose a target revision.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_noRevisionSelectedCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_noRevisionSelectedCaption" Property="Text">
           <Source>Error</Source>
           <Value>Ошибка</Value>
         </TranslationItem>
@@ -1650,7 +1650,7 @@ compare with first:</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormBrowse">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Git Extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
@@ -1658,7 +1658,7 @@ compare with first:</Source>
           <Source>Commit</Source>
           <Value>Коммит</Value>
         </TranslationItem>
-        <TranslationItem Name="DiffTabPage" Property="Text" type="unfinished">
+        <TranslationItem Name="DiffTabPage" Property="Text">
           <Source>Diff</Source>
           <Value>Изменения</Value>
         </TranslationItem>
@@ -1702,9 +1702,9 @@ compare with first:</Source>
           <Source>File tree</Source>
           <Value>Дерево файлов</Value>
         </TranslationItem>
-        <TranslationItem Name="_alwaysShowCheckoutDlgStr" Property="Text" type="unfinished">
+        <TranslationItem Name="_alwaysShowCheckoutDlgStr" Property="Text">
           <Source>Always show checkout dialog</Source>
-          <Value>Всегда показывать диалог смены ветви</Value>
+          <Value>Всегда показывать диалог переключения ветвей</Value>
         </TranslationItem>
         <TranslationItem Name="_configureWorkingDirMenu" Property="Text">
           <Source>Configure this menu</Source>
@@ -2042,7 +2042,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Generate or import key</Source>
           <Value>Генерировать или импортировать ключ</Value>
         </TranslationItem>
-        <TranslationItem Name="gitBashToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="gitBashToolStripMenuItem" Property="Text">
           <Source>Git bash</Source>
           <Value>Git bash</Value>
         </TranslationItem>
@@ -2134,7 +2134,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>View patch file...</Source>
           <Value>Просмотреть файл патч...</Value>
         </TranslationItem>
-        <TranslationItem Name="pluginSettingsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="pluginSettingsToolStripMenuItem" Property="Text">
           <Source>Settings</Source>
           <Value>Настройки</Value>
         </TranslationItem>
@@ -3855,7 +3855,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Change Submitted</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="btnClose" Property="Text" type="unfinished">
+        <TranslationItem Name="btnClose" Property="Text">
           <Source>Close</Source>
           <Value>Закрыть</Value>
         </TranslationItem>
@@ -3871,7 +3871,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Download Gerrit Change</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="AddRemote" Property="Text">
           <Source>Manage remotes</Source>
           <Value>Репозитории</Value>
         </TranslationItem>
@@ -3895,7 +3895,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Please enter a change</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_selectRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="_selectRemote" Property="Text">
           <Source>Please select a remote repository</Source>
           <Value>Пожалуйста, выберите внешний репозиторий</Value>
         </TranslationItem>
@@ -3923,7 +3923,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Publish Gerrit Change</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="AddRemote" Property="Text">
           <Source>Manage remotes</Source>
           <Value>Репозитории</Value>
         </TranslationItem>
@@ -3947,7 +3947,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Please enter a branch</Source>
           <Value>Пожалуйста введите ветвь</Value>
         </TranslationItem>
-        <TranslationItem Name="_selectRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="_selectRemote" Property="Text">
           <Source>Please select a remote repository</Source>
           <Value>Пожалуйста, выберите внешний репозиторий</Value>
         </TranslationItem>
@@ -4153,7 +4153,7 @@ _ReSharper*/
           <Source>Edit .gitreview</Source>
           <Value>Редактировать .gitreview</Value>
         </TranslationItem>
-        <TranslationItem Name="Save" Property="Text" type="unfinished">
+        <TranslationItem Name="Save" Property="Text">
           <Source>Save</Source>
           <Value>Сохранить</Value>
         </TranslationItem>
@@ -4261,7 +4261,7 @@ defaultrebase=0</Source>
           <Source>Line number</Source>
           <Value>Номер строки</Value>
         </TranslationItem>
-        <TranslationItem Name="okBtn" Property="Text" type="unfinished">
+        <TranslationItem Name="okBtn" Property="Text">
           <Source>OK</Source>
           <Value>OK</Value>
         </TranslationItem>
@@ -4501,7 +4501,7 @@ ancestor tree. </Source>
           <Source>Gerrit Plugin</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="btnClose" Property="Text" type="unfinished">
+        <TranslationItem Name="btnClose" Property="Text">
           <Source>Close</Source>
           <Value>Закрыть</Value>
         </TranslationItem>
@@ -4612,7 +4612,7 @@ If you want to fetch and merge a branch, choose a specific branch.</Source>
 Do you want to continue?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_notOnBranchButtons" Property="Text" type="unfinished">
+        <TranslationItem Name="_notOnBranchButtons" Property="Text">
           <Source>Checkout branch|Continue</Source>
           <Value>Забрать ветвь|Продолжить</Value>
         </TranslationItem>
@@ -4750,7 +4750,7 @@ This will initialize and update all submodules recursive.</Source>
           <Source>Remote</Source>
           <Value>Внешние</Value>
         </TranslationItem>
-        <TranslationItem Name="PushToUrl" Property="Text" type="unfinished">
+        <TranslationItem Name="PushToUrl" Property="Text">
           <Source>Url</Source>
           <Value>Url</Value>
         </TranslationItem>
@@ -4937,7 +4937,7 @@ Are you sure you want to push this branch?</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormRebase">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Rebase</Source>
           <Value>Перебазировать</Value>
         </TranslationItem>
@@ -4953,7 +4953,7 @@ Are you sure you want to push this branch?</Source>
           <Source>Solve conflicts</Source>
           <Value>Решить конфликты</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text" type="unfinished">
+        <TranslationItem Name="Ok" Property="Text">
           <Source>Rebase</Source>
           <Value>Перебазировать</Value>
         </TranslationItem>
@@ -4974,7 +4974,7 @@ Are you sure you want to push this branch?</Source>
 </Source>
           <Value>Неразрешенные конфликты</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchUpToDateCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_branchUpToDateCaption" Property="Text">
           <Source>Rebase</Source>
           <Value>Перебазировать</Value>
         </TranslationItem>
@@ -5039,9 +5039,9 @@ Nothing to rebase.</Source>
           <Source>From (exc.)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="lblRangeTo" Property="Text" type="unfinished">
+        <TranslationItem Name="lblRangeTo" Property="Text">
           <Source>To</Source>
-          <Value />
+          <Value>Кому</Value>
         </TranslationItem>
         <TranslationItem Name="Currentbranch" Property="Text" type="obsolete">
           <Source>Current</Source>
@@ -6624,7 +6624,7 @@ Context menu for additional operations</Source>
           <Source>Git Extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
-        <TranslationItem Name="btnDefaultDestinationBrowse" Property="Text" type="unfinished">
+        <TranslationItem Name="btnDefaultDestinationBrowse" Property="Text">
           <Source>Browse</Source>
           <Value>Обзор</Value>
         </TranslationItem>
@@ -6680,9 +6680,9 @@ Context menu for additional operations</Source>
           <Source>Use patience diff algorithm</Source>
           <Value>Показывать граф ревизий в логе коммитов</Value>
         </TranslationItem>
-        <TranslationItem Name="chkUseSSL" Property="Text" type="unfinished">
+        <TranslationItem Name="chkUseSSL" Property="Text">
           <Source>Use SSL/TLS</Source>
-          <Value />
+          <Value>Использовать SSL/TLS</Value>
         </TranslationItem>
         <TranslationItem Name="chkWriteCommitMessageInCommitWindow" Property="Text" type="unfinished">
           <Source>Compose commit messages in Commit dialog
@@ -7033,15 +7033,15 @@ local settings.
           <Source>Mergetool</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="localAutoCrlfFalse" Property="Text" type="unfinished">
+        <TranslationItem Name="localAutoCrlfFalse" Property="Text">
           <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
           <Value>Забирать как есть, коммитить как есть ("core.autocrlf" установлен в "false")</Value>
         </TranslationItem>
-        <TranslationItem Name="localAutoCrlfInput" Property="Text" type="unfinished">
+        <TranslationItem Name="localAutoCrlfInput" Property="Text">
           <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
           <Value>Забирать как есть, коммитить конец строки в стиле Unix-style ("core.autocrlf" установлен в "input")</Value>
         </TranslationItem>
-        <TranslationItem Name="localAutoCrlfTrue" Property="Text" type="unfinished">
+        <TranslationItem Name="localAutoCrlfTrue" Property="Text">
           <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
           <Value>Забирать в стиле Windows, коммитить конец строки в стиле Unix-style ("core.autocrlf" установлен в "true")</Value>
         </TranslationItem>
@@ -7057,7 +7057,7 @@ local settings.
           <Source>You are in the middle of a patch apply, continue patch apply?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_middleOfPatchApplyCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_middleOfPatchApplyCaption" Property="Text">
           <Source>Patch apply</Source>
           <Value>Применить патч</Value>
         </TranslationItem>
@@ -7065,7 +7065,7 @@ local settings.
           <Source>You are in the middle of a rebase, continue rebase?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_middleOfRebaseCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_middleOfRebaseCaption" Property="Text">
           <Source>Rebase</Source>
           <Value>Перебазировать</Value>
         </TranslationItem>
@@ -7077,9 +7077,9 @@ local settings.
           <Source>The current directory is not a valid git-svn repository.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_pageantNotFound" Property="Text">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Не удалось загрузить ключ. PuTTY не настроен должным образом.</Value>
+          <Value>Не удалось загрузить SSH ключ. PuTTY не настроен должным образом.</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
