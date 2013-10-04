@@ -2204,8 +2204,10 @@ namespace GitUI.CommandsDialogs
 
         private void LoadCommitTemplates()
         {
-            CommitTemplateItem[] commitTemplates =
-                CommitTemplateItem.DeserializeCommitTemplates(Settings.CommitTemplates);
+            bool shouldBeUpdated;
+            CommitTemplateItem[] commitTemplates = CommitTemplateItem.DeserializeCommitTemplates(Settings.CommitTemplates, out shouldBeUpdated);
+            if (shouldBeUpdated)
+                Settings.CommitTemplates = CommitTemplateItem.SerializeCommitTemplates(commitTemplates);
 
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
