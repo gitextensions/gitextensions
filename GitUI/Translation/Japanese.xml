@@ -3880,9 +3880,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
     </TranslationCategory>
     <TranslationCategory Name="FormGerritDownload">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Download Gerrit Change</Source>
-          <Value />
+          <Value>Gerrit Changeのダウンロード</Value>
         </TranslationItem>
         <TranslationItem Name="AddRemote" Property="Text">
           <Source>Manage remotes</Source>
@@ -3900,9 +3900,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Download change {0}</Source>
           <Value>変更のダウンロード {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text">
           <Source>Download Gerrit Change</Source>
-          <Value />
+          <Value>Gerrit Changeのダウンロード</Value>
         </TranslationItem>
         <TranslationItem Name="_selectChange" Property="Text">
           <Source>Please enter a change</Source>
@@ -3912,53 +3912,53 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Please select a remote repository</Source>
           <Value>リモートリポジトリを選択してください。</Value>
         </TranslationItem>
-        <TranslationItem Name="labelChange" Property="Text" type="unfinished">
+        <TranslationItem Name="labelChange" Property="Text">
           <Source>Change:</Source>
-          <Value />
+          <Value>Change:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelEnterChangeIdOrNumber" Property="Text" type="unfinished">
+        <TranslationItem Name="labelEnterChangeIdOrNumber" Property="Text">
           <Source>Enter the Change-Id or the number from the Gerrit URL</Source>
-          <Value />
+          <Value>Change-IdかGerrit URLからの番号を入力してください</Value>
         </TranslationItem>
         <TranslationItem Name="labelRemote" Property="Text">
           <Source>Remote:</Source>
           <Value>リモート:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelTopicBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="labelTopicBranch" Property="Text">
           <Source>Topic branch:</Source>
-          <Value />
+          <Value>トピックブランチ:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormGerritPublish">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Publish Gerrit Change</Source>
-          <Value />
+          <Value>Gerrit Changeの発行</Value>
         </TranslationItem>
         <TranslationItem Name="AddRemote" Property="Text" type="unfinished">
           <Source>Manage remotes</Source>
           <Value>リモートの管理</Value>
         </TranslationItem>
-        <TranslationItem Name="Publish" Property="Text" type="unfinished">
+        <TranslationItem Name="Publish" Property="Text">
           <Source>&amp;Publish</Source>
-          <Value />
+          <Value>発行(&amp;P)</Value>
         </TranslationItem>
-        <TranslationItem Name="PublishDraft" Property="Text" type="unfinished">
+        <TranslationItem Name="PublishDraft" Property="Text">
           <Source>Submit review as draft</Source>
-          <Value />
+          <Value>ドラフトとしてレビューを提出</Value>
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text">
           <Source>Download Gerrit Change</Source>
-          <Value />
+          <Value>Gerrit Changeをダウンロード</Value>
         </TranslationItem>
-        <TranslationItem Name="_publishCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_publishCaption" Property="Text">
           <Source>Publish change</Source>
-          <Value />
+          <Value>変更を発行</Value>
         </TranslationItem>
-        <TranslationItem Name="_selectBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="_selectBranch" Property="Text">
           <Source>Please enter a branch</Source>
-          <Value />
+          <Value>ブランチを入力してください</Value>
         </TranslationItem>
         <TranslationItem Name="_selectRemote" Property="Text" type="unfinished">
           <Source>Please select a remote repository</Source>
@@ -3972,9 +3972,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Remote:</Source>
           <Value>リモート:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelTopic" Property="Text" type="unfinished">
+        <TranslationItem Name="labelTopic" Property="Text">
           <Source>Topic:</Source>
-          <Value />
+          <Value>トピック:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4210,7 +4210,7 @@ Check if file is accessible.</Source>
           <Source>Save changes?</Source>
           <Value>変更を保存しますか？</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Provide the configuration for
 .gitreview to setup Gerrit.
 
@@ -4223,7 +4223,18 @@ project=department/project.git
 defaultbranch=master
 defaultremote=review
 defaultrebase=0</Source>
-          <Value />
+          <Value>.gitreviewはGerritをセットアップ
+するための設定を提供します。
+
+例:
+
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review
+defaultrebase=0</Value>
         </TranslationItem>
         <TranslationItem Name="lnkGitReviewHelp" Property="Text">
           <Source>GitHub page for git-review</Source>
@@ -6614,9 +6625,9 @@ Context menu for additional operations</Source>
     </TranslationCategory>
     <TranslationCategory Name="GerritPlugin">
       <translationItems>
-        <TranslationItem Name="_downloadGerritChange" Property="Text" type="unfinished">
+        <TranslationItem Name="_downloadGerritChange" Property="Text">
           <Source>Download Gerrit Change</Source>
-          <Value />
+          <Value>Gerrit Changeのダウンロード</Value>
         </TranslationItem>
         <TranslationItem Name="_editGitReview" Property="Text">
           <Source>Edit .gitreview</Source>
@@ -6626,25 +6637,25 @@ Context menu for additional operations</Source>
           <Source>Install Hook</Source>
           <Value>フックのインストール</Value>
         </TranslationItem>
-        <TranslationItem Name="_installCommitMsgHookFailed" Property="Text" type="unfinished">
+        <TranslationItem Name="_installCommitMsgHookFailed" Property="Text">
           <Source>Could not download the commit-msg file. Please install the commit-msg hook manually.</Source>
-          <Value />
+          <Value>commit-msgファイルをダウンロードできませんでした。手動でcommit-msgフックをインストールしてください。</Value>
         </TranslationItem>
-        <TranslationItem Name="_installCommitMsgHookMessage" Property="Text" type="unfinished">
+        <TranslationItem Name="_installCommitMsgHookMessage" Property="Text">
           <Source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</Source>
-          <Value />
+          <Value>Gerritを使うにはcommit-msgフックが必要です。リポジトリにcommit-msgフックをインストールしますか？</Value>
         </TranslationItem>
-        <TranslationItem Name="_installCommitMsgHookShortText" Property="Text" type="unfinished">
+        <TranslationItem Name="_installCommitMsgHookShortText" Property="Text">
           <Source>Install commit-msg hook</Source>
-          <Value />
+          <Value>commit-msgフックのインストール</Value>
         </TranslationItem>
-        <TranslationItem Name="_pluginDescription" Property="Text" type="unfinished">
+        <TranslationItem Name="_pluginDescription" Property="Text">
           <Source>Gerrit Code Review</Source>
-          <Value />
+          <Value>Gerrit コードレビュー</Value>
         </TranslationItem>
-        <TranslationItem Name="_publishGerritChange" Property="Text" type="unfinished">
+        <TranslationItem Name="_publishGerritChange" Property="Text">
           <Source>Publish Gerrit Change</Source>
-          <Value />
+          <Value>Gerrit Changeの発行</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6662,17 +6673,17 @@ Context menu for additional operations</Source>
           <Source>Cannot find the ".gitreview" file in the working directory.</Source>
           <Value>ワーキング ディレクトリで .gitreview ファイルを 見つけられません。</Value>
         </TranslationItem>
-        <TranslationItem Name="_settingsErrorHostNotEntered" Property="Text" type="unfinished">
+        <TranslationItem Name="_settingsErrorHostNotEntered" Property="Text">
           <Source>The "host" setting in the .gitreview file is mandatory.</Source>
-          <Value />
+          <Value>.gitreviewファイルに"host"の設定は必須です。</Value>
         </TranslationItem>
-        <TranslationItem Name="_settingsErrorPortNotNumeric" Property="Text" type="unfinished">
+        <TranslationItem Name="_settingsErrorPortNotNumeric" Property="Text">
           <Source>The "port" specified in the .gitreview file may only contain digits.</Source>
-          <Value />
+          <Value>.gitreviewファイルの"port"の指定には数値のみが許されます。</Value>
         </TranslationItem>
-        <TranslationItem Name="_settingsErrorProjectNotEntered" Property="Text" type="unfinished">
+        <TranslationItem Name="_settingsErrorProjectNotEntered" Property="Text">
           <Source>The "project" setting in the .gitreview file is mandatory.</Source>
-          <Value />
+          <Value>.gitreviewファイルに"project"の設定は必須です。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
