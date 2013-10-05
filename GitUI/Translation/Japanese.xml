@@ -1572,8 +1572,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
           <Source>This revision will be archived:</Source>
-          <OldSource>Selected revision to archive:</OldSource>
-          <Value>選択したリビジョンをzipに</Value>
+          <Value>このリビジョンをアーカイブ:</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
@@ -1763,8 +1762,7 @@ compare with first:</Source>
         </TranslationItem>
         <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>(Repository hosts)</Source>
-          <OldSource>Repository hosts</OldSource>
-          <Value>リポジトリのホスト</Value>
+          <Value>(リポジトリのホスト)</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileFilterAllFiles" Property="Text">
           <Source>All files</Source>
@@ -1792,8 +1790,7 @@ compare with first:</Source>
         </TranslationItem>
         <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>View pull requests...</Source>
-          <OldSource>View pull requests</OldSource>
-          <Value>Pull Requestの表示</Value>
+          <Value>Pull Requestの表示...</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
           <Source>You are in the middle of a bisect</Source>
@@ -1877,8 +1874,7 @@ compare with first:</Source>
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Clean working tree...</Source>
-          <OldSource>Cleanup repository...</OldSource>
-          <Value>クリーンアップ...</Value>
+          <Value>作業ディレクトリのクリーン...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
           <Source>Clone SVN repository...</Source>
@@ -1926,8 +1922,7 @@ compare with first:</Source>
         </TranslationItem>
         <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text" type="unfinished">
           <Source>Copy full path(s)</Source>
-          <OldSource>Copy full path</OldSource>
-          <Value>ファイル名をクリップボードにコピー</Value>
+          <Value>ファイルパスをクリップボードにコピー</Value>
         </TranslationItem>
         <TranslationItem Name="dashboardToolStripMenuItem" Property="Text">
           <Source>Dashboard</Source>
@@ -2018,8 +2013,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="fileToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Start</Source>
-          <OldSource>File</OldSource>
-          <Value>ファイル</Value>
+          <Value>Start</Value>
         </TranslationItem>
         <TranslationItem Name="fileTreeArchiveToolStripMenuItem" Property="Text">
           <Source>Archive...</Source>
@@ -2083,13 +2077,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text" type="unfinished">
           <Source>Remote repositories...</Source>
-          <OldSource>Manage remote repositories</OldSource>
-          <Value>リモートリポジトリの管理</Value>
+          <Value>リモートリポジトリ...</Value>
         </TranslationItem>
         <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Submodules...</Source>
-          <OldSource>Manage submodules</OldSource>
-          <Value>サブモジュールの管理</Value>
+          <Value>サブモジュール...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge branches...</Source>
@@ -2105,7 +2097,6 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Open containing folder(s)</Source>
-          <OldSource>Open containing folder</OldSource>
           <Value>ファイルのあるフォルダを開く</Value>
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
@@ -2454,8 +2445,7 @@ Enter valid branch name or select predefined value.</Source>
         </TranslationItem>
         <TranslationItem Name="Force" Property="Text" type="unfinished">
           <Source>Force (reset local changes)</Source>
-          <OldSource>Force</OldSource>
-          <Value>強制</Value>
+          <Value>強制 (ローカルの変更を破棄)</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Checkout</Source>
@@ -2763,7 +2753,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
         </TranslationItem>
         <TranslationItem Name="Reset" Property="Text" type="unfinished">
           <Source>Reset all changes</Source>
-          <OldSource>Reset changes</OldSource>
           <Value>すべての変更を取り消し</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
@@ -3330,7 +3319,6 @@ Do you want to continue?</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Create branch</Source>
-          <OldSource>Create Branch</OldSource>
           <Value>ブランチの作成</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
@@ -3837,7 +3825,6 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="_wrongSmtpSettingsText" Property="Text" type="unfinished">
           <Source>You need to enter a valid smtp in the settings dialog.</Source>
-          <OldSource>You need to enter a valid SMTP in the settings dialog.</OldSource>
           <Value>設定ダイアログで、正しい SMTP を入力してください。</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -4283,8 +4270,7 @@ defaultrebase=0</Value>
         </TranslationItem>
         <TranslationItem Name="linkGitRevParse" Property="Text" type="unfinished">
           <Source>More see git-rev-parse</Source>
-          <OldSource>More (git-rev-parse, section SPECIFYING REVISIONS)</OldSource>
-          <Value>詳しい情報 (git-rev-parse, section SPECIFYING REVISIONS)</Value>
+          <Value>詳しくは git-rev-parse を参照</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5428,12 +5414,12 @@ Value has been reset to empty value.</Source>
         <TranslationItem Name="Hard" Property="Text" type="unfinished">
           <Source>Hard: reset working dir and index
 (discard ALL local changes, even uncommitted changes)</Source>
-          <OldSource>Hard: reset working dir and index (discard ALL local changes, even uncommitted changes)</OldSource>
-          <Value>コミットされていない変更点をすべて破棄します: git reset --hard</Value>
+          <Value>Hard: 作業ディレクトリとインデックスを移動先の状態にする
+(コミットしていない変更点をすべて破棄します)</Value>
         </TranslationItem>
         <TranslationItem Name="Mixed" Property="Text">
           <Source>Mixed: leave working dir untouched, reset index</Source>
-          <Value>作業ディレクトリの状態を保ったまま移動します: git reset --mixed</Value>
+          <Value>Mixed: 作業ディレクトリの状態を保ったままインデックスを移動先の状態にする</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>OK</Source>
@@ -5441,12 +5427,11 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="Soft" Property="Text">
           <Source>Soft: leave working dir and index untouched</Source>
-          <Value>HEADのみ移動し、作業ディレクトリとインデックスの状態は保ちます: git reset --soft</Value>
+          <Value>Soft: 作業ディレクトリとインデックスの状態は保ったままHEADのみ移動</Value>
         </TranslationItem>
         <TranslationItem Name="branchInfo" Property="Text" type="unfinished">
           <Source>Reset branch '{0}' to revision:</Source>
-          <OldSource>Reset {0} to:</OldSource>
-          <Value>{0}から:</Value>
+          <Value>ブランチをリビジョン{0}から移動:</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Reset type</Source>
@@ -5811,8 +5796,8 @@ The merge conflict will not be marked as solved. Please try again.</Source>
         <TranslationItem Name="mergeConflictIsSubmodule" Property="Text" type="unfinished">
           <Source>The selected mergeconflict is a submodule.
 Stage current submodule commit?</Source>
-          <OldSource>The selected mergeconflict is a submodule. Mark conflict as resolved?</OldSource>
-          <Value>選択された競合はサブモジュールです。競合を解決としますか？</Value>
+          <Value>選択された競合はサブモジュールです。
+現在のサブモジュールコミットをステージしますか?</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
           <Source>Submodule</Source>
@@ -6049,10 +6034,8 @@ git.cmd の 正しいパスを入力してください。</Value>
         <TranslationItem Name="labelInstantSaveNotice" Property="Text" type="unfinished">
           <Source>Changes on the selected page will be saved instantly. 
 Therefore the Cancel button does NOT revert any changes made.</Source>
-          <OldSource>Changes made on this page will be saved instantly. 
-Thus the Cancel and Discard button will have no effect for this page.</OldSource>
-          <Value>このページ上での設定はすぐに保存されるため、
-キャンセル/破棄ボタンはこのページでは特に意味はありません。</Value>
+          <Value>このページ上での設定はすぐに保存されます。
+そのため、キャンセルボタンは変更を取り消しません。</Value>
         </TranslationItem>
         <TranslationItem Name="labelSettingsPageTitle" Property="Text">
           <Source>...title...</Source>
@@ -7592,9 +7575,8 @@ when all items are shown:</Source>
         <TranslationItem Name="lblMenuEntries" Property="Text" type="unfinished">
           <Source>Select items to be shown in the cascaded context menu.
 (Unchecked items will be shown top level for direct access.)</Source>
-          <OldSource>Select items to be shown in
-the cascaded context menu:</OldSource>
-          <Value>以下の項目をコンテキストメニュー内に表示します:</Value>
+          <Value>カスケードコンテキストメニューに表示する項目を選択してください。
+(選択しない項目はトップレベルに表示されます。)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7671,8 +7653,7 @@ When OpenSSH is used, command line dialogs are shown!
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Plugins Settings</Source>
-          <OldSource>Start Page</OldSource>
-          <Value>スタートページ</Value>
+          <Value>プラグインの設定</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select one of the subnodes to view or edit the settings of a Git Extensions Plugin.</Source>
