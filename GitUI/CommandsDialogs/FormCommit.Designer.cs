@@ -351,10 +351,10 @@ namespace GitUI.CommandsDialogs
             // StageInSuperproject
             // 
             this.StageInSuperproject.AutoSize = true;
-            this.StageInSuperproject.Location = new System.Drawing.Point(2, 127);
+            this.StageInSuperproject.Location = new System.Drawing.Point(2, 123);
             this.StageInSuperproject.Margin = new System.Windows.Forms.Padding(2);
             this.StageInSuperproject.Name = "StageInSuperproject";
-            this.StageInSuperproject.Size = new System.Drawing.Size(158, 23);
+            this.StageInSuperproject.Size = new System.Drawing.Size(138, 19);
             this.StageInSuperproject.TabIndex = 13;
             this.StageInSuperproject.Text = "Stage in Superproject";
             this.fileTooltip.SetToolTip(this.StageInSuperproject, "Stage current submodule in superproject after commit");
@@ -963,7 +963,7 @@ namespace GitUI.CommandsDialogs
             this.llShowPreview.AutoSize = true;
             this.llShowPreview.Location = new System.Drawing.Point(43, 23);
             this.llShowPreview.Name = "llShowPreview";
-            this.llShowPreview.Size = new System.Drawing.Size(274, 19);
+            this.llShowPreview.Size = new System.Drawing.Size(236, 15);
             this.llShowPreview.TabIndex = 9;
             this.llShowPreview.TabStop = true;
             this.llShowPreview.Text = "This file is over 5 MB. Click to show preview";
@@ -1156,7 +1156,7 @@ namespace GitUI.CommandsDialogs
             this.Amend.AutoSize = true;
             this.Amend.Location = new System.Drawing.Point(3, 99);
             this.Amend.Name = "Amend";
-            this.Amend.Size = new System.Drawing.Size(125, 23);
+            this.Amend.Size = new System.Drawing.Size(112, 19);
             this.Amend.TabIndex = 12;
             this.Amend.Text = "&Amend Commit";
             this.Amend.UseVisualStyleBackColor = true;

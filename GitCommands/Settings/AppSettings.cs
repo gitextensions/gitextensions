@@ -1004,6 +1004,12 @@ namespace GitCommands
             set { SetDate("LastUpdateCheck", value); }
         }
 
+        public static bool ShowResetAllButton
+        {
+            get { return GetBool("ShowResetAllButton", false); ; }
+            set { SetBool("ShowResetAllButton", value); }
+        }
+        
         public static string GetGitExtensionsFullPath()
         {
             return Application.ExecutablePath;
