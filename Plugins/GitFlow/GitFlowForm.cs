@@ -206,7 +206,7 @@ namespace GitFlow
 
         private void btnPull_Click(object sender, EventArgs e)
         {
-            RunCommand("flow feature pull " + cbBranches.SelectedValue + " " + cbRemote.SelectedValue);
+            RunCommand("flow feature pull " + cbRemote.SelectedValue + " " + cbBranches.SelectedValue);
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
