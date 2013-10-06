@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -116,11 +114,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 if (dialog.ShowDialog(this) == DialogResult.OK)
                     cbDefaultCloneDestination.Text = dialog.SelectedPath;
             }
-        }
-
-        public static SettingsPageReference GetPageReference()
-        {
-            return new SettingsPageReferenceByType(typeof(GitExtensionsSettingsPage));
         }        
     }
 }
