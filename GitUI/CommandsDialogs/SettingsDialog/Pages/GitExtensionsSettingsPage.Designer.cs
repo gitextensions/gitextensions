@@ -29,12 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox12 = new System.Windows.Forms.GroupBox();
-            this.lblCommitDialogNumberOfPreviousMessages = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages = new System.Windows.Forms.NumericUpDown();
             this.btnDefaultDestinationBrowse = new System.Windows.Forms.Button();
             this.cbDefaultCloneDestination = new System.Windows.Forms.ComboBox();
             this.lblDefaultCloneDestination = new System.Windows.Forms.Label();
-            this.chkWriteCommitMessageInCommitWindow = new System.Windows.Forms.CheckBox();
             this.chkPlaySpecialStartupSound = new System.Windows.Forms.CheckBox();
             this.chkCloseProcessDialog = new System.Windows.Forms.CheckBox();
             this.chkShowGitCommandLine = new System.Windows.Forms.CheckBox();
@@ -43,7 +40,6 @@
             this.chkStashUntrackedFiles = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.chkUsePatienceDiffAlgorithm = new System.Windows.Forms.CheckBox();
-            this.chkShowErrorsWhenStagingFiles = new System.Windows.Forms.CheckBox();
             this.chkFollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.chkCheckForUncommittedChangesInCheckoutBranch = new System.Windows.Forms.CheckBox();
@@ -62,7 +58,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.groupBox12.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).BeginInit();
             this.groupBox11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_MaxCommits)).BeginInit();
@@ -74,12 +69,9 @@
             // 
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox12.Controls.Add(this.lblCommitDialogNumberOfPreviousMessages);
-            this.groupBox12.Controls.Add(this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages);
             this.groupBox12.Controls.Add(this.btnDefaultDestinationBrowse);
             this.groupBox12.Controls.Add(this.cbDefaultCloneDestination);
             this.groupBox12.Controls.Add(this.lblDefaultCloneDestination);
-            this.groupBox12.Controls.Add(this.chkWriteCommitMessageInCommitWindow);
             this.groupBox12.Controls.Add(this.chkPlaySpecialStartupSound);
             this.groupBox12.Controls.Add(this.chkCloseProcessDialog);
             this.groupBox12.Controls.Add(this.chkShowGitCommandLine);
@@ -88,7 +80,6 @@
             this.groupBox12.Controls.Add(this.chkStashUntrackedFiles);
             this.groupBox12.Controls.Add(this.label24);
             this.groupBox12.Controls.Add(this.chkUsePatienceDiffAlgorithm);
-            this.groupBox12.Controls.Add(this.chkShowErrorsWhenStagingFiles);
             this.groupBox12.Controls.Add(this.chkFollowRenamesInFileHistory);
             this.groupBox12.Location = new System.Drawing.Point(3, 186);
             this.groupBox12.Name = "groupBox12";
@@ -96,37 +87,6 @@
             this.groupBox12.TabIndex = 56;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Behaviour";
-            // 
-            // lblCommitDialogNumberOfPreviousMessages
-            // 
-            this.lblCommitDialogNumberOfPreviousMessages.AutoSize = true;
-            this.lblCommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(7, 233);
-            this.lblCommitDialogNumberOfPreviousMessages.Name = "lblCommitDialogNumberOfPreviousMessages";
-            this.lblCommitDialogNumberOfPreviousMessages.Size = new System.Drawing.Size(261, 15);
-            this.lblCommitDialogNumberOfPreviousMessages.TabIndex = 9;
-            this.lblCommitDialogNumberOfPreviousMessages.Text = "Number of previous messages in commit dialog";
-            // 
-            // _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages
-            // 
-            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(320, 231);
-            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Name = "_NO_TRANSLATE_CommitDialogNumberOfPreviousMessages";
-            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Size = new System.Drawing.Size(123, 23);
-            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.TabIndex = 10;
-            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // btnDefaultDestinationBrowse
             // 
@@ -156,17 +116,6 @@
             this.lblDefaultCloneDestination.Size = new System.Drawing.Size(139, 15);
             this.lblDefaultCloneDestination.TabIndex = 11;
             this.lblDefaultCloneDestination.Text = "Default clone destination";
-            // 
-            // chkWriteCommitMessageInCommitWindow
-            // 
-            this.chkWriteCommitMessageInCommitWindow.AutoSize = true;
-            this.chkWriteCommitMessageInCommitWindow.Location = new System.Drawing.Point(10, 187);
-            this.chkWriteCommitMessageInCommitWindow.Name = "chkWriteCommitMessageInCommitWindow";
-            this.chkWriteCommitMessageInCommitWindow.Size = new System.Drawing.Size(329, 34);
-            this.chkWriteCommitMessageInCommitWindow.TabIndex = 8;
-            this.chkWriteCommitMessageInCommitWindow.Text = "Compose commit messages in Commit dialog\r\n(otherwise the message will be requeste" +
-    "d during commit)";
-            this.chkWriteCommitMessageInCommitWindow.UseVisualStyleBackColor = true;
             // 
             // chkPlaySpecialStartupSound
             // 
@@ -263,16 +212,6 @@
             this.chkUsePatienceDiffAlgorithm.TabIndex = 2;
             this.chkUsePatienceDiffAlgorithm.Text = "Use patience diff algorithm";
             this.chkUsePatienceDiffAlgorithm.UseVisualStyleBackColor = true;
-            // 
-            // chkShowErrorsWhenStagingFiles
-            // 
-            this.chkShowErrorsWhenStagingFiles.AutoSize = true;
-            this.chkShowErrorsWhenStagingFiles.Location = new System.Drawing.Point(10, 87);
-            this.chkShowErrorsWhenStagingFiles.Name = "chkShowErrorsWhenStagingFiles";
-            this.chkShowErrorsWhenStagingFiles.Size = new System.Drawing.Size(186, 19);
-            this.chkShowErrorsWhenStagingFiles.TabIndex = 3;
-            this.chkShowErrorsWhenStagingFiles.Text = "Show errors when staging files";
-            this.chkShowErrorsWhenStagingFiles.UseVisualStyleBackColor = true;
             // 
             // chkFollowRenamesInFileHistory
             // 
@@ -489,7 +428,6 @@
             this.Size = new System.Drawing.Size(1303, 856);
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).EndInit();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
@@ -504,7 +442,6 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox12;
-        private System.Windows.Forms.CheckBox chkWriteCommitMessageInCommitWindow;
         private System.Windows.Forms.CheckBox chkPlaySpecialStartupSound;
         private System.Windows.Forms.CheckBox chkCloseProcessDialog;
         private System.Windows.Forms.CheckBox chkShowGitCommandLine;
@@ -513,7 +450,6 @@
         private System.Windows.Forms.CheckBox chkStashUntrackedFiles;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox chkUsePatienceDiffAlgorithm;
-        private System.Windows.Forms.CheckBox chkShowErrorsWhenStagingFiles;
         private System.Windows.Forms.CheckBox chkFollowRenamesInFileHistory;
         private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.CheckBox chkCheckForUncommittedChangesInCheckoutBranch;
@@ -534,7 +470,5 @@
         private System.Windows.Forms.Label lblDefaultCloneDestination;
         private System.Windows.Forms.ComboBox cbDefaultCloneDestination;
         private System.Windows.Forms.Button btnDefaultDestinationBrowse;
-        private System.Windows.Forms.Label lblCommitDialogNumberOfPreviousMessages;
-        private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages;
     }
 }
