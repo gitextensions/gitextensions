@@ -61,7 +61,7 @@
             this.argumentsLabel = new System.Windows.Forms.Label();
             this.buttonShowArgumentsHelp = new System.Windows.Forms.Button();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
-            this.scriptShowProgress = new System.Windows.Forms.CheckBox();
+            this.scriptRunInBackground = new System.Windows.Forms.CheckBox();
             this.inMenuCheckBox = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).BeginInit();
@@ -439,7 +439,7 @@
             // flowLayoutPanel5
             // 
             this.flowLayoutPanel5.AutoSize = true;
-            this.flowLayoutPanel5.Controls.Add(this.scriptShowProgress);
+            this.flowLayoutPanel5.Controls.Add(this.scriptRunInBackground);
             this.flowLayoutPanel5.Controls.Add(this.inMenuCheckBox);
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel5.Location = new System.Drawing.Point(90, 43);
@@ -447,23 +447,23 @@
             this.flowLayoutPanel5.Size = new System.Drawing.Size(547, 25);
             this.flowLayoutPanel5.TabIndex = 28;
             // 
-            // scriptShowProgress
+            // scriptRunInBackground
             // 
-            this.scriptShowProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.scriptShowProgress.AutoSize = true;
-            this.scriptShowProgress.Location = new System.Drawing.Point(3, 3);
-            this.scriptShowProgress.Name = "scriptShowProgress";
-            this.scriptShowProgress.Size = new System.Drawing.Size(103, 19);
-            this.scriptShowProgress.TabIndex = 16;
-            this.scriptShowProgress.Text = "Show progress";
-            this.scriptShowProgress.UseVisualStyleBackColor = true;
-            this.scriptShowProgress.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
+            this.scriptRunInBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.scriptRunInBackground.AutoSize = true;
+            this.scriptRunInBackground.Location = new System.Drawing.Point(3, 3);
+            this.scriptRunInBackground.Name = "scriptRunInBackground";
+            this.scriptRunInBackground.Size = new System.Drawing.Size(127, 19);
+            this.scriptRunInBackground.TabIndex = 16;
+            this.scriptRunInBackground.Text = "Run in background";
+            this.scriptRunInBackground.UseVisualStyleBackColor = true;
+            this.scriptRunInBackground.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // inMenuCheckBox
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(112, 3);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(136, 3);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(206, 19);
             this.inMenuCheckBox.TabIndex = 15;
@@ -532,6 +532,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.Button buttonShowArgumentsHelp;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
-        private System.Windows.Forms.CheckBox scriptShowProgress;
+        private System.Windows.Forms.CheckBox scriptRunInBackground;
     }
 }
