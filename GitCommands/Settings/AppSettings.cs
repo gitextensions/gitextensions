@@ -1034,9 +1034,13 @@ namespace GitCommands
 
         private static IEnumerable<Tuple<string, string>> GetSettingsFromRegistry()
         {
-            foreach (String name in VersionIndependentRegKey.GetValueNames())
+            RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
+            if (oldSettings == null)
+                yield break;
+
+            foreach (String name in oldSettings.GetValueNames())
             {
-                object value = VersionIndependentRegKey.GetValue(name, null);
+                object value = oldSettings.GetValue(name, null);
                 if (value != null)
                     yield return new Tuple<string, string>(name, value.ToString());
             }

@@ -2270,8 +2270,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadCommitTemplates()
         {
-            CommitTemplateItem[] commitTemplates =
-                CommitTemplateItem.DeserializeCommitTemplates(AppSettings.CommitTemplates);
+            CommitTemplateItem[] commitTemplates = CommitTemplateItem.LoadFromSettings();
 
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
