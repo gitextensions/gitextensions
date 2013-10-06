@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             nameTextBox.Text = scriptInfo.Name;
             commandTextBox.Text = scriptInfo.Command;
             argumentsTextBox.Text = scriptInfo.Arguments;
-            scriptShowProgress.Checked = scriptInfo.ShowProgress;
+            scriptRunInBackground.Checked = scriptInfo.RunInBackground;
             inMenuCheckBox.Checked = scriptInfo.AddToRevisionGridContextMenu;
             scriptEnabled.Checked = scriptInfo.Enabled;
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
@@ -146,7 +146,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;
                 selectedScriptInfo.AddToRevisionGridContextMenu = inMenuCheckBox.Checked;
                 selectedScriptInfo.Enabled = scriptEnabled.Checked;
-                selectedScriptInfo.ShowProgress = scriptShowProgress.Checked;
+                selectedScriptInfo.RunInBackground = scriptRunInBackground.Checked;
                 selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
                 selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
                 selectedScriptInfo.Icon = IconName;
