@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.groupBoxBehaviour = new System.Windows.Forms.GroupBox();
             this.btnDefaultDestinationBrowse = new System.Windows.Forms.Button();
             this.cbDefaultCloneDestination = new System.Windows.Forms.ComboBox();
             this.lblDefaultCloneDestination = new System.Windows.Forms.Label();
@@ -41,7 +41,7 @@
             this.label24 = new System.Windows.Forms.Label();
             this.chkUsePatienceDiffAlgorithm = new System.Windows.Forms.CheckBox();
             this.chkFollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
-            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.groupBoxPerformance = new System.Windows.Forms.GroupBox();
             this.chkCheckForUncommittedChangesInCheckoutBranch = new System.Windows.Forms.CheckBox();
             this.chkShowGitStatusInToolbar = new System.Windows.Forms.CheckBox();
             this.chkShowCurrentChangesInRevisionGraph = new System.Windows.Forms.CheckBox();
@@ -57,40 +57,41 @@
             this.label23 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.groupBox12.SuspendLayout();
+            this.panelSpacer1 = new System.Windows.Forms.Panel();
+            this.panelSpacer2 = new System.Windows.Forms.Panel();
+            this.groupBoxBehaviour.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).BeginInit();
-            this.groupBox11.SuspendLayout();
+            this.groupBoxPerformance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_MaxCommits)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
-            // groupBox12
+            // groupBoxBehaviour
             // 
-            this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox12.Controls.Add(this.btnDefaultDestinationBrowse);
-            this.groupBox12.Controls.Add(this.cbDefaultCloneDestination);
-            this.groupBox12.Controls.Add(this.lblDefaultCloneDestination);
-            this.groupBox12.Controls.Add(this.chkPlaySpecialStartupSound);
-            this.groupBox12.Controls.Add(this.chkCloseProcessDialog);
-            this.groupBox12.Controls.Add(this.chkShowGitCommandLine);
-            this.groupBox12.Controls.Add(this.chkStartWithRecentWorkingDir);
-            this.groupBox12.Controls.Add(this.RevisionGridQuickSearchTimeout);
-            this.groupBox12.Controls.Add(this.chkStashUntrackedFiles);
-            this.groupBox12.Controls.Add(this.label24);
-            this.groupBox12.Controls.Add(this.chkUsePatienceDiffAlgorithm);
-            this.groupBox12.Controls.Add(this.chkFollowRenamesInFileHistory);
-            this.groupBox12.Location = new System.Drawing.Point(3, 186);
-            this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(1297, 331);
-            this.groupBox12.TabIndex = 56;
-            this.groupBox12.TabStop = false;
-            this.groupBox12.Text = "Behaviour";
+            this.groupBoxBehaviour.Controls.Add(this.btnDefaultDestinationBrowse);
+            this.groupBoxBehaviour.Controls.Add(this.cbDefaultCloneDestination);
+            this.groupBoxBehaviour.Controls.Add(this.lblDefaultCloneDestination);
+            this.groupBoxBehaviour.Controls.Add(this.chkPlaySpecialStartupSound);
+            this.groupBoxBehaviour.Controls.Add(this.chkCloseProcessDialog);
+            this.groupBoxBehaviour.Controls.Add(this.chkShowGitCommandLine);
+            this.groupBoxBehaviour.Controls.Add(this.chkStartWithRecentWorkingDir);
+            this.groupBoxBehaviour.Controls.Add(this.RevisionGridQuickSearchTimeout);
+            this.groupBoxBehaviour.Controls.Add(this.chkStashUntrackedFiles);
+            this.groupBoxBehaviour.Controls.Add(this.label24);
+            this.groupBoxBehaviour.Controls.Add(this.chkUsePatienceDiffAlgorithm);
+            this.groupBoxBehaviour.Controls.Add(this.chkFollowRenamesInFileHistory);
+            this.groupBoxBehaviour.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxBehaviour.Location = new System.Drawing.Point(0, 182);
+            this.groupBoxBehaviour.Name = "groupBoxBehaviour";
+            this.groupBoxBehaviour.Size = new System.Drawing.Size(1303, 231);
+            this.groupBoxBehaviour.TabIndex = 56;
+            this.groupBoxBehaviour.TabStop = false;
+            this.groupBoxBehaviour.Text = "Behaviour";
             // 
             // btnDefaultDestinationBrowse
             // 
-            this.btnDefaultDestinationBrowse.Location = new System.Drawing.Point(449, 262);
+            this.btnDefaultDestinationBrowse.Location = new System.Drawing.Point(449, 165);
             this.btnDefaultDestinationBrowse.Name = "btnDefaultDestinationBrowse";
             this.btnDefaultDestinationBrowse.Size = new System.Drawing.Size(75, 23);
             this.btnDefaultDestinationBrowse.TabIndex = 13;
@@ -103,7 +104,7 @@
             this.cbDefaultCloneDestination.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cbDefaultCloneDestination.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.cbDefaultCloneDestination.FormattingEnabled = true;
-            this.cbDefaultCloneDestination.Location = new System.Drawing.Point(155, 262);
+            this.cbDefaultCloneDestination.Location = new System.Drawing.Point(155, 165);
             this.cbDefaultCloneDestination.Name = "cbDefaultCloneDestination";
             this.cbDefaultCloneDestination.Size = new System.Drawing.Size(288, 23);
             this.cbDefaultCloneDestination.TabIndex = 12;
@@ -111,7 +112,7 @@
             // lblDefaultCloneDestination
             // 
             this.lblDefaultCloneDestination.AutoSize = true;
-            this.lblDefaultCloneDestination.Location = new System.Drawing.Point(7, 265);
+            this.lblDefaultCloneDestination.Location = new System.Drawing.Point(7, 168);
             this.lblDefaultCloneDestination.Name = "lblDefaultCloneDestination";
             this.lblDefaultCloneDestination.Size = new System.Drawing.Size(139, 15);
             this.lblDefaultCloneDestination.TabIndex = 11;
@@ -120,7 +121,7 @@
             // chkPlaySpecialStartupSound
             // 
             this.chkPlaySpecialStartupSound.AutoSize = true;
-            this.chkPlaySpecialStartupSound.Location = new System.Drawing.Point(320, 158);
+            this.chkPlaySpecialStartupSound.Location = new System.Drawing.Point(320, 135);
             this.chkPlaySpecialStartupSound.Name = "chkPlaySpecialStartupSound";
             this.chkPlaySpecialStartupSound.Size = new System.Drawing.Size(166, 19);
             this.chkPlaySpecialStartupSound.TabIndex = 7;
@@ -150,7 +151,7 @@
             // chkStartWithRecentWorkingDir
             // 
             this.chkStartWithRecentWorkingDir.AutoSize = true;
-            this.chkStartWithRecentWorkingDir.Location = new System.Drawing.Point(10, 158);
+            this.chkStartWithRecentWorkingDir.Location = new System.Drawing.Point(10, 135);
             this.chkStartWithRecentWorkingDir.Name = "chkStartWithRecentWorkingDir";
             this.chkStartWithRecentWorkingDir.Size = new System.Drawing.Size(196, 19);
             this.chkStartWithRecentWorkingDir.TabIndex = 6;
@@ -164,7 +165,7 @@
             0,
             0,
             0});
-            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(320, 295);
+            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(320, 198);
             this.RevisionGridQuickSearchTimeout.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -187,7 +188,7 @@
             // chkStashUntrackedFiles
             // 
             this.chkStashUntrackedFiles.AutoSize = true;
-            this.chkStashUntrackedFiles.Location = new System.Drawing.Point(10, 110);
+            this.chkStashUntrackedFiles.Location = new System.Drawing.Point(10, 89);
             this.chkStashUntrackedFiles.Name = "chkStashUntrackedFiles";
             this.chkStashUntrackedFiles.Size = new System.Drawing.Size(188, 19);
             this.chkStashUntrackedFiles.TabIndex = 4;
@@ -197,7 +198,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(7, 297);
+            this.label24.Location = new System.Drawing.Point(7, 200);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(216, 15);
             this.label24.TabIndex = 14;
@@ -216,30 +217,29 @@
             // chkFollowRenamesInFileHistory
             // 
             this.chkFollowRenamesInFileHistory.AutoSize = true;
-            this.chkFollowRenamesInFileHistory.Location = new System.Drawing.Point(10, 133);
+            this.chkFollowRenamesInFileHistory.Location = new System.Drawing.Point(10, 112);
             this.chkFollowRenamesInFileHistory.Name = "chkFollowRenamesInFileHistory";
             this.chkFollowRenamesInFileHistory.Size = new System.Drawing.Size(259, 19);
             this.chkFollowRenamesInFileHistory.TabIndex = 5;
             this.chkFollowRenamesInFileHistory.Text = "Follow renames in file history (experimental)";
             this.chkFollowRenamesInFileHistory.UseVisualStyleBackColor = true;
             // 
-            // groupBox11
+            // groupBoxPerformance
             // 
-            this.groupBox11.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox11.Controls.Add(this.chkCheckForUncommittedChangesInCheckoutBranch);
-            this.groupBox11.Controls.Add(this.chkShowGitStatusInToolbar);
-            this.groupBox11.Controls.Add(this.chkShowCurrentChangesInRevisionGraph);
-            this.groupBox11.Controls.Add(this.chkUseFastChecks);
-            this.groupBox11.Controls.Add(this.chkShowStashCountInBrowseWindow);
-            this.groupBox11.Controls.Add(this.label12);
-            this.groupBox11.Controls.Add(this._NO_TRANSLATE_MaxCommits);
-            this.groupBox11.Location = new System.Drawing.Point(3, 3);
-            this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(1297, 177);
-            this.groupBox11.TabIndex = 55;
-            this.groupBox11.TabStop = false;
-            this.groupBox11.Text = "Performance";
+            this.groupBoxPerformance.Controls.Add(this.chkCheckForUncommittedChangesInCheckoutBranch);
+            this.groupBoxPerformance.Controls.Add(this.chkShowGitStatusInToolbar);
+            this.groupBoxPerformance.Controls.Add(this.chkShowCurrentChangesInRevisionGraph);
+            this.groupBoxPerformance.Controls.Add(this.chkUseFastChecks);
+            this.groupBoxPerformance.Controls.Add(this.chkShowStashCountInBrowseWindow);
+            this.groupBoxPerformance.Controls.Add(this.label12);
+            this.groupBoxPerformance.Controls.Add(this._NO_TRANSLATE_MaxCommits);
+            this.groupBoxPerformance.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxPerformance.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxPerformance.Name = "groupBoxPerformance";
+            this.groupBoxPerformance.Size = new System.Drawing.Size(1303, 177);
+            this.groupBoxPerformance.TabIndex = 55;
+            this.groupBoxPerformance.TabStop = false;
+            this.groupBoxPerformance.Text = "Performance";
             // 
             // chkCheckForUncommittedChangesInCheckoutBranch
             // 
@@ -325,8 +325,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.chkUseSSL);
             this.groupBox1.Controls.Add(this.SmtpServerPort);
             this.groupBox1.Controls.Add(this.label2);
@@ -334,9 +332,10 @@
             this.groupBox1.Controls.Add(this.label23);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.numericUpDown1);
-            this.groupBox1.Location = new System.Drawing.Point(3, 523);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(0, 418);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1297, 68);
+            this.groupBox1.Size = new System.Drawing.Size(1303, 68);
             this.groupBox1.TabIndex = 57;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Email settings for sending patches";
@@ -416,21 +415,39 @@
             0,
             0});
             // 
+            // panelSpacer1
+            // 
+            this.panelSpacer1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelSpacer1.Location = new System.Drawing.Point(0, 177);
+            this.panelSpacer1.Name = "panelSpacer1";
+            this.panelSpacer1.Size = new System.Drawing.Size(1303, 5);
+            this.panelSpacer1.TabIndex = 58;
+            // 
+            // panelSpacer2
+            // 
+            this.panelSpacer2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelSpacer2.Location = new System.Drawing.Point(0, 413);
+            this.panelSpacer2.Name = "panelSpacer2";
+            this.panelSpacer2.Size = new System.Drawing.Size(1303, 5);
+            this.panelSpacer2.TabIndex = 60;
+            // 
             // GitExtensionsSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.groupBox12);
-            this.Controls.Add(this.groupBox11);
+            this.Controls.Add(this.panelSpacer2);
+            this.Controls.Add(this.groupBoxBehaviour);
+            this.Controls.Add(this.panelSpacer1);
+            this.Controls.Add(this.groupBoxPerformance);
             this.Name = "GitExtensionsSettingsPage";
             this.Size = new System.Drawing.Size(1303, 856);
-            this.groupBox12.ResumeLayout(false);
-            this.groupBox12.PerformLayout();
+            this.groupBoxBehaviour.ResumeLayout(false);
+            this.groupBoxBehaviour.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).EndInit();
-            this.groupBox11.ResumeLayout(false);
-            this.groupBox11.PerformLayout();
+            this.groupBoxPerformance.ResumeLayout(false);
+            this.groupBoxPerformance.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_MaxCommits)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -441,7 +458,7 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.GroupBox groupBoxBehaviour;
         private System.Windows.Forms.CheckBox chkPlaySpecialStartupSound;
         private System.Windows.Forms.CheckBox chkCloseProcessDialog;
         private System.Windows.Forms.CheckBox chkShowGitCommandLine;
@@ -451,7 +468,7 @@
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.CheckBox chkUsePatienceDiffAlgorithm;
         private System.Windows.Forms.CheckBox chkFollowRenamesInFileHistory;
-        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.GroupBox groupBoxPerformance;
         private System.Windows.Forms.CheckBox chkCheckForUncommittedChangesInCheckoutBranch;
         private System.Windows.Forms.CheckBox chkShowGitStatusInToolbar;
         private System.Windows.Forms.CheckBox chkShowCurrentChangesInRevisionGraph;
@@ -470,5 +487,7 @@
         private System.Windows.Forms.Label lblDefaultCloneDestination;
         private System.Windows.Forms.ComboBox cbDefaultCloneDestination;
         private System.Windows.Forms.Button btnDefaultDestinationBrowse;
+        private System.Windows.Forms.Panel panelSpacer1;
+        private System.Windows.Forms.Panel panelSpacer2;
     }
 }
