@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.46">
+<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.47">
   <translationCategories>
     <TranslationCategory Name="AboutBox">
       <translationItems>
@@ -607,6 +607,14 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
     </TranslationCategory>
     <TranslationCategory Name="CommitSummaryUserControl">
       <translationItems>
+        <TranslationItem Name="_noRevision" Property="Text" type="unfinished">
+          <Source>No revision</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_notAvailable" Property="Text" type="unfinished">
+          <Source>n/a</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="labelAuthorCaption" Property="Text" type="unfinished">
           <Source>Author:</Source>
           <Value>作者：</Value>
@@ -621,14 +629,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="labelTagsCaption" Property="Text" type="unfinished">
           <Source>Tag(s):</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="noRevision" Property="Text" type="unfinished">
-          <Source>No revision</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="notAvailable" Property="Text" type="unfinished">
-          <Source>n/a</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -1520,6 +1520,14 @@ You will have push access. {2}</Source>
           <Source>Archive</Source>
           <Value>存档</Value>
         </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text" type="unfinished">
+          <Source>You need to choose a target revision.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedCaption" Property="Text" type="unfinished">
+          <Source>Error</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_saveFileDialogCaption" Property="Text" type="unfinished">
           <Source>Save archive as</Source>
           <Value />
@@ -1536,17 +1544,47 @@ You will have push access. {2}</Source>
           <Source>Save as...</Source>
           <Value>另存为</Value>
         </TranslationItem>
+        <TranslationItem Name="checkBoxPathFilter" Property="Text" type="unfinished">
+          <Source>Archive specific paths only</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="checkboxRevisionFilter" Property="Text" type="unfinished">
+          <Source>Take the files that have changed from the revision above to this one and archive only those</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
           <Source>Archive format</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Selected revision to archive:</Source>
+        <TranslationItem Name="groupBox2" Property="Text" type="unfinished">
+          <Source>Filter files</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text" type="unfinished">
+          <Source>This revision will be archived:</Source>
+          <OldSource>Selected revision to archive:</OldSource>
           <Value>选择一个版本进行zip压缩</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text" type="unfinished">
           <Source>Choose another
 revision:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text" type="unfinished">
+          <Source>separate each new path by new line</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelAuthorCaption" Property="Text" type="unfinished">
+          <Source>Author:</Source>
+          <Value>作者：</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelDateCaption" Property="Text" type="unfinished">
+          <Source>Commit date:</Source>
+          <Value>提交日期：</Value>
+        </TranslationItem>
+        <TranslationItem Name="lblChooseDiffRevision" Property="Text" type="unfinished">
+          <Source>Choose revision to 
+compare with first:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="radioButtonFormatTar" Property="Text" type="obsolete">
@@ -1620,6 +1658,14 @@ revision:</Source>
         <TranslationItem Name="GitBash" Property="ToolTipText">
           <Source>Git bash</Source>
           <Value>Git bash</Value>
+        </TranslationItem>
+        <TranslationItem Name="GotoCommit" Property="Text" type="unfinished">
+          <Source>Go to commit...</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="GotoCurrentRevision" Property="Text" type="unfinished">
+          <Source>Go to current revision</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="PuTTYToolStripMenuItem" Property="Text">
           <Source>PuTTY</Source>
@@ -1697,6 +1743,14 @@ revision:</Source>
           <Source>No submodules</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="_nodeNotFoundNextAvailableParentSelected" Property="Text" type="unfinished">
+          <Source>Node not found. The next available parent node will be selected.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_nodeNotFoundSelectionNotChanged" Property="Text" type="unfinished">
+          <Source>Node not found. File tree selection was not changed.</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>(Repository hosts)</Source>
           <Value />
@@ -1730,7 +1784,7 @@ revision:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text" type="unfinished">
-          <Source>Your are in the middle of a bisect</Source>
+          <Source>You are in the middle of a bisect</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfPatchApply" Property="Text" type="unfinished">
@@ -1859,8 +1913,9 @@ revision:</Source>
           <Source>Copy full path</Source>
           <Value>把文件名复制到剪贴板</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
-          <Source>Copy full path</Source>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text" type="unfinished">
+          <Source>Copy full path(s)</Source>
+          <OldSource>Copy full path</OldSource>
           <Value>把文件名复制到剪贴板</Value>
         </TranslationItem>
         <TranslationItem Name="dashboardToolStripMenuItem" Property="Text" type="unfinished">
@@ -1881,6 +1936,10 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Diff contains (SLOW)</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="diffShowInFileTreeToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Show in File tree</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="directoryIsNotAValidRepository" Property="Text" type="unfinished">
@@ -1950,6 +2009,10 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <OldSource>File</OldSource>
           <Value>文件</Value>
         </TranslationItem>
+        <TranslationItem Name="fileTreeArchiveToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Archive...</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="fileTreeOpenContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Open containing folder</Source>
           <Value />
@@ -1985,10 +2048,6 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         <TranslationItem Name="gitcommandLogToolStripMenuItem" Property="Text">
           <Source>Gitcommand log</Source>
           <Value>Gitcommand日志</Value>
-        </TranslationItem>
-        <TranslationItem Name="goToToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Go to commit...</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="hashToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Hash</Source>
@@ -2028,8 +2087,12 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Merge</Source>
           <Value>合并</Value>
         </TranslationItem>
+        <TranslationItem Name="navigateToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Navigate</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Open containing folder</Source>
+          <Source>Open containing folder(s)</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
@@ -2247,6 +2310,10 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         <TranslationItem Name="viewStashToolStripMenuItem" Property="Text">
           <Source>View stash</Source>
           <Value>查看Git缓冲区</Value>
+        </TranslationItem>
+        <TranslationItem Name="viewToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>View</Source>
+          <Value>查看</Value>
         </TranslationItem>
         <TranslationItem Name="remotesToolStripMenuItem" Property="Text" type="obsolete">
           <Source>Remotes</Source>
@@ -2673,8 +2740,9 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Source>Commit</Source>
           <Value>提交</Value>
         </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text">
-          <Source>Reset changes</Source>
+        <TranslationItem Name="Reset" Property="Text" type="unfinished">
+          <Source>Reset all changes</Source>
+          <OldSource>Reset changes</OldSource>
           <Value>复位更改</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
@@ -2699,14 +2767,6 @@ Do you want to continue?</Source>
         <TranslationItem Name="_amendCommitCaption" Property="Text">
           <Source>Amend commit</Source>
           <Value>修改(Amend)提交</Value>
-        </TranslationItem>
-        <TranslationItem Name="_commitAuthorInfo" Property="Text" type="unfinished">
-          <Source>Commit as </Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
-          <Source>Click to change author information.</Source>
-          <Value>点击更改作者信息。</Value>
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
           <Source>Commit Message is requested during commit</Source>
@@ -2903,10 +2963,6 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Close dialog after each commit</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
-          <Source>Click to change author information.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text" type="unfinished">
@@ -3145,6 +3201,14 @@ Choose 'No' to keep all new files.</Source>
         <TranslationItem Name="cbIncludeSubmodules" Property="Text" type="unfinished">
           <Source>Include submodules</Source>
           <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Diff</Source>
+          <Value>差异</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3462,14 +3526,6 @@ this using `force delete´.
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDiff">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Diff</Source>
-          <Value>差异</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDiffSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Diff</Source>
@@ -4684,14 +4740,6 @@ This will initialize and update all submodules recursive.</Source>
           <Source>&amp;Push</Source>
           <Value>推送(&amp;P)</Value>
         </TranslationItem>
-        <TranslationItem Name="PushAllBranches" Property="Text">
-          <Source>Push &amp;all branches</Source>
-          <Value>推送所有分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="PushAllTags" Property="Text">
-          <Source>Push &amp;all tags</Source>
-          <Value>推送所有标签</Value>
-        </TranslationItem>
         <TranslationItem Name="PushColumn" Property="HeaderText">
           <Source>Push</Source>
           <Value>推送</Value>
@@ -4713,10 +4761,6 @@ This will initialize and update all submodules recursive.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="ShowOptions" Property="Text" type="unfinished">
-          <Source>Show options</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="ShowTagOptions" Property="Text" type="unfinished">
           <Source>Show options</Source>
           <Value />
         </TranslationItem>
@@ -4742,18 +4786,32 @@ Are you sure you want to push this branch?</Source>
           <Source>No</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="_pullActionFetch" Property="Text" type="unfinished">
+          <Source>fetch</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pullActionMerge" Property="Text" type="unfinished">
+          <Source>merge</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pullActionNone" Property="Text" type="unfinished">
+          <Source>none</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pullActionRebase" Property="Text" type="unfinished">
+          <Source>rebase</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_pullRepository" Property="Text" type="unfinished">
-          <Source>The push was rejected because the tip of your current branch is behind its remote counterpart. Merge the remote changes before pushing again.
-
-Do you want to pull the latest changes?</Source>
+          <Source>The push was rejected because the tip of your current branch is behind its remote counterpart. Merge the remote changes before pushing again.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_pullRepositoryButtons" Property="Text" type="unfinished">
-          <Source>Pull with default pull action|Pull with rebase|Pull with merge|Cancel</Source>
+          <Source>Pull with last pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_pullRepositoryCaption" Property="Text" type="unfinished">
-          <Source>Push was rejected</Source>
+          <Source>Push was rejected from "{0}"</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_pullRepositoryMainInstruction" Property="Text" type="unfinished">
@@ -4819,6 +4877,14 @@ Do you want to pull the latest changes?</Source>
         <TranslationItem Name="labelTo" Property="Text">
           <Source>to</Source>
           <Value>到</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllBranches" Property="Text" type="obsolete">
+          <Source>Push &amp;all branches</Source>
+          <Value>推送所有分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushAllTags" Property="Text" type="obsolete">
+          <Source>Push &amp;all tags</Source>
+          <Value>推送所有标签</Value>
         </TranslationItem>
         <TranslationItem Name="BranchTab" Property="ToolTipText" type="obsolete">
           <Source>Push branches and commits to remote repository.</Source>
@@ -5638,8 +5704,10 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>Merge</Source>
           <Value>合并</Value>
         </TranslationItem>
-        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
-          <Source>The selected mergeconflict is a submodule. Mark conflict as resolved?</Source>
+        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text" type="unfinished">
+          <Source>The selected mergeconflict is a submodule.
+Stage current submodule commit?</Source>
+          <OldSource>The selected mergeconflict is a submodule. Mark conflict as resolved?</OldSource>
           <Value>所选定的合并冲突是一个子模块。把冲突标记成已解决吗？</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
@@ -5868,8 +5936,8 @@ any global setting.
           <Value>您需要设置git.cmd正确的路径，才能更改全局设置。</Value>
         </TranslationItem>
         <TranslationItem Name="labelInstantSaveNotice" Property="Text" type="unfinished">
-          <Source>Changes made on this page will be saved instantly. 
-Thus the Cancel and Discard button will have no effect for this page.</Source>
+          <Source>Changes on the selected page will be saved instantly. 
+Therefore the Cancel button does NOT revert any changes made.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="labelSettingsPageTitle" Property="Text" type="unfinished">
@@ -6502,6 +6570,10 @@ Context menu for additional operations</Source>
           <Source>Git Extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
+        <TranslationItem Name="btnDefaultDestinationBrowse" Property="Text" type="unfinished">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
         <TranslationItem Name="chkCheckForUncommittedChangesInCheckoutBranch" Property="Text" type="unfinished">
           <Source>Check for uncommitted changes in checkout branch dialog</Source>
           <Value />
@@ -6584,7 +6656,7 @@ Context menu for additional operations</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text" type="unfinished">
-          <Source>Server port</Source>
+          <Source>Port</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text" type="unfinished">
@@ -6595,6 +6667,10 @@ Context menu for additional operations</Source>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
           <Value>版本网格快速搜索超时[毫秒]</Value>
+        </TranslationItem>
+        <TranslationItem Name="lblDefaultCloneDestination" Property="Text" type="unfinished">
+          <Source>Default clone destination</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7031,6 +7107,14 @@ local settings.
           <Source>Edit .gitignore</Source>
           <Value>编辑.gitignore</Value>
         </TranslationItem>
+        <TranslationItem Name="GotoChildCommit" Property="Text" type="unfinished">
+          <Source>Go to child commit</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="GotoParentCommit" Property="Text" type="unfinished">
+          <Source>Go to parent commit</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="InitRepository" Property="Text" type="unfinished">
           <Source>Initialize repository</Source>
           <Value />
@@ -7039,9 +7123,37 @@ local settings.
           <Source>Message</Source>
           <Value>消息</Value>
         </TranslationItem>
+        <TranslationItem Name="NextQuickSearch" Property="Text" type="unfinished">
+          <Source>Quick search next</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="PrevQuickSearch" Property="Text" type="unfinished">
+          <Source>Quick search previous</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="QuickSearch" Property="Text" type="unfinished">
+          <Source>Quick search</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="ShowAllBranches" Property="Text" type="unfinished">
+          <Source>Show all branches</Source>
+          <Value>显示所有分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowCurrentBranchOnly" Property="Text" type="unfinished">
+          <Source>Show current branch only</Source>
+          <Value>只显示当前分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowFilteredBranches" Property="Text" type="unfinished">
+          <Source>Show filtered branches</Source>
+          <Value>显示过滤分支</Value>
+        </TranslationItem>
         <TranslationItem Name="ShowRemoteBranches" Property="Text">
           <Source>Show remote branches</Source>
           <Value>显示远程分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="ToggleHighlightSelectedBranch" Property="Text" type="unfinished">
+          <Source>Highlight selected branch (until refresh)</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_cannotHighlightSelectedBranch" Property="Text" type="unfinished">
           <Source>Cannot highlight selected branch when revision graph is loading.</Source>
@@ -7049,6 +7161,10 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="_droppingFilesBlocked" Property="Text" type="unfinished">
           <Source>For you own protection dropping more than 10 patch files at once is blocked!</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_quickSearchQuickHelp" Property="Text" type="unfinished">
+          <Source>Start typing in revision grid to start quick search.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
@@ -7316,12 +7432,20 @@ If this is a central repository (bare repository without a working dir):
           <Source>Ask for confirmation</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="scriptShowProgress" Property="Text" type="unfinished">
+          <Source>Show progress</Source>
+          <Value />
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ShellExtensionSettingsPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Shell extension</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="cbAlwaysShowAllCommands" Property="Text" type="unfinished">
+          <Source>Always show all commands</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
@@ -7407,8 +7531,9 @@ When OpenSSH is used, command line dialogs are shown!
     </TranslationCategory>
     <TranslationCategory Name="StartPageSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Start Page</Source>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Plugins Settings</Source>
+          <OldSource>Start Page</OldSource>
           <Value>起始页</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">

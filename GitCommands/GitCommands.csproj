@@ -64,6 +64,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -151,6 +152,7 @@
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="SynchronizedProcessReader.cs" />
     <Compile Include="System.cs" />
+    <Compile Include="Utils\JsonSerializer.cs" />
     <Compile Include="Utils\WeakRefCache.cs" />
     <Compile Include="XmlSerializableDictionary.cs" />
   </ItemGroup>
