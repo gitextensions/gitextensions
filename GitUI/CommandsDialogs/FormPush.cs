@@ -53,7 +53,11 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullRepository =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
                 "Merge the remote changes before pushing again.");
-        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with default pull action|Pull with rebase|Pull with merge|Force push|Cancel");
+        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with last pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel");
+        private readonly TranslationString _pullActionNone = new TranslationString("none");
+        private readonly TranslationString _pullActionFetch = new TranslationString("fetch");
+        private readonly TranslationString _pullActionRebase = new TranslationString("rebase");
+        private readonly TranslationString _pullActionMerge = new TranslationString("merge");
         private readonly TranslationString _pullRepositoryCaption = new TranslationString("Push was rejected from \"{0}\"");
         private readonly TranslationString _dontShowAgain = new TranslationString("Remember my decision.");
 
@@ -363,6 +367,23 @@ namespace GitUI.CommandsDialogs
                 {
                     bool cancel = false;
                     string destination = PushToRemote.Checked ? _NO_TRANSLATE_Remotes.Text : PushDestination.Text;
+                    string buttons = _pullRepositoryButtons.Text;
+                    switch (Module.LastPullAction)
+                    {
+                        case AppSettings.PullAction.Fetch:
+                        case AppSettings.PullAction.FetchAll:
+                            buttons = string.Format(buttons, _pullActionFetch.Text);
+                            break;
+                        case AppSettings.PullAction.Merge:
+                            buttons = string.Format(buttons, _pullActionMerge.Text);
+                            break;
+                        case AppSettings.PullAction.Rebase:
+                            buttons = string.Format(buttons, _pullActionRebase.Text);
+                            break;
+                        default:
+                            buttons = string.Format(buttons, _pullActionNone.Text);
+                            break;
+                    }
                     int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
                                     String.Format(_pullRepositoryCaption.Text, destination),
                                     _pullRepositoryMainInstruction.Text,
@@ -370,7 +391,7 @@ namespace GitUI.CommandsDialogs
                                     "",
                                     "",
                                     _dontShowAgain.Text,
-                                    _pullRepositoryButtons.Text,
+                                    buttons,
                                     true,
                                     0,
                                     0);

@@ -8,7 +8,7 @@
         <PropertyRef Id="NETFRAMEWORK40CLIENT" />
         <Condition Message=".NET Framework 4.0 must be installed prior to installation of Git Extensions.">
       Installed OR NETFRAMEWORK40CLIENT
-    </Condition>
+        </Condition>
         <Icon Id="gitextensions.ico" SourceFile="../bin/logo/git-extensions-logo-final-256.ico" />
         <?include AddRemove.wxi?>
         <?include EnableUpgrades.wxi?>
@@ -43,6 +43,9 @@
                 <Directory Id="StartMenuDir" Name="$(var.ProductName)" />
             </Directory>
             <Directory Id="DesktopFolder" />
+            <Component Id="Path" Guid="{DAC97FD8-A869-4458-AABD-C27D2C892643}">
+                <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
+            </Component>
         </Directory>
         <?define VsVersions = 2005;2008;2010;2012;2013?>
         <?foreach VsVersion in $(var.VsVersions)?>
@@ -101,7 +104,7 @@
                 <File Source="..\bin\ICSharpCode.SharpZipLib.dll" />
             </Component>
             <Component Id="Git.hub.dll" Guid="*">
-                <File Source="..\bin\Git.hub.dll" />
+                <File Source="..\Externals\Git.hub\Git.hub\bin\Release\Git.hub.dll" />
             </Component>
             <Component Id="PSTaskDialog.dll" Guid="*">
                 <File Source="..\bin\PSTaskDialog.dll" />
@@ -116,7 +119,7 @@
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.Shell.dll" />
             </Component>
             <Component Id="NBug.dll" Guid="*">
-                <File Source="..\packages\NBug.1.1.1\lib\net40-client\NBug.dll" />
+                <File Source="..\packages\NBug\lib\net40-client\NBug.dll" />
             </Component>
             <Component Id="SmartFormat.dll" Guid="*">
                 <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
@@ -632,6 +635,9 @@
             <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
                 <ComponentRef Id="GitExtensionsShellEx32.dll" />
                 <ComponentRef Id="GitExtensionsShellEx64.dll" />
+            </Feature>
+            <Feature Id="AddToPath" Title="Add installation directory to PATH" Level="1">
+                <ComponentRef Id="Path" />
             </Feature>
             <?foreach VsVersion in $(var.VsVersions)?>
             <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
