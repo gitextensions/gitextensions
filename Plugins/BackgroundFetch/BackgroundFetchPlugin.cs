@@ -12,6 +12,7 @@ namespace BackgroundFetch
         private IGitUICommands currentGitUiCommands;
         private const string FetchIntervalSetting = "Fetch every (seconds) - set to 0 to disable";
         private const string AutoRefreshSetting = "Refresh view after fetch (true / false)";
+        private const string FetchSubmodules = "Fetch submodules (true/false)";
 
         public override string Description
         {
@@ -24,6 +25,7 @@ namespace BackgroundFetch
 
             Settings.AddSetting(FetchIntervalSetting, "0");
             Settings.AddSetting(AutoRefreshSetting, "false");
+            Settings.AddSetting(FetchSubmodules, "false");
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -53,6 +55,11 @@ namespace BackgroundFetch
             if (!bool.TryParse(Settings.GetSetting(AutoRefreshSetting), out autoRefresh))
                 autoRefresh = false;
 
+            bool fetchSubMods;
+            if (!bool.TryParse(Settings.GetSetting(FetchSubmodules), out fetchSubMods))
+                fetchSubMods = false;
+
+
             var gitModule = currentGitUiCommands.GitModule;
             if (fetchInterval > 0 && GitModule.IsValidGitWorkingDir(gitModule.GitWorkingDir))
             {
@@ -64,8 +71,13 @@ namespace BackgroundFetch
                               .Subscribe(i =>
                                   {
                                       var msg = currentGitUiCommands.GitCommand("fetch --all");
+                                      // string subMod = "";
+                                      if (fetchSubMods)
+                                          currentGitUiCommands.GitCommand("submodule foreach --recursive git fetch --all");
+
                                       if (autoRefresh && msg.IndexOf("From", StringComparison.InvariantCultureIgnoreCase) > 0)
                                           currentGitUiCommands.RepoChangedNotifier.Notify();
+
                                   }
                                   );
             }
