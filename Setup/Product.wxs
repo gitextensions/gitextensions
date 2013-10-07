@@ -114,7 +114,7 @@
                 <File Source="..\bin\PSTaskDialog.dll" />
             </Component>
             <Component Id="RestSharp.dll" Guid="*">
-                <File Source="..\packages\RestSharp.104.1\lib\net4-client\RestSharp.dll" />
+                <File Source="..\packages\RestSharp.104.2.0\lib\net4-client\RestSharp.dll" />
             </Component>
             <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.dll" />
@@ -299,12 +299,12 @@
         </DirectoryRef>
         <DirectoryRef Id="NativeBinariesX86Dir">
             <Component Id="git2_x86.dll" Guid="*">
-                <File Id="git2_x86.dll" Source="..\libgit2sharp\Lib\NativeBinaries\x86\git2-32e4992.dll" />
+                <File Id="git2_x86.dll" Source="..\libgit2sharp\Lib\NativeBinaries\x86\git2-711333e.dll" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="NativeBinariesX64Dir">
             <Component Id="git2_x64.dll" Guid="*">
-                <File Id="git2_x64.dll" Source="..\libgit2sharp\Lib\NativeBinaries\amd64\git2-32e4992.dll" />
+                <File Id="git2_x64.dll" Source="..\libgit2sharp\Lib\NativeBinaries\amd64\git2-711333e.dll" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="DictionariesDir">
