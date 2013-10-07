@@ -6270,14 +6270,6 @@ También puede agregar la huella del host manualmente o ejecutar Probar conexió
           <Source>Host Fingerprint not registered</Source>
           <Value>Huella del host no registrada</Value>
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value>La clave del host del servidor no está almacenada en el registro.
-
-¿Desea confiar en esta clave del host e intentarlo de nuevo?</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -7235,6 +7227,14 @@ la configuración local.</Value>
         <TranslationItem Name="_pageantNotFound" Property="Text">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value>La clave del host del servidor no está almacenada en el registro.
+
+¿Desea confiar en esta clave del host e intentarlo de nuevo?</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text">
           <Source>Unable to determine upstream SVN information.</Source>

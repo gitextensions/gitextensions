@@ -6344,14 +6344,6 @@ Wollen Sie den Fingerprint dieses Hosts registrieren und den Prozess neu starten
           <Source>Host Fingerprint not registered</Source>
           <Value>Fingerprint von Host nicht registriert</Value>
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value>Der Host-Key des Servers ist nicht in der Registry vorhanden.
-
-Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -7316,6 +7308,14 @@ können.</Value>
         <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value>Der Host-Key des Servers ist nicht in der Registry vorhanden.
+
+Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text">
           <Source>Unable to determine upstream SVN information.</Source>
