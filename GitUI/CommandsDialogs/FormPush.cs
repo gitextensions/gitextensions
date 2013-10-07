@@ -63,9 +63,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullRepositoryCaption = new TranslationString("Push was rejected from \"{0}\"");
         private readonly TranslationString _dontShowAgain = new TranslationString("Remember my decision.");
 
-        private readonly TranslationString _serverHotkeyNotCachedText =
-            new TranslationString("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?");
-        
         #endregion
 
         private FormPush()
@@ -714,7 +711,7 @@ namespace GitUI.CommandsDialogs
 
                         if (!string.IsNullOrEmpty(remote))
                         {
-                            if (MessageBox.Show(this, _serverHotkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                            if (MessageBoxes.CacheHostkey(this))
                             {
                                 Module.RunExternalCmdShowConsole(
                                     "cmd.exe",

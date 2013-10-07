@@ -29,9 +29,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _questionOpenRepoCaption = 
             new TranslationString("Open");
 
-        private readonly TranslationString _serverHotkeyNotCachedText =
-            new TranslationString("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?");
-        
         private bool openedFromProtocolHandler;
         private readonly string url;
         private GitModuleChangedEventHandler GitModuleChanged;
@@ -276,7 +273,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!string.IsNullOrEmpty(remoteUrl))
                 {
-                    if (MessageBox.Show(this, _serverHotkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                    if (MessageBoxes.CacheHostkey(this))
                     {
                         Module.RunExternalCmdShowConsole(
                                 "cmd.exe",
