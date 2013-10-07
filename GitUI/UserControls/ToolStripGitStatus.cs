@@ -282,10 +282,10 @@ namespace GitUI
             if (_statusIsUpToDate)
             {
                 IList<string> submodules = Module.GetSubmodulesLocalPathes();
-                var stagedCount = entries.Count(status => status.State.HasFlag(FileStatus.Staged));
+                var stagedCount = entries.Count(status => status.IsStaged);
                 var unstagedCount = entries.Length - stagedCount;
-                var unstagedSubmodulesCount = entries.Count(status => submodules.Contains(status.FilePath) && 
-                    !status.State.HasFlag(FileStatus.Staged));
+                var unstagedSubmodulesCount = entries.Count(status => submodules.Contains(status.FilePath) &&
+                    !status.IsStaged);
 
                 Image = GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount);
 
