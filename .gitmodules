@@ -6,7 +6,7 @@
 	url = git://github.com/gitextensions/GitExtensionsDoc.git
 [submodule "libgit2sharp"]
 	path = libgit2sharp
-	url = git://github.com/libgit2/libgit2sharp.git
+	url = git://github.com/gitextensions/libgit2sharp.git
 [submodule "Externals/NBug"]
 	path = Externals/NBug
 	url = git://github.com/gitextensions/NBug.git
