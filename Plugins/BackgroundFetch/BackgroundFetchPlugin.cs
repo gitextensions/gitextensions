@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
+using System.Collections.Generic;
 
 namespace BackgroundFetch
 {
@@ -12,8 +13,15 @@ namespace BackgroundFetch
         private IGitUICommands currentGitUiCommands;
         private const string GitCommandSetting = "Arguments of git command to run";
         private const string FetchIntervalSetting = "Fetch every (seconds) - set to 0 to disable";
-        private const string AutoRefreshSetting = "Refresh view after fetch (true / false)";
         private const string FetchSubmodules = "Fetch all submodules (true/false)";
+
+        private BoolSetting AutoRefresh = new BoolSetting("Refresh view after fetch", false);
+
+        public IEnumerable<ISetting> GetSettings()
+        {
+            //return all settings or introduce implementation based on reflection on GitPluginBase level
+            yield return AutoRefresh;
+        }
 
         public override string Description
         {
@@ -25,7 +33,6 @@ namespace BackgroundFetch
             base.RegisterSettings();
 
             Settings.AddSetting(FetchIntervalSetting, "0");
-            Settings.AddSetting(AutoRefreshSetting, "false");
             Settings.AddSetting(GitCommandSetting, "fetch --all");
             Settings.AddSetting(FetchSubmodules, "false");
         }
@@ -82,8 +89,8 @@ namespace BackgroundFetch
                                           if (gitCmd.StartsWith("fetch", StringComparison.InvariantCultureIgnoreCase))
                                           {
                                               if (msg.Contains("From"))
-                                                  currentGitUiCommands.RepoChangedNotifier.Notify();
-                                          }
+                                          currentGitUiCommands.RepoChangedNotifier.Notify();
+                                  }
                                           else
                                               currentGitUiCommands.RepoChangedNotifier.Notify();
                                       }
