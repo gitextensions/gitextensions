@@ -263,23 +263,49 @@ namespace GitUI.CommandsDialogs
 
         private readonly AsyncLoader _branchListLoader = new AsyncLoader();
 
-        private void UpdateBranches(IList<GitRef> branchList)
+        private void UpdateBranches(RemoteActionResult<IList<GitRef>> branchList)
         {
-            string text = Branches.Text;
-            Branches.DataSource = branchList;
-            if (branchList.Any(a => a.LocalName == text))
-            {
-                Branches.Text = text;
-            }
             Cursor = Cursors.Default;
+
+            if (branchList.HostKeyFail)
+            {
+                string remoteUrl = _NO_TRANSLATE_From.Text;
+
+                if (FormRemoteProcess.AskForCacheHostkey(this, Module, remoteUrl))
+                {
+                    LoadBranches();
+                }
+            }
+            else if (branchList.AuthenticationFail)
+            {
+                string loadedKey;
+                if (FormPuttyError.AskForKey(this, out loadedKey))
+                {
+                    LoadBranches();
+                }
+            }
+            else
+            {
+                string text = Branches.Text;
+                Branches.DataSource = branchList.Result;
+                if (branchList.Result.Any(a => a.LocalName == text))
+                {
+                    Branches.Text = text;
+                }
+            }
         }
 
-        private void Branches_DropDown(object sender, EventArgs e)
+        private void LoadBranches()
         {
             Branches.DisplayMember = "LocalName";
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
             _branchListLoader.Load(() => Module.GetRemoteRefs(from, false, true), UpdateBranches);
+        }
+
+        private void Branches_DropDown(object sender, EventArgs e)
+        {
+            LoadBranches();
         }
     }
 }
