@@ -709,16 +709,9 @@ namespace GitUI.CommandsDialogs
                         if (string.IsNullOrEmpty(remoteUrl))
                             remoteUrl = remote;
 
-                        if (!string.IsNullOrEmpty(remote))
+                        if (FormRemoteProcess.AskForCacheHostkey(this, Module, remoteUrl))
                         {
-                            if (MessageBoxes.CacheHostkey(this))
-                            {
-                                Module.RunExternalCmdShowConsole(
-                                    "cmd.exe",
-                                    string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, remoteUrl));
-
-                                LoadMultiBranchViewData(remote, localHeads);
-                            }
+                            LoadMultiBranchViewData(remote, localHeads);
                         }
                     }
                     else if (remoteHeads.AuthenticationFail)

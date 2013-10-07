@@ -124,21 +124,30 @@ namespace GitUI
                     }
                     else
                         remoteUrl = UrlTryingToConnect;
-                    if (!string.IsNullOrEmpty(remoteUrl))
-                        if (MessageBoxes.CacheHostkey(this))
-                        {
-                            Module.RunExternalCmdShowConsole(
-                                "cmd.exe",
-                                string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, remoteUrl));
 
-                            Retry();
-                            return true;
-                        }
-
+                    if (AskForCacheHostkey(this, Module, remoteUrl))
+                    {
+                        Retry();
+                        return true;
+                    }
                 }
             }
 
             return base.HandleOnExit(ref isError);
+        }
+
+        public static bool AskForCacheHostkey(IWin32Window owner, GitModule module, string remoteUrl)
+        {
+            if (!remoteUrl.IsNullOrEmpty() && MessageBoxes.CacheHostkey(owner))
+            {
+                module.RunExternalCmdShowConsole(
+                    "cmd.exe",
+                    string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, remoteUrl));
+
+                return true;
+            }
+
+            return false;
         }
 
         protected override void DataReceived(object sender, DataReceivedEventArgs e)
