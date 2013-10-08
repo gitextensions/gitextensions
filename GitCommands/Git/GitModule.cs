@@ -2269,9 +2269,6 @@ namespace GitCommands
 
         public IList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode)
         {
-            if (!GitCommandHelpers.VersionInUse.SupportGitStatusPorcelain)
-                throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
-
             string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
             string status = RunGitCmd(command);
             return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
@@ -2871,10 +2868,7 @@ namespace GitCommands
                 oldFileName = oldFileName.Quote();
 
             string args = string.Join(" ", extraDiffArguments, revision2.QuoteNE(), revision1.QuoteNE(), "--", filename, oldFileName);
-            if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
                 RunGitCmdDetached("difftool --gui --no-prompt " + args);
-            else
-                output = RunGitCmd("difftool --no-prompt " + args);
             return output;
         }
 
