@@ -307,7 +307,7 @@ namespace GitUI.Script
                 }
             }
 
-            if (scriptInfo.ShowProgress)
+            if (!scriptInfo.RunInBackground)
                 FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
             else
                 aModule.RunExternalCmdDetached(command, argument);

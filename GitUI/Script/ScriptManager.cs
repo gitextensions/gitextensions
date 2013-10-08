@@ -95,7 +95,7 @@ namespace GitUI.Script
             fetchAfterCommitScript.Name = "Fetch changes after commit";
             fetchAfterCommitScript.Command = "git";
             fetchAfterCommitScript.Arguments = "fetch";
-            fetchAfterCommitScript.ShowProgress = true;
+            fetchAfterCommitScript.RunInBackground = false;
             fetchAfterCommitScript.AskConfirmation = true;
             fetchAfterCommitScript.OnEvent = ScriptEvent.AfterCommit;
             fetchAfterCommitScript.AddToRevisionGridContextMenu = false;
@@ -107,7 +107,7 @@ namespace GitUI.Script
             updateSubmodulesAfterPullScript.Name = "Update submodules after pull";
             updateSubmodulesAfterPullScript.Command = "git";
             updateSubmodulesAfterPullScript.Arguments = "submodule update --init --recursive";
-            updateSubmodulesAfterPullScript.ShowProgress = true;
+            updateSubmodulesAfterPullScript.RunInBackground = false;
             updateSubmodulesAfterPullScript.AskConfirmation = true;
             updateSubmodulesAfterPullScript.OnEvent = ScriptEvent.AfterPull;
             updateSubmodulesAfterPullScript.AddToRevisionGridContextMenu = false;
@@ -119,7 +119,7 @@ namespace GitUI.Script
             userMenuScript.Name = "Example";
             userMenuScript.Command = "c:\\windows\\system32\\calc.exe";
             userMenuScript.Arguments = "";
-            userMenuScript.ShowProgress = false;
+            userMenuScript.RunInBackground = false;
             userMenuScript.AskConfirmation = false;
             userMenuScript.OnEvent = ScriptEvent.ShowInUserMenuBar;
             userMenuScript.AddToRevisionGridContextMenu = false;
@@ -131,7 +131,7 @@ namespace GitUI.Script
             openHashOnGitHub.Name = "Open on GitHub";
             openHashOnGitHub.Command = "{openurl}";
             openHashOnGitHub.Arguments = "https://github.com{cDefaultRemotePathFromUrl}/commit/{sHash}";
-            openHashOnGitHub.ShowProgress = false;
+            openHashOnGitHub.RunInBackground = false;
             openHashOnGitHub.AskConfirmation = false;
             openHashOnGitHub.OnEvent = 0;
             openHashOnGitHub.AddToRevisionGridContextMenu = true;
@@ -159,7 +159,7 @@ namespace GitUI.Script
                     scriptInfo.Arguments = parameters[2];
                     scriptInfo.AddToRevisionGridContextMenu = parameters[3].Equals("yes");
                     scriptInfo.Enabled = true;
-                    scriptInfo.ShowProgress = true;
+                    scriptInfo.RunInBackground = false;
 
                     Scripts.Add(scriptInfo);
                 }
