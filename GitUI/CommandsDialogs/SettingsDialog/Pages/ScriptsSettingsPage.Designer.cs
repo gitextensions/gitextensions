@@ -61,7 +61,7 @@
             this.argumentsLabel = new System.Windows.Forms.Label();
             this.buttonShowArgumentsHelp = new System.Windows.Forms.Button();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
-            this.scriptShowProgress = new System.Windows.Forms.CheckBox();
+            this.scriptRunInBackground = new System.Windows.Forms.CheckBox();
             this.inMenuCheckBox = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).BeginInit();
@@ -90,7 +90,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(742, 436);
-            this.tableLayoutPanel1.TabIndex = 25;
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
             // ScriptList
             // 
@@ -111,7 +111,7 @@
             this.ScriptList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ScriptList.ShowCellErrors = false;
             this.ScriptList.Size = new System.Drawing.Size(640, 224);
-            this.ScriptList.TabIndex = 18;
+            this.ScriptList.TabIndex = 0;
             this.ScriptList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ScriptList_CellClick);
             this.ScriptList.SelectionChanged += new System.EventHandler(this.ScriptList_SelectionChanged);
             // 
@@ -155,7 +155,7 @@
             this.panel1.Location = new System.Drawing.Point(649, 3);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(90, 224);
-            this.panel1.TabIndex = 0;
+            this.panel1.TabIndex = 1;
             // 
             // addScriptButton
             // 
@@ -163,7 +163,7 @@
             this.addScriptButton.Location = new System.Drawing.Point(7, 86);
             this.addScriptButton.Name = "addScriptButton";
             this.addScriptButton.Size = new System.Drawing.Size(75, 25);
-            this.addScriptButton.TabIndex = 2;
+            this.addScriptButton.TabIndex = 1;
             this.addScriptButton.Text = "Add";
             this.addScriptButton.UseVisualStyleBackColor = true;
             this.addScriptButton.Click += new System.EventHandler(this.addScriptButton_Click);
@@ -176,7 +176,7 @@
             this.moveUpButton.Location = new System.Drawing.Point(32, 57);
             this.moveUpButton.Name = "moveUpButton";
             this.moveUpButton.Size = new System.Drawing.Size(26, 23);
-            this.moveUpButton.TabIndex = 1;
+            this.moveUpButton.TabIndex = 0;
             this.moveUpButton.UseVisualStyleBackColor = true;
             this.moveUpButton.Click += new System.EventHandler(this.moveUpButton_Click);
             // 
@@ -187,7 +187,7 @@
             this.removeScriptButton.Location = new System.Drawing.Point(7, 117);
             this.removeScriptButton.Name = "removeScriptButton";
             this.removeScriptButton.Size = new System.Drawing.Size(75, 25);
-            this.removeScriptButton.TabIndex = 4;
+            this.removeScriptButton.TabIndex = 2;
             this.removeScriptButton.Text = "Remove";
             this.removeScriptButton.UseVisualStyleBackColor = true;
             this.removeScriptButton.Click += new System.EventHandler(this.removeScriptButton_Click);
@@ -200,7 +200,7 @@
             this.moveDownButton.Location = new System.Drawing.Point(32, 148);
             this.moveDownButton.Name = "moveDownButton";
             this.moveDownButton.Size = new System.Drawing.Size(26, 23);
-            this.moveDownButton.TabIndex = 5;
+            this.moveDownButton.TabIndex = 3;
             this.moveDownButton.UseVisualStyleBackColor = true;
             this.moveDownButton.Click += new System.EventHandler(this.moveDownButton_Click);
             // 
@@ -228,7 +228,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(640, 180);
-            this.tableLayoutPanel2.TabIndex = 19;
+            this.tableLayoutPanel2.TabIndex = 2;
             // 
             // flowLayoutPanel3
             // 
@@ -240,7 +240,7 @@
             this.flowLayoutPanel3.Location = new System.Drawing.Point(90, 146);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(547, 31);
-            this.flowLayoutPanel3.TabIndex = 26;
+            this.flowLayoutPanel3.TabIndex = 4;
             // 
             // scriptEvent
             // 
@@ -250,7 +250,7 @@
             this.scriptEvent.Location = new System.Drawing.Point(3, 4);
             this.scriptEvent.Name = "scriptEvent";
             this.scriptEvent.Size = new System.Drawing.Size(208, 23);
-            this.scriptEvent.TabIndex = 19;
+            this.scriptEvent.TabIndex = 0;
             this.scriptEvent.SelectedIndexChanged += new System.EventHandler(this.scriptEvent_SelectedIndexChanged);
             this.scriptEvent.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
@@ -261,7 +261,7 @@
             this.lbl_icon.Location = new System.Drawing.Point(217, 8);
             this.lbl_icon.Name = "lbl_icon";
             this.lbl_icon.Size = new System.Drawing.Size(33, 15);
-            this.lbl_icon.TabIndex = 23;
+            this.lbl_icon.TabIndex = 1;
             this.lbl_icon.Text = "Icon:";
             this.lbl_icon.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_icon.Visible = false;
@@ -276,7 +276,7 @@
             this.sbtn_icon.Name = "sbtn_icon";
             this.sbtn_icon.Size = new System.Drawing.Size(92, 25);
             this.sbtn_icon.SplitMenuStrip = this.contextMenuStrip_SplitButton;
-            this.sbtn_icon.TabIndex = 22;
+            this.sbtn_icon.TabIndex = 2;
             this.sbtn_icon.Text = "Select icon";
             this.sbtn_icon.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.sbtn_icon.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -308,7 +308,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(90, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(547, 34);
-            this.flowLayoutPanel1.TabIndex = 13;
+            this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
             // 
             // nameTextBox
@@ -317,7 +317,7 @@
             this.nameTextBox.Location = new System.Drawing.Point(3, 3);
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(160, 23);
-            this.nameTextBox.TabIndex = 6;
+            this.nameTextBox.TabIndex = 0;
             this.nameTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // scriptEnabled
@@ -327,7 +327,7 @@
             this.scriptEnabled.Location = new System.Drawing.Point(169, 7);
             this.scriptEnabled.Name = "scriptEnabled";
             this.scriptEnabled.Size = new System.Drawing.Size(68, 19);
-            this.scriptEnabled.TabIndex = 18;
+            this.scriptEnabled.TabIndex = 1;
             this.scriptEnabled.Text = "Enabled";
             this.scriptEnabled.UseVisualStyleBackColor = true;
             this.scriptEnabled.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
@@ -339,7 +339,7 @@
             this.scriptNeedsConfirmation.Location = new System.Drawing.Point(243, 7);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
             this.scriptNeedsConfirmation.Size = new System.Drawing.Size(135, 19);
-            this.scriptNeedsConfirmation.TabIndex = 21;
+            this.scriptNeedsConfirmation.TabIndex = 2;
             this.scriptNeedsConfirmation.Text = "Ask for confirmation";
             this.scriptNeedsConfirmation.UseVisualStyleBackColor = true;
             this.scriptNeedsConfirmation.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
@@ -362,7 +362,7 @@
             this.flowLayoutPanel2.Location = new System.Drawing.Point(90, 74);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(547, 34);
-            this.flowLayoutPanel2.TabIndex = 14;
+            this.flowLayoutPanel2.TabIndex = 2;
             // 
             // commandTextBox
             // 
@@ -370,7 +370,7 @@
             this.commandTextBox.Location = new System.Drawing.Point(3, 4);
             this.commandTextBox.Name = "commandTextBox";
             this.commandTextBox.Size = new System.Drawing.Size(388, 23);
-            this.commandTextBox.TabIndex = 7;
+            this.commandTextBox.TabIndex = 0;
             this.commandTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // browseScriptButton
@@ -379,7 +379,7 @@
             this.browseScriptButton.Location = new System.Drawing.Point(397, 3);
             this.browseScriptButton.Name = "browseScriptButton";
             this.browseScriptButton.Size = new System.Drawing.Size(102, 25);
-            this.browseScriptButton.TabIndex = 11;
+            this.browseScriptButton.TabIndex = 1;
             this.browseScriptButton.Text = "Browse";
             this.browseScriptButton.UseVisualStyleBackColor = true;
             this.browseScriptButton.Click += new System.EventHandler(this.browseScriptButton_Click);
@@ -391,7 +391,7 @@
             this.argumentsTextBox.Location = new System.Drawing.Point(90, 114);
             this.argumentsTextBox.Name = "argumentsTextBox";
             this.argumentsTextBox.Size = new System.Drawing.Size(547, 26);
-            this.argumentsTextBox.TabIndex = 8;
+            this.argumentsTextBox.TabIndex = 3;
             this.argumentsTextBox.Text = "";
             this.argumentsTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
@@ -432,6 +432,7 @@
             this.buttonShowArgumentsHelp.Name = "buttonShowArgumentsHelp";
             this.buttonShowArgumentsHelp.Size = new System.Drawing.Size(75, 23);
             this.buttonShowArgumentsHelp.TabIndex = 15;
+            this.buttonShowArgumentsHelp.TabStop = false;
             this.buttonShowArgumentsHelp.Text = "Help";
             this.buttonShowArgumentsHelp.UseVisualStyleBackColor = true;
             this.buttonShowArgumentsHelp.Click += new System.EventHandler(this.buttonShowArgumentsHelp_Click);
@@ -439,34 +440,34 @@
             // flowLayoutPanel5
             // 
             this.flowLayoutPanel5.AutoSize = true;
-            this.flowLayoutPanel5.Controls.Add(this.scriptShowProgress);
+            this.flowLayoutPanel5.Controls.Add(this.scriptRunInBackground);
             this.flowLayoutPanel5.Controls.Add(this.inMenuCheckBox);
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel5.Location = new System.Drawing.Point(90, 43);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
             this.flowLayoutPanel5.Size = new System.Drawing.Size(547, 25);
-            this.flowLayoutPanel5.TabIndex = 28;
+            this.flowLayoutPanel5.TabIndex = 1;
             // 
-            // scriptShowProgress
+            // scriptRunInBackground
             // 
-            this.scriptShowProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.scriptShowProgress.AutoSize = true;
-            this.scriptShowProgress.Location = new System.Drawing.Point(3, 3);
-            this.scriptShowProgress.Name = "scriptShowProgress";
-            this.scriptShowProgress.Size = new System.Drawing.Size(103, 19);
-            this.scriptShowProgress.TabIndex = 16;
-            this.scriptShowProgress.Text = "Show progress";
-            this.scriptShowProgress.UseVisualStyleBackColor = true;
-            this.scriptShowProgress.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
+            this.scriptRunInBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.scriptRunInBackground.AutoSize = true;
+            this.scriptRunInBackground.Location = new System.Drawing.Point(3, 3);
+            this.scriptRunInBackground.Name = "scriptRunInBackground";
+            this.scriptRunInBackground.Size = new System.Drawing.Size(127, 19);
+            this.scriptRunInBackground.TabIndex = 0;
+            this.scriptRunInBackground.Text = "Run in background";
+            this.scriptRunInBackground.UseVisualStyleBackColor = true;
+            this.scriptRunInBackground.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // inMenuCheckBox
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(112, 3);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(136, 3);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(206, 19);
-            this.inMenuCheckBox.TabIndex = 15;
+            this.inMenuCheckBox.TabIndex = 1;
             this.inMenuCheckBox.Text = "Add to revision grid context menu";
             this.inMenuCheckBox.UseVisualStyleBackColor = true;
             this.inMenuCheckBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
@@ -532,6 +533,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.Button buttonShowArgumentsHelp;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
-        private System.Windows.Forms.CheckBox scriptShowProgress;
+        private System.Windows.Forms.CheckBox scriptRunInBackground;
     }
 }

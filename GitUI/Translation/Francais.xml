@@ -7590,7 +7590,11 @@ Si c'est un dépôt central (dépôt nu sans répertoire de travail) :
           <Source>Ask for confirmation</Source>
           <Value>Demander une confirmation</Value>
         </TranslationItem>
-        <TranslationItem Name="scriptShowProgress" Property="Text">
+        <TranslationItem Name="scriptRunInBackground" Property="Text">
+          <Source>Run in background</Source>
+          <Value>Lancer en arrière-plan</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptShowProgress" Property="Text" type="obsolete">
           <Source>Show progress</Source>
           <Value>Afficher l'avancement</Value>
         </TranslationItem>
