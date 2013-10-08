@@ -6208,14 +6208,6 @@ Voulez'vous enregister l'empreinte de l'hôte et relancer le processus?</Value>
           <Source>Host Fingerprint not registered</Source>
           <Value>L'empreinte de l'hôte n'est pas enregistré</Value>
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value>La clé d'hôte du serveur n'est pas caché dans le registre.
-
-Avez vous confiance en cet hôte et souhaitez réessayer?</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -7184,6 +7176,14 @@ local settings.
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>Impossible de charger la clef SSH. PuTTY n'est pas configuré correctement.</Value>
         </TranslationItem>
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value>La clé d'hôte du serveur n'est pas caché dans le registre.
+
+Avez vous confiance en cet hôte et souhaitez réessayer?</Value>
+        </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text">
           <Source>Unable to determine upstream SVN information.</Source>
           <Value>Impossible de déterminer les information SVN upstream</Value>
@@ -7590,7 +7590,11 @@ Si c'est un dépôt central (dépôt nu sans répertoire de travail) :
           <Source>Ask for confirmation</Source>
           <Value>Demander une confirmation</Value>
         </TranslationItem>
-        <TranslationItem Name="scriptShowProgress" Property="Text">
+        <TranslationItem Name="scriptRunInBackground" Property="Text">
+          <Source>Run in background</Source>
+          <Value>Lancer en arrière-plan</Value>
+        </TranslationItem>
+        <TranslationItem Name="scriptShowProgress" Property="Text" type="obsolete">
           <Source>Show progress</Source>
           <Value>Afficher l'avancement</Value>
         </TranslationItem>

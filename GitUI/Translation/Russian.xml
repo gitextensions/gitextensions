@@ -663,7 +663,7 @@ Value:  {2} = {3}</Source>
         </TranslationItem>
         <TranslationItem Name="chkAmend" Property="Text">
           <Source>Amend last commit</Source>
-          <Value>Присоединить к последнему коммиту</Value>
+          <Value>Изменить последний коммит</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterCheckout" Property="Text" type="unfinished">
           <Source>Apply stashed changes after successful checkout (stash will be popped automatically)</Source>
@@ -1473,7 +1473,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Source>Solve conflicts</Source>
-          <Value>Решить конфликты</Value>
+          <Value>Разрешить конфликты</Value>
         </TranslationItem>
         <TranslationItem Name="PatchDirMode" Property="Text">
           <Source>Patch dir</Source>
@@ -1572,10 +1572,11 @@ You will have push access. {2}</Source>
           <Source>This revision will be archived:</Source>
           <Value>Эта ревизия будет архивированна:</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
 revision:</Source>
-          <Value />
+          <Value>Выберите другую
+ревизию:</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text" type="unfinished">
           <Source>separate each new path by new line</Source>
@@ -2160,7 +2161,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem1" Property="Text">
           <Source>Rebase</Source>
-          <Value>Перебазировать ветвь</Value>
+          <Value>Перебазировать</Value>
         </TranslationItem>
         <TranslationItem Name="recentToolStripMenuItem" Property="Text">
           <Source>Recent Repositories</Source>
@@ -2212,7 +2213,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Source>Solve mergeconflicts...</Source>
-          <Value>Решить конфликты...</Value>
+          <Value>Разрешить конфликты...</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
           <Source>Save as...</Source>
@@ -2522,10 +2523,11 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Date</Source>
           <Value>Дата</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
 revision:</Source>
-          <Value />
+          <Value>Выберите другую
+ревизию:</Value>
         </TranslationItem>
         <TranslationItem Name="_cmdExecutedMsgBox" Property="Text" type="obsolete">
           <Source>Command executed</Source>
@@ -2601,23 +2603,23 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="Preview" Property="Text">
           <Source>Preview</Source>
-          <Value>Предварительный просмотр</Value>
+          <Value>Предпросмотр</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveAll" Property="Text">
           <Source>Remove all untracked files</Source>
-          <Value>Удалить все untracked файлы</Value>
+          <Value>Удалить все неотслеживаемые файлы</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveDirectories" Property="Text">
           <Source>Remove untracked directories</Source>
-          <Value>Удалить untracked директории</Value>
+          <Value>Удалить неотслеживаемые директории</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveIngnored" Property="Text">
           <Source>Remove only ignored untracked files</Source>
-          <Value>Удалить только игнорируемые untracked файлы</Value>
+          <Value>Удалить только игнорируемые неотслеживаемые файлы</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveNonIgnored" Property="Text">
           <Source>Remove only non-ignored untracked files</Source>
-          <Value>Удалить только неигнорируемые untracked файлы</Value>
+          <Value>Удалить только неигнорируемые неотслеживаемые файлы</Value>
         </TranslationItem>
         <TranslationItem Name="_reallyCleanupQuestion" Property="Text">
           <Source>Are you sure you want to cleanup the repository?</Source>
@@ -3337,9 +3339,9 @@ Choose 'No' to keep all new files.</Source>
           <Source>Checkout after create</Source>
           <Value>Переключиться после создания</Value>
         </TranslationItem>
-        <TranslationItem Name="ClearOrphan" Property="Text" type="unfinished">
+        <TranslationItem Name="ClearOrphan" Property="Text">
           <Source>Clear working dir and index</Source>
-          <Value />
+          <Value>Очистить рабочую папку и индекс</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Create branch</Source>
@@ -3369,9 +3371,9 @@ Choose 'No' to keep all new files.</Source>
           <Source>Branch name</Source>
           <Value>Имя ветви</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Create branch at this revision</Source>
-          <Value />
+          <Value>Создать ветвь на этой ревизие</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>or choose another one.</Source>
@@ -3421,9 +3423,9 @@ Choose 'No' to keep all new files.</Source>
           <Source>Message</Source>
           <Value>Сообщение</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>Create tag at this revision</Source>
-          <Value />
+          <Value>Создать метку на эту ревтзию</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text">
           <Source>or choose another one.</Source>
@@ -3526,21 +3528,21 @@ this using `force delete´.
           <Source>Delete</Source>
           <Value>Удалить</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteTag" Property="Text" type="unfinished">
+        <TranslationItem Name="deleteTag" Property="Text">
           <Source>Delete tag also from the following remote(s):</Source>
-          <Value />
+          <Value>Удалить метку также из внешнего репозитория:</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select tag</Source>
           <Value>Выбор метки</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>This will delete the selected tag from the (local) repository.</Source>
-          <Value />
+          <Value>Команда удалит выбранную метку из (локального) репозитория.</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>(includes information about deleting tags which are already pushed)</Source>
-          <Value />
+          <Value>(включая информацию о удаляемой метке которая уже отправленна)</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteTagMessageBoxCaption" Property="Text" type="obsolete">
           <Source>Delete Tag</Source>
@@ -3839,13 +3841,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>To</Source>
           <Value>Кому</Value>
         </TranslationItem>
-        <TranslationItem Name="radioButton1" Property="Text" type="unfinished">
+        <TranslationItem Name="radioButton1" Property="Text">
           <Source>Mail patches from</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="SendToMail" Property="Text" type="obsolete">
-          <Source>Mail patches to</Source>
-          <Value>Отправить патчи по почте</Value>
+          <Value>Отправить патчи от</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4449,9 +4447,9 @@ ancestor tree. </Source>
           <Source>Always create a new merge commit</Source>
           <Value>Всегда создавать merge commit</Value>
         </TranslationItem>
-        <TranslationItem Name="squash" Property="Text" type="unfinished">
+        <TranslationItem Name="squash" Property="Text">
           <Source>Squash commits</Source>
-          <Value />
+          <Value>Объединить коммиты в один</Value>
         </TranslationItem>
         <TranslationItem Name="strategyHelp" Property="Text">
           <Source>Help</Source>
@@ -4541,7 +4539,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Source>Solve conflicts</Source>
-          <Value>Решить конфликты</Value>
+          <Value>Разрешить конфликты</Value>
         </TranslationItem>
         <TranslationItem Name="NoTags" Property="Text">
           <Source>Fetch no tag</Source>
@@ -4559,9 +4557,9 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
           <Source>Url</Source>
           <Value>Url</Value>
         </TranslationItem>
-        <TranslationItem Name="ReachableTags" Property="Text" type="unfinished">
+        <TranslationItem Name="ReachableTags" Property="Text">
           <Source>Follow tagopt, if not specified, fetch tags reachable from remote HEAD</Source>
-          <Value />
+          <Value>Следовать tagopt, если не указан, забрать теги доступные с внешней HEAD ветки</Value>
         </TranslationItem>
         <TranslationItem Name="Rebase" Property="Text">
           <Source>&amp;Rebase current branch on top of remote branch, creates linear history (use with caution)</Source>
@@ -4951,7 +4949,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Source>Solve conflicts</Source>
-          <Value>Решить конфликты</Value>
+          <Value>Разрешить конфликты</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Rebase</Source>
@@ -5009,23 +5007,23 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="chkInteractive" Property="Text">
           <Source>Interactive Rebase</Source>
-          <Value>Интерактивный rebase</Value>
+          <Value>Интерактивный процесс</Value>
         </TranslationItem>
-        <TranslationItem Name="chkPreserveMerges" Property="Text" type="unfinished">
+        <TranslationItem Name="chkPreserveMerges" Property="Text">
           <Source>Preserve Merges</Source>
-          <Value />
+          <Value>Сохранять объединения ветвей</Value>
         </TranslationItem>
-        <TranslationItem Name="chkSpecificRange" Property="Text" type="unfinished">
+        <TranslationItem Name="chkSpecificRange" Property="Text">
           <Source>Specific range</Source>
-          <Value />
+          <Value>Указанный диапазон</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Rebase current branch on top of another branch</Source>
           <Value>Перебазировать текущую ветвь на верхушке другой</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Rebase on</Source>
-          <Value />
+          <Value>Перебазировать на</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Commits to re-apply:</Source>
@@ -5037,7 +5035,7 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="lblRangeFrom" Property="Text" type="unfinished">
           <Source>From (exc.)</Source>
-          <Value />
+          <Value>От (искл.)</Value>
         </TranslationItem>
         <TranslationItem Name="lblRangeTo" Property="Text">
           <Source>To</Source>
@@ -6124,12 +6122,6 @@ Do you want to register the host's fingerprint and restart the process?</Source>
           <Source>Host Fingerprint not registered</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value />
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -6249,7 +6241,7 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Svn repository to clone</Source>
-          <Value>SVN репозиторий для клонирования</Value>
+          <Value>SVN репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Destination</Source>
@@ -6257,7 +6249,7 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Subdirectory to create</Source>
-          <Value>Поддиректория для создания</Value>
+          <Value>Подкаталог для создания</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text">
           <Source>Authors file</Source>
@@ -6380,6 +6372,34 @@ Do you want to select a language code first?</Source>
         <TranslationItem Name="toolStripButtonNew" Property="ToolTipText" type="obsolete">
           <Source>Create new translation</Source>
           <Value>Создать новый перевод</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormUpdates">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Check for update</Source>
+          <Value>Проверить на наличие обновлений</Value>
+        </TranslationItem>
+        <TranslationItem Name="UpdateLabel" Property="Text">
+          <Source>Searching for updates</Source>
+          <Value>Поиск обновлений</Value>
+        </TranslationItem>
+        <TranslationItem Name="_newVersionAvailable" Property="Text">
+          <Source>There is a new version available</Source>
+          <Value>Доступна новая версия</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noUpdatesFound" Property="Text">
+          <Source>No updates found</Source>
+          <Value>Обновлений не найдено</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeButton" Property="Text">
+          <Source>Close</Source>
+          <Value>Закрыть</Value>
+        </TranslationItem>
+        <TranslationItem Name="linkChangeLog" Property="Text">
+          <Source>Show ChangeLog</Source>
+          <Value>Показать список изменений</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7081,6 +7101,12 @@ local settings.
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>Не удалось загрузить SSH ключ. PuTTY не настроен должным образом.</Value>
         </TranslationItem>
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text" type="unfinished">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
           <Value />
@@ -7205,9 +7231,9 @@ local settings.
           <Source>Show remote branches</Source>
           <Value>Показывать внешние ветви</Value>
         </TranslationItem>
-        <TranslationItem Name="ToggleHighlightSelectedBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="ToggleHighlightSelectedBranch" Property="Text">
           <Source>Highlight selected branch (until refresh)</Source>
-          <Value />
+          <Value>Подсветить выделенную ветвь (до обновления)</Value>
         </TranslationItem>
         <TranslationItem Name="_cannotHighlightSelectedBranch" Property="Text" type="unfinished">
           <Source>Cannot highlight selected branch when revision graph is loading.</Source>
@@ -7675,10 +7701,6 @@ When OpenSSH is used, command line dialogs are shown!
         <TranslationItem Name="_yearsAgo" Property="Text">
           <Source>{0} {1:year|years} ago</Source>
           <Value>{0} {1:год|года/лет} назад</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Не удалось загрузить ключ. PuTTY не настроен должным образом.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

@@ -352,41 +352,29 @@
             <Component Id="Dutch.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Dutch.gif" />
             </Component>
-            <Component Id="German.xml" Guid="*">
-                <File Source="..\GitUI\Translation\German.xml" />
-            </Component>
-            <Component Id="German.gif" Guid="*">
-                <File Source="..\GitUI\Translation\German.gif" />
-            </Component>
             <Component Id="Francais.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Francais.xml" />
             </Component>
             <Component Id="Francais.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Francais.gif" />
             </Component>
-            <Component Id="Italiano.xml" Guid="*">
+            <Component Id="German.xml" Guid="*">
+                <File Source="..\GitUI\Translation\German.xml" />
+            </Component>
+            <Component Id="German.gif" Guid="*">
+                <File Source="..\GitUI\Translation\German.gif" />
+            </Component>
+            <!--Component Id="Italiano.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Italiano.xml" />
             </Component>
             <Component Id="Italiano.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Italiano.gif" />
-            </Component>
+            </Component-->
             <Component Id="Japanese.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.xml" />
             </Component>
             <Component Id="Japanese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.gif" />
-            </Component>
-            <Component Id="SimplifiedChinese.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Simplified Chinese.xml" />
-            </Component>
-            <Component Id="SimplifiedChinese.gif" Guid="*">
-                <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
-            </Component>
-            <Component Id="Spanish.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Spanish.xml" />
-            </Component>
-            <Component Id="Spanish.gif" Guid="*">
-                <File Source="..\GitUI\Translation\Spanish.gif" />
             </Component>
             <Component Id="Russian.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.xml" />
@@ -394,12 +382,24 @@
             <Component Id="Russian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.gif" />
             </Component>
-            <Component Id="TraditionalChinese.xml" Guid="*">
+            <!--Component Id="SimplifiedChinese.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Simplified Chinese.xml" />
+            </Component>
+            <Component Id="SimplifiedChinese.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
+            </Component-->
+            <Component Id="Spanish.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Spanish.xml" />
+            </Component>
+            <Component Id="Spanish.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Spanish.gif" />
+            </Component>
+            <!--Component Id="TraditionalChinese.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Traditional Chinese.xml" />
             </Component>
             <Component Id="TraditionalChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Traditional Chinese.gif" />
-            </Component>
+            </Component-->
         </DirectoryRef>
         <DirectoryRef Id="GitCredentialWinStoreDir">
             <Component Id="gitcredentialwinstore.exe" Guid="*">
@@ -625,38 +625,38 @@
                     <ComponentRef Id="Dutch.xml" />
                     <ComponentRef Id="Dutch.gif" />
                 </Feature>
-                <Feature Id="German" Title="German" Level="1">
-                    <ComponentRef Id="German.xml" />
-                    <ComponentRef Id="German.gif" />
-                </Feature>
                 <Feature Id="Francais" Title="Francais" Level="1">
                     <ComponentRef Id="Francais.xml" />
                     <ComponentRef Id="Francais.gif" />
                 </Feature>
+                <Feature Id="German" Title="German" Level="1">
+                    <ComponentRef Id="German.xml" />
+                    <ComponentRef Id="German.gif" />
+                </Feature>
+                <!--Feature Id="Italiano" Title="Italiano" Level="1">
+                    <ComponentRef Id="Italiano.xml" />
+                    <ComponentRef Id="Italiano.gif" />
+                </Feature-->
                 <Feature Id="Japanese" Title="Japanese" Level="1">
                     <ComponentRef Id="Japanese.xml" />
                     <ComponentRef Id="Japanese.gif" />
-                </Feature>
-                <Feature Id="Italiano" Title="Italiano" Level="1">
-                    <ComponentRef Id="Italiano.xml" />
-                    <ComponentRef Id="Italiano.gif" />
-                </Feature>
-                <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
-                    <ComponentRef Id="SimplifiedChinese.xml" />
-                    <ComponentRef Id="SimplifiedChinese.gif" />
-                </Feature>
-                <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
-                    <ComponentRef Id="TraditionalChinese.xml" />
-                    <ComponentRef Id="TraditionalChinese.gif" />
-                </Feature>
-                <Feature Id="Spanish" Title="Spanish" Level="1">
-                    <ComponentRef Id="Spanish.xml" />
-                    <ComponentRef Id="Spanish.gif" />
                 </Feature>
                 <Feature Id="Russian" Title="Russian" Level="1">
                     <ComponentRef Id="Russian.xml" />
                     <ComponentRef Id="Russian.gif" />
                 </Feature>
+                <!--Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
+                    <ComponentRef Id="SimplifiedChinese.xml" />
+                    <ComponentRef Id="SimplifiedChinese.gif" />
+                </Feature-->
+                <Feature Id="Spanish" Title="Spanish" Level="1">
+                    <ComponentRef Id="Spanish.xml" />
+                    <ComponentRef Id="Spanish.gif" />
+                </Feature>
+                <!--Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
+                    <ComponentRef Id="TraditionalChinese.xml" />
+                    <ComponentRef Id="TraditionalChinese.gif" />
+                </Feature-->
             </Feature>
             <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
                 <ComponentRef Id="GitExtensionsShellEx32.dll" />

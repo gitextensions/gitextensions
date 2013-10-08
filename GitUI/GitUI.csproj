@@ -151,6 +151,12 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.Designer.cs">
       <DependentUpon>BuildServerIntegrationSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\CommitDialogSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\CommitDialogSettingsPage.Designer.cs">
+      <DependentUpon>CommitDialogSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="HelperDialogs\FormBuildServerCredentials.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -990,6 +996,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.resx">
       <DependentUpon>BuildServerIntegrationSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\CommitDialogSettingsPage.resx">
+      <DependentUpon>CommitDialogSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HelperDialogs\FormBuildServerCredentials.resx">
       <DependentUpon>FormBuildServerCredentials.cs</DependentUpon>

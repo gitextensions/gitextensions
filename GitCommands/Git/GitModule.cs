@@ -2426,12 +2426,34 @@ namespace GitCommands
             return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
         }
 
-        public IList<GitRef> GetRemoteRefs(string remote, bool tags, bool branches)
+        public RemoteActionResult<IList<GitRef>> GetRemoteRefs(string remote, bool tags, bool branches)
         {
+            RemoteActionResult<IList<GitRef>> result = new RemoteActionResult<IList<GitRef>>()
+            {
+                AuthenticationFail = false,
+                HostKeyFail = false,
+                Result = null
+            };
+
             remote = FixPath(remote);
 
             var tree = GetTreeFromRemoteRefs(remote, tags, branches);
-            return GetTreeRefs(tree);
+
+            // If the authentication failed because of a missing key, ask the user to supply one. 
+            if (tree.Contains("FATAL ERROR") && tree.Contains("authentication"))
+            {
+                result.AuthenticationFail = true;
+            }
+            else if (tree.ToLower().Contains("the server's host key is not cached in the registry"))
+            {
+                result.HostKeyFail = true;
+            }
+            else
+            {
+                result.Result = GetTreeRefs(tree);
+            }
+
+            return result;
         }
 
         private string GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
