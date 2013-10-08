@@ -4,29 +4,35 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands.Config;
+using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
-    public partial class FormUpdates : Form
+    public partial class FormUpdates : GitExtensionsForm
     {
+        #region Translation
+        private readonly TranslationString _newVersionAvailable =
+            new TranslationString("There is a new version available");
+        private readonly TranslationString _noUpdatesFound =
+            new TranslationString("No updates found");
+        #endregion
+
         public bool AutoClose;
         public Version CurrentVersion;
         public bool UpdateFound;
         public string UpdateUrl;
-        private const string FilesUrl = "gitextensions.googlecode.com/files/GitExtensions";
-        private readonly SynchronizationContext syncContext;
+        private readonly SynchronizationContext _syncContext;
 
         public FormUpdates(Version currentVersion)
         {
-            syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current;
             InitializeComponent();
+            Translate();
             UpdateFound = false;
-            link.Visible = false;
-            UpdateLabel.Text = "Searching for updates";
+            _NO_TRANSLATE_link.Visible = false;
             progressBar1.Visible = true;
             CurrentVersion = currentVersion;
             UpdateUrl = "";
@@ -42,7 +48,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             try
             {
-                Process.Start(link.Text);
+                Process.Start(_NO_TRANSLATE_link.Text);
             }
             catch (System.ComponentModel.Win32Exception)
             {
@@ -61,7 +67,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            syncContext.Send(o =>
+            _syncContext.Send(o =>
             {
                 progressBar1.Style = ProgressBarStyle.Continuous;
                 progressBar1.Maximum = 100;
@@ -103,21 +109,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void Done()
         {
-            syncContext.Send(o =>
+            _syncContext.Send(o =>
             {
                 progressBar1.Visible = false;
-                link.Text = UpdateUrl;
+                _NO_TRANSLATE_link.Text = UpdateUrl;
 
                 if (UpdateFound)
                 {
-                    link.Visible = true;
+                    _NO_TRANSLATE_link.Visible = true;
                     linkChangeLog.Visible = true;
 
-                    UpdateLabel.Text = "There is a new version available";
+                    UpdateLabel.Text = _newVersionAvailable.Text;
                 }
                 else
                 {
-                    UpdateLabel.Text = "No updates found";
+                    UpdateLabel.Text = _noUpdatesFound.Text;
                     if (AutoClose)
                         Close();
                 }
@@ -169,7 +175,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             cfg.LoadFromString(versionsStr);
             var sections = cfg.GetConfigSections("Version");
 
-            return sections.Select(section => ReleaseVersion.FromSection(section)).Where(version => version != null);
+            return sections.Select(FromSection).Where(version => version != null);
         }
 
     }
