@@ -1531,14 +1531,16 @@ namespace GitUI.CommandsDialogs
 
             AddCommitMessageToMenu(msg);
 
-            foreach (var localLastCommitMessage in Module.GetPreviousCommitMessages(4))
+            foreach (var localLastCommitMessage in Module.GetPreviousCommitMessages(AppSettings.CommitDialogNumberOfPreviousMessages))
             {
                 if (!localLastCommitMessage.Trim().Equals(msg.Trim()))
                     AddCommitMessageToMenu(localLastCommitMessage);
 
-            commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-                toolStripMenuItem1,
-                generateListOfChangesInSubmodulesChangesToolStripMenuItem});
+                commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+                {
+                    toolStripMenuItem1,
+                    generateListOfChangesInSubmodulesChangesToolStripMenuItem
+                });
             }
         }
 
