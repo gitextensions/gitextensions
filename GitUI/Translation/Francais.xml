@@ -7691,7 +7691,7 @@ mais nécessite que le client d'authentification fonctionne en arrière-plan.</V
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="StartPageSettingsPage">
+    <TranslationCategory Name="PluginRootIntroductionPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Plugins Settings</Source>

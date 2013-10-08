@@ -7649,7 +7649,7 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="StartPageSettingsPage">
+    <TranslationCategory Name="PluginRootIntroductionPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Plugins Settings</Source>

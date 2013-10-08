@@ -7669,9 +7669,8 @@ voor windows gebruikers.</Value>
     </TranslationCategory>
     <TranslationCategory Name="StartPageSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Plugins Settings</Source>
-          <OldSource>Start Page</OldSource>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Start Page</Source>
           <Value>Start pagina</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
