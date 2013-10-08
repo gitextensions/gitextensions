@@ -194,6 +194,13 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
+            toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
+        }
+
+        void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.Alt)
+                e.IsInputKey = true;
         }
 
         private void FormCommit_Load(object sender, EventArgs e)
