@@ -11,11 +11,13 @@
           <Source>&amp;OK</Source>
           <Value>&amp;OK</Value>
         </TranslationItem>
-        <TranslationItem Name="textBoxDescription" Property="Text" type="unfinished">
+        <TranslationItem Name="textBoxDescription" Property="Text">
           <Source>Git extensions - Visual Studio and Shell Explorer Extensions for Git
 
-This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
-          <Value />
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
+          <Value>Git extensions - расширение Visual Studio и проводника Windows для Git
+
+Эта программа распространяется в надежде, что она будет полезной, но БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, даже без подразумеваемых гарантий КОММЕРЧЕСКОЙ ПРИГОДНОСТИ ДЛЯ КОНКРЕТНЫХ ЦЕЛЕЙ.</Value>
         </TranslationItem>
         <TranslationItem Name="thanksTo" Property="Text">
           <Source>Thanks to:</Source>
