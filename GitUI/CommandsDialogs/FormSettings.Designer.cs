@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
             this.labelSettingsPageTitle.Padding = new System.Windows.Forms.Padding(20, 2, 20, 2);
             this.labelSettingsPageTitle.Size = new System.Drawing.Size(101, 24);
             this.labelSettingsPageTitle.TabIndex = 2;
-            this.labelSettingsPageTitle.Text = "...title...";
+            this.labelSettingsPageTitle.Text = "";
             this.labelSettingsPageTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // flowLayoutPanel4

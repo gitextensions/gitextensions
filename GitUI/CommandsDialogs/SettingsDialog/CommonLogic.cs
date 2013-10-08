@@ -15,11 +15,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private readonly TranslationString _cantReadRegistry =
             new TranslationString("GitExtensions has insufficient permissions to check the registry.");
 
-        private readonly TranslationString _AddEntryManually =
-            new TranslationString("Please add this key to the registry manually." +
-                                Environment.NewLine + "Path:  {0}\\{1}" + Environment.NewLine +
-                                "Value:  {2} = {3}");
-
         private readonly TranslationString _selectFile =
             new TranslationString("Select file");
 
@@ -68,26 +63,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 MessageBox.Show(_cantReadRegistry.Text);
             }
             return value ?? string.Empty;
-        }
-
-        public void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
-        {
-            try
-            {
-                value = value.Replace("\\", "\\\\");
-                string reg = "Windows Registry Editor Version 5.00" + Environment.NewLine + Environment.NewLine + "[" + root +
-                             "\\" + subkey + "]" + Environment.NewLine + "\"" + key + "\"=\"" + value + "\"";
-
-                TextWriter tw = new StreamWriter(Path.GetTempPath() + "GitExtensions.reg", false);
-                tw.Write(reg);
-                tw.Close();
-                _gitModule.RunCmd("regedit", "\"" + Path.GetTempPath() + "GitExtensions.reg" + "\"");
-            }
-            catch (UnauthorizedAccessException)
-            {
-                MessageBox.Show(_cantReadRegistry + Environment.NewLine +
-                    String.Format(_AddEntryManually.Text, root, subkey, key, value));
-            }
         }
 
         public string GetGlobalEditor()
