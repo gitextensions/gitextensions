@@ -21,7 +21,6 @@ namespace GitUI.Script
         {
             _Icon = "bug";
             Enabled = true;
-            ShowProgress = true;
         }
 
         public bool Enabled { get; set; }
@@ -38,7 +37,7 @@ namespace GitUI.Script
 
         public bool AskConfirmation { get; set; }
 
-        public bool ShowProgress { get; set; }
+        public bool RunInBackground { get; set; }
 
         public int HotkeyCommandIdentifier { get; set; }
         /// <summary>
