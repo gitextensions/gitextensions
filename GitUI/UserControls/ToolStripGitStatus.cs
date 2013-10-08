@@ -267,11 +267,8 @@ namespace GitUI
         {
             if (Module.Repository == null)
                 return null;
-            using (GitModule.LibGit2SharpThreadLock(Module))
-            {
-                var index = Module.Repository.Index;
-                return index.RetrieveStatus().Where(entry => entry.State != FileStatus.Ignored).ToArray();
-            }
+            var index = Module.Repository.Index;
+            return index.RetrieveStatus().Where(entry => entry.State != FileStatus.Ignored).ToArray();
         }
 
         private void UpdatedStatusReceived(StatusEntry[] entries)

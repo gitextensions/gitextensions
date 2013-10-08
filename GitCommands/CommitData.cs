@@ -183,16 +183,13 @@ namespace GitCommands
             if (sha1 == null)
                 throw new ArgumentNullException("sha1");
 
-            using (GitModule.LibGit2SharpThreadLock(module))
+            var commit = module.Repository.Lookup<Commit>(sha1);
+            if (commit == null)
             {
-                var commit = module.Repository.Lookup<Commit>(sha1);
-                if (commit == null)
-                {
-                    error = "Cannot find commit " + sha1;
-                    return null;
-                }
-                return CreateFromCommit(commit);
+                error = "Cannot find commit " + sha1;
+                return null;
             }
+            return CreateFromCommit(commit);
         }
 
         /// <summary>

@@ -53,47 +53,11 @@ namespace GitCommands
 
             try
             {
-                using (LibGit2SharpThreadLock(this))
-                {
-                    _repository = new LibGit2Sharp.Repository(_workingdir);
-                }
+                 _repository = new LibGit2Sharp.Repository(_workingdir);
             }
             catch (RepositoryNotFoundException)
             {
                 _repository = null;
-            }
-        }
-
-        public static Func<GitModule, IDisposable> LibGit2SharpThreadLock = WithoutThreadLock;
-
-        internal static void EnableThreadLock(GitModule module)
-        {
-            LibGit2SharpThreadLock = WithThreadLock;
-        }
-
-        private static IDisposable WithoutThreadLock(GitModule module)
-        {
-            return null;
-        }
-
-        private static IDisposable WithThreadLock(GitModule module)
-        {
-            return new DisposableThreadLockWrapper(module);
-        }
-
-        private class DisposableThreadLockWrapper : IDisposable
-        {
-            private object lockObject;
-
-            public DisposableThreadLockWrapper(GitModule module)
-            {
-                lockObject = module;
-                Monitor.Enter(lockObject);
-            }
-
-            public void Dispose()
-            {
-                Monitor.Exit(lockObject);
             }
         }
 
@@ -1098,10 +1062,7 @@ namespace GitCommands
 
         public string GetCurrentCheckout()
         {
-            using (LibGit2SharpThreadLock(this))
-            {
-                return IsValidGitWorkingDir() ? _repository.Head.Tip.Sha : "";
-            }
+            return IsValidGitWorkingDir() ? _repository.Head.Tip.Sha : "";
         }
 
         public KeyValuePair<char, string> GetSuperprojectCurrentCheckout()
@@ -2551,33 +2512,30 @@ namespace GitCommands
             if (!IsValidGitWorkingDir())
                 return "";
 
-            using (GitModule.LibGit2SharpThreadLock(this))
+            if (tags && branches)
             {
-                if (tags && branches)
-                {
-                    return Repository.Refs
-                        .Select(
-                            r =>
-                            string.Format("{0} {1}", r.ResolveToDirectReference().TargetIdentifier, r.CanonicalName))
-                        .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
-                        .ToString();
-                }
+                return Repository.Refs
+                    .Select(
+                        r =>
+                        string.Format("{0} {1}", r.ResolveToDirectReference().TargetIdentifier, r.CanonicalName))
+                    .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
+                    .ToString();
+            }
 
-                if (tags)
-                    return Repository.Tags
-                        .Select(r => string.Format("{0} {1}", r.Target.Sha, r.CanonicalName))
-                        .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
-                        .ToString();
+            if (tags)
+                return Repository.Tags
+                    .Select(r => string.Format("{0} {1}", r.Target.Sha, r.CanonicalName))
+                    .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
+                    .ToString();
 
-                if (branches)
-                {
-                    var refs = Repository.Branches
-                        .Where(r => !r.IsRemote);
-                    var sb = new StringBuilder();
-                    foreach (var r in refs.Where(r => r.Tip != null))
-                        sb.AppendLine(string.Format("{0} {1}", r.Tip.Sha, r.CanonicalName));
-                    return sb.ToString();
-                }
+            if (branches)
+            {
+                var refs = Repository.Branches
+                    .Where(r => !r.IsRemote);
+                var sb = new StringBuilder();
+                foreach (var r in refs.Where(r => r.Tip != null))
+                    sb.AppendLine(string.Format("{0} {1}", r.Tip.Sha, r.CanonicalName));
+                return sb.ToString();
             }
             return "";
         }
@@ -2748,19 +2706,16 @@ namespace GitCommands
         //TODO: submodules should be implemented in libgit2sharp
         public List<IGitItem> GetTreeNew(string id, bool full)
         {
-            using (LibGit2SharpThreadLock(this))
-            {
-                var tree = Repository.Lookup<Tree>(id);
-                return tree.Where(t => t.TargetType == TreeEntryTargetType.Tree || t.TargetType == TreeEntryTargetType.Blob)
-                    .Select(t => (IGitItem) new GitItem(this)
-                        {
-                            Mode = ((int) t.Mode).ToString(),
-                            ItemType = t.TargetType.ToString().ToLower(),
-                            Guid = t.Target.Sha,
-                            Name = t.Name,
-                            FileName = t.Name
-                        }).ToList();
-            }
+            var tree = Repository.Lookup<Tree>(id);
+            return tree.Where(t => t.TargetType == TreeEntryTargetType.Tree || t.TargetType == TreeEntryTargetType.Blob)
+                .Select(t => (IGitItem)new GitItem(this)
+                    {
+                        Mode = ((int)t.Mode).ToString(),
+                        ItemType = t.TargetType.ToString().ToLower(),
+                        Guid = t.Target.Sha,
+                        Name = t.Name,
+                        FileName = t.Name
+                    }).ToList();
         }
 
         public List<IGitItem> GetTreeOld(string id, bool full)
@@ -2867,11 +2822,8 @@ namespace GitCommands
 
         public string GetFileText(string id, Encoding encoding)
         {
-            using (GitModule.LibGit2SharpThreadLock(this))
-            {
-                var blob = Repository.Lookup<LibGit2Sharp.Blob>(new ObjectId(id));
-                return encoding.GetString(blob.Content);
-            }
+            var blob = Repository.Lookup<LibGit2Sharp.Blob>(new ObjectId(id));
+            return encoding.GetString(blob.Content);
         }
 
         public string GetFileBlobHash(string fileName, string revision)
@@ -2911,10 +2863,7 @@ namespace GitCommands
 
         public Stream GetFileStream(string blob)
         {
-            using (GitModule.LibGit2SharpThreadLock(this))
-            {
-                return Repository.Lookup<Blob>(new ObjectId(blob)).ContentStream;
-            }
+            return Repository.Lookup<Blob>(new ObjectId(blob)).ContentStream;
         }
 
         public IEnumerable<string> GetPreviousCommitMessages(int count)
@@ -2974,15 +2923,12 @@ namespace GitCommands
 
         public string GetMergeBase(string a, string b)
         {
-            using (GitModule.LibGit2SharpThreadLock(this))
-            {
-                var aCommit = Repository.Lookup<Commit>(a);
-                var bCommit = Repository.Lookup<Commit>(b);
-                if (aCommit == null || bCommit == null)
-                    return null;
-                var baseCommit = Repository.Commits.FindCommonAncestor(aCommit, bCommit);
-                return baseCommit != null ? baseCommit.Sha : null;
-            }
+            var aCommit = Repository.Lookup<Commit>(a);
+            var bCommit = Repository.Lookup<Commit>(b);
+            if (aCommit == null || bCommit == null)
+                return null;
+            var baseCommit = Repository.Commits.FindCommonAncestor(aCommit, bCommit);
+            return baseCommit != null ? baseCommit.Sha : null;
         }
 
         public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
