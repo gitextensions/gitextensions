@@ -1894,7 +1894,7 @@ compare with first:</Source>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close (go to Dashboard)</Source>
-          <Value>Закрыть (перейти в Главную панель)</Value>
+          <Value>Закрыть (перейти в главную панель)</Value>
         </TranslationItem>
         <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text">
           <Source>Collapse all</Source>
@@ -2716,7 +2716,7 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>&amp;Repository to clone:</Source>
-          <Value>&amp;Внешний репозиторий для клонирования:</Value>
+          <Value>&amp;Внешний репозиторий:</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>&amp;Destination:</Source>
@@ -3713,37 +3713,41 @@ Click on the "Support this project" button to get more information about making 
           <Source>Home</Source>
           <Value>Дом</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitGlobalConfigNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitGlobalConfigNotFound" Property="Text">
           <Source>The environment variable HOME does not point to a directory that contains the global git config file:
 " {0} "
 
 Do you want Git Extensions to help locate the correct folder?</Source>
-          <Value />
+          <Value>Переменная среды HOME не указывает на каталог, который содержит глобальный конфигурационный файл git:
+"{0}"
+
+Вы хотите помочь Git Extensions найти нужную папку?</Value>
         </TranslationItem>
         <TranslationItem Name="_gitGlobalConfigNotFoundCaption" Property="Text">
           <Source>Global config</Source>
           <Value>Глобальная конфигурация</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitconfigFoundHome" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitconfigFoundHome" Property="Text">
           <Source>Located .gitconfig in %HOME% ({0}). This setting has been chosen automatically.</Source>
-          <Value />
+          <Value>Найден .gitconfig в %HOME% ({0}). Этот параметр был выбран автоматически.</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitconfigFoundHomedrive" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitconfigFoundHomedrive" Property="Text">
           <Source>Located .gitconfig in %HOMEDRIVE%%HOMEPATH% ({0}). This setting has been chosen automatically.</Source>
-          <Value />
+          <Value>Найден .gitconfig в %HOMEDRIVE%%HOMEPATH% ({0}). Этот параметр был выбран автоматически.</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitconfigFoundPersonalFolder" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitconfigFoundPersonalFolder" Property="Text">
           <Source>Located .gitconfig in personal folder ({0}). This setting has been chosen automatically.</Source>
-          <Value />
+          <Value>Найден .gitconfig в личной папке ({0}). Этот параметр был выбран автоматически.</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitconfigFoundUserprofile" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitconfigFoundUserprofile" Property="Text">
           <Source>Located .gitconfig in %USERPROFILE% ({0}). This setting has been chosen automatically.</Source>
-          <Value />
+          <Value>Найден .gitconfig в %USERPROFILE% ({0}). Этот параметр был выбран автоматически.</Value>
         </TranslationItem>
-        <TranslationItem Name="_homeNotAccessible" Property="Text" type="unfinished">
+        <TranslationItem Name="_homeNotAccessible" Property="Text">
           <Source>The environment variable HOME points to a directory that is not accessible:
 "{0}"</Source>
-          <Value />
+          <Value>Переменная среды HOME указывает на недоступный каталог:
+"{0}"</Value>
         </TranslationItem>
         <TranslationItem Name="_noHomeDirectorySpecified" Property="Text">
           <Source>Please enter a HOME directory.</Source>
@@ -3777,7 +3781,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="userprofileHome" Property="Text">
           <Source>Set HOME to USERPROFILE</Source>
-          <Value>Устанвоить HOME в USERPROFILE</Value>
+          <Value>Установить HOME в USERPROFILE</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3867,69 +3871,69 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
     </TranslationCategory>
     <TranslationCategory Name="FormGerritChangeSubmitted">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Change Submitted</Source>
-          <Value />
+          <Value>Изменения отправлены</Value>
         </TranslationItem>
         <TranslationItem Name="btnClose" Property="Text">
           <Source>Close</Source>
           <Value>Закрыть</Value>
         </TranslationItem>
-        <TranslationItem Name="labelSubmitted" Property="Text" type="unfinished">
+        <TranslationItem Name="labelSubmitted" Property="Text">
           <Source>Your change has been submitted for review at the following location:</Source>
-          <Value />
+          <Value>Ваши изменения были отправлены на рассмотрение по следующему адресу:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormGerritDownload">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Download Gerrit Change</Source>
-          <Value />
+          <Value>Загрузить изменения из Gerrit</Value>
         </TranslationItem>
         <TranslationItem Name="AddRemote" Property="Text">
           <Source>Manage remotes</Source>
           <Value>Репозитории</Value>
         </TranslationItem>
-        <TranslationItem Name="Download" Property="Text" type="unfinished">
+        <TranslationItem Name="Download" Property="Text">
           <Source>&amp;Download</Source>
-          <Value />
+          <Value>&amp;Загрузить</Value>
         </TranslationItem>
-        <TranslationItem Name="_cannotGetChangeDetails" Property="Text" type="unfinished">
+        <TranslationItem Name="_cannotGetChangeDetails" Property="Text">
           <Source>Could not retrieve the change details</Source>
-          <Value />
+          <Value>Не удалось получить подробности об изменении</Value>
         </TranslationItem>
-        <TranslationItem Name="_downloadCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_downloadCaption" Property="Text">
           <Source>Download change {0}</Source>
-          <Value />
+          <Value>Скачать изменения {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text">
           <Source>Download Gerrit Change</Source>
-          <Value />
+          <Value>Загрузить изменения из Gerrit</Value>
         </TranslationItem>
-        <TranslationItem Name="_selectChange" Property="Text" type="unfinished">
+        <TranslationItem Name="_selectChange" Property="Text">
           <Source>Please enter a change</Source>
-          <Value />
+          <Value>Пожалуйста введите изменения</Value>
         </TranslationItem>
         <TranslationItem Name="_selectRemote" Property="Text">
           <Source>Please select a remote repository</Source>
           <Value>Пожалуйста, выберите внешний репозиторий</Value>
         </TranslationItem>
-        <TranslationItem Name="labelChange" Property="Text" type="unfinished">
+        <TranslationItem Name="labelChange" Property="Text">
           <Source>Change:</Source>
-          <Value />
+          <Value>Измения:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelEnterChangeIdOrNumber" Property="Text" type="unfinished">
+        <TranslationItem Name="labelEnterChangeIdOrNumber" Property="Text">
           <Source>Enter the Change-Id or the number from the Gerrit URL</Source>
-          <Value />
+          <Value>Введите Change-Id или число из Gerrit URL</Value>
         </TranslationItem>
-        <TranslationItem Name="labelRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="labelRemote" Property="Text">
           <Source>Remote:</Source>
-          <Value />
+          <Value>Внешний репозиторий:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelTopicBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="labelTopicBranch" Property="Text">
           <Source>Topic branch:</Source>
-          <Value />
+          <Value>Ветвь-тема:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4543,19 +4547,21 @@ ancestor tree. </Source>
     </TranslationCategory>
     <TranslationCategory Name="FormPluginInformation">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Gerrit Plugin</Source>
-          <Value />
+          <Value>Gerrit Плагин</Value>
         </TranslationItem>
         <TranslationItem Name="btnClose" Property="Text">
           <Source>Close</Source>
           <Value>Закрыть</Value>
         </TranslationItem>
-        <TranslationItem Name="informationLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="informationLabel" Property="Text">
           <Source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Settings | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</Source>
-          <Value />
+          <Value>Gerrit плагин для GitExtensions обеспечивает интеграцию с Gerrit для GitExtensions. Этот плагин был основан на утилите git-review.
+
+Чтобы включить поддержку Gerrit для репозитория, файл .gitreview должен быть создан. Это можно сделать через меню Репозиторий | Редактировать .gitreview. Смотрите ссылку ниже для получения дополнительной информации о файле .gitreview файла и утилите git-review.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5105,73 +5111,73 @@ Nothing to rebase.</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormRecentReposSettings">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Recent repositories settings</Source>
-          <Value />
+          <Value>Настройки последних репозиториев</Value>
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
           <Source>Cancel</Source>
           <Value>Отмена</Value>
         </TranslationItem>
-        <TranslationItem Name="MostRecentLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="MostRecentLabel" Property="Text">
           <Source>Most recent repositories</Source>
-          <Value />
+          <Value>Самые последние репозитории</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>OK</Source>
           <Value>OK</Value>
         </TranslationItem>
-        <TranslationItem Name="anchorToLessToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="anchorToLessToolStripMenuItem" Property="Text">
           <Source>Anchor to less recent repositories</Source>
-          <Value />
+          <Value>Отметить как менее последний репозиторий</Value>
         </TranslationItem>
-        <TranslationItem Name="anchorToMostToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="anchorToMostToolStripMenuItem" Property="Text">
           <Source>Anchor to most recent repositories</Source>
-          <Value />
+          <Value>Отметить как самый последний репозиторий</Value>
         </TranslationItem>
-        <TranslationItem Name="comboMinWidthLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="comboMinWidthLabel" Property="Text">
           <Source>Combobox minimum width (0 = Autosize)</Source>
-          <Value />
+          <Value>Минимальная ширина выпадающего списка (0 = задавать автоматически)</Value>
         </TranslationItem>
-        <TranslationItem Name="dontShortenRB" Property="Text" type="unfinished">
+        <TranslationItem Name="dontShortenRB" Property="Text">
           <Source>Do not shorten  </Source>
-          <Value />
+          <Value>Не укорачивать  </Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Less recent repositories</Source>
-          <Value />
+          <Value>Менее последние репозитории</Value>
         </TranslationItem>
-        <TranslationItem Name="maxRecentRepositories" Property="Text" type="unfinished">
+        <TranslationItem Name="maxRecentRepositories" Property="Text">
           <Source>Maximum number of most recent repositories</Source>
-          <Value />
+          <Value>Максимальное количество последних репозиториев</Value>
         </TranslationItem>
-        <TranslationItem Name="middleDotRB" Property="Text" type="unfinished">
+        <TranslationItem Name="middleDotRB" Property="Text">
           <Source>Replace middle part with dots </Source>
-          <Value />
+          <Value>Заменить среднею часть точками</Value>
         </TranslationItem>
-        <TranslationItem Name="mostSigDirRB" Property="Text" type="unfinished">
+        <TranslationItem Name="mostSigDirRB" Property="Text">
           <Source>The most significant directory </Source>
-          <Value />
+          <Value>Наиболее важный каталог</Value>
         </TranslationItem>
-        <TranslationItem Name="removeAnchorToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="removeAnchorToolStripMenuItem" Property="Text">
           <Source>Remove anchor</Source>
-          <Value />
+          <Value>Удалить отметку</Value>
         </TranslationItem>
-        <TranslationItem Name="removeRecentToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="removeRecentToolStripMenuItem" Property="Text">
           <Source>Remove from recent repositories</Source>
-          <Value />
+          <Value>Удалить из последних репозиториев</Value>
         </TranslationItem>
-        <TranslationItem Name="shorteningGB" Property="Text" type="unfinished">
+        <TranslationItem Name="shorteningGB" Property="Text">
           <Source>Shortening strategy</Source>
-          <Value />
+          <Value>Стратегия сокращения</Value>
         </TranslationItem>
-        <TranslationItem Name="sortLessRecentRepos" Property="Text" type="unfinished">
+        <TranslationItem Name="sortLessRecentRepos" Property="Text">
           <Source>Sort less recent repositories alphabetically</Source>
-          <Value />
+          <Value>Сортировать менее последние репозитория по алфавиту</Value>
         </TranslationItem>
-        <TranslationItem Name="sortMostRecentRepos" Property="Text" type="unfinished">
+        <TranslationItem Name="sortMostRecentRepos" Property="Text">
           <Source>Sort most recent repositories alphabetically</Source>
-          <Value />
+          <Value>Сортировать самые последние репозитория по алфавиту</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5764,9 +5770,9 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>Guid</Source>
           <Value>Guid</Value>
         </TranslationItem>
-        <TranslationItem Name="itemTypeDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="itemTypeDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>ItemType</Source>
-          <Value />
+          <Value>ItemType</Value>
         </TranslationItem>
         <TranslationItem Name="keepBaseButtonText" Property="Text">
           <Source>Keep base file</Source>
@@ -6491,16 +6497,18 @@ Do you want to select a language code first?</Source>
           <Source>Delete all LOST_AND_FOUND tags</Source>
           <Value>Удалить все метки LOST_AND_FOUND</Value>
         </TranslationItem>
-        <TranslationItem Name="FullCheck" Property="Text" type="unfinished">
+        <TranslationItem Name="FullCheck" Property="Text">
           <Source>Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), 
 but also the ones found in alternate object pools.
 </Source>
-          <Value />
+          <Value>Проверит не только объекты в GIT_OBJECT_DIRECTORY ($GIT_DIR/объекты),
+но и те что будет найдены в альтернативных пулах объектов.</Value>
         </TranslationItem>
-        <TranslationItem Name="NoReflogs" Property="Text" type="unfinished">
+        <TranslationItem Name="NoReflogs" Property="Text">
           <Source>Do not consider commits that are referenced only by an entry in a 
 reflog to be reachable.</Source>
-          <Value />
+          <Value>Не считать коммиты на которые ссылаются только записи в
+reflog доступными.</Value>
         </TranslationItem>
         <TranslationItem Name="Remove" Property="Text">
           <Source>Remove all dangling objects</Source>
@@ -6514,11 +6522,12 @@ reflog to be reachable.</Source>
           <Source>Show only commits</Source>
           <Value>Показать только коммиты</Value>
         </TranslationItem>
-        <TranslationItem Name="Unreachable" Property="Text" type="unfinished">
+        <TranslationItem Name="Unreachable" Property="Text">
           <Source>Print out objects that exist but that aren't readable from any of the reference 
 nodes.
 </Source>
-          <Value />
+          <Value>Вывести объекты которые существуют, но не могут быть прочитаны
+из любого ссылающего узла.</Value>
         </TranslationItem>
         <TranslationItem Name="_removeDanglingObjectsCaption" Property="Text">
           <Source>Remove</Source>
@@ -6646,65 +6655,65 @@ Context menu for additional operations</Source>
     </TranslationCategory>
     <TranslationCategory Name="GerritPlugin">
       <translationItems>
-        <TranslationItem Name="_downloadGerritChange" Property="Text" type="unfinished">
+        <TranslationItem Name="_downloadGerritChange" Property="Text">
           <Source>Download Gerrit Change</Source>
-          <Value />
+          <Value>Загрузить изменения из Gerrit</Value>
         </TranslationItem>
         <TranslationItem Name="_editGitReview" Property="Text">
           <Source>Edit .gitreview</Source>
           <Value>Редактировать .gitreview</Value>
         </TranslationItem>
-        <TranslationItem Name="_installCommitMsgHook" Property="Text" type="unfinished">
+        <TranslationItem Name="_installCommitMsgHook" Property="Text">
           <Source>Install Hook</Source>
-          <Value />
+          <Value>Установить Хук</Value>
         </TranslationItem>
-        <TranslationItem Name="_installCommitMsgHookFailed" Property="Text" type="unfinished">
+        <TranslationItem Name="_installCommitMsgHookFailed" Property="Text">
           <Source>Could not download the commit-msg file. Please install the commit-msg hook manually.</Source>
-          <Value />
+          <Value>Невозможно скачать файл  commit-msg. Пожалуйста установите хук commit-msg вручную.</Value>
         </TranslationItem>
-        <TranslationItem Name="_installCommitMsgHookMessage" Property="Text" type="unfinished">
+        <TranslationItem Name="_installCommitMsgHookMessage" Property="Text">
           <Source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</Source>
-          <Value />
+          <Value>Gerrit требует чтобы хук commit-msg был установлен. Хотите установить commit-msg хук в вашем репозиторие?</Value>
         </TranslationItem>
-        <TranslationItem Name="_installCommitMsgHookShortText" Property="Text" type="unfinished">
+        <TranslationItem Name="_installCommitMsgHookShortText" Property="Text">
           <Source>Install commit-msg hook</Source>
-          <Value />
+          <Value>Установить commit-msg хук</Value>
         </TranslationItem>
-        <TranslationItem Name="_pluginDescription" Property="Text" type="unfinished">
+        <TranslationItem Name="_pluginDescription" Property="Text">
           <Source>Gerrit Code Review</Source>
-          <Value />
+          <Value>Проверки кода Gerrit</Value>
         </TranslationItem>
-        <TranslationItem Name="_publishGerritChange" Property="Text" type="unfinished">
+        <TranslationItem Name="_publishGerritChange" Property="Text">
           <Source>Publish Gerrit Change</Source>
-          <Value />
+          <Value>Опубилковать изменения в Gerrit</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="GerritSettings">
       <translationItems>
-        <TranslationItem Name="_settingsError" Property="Text" type="unfinished">
+        <TranslationItem Name="_settingsError" Property="Text">
           <Source>Error loading .gitreview file.</Source>
-          <Value />
+          <Value>Ошибка при загрузке .gitreview файла.</Value>
         </TranslationItem>
-        <TranslationItem Name="_settingsErrorDefaultRemoteNotPresent" Property="Text" type="unfinished">
+        <TranslationItem Name="_settingsErrorDefaultRemoteNotPresent" Property="Text">
           <Source>The remote "{0}" specified with the "defaultremote" setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</Source>
-          <Value />
+          <Value>Внешний репозиторий "{0}" указанный с "defaultremote" в настройках файла .gitreview не относится к настроенными внешним репозиториям. Либо создайте этот внешний репозиторий или измените настройки в файле .gitreview.</Value>
         </TranslationItem>
-        <TranslationItem Name="_settingsErrorFileNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_settingsErrorFileNotFound" Property="Text">
           <Source>Cannot find the ".gitreview" file in the working directory.</Source>
-          <Value />
+          <Value>Не удается найти ".gitreview" файл в рабочем каталоге.</Value>
         </TranslationItem>
-        <TranslationItem Name="_settingsErrorHostNotEntered" Property="Text" type="unfinished">
+        <TranslationItem Name="_settingsErrorHostNotEntered" Property="Text">
           <Source>The "host" setting in the .gitreview file is mandatory.</Source>
-          <Value />
+          <Value>"host" настройка в файле .gitreview является обязательной.</Value>
         </TranslationItem>
-        <TranslationItem Name="_settingsErrorPortNotNumeric" Property="Text" type="unfinished">
+        <TranslationItem Name="_settingsErrorPortNotNumeric" Property="Text">
           <Source>The "port" specified in the .gitreview file may only contain digits.</Source>
-          <Value />
+          <Value>"port" указанный в файле .gitreview может содержать только цифры.</Value>
         </TranslationItem>
-        <TranslationItem Name="_settingsErrorProjectNotEntered" Property="Text" type="unfinished">
+        <TranslationItem Name="_settingsErrorProjectNotEntered" Property="Text">
           <Source>The "project" setting in the .gitreview file is mandatory.</Source>
-          <Value />
+          <Value>"host" настройка в файле .gitreview является обязательной.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
