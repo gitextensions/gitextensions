@@ -4869,7 +4869,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="_pullRepositoryButtons" Property="Text">
           <Source>Pull with last pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</Source>
-          <Value>Pull использозуя последнее действие({0})|Pull с перебазирование|Pull с объединением|Принудительная отправка|Отмена</Value>
+          <Value>Pull используя последнее действие ({0})|Забрать и перебазировать|Забрать и объединить|Принудительная отправка|Отмена</Value>
         </TranslationItem>
         <TranslationItem Name="_pullRepositoryCaption" Property="Text">
           <Source>Push was rejected from "{0}"</Source>
@@ -4913,7 +4913,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="groupBox2" Property="Text">
           <Source>Push to</Source>
-          <Value>Push в</Value>
+          <Value>Отправить в</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox3" Property="Text">
           <Source>Tag</Source>
