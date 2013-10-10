@@ -213,6 +213,7 @@ namespace GitCommands
             get
             {
                 Encoding result = EffectiveConfigFile.CommitEncoding;
+                if (result == null)
                     result = new UTF8Encoding(false);
                 return result;
             }
