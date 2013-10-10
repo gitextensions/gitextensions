@@ -55,7 +55,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.SmtpServer = new System.Windows.Forms.TextBox();
             this.label23 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.panelSpacer1 = new System.Windows.Forms.Panel();
             this.panelSpacer2 = new System.Windows.Forms.Panel();
@@ -330,7 +329,6 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.SmtpServer);
             this.groupBox1.Controls.Add(this.label23);
-            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.numericUpDown1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 418);
@@ -383,15 +381,6 @@
             this.label23.Size = new System.Drawing.Size(105, 15);
             this.label23.TabIndex = 20;
             this.label23.Text = "SMTP server name";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 143);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(296, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Limit number of commits that will be loaded at startup";
             // 
             // numericUpDown1
             // 
@@ -482,7 +471,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox SmtpServer;
         private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label lblDefaultCloneDestination;
         private System.Windows.Forms.ComboBox cbDefaultCloneDestination;
