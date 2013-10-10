@@ -14,7 +14,7 @@
         <TranslationItem Name="textBoxDescription" Property="Text">
           <Source>Git extensions - Visual Studio and Shell Explorer Extensions for Git
 
-This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
           <Value>Git extensions - Visual Studio et Shell Explorer Extensions pour Git
 
 Ce program est distribué dans l'espoir d'être utile, mais SANS AUCUNE GARANTIE; sans même la garantie implicite de QUALITÉ MARCHANDE D'APPTITUDE POUR UN USAGE PARTICULIER.
@@ -6474,6 +6474,34 @@ Voulez-vous sélectionner un code de langue ?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormUpdates">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Check for update</Source>
+          <Value>Vérifier les mises à jour</Value>
+        </TranslationItem>
+        <TranslationItem Name="UpdateLabel" Property="Text">
+          <Source>Searching for updates</Source>
+          <Value>Recherche d'un mise à jour</Value>
+        </TranslationItem>
+        <TranslationItem Name="_newVersionAvailable" Property="Text">
+          <Source>There is a new version available</Source>
+          <Value>Il n'y a pas de nouvelle version disponible.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noUpdatesFound" Property="Text">
+          <Source>No updates found</Source>
+          <Value>Aucune mise à jour trouvée</Value>
+        </TranslationItem>
+        <TranslationItem Name="closeButton" Property="Text" type="unfinished">
+          <Source>Close</Source>
+          <Value>Fermer</Value>
+        </TranslationItem>
+        <TranslationItem Name="linkChangeLog" Property="Text">
+          <Source>Show ChangeLog</Source>
+          <Value>Afficher le journal des changements</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormVerify">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -7691,7 +7719,7 @@ mais nécessite que le client d'authentification fonctionne en arrière-plan.</V
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="StartPageSettingsPage">
+    <TranslationCategory Name="PluginRootIntroductionPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Plugins Settings</Source>
