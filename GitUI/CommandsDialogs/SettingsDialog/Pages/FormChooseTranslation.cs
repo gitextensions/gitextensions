@@ -25,8 +25,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             const int imageWidth = 150;
             int x = -(imageWidth + 6);
             int y = 0;
-            var translations = new List<string>(Translator.GetAllTranslations()) {"English"};
+            var translations = new List<string>(Translator.GetAllTranslations());
             translations.Sort();
+            translations.Insert(0, "English");
 
             foreach (string translation in translations)
             {

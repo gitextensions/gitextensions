@@ -24,6 +24,8 @@ namespace GitUI.CommandsDialogs
         private string _selectedBranchRemote;
         private string _selectedRemoteBranchName;
 
+        private readonly AsyncLoader _remoteBranchesLoader = new AsyncLoader();
+
         public bool ErrorOccurred { get; private set; }
 
         #region Translation
@@ -686,46 +688,82 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var localHeads = Module.GetRefs(false, true);
-            var remoteHeads = Module.GetRemoteRefs(remote, false, true);
+            BranchGrid.Enabled = false;
+            LoadMultiBranchViewData(remote, localHeads);
+            
+        }
 
-            // Add all the local branches.
-            foreach (var head in localHeads)
-            {
-                DataRow row = _branchTable.NewRow();
-                row["Force"] = false;
-                row["Delete"] = false;
-                row["Local"] = head.Name;
-
-                string remoteName;
-                if (head.Remote == remote)
-                    remoteName = head.MergeWith ?? head.Name;
-                else
-                    remoteName = head.Name;
-
-                row["Remote"] = remoteName;
-                bool newAtRemote = remoteHeads.Any(h => h.Name == remoteName);
-                row["New"] = newAtRemote ? _no.Text : _yes.Text;
-                row["Push"] = newAtRemote;
-
-                _branchTable.Rows.Add(row);
-            }
-
-            // Offer to delete all the left over remote branches.
-            foreach (var remoteHead in remoteHeads)
-            {
-                GitRef head = remoteHead;
-                if (localHeads.All(h => h.Name != head.Name))
+        private void LoadMultiBranchViewData(string remote, IList<GitRef> localHeads)
+        {
+            _remoteBranchesLoader.Cancel();
+            Cursor = Cursors.AppStarting;
+            _remoteBranchesLoader.Load(() => { return Module.GetRemoteRefs(remote, false, true); },
+                (remoteHeads) =>
                 {
-                    DataRow row = _branchTable.NewRow();
-                    row["Local"] = null;
-                    row["Remote"] = remoteHead.Name;
-                    row["New"] = _no.Text;
-                    row["Push"] = false;
-                    row["Force"] = false;
-                    row["Delete"] = false;
-                    _branchTable.Rows.Add(row);
-                }
-            }
+                    Cursor = Cursors.Default;
+                    if (remoteHeads.HostKeyFail)
+                    {
+                        string remoteUrl;
+
+                        remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        if (string.IsNullOrEmpty(remoteUrl))
+                            remoteUrl = remote;
+
+                        if (FormRemoteProcess.AskForCacheHostkey(this, Module, remoteUrl))
+                        {
+                            LoadMultiBranchViewData(remote, localHeads);
+                        }
+                    }
+                    else if (remoteHeads.AuthenticationFail)
+                    {
+                        string loadedKey;
+                        if (FormPuttyError.AskForKey(this, out loadedKey))
+                        {
+                            LoadMultiBranchViewData(remote, localHeads);
+                        }
+                    }
+                    else
+                    {
+                        // Add all the local branches.
+                        foreach (var head in localHeads)
+                        {
+                            DataRow row = _branchTable.NewRow();
+                            row["Force"] = false;
+                            row["Delete"] = false;
+                            row["Local"] = head.Name;
+
+                            string remoteName;
+                            if (head.Remote == remote)
+                                remoteName = head.MergeWith ?? head.Name;
+                            else
+                                remoteName = head.Name;
+
+                            row["Remote"] = remoteName;
+                            bool newAtRemote = remoteHeads.Result.Any(h => h.Name == remoteName);
+                            row["New"] = newAtRemote ? _no.Text : _yes.Text;
+                            row["Push"] = newAtRemote;
+
+                            _branchTable.Rows.Add(row);
+                        }
+
+                        // Offer to delete all the left over remote branches.
+                        foreach (var remoteHead in remoteHeads.Result)
+                        {
+                            GitRef head = remoteHead;
+                            if (localHeads.All(h => h.Name != head.Name))
+                            {
+                                DataRow row = _branchTable.NewRow();
+                                row["Local"] = null;
+                                row["Remote"] = remoteHead.Name;
+                                row["New"] = _no.Text;
+                                row["Push"] = false;
+                                row["Force"] = false;
+                                row["Delete"] = false;
+                                _branchTable.Rows.Add(row);
+                            }
+                        }
+                    }
+                });
         }
 
         static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
@@ -749,6 +787,8 @@ namespace GitUI.CommandsDialogs
 
         private void TabControlTagBranch_Selected(object sender, TabControlEventArgs e)
         {
+            _remoteBranchesLoader.Cancel();
+
             if (TabControlTagBranch.SelectedTab == MultipleBranchTab)
                 UpdateMultiBranchView();
             else if (TabControlTagBranch.SelectedTab == TagTab)
