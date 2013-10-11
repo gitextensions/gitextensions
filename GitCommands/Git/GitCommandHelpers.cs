@@ -432,8 +432,7 @@ namespace GitCommands
                 options.Add("--recurse-submodules");
             if (depth.HasValue)
                 options.Add("--depth " + depth.ToString());
-            if (VersionInUse.CloneCanAskForProgress)
-                options.Add("--progress");
+            options.Add("--progress");
             if (!string.IsNullOrEmpty(branch))
                 options.Add("--branch " + branch);
             options.Add(string.Format("\"{0}\"", from.Trim()));
@@ -794,9 +793,6 @@ namespace GitCommands
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = 0)
         {
-            if (!VersionInUse.SupportGitStatusPorcelain)
-                throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
-
             StringBuilder stringBuilder = new StringBuilder("status --porcelain -z");
 
             switch (untrackedFiles)

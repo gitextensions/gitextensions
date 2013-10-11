@@ -248,19 +248,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static string GetDiffToolFromConfig(ConfigFileSettings settings)
         {
-            if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
-                return settings.GetValue("diff.guitool");
-            return settings.GetValue("diff.tool");
+            return settings.GetValue("diff.guitool");
         }
 
         public static void SetDiffToolToConfig(ConfigFileSettings settings, string diffTool)
         {
-            if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
-            {
-                settings.SetValue("diff.guitool", diffTool);
-                return;
-            }
-            settings.SetValue("diff.tool", diffTool);
+            settings.SetValue("diff.guitool", diffTool);
         }
 
         public bool SolveDiffToolPathForKDiff()

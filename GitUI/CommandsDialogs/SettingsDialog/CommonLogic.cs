@@ -15,11 +15,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private readonly TranslationString _cantReadRegistry =
             new TranslationString("GitExtensions has insufficient permissions to check the registry.");
 
-        private readonly TranslationString _AddEntryManually =
-            new TranslationString("Please add this key to the registry manually." +
-                                Environment.NewLine + "Path:  {0}\\{1}" + Environment.NewLine +
-                                "Value:  {2} = {3}");
-
         private readonly TranslationString _selectFile =
             new TranslationString("Select file");
 

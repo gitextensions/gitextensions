@@ -194,6 +194,13 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
+            toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
+        }
+
+        void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.Alt)
+                e.IsInputKey = true;
         }
 
         private void FormCommit_Load(object sender, EventArgs e)
@@ -1529,17 +1536,23 @@ namespace GitUI.CommandsDialogs
 
             var msg = AppSettings.LastCommitMessage;
 
-            AddCommitMessageToMenu(msg);
+            var prevMsgs = Module.GetPreviousCommitMessages(AppSettings.CommitDialogNumberOfPreviousMessages);
 
-            foreach (var localLastCommitMessage in Module.GetPreviousCommitMessages(4))
+            if (!prevMsgs.Contains(msg))
             {
-                if (!localLastCommitMessage.Trim().Equals(msg.Trim()))
-                    AddCommitMessageToMenu(localLastCommitMessage);
-
-            commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-                toolStripMenuItem1,
-                generateListOfChangesInSubmodulesChangesToolStripMenuItem});
+                prevMsgs = new string[] { msg }.Concat(prevMsgs).Take(AppSettings.CommitDialogNumberOfPreviousMessages);
             }
+
+            foreach (var localLastCommitMessage in prevMsgs)
+            {
+                AddCommitMessageToMenu(localLastCommitMessage);
+            }
+
+            commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+            {
+                toolStripMenuItem1,
+                generateListOfChangesInSubmodulesChangesToolStripMenuItem
+            });
         }
 
         private void AddCommitMessageToMenu(string commitMessage)
