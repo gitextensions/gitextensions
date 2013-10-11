@@ -213,6 +213,7 @@ namespace GitCommands
             get
             {
                 Encoding result = EffectiveConfigFile.CommitEncoding;
+                if (result == null)
                     result = new UTF8Encoding(false);
                 return result;
             }
@@ -2269,9 +2270,6 @@ namespace GitCommands
 
         public IList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode)
         {
-            if (!GitCommandHelpers.VersionInUse.SupportGitStatusPorcelain)
-                throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
-
             string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
             string status = RunGitCmd(command);
             return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
@@ -2397,12 +2395,34 @@ namespace GitCommands
             return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
         }
 
-        public IList<GitRef> GetRemoteRefs(string remote, bool tags, bool branches)
+        public RemoteActionResult<IList<GitRef>> GetRemoteRefs(string remote, bool tags, bool branches)
         {
+            RemoteActionResult<IList<GitRef>> result = new RemoteActionResult<IList<GitRef>>()
+            {
+                AuthenticationFail = false,
+                HostKeyFail = false,
+                Result = null
+            };
+
             remote = FixPath(remote);
 
             var tree = GetTreeFromRemoteRefs(remote, tags, branches);
-            return GetTreeRefs(tree);
+
+            // If the authentication failed because of a missing key, ask the user to supply one. 
+            if (tree.Contains("FATAL ERROR") && tree.Contains("authentication"))
+            {
+                result.AuthenticationFail = true;
+            }
+            else if (tree.ToLower().Contains("the server's host key is not cached in the registry"))
+            {
+                result.HostKeyFail = true;
+            }
+            else
+            {
+                result.Result = GetTreeRefs(tree);
+            }
+
+            return result;
         }
 
         private string GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
@@ -2849,10 +2869,7 @@ namespace GitCommands
                 oldFileName = oldFileName.Quote();
 
             string args = string.Join(" ", extraDiffArguments, revision2.QuoteNE(), revision1.QuoteNE(), "--", filename, oldFileName);
-            if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
                 RunGitCmdDetached("difftool --gui --no-prompt " + args);
-            else
-                output = RunGitCmd("difftool --no-prompt " + args);
             return output;
         }
 
