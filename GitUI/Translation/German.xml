@@ -14,7 +14,7 @@
         <TranslationItem Name="textBoxDescription" Property="Text">
           <Source>Git extensions - Visual Studio and Shell Explorer Extensions for Git
 
-This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
           <Value>Git extensions - Visual Studio und Shell Explorer Erweiterung für Git
 
 Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License.</Value>
@@ -2841,19 +2841,6 @@ Möchten Sie den Vorgang fortsetzen?</Value>
           <Source>Amend commit</Source>
           <Value>Commit anpassen</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorInfo" Property="Text" type="unfinished">
-          <Source>Author </Source>
-          <OldSource>Commit as </OldSource>
-          <Value>Commit als</Value>
-        </TranslationItem>
-        <TranslationItem Name="_commitCommitterInfo" Property="Text">
-          <Source>Committer </Source>
-          <Value>Committer</Value>
-        </TranslationItem>
-        <TranslationItem Name="_commitCommitterToolTip" Property="Text">
-          <Source>Click to change committer information.</Source>
-          <Value>Klicken, um committer Informationen zu ändern.</Value>
-        </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text">
           <Source>Commit Message is requested during commit</Source>
           <Value>Commit Nachricht wird während des Commits angefragt</Value>
@@ -3069,10 +3056,6 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Source>Close dialog after each commit</Source>
           <Value>Dialog nach jedem Commit schließen</Value>
         </TranslationItem>
-        <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
-          <Source>Click to change committer information.</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text">
           <Source>Col</Source>
           <Value>Spalte</Value>
@@ -3284,10 +3267,6 @@ Möchten Sie trotzdem fortfahren?</Value>
         <TranslationItem Name="workingToolStripMenuItem" Property="Text">
           <Source>Working dir changes</Source>
           <Value>Änderungen im Arbeitsverzeichnis</Value>
-        </TranslationItem>
-        <TranslationItem Name="_commitAuthorToolTip" Property="Text" type="obsolete">
-          <Source>Click to change author information.</Source>
-          <Value>Klicken, um Informationen über den Autor ändern.</Value>
         </TranslationItem>
         <TranslationItem Name="commitTemplatesToolStripMenuItem" Property="ToolTipText" type="obsolete">
           <Source>Commit templates</Source>
@@ -6365,14 +6344,6 @@ Wollen Sie den Fingerprint dieses Hosts registrieren und den Prozess neu starten
           <Source>Host Fingerprint not registered</Source>
           <Value>Fingerprint von Host nicht registriert</Value>
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value>Der Host-Key des Servers ist nicht in der Registry vorhanden.
-
-Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -7338,6 +7309,14 @@ können.</Value>
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
         </TranslationItem>
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value>Der Host-Key des Servers ist nicht in der Registry vorhanden.
+
+Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
+        </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text">
           <Source>Unable to determine upstream SVN information.</Source>
           <Value>Bestimmung der upstream SVN Informationen nicht möglich.</Value>
@@ -7851,9 +7830,8 @@ Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
     </TranslationCategory>
     <TranslationCategory Name="StartPageSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Plugins Settings</Source>
-          <OldSource>Start Page</OldSource>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Start Page</Source>
           <Value>Startseite</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">

@@ -14,10 +14,10 @@
         <TranslationItem Name="textBoxDescription" Property="Text">
           <Source>Git extensions - Visual Studio and Shell Explorer Extensions for Git
 
-This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
           <Value>Git extenstions - Visual Studio 和Shell Explorer 的Git介面 
 
-This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE. 
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE. 
 (發布這一程序的目的是希望它有用，但沒有任何擔保。甚至沒有適合特定目的的隱含的擔保) 
 </Value>
         </TranslationItem>
@@ -6132,12 +6132,6 @@ Do you want to register the host's fingerprint and restart the process?</Source>
           <Source>Host Fingerprint not registered</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value />
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -7080,6 +7074,12 @@ local settings.
         <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>無法載入SSH密鑰。 PuTTY設定的不正確。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text" type="unfinished">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
