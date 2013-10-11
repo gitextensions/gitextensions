@@ -2423,7 +2423,7 @@ namespace GitUI.CommandsDialogs
         private void commitCommitter_Click(object sender, EventArgs e)
         {
 
-            UICommands.StartSettingsDialog(this, SettingsDialog.Pages.GitSettingsPage.GetPageReference());
+            UICommands.StartSettingsDialog(this, SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
         private void toolAuthor_Leave(object sender, EventArgs e)
