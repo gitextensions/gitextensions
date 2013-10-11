@@ -14,7 +14,7 @@
         <TranslationItem Name="textBoxDescription" Property="Text">
           <Source>Git extensions - Visual Studio and Shell Explorer Extensions for Git
 
-This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
           <Value>Git extensions - Visual Studio und Shell Explorer Erweiterung für Git
 
 Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License.</Value>
@@ -7830,9 +7830,8 @@ Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
     </TranslationCategory>
     <TranslationCategory Name="StartPageSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Plugins Settings</Source>
-          <OldSource>Start Page</OldSource>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Start Page</Source>
           <Value>Startseite</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
