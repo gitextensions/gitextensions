@@ -370,7 +370,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return null;
             }
 
-            targetDir = Path.Combine(targetDir, _createDirTB.Text);
+            if (!targetDir.EndsWith(Settings.PathSeparator.ToString()) && !targetDir.EndsWith(Settings.PathSeparatorWrong.ToString()))
+                targetDir += Settings.PathSeparator.ToString();
+            targetDir = targetDir + _createDirTB.Text;
             return targetDir;
         }
 
