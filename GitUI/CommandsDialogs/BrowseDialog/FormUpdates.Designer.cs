@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormUpdates));
             this.closeButton = new System.Windows.Forms.Button();
             this.UpdateLabel = new System.Windows.Forms.Label();
-            this.link = new System.Windows.Forms.LinkLabel();
+            this._NO_TRANSLATE_link = new System.Windows.Forms.LinkLabel();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.linkChangeLog = new System.Windows.Forms.LinkLabel();
@@ -57,19 +57,19 @@
             this.UpdateLabel.Name = "UpdateLabel";
             this.UpdateLabel.Size = new System.Drawing.Size(152, 17);
             this.UpdateLabel.TabIndex = 1;
-            this.UpdateLabel.Text = "Searching for updates.";
+            this.UpdateLabel.Text = "Searching for updates";
             // 
             // link
             // 
-            this.link.AutoSize = true;
-            this.link.Location = new System.Drawing.Point(16, 46);
-            this.link.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.link.Name = "link";
-            this.link.Size = new System.Drawing.Size(54, 17);
-            this.link.TabIndex = 2;
-            this.link.TabStop = true;
-            this.link.Text = "version";
-            this.link.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkClicked);
+            this._NO_TRANSLATE_link.AutoSize = true;
+            this._NO_TRANSLATE_link.Location = new System.Drawing.Point(16, 46);
+            this._NO_TRANSLATE_link.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._NO_TRANSLATE_link.Name = "link";
+            this._NO_TRANSLATE_link.Size = new System.Drawing.Size(54, 17);
+            this._NO_TRANSLATE_link.TabIndex = 2;
+            this._NO_TRANSLATE_link.TabStop = true;
+            this._NO_TRANSLATE_link.Text = "version";
+            this._NO_TRANSLATE_link.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkClicked);
             // 
             // progressBar1
             // 
@@ -105,7 +105,7 @@
             this.ClientSize = new System.Drawing.Size(565, 125);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.linkChangeLog);
-            this.Controls.Add(this.link);
+            this.Controls.Add(this._NO_TRANSLATE_link);
             this.Controls.Add(this.UpdateLabel);
             this.Controls.Add(this.closeButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -124,7 +124,7 @@
 
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.Label UpdateLabel;
-        private System.Windows.Forms.LinkLabel link;
+        private System.Windows.Forms.LinkLabel _NO_TRANSLATE_link;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.LinkLabel linkChangeLog;

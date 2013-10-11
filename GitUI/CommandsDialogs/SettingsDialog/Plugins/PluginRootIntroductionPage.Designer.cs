@@ -41,12 +41,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.label1.Text = "Select one of the subnodes to view or edit the settings of a Git Extensions Plugi" +
     "n.";
             // 
-            // StartPageSettingsPage
+            // PluginRootIntroductionPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.label1);
-            this.Name = "StartPageSettingsPage";
+            this.Name = "PluginRootIntroductionPage";
             this.Size = new System.Drawing.Size(473, 229);
             this.ResumeLayout(false);
 

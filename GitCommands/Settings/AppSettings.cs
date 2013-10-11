@@ -241,6 +241,12 @@ namespace GitCommands
             set { SetString("lastCommitMessage", value); }
         }
 
+        public static int CommitDialogNumberOfPreviousMessages
+        {
+            get { return GetInt("commitDialogNumberOfPreviousMessages", 4); }
+            set { SetInt("commitDialogNumberOfPreviousMessages", value); }
+        }
+
         public static string TruncatePathMethod
         {
             get { return GetString("truncatepathmethod", "none"); }
