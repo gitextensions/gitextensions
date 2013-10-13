@@ -683,6 +683,7 @@ namespace GitCommands
             set { SetString("gravatarfallbackservice", value); }
         }
 
+        /// <summary>Gets or sets the path to the git application executable.</summary>
         public static string GitBinDir
         {
             get { return GetString("gitbindir", ""); }
@@ -734,6 +735,7 @@ namespace GitCommands
             set { SetString("puttygen", value); }
         }
 
+        /// <summary>Gets the path to Pageant (SSH auth agent).</summary>
         public static string Pageant
         {
             get { return GetString("pageant", ""); }

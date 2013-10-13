@@ -16,6 +16,7 @@ using Settings = GitCommands.AppSettings;
 
 namespace GitUI
 {
+    /// <summary>Contains methods to invoke GitEx forms, dialogs, etc.</summary>
     public sealed class GitUICommands : IGitUICommands
     {
         public GitUICommands(GitModule module)
@@ -160,6 +161,7 @@ namespace GitUI
         public event GitUIEventHandler PostRegisterPlugin;
 
         public ILockableNotifier RepoChangedNotifier { get; private set; }
+        public IBrowseRepo BrowseRepo { get; set; }
 
         #endregion
 
@@ -413,6 +415,8 @@ namespace GitUI
             return DoActionOnRepo(null, false, true, null, null, action);
         }
 
+        #region Checkout
+
         public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string containRevison)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
@@ -438,6 +442,11 @@ namespace GitUI
             return StartCheckoutBranch(owner, "", false, null);
         }
 
+        public bool StartCheckoutBranch(string branch, bool remote)
+        {
+            return StartCheckoutBranch(null, branch, remote, null);
+        }
+
         public bool StartCheckoutBranch()
         {
             return StartCheckoutBranch(null, "", false, null);
@@ -447,6 +456,8 @@ namespace GitUI
         {
             return StartCheckoutBranch(owner, branch, true);
         }
+
+        #endregion Checkout
 
         public bool StartCompareRevisionsDialog(IWin32Window owner)
         {
@@ -708,11 +719,6 @@ namespace GitUI
             return StartInitializeDialog(null, dir, null);
         }
 
-        public bool StartPushDialog()
-        {
-            return StartPushDialog(false);
-        }
-
         /// <summary>
         /// Starts pull dialog
         /// </summary>
@@ -897,8 +903,8 @@ namespace GitUI
                         else
                             Directory.Delete(path, true);
                     }
-                    catch (System.IO.IOException) { }
-                    catch (System.UnauthorizedAccessException) { }
+                    catch (IOException) { }
+                    catch (UnauthorizedAccessException) { }
                 }
             }
 
@@ -915,7 +921,7 @@ namespace GitUI
             if (resetAction == FormResetChanges.ActionEnum.Cancel)
             {
                 return false;
-            }
+        }
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -1057,6 +1063,9 @@ namespace GitUI
             return StartCherryPickDialog(null);
         }
 
+        /// <summary>Start Merge dialog, using the specified branch.</summary>
+        /// <param name="owner">Owner of the dialog.</param>
+        /// <param name="branch">Branch to merge into the current branch.</param>
         public bool StartMergeBranchDialog(IWin32Window owner, string branch)
         {
 
@@ -1071,6 +1080,8 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreMergeBranch, PostMergeBranch, action);
         }
 
+        /// <summary>Start Merge dialog, using the specified branch.</summary>
+        /// <param name="branch">Branch to merge into the current branch.</param>
         public bool StartMergeBranchDialog(string branch)
         {
             return StartMergeBranchDialog(null, branch);
@@ -1435,6 +1446,11 @@ namespace GitUI
         public void StartFileHistoryDialog(string fileName)
         {
             StartFileHistoryDialog(fileName, null);
+        }
+
+        public bool StartPushDialog()
+        {
+            return StartPushDialog(false);
         }
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted)
@@ -2048,6 +2064,12 @@ namespace GitUI
             InvokeEvent(owner, PostRegisterPlugin);
         }
 
+        public void BrowseGoToRef(string refName, bool showNoRevisionMsg)
+        {
+            if (BrowseRepo != null)
+                BrowseRepo.GoToRef(refName, showNoRevisionMsg);
+        }
+
         public IGitRemoteCommand CreateRemoteCommand()
         {
             return new GitRemoteCommand(Module);
@@ -2110,6 +2132,22 @@ namespace GitUI
 
                 return e.Handled;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            GitUICommands other = obj as GitUICommands;
+            return (other != null) && Equals(other);
+        }
+
+        bool Equals(GitUICommands other)
+        {
+            return Equals(Module, other.Module);
+        }
+
+        public override int GetHashCode()
+        {
+            return Module.GetHashCode();
         }
     }
 }
