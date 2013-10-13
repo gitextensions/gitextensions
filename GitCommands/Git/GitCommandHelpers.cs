@@ -589,12 +589,12 @@ namespace GitCommands
 
             var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
             if (all)
-                return string.Format("push {0}--all \"{1}\"", options, remote);
+                return string.Format("push {0}--all \"{1}\"", options, remote.Trim());
 
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}\"{1}\" {2}:{3}", options, remote, fromBranch, toBranch);
+                return string.Format("push {0}\"{1}\" {2}:{3}", options, remote.Trim(), fromBranch, toBranch);
 
-            return string.Format("push {0}\"{1}\" {2}", options, remote, fromBranch);
+            return string.Format("push {0}\"{1}\" {2}", options, remote.Trim(), fromBranch);
         }
 
         /// <summary>Pushes multiple sets of local branches to remote branches.</summary>

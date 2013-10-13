@@ -114,7 +114,7 @@ namespace GitUI
         {
             var handler = GitUICommandsSourceSet;
             if (handler != null)
-                handler(this, _UICommandsSource);
+                handler(this, newSource);
         }
     }
 }

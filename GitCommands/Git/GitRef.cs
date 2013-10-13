@@ -46,7 +46,7 @@ namespace GitCommands
 
         public static GitRef CreateBranchRef(GitModule module, string guid, string name)
         {
-            return new GitRef(module, guid, GitHeadsPrefix + name);
+            return new GitRef(module, guid, RefsHeadsPrefix + name);
         }
 
         public string CompleteName { get; private set; }

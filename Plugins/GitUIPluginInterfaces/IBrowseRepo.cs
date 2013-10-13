@@ -7,6 +7,6 @@ namespace GitUIPluginInterfaces
 {
     public interface IBrowseRepo
     {
-        void GoToRef(string refName);
+        void GoToRef(string refName, bool showNoRevisionMsg);
     }
 }

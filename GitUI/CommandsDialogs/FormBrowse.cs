@@ -227,6 +227,14 @@ namespace GitUI.CommandsDialogs
         }
     
         #region IBrowseRepo
+        public void GoToRef(string refName, bool showNoRevisionMsg)
+        {
+            RevisionGrid.GoToRef(refName, showNoRevisionMsg);
+        }
+
+        #endregion
+    
+        #region IBrowseRepo
         public void GoToRef(string refName)
         {
             //TODO jb
