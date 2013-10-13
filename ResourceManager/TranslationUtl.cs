@@ -105,8 +105,7 @@ namespace ResourceManager.Translation
 					if (propertyInfo.CanWrite)
 						propertyInfo.SetValue(itemObj, value, null);
 				}
-				else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null))
-                         && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
+				else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
 				{
 					value = translation.TranslateItem(category, item, "Text", null);
 					if (!String.IsNullOrEmpty(value))
