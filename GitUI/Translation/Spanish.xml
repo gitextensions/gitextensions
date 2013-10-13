@@ -14,7 +14,7 @@
         <TranslationItem Name="textBoxDescription" Property="Text">
           <Source>Git extensions - Visual Studio and Shell Explorer Extensions for Git
 
-This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
           <Value>Git Extensions - Extensiones de Visual Studio y Explorador Shell para Git
 
 Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA GARANTÍA; incluso sin la garantía implícita de COMERCIABILIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR.</Value>
@@ -7749,9 +7749,8 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
     </TranslationCategory>
     <TranslationCategory Name="StartPageSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Plugins Settings</Source>
-          <OldSource>Start Page</OldSource>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Start Page</Source>
           <Value>Página de inicio</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">

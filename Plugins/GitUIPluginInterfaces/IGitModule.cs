@@ -5,6 +5,7 @@ using System.Text;
 
 namespace GitUIPluginInterfaces
 {
+    /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule : IDisposable
     {
         /// <summary>
@@ -34,12 +35,16 @@ namespace GitUIPluginInterfaces
 
         string RunBatchFile(string batchFile);
 
+        /// <summary>Gets the directory which contains the git repository.</summary>
         string GitWorkingDir { get; }
 
+        /// <summary>Gets the ".git" directory path.</summary>
         string GetGitDirectory();
 
+        /// <summary>Indicates whether the specified directory contains a git repository.</summary>
         bool IsValidGitWorkingDir();
 
+        /// <summary>Gets the path to the git application executable.</summary>
         string GitCommand { get; }
 
         Version AppVersion { get; }
@@ -58,8 +63,10 @@ namespace GitUIPluginInterfaces
 
         bool StartPageantForRemote(string remote);
 
+        /// <summary>Gets the current branch; or "(no branch)" if HEAD is detached.</summary>
         string GetSelectedBranch();
 
+        /// <summary>true if ".git" directory does NOT exist.</summary>
         bool IsBareRepository();
 
         bool IsRunningGitProcess();

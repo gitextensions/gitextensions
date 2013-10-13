@@ -14,32 +14,36 @@ using JetBrains.Annotations;
 
 namespace GitCommands
 {
+    /// <summary>Specifies whether to check untracked files/directories (e.g. via 'git status')</summary>
     public enum UntrackedFilesMode
     {
-        /// <summary>
-        /// Default value.
-        /// </summary>
+        /// <summary>Default is <see cref="All"/>; when <see cref="UntrackedFilesMode"/> is NOT used, 'git status' uses <see cref="Normal"/>.</summary>
         Default = 1,
-        /// <summary>
-        /// Show no untracked files.
-        /// </summary>
+        /// <summary>Show no untracked files.</summary>
         No = 2,
-        /// <summary>
-        /// Shows untracked files and directories.
-        /// </summary>
+        /// <summary>Shows untracked files and directories.</summary>
         Normal = 3,
-        /// <summary>
-        /// Also shows individual files in untracked directories.
-        /// </summary>
+        /// <summary>Shows untracked files and directories, and individual files in untracked directories.</summary>
         All = 4
     }
 
+    /// <summary>Specifies whether to ignore changes to submodules when looking for changes (e.g. via 'git status').</summary>
     public enum IgnoreSubmodulesMode
     {
+        /// <summary>Default is <see cref="All"/> (hides all changes to submodules).</summary>
         Default = 1,
+        /// <summary>Consider a submodule modified when it either:
+        ///  contains untracked or modified files,
+        ///  or its HEAD differs from the commit recorded in the superproject.</summary>
         None = 2,
+        /// <summary>Submodules NOT considered dirty when they only contain <i>untracked</i> content
+        ///  (but they are still scanned for modified content).</summary>
         Untracked = 3,
+        /// <summary>Ignores all changes to the work tree of submodules,
+        ///  only changes to the <i>commits</i> stored in the superproject are shown.</summary>
         Dirty = 4,
+        /// <summary>Hides all changes to submodules
+        ///  (and suppresses the output of submodule summaries when the config option status.submodulesummary is set).</summary>
         All = 5
     }
 
@@ -111,6 +115,7 @@ namespace GitCommands
             }
         }
 
+        /// <summary>Trims whitespace and replaces '\' with '/'.</summary>
         public static string FixPath([NotNull] string path)
         {
             path = path.Trim();
@@ -334,10 +339,7 @@ namespace GitCommands
         public static string DeleteBranchCmd(string branchName, bool force, bool remoteBranch)
         {
             StringBuilder cmd = new StringBuilder("branch");
-            if (force)
-                cmd.Append(" -D");
-            else
-                cmd.Append(" -d");
+            cmd.Append(force ? " -D" : " -d");
 
             if (remoteBranch)
                 cmd.Append(" -r");
@@ -431,9 +433,8 @@ namespace GitCommands
             if (initSubmodules)
                 options.Add("--recurse-submodules");
             if (depth.HasValue)
-                options.Add("--depth " + depth.ToString());
-            if (VersionInUse.CloneCanAskForProgress)
-                options.Add("--progress");
+                options.Add("--depth " + depth);
+            options.Add("--progress");
             if (!string.IsNullOrEmpty(branch))
                 options.Add("--branch " + branch);
             options.Add(string.Format("\"{0}\"", from.Trim()));
@@ -492,11 +493,13 @@ namespace GitCommands
             return "branch --merged";
         }
 
+        /// <summary>Un-sets the git SSH command path.</summary>
         public static void UnsetSsh()
         {
             Environment.SetEnvironmentVariable("GIT_SSH", "", EnvironmentVariableTarget.Process);
         }
 
+        /// <summary>Sets the git SSH command path.</summary>
         public static void SetSsh(string path)
         {
             if (!string.IsNullOrEmpty(path))
@@ -510,6 +513,7 @@ namespace GitCommands
             return sshString.EndsWith("plink.exe", StringComparison.CurrentCultureIgnoreCase);
         }
 
+        /// <summary>Gets the git SSH command; or "" if the environment variable is NOT set.</summary>
         public static string GetSsh()
         {
             var ssh = Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process);
@@ -517,15 +521,42 @@ namespace GitCommands
             return ssh ?? "";
         }
 
-        public static string PushCmd(string path, string branch, bool all)
+        /// <summary>Creates a 'git push' command using the specified parameters, pushing from HEAD.</summary>
+        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
+        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
+        /// <param name="all">All refs under 'refs/heads/' will be pushed.</param>
+        /// <returns>'git push' command with the specified parameters.</returns>
+        public static string PushCmd(string remote, string toBranch, bool all)
         {
-            return PushCmd(path, null, branch, all, false, true, 0);
+            return PushCmd(remote, null, toBranch, all, false, true, 0);
         }
 
-        public static string PushCmd(string path, string fromBranch, string toBranch,
+        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
+        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
+        /// <param name="fromBranch">Name of the branch to push.</param>
+        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
+        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
+        /// <returns>'git push' command with the specified parameters.</returns>
+        public static string PushCmd(string remote, string fromBranch, string toBranch, bool force = false)
+        {
+            return PushCmd(remote, fromBranch, toBranch, false, force, false, 0);
+        }
+
+        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
+        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
+        /// <param name="fromBranch">Name of the branch to push.</param>
+        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
+        /// <param name="all">All refs under 'refs/heads/' will be pushed.</param>
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
+        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
+        /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
+        /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
+        /// <returns>'git push' command with the specified parameters.</returns>
+        public static string PushCmd(string remote, string fromBranch, string toBranch,
             bool all, bool force, bool track, int recursiveSubmodules)
         {
-            path = FixPath(path);
+            remote = FixPath(remote);
 
             // This method is for pushing to remote branches, so fully qualify the
             // remote branch name with refs/heads/.
@@ -557,27 +588,22 @@ namespace GitCommands
 
             var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
             if (all)
-                return string.Format("push {0}--all \"{1}\"", options, path.Trim());
+                return string.Format("push {0}--all \"{1}\"", options, remote.Trim());
 
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}\"{1}\" {2}:{3}", options, path.Trim(), fromBranch, toBranch);
+                return string.Format("push {0}\"{1}\" {2}:{3}", options, remote.Trim(), fromBranch, toBranch);
 
-            return string.Format("push {0}\"{1}\" {2}", options, path.Trim(), fromBranch);
+            return string.Format("push {0}\"{1}\" {2}", options, remote.Trim(), fromBranch);
         }
 
-        public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)
+        /// <summary>Pushes multiple sets of local branches to remote branches.</summary>
+        public static string PushMultipleCmd(string remote, IEnumerable<GitPushAction> pushActions)
         {
-            path = FixPath(path);
-
-            var sprogressOption = "";
-            if (VersionInUse.PushCanAskForProgress)
-                sprogressOption = "--progress ";
-
-            string cmd = string.Format("push {0} \"{1}\" ", sprogressOption, path.Trim());
-
-            cmd += string.Join(" ", pushActions.Select(action => action.Format()));
-
-            return cmd;
+            remote = FixPath(remote);
+            return new GitPush(remote, pushActions)
+            {
+                ReportProgress = VersionInUse.PushCanAskForProgress
+            }.ToString();
         }
 
         public static string PushTagCmd(string path, string tag, bool all, bool force = false)
@@ -794,9 +820,6 @@ namespace GitCommands
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = 0)
         {
-            if (!VersionInUse.SupportGitStatusPorcelain)
-                throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
-
             StringBuilder stringBuilder = new StringBuilder("status --porcelain -z");
 
             switch (untrackedFiles)
@@ -1238,7 +1261,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="originDate">Current date.</param>
         /// <param name="previousDate">The date to get relative time string for.</param>
-        /// <param name="displayWeeks">Display weeks in date string.</param>
+        /// <param name="displayWeeks">Indicates whether to display weeks.</param>
         /// <returns>The human readable string for relative date.</returns>
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks = true)
