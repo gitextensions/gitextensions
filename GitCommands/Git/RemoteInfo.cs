@@ -88,6 +88,12 @@ namespace GitCommands.Git
             int i = 0;
             Name = lines[i].Substring("* remote ".Length);
 
+            _RemoteTrackingBranches = new ObservableCollection<RemoteTrackingBranch>();
+            PushUrls = new string[0];
+            if (lines.Count == 1)
+            {                
+                return;
+            }
             i += 1;// 1
             string fetchURL = lines[i];
             if (!fetchURL.Contains("(no URL)"))
