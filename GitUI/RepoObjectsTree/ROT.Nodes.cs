@@ -59,7 +59,7 @@ namespace GitUI.UserControls
             /// <summary>Styles the <see cref="TreeNode"/>.</summary>
             internal virtual void ApplyStyle()
             {
-                TreeNode.NodeFont = Settings.Font;
+                TreeNode.NodeFont = AppSettings.Font;
             }
 
             /// <summary>Occurs when the <see cref="Node"/> is selected.</summary>

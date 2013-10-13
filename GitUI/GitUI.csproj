@@ -147,6 +147,7 @@
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\MergeToolsHelper.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -232,6 +233,7 @@
     <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\PathFormatter.cs" />
     <Compile Include="UserControls\RevisionGridClasses\CopyToClipboardMenuHelper.cs" />
     <Compile Include="UserControls\RevisionGridClasses\CaptionCustomMenuRenderer.cs" />
     <Compile Include="UserControls\RevisionGridClasses\GitRefListsForRevision.cs" />

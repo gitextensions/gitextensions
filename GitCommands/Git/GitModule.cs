@@ -171,7 +171,7 @@ namespace GitCommands
         {
             get
             {
-                if (_systemEncoding == null)
+                if (_SystemEncoding == null)
                 {
                     //check whether GitExtensions works with standard msysgit or msysgit-unicode
 
@@ -187,14 +187,14 @@ namespace GitCommands
 
                     String s = new GitModule("").RunGitCmd(arguments, out exitCode, Encoding.UTF8);
                     if (s != null && s.IndexOf(controlStr) != -1)
-                        _systemEncoding = new UTF8Encoding(false);
+                        _SystemEncoding = new UTF8Encoding(false);
                     else
-                        _systemEncoding = Encoding.Default;
+                        _SystemEncoding = Encoding.Default;
 
-                    Debug.WriteLine("System encoding: " + _systemEncoding.EncodingName);
+                    Debug.WriteLine("System encoding: " + _SystemEncoding.EncodingName);
                 }
 
-                return _systemEncoding;
+                return _SystemEncoding;
             }
         }
 
@@ -571,17 +571,17 @@ namespace GitCommands
             return RunCmd(AppSettings.GitCommand, arguments, out exitCode, encoding, stdInput);
         }
 
-        /// <summary>
-        /// Run command, console window is hidden, wait for exit, redirect output
-        /// </summary>
-        /// <summary>Runs a git command. "git {arguments}"</summary>
         /// <summary>Runs a 'git' command with the specified args.</summary>
         public GitCommandResult GitCmd(string args)
         {
             int exitCode;
-            string output = RunGit(args, out exitCode);
+            string output = RunGitCmd(args, out exitCode);
             return new GitCommandResult(output, exitCode == 0);
         }
+
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private IEnumerable<string> ReadCmdOutputLines(string cmd, string arguments, string stdInput)
         {
@@ -1304,7 +1304,7 @@ namespace GitCommands
         /// <summary>Show the changes recorded in the stash as a diff between the stashed state and its original parent.</summary>
         public string StashShowDiff(string stash = null)
         {
-            return RunGit(string.Format("stash show {0}", stash));
+            return RunGitCmd(string.Format("stash show {0}", stash));
         }
 
         /// <summary>Remove a single stashed state from the stash list and apply it on top of the current working tree state.</summary>
@@ -1312,7 +1312,7 @@ namespace GitCommands
         /// <param name="includeIndex">Try to reinstate both working tree and index changes.</param>
         public string StashPop(string stash = null, bool includeIndex = false)
         {
-            return RunGit(
+            return RunGitCmd(
                 string.Format(
                     "stash pop {0} {1}",
                     includeIndex ? "--index" : "",
@@ -1325,7 +1325,7 @@ namespace GitCommands
         /// Applies the changes recorded in the stash to the new working tree and index.</summary>
         public string StashBranch(string branchName, string stash = null)
         {
-            return RunGit(
+            return RunGitCmd(
                 string.Format(
                     "stash branch {0} {1}",
                     branchName,
@@ -1338,7 +1338,7 @@ namespace GitCommands
         /// <remarks>When no stash is given, removes the latest one.</remarks></summary>
         public GitCommandResult StashDelete(string stash = null)
         {
-            string stashDelete = RunGit(string.Format("stash drop {0}", stash));
+            string stashDelete = RunGitCmd(string.Format("stash drop {0}", stash));
             return new GitCommandResult(stashDelete, stashDelete.Contains("Dropped"));
         }
 

@@ -229,7 +229,8 @@ namespace GitUI.CommandsDialogs
         #region IBrowseRepo
         public void GoToRef(string refName)
         {
-            RevisionGrid.GoToRef(refName);
+            //TODO jb
+            //RevisionGrid.GoToRef(refName);
         }
 
         #endregion

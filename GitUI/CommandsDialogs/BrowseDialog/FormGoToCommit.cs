@@ -12,6 +12,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <summary>
         /// this will be used when Go() is called
         /// </summary>
+        string _selectedRevision;
 
         // these two are used to prepare for _selectedRevision
         GitRef _selectedTag;
@@ -42,7 +43,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <returns></returns>
         public string GetSelectedRevision()
         {
-            return _selectedRefName;
+            return _selectedRevision;
         }
 
         /// <summary>
