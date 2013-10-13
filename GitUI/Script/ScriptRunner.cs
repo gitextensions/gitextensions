@@ -10,8 +10,11 @@ using GitUI.HelperDialogs;
 
 namespace GitUI.Script
 {
+    /// <summary>Runs scripts.</summary>
     public static class ScriptRunner
     {
+        /// <summary>Tries to run scripts identified by a <paramref name="command"/> 
+        /// and returns true if any executed.</summary>
         public static bool ExecuteScriptCommand(IWin32Window owner, GitModule aModule, int command, RevisionGrid revisionGrid = null)
         {
             var curScripts = ScriptManager.GetScripts();
