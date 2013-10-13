@@ -49,6 +49,7 @@ namespace GitUI
     {
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
         private readonly TranslationString _cannotHighlightSelectedBranch = new TranslationString("Cannot highlight selected branch when revision graph is loading.");
+        private readonly TranslationString _noRevisionFoundError = new TranslationString("No revision found.");
 
         private const int NodeDimension = 8;
         private const int LaneWidth = 13;
@@ -2696,6 +2697,19 @@ namespace GitUI
             CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(revision.Message, 30));
             CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, revision.Author);
             CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, revision.CommitDate.ToString());
+        }
+
+        public void GoToRef(string refName, bool showNoRevisionMsg)
+        {
+            string revisionGuid = Module.RevParse(refName);
+            if (!string.IsNullOrEmpty(revisionGuid))
+            {
+                SetSelectedRevision(new GitRevision(Module, revisionGuid));
+            }
+            else if(showNoRevisionMsg)
+            {
+                MessageBox.Show((ParentForm as IWin32Window) ?? this, _noRevisionFoundError.Text);
+            }
         }
 
         /// <summary>

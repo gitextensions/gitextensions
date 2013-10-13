@@ -80,6 +80,7 @@
     <Compile Include="BuildServerIntegration\IBuildServerWatcher.cs" />
     <Compile Include="GitPluginBase.cs" />
     <Compile Include="GitUIPostActionEventArgs.cs" />
+    <Compile Include="IBrowseRepo.cs" />
     <Compile Include="IGitPluginForRepository.cs" />
     <Compile Include="IGitModule.cs" />
     <Compile Include="IGitRemoteCommand.cs" />
