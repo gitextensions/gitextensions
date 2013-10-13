@@ -162,7 +162,7 @@ namespace GitCommands
                 }
 
                 return _EffectiveConfigFile;
-            }            
+            }
         }
 
         //encoding for files paths
@@ -249,7 +249,7 @@ namespace GitCommands
         public static readonly string DetachedBranch = "(no branch)";
 
         private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from " };
-        
+
         public AppSettings.PullAction LastPullAction
         {
             get { return AppSettings.GetEnum("LastPullAction_" + WorkingDir, AppSettings.PullAction.None); }
@@ -1019,7 +1019,7 @@ namespace GitCommands
 
                 //commit message is not reencoded by git when format is given
                 revision.Body = ReEncodeCommitMessage(message, revision.MessageEncoding);
-                revision.Message = revision.Body.Substring(0, revision.Body.IndexOfAny(new[] {'\r', '\n'}));
+                revision.Message = revision.Body.Substring(0, revision.Body.IndexOfAny(new[] { '\r', '\n' }));
             }
 
             return revision;
@@ -1735,11 +1735,11 @@ namespace GitCommands
         {
             return File.Exists(GetRebaseDir() + "git-rebase-todo");
         }
-        
+
         public IList<PatchFile> GetInteractiveRebasePatchFiles()
         {
             string todoFile = GetRebaseDir() + "git-rebase-todo";
-            string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new char[]{'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries) : null;
+            string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries) : null;
 
             IList<PatchFile> patchFiles = new List<PatchFile>();
 
@@ -2345,14 +2345,14 @@ namespace GitCommands
                     var localItem = item;
                     localItem.SubmoduleStatus = Task.Factory.StartNew(() =>
                     {
-                            var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.IsStaged);
-                            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
-                            {
-                                var submodule = submoduleStatus.GetSubmodule(this);
-                                submoduleStatus.CheckSubmoduleStatus(submodule);
-                    }
-                            return submoduleStatus;
-                        });
+                        var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.IsStaged);
+                        if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+                        {
+                            var submodule = submoduleStatus.GetSubmodule(this);
+                            submoduleStatus.CheckSubmoduleStatus(submodule);
+                        }
+                        return submoduleStatus;
+                    });
                 }
         }
 
@@ -3072,7 +3072,7 @@ namespace GitCommands
                 oldFileName = oldFileName.Quote();
 
             string args = string.Join(" ", extraDiffArguments, revision2.QuoteNE(), revision1.QuoteNE(), "--", filename, oldFileName);
-                RunGitCmdDetached("difftool --gui --no-prompt " + args);
+            RunGitCmdDetached("difftool --gui --no-prompt " + args);
             return output;
         }
 
