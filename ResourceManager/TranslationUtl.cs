@@ -73,21 +73,31 @@ namespace ResourceManager.Translation
                 {
                     DataGridViewColumn c = itemObj as DataGridViewColumn;
 
-                    IsTranslatableItem = propertyInfo => IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
+                    IsTranslatableItem = delegate(PropertyInfo propertyInfo)
+                    {
+                        return IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
+                    };
                 }
                 else
                 {
                     IsTranslatableItem = IsTranslatableItemInComponent;
                 }
 
-                Action<PropertyInfo> paction = propertyInfo => action(itemName, itemObj, propertyInfo);
-                ForEachProperty(itemObj, paction, IsTranslatableItem);
+                if (IsTranslatableItem != null)
+                {
+                    Action<PropertyInfo> paction = delegate(PropertyInfo propertyInfo)
+                    {
+                        action(itemName, itemObj, propertyInfo);
+                    };
+
+                    ForEachProperty(itemObj, paction, IsTranslatableItem);
+                }
             }
         }
 
         public static void TranslateItemsFromList(string category, Translation translation, IEnumerable<Tuple<string, object>> items)
         {
-            Action<string, object, PropertyInfo> action = (item, itemObj, propertyInfo) =>
+            Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
             {
                 string value = translation.TranslateItem(category, item, propertyInfo.Name, null);
 				if (!String.IsNullOrEmpty(value))

@@ -101,7 +101,8 @@ namespace GitUI
 
         protected Hotkey.HotkeyCommand GetHotkeyCommand(int commandCode)
         {
-            if (Hotkeys == null) { return null; }
+            if (Hotkeys == null)
+                return null;
 
             return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
         }
@@ -114,7 +115,7 @@ namespace GitUI
 
         #endregion
 
-        void SetFont()
+        private void SetFont()
         {
             Font = Settings.Font;
         }
@@ -269,7 +270,7 @@ namespace GitUI
                 OnRuntimeLoad(e);
         }
 
-        void GitExtensionsFormLoad(object sender, EventArgs e)
+        private void GitExtensionsFormLoad(object sender, EventArgs e)
         {
             // find out if the value is a component and is currently in design mode
             var isComponentInDesignMode = CheckComponent(this);

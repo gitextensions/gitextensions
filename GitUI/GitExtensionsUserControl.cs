@@ -109,7 +109,10 @@ namespace GitUI
         /// <remarks>This base method does nothing and returns false.</remarks>
         /// </summary>
         /// <param name="command"></param>
-        protected virtual bool ExecuteCommand(int command) { return false; }
+        protected virtual bool ExecuteCommand(int command)
+        {
+            return false;
+        }
 
         #endregion
     }

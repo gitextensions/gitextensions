@@ -483,10 +483,9 @@ namespace GitCommands
 
         public static string BranchCmd(string branchName, string revision, bool checkout)
         {
-            return string.Format(
-                checkout
-                ? "checkout -b \"{0}\" \"{1}\""
-                : "branch \"{0}\" \"{1}\"", branchName.Trim(), revision);
+            if (checkout)
+                return string.Format("checkout -b \"{0}\" \"{1}\"", branchName.Trim(), revision);
+            return string.Format("branch \"{0}\" \"{1}\"", branchName.Trim(), revision);
         }
 
         public static string MergedBranches()
@@ -518,8 +517,9 @@ namespace GitCommands
         /// <summary>Gets the git SSH command; or "" if the environment variable is NOT set.</summary>
         public static string GetSsh()
         {
-            return Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process)
-                ?? "";
+            var ssh = Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process);
+
+            return ssh ?? "";
         }
 
         /// <summary>Creates a 'git push' command using the specified parameters, pushing from HEAD.</summary>
@@ -662,9 +662,9 @@ namespace GitCommands
         public static string ContinueBisectCmd(GitBisectOption bisectOption, params string[] revisions)
         {
             var bisectCommand = GetBisectCommand(bisectOption);
-            return (revisions.Length == 0)
-                ? bisectCommand
-                : string.Format("{0} {1}", bisectCommand, string.Join(" ", revisions));
+            if (revisions.Length == 0)
+                return bisectCommand;
+            return string.Format("{0} {1}", bisectCommand, string.Join(" ", revisions));
         }
 
         private static string GetBisectCommand(GitBisectOption bisectOption)
@@ -766,16 +766,18 @@ namespace GitCommands
 
         public static string PatchCmd(string patchFile)
         {
-            return IsDiffFile(patchFile)
-                       ? "apply \"" + FixPath(patchFile) + "\""
-                       : "am --3way --signoff \"" + FixPath(patchFile) + "\"";
+            if (IsDiffFile(patchFile))
+                return "apply \"" + FixPath(patchFile) + "\"";
+            else
+                return "am --3way --signoff \"" + FixPath(patchFile) + "\"";
         }
 
         public static string PatchCmdIgnoreWhitespace(string patchFile)
         {
-            return IsDiffFile(patchFile)
-                       ? "apply --ignore-whitespace \"" + FixPath(patchFile) + "\""
-                       : "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+            if (IsDiffFile(patchFile))
+                return "apply --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+            else
+                return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
         }
 
         public static string PatchDirCmd()
@@ -812,9 +814,9 @@ namespace GitCommands
         public static ConfigFile GetGlobalConfig()
         {
             string configPath = Path.Combine(GetHomeDir(), ".config", "git", "config");
-            return File.Exists(configPath)
-                ? new ConfigFile(configPath, false)
-                : new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
+            if (File.Exists(configPath))
+                return new ConfigFile(configPath, false);
+            return new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = 0)

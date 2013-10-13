@@ -354,7 +354,7 @@ namespace GitUI.Script
                 {
                     string currentRevisionGuid = aModule.GetCurrentCheckout();
                     refs = aModule.GetRefs(true, true).Where(gitRef => gitRef.Guid == currentRevisionGuid).ToList();
-                    }
+                }
                 else
                 {
                     currentRevision = RevisionGrid.GetCurrentRevision();

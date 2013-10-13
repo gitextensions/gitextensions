@@ -166,12 +166,12 @@ namespace GitCommands
         }
 
         //encoding for files paths
-        private static Encoding _SystemEncoding;
+        private static Encoding _systemEncoding;
         public static Encoding SystemEncoding
         {
             get
             {
-                if (_SystemEncoding == null)
+                if (_systemEncoding == null)
                 {
                     //check whether GitExtensions works with standard msysgit or msysgit-unicode
 
@@ -187,14 +187,14 @@ namespace GitCommands
 
                     String s = new GitModule("").RunGitCmd(arguments, out exitCode, Encoding.UTF8);
                     if (s != null && s.IndexOf(controlStr) != -1)
-                        _SystemEncoding = new UTF8Encoding(false);
+                        _systemEncoding = new UTF8Encoding(false);
                     else
-                        _SystemEncoding = Encoding.Default;
+                        _systemEncoding = Encoding.Default;
 
-                    Debug.WriteLine("System encoding: " + _SystemEncoding.EncodingName);
+                    Debug.WriteLine("System encoding: " + _systemEncoding.EncodingName);
                 }
 
-                return _SystemEncoding;
+                return _systemEncoding;
             }
         }
 
@@ -2103,7 +2103,6 @@ namespace GitCommands
 
         public string GetEffectiveSetting(string setting)
         {
-            //return GetConfigSetting(setting, config => config.GetValue(setting));
             var localConfig = GetLocalConfig();
             if (localConfig.HasValue(setting))
                 return localConfig.GetValue(setting);
@@ -2113,7 +2112,6 @@ namespace GitCommands
 
         public string GetEffectivePathSetting(string setting)
         {
-            //return GetConfigSetting(setting, (config) => config.GetPathValue(setting));
             var localConfig = GetLocalConfig();
             if (localConfig.HasValue(setting))
                 return localConfig.GetPathValue(setting);
@@ -2575,14 +2573,12 @@ namespace GitCommands
         public string GetCurrentRemote()
         {
             string remote = GetSetting(string.Format("branch.{0}.remote", GetSelectedBranch()));
-            return String.IsNullOrEmpty(remote)
-                ? "origin"
-                : remote;
+            return remote;
         }
 
         /// <summary>Gets the remote branch of the specified local branch; or "" if none is configured.</summary>
         public string GetRemoteBranch(string branch)
-        {// might be quicker to parse 'git for-each-ref --sort=-upstream --format='%(upstream:short) <- %(refname:short)' refs/heads'
+        {
             string remote = GetSetting(string.Format("branch.{0}.remote", branch));
             string merge = GetSetting(string.Format("branch.{0}.merge", branch));
             if (String.IsNullOrEmpty(remote) || String.IsNullOrEmpty(merge))
@@ -3104,8 +3100,7 @@ namespace GitCommands
             string baseCommit = GetMergeBase(commit, oldCommit);
             if (baseCommit == oldCommit)
                 return SubmoduleStatus.FastForward;
-
-            if (baseCommit == commit)
+            else if (baseCommit == commit)
                 return SubmoduleStatus.Rewind;
 
             string error = "";
@@ -3120,9 +3115,9 @@ namespace GitCommands
                 return SubmoduleStatus.Unknown;
             if (data.CommitDate > olddata.CommitDate)
                 return SubmoduleStatus.NewerTime;
-            if (data.CommitDate < olddata.CommitDate)
+            else if (data.CommitDate < olddata.CommitDate)
                 return SubmoduleStatus.OlderTime;
-            if (data.CommitDate == olddata.CommitDate)
+            else if (data.CommitDate == olddata.CommitDate)
                 return SubmoduleStatus.SameTime;
             return SubmoduleStatus.Unknown;
         }

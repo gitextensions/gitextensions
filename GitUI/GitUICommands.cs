@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,7 +16,6 @@ using GitUIPluginInterfaces.Notifications;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
 using Settings = GitCommands.AppSettings;
-using System.Diagnostics;
 
 namespace GitUI
 {
@@ -315,7 +315,7 @@ namespace GitUI
                     {
                         form.SetRevision(revision);
                         return form.ShowDialog(owner) == DialogResult.OK;
-                }
+                    }
                 }
             );
         }
@@ -333,7 +333,7 @@ namespace GitUI
 
         public void InvokeEventOnClose(Form form, GitUIEventHandler ev)
         {
-            form.FormClosed += (o, ea) =>
+            form.FormClosed += (object o, FormClosedEventArgs ea) =>
             {
                 InvokeEvent(form == null ? null : form.Owner, ev);
             };
@@ -388,15 +388,15 @@ namespace GitUI
                 if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
                     return false;
 
-                    if (!InvokeEvent(owner, preEvent))
-                        return false;
+                if (!InvokeEvent(owner, preEvent))
+                    return false;
                 try
                 {
                     actionDone = action();
                 }
                 finally
                 {
-                        InvokePostEvent(owner, actionDone, postEvent);
+                    InvokePostEvent(owner, actionDone, postEvent);
                 }
             }
             finally
@@ -427,10 +427,10 @@ namespace GitUI
         public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string containRevison)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
-                {
-                    using (var form = new FormCheckoutBranch(this, branch, remote, containRevison))
-                        return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
-                }
+            {
+                using (var form = new FormCheckoutBranch(this, branch, remote, containRevison))
+                    return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
+            }
             );
         }
 
@@ -937,7 +937,7 @@ namespace GitUI
 
             // Also delete new files, if requested.
             if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
-        {
+            {
                 try
                 {
                     string path = Path.Combine(Module.WorkingDir, fileName);
@@ -945,7 +945,7 @@ namespace GitUI
                         File.Delete(path);
                     else
                         Directory.Delete(path, true);
-        }
+                }
                 catch (System.IO.IOException) { }
                 catch (System.UnauthorizedAccessException) { }
             }
@@ -1421,8 +1421,8 @@ namespace GitUI
                 {
                     var form = new FormFileHistory(this, fileName, revision, filterByRevision);
 
-                        if (showBlame)
-                            form.SelectBlameTab();
+                    if (showBlame)
+                        form.SelectBlameTab();
 
                     return form;
                 };
@@ -1755,7 +1755,8 @@ namespace GitUI
             switch (args[1])
             {
                 case "about":
-                    var frm = new AboutBox { StartPosition = FormStartPosition.CenterScreen };
+                    var frm = new AboutBox();
+                    frm.StartPosition = FormStartPosition.CenterScreen;
                     Application.Run(frm);
                     return;
                 case "add":
@@ -1878,7 +1879,8 @@ namespace GitUI
                     }
                     break;
             }
-            var frmCmdLine = new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen };
+            var frmCmdLine = new FormCommandlineHelp();
+            frmCmdLine.StartPosition = FormStartPosition.CenterScreen;
             Application.Run(frmCmdLine);
         }
 
@@ -1956,7 +1958,7 @@ namespace GitUI
         {
             using (var formEditor = new FormEditor(this, filename, showWarning))
                 return formEditor.ShowDialog() != DialogResult.Cancel;
-            }
+        }
 
         private void RunFileHistoryCommand(string[] args)
         {
@@ -2094,7 +2096,7 @@ namespace GitUI
 
             public string CommandOutput { get; private set; }
 
-            readonly GitModule Module;
+            public readonly GitModule Module;
 
             public event GitRemoteCommandCompletedEventHandler Completed;
 

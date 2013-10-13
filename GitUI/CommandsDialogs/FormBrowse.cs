@@ -120,6 +120,9 @@ namespace GitUI.CommandsDialogs
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
 
+        /// <summary>
+        /// For VS designer
+        /// </summary>
         private FormBrowse()
         {
             InitializeComponent();
@@ -187,7 +190,7 @@ namespace GitUI.CommandsDialogs
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
             this._dontUpdateOnIndexChange = false;
-            
+
             GitUICommandsChanged += (a, oldcommands) =>
             {
                 RefreshPullIcon();
@@ -196,7 +199,7 @@ namespace GitUI.CommandsDialogs
                 oldcommands.BrowseRepo = null;
                 UICommands.BrowseRepo = this;
             };
-            
+
             if (aCommands != null)
             {
                 RefreshPullIcon();
@@ -230,15 +233,6 @@ namespace GitUI.CommandsDialogs
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
             RevisionGrid.GoToRef(refName, showNoRevisionMsg);
-        }
-
-        #endregion
-    
-        #region IBrowseRepo
-        public void GoToRef(string refName)
-        {
-            //TODO jb
-            //RevisionGrid.GoToRef(refName);
         }
 
         #endregion
@@ -330,15 +324,15 @@ namespace GitUI.CommandsDialogs
         {
             if (_pluginsLoaded)
                 return;
-                foreach (var plugin in LoadedPlugins.Plugins)
-                {
-                    var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
-                    item.Click += ItemClick;
+            foreach (var plugin in LoadedPlugins.Plugins)
+            {
+                var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
+                item.Click += ItemClick;
                 pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
-                }
+            }
             _pluginsLoaded = true;
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
-            }
+        }
 
         /// <summary>
         ///   Execute plugin
@@ -1068,7 +1062,7 @@ namespace GitUI.CommandsDialogs
 
             var revision = RevisionGrid.GetSelectedRevisions()[0];
             var children = RevisionGrid.GetRevisionChildren(revision.Guid);
-                RevisionInfo.SetRevisionWithChildren(revision, children);
+            RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
         private BuildReportTabPageExtension BuildReportTabPageExtension;
@@ -1207,7 +1201,7 @@ namespace GitUI.CommandsDialogs
             {
                 var fileName = SaveSelectedItemToTempFile();
                 if (fileName != null)
-                Process.Start(fileName);
+                    Process.Start(fileName);
             }
             catch (Exception ex)
             {
@@ -1394,9 +1388,9 @@ namespace GitUI.CommandsDialogs
         }
 
         private void RefreshDashboardToolStripMenuItemClick(object sender, EventArgs e)
-            {
-                _dashboard.Refresh();
-            }
+        {
+            _dashboard.Refresh();
+        }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
         {

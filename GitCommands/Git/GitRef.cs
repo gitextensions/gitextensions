@@ -6,8 +6,6 @@ namespace GitCommands
 {
     public class GitRef : IGitItem
     {
-        public const string GitHeadsPrefix = "refs/heads/";
-
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
         private IList<IGitItem> _subItems;
