@@ -15,6 +15,8 @@ namespace GitUI
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
         public event GitUICommandsSourceSetEventHandler GitUICommandsSourceSet;
+        private IGitUICommandsSource _uiCommandsSource;
+
         
         /// <summary>Gets the <see cref="IGitUICommandsSource"/>.</summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -23,21 +25,21 @@ namespace GitUI
         {
             get
             {
-                if (_UICommandsSource == null)
+                if (_uiCommandsSource == null)
                     SearchForUICommandsSource();
-                if (_UICommandsSource == null)
+                if (_uiCommandsSource == null)
                     throw new NullReferenceException("UICommandsSource");
-                return _UICommandsSource;
+                return _uiCommandsSource;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentException("Can not assign null value to UICommandsSource");
-                if (_UICommandsSource != null)
+                if (_uiCommandsSource != null)
                     throw new ArgumentException("UICommandsSource is already set");
 
-                _UICommandsSource = value;
-                OnUICommandsSourceChanged(this, _UICommandsSource);
+                _uiCommandsSource = value;
+                OnUICommandsSourceChanged(this, _uiCommandsSource);
             }
         }
         private IGitUICommandsSource _UICommandsSource;
@@ -57,7 +59,7 @@ namespace GitUI
 
         protected override void Dispose(bool disposing)
         {
-            if (_UICommandsSource != null)
+            if (_uiCommandsSource != null)
                 DisposeUICommandsSource();
 
             base.Dispose(disposing);
@@ -66,7 +68,7 @@ namespace GitUI
         /// <summary>Occurs when the <see cref="UICommandsSource"/> is disposed.</summary>
         protected virtual void DisposeUICommandsSource()
         {
-            _UICommandsSource = null;
+            _uiCommandsSource = null;
         }
 
         /// <summary>Searches up the <see cref="UserControl"/>'s parent tree until it finds a <see cref="IGitUICommandsSource"/>.</summary>
@@ -77,7 +79,7 @@ namespace GitUI
 
             lock (this)
             {
-                if (_UICommandsSource != null)
+                if (_uiCommandsSource != null)
                     return;
 
                 IGitUICommandsSource cmdsSrc = null;
@@ -102,9 +104,9 @@ namespace GitUI
 
         /// <summary>Tries to run scripts identified by a <paramref name="command"/> 
         /// and returns true if any executed.</summary>
-        protected virtual bool ExecuteScriptCommand(int command)
+        protected bool ExecuteScriptCommand(int command)
         {
-            return Script.ScriptRunner.ExecuteScriptCommand(Module, command);
+            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGrid);
         }
 
         /// <summary>Raises the <see cref="GitUICommandsSourceSet"/> event.</summary>

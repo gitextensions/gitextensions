@@ -37,6 +37,8 @@ namespace GitUI.Script
 
         public bool AskConfirmation { get; set; }
 
+        public bool RunInBackground { get; set; }
+
         public int HotkeyCommandIdentifier { get; set; }
         /// <summary>
         /// Gets or sets the icon name.

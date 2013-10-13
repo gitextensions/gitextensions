@@ -51,7 +51,6 @@
             this.nameTextBox = new System.Windows.Forms.TextBox();
             this.scriptEnabled = new System.Windows.Forms.CheckBox();
             this.scriptNeedsConfirmation = new System.Windows.Forms.CheckBox();
-            this.inMenuCheckBox = new System.Windows.Forms.CheckBox();
             this.commandLabel = new System.Windows.Forms.Label();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.commandTextBox = new System.Windows.Forms.TextBox();
@@ -61,6 +60,9 @@
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.argumentsLabel = new System.Windows.Forms.Label();
             this.buttonShowArgumentsHelp = new System.Windows.Forms.Button();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.scriptRunInBackground = new System.Windows.Forms.CheckBox();
+            this.inMenuCheckBox = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).BeginInit();
             this.panel1.SuspendLayout();
@@ -69,6 +71,7 @@
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
+            this.flowLayoutPanel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -87,7 +90,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(742, 436);
-            this.tableLayoutPanel1.TabIndex = 25;
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
             // ScriptList
             // 
@@ -108,7 +111,7 @@
             this.ScriptList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ScriptList.ShowCellErrors = false;
             this.ScriptList.Size = new System.Drawing.Size(640, 224);
-            this.ScriptList.TabIndex = 18;
+            this.ScriptList.TabIndex = 0;
             this.ScriptList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ScriptList_CellClick);
             this.ScriptList.SelectionChanged += new System.EventHandler(this.ScriptList_SelectionChanged);
             // 
@@ -152,7 +155,7 @@
             this.panel1.Location = new System.Drawing.Point(649, 3);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(90, 224);
-            this.panel1.TabIndex = 0;
+            this.panel1.TabIndex = 1;
             // 
             // addScriptButton
             // 
@@ -160,7 +163,7 @@
             this.addScriptButton.Location = new System.Drawing.Point(7, 86);
             this.addScriptButton.Name = "addScriptButton";
             this.addScriptButton.Size = new System.Drawing.Size(75, 25);
-            this.addScriptButton.TabIndex = 2;
+            this.addScriptButton.TabIndex = 1;
             this.addScriptButton.Text = "Add";
             this.addScriptButton.UseVisualStyleBackColor = true;
             this.addScriptButton.Click += new System.EventHandler(this.addScriptButton_Click);
@@ -173,7 +176,7 @@
             this.moveUpButton.Location = new System.Drawing.Point(32, 57);
             this.moveUpButton.Name = "moveUpButton";
             this.moveUpButton.Size = new System.Drawing.Size(26, 23);
-            this.moveUpButton.TabIndex = 1;
+            this.moveUpButton.TabIndex = 0;
             this.moveUpButton.UseVisualStyleBackColor = true;
             this.moveUpButton.Click += new System.EventHandler(this.moveUpButton_Click);
             // 
@@ -184,7 +187,7 @@
             this.removeScriptButton.Location = new System.Drawing.Point(7, 117);
             this.removeScriptButton.Name = "removeScriptButton";
             this.removeScriptButton.Size = new System.Drawing.Size(75, 25);
-            this.removeScriptButton.TabIndex = 4;
+            this.removeScriptButton.TabIndex = 2;
             this.removeScriptButton.Text = "Remove";
             this.removeScriptButton.UseVisualStyleBackColor = true;
             this.removeScriptButton.Click += new System.EventHandler(this.removeScriptButton_Click);
@@ -197,7 +200,7 @@
             this.moveDownButton.Location = new System.Drawing.Point(32, 148);
             this.moveDownButton.Name = "moveDownButton";
             this.moveDownButton.Size = new System.Drawing.Size(26, 23);
-            this.moveDownButton.TabIndex = 5;
+            this.moveDownButton.TabIndex = 3;
             this.moveDownButton.UseVisualStyleBackColor = true;
             this.moveDownButton.Click += new System.EventHandler(this.moveDownButton_Click);
             // 
@@ -206,24 +209,26 @@
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel3, 1, 3);
+            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel3, 1, 4);
             this.tableLayoutPanel2.Controls.Add(this.nameLabel, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.commandLabel, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel2, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.argumentsTextBox, 1, 2);
-            this.tableLayoutPanel2.Controls.Add(this.labelOnEvent, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel4, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.commandLabel, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel2, 1, 2);
+            this.tableLayoutPanel2.Controls.Add(this.argumentsTextBox, 1, 3);
+            this.tableLayoutPanel2.Controls.Add(this.labelOnEvent, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel4, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel5, 1, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 233);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 4;
+            this.tableLayoutPanel2.RowCount = 5;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(640, 180);
-            this.tableLayoutPanel2.TabIndex = 19;
+            this.tableLayoutPanel2.TabIndex = 2;
             // 
             // flowLayoutPanel3
             // 
@@ -235,7 +240,7 @@
             this.flowLayoutPanel3.Location = new System.Drawing.Point(90, 146);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(547, 31);
-            this.flowLayoutPanel3.TabIndex = 26;
+            this.flowLayoutPanel3.TabIndex = 4;
             // 
             // scriptEvent
             // 
@@ -245,7 +250,7 @@
             this.scriptEvent.Location = new System.Drawing.Point(3, 4);
             this.scriptEvent.Name = "scriptEvent";
             this.scriptEvent.Size = new System.Drawing.Size(208, 23);
-            this.scriptEvent.TabIndex = 19;
+            this.scriptEvent.TabIndex = 0;
             this.scriptEvent.SelectedIndexChanged += new System.EventHandler(this.scriptEvent_SelectedIndexChanged);
             this.scriptEvent.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
@@ -256,7 +261,7 @@
             this.lbl_icon.Location = new System.Drawing.Point(217, 8);
             this.lbl_icon.Name = "lbl_icon";
             this.lbl_icon.Size = new System.Drawing.Size(33, 15);
-            this.lbl_icon.TabIndex = 23;
+            this.lbl_icon.TabIndex = 1;
             this.lbl_icon.Text = "Icon:";
             this.lbl_icon.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_icon.Visible = false;
@@ -271,7 +276,7 @@
             this.sbtn_icon.Name = "sbtn_icon";
             this.sbtn_icon.Size = new System.Drawing.Size(92, 25);
             this.sbtn_icon.SplitMenuStrip = this.contextMenuStrip_SplitButton;
-            this.sbtn_icon.TabIndex = 22;
+            this.sbtn_icon.TabIndex = 2;
             this.sbtn_icon.Text = "Select icon";
             this.sbtn_icon.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.sbtn_icon.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -299,12 +304,11 @@
             this.flowLayoutPanel1.Controls.Add(this.nameTextBox);
             this.flowLayoutPanel1.Controls.Add(this.scriptEnabled);
             this.flowLayoutPanel1.Controls.Add(this.scriptNeedsConfirmation);
-            this.flowLayoutPanel1.Controls.Add(this.inMenuCheckBox);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(90, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(547, 34);
-            this.flowLayoutPanel1.TabIndex = 13;
+            this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
             // 
             // nameTextBox
@@ -313,17 +317,17 @@
             this.nameTextBox.Location = new System.Drawing.Point(3, 3);
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(160, 23);
-            this.nameTextBox.TabIndex = 6;
+            this.nameTextBox.TabIndex = 0;
             this.nameTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // scriptEnabled
             // 
-            this.scriptEnabled.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.scriptEnabled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptEnabled.AutoSize = true;
-            this.scriptEnabled.Location = new System.Drawing.Point(169, 5);
+            this.scriptEnabled.Location = new System.Drawing.Point(169, 7);
             this.scriptEnabled.Name = "scriptEnabled";
             this.scriptEnabled.Size = new System.Drawing.Size(68, 19);
-            this.scriptEnabled.TabIndex = 18;
+            this.scriptEnabled.TabIndex = 1;
             this.scriptEnabled.Text = "Enabled";
             this.scriptEnabled.UseVisualStyleBackColor = true;
             this.scriptEnabled.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
@@ -335,28 +339,16 @@
             this.scriptNeedsConfirmation.Location = new System.Drawing.Point(243, 7);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
             this.scriptNeedsConfirmation.Size = new System.Drawing.Size(135, 19);
-            this.scriptNeedsConfirmation.TabIndex = 21;
+            this.scriptNeedsConfirmation.TabIndex = 2;
             this.scriptNeedsConfirmation.Text = "Ask for confirmation";
             this.scriptNeedsConfirmation.UseVisualStyleBackColor = true;
             this.scriptNeedsConfirmation.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
-            // 
-            // inMenuCheckBox
-            // 
-            this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(384, 7);
-            this.inMenuCheckBox.Name = "inMenuCheckBox";
-            this.inMenuCheckBox.Size = new System.Drawing.Size(206, 19);
-            this.inMenuCheckBox.TabIndex = 15;
-            this.inMenuCheckBox.Text = "Add to revision grid context menu";
-            this.inMenuCheckBox.UseVisualStyleBackColor = true;
-            this.inMenuCheckBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // commandLabel
             // 
             this.commandLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.commandLabel.AutoSize = true;
-            this.commandLabel.Location = new System.Drawing.Point(3, 52);
+            this.commandLabel.Location = new System.Drawing.Point(3, 83);
             this.commandLabel.Name = "commandLabel";
             this.commandLabel.Size = new System.Drawing.Size(67, 15);
             this.commandLabel.TabIndex = 13;
@@ -367,38 +359,39 @@
             this.flowLayoutPanel2.Controls.Add(this.commandTextBox);
             this.flowLayoutPanel2.Controls.Add(this.browseScriptButton);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(90, 43);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(90, 74);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(547, 34);
-            this.flowLayoutPanel2.TabIndex = 14;
+            this.flowLayoutPanel2.TabIndex = 2;
             // 
             // commandTextBox
             // 
             this.commandTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.commandTextBox.Location = new System.Drawing.Point(3, 4);
             this.commandTextBox.Name = "commandTextBox";
-            this.commandTextBox.Size = new System.Drawing.Size(441, 23);
-            this.commandTextBox.TabIndex = 7;
+            this.commandTextBox.Size = new System.Drawing.Size(388, 23);
+            this.commandTextBox.TabIndex = 0;
             this.commandTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // browseScriptButton
             // 
             this.browseScriptButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.browseScriptButton.Location = new System.Drawing.Point(450, 3);
+            this.browseScriptButton.Location = new System.Drawing.Point(397, 3);
             this.browseScriptButton.Name = "browseScriptButton";
-            this.browseScriptButton.Size = new System.Drawing.Size(75, 25);
-            this.browseScriptButton.TabIndex = 11;
+            this.browseScriptButton.Size = new System.Drawing.Size(102, 25);
+            this.browseScriptButton.TabIndex = 1;
             this.browseScriptButton.Text = "Browse";
             this.browseScriptButton.UseVisualStyleBackColor = true;
             this.browseScriptButton.Click += new System.EventHandler(this.browseScriptButton_Click);
             // 
             // argumentsTextBox
             // 
+            this.argumentsTextBox.DetectUrls = false;
             this.argumentsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.argumentsTextBox.Location = new System.Drawing.Point(90, 83);
+            this.argumentsTextBox.Location = new System.Drawing.Point(90, 114);
             this.argumentsTextBox.Name = "argumentsTextBox";
-            this.argumentsTextBox.Size = new System.Drawing.Size(547, 57);
-            this.argumentsTextBox.TabIndex = 8;
+            this.argumentsTextBox.Size = new System.Drawing.Size(547, 26);
+            this.argumentsTextBox.TabIndex = 3;
             this.argumentsTextBox.Text = "";
             this.argumentsTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
@@ -418,9 +411,9 @@
             this.flowLayoutPanel4.AutoSize = true;
             this.flowLayoutPanel4.Controls.Add(this.argumentsLabel);
             this.flowLayoutPanel4.Controls.Add(this.buttonShowArgumentsHelp);
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 89);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 114);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(81, 44);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(81, 26);
             this.flowLayoutPanel4.TabIndex = 27;
             // 
             // argumentsLabel
@@ -439,9 +432,45 @@
             this.buttonShowArgumentsHelp.Name = "buttonShowArgumentsHelp";
             this.buttonShowArgumentsHelp.Size = new System.Drawing.Size(75, 23);
             this.buttonShowArgumentsHelp.TabIndex = 15;
+            this.buttonShowArgumentsHelp.TabStop = false;
             this.buttonShowArgumentsHelp.Text = "Help";
             this.buttonShowArgumentsHelp.UseVisualStyleBackColor = true;
             this.buttonShowArgumentsHelp.Click += new System.EventHandler(this.buttonShowArgumentsHelp_Click);
+            // 
+            // flowLayoutPanel5
+            // 
+            this.flowLayoutPanel5.AutoSize = true;
+            this.flowLayoutPanel5.Controls.Add(this.scriptRunInBackground);
+            this.flowLayoutPanel5.Controls.Add(this.inMenuCheckBox);
+            this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(90, 43);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(547, 25);
+            this.flowLayoutPanel5.TabIndex = 1;
+            // 
+            // scriptRunInBackground
+            // 
+            this.scriptRunInBackground.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.scriptRunInBackground.AutoSize = true;
+            this.scriptRunInBackground.Location = new System.Drawing.Point(3, 3);
+            this.scriptRunInBackground.Name = "scriptRunInBackground";
+            this.scriptRunInBackground.Size = new System.Drawing.Size(127, 19);
+            this.scriptRunInBackground.TabIndex = 0;
+            this.scriptRunInBackground.Text = "Run in background";
+            this.scriptRunInBackground.UseVisualStyleBackColor = true;
+            this.scriptRunInBackground.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
+            // 
+            // inMenuCheckBox
+            // 
+            this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.inMenuCheckBox.AutoSize = true;
+            this.inMenuCheckBox.Location = new System.Drawing.Point(136, 3);
+            this.inMenuCheckBox.Name = "inMenuCheckBox";
+            this.inMenuCheckBox.Size = new System.Drawing.Size(206, 19);
+            this.inMenuCheckBox.TabIndex = 1;
+            this.inMenuCheckBox.Text = "Add to revision grid context menu";
+            this.inMenuCheckBox.UseVisualStyleBackColor = true;
+            this.inMenuCheckBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // ScriptsSettingsPage
             // 
@@ -463,6 +492,8 @@
             this.flowLayoutPanel2.PerformLayout();
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
+            this.flowLayoutPanel5.ResumeLayout(false);
+            this.flowLayoutPanel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -501,5 +532,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_SplitButton;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.Button buttonShowArgumentsHelp;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
+        private System.Windows.Forms.CheckBox scriptRunInBackground;
     }
 }

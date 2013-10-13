@@ -30,6 +30,7 @@ namespace GitUI
         public FileStatusList()
         {
             InitializeComponent(); Translate();
+            SelectFirstItemOnSetItems = true;
             _noDiffFilesChangesDefaultText = NoFiles.Text;
 #if !__MonoCS__ // TODO Drag'n'Drop doesn't work on Mono/Linux
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
@@ -86,6 +87,16 @@ namespace GitUI
                     SelectedIndex = 0;
                 FileStatusListView.Focus();
             }
+        }
+
+        public void BeginUpdate()
+        {
+            FileStatusListView.BeginUpdate();
+        }
+
+        public void EndUpdate()
+        {
+            FileStatusListView.EndUpdate();
         }
 
         private string GetItemText(Graphics graphics, GitItemStatus gitItemStatus)
@@ -277,6 +288,22 @@ namespace GitUI
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>().
                     Select(i => (GitItemStatus)i.Tag);
             }
+            set
+            {
+                ClearSelected();
+                if (value == null)
+                    return;
+
+                foreach (var item in FileStatusListView.Items.Cast<ListViewItem>()
+                    .Where(i => value.Contains((GitItemStatus)i.Tag)))
+                {
+                    item.Selected = true;
+                }
+                var first = FileStatusListView.SelectedItems.Cast<ListViewItem>().FirstOrDefault(x => x.Selected);
+                if (first != null)
+                    first.EnsureVisible();
+                StoreNextIndexToSelect();
+            }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -285,8 +312,11 @@ namespace GitUI
         {
             get
             {
-                foreach (ListViewItem item in FileStatusListView.SelectedItems)
-                    return (GitItemStatus)item.Tag;
+                if (FileStatusListView.SelectedItems.Count > 0)
+                {
+                    ListViewItem item = FileStatusListView.SelectedItems[0];
+                    return (GitItemStatus) item.Tag;
+                }
                 return null;
             }
             set
@@ -391,22 +421,24 @@ namespace GitUI
                 return 0;
             if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
                 return 1;
-            if (gitItemStatus.IsChanged)
+            if (gitItemStatus.IsChanged || gitItemStatus.IsConflict)
             {
                 if (!gitItemStatus.IsSubmodule || gitItemStatus.SubmoduleStatus == null ||
                     !gitItemStatus.SubmoduleStatus.IsCompleted)
                     return 2;
 
                 var status = gitItemStatus.SubmoduleStatus.Result;
+                if (status == null)
+                    return 2;
                 if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
                     return 6 + (status.IsDirty ? 1 : 0);
                 if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
                     return 8 + (status.IsDirty ? 1 : 0);
                 return !status.IsDirty ? 2 : 5;
             }
-            else if (gitItemStatus.IsRenamed)
+            if (gitItemStatus.IsRenamed)
                 return 3;
-            else if (gitItemStatus.IsCopied)
+            if (gitItemStatus.IsCopied)
                 return 4;
             return -1;
         }
@@ -482,8 +514,15 @@ namespace GitUI
                 FileStatusListView.Groups.Clear();
                 FileStatusListView.Items.Clear();
                 _itemsDictionary = new Dictionary<string, IList<GitItemStatus>>();
-                if (value == null)
+                if (value == null || value.All(pair => pair.Value.Count == 0))
+                {
+                    if (!empty)
+                    {
+                        //bug in the ListView control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
+                        FileStatusListView_SelectedIndexChanged(this, EventArgs.Empty);
+                    }
                     return;
+                }
                 FileStatusListView.BeginUpdate();
                 var list = new List<ListViewItem>();
                 foreach (var pair in value)
@@ -524,20 +563,18 @@ namespace GitUI
                 FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
                 if (DataSourceChanged != null)
                     DataSourceChanged(this, new EventArgs());
-                if (FileStatusListView.Items.Count > 0)
-                {
+                if (SelectFirstItemOnSetItems)
                     SelectFirstVisibleItem();
-                }
-                else if (FileStatusListView.Items.Count == 0 && !empty)
-                {
-                    //bug in the ListView control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
-                    FileStatusListView_SelectedIndexChanged(this, EventArgs.Empty);
-                }
             }
         }
 
-        private void SelectFirstVisibleItem()
+        [DefaultValue(true)]
+        public bool SelectFirstItemOnSetItems { get; set; }
+
+        public void SelectFirstVisibleItem()
         {
+            if (FileStatusListView.Items.Count == 0)
+                return;
             var group = FileStatusListView.Groups.Cast<ListViewGroup>().
                 FirstOrDefault(gr => gr.Items.Count > 0);
             if (group != null)

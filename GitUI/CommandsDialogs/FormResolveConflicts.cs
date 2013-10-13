@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
         private readonly TranslationString allConflictsResolved = new TranslationString("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
         private readonly TranslationString allConflictsResolvedCaption = new TranslationString("Commit");
-        private readonly TranslationString mergeConflictIsSubmodule = new TranslationString("The selected mergeconflict is a submodule. Mark conflict as resolved?");
+        private readonly TranslationString mergeConflictIsSubmodule = new TranslationString("The selected mergeconflict is a submodule." + Environment.NewLine + "Stage current submodule commit?");
         private readonly TranslationString mergeConflictIsSubmoduleCaption = new TranslationString("Submodule");
         private readonly TranslationString fileIsBinary = new TranslationString("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in {0}?");
         private readonly TranslationString askMergeConflictSolvedAfterCustomMergeScript = new TranslationString("The merge conflict need to be solved and the result must be saved as:" + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Is the mergeconflict solved?");
@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
             Directory.SetCurrentDirectory(Module.WorkingDir);
-            Module.RunRealCmd(Settings.GitCommand, "mergetool");
+            Module.RunExternalCmdShowConsole(AppSettings.GitCommand, "mergetool");
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -208,7 +208,7 @@ namespace GitUI.CommandsDialogs
 
         private string FixPath(string path)
         {
-            return (path ?? "").Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+            return (path ?? "").Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator);
         }
 
         private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
@@ -233,7 +233,7 @@ namespace GitUI.CommandsDialogs
                     return false;
 
                 string dir = Path.GetDirectoryName(Application.ExecutablePath) +
-                    Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator;
+                    AppSettings.PathSeparator + "Diff-Scripts" + AppSettings.PathSeparator;
                 if (Directory.Exists(dir))
                 {
                     string mergeScript = "";
@@ -267,7 +267,7 @@ namespace GitUI.CommandsDialogs
 
             int exitCode;
             Module.RunCmd("wscript", "\"" + mergeScript + "\" \"" +
-                FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +//
+                FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
                 FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"", out exitCode);
 
             if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text,
@@ -328,13 +328,18 @@ namespace GitUI.CommandsDialogs
                     var submodulesList = Module.GetSubmodulesLocalPathes();
                     if (submodulesList.Any(configSection => configSection.Equals(filename.Trim())))
                     {
-                        if (MessageBox.Show(this, mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                        string[] hashes = Module.GetConflictedSubmoduleHashes(filename);
+                        var submodule = Module.GetSubmodule(filename);
+                        string submoduleHash = submodule != null ? submodule.GetCurrentCheckout() : "";
+                        string text = string.Format("\n\nBASE:\t{0}\nLOCAL:\t{1}\nREMOTE:\t{2}\n\nCURRENT:{3}\n",
+                            hashes[0], hashes[1], hashes[2], submoduleHash);
+                        if (MessageBox.Show(this, mergeConflictIsSubmodule.Text + text, mergeConflictIsSubmoduleCaption.Text,
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                         {
                             stageFile(filename);
                         }
                         return;
                     }
-                    //END: REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
                 }
 
                 ResolveFilesConflict(filename);
@@ -734,19 +739,19 @@ namespace GitUI.CommandsDialogs
         
         private static string GetShortFileName(string fileName)
         {
-            if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeparator) + 1);
-            if (fileName.Contains(Settings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeparatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeparatorWrong) + 1);
+            if (fileName.Contains(AppSettings.PathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PathSeparator) + 1);
+            if (fileName.Contains(AppSettings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PathSeparatorWrong) + 1);
             return fileName;
         }
 
         private static string GetDirectoryFromFileName(string fileName)
         {
-            if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.PathSeparator));
-            if (fileName.Contains(Settings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeparatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.PathSeparatorWrong));
+            if (fileName.Contains(AppSettings.PathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PathSeparator));
+            if (fileName.Contains(AppSettings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PathSeparatorWrong));
             return fileName;
         }
 
@@ -881,10 +886,7 @@ namespace GitUI.CommandsDialogs
                     delegate(FormStatus form)
                     {
                         form.AddMessageLine(string.Format(stageFilename.Text, filename));
-                        string output = Module.RunCmd
-                            (
-                            Settings.GitCommand, "add -- \"" + filename + "\""
-                            );
+                        string output = Module.RunGitCmd("add -- \"" + filename + "\"");
                         form.AddMessageLine(output);
                         form.Done(string.IsNullOrEmpty(output));
                     }

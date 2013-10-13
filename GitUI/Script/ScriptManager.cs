@@ -17,7 +17,7 @@ namespace GitUI.Script
         {
             if (Scripts == null)
             {
-                DeserializeFromXml(Settings.ownScripts);
+                DeserializeFromXml(AppSettings.ownScripts);
             }
 
             return Scripts;
@@ -32,16 +32,16 @@ namespace GitUI.Script
             return null;
         }
 
-        public static void RunEventScripts(GitModule aModule, ScriptEvent scriptEvent)
+        public static void RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent)
         {
             foreach (ScriptInfo scriptInfo in GetScripts())
                 if (scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent)
                 {
                     if (scriptInfo.AskConfirmation)
-                        if (MessageBox.Show(String.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        if (MessageBox.Show(form, String.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                             continue;
 
-                    ScriptRunner.RunScript(aModule, scriptInfo.Name, null);
+                    ScriptRunner.RunScript(form, form.Module, scriptInfo.Name, null);
                 }
         }
 
@@ -95,6 +95,7 @@ namespace GitUI.Script
             fetchAfterCommitScript.Name = "Fetch changes after commit";
             fetchAfterCommitScript.Command = "git";
             fetchAfterCommitScript.Arguments = "fetch";
+            fetchAfterCommitScript.RunInBackground = false;
             fetchAfterCommitScript.AskConfirmation = true;
             fetchAfterCommitScript.OnEvent = ScriptEvent.AfterCommit;
             fetchAfterCommitScript.AddToRevisionGridContextMenu = false;
@@ -106,6 +107,7 @@ namespace GitUI.Script
             updateSubmodulesAfterPullScript.Name = "Update submodules after pull";
             updateSubmodulesAfterPullScript.Command = "git";
             updateSubmodulesAfterPullScript.Arguments = "submodule update --init --recursive";
+            updateSubmodulesAfterPullScript.RunInBackground = false;
             updateSubmodulesAfterPullScript.AskConfirmation = true;
             updateSubmodulesAfterPullScript.OnEvent = ScriptEvent.AfterPull;
             updateSubmodulesAfterPullScript.AddToRevisionGridContextMenu = false;
@@ -117,27 +119,39 @@ namespace GitUI.Script
             userMenuScript.Name = "Example";
             userMenuScript.Command = "c:\\windows\\system32\\calc.exe";
             userMenuScript.Arguments = "";
+            userMenuScript.RunInBackground = false;
             userMenuScript.AskConfirmation = false;
             userMenuScript.OnEvent = ScriptEvent.ShowInUserMenuBar;
             userMenuScript.AddToRevisionGridContextMenu = false;
             userMenuScript.Enabled = false;
             Scripts.Add(userMenuScript);
 
+            ScriptInfo openHashOnGitHub = new ScriptInfo();
+            openHashOnGitHub.HotkeyCommandIdentifier = 9003;
+            openHashOnGitHub.Name = "Open on GitHub";
+            openHashOnGitHub.Command = "{openurl}";
+            openHashOnGitHub.Arguments = "https://github.com{cDefaultRemotePathFromUrl}/commit/{sHash}";
+            openHashOnGitHub.RunInBackground = false;
+            openHashOnGitHub.AskConfirmation = false;
+            openHashOnGitHub.OnEvent = 0;
+            openHashOnGitHub.AddToRevisionGridContextMenu = true;
+            openHashOnGitHub.Enabled = false;
+            Scripts.Add(openHashOnGitHub);
         }
 
         private static void DeserializeFromOldFormat(string inputString)
         {
-            const string PARAM_SEPARATOR = "<_PARAM_SEPARATOR_>";
-            const string SCRIPT_SEPARATOR = "<_SCRIPT_SEPARATOR_>";
+            const string paramSeparator = "<_PARAM_SEPARATOR_>";
+            const string scriptSeparator = "<_SCRIPT_SEPARATOR_>";
 
-            if (inputString.Contains(PARAM_SEPARATOR) || inputString.Contains(SCRIPT_SEPARATOR))
+            if (inputString.Contains(paramSeparator) || inputString.Contains(scriptSeparator))
             {
                 Scripts = new BindingList<ScriptInfo>();
 
-                string[] scripts = inputString.Split(new string[] { SCRIPT_SEPARATOR }, StringSplitOptions.RemoveEmptyEntries);
+                string[] scripts = inputString.Split(new[] { scriptSeparator }, StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 0; i < scripts.Length; i++)
                 {
-                    string[] parameters = scripts[i].Split(new string[] { PARAM_SEPARATOR }, StringSplitOptions.None);
+                    string[] parameters = scripts[i].Split(new[] { paramSeparator }, StringSplitOptions.None);
 
                     ScriptInfo scriptInfo = new ScriptInfo();
                     scriptInfo.Name = parameters[0];
@@ -145,6 +159,7 @@ namespace GitUI.Script
                     scriptInfo.Arguments = parameters[2];
                     scriptInfo.AddToRevisionGridContextMenu = parameters[3].Equals("yes");
                     scriptInfo.Enabled = true;
+                    scriptInfo.RunInBackground = false;
 
                     Scripts.Add(scriptInfo);
                 }

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
-    public sealed class GitRevision : IGitItem
+    public sealed class GitRevision : IGitItem, INotifyPropertyChanged
     {
         /// <summary>40 characters of 0's</summary>
         public const string UnstagedGuid = "0000000000000000000000000000000000000000";
@@ -19,6 +22,7 @@ namespace GitCommands
         private IList<IGitItem> _subItems;
         private readonly List<GitRef> _refs = new List<GitRef>();
         private readonly GitModule _module;
+        private BuildInfo _buildStatus;
 
         public GitRevision(GitModule aModule, string guid)
         {
@@ -38,7 +42,19 @@ namespace GitCommands
         public string CommitterEmail { get; set; }
         public DateTime CommitDate { get; set; }
 
+        public BuildInfo BuildStatus
+        {
+            get { return _buildStatus; }
+            set
+            {
+                if (Equals(value, _buildStatus)) return;
+                _buildStatus = value;
+                OnPropertyChanged("BuildStatus");
+            }
+        }
+
         public string Message { get; set; }
+        public string Body { get; set; }
         //UTF-8 when is null or empty
         public string MessageEncoding { get; set; }
 
@@ -72,9 +88,8 @@ namespace GitCommands
             if ((searchString.Length > 2) && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
                 return true;
 
-            return
-                (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
-                Message.ToLower().Contains(searchString);
+            return (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
+                    Message.ToLower().Contains(searchString);
         }
 
         public bool IsArtificial()
@@ -93,5 +108,13 @@ namespace GitCommands
             return ParentGuids != null && ParentGuids.Length > 0;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using ResourceManager.Translation;
+using SmartFormat;
 
 namespace GitCommands
 {
@@ -9,7 +10,7 @@ namespace GitCommands
         // public only because of FormTranslate
         public Strings()
         {
-            Translator.Translate(this, Settings.CurrentTranslation);
+            Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
         private static Lazy<Strings> _instance = new Lazy<Strings>();
@@ -82,7 +83,7 @@ namespace GitCommands
 
         public static string GetLoadingData()
         {
-            return Instance._LoadingData.Text;
+            return Instance._loadingData.Text;
         }
 
         /// <summary>"branches" translation.</summary>
@@ -115,72 +116,52 @@ namespace GitCommands
         private readonly TranslationString _commitHashText         = new TranslationString("Commit hash");
         private readonly TranslationString _messageText            = new TranslationString("Message");
         private readonly TranslationString _parentsText            = new TranslationString("Parent(s)");
-        private readonly TranslationString _childrenText           = new TranslationString("Children");
+        private readonly TranslationString _childrenText   = new TranslationString("Children");
         private readonly TranslationString _currentUnstagedChanges = new TranslationString("Current unstaged changes");
-        private readonly TranslationString _currentIndex           = new TranslationString("Commit index");
-        private readonly TranslationString _LoadingData            = new TranslationString("Loading data...");
+        private readonly TranslationString _currentIndex   = new TranslationString("Commit index");
+        private readonly TranslationString _loadingData    = new TranslationString("Loading data...");
 
         public static string GetNSecondsAgoText(int value)
         {
-            if (Math.Abs(value) == 1)
-                return string.Format(Instance._secondAgo.Text, value);
-            return string.Format(Instance._secondsAgo.Text, value);
+            return Smart.Format(Instance._secondsAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNMinutesAgoText(int value)
         {
-            if (Math.Abs(value) == 1)
-                return string.Format(Instance._minuteAgo.Text, value);
-            return string.Format(Instance._minutesAgo.Text, value);
+            return Smart.Format(Instance._minutesAgo.Text, value, Math.Abs(value));
         }
+
         public static string GetNHoursAgoText(int value)
         {
-            if (Math.Abs(value) == 1)
-                return string.Format(Instance._hourAgo.Text, value);
-            return string.Format(Instance._hoursAgo.Text, value);
+            return Smart.Format(Instance._hoursAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNDaysAgoText(int value)
         {
-            if (Math.Abs(value) == 1)
-                return string.Format(Instance._dayAgo.Text, value);
-            return string.Format(Instance._daysAgo.Text, value);
+            return Smart.Format(Instance._daysAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNWeeksAgoText(int value)
         {
-            if (Math.Abs(value) == 1)
-                return string.Format(Instance._weekAgo.Text, value);
-            return string.Format(Instance._weeksAgo.Text, value);
+            return Smart.Format(Instance._weeksAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNMonthsAgoText(int value)
         {
-            if (Math.Abs(value) == 1)
-                return string.Format(Instance._monthAgo.Text, value);
-            return string.Format(Instance._monthsAgo.Text, value);
+            return Smart.Format(Instance._monthsAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNYearsAgoText(int value)
         {
-            if (Math.Abs(value) == 1)
-                return string.Format(Instance._yearAgo.Text, value);
-            return string.Format(Instance._yearsAgo.Text, value);
+            return Smart.Format(Instance._yearsAgo.Text, value, Math.Abs(value));
         }
 
-        private readonly TranslationString _secondAgo = new TranslationString("{0} second ago");
-        private readonly TranslationString _secondsAgo = new TranslationString("{0} seconds ago");
-        private readonly TranslationString _minuteAgo = new TranslationString("{0} minute ago");
-        private readonly TranslationString _minutesAgo = new TranslationString("{0} minutes ago");
-        private readonly TranslationString _hourAgo = new TranslationString("{0} hour ago");
-        private readonly TranslationString _hoursAgo = new TranslationString("{0} hours ago");
-        private readonly TranslationString _dayAgo = new TranslationString("{0} day ago");
-        private readonly TranslationString _daysAgo = new TranslationString("{0} days ago");
-        private readonly TranslationString _weekAgo = new TranslationString("{0} week ago");
-        private readonly TranslationString _weeksAgo = new TranslationString("{0} weeks ago");
-        private readonly TranslationString _monthAgo = new TranslationString("{0} month ago");
-        private readonly TranslationString _monthsAgo = new TranslationString("{0} months ago");
-        private readonly TranslationString _yearAgo = new TranslationString("{0} year ago");
-        private readonly TranslationString _yearsAgo = new TranslationString("{0} years ago");
+        private readonly TranslationString _secondsAgo = new TranslationString("{0} {1:second|seconds} ago");
+        private readonly TranslationString _minutesAgo = new TranslationString("{0} {1:minute|minutes} ago");
+        private readonly TranslationString _hoursAgo   = new TranslationString("{0} {1:hour|hours} ago");
+        private readonly TranslationString _daysAgo    = new TranslationString("{0} {1:day|days} ago");
+        private readonly TranslationString _weeksAgo   = new TranslationString("{0} {1:week|weeks} ago");
+        private readonly TranslationString _monthsAgo  = new TranslationString("{0} {1:month|months} ago");
+        private readonly TranslationString _yearsAgo   = new TranslationString("{0} {1:year|years} ago");
     }
 }

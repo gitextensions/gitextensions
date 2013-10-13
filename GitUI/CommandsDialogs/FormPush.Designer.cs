@@ -13,6 +13,8 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            _remoteBranchesLoader.Cancel();
+
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -42,7 +44,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.RecursiveSubmodules = new System.Windows.Forms.ComboBox();
             this.ReplaceTrackingReference = new System.Windows.Forms.CheckBox();
-            this.PushAllBranches = new System.Windows.Forms.CheckBox();
             this.ForcePushBranches = new System.Windows.Forms.CheckBox();
             this._createPullRequestCB = new System.Windows.Forms.CheckBox();
             this.labelTo = new System.Windows.Forms.Label();
@@ -51,10 +52,7 @@
             this._NO_TRANSLATE_Branch = new System.Windows.Forms.ComboBox();
             this.TagTab = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.TagOptionsPanel = new System.Windows.Forms.Panel();
-            this.PushAllTags = new System.Windows.Forms.CheckBox();
             this.ForcePushTags = new System.Windows.Forms.CheckBox();
-            this.ShowTagOptions = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.TagComboBox = new System.Windows.Forms.ComboBox();
             this.MultipleBranchTab = new System.Windows.Forms.TabPage();
@@ -80,7 +78,6 @@
             this.flowLayoutPanel1.SuspendLayout();
             this.TagTab.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.TagOptionsPanel.SuspendLayout();
             this.MultipleBranchTab.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BranchGrid)).BeginInit();
@@ -91,7 +88,7 @@
             // 
             this.PushToUrl.AutoSize = true;
             this.PushToUrl.Location = new System.Drawing.Point(9, 61);
-            this.PushToUrl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PushToUrl.Margin = new System.Windows.Forms.Padding(4);
             this.PushToUrl.Name = "PushToUrl";
             this.PushToUrl.Size = new System.Drawing.Size(53, 27);
             this.PushToUrl.TabIndex = 1;
@@ -105,7 +102,7 @@
             this.PushToRemote.AutoSize = true;
             this.PushToRemote.Checked = true;
             this.PushToRemote.Location = new System.Drawing.Point(9, 24);
-            this.PushToRemote.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PushToRemote.Margin = new System.Windows.Forms.Padding(4);
             this.PushToRemote.Name = "PushToRemote";
             this.PushToRemote.Size = new System.Drawing.Size(90, 27);
             this.PushToRemote.TabIndex = 0;
@@ -113,7 +110,6 @@
             this.PushToRemote.Text = "Remote";
             this.toolTip1.SetToolTip(this.PushToRemote, "Remote repository to push to");
             this.PushToRemote.UseVisualStyleBackColor = true;
-            this.PushToRemote.CheckedChanged += new System.EventHandler(this.PushToRemoteCheckedChanged);
             // 
             // Push
             // 
@@ -121,8 +117,8 @@
             this.Push.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Push.Image = global::GitUI.Properties.Resources.ArrowUp;
             this.Push.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Push.Location = new System.Drawing.Point(662, 239);
-            this.Push.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Push.Location = new System.Drawing.Point(648, 259);
+            this.Push.Margin = new System.Windows.Forms.Padding(4);
             this.Push.Name = "Push";
             this.Push.Size = new System.Drawing.Size(126, 31);
             this.Push.TabIndex = 9;
@@ -141,12 +137,12 @@
             this.TabControlTagBranch.HotTrack = true;
             this.TabControlTagBranch.ItemSize = new System.Drawing.Size(57, 18);
             this.TabControlTagBranch.Location = new System.Drawing.Point(15, 122);
-            this.TabControlTagBranch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TabControlTagBranch.Margin = new System.Windows.Forms.Padding(4);
             this.TabControlTagBranch.Multiline = true;
             this.TabControlTagBranch.Name = "TabControlTagBranch";
             this.TabControlTagBranch.SelectedIndex = 0;
             this.TabControlTagBranch.ShowToolTips = true;
-            this.TabControlTagBranch.Size = new System.Drawing.Size(780, 106);
+            this.TabControlTagBranch.Size = new System.Drawing.Size(766, 126);
             this.TabControlTagBranch.TabIndex = 6;
             this.TabControlTagBranch.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabControlTagBranch_Selected);
             // 
@@ -155,10 +151,10 @@
             this.BranchTab.BackColor = System.Drawing.Color.Transparent;
             this.BranchTab.Controls.Add(this.groupBox1);
             this.BranchTab.Location = new System.Drawing.Point(4, 22);
-            this.BranchTab.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BranchTab.Margin = new System.Windows.Forms.Padding(4);
             this.BranchTab.Name = "BranchTab";
-            this.BranchTab.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.BranchTab.Size = new System.Drawing.Size(772, 80);
+            this.BranchTab.Padding = new System.Windows.Forms.Padding(4);
+            this.BranchTab.Size = new System.Drawing.Size(758, 100);
             this.BranchTab.TabIndex = 0;
             this.BranchTab.Text = "Push branches";
             this.BranchTab.ToolTipText = "Push branches and commits to remote repository.";
@@ -174,10 +170,10 @@
             this.groupBox1.Controls.Add(this._NO_TRANSLATE_Branch);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(4, 4);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox1.Size = new System.Drawing.Size(764, 72);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Size = new System.Drawing.Size(750, 92);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Branch";
@@ -201,13 +197,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PushOptionsPanel.Controls.Add(this.flowLayoutPanel1);
             this.PushOptionsPanel.Controls.Add(this.ReplaceTrackingReference);
-            this.PushOptionsPanel.Controls.Add(this.PushAllBranches);
             this.PushOptionsPanel.Controls.Add(this.ForcePushBranches);
             this.PushOptionsPanel.Controls.Add(this._createPullRequestCB);
             this.PushOptionsPanel.Location = new System.Drawing.Point(159, 58);
-            this.PushOptionsPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PushOptionsPanel.Margin = new System.Windows.Forms.Padding(4);
             this.PushOptionsPanel.Name = "PushOptionsPanel";
-            this.PushOptionsPanel.Size = new System.Drawing.Size(602, 10);
+            this.PushOptionsPanel.Size = new System.Drawing.Size(588, 30);
             this.PushOptionsPanel.TabIndex = 25;
             this.PushOptionsPanel.Visible = false;
             // 
@@ -252,31 +247,19 @@
             // ReplaceTrackingReference
             // 
             this.ReplaceTrackingReference.AutoSize = true;
-            this.ReplaceTrackingReference.Location = new System.Drawing.Point(0, 81);
-            this.ReplaceTrackingReference.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ReplaceTrackingReference.Location = new System.Drawing.Point(0, 46);
+            this.ReplaceTrackingReference.Margin = new System.Windows.Forms.Padding(4);
             this.ReplaceTrackingReference.Name = "ReplaceTrackingReference";
             this.ReplaceTrackingReference.Size = new System.Drawing.Size(233, 27);
             this.ReplaceTrackingReference.TabIndex = 25;
             this.ReplaceTrackingReference.Text = "Replace tracking reference";
             this.ReplaceTrackingReference.UseVisualStyleBackColor = true;
             // 
-            // PushAllBranches
-            // 
-            this.PushAllBranches.AutoSize = true;
-            this.PushAllBranches.Location = new System.Drawing.Point(0, 11);
-            this.PushAllBranches.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.PushAllBranches.Name = "PushAllBranches";
-            this.PushAllBranches.Size = new System.Drawing.Size(165, 27);
-            this.PushAllBranches.TabIndex = 2;
-            this.PushAllBranches.Text = "Push &all branches";
-            this.PushAllBranches.UseVisualStyleBackColor = true;
-            this.PushAllBranches.CheckedChanged += new System.EventHandler(this.PushAllBranchesCheckedChanged);
-            // 
             // ForcePushBranches
             // 
             this.ForcePushBranches.AutoSize = true;
-            this.ForcePushBranches.Location = new System.Drawing.Point(0, 46);
-            this.ForcePushBranches.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ForcePushBranches.Location = new System.Drawing.Point(0, 12);
+            this.ForcePushBranches.Margin = new System.Windows.Forms.Padding(4);
             this.ForcePushBranches.Name = "ForcePushBranches";
             this.ForcePushBranches.Size = new System.Drawing.Size(115, 27);
             this.ForcePushBranches.TabIndex = 3;
@@ -288,7 +271,7 @@
             // 
             this._createPullRequestCB.AutoSize = true;
             this._createPullRequestCB.Location = new System.Drawing.Point(276, 46);
-            this._createPullRequestCB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._createPullRequestCB.Margin = new System.Windows.Forms.Padding(4);
             this._createPullRequestCB.Name = "_createPullRequestCB";
             this._createPullRequestCB.Size = new System.Drawing.Size(259, 27);
             this._createPullRequestCB.TabIndex = 22;
@@ -313,7 +296,7 @@
             this.RemoteBranch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.RemoteBranch.FormattingEnabled = true;
             this.RemoteBranch.Location = new System.Drawing.Point(435, 24);
-            this.RemoteBranch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RemoteBranch.Margin = new System.Windows.Forms.Padding(4);
             this.RemoteBranch.Name = "RemoteBranch";
             this.RemoteBranch.Size = new System.Drawing.Size(314, 31);
             this.RemoteBranch.TabIndex = 1;
@@ -334,10 +317,11 @@
             this._NO_TRANSLATE_Branch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this._NO_TRANSLATE_Branch.FormattingEnabled = true;
             this._NO_TRANSLATE_Branch.Location = new System.Drawing.Point(159, 24);
-            this._NO_TRANSLATE_Branch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._NO_TRANSLATE_Branch.Margin = new System.Windows.Forms.Padding(4);
             this._NO_TRANSLATE_Branch.Name = "_NO_TRANSLATE_Branch";
             this._NO_TRANSLATE_Branch.Size = new System.Drawing.Size(215, 31);
             this._NO_TRANSLATE_Branch.TabIndex = 0;
+            this._NO_TRANSLATE_Branch.SelectedIndexChanged += new System.EventHandler(this._NO_TRANSLATE_Branch_SelectedIndexChanged);
             this._NO_TRANSLATE_Branch.SelectedValueChanged += new System.EventHandler(this.BranchSelectedValueChanged);
             // 
             // TagTab
@@ -345,10 +329,10 @@
             this.TagTab.BackColor = System.Drawing.Color.Transparent;
             this.TagTab.Controls.Add(this.groupBox3);
             this.TagTab.Location = new System.Drawing.Point(4, 22);
-            this.TagTab.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TagTab.Margin = new System.Windows.Forms.Padding(4);
             this.TagTab.Name = "TagTab";
-            this.TagTab.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.TagTab.Size = new System.Drawing.Size(772, 92);
+            this.TagTab.Padding = new System.Windows.Forms.Padding(4);
+            this.TagTab.Size = new System.Drawing.Size(772, 100);
             this.TagTab.TabIndex = 1;
             this.TagTab.Text = "Push tags";
             this.TagTab.ToolTipText = "Push tags to remote repository";
@@ -356,68 +340,30 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.TagOptionsPanel);
-            this.groupBox3.Controls.Add(this.ShowTagOptions);
+            this.groupBox3.Controls.Add(this.ForcePushTags);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.TagComboBox);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(4, 4);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox3.Size = new System.Drawing.Size(764, 84);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox3.Size = new System.Drawing.Size(764, 92);
             this.groupBox3.TabIndex = 23;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Tag";
             // 
-            // TagOptionsPanel
-            // 
-            this.TagOptionsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TagOptionsPanel.Controls.Add(this.PushAllTags);
-            this.TagOptionsPanel.Controls.Add(this.ForcePushTags);
-            this.TagOptionsPanel.Location = new System.Drawing.Point(200, 55);
-            this.TagOptionsPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.TagOptionsPanel.Name = "TagOptionsPanel";
-            this.TagOptionsPanel.Size = new System.Drawing.Size(562, 30);
-            this.TagOptionsPanel.TabIndex = 28;
-            this.TagOptionsPanel.Visible = false;
-            // 
-            // PushAllTags
-            // 
-            this.PushAllTags.AutoSize = true;
-            this.PushAllTags.Location = new System.Drawing.Point(0, 4);
-            this.PushAllTags.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.PushAllTags.Name = "PushAllTags";
-            this.PushAllTags.Size = new System.Drawing.Size(128, 27);
-            this.PushAllTags.TabIndex = 19;
-            this.PushAllTags.Text = "Push &all tags";
-            this.PushAllTags.UseVisualStyleBackColor = true;
-            // 
             // ForcePushTags
             // 
             this.ForcePushTags.AutoSize = true;
-            this.ForcePushTags.Location = new System.Drawing.Point(0, 32);
-            this.ForcePushTags.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ForcePushTags.Location = new System.Drawing.Point(200, 63);
+            this.ForcePushTags.Margin = new System.Windows.Forms.Padding(4);
             this.ForcePushTags.Name = "ForcePushTags";
             this.ForcePushTags.Size = new System.Drawing.Size(115, 27);
             this.ForcePushTags.TabIndex = 22;
             this.ForcePushTags.Text = "&Force Push";
             this.ForcePushTags.UseVisualStyleBackColor = true;
             this.ForcePushTags.CheckedChanged += new System.EventHandler(this.ForcePushTagsCheckedChanged);
-            // 
-            // ShowTagOptions
-            // 
-            this.ShowTagOptions.AutoSize = true;
-            this.ShowTagOptions.Location = new System.Drawing.Point(196, 56);
-            this.ShowTagOptions.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.ShowTagOptions.Name = "ShowTagOptions";
-            this.ShowTagOptions.Size = new System.Drawing.Size(113, 23);
-            this.ShowTagOptions.TabIndex = 27;
-            this.ShowTagOptions.TabStop = true;
-            this.ShowTagOptions.Text = "Show options";
-            this.ShowTagOptions.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ShowTagOptions_LinkClicked);
             // 
             // label1
             // 
@@ -435,7 +381,7 @@
             this.TagComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.TagComboBox.FormattingEnabled = true;
             this.TagComboBox.Location = new System.Drawing.Point(200, 24);
-            this.TagComboBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.TagComboBox.Margin = new System.Windows.Forms.Padding(4);
             this.TagComboBox.Name = "TagComboBox";
             this.TagComboBox.Size = new System.Drawing.Size(370, 31);
             this.TagComboBox.TabIndex = 18;
@@ -444,10 +390,10 @@
             // 
             this.MultipleBranchTab.Controls.Add(this.groupBox4);
             this.MultipleBranchTab.Location = new System.Drawing.Point(4, 22);
-            this.MultipleBranchTab.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MultipleBranchTab.Margin = new System.Windows.Forms.Padding(4);
             this.MultipleBranchTab.Name = "MultipleBranchTab";
-            this.MultipleBranchTab.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.MultipleBranchTab.Size = new System.Drawing.Size(772, 92);
+            this.MultipleBranchTab.Padding = new System.Windows.Forms.Padding(4);
+            this.MultipleBranchTab.Size = new System.Drawing.Size(772, 100);
             this.MultipleBranchTab.TabIndex = 2;
             this.MultipleBranchTab.Text = "Push multiple branches";
             this.MultipleBranchTab.UseVisualStyleBackColor = true;
@@ -457,10 +403,10 @@
             this.groupBox4.Controls.Add(this.BranchGrid);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(4, 4);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox4.Size = new System.Drawing.Size(764, 84);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox4.Size = new System.Drawing.Size(764, 92);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Select Branches to Push";
@@ -479,10 +425,10 @@
             this.DeleteColumn});
             this.BranchGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BranchGrid.Location = new System.Drawing.Point(4, 27);
-            this.BranchGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BranchGrid.Margin = new System.Windows.Forms.Padding(4);
             this.BranchGrid.Name = "BranchGrid";
             this.BranchGrid.RowHeadersVisible = false;
-            this.BranchGrid.Size = new System.Drawing.Size(756, 53);
+            this.BranchGrid.Size = new System.Drawing.Size(756, 61);
             this.BranchGrid.TabIndex = 0;
             this.BranchGrid.CurrentCellDirtyStateChanged += new System.EventHandler(this.BranchGrid_CurrentCellDirtyStateChanged);
             // 
@@ -538,8 +484,8 @@
             this.LoadSSHKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LoadSSHKey.Location = new System.Drawing.Point(478, 239);
-            this.LoadSSHKey.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LoadSSHKey.Location = new System.Drawing.Point(464, 259);
+            this.LoadSSHKey.Margin = new System.Windows.Forms.Padding(4);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(171, 31);
             this.LoadSSHKey.TabIndex = 8;
@@ -558,10 +504,10 @@
             this.groupBox2.Controls.Add(this._NO_TRANSLATE_Remotes);
             this.groupBox2.Controls.Add(this.PushDestination);
             this.groupBox2.Location = new System.Drawing.Point(15, 15);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox2.Size = new System.Drawing.Size(780, 100);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox2.Size = new System.Drawing.Size(766, 100);
             this.groupBox2.TabIndex = 21;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Push to";
@@ -570,8 +516,8 @@
             // 
             this.folderBrowserButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.folderBrowserButton1.Enabled = false;
-            this.folderBrowserButton1.Location = new System.Drawing.Point(580, 59);
-            this.folderBrowserButton1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.folderBrowserButton1.Location = new System.Drawing.Point(566, 59);
+            this.folderBrowserButton1.Margin = new System.Windows.Forms.Padding(4);
             this.folderBrowserButton1.Name = "folderBrowserButton1";
             this.folderBrowserButton1.PathShowingControl = this.PushDestination;
             this.folderBrowserButton1.Size = new System.Drawing.Size(188, 31);
@@ -586,9 +532,9 @@
             this.PushDestination.Enabled = false;
             this.PushDestination.FormattingEnabled = true;
             this.PushDestination.Location = new System.Drawing.Point(160, 60);
-            this.PushDestination.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.PushDestination.Margin = new System.Windows.Forms.Padding(4);
             this.PushDestination.Name = "PushDestination";
-            this.PushDestination.Size = new System.Drawing.Size(412, 31);
+            this.PushDestination.Size = new System.Drawing.Size(398, 31);
             this.PushDestination.TabIndex = 4;
             // 
             // AddRemote
@@ -596,8 +542,8 @@
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddRemote.Image = global::GitUI.Properties.Resources.IconRemotes;
             this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddRemote.Location = new System.Drawing.Point(580, 21);
-            this.AddRemote.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.AddRemote.Location = new System.Drawing.Point(566, 21);
+            this.AddRemote.Margin = new System.Windows.Forms.Padding(4);
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(188, 31);
             this.AddRemote.TabIndex = 3;
@@ -613,9 +559,9 @@
             this._NO_TRANSLATE_Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(160, 24);
-            this._NO_TRANSLATE_Remotes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._NO_TRANSLATE_Remotes.Margin = new System.Windows.Forms.Padding(4);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
-            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(412, 31);
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(398, 31);
             this._NO_TRANSLATE_Remotes.TabIndex = 2;
             this._NO_TRANSLATE_Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
             this._NO_TRANSLATE_Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
@@ -624,8 +570,8 @@
             // Pull
             // 
             this.Pull.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Pull.Location = new System.Drawing.Point(15, 239);
-            this.Pull.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Pull.Location = new System.Drawing.Point(15, 259);
+            this.Pull.Margin = new System.Windows.Forms.Padding(4);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(126, 31);
             this.Pull.TabIndex = 7;
@@ -638,15 +584,15 @@
             this.AcceptButton = this.Push;
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(815, 296);
+            this.ClientSize = new System.Drawing.Size(801, 316);
             this.Controls.Add(this.TabControlTagBranch);
             this.Controls.Add(this.LoadSSHKey);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Push);
             this.Controls.Add(this.Pull);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(819, 343);
+            this.MinimumSize = new System.Drawing.Size(819, 363);
             this.Name = "FormPush";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Push";
@@ -662,8 +608,6 @@
             this.TagTab.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.TagOptionsPanel.ResumeLayout(false);
-            this.TagOptionsPanel.PerformLayout();
             this.MultipleBranchTab.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.BranchGrid)).EndInit();
@@ -691,7 +635,6 @@
         private System.Windows.Forms.TabControl TabControlTagBranch;
         private System.Windows.Forms.TabPage BranchTab;
         private System.Windows.Forms.TabPage TagTab;
-        private System.Windows.Forms.CheckBox PushAllTags;
         private System.Windows.Forms.ToolTip toolTip1;
 		private System.Windows.Forms.TabPage MultipleBranchTab;
 		private System.Windows.Forms.GroupBox groupBox4;
@@ -702,12 +645,9 @@
 		private System.Windows.Forms.DataGridViewCheckBoxColumn PushColumn;
 		private System.Windows.Forms.DataGridViewCheckBoxColumn ForceColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn DeleteColumn;
-        private System.Windows.Forms.Panel TagOptionsPanel;
-        private System.Windows.Forms.LinkLabel ShowTagOptions;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.LinkLabel ShowOptions;
         private System.Windows.Forms.Panel PushOptionsPanel;
-        private System.Windows.Forms.CheckBox PushAllBranches;
         private System.Windows.Forms.CheckBox ForcePushBranches;
         private System.Windows.Forms.CheckBox _createPullRequestCB;
         private System.Windows.Forms.Label labelTo;

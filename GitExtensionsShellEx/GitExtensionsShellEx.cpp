@@ -6,6 +6,25 @@
 #include "Generated/GitExtensionsShellEx.h"
 #include "GitExtensionsShellEx.h"
 
+#ifdef _DEBUG
+#include <stdio.h>
+
+void XTrace(LPCTSTR lpszFormat, ...)
+{
+    va_list args;
+    va_start(args, lpszFormat);
+    int nBuf;
+    TCHAR szBuffer[512]; // get rid of this hard-coded buffer
+    nBuf = _vsntprintf(szBuffer, 511, lpszFormat, args);
+    ::OutputDebugString(szBuffer);
+    va_end(args);
+}
+
+#define DBG_TRACE   XTrace
+#else
+#define DBG_TRACE   __noop
+#endif // _DEBUG
+
 #define MIIM_ID          0x00000002
 #define MIIM_STRING      0x00000040
 #define MIIM_BITMAP      0x00000080
@@ -71,6 +90,8 @@ STDMETHODIMP CGitExtensionsShellEx::Initialize(LPCITEMIDLIST pidlFolder, LPDATAO
     HDROP     hDrop;
 
     /* store the folder, if provided */
+    DBG_TRACE(L"CGitExtensionsShellEx::Initialize(pidlFolder=%p)", pidlFolder);
+    m_szFile[0] = '\0';
     if (pidlFolder)
         SHGetPathFromIDList(pidlFolder, m_szFile);
 
@@ -94,12 +115,14 @@ STDMETHODIMP CGitExtensionsShellEx::Initialize(LPCITEMIDLIST pidlFolder, LPDATAO
     // Sanity check - make sure there is at least one filename.
     UINT uNumFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
     HRESULT hr = S_OK;
+    DBG_TRACE(L"uNumFiles=%u", uNumFiles);
 
-    if (uNumFiles == 0)
+    if (uNumFiles != 1)
         hr = E_INVALIDARG;
     // Get the name of the first file and store it in our member variable m_szFile.
     else if (!DragQueryFile(hDrop, 0, m_szFile, MAX_PATH))
         hr = E_INVALIDARG;
+    DBG_TRACE(L"m_szFile=%s", m_szFile);
 
     GlobalUnlock(stg.hGlobal);
     ReleaseStgMedium(&stg);
@@ -341,20 +364,50 @@ bool CGitExtensionsShellEx::IsValidGitDir(TCHAR m_szFile[])
 STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
     HMENU hMenu, UINT menuIndex, UINT uidFirstCmd, UINT uidLastCmd, UINT uFlags)
 {
+    DBG_TRACE(L"CGitExtensionsShellEx::QueryContextMenu(menuIndex=%u,uidLastCmd=%u,uFlags=%u)", menuIndex, uidLastCmd, uFlags);
     // If the flags include CMF_DEFAULTONLY then we shouldn't do anything.
     if (uFlags & CMF_DEFAULTONLY)
         return S_OK;
 
-    CString szCascadeShellMenuItems = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions\\GitExtensions", L"CascadeShellMenuItems");
+    //check if we already added our menu entry for a folder.
+    //we check that by iterating through all menu entries and check if
+    //the dwItemData member points to our global ID string. That string is set
+    //by our shell extension when the folder menu is inserted.
+    TCHAR menubuf[MAX_PATH];
+    int count = GetMenuItemCount(hMenu);
+    for (int i=0; i<count; ++i)
+    {
+        MENUITEMINFO miif;
+        SecureZeroMemory(&miif, sizeof(MENUITEMINFO));
+        miif.cbSize = sizeof(MENUITEMINFO);
+        miif.fMask = MIIM_DATA;
+        miif.dwTypeData = menubuf;
+        miif.cch = _countof(menubuf);
+        GetMenuItemInfo(hMenu, i, TRUE, &miif);
+        if (miif.dwItemData == (ULONG_PTR)_Module.GetModuleInstance())
+        {
+            DBG_TRACE(L"Menu already added");
+            return S_OK;
+        }
+    }
+
+    CString szCascadeShellMenuItems = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"CascadeShellMenuItems");
     if (szCascadeShellMenuItems.IsEmpty())
         szCascadeShellMenuItems = "110111000111111111";
     bool cascadeContextMenu = szCascadeShellMenuItems.Find('1') != -1;
+    bool alwaysShowAllCommands = GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"AlwaysShowAllCommands");
+
     HMENU popupMenu = NULL;
     if (cascadeContextMenu)
         popupMenu = CreateMenu();
 
-    bool isValidDir = IsValidGitDir(m_szFile);
-    bool isFile = IsFileExists(m_szFile);
+    bool isValidDir = true;
+    bool isFolder = true;
+    if (!alwaysShowAllCommands)
+    {
+        isValidDir = IsValidGitDir(m_szFile);
+        isFolder = !IsFileExists(m_szFile);
+    }
 
     // preset values, if not used
     commandsId.clear();
@@ -364,24 +417,34 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
     int cmdid;
     bool isSubMenu;
 
+    if (alwaysShowAllCommands || !isValidDir)
+    {
+        isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcClone);
+        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Clone...", IDI_ICONCLONEREPOGIT, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        commandsId[cmdid]=gcClone;
+
+        isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcCreateRepository);
+        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Create new repository...", IDI_ICONCREATEREPOSITORY, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        commandsId[cmdid]=gcCreateRepository;
+    }
     if (isValidDir)
     {
-        if (!isFile)
-        {
-            isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcBrowse);
-            cmdid = AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Browse", IDI_ICONBROWSEFILEEXPLORER, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
-            commandsId[cmdid]=gcBrowse;
+        isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcBrowse);
+        cmdid = AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Browse", IDI_ICONBROWSEFILEEXPLORER, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        commandsId[cmdid]=gcBrowse;
 
+        if (isFolder)
+        {
             isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcCommit);
-            cmdid = AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Commit", IDI_ICONCOMMIT, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+            cmdid = AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Commit...", IDI_ICONCOMMIT, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
             commandsId[cmdid]=gcCommit;
 
             isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcPull);
-            cmdid = AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Pull", IDI_ICONPULL, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+            cmdid = AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Pull...", IDI_ICONPULL, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
             commandsId[cmdid]=gcPull;
 
             isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcPush);
-            cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Push", IDI_ICONPUSH, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+            cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Push...", IDI_ICONPUSH, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
             commandsId[cmdid]=gcPush;
 
             isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcStash);
@@ -396,15 +459,15 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
             if (isSubMenu && submenuIndex > 0) {
                 InsertMenu(popupMenu, submenuIndex++, MF_SEPARATOR|MF_BYPOSITION, 0, NULL); ++id;
             }
-            cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Checkout branch", IDI_ICONBRANCHCHECKOUT, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+            cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Checkout branch...", IDI_ICONBRANCHCHECKOUT, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
             commandsId[cmdid]=gcCheckoutBranch;
 
             isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcCheckoutRevision);
-            cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Checkout revision", IDI_ICONREVISIONCHECKOUT, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+            cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Checkout revision...", IDI_ICONREVISIONCHECKOUT, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
             commandsId[cmdid]=gcCheckoutRevision;
 
             isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcCreateBranch);
-            cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Create branch", IDI_ICONBRANCHCREATE, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+            cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Create branch...", IDI_ICONBRANCHCREATE, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
             commandsId[cmdid]=gcCreateBranch;
         }
 
@@ -420,26 +483,16 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
         commandsId[cmdid]=gcFileHistory;
 
         isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcResetFileChanges);
-        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Reset file changes", IDI_ICONTRESETFILETO, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Reset file changes...", IDI_ICONTRESETFILETO, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
         commandsId[cmdid]=gcResetFileChanges;
 
         isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcAddFiles);
-        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Add files", IDI_ICONADDED, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Add files...", IDI_ICONADDED, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
         commandsId[cmdid]=gcAddFiles;
 
         isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcApplyPatch);
-        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Apply patch", 0, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Apply patch...", 0, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
         commandsId[cmdid]=gcApplyPatch;
-    }
-    else 
-    {
-        isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcClone);
-        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Clone", IDI_ICONCLONEREPOGIT, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
-        commandsId[cmdid]=gcClone;
-
-        isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcCreateRepository);
-        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Create new repository", IDI_ICONCREATEREPOSITORY, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
-        commandsId[cmdid]=gcCreateRepository;
     }
 
     isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcSettings);
@@ -473,7 +526,7 @@ UINT CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPTSTR text, int resource, 
     MENUITEMINFO mii;
     memset(&mii, 0, sizeof(mii));
     mii.cbSize = sizeof(mii);
-    mii.fMask = MIIM_STRING | MIIM_ID;
+    mii.fMask = MIIM_STRING | MIIM_DATA | MIIM_ID;
     if (resource)
     {
         mii.fMask |= MIIM_BITMAP;
@@ -482,12 +535,13 @@ UINT CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPTSTR text, int resource, 
         myIDMap[uidFirstCmd + id] = resource;
     }
     mii.wID = uidFirstCmd + id;
+    mii.dwItemData = (ULONG_PTR)_Module.GetModuleInstance();
     std::wstring textEx;
     if (isSubMenu)
         mii.dwTypeData = text;
     else
     {
-        textEx = std::wstring(L"GitEx ") + text;
+        textEx = std::wstring(L"GitExt ") + text;
         mii.dwTypeData = &textEx[0];
     }
 
@@ -554,11 +608,11 @@ void CGitExtensionsShellEx::RunGitEx(const TCHAR* command)
     CString dir = "";
 
     if (dir.GetLength() == 0)
-        dir = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions\\GitExtensions", L"InstallDir");
+        dir = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"InstallDir");
     if (dir.GetLength() == 0)
-        dir = GetRegistryValue(HKEY_USERS, L"SOFTWARE\\GitExtensions\\GitExtensions", L"InstallDir");
+        dir = GetRegistryValue(HKEY_USERS, L"SOFTWARE\\GitExtensions", L"InstallDir");
     if (dir.GetLength() == 0)
-        dir = GetRegistryValue(HKEY_LOCAL_MACHINE, L"SOFTWARE\\GitExtensions\\GitExtensions", L"InstallDir");
+        dir = GetRegistryValue(HKEY_LOCAL_MACHINE, L"SOFTWARE\\GitExtensions", L"InstallDir");
 
     ShellExecute(NULL, L"open", L"GitExtensions.exe", args, dir, SW_SHOWNORMAL);
 }
@@ -634,18 +688,17 @@ STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPA
 
 CString CGitExtensionsShellEx::GetRegistryValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path)
 {
-    CString result = "";
     HKEY key;
-
-    TCHAR tempStr[512];
-    unsigned long taille = sizeof(tempStr);
-    unsigned long type;
-
     long res = RegOpenKeyEx(hOpenKey,szKey, 0, KEY_READ | KEY_WOW64_32KEY, &key);
     if (res != ERROR_SUCCESS)
     {
         return "";
     }
+
+    CString result = "";
+    TCHAR tempStr[512];
+    unsigned long taille = sizeof(tempStr);
+    unsigned long type;
     if (RegQueryValueEx(key, path, 0, &type, (BYTE*)&tempStr[0], &taille) != ERROR_SUCCESS)
     {
         RegCloseKey(key);
@@ -659,4 +712,12 @@ CString CGitExtensionsShellEx::GetRegistryValue(HKEY hOpenKey, LPCTSTR szKey, LP
     RegCloseKey(key);
 
     return result;
+}
+
+bool CGitExtensionsShellEx::GetRegistryBoolValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path)
+{
+    CString value = GetRegistryValue(hOpenKey, szKey, path);
+    if (value.IsEmpty())
+        return false;
+    return value.CompareNoCase(L"true") == 0;
 }

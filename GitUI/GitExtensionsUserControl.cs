@@ -13,7 +13,7 @@ namespace GitUI
     {
         public GitExtensionsControl()
         {
-            Font = Settings.Font;
+            Font = AppSettings.Font;
 
             Load += GitExtensionsControl_Load;
         }
@@ -67,7 +67,7 @@ namespace GitUI
         /// <summary>Translates the <see cref="UserControl"/>'s elements.</summary>
         protected void Translate()
         {
-            Translator.Translate(this, GitCommands.Settings.CurrentTranslation);
+            Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
             translated = true;
         }
 

@@ -31,6 +31,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -56,9 +58,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Reactive.Interfaces">
-      <HintPath>..\Statistics\GitImpact\bin\Debug\System.Reactive.Interfaces.dll</HintPath>
+      <HintPath>..\..\packages\Rx-Interfaces.2.1.30214.0\lib\Net40\System.Reactive.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
@@ -66,6 +69,15 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BuildServerIntegration\BuildInfo.cs" />
+    <Compile Include="BuildServerIntegration\BuildServerAdapterMetadataAttribute.cs" />
+    <Compile Include="BuildServerIntegration\BuildServerCredentials.cs" />
+    <Compile Include="BuildServerIntegration\BuildServerSettingsUserControlMetadata.cs" />
+    <Compile Include="BuildServerIntegration\IBuildServerAdapter.cs" />
+    <Compile Include="BuildServerIntegration\IBuildServerCredentials.cs" />
+    <Compile Include="BuildServerIntegration\IBuildServerSettingsUserControl.cs" />
+    <Compile Include="BuildServerIntegration\IBuildServerTypeMetadata.cs" />
+    <Compile Include="BuildServerIntegration\IBuildServerWatcher.cs" />
     <Compile Include="GitPluginBase.cs" />
     <Compile Include="GitUIPostActionEventArgs.cs" />
     <Compile Include="IBrowseRepo.cs" />
@@ -76,11 +88,13 @@
     <Compile Include="Notifications\INotifications.cs" />
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="ILockableNotifier.cs" />
+    <Compile Include="ISettingsSource.cs" />
+    <Compile Include="ManagedExtensibility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryHosts\IRepositoryHostPlugin.cs" />
     <Compile Include="IGitPlugin.cs" />
     <Compile Include="IGitPluginSettingsContainer.cs" />
-    <Compile Include="IGitSubmodule.cs" />
+    <Compile Include="IGitSubmoduleInfo.cs" />
     <Compile Include="IGitUICommands.cs" />
     <Compile Include="GitUIBaseEventArgs.cs" />
     <Compile Include="RepositoryHosts\IHostedRepository.cs" />
@@ -106,7 +120,11 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

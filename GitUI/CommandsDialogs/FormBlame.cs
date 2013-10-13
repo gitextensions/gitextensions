@@ -22,8 +22,9 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrEmpty(fileName))
                 return;
 
+            FileName = fileName;
             if (revision == null)
-                revision = new GitRevision(Module, "Head");
+                revision = Module.GetRevision("Head");
 
             blameControl1.LoadBlame(revision, null, fileName, null, null, Module.FilesEncoding);
         }

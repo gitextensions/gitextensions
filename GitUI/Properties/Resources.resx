@@ -616,11 +616,26 @@
   <data name="HelpPullMergeFastForward" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\HelpPullMergeFastForward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="BuildCancelled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BuildCancelled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BuildFailed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BuildFailed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BuildSuccessful" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BuildSuccessful.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="IconGotoManual" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\IconGotoManual.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="IconWarning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconWarning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="AddBranch" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\AddBranch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconGotoCurrentRevision" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconGotoCurrentRevision.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="AddConnection" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\AddConnection.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

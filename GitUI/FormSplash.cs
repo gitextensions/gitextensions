@@ -65,7 +65,7 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            _NO_TRANSLATE_versionLabel.Text = string.Format(_version.Text, Settings.GitExtensionsVersionString);
+            _NO_TRANSLATE_versionLabel.Text = string.Format(_version.Text, AppSettings.GitExtensionsVersionString);
 
             if (EnvUtils.RunningOnUnix())
                 _NO_TRANSLATE_osLabel.Text = "Unix";

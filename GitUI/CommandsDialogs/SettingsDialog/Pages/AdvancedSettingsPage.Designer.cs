@@ -35,6 +35,7 @@
             this.chkUseLocalChangesAction = new System.Windows.Forms.CheckBox();
             this.GeneralGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.chkAlwaysShowAdvOpt = new System.Windows.Forms.CheckBox();
             this.chkDontSHowHelpImages = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.CheckoutGB.SuspendLayout();
@@ -106,7 +107,7 @@
             this.chkUseLocalChangesAction.Size = new System.Drawing.Size(430, 32);
             this.chkUseLocalChangesAction.TabIndex = 1;
             this.chkUseLocalChangesAction.Text = "Use last chosen \"local changes\" action as default action.\r\nThis action will be pe" +
-                "rformed without warning while checking out branch.";
+    "rformed without warning while checking out branch.";
             this.chkUseLocalChangesAction.UseVisualStyleBackColor = true;
             // 
             // GeneralGB
@@ -128,6 +129,7 @@
             this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.chkAlwaysShowAdvOpt, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.chkDontSHowHelpImages, 0, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 21);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -136,6 +138,16 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(163, 24);
             this.tableLayoutPanel1.TabIndex = 1;
+            // 
+            // chkAlwaysShowAdvOpt
+            // 
+            this.chkAlwaysShowAdvOpt.AutoSize = true;
+            this.chkAlwaysShowAdvOpt.Location = new System.Drawing.Point(3, 32);
+            this.chkAlwaysShowAdvOpt.Name = "chkAlwaysShowAdvOpt";
+            this.chkAlwaysShowAdvOpt.Size = new System.Drawing.Size(208, 21);
+            this.chkAlwaysShowAdvOpt.TabIndex = 2;
+            this.chkAlwaysShowAdvOpt.Text = "Always show advanced options";
+            this.chkAlwaysShowAdvOpt.UseVisualStyleBackColor = true;
             // 
             // chkDontSHowHelpImages
             // 
@@ -149,8 +161,7 @@
             // 
             // AdvancedSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "AdvancedSettingsPage";
             this.Size = new System.Drawing.Size(701, 459);
@@ -179,6 +190,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.CheckBox chkAlwaysShowCheckoutDlg;
         private System.Windows.Forms.CheckBox chkUseLocalChangesAction;
+        private System.Windows.Forms.CheckBox chkAlwaysShowAdvOpt;
 
     }
 }

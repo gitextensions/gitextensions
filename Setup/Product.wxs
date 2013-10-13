@@ -1,725 +1,669 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
-    xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
-
-  <?include Config.wxi?>
-
-  <Product
-    Id="*" UpgradeCode="$(var.UpgradeCode)"
-    Name="$(var.ProductName) $(var.Version)"
-    Manufacturer="$(var.Manufacturer)"
-    Version="$(var.NumericVersion)"
-    Language="1033">
-
-    <Package
-      InstallerVersion="200"
-      Compressed="yes"
-      Description="$(var.ProductName)"/>
-
-    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes"/>
-    
-    <Property Id="ALLUSERS" Value="1" />
-    
-    <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
-    <Condition Message='.NET Framework 4.0 must be installed prior to installation of Git Extensions.'>
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+    <?include Config.wxi?>
+    <Product Id="*" UpgradeCode="$(var.UpgradeCode)" Name="$(var.ProductName) $(var.Version)" Manufacturer="$(var.Manufacturer)" Version="$(var.NumericVersion)" Language="1033">
+        <Package InstallerVersion="200" Compressed="yes" Description="$(var.ProductName)" />
+        <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+        <Property Id="ALLUSERS" Value="1" />
+        <PropertyRef Id="NETFRAMEWORK40CLIENT" />
+        <Condition Message=".NET Framework 4.0 must be installed prior to installation of Git Extensions.">
       Installed OR NETFRAMEWORK40CLIENT
-    </Condition>
-   
-    <Icon Id="gitextensions.ico" SourceFile="../bin/logo/git-extensions-logo-final-256.ico"/>
-
-    <?include AddRemove.wxi?>
-    <?include EnableUpgrades.wxi?>
-
-    <UIRef Id="WixUI_GitExtensions"/>
-    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
-    <Property Id="SSHCLIENT" Value="PuTTY" Secure="yes"/>
-    <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp"/>
-    <WixVariable Id="WixUIBannerBmp" Value="banner.bmp"/>
-    <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
-    <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes"/>
-
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
-          <Directory Id="PuttyDir" Name="PuTTY"/>
-          <Directory Id="GitCredentialWinStoreDir" Name="GitCredentialWinStore"/>
-          <Directory Id="PluginsDir" Name="Plugins"/>
-          <Directory Id="InstallerDir" Name="Installer"/>
-          <Directory Id="DictionariesDir" Name="Dictionaries"/>
-          <Directory Id="TranslationsDir" Name="Translation"/>          
-          <Directory Id="IconsDir" Name="Icons"/>
-          <Directory Id="DiffScriptsDir" Name="Diff-Scripts"/>
+        </Condition>
+        <Icon Id="gitextensions.ico" SourceFile="../bin/logo/git-extensions-logo-final-256.ico" />
+        <?include AddRemove.wxi?>
+        <?include EnableUpgrades.wxi?>
+        <UIRef Id="WixUI_GitExtensions" />
+        <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+        <Property Id="SSHCLIENT" Value="PuTTY" Secure="yes" />
+        <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
+        <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
+        <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
+        <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
+                    <Directory Id="PuttyDir" Name="PuTTY" />
+                    <Directory Id="GitCredentialWinStoreDir" Name="GitCredentialWinStore" />
+                    <Directory Id="PluginsDir" Name="Plugins" />
+                    <Directory Id="InstallerDir" Name="Installer" />
+                    <Directory Id="DictionariesDir" Name="Dictionaries" />
+                    <Directory Id="TranslationsDir" Name="Translation" />
+                    <Directory Id="IconsDir" Name="Icons" />
+                    <Directory Id="DiffScriptsDir" Name="Diff-Scripts" />
+                </Directory>
+            </Directory>
+            <Directory Id="PersonalFolder">
+                <Directory Id="VS2005" Name="Visual Studio 2005" />
+                <Directory Id="VS2008" Name="Visual Studio 2008" />
+                <Directory Id="VS2010" Name="Visual Studio 2010" />
+                <Directory Id="VS2012" Name="Visual Studio 2012" />
+                <Directory Id="VS2013" Name="Visual Studio 2013" />
+            </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="StartMenuDir" Name="$(var.ProductName)" />
+            </Directory>
+            <Directory Id="DesktopFolder" />
+            <Component Id="Path" Guid="{DAC97FD8-A869-4458-AABD-C27D2C892643}">
+                <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
+            </Component>
         </Directory>
-      </Directory>
-      <Directory Id="PersonalFolder">
-        <Directory Id="VS2005" Name="Visual Studio 2005"/>
-        <Directory Id="VS2008" Name="Visual Studio 2008"/>
-        <Directory Id="VS2010" Name="Visual Studio 2010"/>
-        <Directory Id="VS2012" Name="Visual Studio 2012"/>
-      </Directory>
-      <Directory Id="ProgramMenuFolder">
-        <Directory Id="StartMenuDir" Name="$(var.ProductName)"/>
-      </Directory>
-      <Directory Id="DesktopFolder"/>
-    </Directory>
-
-    <?define VsVersions = 2005;2008;2010;2012?>
-    
-    <?foreach VsVersion in $(var.VsVersions)?>
-    <Property Id="VS$(var.VsVersion)">
-      <DirectorySearch Id="VS$(var.VsVersion)" Path="[PersonalFolder]Visual Studio $(var.VsVersion)"/>
-    </Property>
-    <?endforeach?>
-
-    <DirectoryRef Id="INSTALLDIR">
-      <Component Id="gitextensions.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final-256.ico"/>
-      </Component>
-      <Component Id="gitex.cmd" Guid="*">
-        <File Source="..\bin\gitex.cmd"/>
-      </Component>
-      <Component Id="GitExtensionsUserManual.pdf" Guid="*">
-        <File Source="..\bin\GitExtensionsUserManual.pdf"/>
-      </Component>
-      <Component Id="GitExtensions.exe" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\GitExtensions.exe">
-          <netfx:NativeImage Id="ngen_GitExtensions.exe" Platform="all" Priority="1"/>
-        </File>
-        <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Advertise="no">
-          <Extension Id="gitext">
-            <Verb Id="open" Command="Open Git Extentions Repository" TargetFile="GitExtensions.exe" Argument="openrepo &quot;%1&quot;" />
-          </Extension>
-        </ProgId>
-      </Component>
-      <Component Id="TranslationApp.exe" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\TranslationApp.exe"/>
-      </Component>
-      <Component Id="Gravatar.dll" Guid="*">
-        <File Source="..\Gravatar\bin\Release\Gravatar.dll"/>
-      </Component>
-      <Component Id="GitCommands.dll" Guid="*">
-        <File Source="..\GitCommands\bin\Release\GitCommands.dll"/>
-      </Component>
-      <Component Id="GitUI.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\GitUI.dll"/>
-      </Component>
-      <Component Id="NetSpell.SpellChecker.dll" Guid="*">
-        <File Source="..\NetSpell.SpellChecker\bin\Release\NetSpell.SpellChecker.dll"/>
-      </Component>
-      <Component Id="ResourceManager.dll" Guid="*">
-        <File Source="..\ResourceManager\bin\Release\ResourceManager.dll"/>
-      </Component>
-      <Component Id="GitUIPluginInterfaces.dll" Guid="*">
-        <File Source="..\Plugins\GitUIPluginInterfaces\bin\Release\GitUIPluginInterfaces.dll"/>
-      </Component>
-      <Component Id="ICSharpCode.TextEditor.dll" Guid="*">
-        <File Source="..\bin\ICSharpCode.TextEditor.dll"/>
-      </Component>
-      <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
-        <File Source="..\bin\ICSharpCode.SharpZipLib.dll"/>
-      </Component>
-      <Component Id="Git.hub.dll" Guid="*">
-        <File Source="..\bin\Git.hub.dll"/>
-      </Component>
-      <Component Id="PSTaskDialog.dll" Guid="*">
-        <File Source="..\bin\PSTaskDialog.dll"/>
-      </Component>
-      <Component Id="RestSharp.dll" Guid="*">
-        <File Source="..\packages\RestSharp.104.1\lib\net4-client\RestSharp.dll"/>
-      </Component>
-      <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
-        <File Source="..\bin\Microsoft.WindowsAPICodePack.dll"/>
-      </Component>
-      <Component Id="Microsoft.WindowsAPICodePack.Shell.dll" Guid="*">
-        <File Source="..\bin\Microsoft.WindowsAPICodePack.Shell.dll"/>
-      </Component>
-      <Component Id="NBug.dll" Guid="*">
-        <File Source="..\packages\NBug.1.1.1\lib\net40-client\NBug.dll"/>
-      </Component>
-
-      <Component Id="System.Reactive.Core.dll" Guid="*">
-        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Core.dll"/>
-      </Component>
-      <Component Id="System.Reactive.Interfaces.dll" Guid="*">
-        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Interfaces.dll"/>
-      </Component>
-      <Component Id="System.Reactive.Linq.dll" Guid="*">
-        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Linq.dll"/>
-      </Component>
-      <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
-        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.PlatformServices.dll"/>
-      </Component>
-
-      <!--Remove unused dll, installed in versions <= 2.31-->
-      <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
-        <RemoveFile Name="GithubSharp.Core.dll" Id="GithubSharp.Core.dll" On="both"/>
-      </Component>
-
-      <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
-      
-      <Component Id="GitExtensionsShellEx32.dll" Guid="*">
-        <File
-          Name="GitExtensionsShellEx32.dll"
-          Source="..\GitExtensionsShellEx\Release\GitExtensionsShellEx32.dll"
-          KeyPath="yes"/>
+        <?define VsVersions = 2005;2008;2010;2012;2013?>
+        <?foreach VsVersion in $(var.VsVersions)?>
+        <Property Id="VS$(var.VsVersion)">
+            <DirectorySearch Id="VS$(var.VsVersion)" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
+        </Property>
+        <?endforeach ?>
+        <DirectoryRef Id="INSTALLDIR">
+            <Component Id="gitextensions.ico" Guid="*">
+                <File Source="..\bin\logo\git-extensions-logo-final-256.ico" />
+            </Component>
+            <Component Id="gitex.cmd" Guid="*">
+                <File Source="..\bin\gitex.cmd" />
+            </Component>
+            <Component Id="GitExtensionsUserManual.pdf" Guid="*">
+                <File Source="..\bin\GitExtensionsUserManual.pdf" />
+            </Component>
+            <Component Id="GitExtensions.exe" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\GitExtensions.exe">
+                    <netfx:NativeImage Id="ngen_GitExtensions.exe" Platform="all" Priority="1" />
+                </File>
+                <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Advertise="no">
+                    <Extension Id="gitext">
+                        <Verb Id="open" Command="Open Git Extentions Repository" TargetFile="GitExtensions.exe" Argument="openrepo &quot;%1&quot;" />
+                    </Extension>
+                </ProgId>
+            </Component>
+            <Component Id="GitExtensions.exe.config" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\GitExtensions.exe.config" />
+            </Component>
+            <Component Id="TranslationApp.exe" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\TranslationApp.exe" />
+            </Component>
+            <Component Id="Gravatar.dll" Guid="*">
+                <File Source="..\Gravatar\bin\Release\Gravatar.dll" />
+            </Component>
+            <Component Id="GitCommands.dll" Guid="*">
+                <File Source="..\GitCommands\bin\Release\GitCommands.dll" />
+            </Component>
+            <Component Id="GitUI.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\GitUI.dll" />
+            </Component>
+            <Component Id="NetSpell.SpellChecker.dll" Guid="*">
+                <File Source="..\NetSpell.SpellChecker\bin\Release\NetSpell.SpellChecker.dll" />
+            </Component>
+            <Component Id="ResourceManager.dll" Guid="*">
+                <File Source="..\ResourceManager\bin\Release\ResourceManager.dll" />
+            </Component>
+            <Component Id="GitUIPluginInterfaces.dll" Guid="*">
+                <File Source="..\Plugins\GitUIPluginInterfaces\bin\Release\GitUIPluginInterfaces.dll" />
+            </Component>
+            <Component Id="ICSharpCode.TextEditor.dll" Guid="*">
+                <File Source="..\bin\ICSharpCode.TextEditor.dll" />
+            </Component>
+            <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
+                <File Source="..\bin\ICSharpCode.SharpZipLib.dll" />
+            </Component>
+            <Component Id="Git.hub.dll" Guid="*">
+                <File Source="..\Externals\Git.hub\Git.hub\bin\Release\Git.hub.dll" />
+            </Component>
+            <Component Id="PSTaskDialog.dll" Guid="*">
+                <File Source="..\bin\PSTaskDialog.dll" />
+            </Component>
+            <Component Id="RestSharp.dll" Guid="*">
+                <File Source="..\packages\RestSharp.104.1\lib\net4-client\RestSharp.dll" />
+            </Component>
+            <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
+                <File Source="..\bin\Microsoft.WindowsAPICodePack.dll" />
+            </Component>
+            <Component Id="Microsoft.WindowsAPICodePack.Shell.dll" Guid="*">
+                <File Source="..\bin\Microsoft.WindowsAPICodePack.Shell.dll" />
+            </Component>
+            <Component Id="NBug.dll" Guid="*">
+                <File Source="..\packages\NBug\lib\net40-client\NBug.dll" />
+            </Component>
+            <Component Id="SmartFormat.dll" Guid="*">
+                <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
+            </Component>
+            <Component Id="System.Reactive.Core.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll"/>
+            </Component>
+            <Component Id="System.Reactive.Interfaces.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Interfaces.dll"/>
+            </Component>
+            <Component Id="System.Reactive.Linq.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Linq.dll"/>
+            </Component>
+            <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.PlatformServices.dll"/>
+            </Component>
+            <!--Remove unused dll, installed in versions <= 2.31-->
+            <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
+                <RemoveFile Name="GithubSharp.Core.dll" Id="GithubSharp.Core.dll" On="both" />
+            </Component>
+            <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
+            <Component Id="GitExtensionsShellEx32.dll" Guid="*">
+                <File Name="GitExtensionsShellEx32.dll" Source="..\GitExtensionsShellEx\Release\GitExtensionsShellEx32.dll" KeyPath="yes" />
+                <?foreach ShellExFileName in GitExtensionsShellEx32.dll?>
+                <?include RegisterShellExtension.wxi?>
+                <?endforeach ?>
+            </Component>
+            <Component Id="GitExtensionsShellEx64.dll" Guid="*" Win64="yes">
+                <Condition>VersionNT64</Condition>
+                <File Name="GitExtensionsShellEx64.dll" Source="..\GitExtensionsShellEx\Release-x64\GitExtensionsShellEx64.dll" KeyPath="yes" />
+                <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
+                <?include RegisterShellExtension.wxi?>
+                <?endforeach ?>
+            </Component>
+            <Component Id="checksettings.reg" Guid="*">
+                <RegistryValue Name="CheckSettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+            </Component>
+            <Component Id="InstallDir.reg" Guid="*">
+                <RegistryValue Name="InstallDir" Value="[INSTALLDIR]" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+            </Component>
+            <Component Id="Protocol.git" Guid="*">
+                <RegistryKey Key="git" Root="HKCR">
+                    <RegistryValue Value="URL: Github for Windows Protocol" Type="string" />
+                    <RegistryValue Name="URL Protocol" Value="" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="git\DefaultIcon" Root="HKCR">
+                    <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
+                </RegistryKey>
+                <RegistryKey Root="HKCR" Key="git\shell" />
+                <RegistryKey Root="HKCR" Key="git\shell\open" />
+                <RegistryKey Root="HKCR" Key="git\shell\open\command">
+                    <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
+                </RegistryKey>
+            </Component>
+            <Component Id="Protocol.github_windows" Guid="*">
+                <RegistryKey Key="github-windows" Root="HKCR">
+                    <RegistryValue Value="URL: Github for Windows Protocol" Type="string" />
+                    <RegistryValue Name="URL Protocol" Value="" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="github-windows\DefaultIcon" Root="HKCR">
+                    <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
+                </RegistryKey>
+                <RegistryKey Root="HKCR" Key="github-windows\shell" />
+                <RegistryKey Root="HKCR" Key="github-windows\shell\open" />
+                <RegistryKey Root="HKCR" Key="github-windows\shell\open\command">
+                    <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
+                </RegistryKey>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="PluginsDir">
+            <Component Id="DeleteUnusedBranches.dll" Guid="*">
+                <File Source="..\Plugins\DeleteUnusedBranches\bin\Release\DeleteUnusedBranches.dll" />
+            </Component>
+            <Component Id="AutoCompileSubmodules.dll" Guid="*">
+                <File Source="..\Plugins\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll" />
+            </Component>
+            <Component Id="BackgroundFetch.dll" Guid="*">
+                <File Source="..\Plugins\BackgroundFetch\bin\Release\BackgroundFetch.dll" />
+            </Component>
+            <Component Id="CreateLocalBranches.dll" Guid="*">
+                <File Source="..\Plugins\CreateLocalBranches\bin\Release\CreateLocalBranches.dll" />
+            </Component>
+            <Component Id="GitStatistics.dll" Guid="*">
+                <File Source="..\Plugins\Statistics\GitStatistics\bin\Release\GitStatistics.dll" />
+            </Component>
+            <Component Id="GitImpact.dll" Guid="*">
+                <File Source="..\Plugins\Statistics\GitImpact\bin\Release\GitImpact.dll" />
+            </Component>
+            <Component Id="Gource.dll" Guid="*">
+                <File Source="..\Plugins\Gource\bin\Release\Gource.dll" />
+            </Component>
+            <Component Id="Github3.dll" Guid="*">
+                <File Source="..\Plugins\Github3\bin\Release\Github3.dll" />
+            </Component>
+            <Component Id="Gerrit.dll" Guid="*">
+                <File Source="..\Plugins\Gerrit\bin\Release\Gerrit.dll" />
+            </Component>
+            <Component Id="ReleaseNotesGenerator.dll" Guid="*">
+                <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll" />
+            </Component>
+            <Component Id="Newtonsoft.Json.dll" Guid="*">
+                <File Source="..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll" />
+            </Component>
+            <!--Remove unused dll, installed in versions <= 2.31-->
+            <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
+                <RemoveFile Name="Github.dll" Id="Github.dll" On="both" />
+                <RemoveRegistryValue Id="GithubAPIToken" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubapitoken" />
+                <RemoveRegistryValue Id="GithubUsername" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubusername" />
+                <RemoveRegistryValue Id="GithubPassword" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpassword" />
+                <RemoveRegistryValue Id="GithubAccess" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpreferred access method" />
+            </Component>
+            <Component Id="FindLargeFiles.dll" Guid="*">
+                <File Source="..\Plugins\FindLargeFiles\bin\Release\FindLargeFiles.dll" />
+            </Component>
+            <Component Id="ProxySwitcher.dll" Guid="*">
+                <File Source="..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll" />
+            </Component>
         
-        <?foreach ShellExFileName in GitExtensionsShellEx32.dll?>
-          <?include RegisterShellExtension.wxi?>
-        <?endforeach?>
-      </Component>
-
-      <Component Id="GitExtensionsShellEx64.dll" Guid="*" Win64="yes">
-        <Condition>VersionNT64</Condition>
-        <File
-          Name="GitExtensionsShellEx64.dll"
-          Source="..\GitExtensionsShellEx\Release-x64\GitExtensionsShellEx64.dll"
-          KeyPath="yes"/>
-
-        <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
-          <?include RegisterShellExtension.wxi?>
-        <?endforeach?>
-      </Component>
-
-      <Component Id="checksettings.reg" Guid="*">
-        <RegistryValue Name="checksettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
-      </Component>
-      <Component Id="InstallDir.reg" Guid="*">
-        <RegistryValue Name="InstallDir" Value="[INSTALLDIR]" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
-      </Component>
-
-      <Component Id="Protocol.git" Guid="*">
-        <RegistryKey Key="git" Root="HKCR">
-          <RegistryValue Value="URL: Github for Windows Protocol" Type="string" />
-          <RegistryValue Name="URL Protocol" Value="" Type="string" />
-        </RegistryKey>
-        <RegistryKey Key="git\DefaultIcon" Root="HKCR">
-          <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
-        </RegistryKey>
-        <RegistryKey Root="HKCR" Key="git\shell"/>
-        <RegistryKey Root="HKCR" Key="git\shell\open"/>
-        <RegistryKey Root="HKCR" Key="git\shell\open\command">
-          <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
-        </RegistryKey>
-      </Component>
-
-      <Component Id="Protocol.github_windows" Guid="*">
-        <RegistryKey Key="github-windows" Root="HKCR">
-          <RegistryValue Value="URL: Github for Windows Protocol" Type="string" />
-          <RegistryValue Name="URL Protocol" Value="" Type="string" />
-        </RegistryKey>
-        <RegistryKey Key="github-windows\DefaultIcon" Root="HKCR">
-          <RegistryValue Value="[INSTALLDIR]GitExtensions.exe" Type="string" />
-        </RegistryKey>
-        <RegistryKey Root="HKCR" Key="github-windows\shell"/>
-        <RegistryKey Root="HKCR" Key="github-windows\shell\open"/>
-        <RegistryKey Root="HKCR" Key="github-windows\shell\open\command">
-          <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
-        </RegistryKey>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="PluginsDir">
-      <Component Id="DeleteUnusedBranches.dll" Guid="*">
-        <File Source="..\Plugins\DeleteUnusedBranches\bin\Release\DeleteUnusedBranches.dll"/>
-      </Component>
-      <Component Id="AutoCompileSubmodules.dll" Guid="*">
-        <File Source="..\Plugins\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll"/>
-      </Component>
-      <Component Id="BackgroundFetch.dll" Guid="*">
-        <File Source="..\Plugins\BackgroundFetch\bin\Release\BackgroundFetch.dll"/>
-      </Component>
-      <Component Id="CreateLocalBranches.dll" Guid="*">
-        <File Source="..\Plugins\CreateLocalBranches\bin\Release\CreateLocalBranches.dll"/>
-      </Component>
-      <Component Id="GitStatistics.dll" Guid="*">
-        <File Source="..\Plugins\Statistics\GitStatistics\bin\Release\GitStatistics.dll"/>
-      </Component>
-      <Component Id="GitImpact.dll" Guid="*">
-        <File Source="..\Plugins\Statistics\GitImpact\bin\Release\GitImpact.dll"/>
-      </Component>
-      <Component Id="Gource.dll" Guid="*">
-        <File Source="..\Plugins\Gource\bin\Release\Gource.dll"/>
-      </Component>
-      <Component Id="Github3.dll" Guid="*">
-        <File Source="..\Plugins\Github3\bin\Release\Github3.dll"/>
-      </Component>
-      <Component Id="Gerrit.dll" Guid="*">
-        <File Source="..\Plugins\Gerrit\bin\Release\Gerrit.dll"/>
-      </Component>
-	  <Component Id="ReleaseNotesGenerator.dll" Guid="*">
-		 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll"/>
-	  </Component>		
-      <Component Id="Newtonsoft.Json.dll" Guid="*">
-        <File Source="..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll"/>
-      </Component>
-      <!--Remove unused dll, installed in versions <= 2.31-->
-      <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
-        <RemoveFile Name="Github.dll" Id="Github.dll" On="both"/>
-        <RemoveRegistryValue Id="GithubAPIToken" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubapitoken"/>
-        <RemoveRegistryValue Id="GithubUsername" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubusername"/>
-        <RemoveRegistryValue Id="GithubPassword" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpassword"/>
-        <RemoveRegistryValue Id="GithubAccess" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpreferred access method"/>
-      </Component>
-
-      <Component Id="FindLargeFiles.dll" Guid="*">
-        <File Source="..\Plugins\FindLargeFiles\bin\Release\FindLargeFiles.dll"/>
-      </Component>
-      <Component Id="ProxySwitcher.dll" Guid="*">
-        <File Source="..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="IconsDir">
-      <Component Id="Blue.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final_mixed_blue.ico"/>
-      </Component>
-      <Component Id="Green.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final_mixed_green.ico"/>
-      </Component>
-      <Component Id="Purple.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final_mixed_purple.ico"/>
-      </Component>
-      <Component Id="Red.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final_mixed_red.ico"/>
-      </Component>
-      <Component Id="Yellow.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final_mixed_yellow.ico"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="DiffScriptsDir">
-      <Component Id="mergedoc.js" Guid="*">
-        <File Source="..\Bin\Diff-Scripts\merge-doc.js"/>
-      </Component>
-      <Component Id="mergeods.vbs" Guid="*">
-        <File Source="..\Bin\Diff-Scripts\merge-ods.vbs"/>
-      </Component>
-      <Component Id="License.txt" Guid="*">
-        <File Source="..\Bin\Diff-Scripts\TortoiseSVN License.txt"/>
-      </Component>
-    </DirectoryRef>
-    
-    <DirectoryRef Id="DictionariesDir">
-      <Component Id="deDE.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\de-DE.dic"/>
-      </Component>
-      <Component Id="enAU.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\en-AU.dic"/>
-      </Component>
-      <Component Id="enCA.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\en-CA.dic"/>
-      </Component>
-      <Component Id="enGB.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\en-GB.dic"/>
-      </Component>
-      <Component Id="enUS.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\en-US.dic"/>
-      </Component>
-      <Component Id="esES.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\es-ES.dic"/>
-      </Component>
-      <Component Id="esMX.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\es-MX.dic"/>
-      </Component>
-      <Component Id="frFR.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\fr-FR.dic"/>
-      </Component>
-      <Component Id="itIT.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\it-IT.dic"/>
-      </Component>
-      <Component Id="nlNL.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\nl-NL.dic"/>
-      </Component>
-      <Component Id="ruRU.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\ru-RU.dic"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="TranslationsDir">
-      <Component Id="English.gif" Guid="*">
-        <File Source="..\GitUI\Translation\English.gif"/>
-      </Component>
-      <Component Id="Dutch.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Dutch.xml"/>
-      </Component>
-      <Component Id="Dutch.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Dutch.gif"/>
-      </Component>
-      <Component Id="German.xml" Guid="*">
-        <File Source="..\GitUI\Translation\German.xml"/>
-      </Component>
-      <Component Id="German.gif" Guid="*">
-        <File Source="..\GitUI\Translation\German.gif"/>
-      </Component>
-      <Component Id="Francais.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Francais.xml"/>
-      </Component>
-      <Component Id="Francais.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Francais.gif"/>
-      </Component>
-      <Component Id="Italiano.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Italiano.xml"/>
-      </Component>
-      <Component Id="Italiano.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Italiano.gif"/>
-      </Component>
-      <Component Id="Japanese.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Japanese.xml"/>
-      </Component>
-      <Component Id="Japanese.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Japanese.gif"/>
-      </Component>
-      <Component Id="SimplifiedChinese.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Simplified Chinese.xml"/>
-      </Component>
-      <Component Id="SimplifiedChinese.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Simplified Chinese.gif"/>
-      </Component>
-      <Component Id="Spanish.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Spanish.xml"/>
-      </Component>
-      <Component Id="Spanish.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Spanish.gif"/>
-      </Component>
-      <Component Id="Russian.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Russian.xml"/>
-      </Component>
-      <Component Id="Russian.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Russian.gif"/>
-      </Component>
-      <Component Id="TraditionalChinese.xml" Guid="*">
-        <File Source="..\GitUI\Translation\Traditional Chinese.xml"/>
-      </Component>
-      <Component Id="TraditionalChinese.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Traditional Chinese.gif"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="GitCredentialWinStoreDir">
-      <Component Id="gitcredentialwinstore.exe" Guid="*">
-        <File Source="..\Bin\git-credential-winstore.exe"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="PuttyDir">
-      <Component Id="plink.exe" Guid="*">
-        <File Source="..\Bin\plink.exe"/>
-      </Component>
-      <Component Id="pageant.exe" Guid="*">
-        <File Source="..\Bin\pageant.exe"/>
-      </Component>
-      <Component Id="puttygen.exe" Guid="*">
-        <File Source="..\Bin\puttygen.exe"/>
-      </Component>
-
-      <Component Id="gitssh_openssh.reg" Guid="5f730698-ac38-4e63-ad5d-505b21d1fa22">
-        <Condition>SSHCLIENT="OpenSSH"</Condition>
-        <RegistryValue Name="gitssh" Value="" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
-      </Component>
-      <Component Id="gitssh_putty.reg" Guid="2cb64776-8035-413e-9266-4ad9e5ecbad3">
-        <Condition>SSHCLIENT="PuTTY"</Condition>
-        <RegistryValue Name="gitssh" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
-      </Component>
-      <Component Id="plink.reg" Guid="*">
-        <RegistryValue Name="plink" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
-      </Component>
-      <Component Id="pageant.reg" Guid="*">
-        <RegistryValue Name="pageant" Value="[INSTALLDIR]PuTTY\pageant.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
-      </Component>
-      <Component Id="puttygen.reg" Guid="*">
-        <RegistryValue Name="puttygen" Value="[INSTALLDIR]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string"/>
-      </Component>
-    </DirectoryRef>
-
-    <?foreach VsVersion in $(var.VsVersions)?>
-    <DirectoryRef Id="VS$(var.VsVersion)">
-
-      <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
-        
-        <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
-          <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugIn\GitPlugin.AddIn"/>
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall"/>
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsVersion)"/>
-        </Component>
-        
-        <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
-          <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugIn\obj\Release\GitPlugin.dll"/>
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall"/>
-          <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)"/>
-        </Component>
-        
-        <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
-          <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
-            <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugIn\bin\en-US\GitPlugin.resources.dll"/>
-            <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall"/>
-          </Component>
-        </Directory>
-        
-      </Directory>
-    </DirectoryRef>
-    <?endforeach?>
-
-
-    <DirectoryRef Id="ProgramMenuFolder">
-      <Component Id="GitExtensions.newstartmenu" Guid="*">
-        <Shortcut
-          Id="GitExtensions.newstartmenu"
-          Name="$(var.ProductName)"
-          Description="$(var.ProductName)"
-          Icon="gitextensions.ico"
-          Target="[INSTALLDIR]GitExtensions.exe"
-          WorkingDirectory="INSTALLDIR"/>
-        <RegistryValue
-          Root="HKCU" Key="$(var.InstalledRegKey)"
-          Name="GitExtensions.newstartmenu" Value="" Type="string"
-          KeyPath="yes"/>
-      </Component>
-    </DirectoryRef>
-    
-    <!-- Remove old start menu entries -->
-    <DirectoryRef Id="StartMenuDir">
-      <Component Id="GitExtensions.startmenu" Guid="{028C359A-8752-48E1-86EE-A539A9D2709A}">
-        <RemoveFolder
-          Id="GitExtensions.startmenu"
-          Directory="StartMenuDir"
-          On="install"/>
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="DesktopFolder">
-      <Component Id="GitExtensions.desktop" Guid="*">
-        <Shortcut
-          Id="GitExtensions.desktop"
-          Name="$(var.ProductName)"
-          Description="$(var.ProductName)"
-          Icon="gitextensions.ico"
-          Target="[INSTALLDIR]GitExtensions.exe"
-          WorkingDirectory="INSTALLDIR"/>
-        <RegistryValue
-          Root="HKCU" Key="$(var.InstalledRegKey)"
-          Name="GitExtensions.desktop" Value="" Type="string"
-          KeyPath="yes"/>
-        <RemoveFolder
-          Id="GitExtensions.desktop"
-          On="uninstall"/>
-      </Component>
-    </DirectoryRef>
-
-    <Feature Id="GitExtensions" Title="Git Extensions" Level="1" Display="expand">
-      <ComponentRef Id="gitextensions.ico"/>
-      <ComponentRef Id="gitex.cmd"/>
-      <ComponentRef Id="GitExtensionsUserManual.pdf"/>
-      <ComponentRef Id="GitExtensions.exe"/>
-      <ComponentRef Id="TranslationApp.exe"/>
-      <ComponentRef Id="Gravatar.dll"/>
-      <ComponentRef Id="GitCommands.dll"/>
-      <ComponentRef Id="GitUI.dll"/>
-      <ComponentRef Id="ICSharpCode.TextEditor.dll"/>
-      <ComponentRef Id="PSTaskDialog.dll"/>
-      <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
-      <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
-      <ComponentRef Id="NBug.dll"/>
-      <ComponentRef Id="NetSpell.SpellChecker.dll"/>
-      <ComponentRef Id="ResourceManager.dll"/>
-      <ComponentRef Id="GitUIPluginInterfaces.dll"/>
-      <ComponentRef Id="checksettings.reg"/>
-      <ComponentRef Id="InstallDir.reg"/>
-
-      <ComponentRef Id="gitssh_openssh.reg"/>
-      <ComponentRef Id="gitssh_putty.reg"/>
-      <ComponentRef Id="plink.exe"/>
-      <ComponentRef Id="plink.reg"/>
-      <ComponentRef Id="pageant.exe"/>
-      <ComponentRef Id="pageant.reg"/>
-      <ComponentRef Id="puttygen.exe"/>
-      <ComponentRef Id="puttygen.reg"/>
-      <ComponentRef Id="gitcredentialwinstore.exe"/>
-
-      <ComponentRef Id="GitExtensions.newstartmenu"/>
-      <ComponentRef Id="GitExtensions.startmenu"/>
-      <ComponentRef Id="GitExtensions.desktop"/>
-
-      <ComponentRef Id="English.gif"/>
-
-      <ComponentRef Id="System.Reactive.Core.dll" />
-      <ComponentRef Id="System.Reactive.Interfaces.dll" />
-      <ComponentRef Id="System.Reactive.Linq.dll" />
-      <ComponentRef Id="System.Reactive.PlatformServices.dll" />
-
-      <!--Remove unused dll, installed in versions <= 2.31-->
-      <ComponentRef Id="Github.dll"/>
-      <!--Remove unused dll, installed in versions <= 2.31-->
-      <ComponentRef Id="GithubSharp.Core.dll"/>
-
-      <Feature Id="Plugins" Title="Plugins" Level="1">
-        <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
-          <ComponentRef Id="AutoCompileSubmodules.dll"/>
+      <Component Id="System.Net.Http.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll"/>
+      </Component>
+      <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.WebRequest.dll"/>
+      </Component>
+      <Component Id="System.Net.Http.Primitives.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll"/>
+      </Component>
+      <Component Id="System.Runtime.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll"/>
+      </Component>
+      <Component Id="System.Threading.Tasks.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll"/>
+      </Component>
+      <Component Id="TeamCityIntegration.dll" Guid="*">
+          <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll"/>
+      </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="IconsDir">
+            <Component Id="Blue.ico" Guid="*">
+                <File Source="..\bin\logo\git-extensions-logo-final_mixed_blue.ico" />
+            </Component>
+            <Component Id="Green.ico" Guid="*">
+                <File Source="..\bin\logo\git-extensions-logo-final_mixed_green.ico" />
+            </Component>
+            <Component Id="Purple.ico" Guid="*">
+                <File Source="..\bin\logo\git-extensions-logo-final_mixed_purple.ico" />
+            </Component>
+            <Component Id="Red.ico" Guid="*">
+                <File Source="..\bin\logo\git-extensions-logo-final_mixed_red.ico" />
+            </Component>
+            <Component Id="Yellow.ico" Guid="*">
+                <File Source="..\bin\logo\git-extensions-logo-final_mixed_yellow.ico" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="DiffScriptsDir">
+            <Component Id="mergedoc.js" Guid="*">
+                <File Source="..\Bin\Diff-Scripts\merge-doc.js" />
+            </Component>
+            <Component Id="mergeods.vbs" Guid="*">
+                <File Source="..\Bin\Diff-Scripts\merge-ods.vbs" />
+            </Component>
+            <Component Id="License.txt" Guid="*">
+                <File Source="..\Bin\Diff-Scripts\TortoiseSVN License.txt" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="DictionariesDir">
+            <Component Id="deDE.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\de-DE.dic" />
+            </Component>
+            <Component Id="enAU.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\en-AU.dic" />
+            </Component>
+            <Component Id="enCA.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\en-CA.dic" />
+            </Component>
+            <Component Id="enGB.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\en-GB.dic" />
+            </Component>
+            <Component Id="enUS.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\en-US.dic" />
+            </Component>
+            <Component Id="esES.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\es-ES.dic" />
+            </Component>
+            <Component Id="esMX.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\es-MX.dic" />
+            </Component>
+            <Component Id="frFR.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\fr-FR.dic" />
+            </Component>
+            <Component Id="itIT.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\it-IT.dic" />
+            </Component>
+            <Component Id="nlNL.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\nl-NL.dic" />
+            </Component>
+            <Component Id="ruRU.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\ru-RU.dic" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="TranslationsDir">
+            <Component Id="English.gif" Guid="*">
+                <File Source="..\GitUI\Translation\English.gif" />
+            </Component>
+            <Component Id="Dutch.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Dutch.xml" />
+            </Component>
+            <Component Id="Dutch.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Dutch.gif" />
+            </Component>
+            <Component Id="Francais.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Francais.xml" />
+            </Component>
+            <Component Id="Francais.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Francais.gif" />
+            </Component>
+            <Component Id="German.xml" Guid="*">
+                <File Source="..\GitUI\Translation\German.xml" />
+            </Component>
+            <Component Id="German.gif" Guid="*">
+                <File Source="..\GitUI\Translation\German.gif" />
+            </Component>
+            <!--Component Id="Italiano.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Italiano.xml" />
+            </Component>
+            <Component Id="Italiano.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Italiano.gif" />
+            </Component-->
+            <Component Id="Japanese.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Japanese.xml" />
+            </Component>
+            <Component Id="Japanese.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Japanese.gif" />
+            </Component>
+            <Component Id="Russian.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Russian.xml" />
+            </Component>
+            <Component Id="Russian.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Russian.gif" />
+            </Component>
+            <!--Component Id="SimplifiedChinese.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Simplified Chinese.xml" />
+            </Component>
+            <Component Id="SimplifiedChinese.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
+            </Component-->
+            <Component Id="Spanish.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Spanish.xml" />
+            </Component>
+            <Component Id="Spanish.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Spanish.gif" />
+            </Component>
+            <!--Component Id="TraditionalChinese.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Traditional Chinese.xml" />
+            </Component>
+            <Component Id="TraditionalChinese.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Traditional Chinese.gif" />
+            </Component-->
+        </DirectoryRef>
+        <DirectoryRef Id="GitCredentialWinStoreDir">
+            <Component Id="gitcredentialwinstore.exe" Guid="*">
+                <File Source="..\Bin\git-credential-winstore.exe" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="PuttyDir">
+            <Component Id="plink.exe" Guid="*">
+                <File Source="..\Bin\plink.exe" />
+            </Component>
+            <Component Id="pageant.exe" Guid="*">
+                <File Source="..\Bin\pageant.exe" />
+            </Component>
+            <Component Id="puttygen.exe" Guid="*">
+                <File Source="..\Bin\puttygen.exe" />
+            </Component>
+            <Component Id="gitssh_openssh.reg" Guid="5f730698-ac38-4e63-ad5d-505b21d1fa22">
+                <Condition>SSHCLIENT="OpenSSH"</Condition>
+                <RegistryValue Name="gitssh" Value="" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+            </Component>
+            <Component Id="gitssh_putty.reg" Guid="2cb64776-8035-413e-9266-4ad9e5ecbad3">
+                <Condition>SSHCLIENT="PuTTY"</Condition>
+                <RegistryValue Name="gitssh" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+            </Component>
+            <Component Id="plink.reg" Guid="*">
+                <RegistryValue Name="plink" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+            </Component>
+            <Component Id="pageant.reg" Guid="*">
+                <RegistryValue Name="pageant" Value="[INSTALLDIR]PuTTY\pageant.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+            </Component>
+            <Component Id="puttygen.reg" Guid="*">
+                <RegistryValue Name="puttygen" Value="[INSTALLDIR]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+            </Component>
+        </DirectoryRef>
+        <?foreach VsVersion in $(var.VsVersions)?>
+        <DirectoryRef Id="VS$(var.VsVersion)">
+            <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
+                <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
+                    <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugIn\GitPlugin.AddIn" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
+                </Component>
+                <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
+                    <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugIn\obj\Release\GitPlugin.dll" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
+                </Component>
+                <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
+                    <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
+                        <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugIn\bin\en-US\GitPlugin.resources.dll" />
+                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </DirectoryRef>
+        <?endforeach ?>
+        <DirectoryRef Id="ProgramMenuFolder">
+            <Component Id="GitExtensions.newstartmenu" Guid="*">
+                <Shortcut Id="GitExtensions.newstartmenu" Name="$(var.ProductName)" Description="$(var.ProductName)" Icon="gitextensions.ico" Target="[INSTALLDIR]GitExtensions.exe" WorkingDirectory="INSTALLDIR" />
+                <RegistryValue Root="HKCU" Key="$(var.InstalledRegKey)" Name="GitExtensions.newstartmenu" Value="" Type="string" KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+        <!-- Remove old start menu entries -->
+        <DirectoryRef Id="StartMenuDir">
+            <Component Id="GitExtensions.startmenu" Guid="{028C359A-8752-48E1-86EE-A539A9D2709A}">
+                <RemoveFolder Id="GitExtensions.startmenu" Directory="StartMenuDir" On="install" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="DesktopFolder">
+            <Component Id="GitExtensions.desktop" Guid="*">
+                <Shortcut Id="GitExtensions.desktop" Name="$(var.ProductName)" Description="$(var.ProductName)" Icon="gitextensions.ico" Target="[INSTALLDIR]GitExtensions.exe" WorkingDirectory="INSTALLDIR" />
+                <RegistryValue Root="HKCU" Key="$(var.InstalledRegKey)" Name="GitExtensions.desktop" Value="" Type="string" KeyPath="yes" />
+                <RemoveFolder Id="GitExtensions.desktop" On="uninstall" />
+            </Component>
+        </DirectoryRef>
+        <Feature Id="GitExtensions" Title="Git Extensions" Level="1" Display="expand">
+            <ComponentRef Id="gitextensions.ico" />
+            <ComponentRef Id="gitex.cmd" />
+            <ComponentRef Id="GitExtensionsUserManual.pdf" />
+            <ComponentRef Id="GitExtensions.exe" />
+            <ComponentRef Id="GitExtensions.exe.config" />
+            <ComponentRef Id="TranslationApp.exe" />
+            <ComponentRef Id="Gravatar.dll" />
+            <ComponentRef Id="GitCommands.dll" />
+            <ComponentRef Id="GitUI.dll" />
+            <ComponentRef Id="ICSharpCode.TextEditor.dll" />
+            <ComponentRef Id="PSTaskDialog.dll" />
+            <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
+            <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
+            <ComponentRef Id="NBug.dll" />
+            <ComponentRef Id="SmartFormat.dll" />
+            <ComponentRef Id="NetSpell.SpellChecker.dll" />
+            <ComponentRef Id="ResourceManager.dll" />
+            <ComponentRef Id="GitUIPluginInterfaces.dll" />
+            <ComponentRef Id="checksettings.reg" />
+            <ComponentRef Id="InstallDir.reg" />
+            <ComponentRef Id="gitssh_openssh.reg" />
+            <ComponentRef Id="gitssh_putty.reg" />
+            <ComponentRef Id="plink.exe" />
+            <ComponentRef Id="plink.reg" />
+            <ComponentRef Id="pageant.exe" />
+            <ComponentRef Id="pageant.reg" />
+            <ComponentRef Id="puttygen.exe" />
+            <ComponentRef Id="puttygen.reg" />
+            <ComponentRef Id="gitcredentialwinstore.exe" />
+            <ComponentRef Id="GitExtensions.newstartmenu" />
+            <ComponentRef Id="GitExtensions.startmenu" />
+            <ComponentRef Id="English.gif" />
+            <ComponentRef Id="System.Reactive.Core.dll" />
+            <ComponentRef Id="System.Reactive.Interfaces.dll" />
+            <ComponentRef Id="System.Reactive.Linq.dll" />
+            <ComponentRef Id="System.Reactive.PlatformServices.dll" />
+            <!--Remove unused dll, installed in versions <= 2.31-->
+            <ComponentRef Id="Github.dll" />
+            <!--Remove unused dll, installed in versions <= 2.31-->
+            <ComponentRef Id="GithubSharp.Core.dll" />
+            <Feature Id="Plugins" Title="Plugins" Level="1">
+                <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
+                    <ComponentRef Id="AutoCompileSubmodules.dll" />
+                </Feature>
+                <Feature Id="BackgroundFetch" Title="Periodic background fetch" Level="1">
+                    <ComponentRef Id="BackgroundFetch.dll" />
+                </Feature>
+                <Feature Id="CreateLocalBranches" Title="Create local branches" Level="1">
+                    <ComponentRef Id="CreateLocalBranches.dll" />
+                </Feature>
+                <Feature Id="DeleteUnusedBranches" Title="Delete unused branches" Level="1">
+                    <ComponentRef Id="DeleteUnusedBranches.dll" />
+                </Feature>
+                <Feature Id="FindLargeFiles" Title="Find large files" Level="1">
+                    <ComponentRef Id="FindLargeFiles.dll" />
+                </Feature>
+                <Feature Id="Gerrit" Title="Gerrit code review" Level="1">
+                    <ComponentRef Id="Gerrit.dll" />
+                    <ComponentRef Id="Newtonsoft.Json.dll" />
+                </Feature>
+                <Feature Id="Github" Title="Github integration" Level="1">
+                    <ComponentRef Id="Github3.dll" />
+                    <ComponentRef Id="Git.hub.dll" />
+                    <ComponentRef Id="RestSharp.dll" />
+                </Feature>
+                <Feature Id="Gource" Title="Gource visualization" Level="1">
+                    <ComponentRef Id="Gource.dll" />
+                    <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
+                </Feature>
+                <Feature Id="Impact" Title="Impact Graph" Level="1">
+                    <ComponentRef Id="GitImpact.dll" />
+                </Feature>
+                <Feature Id="Statistics" Title="Statistics" Level="1">
+                    <ComponentRef Id="GitStatistics.dll" />
+                </Feature>
+                <Feature Id="ProxySwitcher" Title="ProxySwitcher" Level="1">
+                    <ComponentRef Id="ProxySwitcher.dll" />
+                </Feature>
+                <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
+                    <ComponentRef Id="ReleaseNotesGenerator.dll" />
+                </Feature>
+        <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
+          <ComponentRef Id="System.Net.Http.dll" />
+          <ComponentRef Id="System.Net.Http.WebRequest.dll" />
+          <ComponentRef Id="System.Net.Http.Primitives.dll" />
+          <ComponentRef Id="System.Runtime.dll" />
+          <ComponentRef Id="System.Threading.Tasks.dll" />
+          <ComponentRef Id="TeamCityIntegration.dll" />
         </Feature>
-        <Feature Id="BackgroundFetch" Title="Periodic background fetch" Level="1">
-          <ComponentRef Id="BackgroundFetch.dll"/>
+            </Feature>
+            <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
+                <ComponentRef Id="GitExtensions.desktop" />
+            </Feature>
+            <Feature Id="Icons" Title="Extra application icons" Level="2">
+                <ComponentRef Id="Blue.ico" />
+                <ComponentRef Id="Green.ico" />
+                <ComponentRef Id="Purple.ico" />
+                <ComponentRef Id="Red.ico" />
+                <ComponentRef Id="Yellow.ico" />
+            </Feature>
+            <Feature Id="DiffScripts" Title="Custom merge scripts" Level="1">
+                <ComponentRef Id="mergedoc.js" />
+                <ComponentRef Id="mergeods.vbs" />
+                <ComponentRef Id="License.txt" />
+            </Feature>
+            <Feature Id="Dictionaries" Title="Spelling dictionaries" Level="1">
+                <Feature Id="deDE" Title="de-DE" Level="1">
+                    <ComponentRef Id="deDE.dic" />
+                </Feature>
+                <Feature Id="enAU" Title="en-AU" Level="1">
+                    <ComponentRef Id="enAU.dic" />
+                </Feature>
+                <Feature Id="enCA" Title="en-CA" Level="1">
+                    <ComponentRef Id="enCA.dic" />
+                </Feature>
+                <Feature Id="enGB" Title="en-GB" Level="1">
+                    <ComponentRef Id="enGB.dic" />
+                </Feature>
+                <Feature Id="enUS" Title="en-US" Level="1">
+                    <ComponentRef Id="enUS.dic" />
+                </Feature>
+                <Feature Id="esES" Title="es-ES" Level="1">
+                    <ComponentRef Id="esES.dic" />
+                </Feature>
+                <Feature Id="esMX" Title="es-MX" Level="1">
+                    <ComponentRef Id="esMX.dic" />
+                </Feature>
+                <Feature Id="frFR" Title="fr-FR" Level="1">
+                    <ComponentRef Id="frFR.dic" />
+                </Feature>
+                <Feature Id="itIT" Title="it-IT" Level="1">
+                    <ComponentRef Id="itIT.dic" />
+                </Feature>
+                <Feature Id="nlNL" Title="nl-NL" Level="1">
+                    <ComponentRef Id="nlNL.dic" />
+                </Feature>
+                <Feature Id="ruRU" Title="ru-RU" Level="1">
+                    <ComponentRef Id="ruRU.dic" />
+                </Feature>
+            </Feature>
+            <Feature Id="Translation" Title="Translations" Level="1">
+                <Feature Id="Dutch" Title="Dutch" Level="1">
+                    <ComponentRef Id="Dutch.xml" />
+                    <ComponentRef Id="Dutch.gif" />
+                </Feature>
+                <Feature Id="Francais" Title="Francais" Level="1">
+                    <ComponentRef Id="Francais.xml" />
+                    <ComponentRef Id="Francais.gif" />
+                </Feature>
+                <Feature Id="German" Title="German" Level="1">
+                    <ComponentRef Id="German.xml" />
+                    <ComponentRef Id="German.gif" />
+                </Feature>
+                <!--Feature Id="Italiano" Title="Italiano" Level="1">
+                    <ComponentRef Id="Italiano.xml" />
+                    <ComponentRef Id="Italiano.gif" />
+                </Feature-->
+                <Feature Id="Japanese" Title="Japanese" Level="1">
+                    <ComponentRef Id="Japanese.xml" />
+                    <ComponentRef Id="Japanese.gif" />
+                </Feature>
+                <Feature Id="Russian" Title="Russian" Level="1">
+                    <ComponentRef Id="Russian.xml" />
+                    <ComponentRef Id="Russian.gif" />
+                </Feature>
+                <!--Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
+                    <ComponentRef Id="SimplifiedChinese.xml" />
+                    <ComponentRef Id="SimplifiedChinese.gif" />
+                </Feature-->
+                <Feature Id="Spanish" Title="Spanish" Level="1">
+                    <ComponentRef Id="Spanish.xml" />
+                    <ComponentRef Id="Spanish.gif" />
+                </Feature>
+                <!--Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
+                    <ComponentRef Id="TraditionalChinese.xml" />
+                    <ComponentRef Id="TraditionalChinese.gif" />
+                </Feature-->
+            </Feature>
+            <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
+                <ComponentRef Id="GitExtensionsShellEx32.dll" />
+                <ComponentRef Id="GitExtensionsShellEx64.dll" />
+            </Feature>
+            <Feature Id="AddToPath" Title="Add installation directory to PATH" Level="1">
+                <ComponentRef Id="Path" />
+            </Feature>
+            <?foreach VsVersion in $(var.VsVersions)?>
+            <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
+                <Condition Level="2">NOT VS$(var.VsVersion)</Condition>
+                <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
+                <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
+                <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
+            </Feature>
+            <?endforeach ?>
+            <Feature Id="Protocol.git" Title="Assign with git://-links" Level="1">
+                <ComponentRef Id="Protocol.git" />
+            </Feature>
+            <Feature Id="Protocol.github_windows" Title="Assign with github-windows://-links" Level="1">
+                <ComponentRef Id="Protocol.github_windows" />
+            </Feature>
         </Feature>
-        <Feature Id="CreateLocalBranches" Title="Create local branches" Level="1">
-          <ComponentRef Id="CreateLocalBranches.dll"/>
-        </Feature>
-        <Feature Id="DeleteUnusedBranches" Title="Delete unused branches" Level="1">
-          <ComponentRef Id="DeleteUnusedBranches.dll"/>
-        </Feature>
-        <Feature Id="FindLargeFiles" Title="Find large files" Level="1">
-          <ComponentRef Id="FindLargeFiles.dll"/>
-        </Feature>
-        <Feature Id="Gerrit" Title="Gerrit code review" Level="1">
-          <ComponentRef Id="Gerrit.dll"/>
-          <ComponentRef Id="Newtonsoft.Json.dll"/>
-        </Feature>
-        <Feature Id="Github" Title="Github integration" Level="1">
-          <ComponentRef Id="Github3.dll"/>
-          <ComponentRef Id="Git.hub.dll"/>
-          <ComponentRef Id="RestSharp.dll"/>
-        </Feature>
-        <Feature Id="Gource" Title="Gource visualization" Level="1">
-          <ComponentRef Id="Gource.dll"/>
-          <ComponentRef Id="ICSharpCode.SharpZipLib.dll"/>
-        </Feature>
-        <Feature Id="Impact" Title="Impact Graph" Level="1">
-          <ComponentRef Id="GitImpact.dll"/>
-        </Feature>
-        <Feature Id="Statistics" Title="Statistics" Level="1">
-          <ComponentRef Id="GitStatistics.dll"/>
-        </Feature>
-        <Feature Id="ProxySwitcher" Title="ProxySwitcher" Level="1">
-          <ComponentRef Id="ProxySwitcher.dll"/>
-        </Feature>
-        <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
-		  <ComponentRef Id="ReleaseNotesGenerator.dll"/>
-		</Feature>
-	  </Feature>
-
-      <Feature Id="Icons" Title="Extra application icons" Level="2">
-        <ComponentRef Id="Blue.ico"/>
-        <ComponentRef Id="Green.ico"/>
-        <ComponentRef Id="Purple.ico"/>
-        <ComponentRef Id="Red.ico"/>
-        <ComponentRef Id="Yellow.ico"/>
-      </Feature>
-
-      <Feature Id="DiffScripts" Title="Custom merge scripts" Level="1">
-        <ComponentRef Id="mergedoc.js"/>
-        <ComponentRef Id="mergeods.vbs"/>
-        <ComponentRef Id="License.txt"/>
-      </Feature>
-      
-      <Feature Id="Dictionaries" Title="Spelling dictionaries" Level="1">
-        <Feature Id="deDE" Title="de-DE" Level="1">
-          <ComponentRef Id="deDE.dic"/>
-        </Feature>
-        <Feature Id="enAU" Title="en-AU" Level="1">
-          <ComponentRef Id="enAU.dic"/>
-        </Feature>
-        <Feature Id="enCA" Title="en-CA" Level="1">
-          <ComponentRef Id="enCA.dic"/>
-        </Feature>
-        <Feature Id="enGB" Title="en-GB" Level="1">
-          <ComponentRef Id="enGB.dic"/>
-        </Feature>
-        <Feature Id="enUS" Title="en-US" Level="1">
-          <ComponentRef Id="enUS.dic"/>
-        </Feature>
-        <Feature Id="esES" Title="es-ES" Level="1">
-          <ComponentRef Id="esES.dic"/>
-        </Feature>
-        <Feature Id="esMX" Title="es-MX" Level="1">
-          <ComponentRef Id="esMX.dic"/>
-        </Feature>
-        <Feature Id="frFR" Title="fr-FR" Level="1">
-          <ComponentRef Id="frFR.dic"/>
-        </Feature>
-        <Feature Id="itIT" Title="it-IT" Level="1">
-          <ComponentRef Id="itIT.dic"/>
-        </Feature>
-        <Feature Id="nlNL" Title="nl-NL" Level="1">
-          <ComponentRef Id="nlNL.dic"/>
-        </Feature>
-        <Feature Id="ruRU" Title="ru-RU" Level="1">
-          <ComponentRef Id="ruRU.dic"/>
-        </Feature>
-      </Feature>
-
-      <Feature Id="Translation" Title="Translations" Level="1">
-        <Feature Id="Dutch" Title="Dutch" Level="1">
-          <ComponentRef Id="Dutch.xml"/>
-          <ComponentRef Id="Dutch.gif"/>
-        </Feature>
-        <Feature Id="German" Title="German" Level="1">
-          <ComponentRef Id="German.xml"/>
-          <ComponentRef Id="German.gif"/>
-        </Feature>
-        <Feature Id="Francais" Title="Francais" Level="1">
-          <ComponentRef Id="Francais.xml"/>
-          <ComponentRef Id="Francais.gif"/>
-        </Feature>
-        <Feature Id="Japanese" Title="Japanese" Level="1">
-          <ComponentRef Id="Japanese.xml"/>
-          <ComponentRef Id="Japanese.gif"/>
-        </Feature>
-        <Feature Id="Italiano" Title="Italiano" Level="1">
-          <ComponentRef Id="Italiano.xml"/>
-          <ComponentRef Id="Italiano.gif"/>
-        </Feature>
-        <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
-          <ComponentRef Id="SimplifiedChinese.xml"/>
-          <ComponentRef Id="SimplifiedChinese.gif"/>
-        </Feature>
-        <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
-          <ComponentRef Id="TraditionalChinese.xml"/>
-          <ComponentRef Id="TraditionalChinese.gif"/>
-        </Feature>
-        <Feature Id="Spanish" Title="Spanish" Level="1">
-          <ComponentRef Id="Spanish.xml"/>
-          <ComponentRef Id="Spanish.gif"/>
-        </Feature>
-        <Feature Id="Russian" Title="Russian" Level="1">
-          <ComponentRef Id="Russian.xml"/>
-          <ComponentRef Id="Russian.gif"/>
-        </Feature>        
-      </Feature>
-
-      <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
-        <ComponentRef Id="GitExtensionsShellEx32.dll"/>
-        <ComponentRef Id="GitExtensionsShellEx64.dll"/>
-      </Feature>
-
-      <?foreach VsVersion in $(var.VsVersions)?>
-      <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
-        <Condition Level="2">NOT VS$(var.VsVersion)</Condition>
-        <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn"/>
-        <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll"/>
-        <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll"/>
-      </Feature>
-      <?endforeach?>
-      
-      <Feature Id="Protocol.git" Title="Assign with git://-links" Level="1">
-        <ComponentRef Id="Protocol.git"/>
-      </Feature>
-      
-      <Feature Id="Protocol.github_windows" Title="Assign with github-windows://-links" Level="1">
-        <ComponentRef Id="Protocol.github_windows"/>
-      </Feature>
-
-    </Feature>
-
-    <?if $(var.IncludeRequiredSoftware) = 1 ?>
-    <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe"/>
-    <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore"/>
-
-    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.1.2-preview20130201.exe"/>
-    <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore"/>
-
-    <InstallExecuteSequence>
-      <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
-      <Custom Action="MsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
-    </InstallExecuteSequence>
-    <?endif?>
-
-  </Product>
-
+        <?if $(var.IncludeRequiredSoftware) = 1 ?>
+        <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe" />
+        <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
+        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.3-preview20130601.exe" />
+        <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore" />
+        <InstallExecuteSequence>
+            <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
+            <Custom Action="MsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
+        </InstallExecuteSequence>
+        <?endif ?>
+        <UI />
+    </Product>
 </Wix>

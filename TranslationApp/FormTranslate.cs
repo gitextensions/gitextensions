@@ -43,8 +43,10 @@ namespace TranslationApp
             translations.Sorted = true;
             translations.Items.AddRange(Translator.GetAllTranslations());
 
-            GetPropertiesToTranslate();
-            translations.SelectedItem = GitCommands.Settings.Translation; // should be called after GetPropertiesToTranslate()
+            FillNeutralTranslation();
+            allCategories.Name = allText.Text;
+            UpdateCategoriesList();
+            translations.SelectedItem = GitCommands.AppSettings.Translation; // should be called after FillNeutralTranslation()
             if (translation == null)
                 LoadTranslation();
             translateCategories.SelectedItem = allCategories;
@@ -118,22 +120,35 @@ namespace TranslationApp
 
         private IEnumerable<TranslationItemWithCategory> GetCategoryItems(TranslationCategory filter)
         {
-            var filterTranslate = translationItems.Where(
-                translateItem => filter == null || filter.Name.Equals(translateItem.Category)).
-                Where(
+            var filteredByCategory = translationItems.Where(
+                translateItem => filter == null || filter.Name.Equals(translateItem.Category));
+            var filteredItems = filteredByCategory.Where(
                     translateItem =>
-                    translateItem.Status != TranslationType.Obsolete &&
-                    (!hideTranslatedItems.Checked || string.IsNullOrEmpty(translateItem.TranslatedValue)));
-            return filterTranslate;
+                        {
+                            if (translateItem.Status == TranslationType.Obsolete)
+                                return false;
+                            if (!hideTranslatedItems.Checked)
+                                return true;
+                            return translateItem.Status != TranslationType.Translated;
+                        });
+            return filteredItems;
         }
 
-        public void GetPropertiesToTranslate()
+        public void UpdateCategoriesList()
         {
+            var tc = translateCategories.SelectedItem as TranslationCategory;
             translateCategories.Items.Clear();
-            allCategories.Name = allText.Text;
             translateCategories.Items.Add(allCategories);
-            FillNeutralTranslation();
-            translateCategories.Items.AddRange(neutralTranslation.GetTranslationCategories().ToArray());
+            if (!hideTranslatedItems.Checked)
+                translateCategories.Items.AddRange(neutralTranslation.GetTranslationCategories().ToArray());
+            else
+            {
+                var categories = neutralTranslation.GetTranslationCategories().Where(cat => GetCategoryItems(cat).Any());
+                translateCategories.Items.AddRange(categories.ToArray());
+            }
+            if (hideTranslatedItems.Checked && !GetCategoryItems(tc).Any())
+                tc = allCategories;
+            translateCategories.SelectedItem = tc;
         }
 
         private void FillNeutralTranslation()
@@ -141,7 +156,7 @@ namespace TranslationApp
             try
             {
                 //Set language to neutral to get neutral translations
-                GitCommands.Settings.CurrentTranslation = "";
+                GitCommands.AppSettings.CurrentTranslation = "";
 
                 List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
                 progressBar.Maximum = translatableTypes.Count;
@@ -164,7 +179,7 @@ namespace TranslationApp
                 neutralTranslation.Sort();
                 
                 //Restore translation
-                GitCommands.Settings.CurrentTranslation = null;
+                GitCommands.AppSettings.CurrentTranslation = null;
                 progressBar.Visible = false;
             }
         }
@@ -317,6 +332,7 @@ namespace TranslationApp
 
             translation = Translator.GetTranslation(translations.Text);
             LoadTranslation();
+            UpdateCategoriesList();
             FillTranslateGrid(translateCategories.SelectedItem as TranslationCategory);
 
             if (translation == null)
@@ -338,6 +354,7 @@ namespace TranslationApp
 
         private void hideTranslatedItems_CheckedChanged(object sender, EventArgs e)
         {
+            UpdateCategoriesList();
             FillTranslateGrid(translateCategories.SelectedItem as TranslationCategory);
         }
 

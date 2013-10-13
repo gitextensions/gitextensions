@@ -34,15 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Git.hub, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\Git.hub.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RestSharp, Version=104.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\RestSharp.104.1\lib\net4-client\RestSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -67,6 +58,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Externals\Git.hub\Git.hub\Git.hub.csproj">
+      <Project>{f50b1dbf-1c9f-4437-87ec-7aba805cc446}</Project>
+      <Name>Git.hub</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
@@ -83,9 +78,6 @@
       <DependentUpon>OAuth.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Windows_NT' ">copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
@@ -97,13 +89,13 @@ cp "$(SolutionDir)Bin/Git.hub.dll" "../../../../GitExtensions/bin/$(Configuratio
 cp "$(SolutionDir)Bin/RestSharp.dll" "../../../../GitExtensions/bin/$(ConfigurationName)/"
 </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Windows_NT' ">copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-copy "$(SolutionDir)\bin\Git.hub.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
+copy "$(SolutionDir)\Externals\Git.hub\Git.hub\bin\$(ConfigurationName)\Git.hub.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Windows_NT' ">cp `echo "$(TargetPath)" | tr -s "//" "/"` "../../../../GitExtensions/bin/$(ConfigurationName)/"
-cp "$(SolutionDir)Bin/Git.hub.dll" "../../../../GitExtensions/bin/$(ConfigurationName)\"
+cp "$(SolutionDir)Externals/Git.hub/Git.hub/bin/$(ConfigurationName)/Git.hub.dll" "../../../../GitExtensions/bin/$(ConfigurationName)\"
     </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

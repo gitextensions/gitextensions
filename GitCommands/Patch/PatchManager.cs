@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 
 namespace PatchApply
 {
@@ -35,7 +37,7 @@ namespace PatchApply
 
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (body != null && "true".Equals(module.GetEffectiveSetting("core.autocrlf"), StringComparison.InvariantCultureIgnoreCase))
+            if (body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
                 body = body.Replace("\r", "");            
 
             if (header == null || body == null)
@@ -118,7 +120,7 @@ namespace PatchApply
             string body = selectedChunks.ToStagePatch(false);
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (reset && body != null && "true".Equals(module.GetEffectiveSetting("core.autocrlf"), StringComparison.InvariantCultureIgnoreCase))
+            if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
                 body = body.Replace("\r", "");            
 
             if (header == null || body == null)
@@ -156,13 +158,12 @@ namespace PatchApply
             return bs;
         }
 
-        //TODO encoding for each file in patch should be obtained separatly from .gitattributes
+        //TODO encoding for each file in patch should be obtained separately from .gitattributes
         public void LoadPatch(string text, bool applyPatch, Encoding filesContentEncoding)
         {
+            PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
 
-            PatchProcessor _patchProcessor = new PatchProcessor(filesContentEncoding);
-
-            _patches = _patchProcessor.CreatePatchesFromString(text);
+            _patches = patchProcessor.CreatePatchesFromString(text).ToList();
 
             if (!applyPatch)
                 return;
@@ -605,7 +606,7 @@ namespace PatchApply
             if (result != null)
             {
                 result = result.Combine("\n", "--");
-                result = result.Combine("\n", Application.ProductName + " " + Settings.GitExtensionsVersionString);
+                result = result.Combine("\n", Application.ProductName + " " + AppSettings.GitExtensionsVersionString);
             }
             return result;
         

@@ -139,10 +139,10 @@ namespace GitUI.RevisionGridClasses
         protected override void OnCreateControl()
         {
             DataGridViewColumn dataGridColumnGraph;
-            if (ColumnCount <= 0 || Columns[0].HeaderText != "")
+            if (ColumnCount <= 0 || GraphColumn.HeaderText != "")
                 dataGridColumnGraph = new DataGridViewTextBoxColumn();
             else
-                dataGridColumnGraph = Columns[0];
+                dataGridColumnGraph = GraphColumn;
             dataGridColumnGraph.HeaderText = "";
             dataGridColumnGraph.Frozen = true;
             dataGridColumnGraph.Name = "dataGridColumnGraph";
@@ -150,14 +150,34 @@ namespace GitUI.RevisionGridClasses
             dataGridColumnGraph.SortMode = DataGridViewColumnSortMode.NotSortable;
             dataGridColumnGraph.Width = 70;
             dataGridColumnGraph.DefaultCellStyle.Font = SystemFonts.DefaultFont;
-            if (ColumnCount == 0 || Columns[0].HeaderText != "")
+            if (ColumnCount == 0 || GraphColumn.HeaderText != "")
                 Columns.Insert(0, dataGridColumnGraph);
         }
 
+        /// <summary>
+        /// 0
+        /// </summary>
+        internal DataGridViewColumn GraphColumn { get { return Columns[0]; } }
+
+        /// <summary>
+        /// 1
+        /// </summary>
+        internal DataGridViewColumn MessageColumn { get { return Columns[1]; } }
+
+        /// <summary>
+        /// 2
+        /// </summary>
+        internal DataGridViewColumn AuthorColumn { get { return Columns[2]; } }
+
+        /// <summary>
+        /// 3
+        /// </summary>
+        internal DataGridViewColumn DateColumn { get { return Columns[3]; } }
+
         public void ShowAuthor(bool show)
         {
-            this.Columns[2].Visible = show;
-            this.Columns[3].Visible = show;
+            this.AuthorColumn.Visible = show;
+            this.DateColumn.Visible = show;
         }
 
         [DefaultValue(FilterType.None)]
@@ -302,14 +322,14 @@ namespace GitUI.RevisionGridClasses
 
         public void ShowRevisionGraph()
         {
-            Columns[0].Visible = true;
+            GraphColumn.Visible = true;
             //updateData();
             _backgroundEvent.Set();
         }
 
         public void HideRevisionGraph()
         {
-            Columns[0].Visible = false;
+            GraphColumn.Visible = false;
             //updateData();
             _backgroundEvent.Set();
         }
@@ -320,7 +340,7 @@ namespace GitUI.RevisionGridClasses
         {
             get
             {
-                return Columns[0].Visible;
+                return GraphColumn.Visible;
             }
         }
 
@@ -712,17 +732,12 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        private DataGridViewColumn ColumnGraph
-        {
-            get { return Columns[0]; }
-        }
-
         private void UpdateColumnWidth()
         {
             lock (_graphData)
             {
                 // Auto scale width on scroll
-                if (ColumnGraph.Visible)
+                if (GraphColumn.Visible)
                 {
                     int laneCount = 2;
                     if (_graphData != null)
@@ -737,8 +752,8 @@ namespace GitUI.RevisionGridClasses
 
                         laneCount = Math.Min(Math.Max(laneCount, width), MaxLanes);
                     }
-                    if (ColumnGraph.Width != _laneWidth * laneCount && _laneWidth * laneCount > ColumnGraph.MinimumWidth)
-                        ColumnGraph.Width = _laneWidth * laneCount;
+                    if (GraphColumn.Width != _laneWidth * laneCount && _laneWidth * laneCount > GraphColumn.MinimumWidth)
+                        GraphColumn.Width = _laneWidth * laneCount;
                 }
             }
         }
@@ -770,7 +785,7 @@ namespace GitUI.RevisionGridClasses
             {
                 if (_revisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
                     return _revisionGraphDrawStyle;
-                if (Settings.RevisionGraphDrawNonRelativesGray)
+                if (AppSettings.RevisionGraphDrawNonRelativesGray)
                     return RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
                 return RevisionGraphDrawStyleEnum.Normal;
             }
@@ -792,8 +807,8 @@ namespace GitUI.RevisionGridClasses
             if (!aJunction.HighLight && RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
                 return _nonRelativeColor;
 
-            if (!Settings.MulticolorBranches)
-                return Settings.GraphColor;
+            if (!AppSettings.MulticolorBranches)
+                return AppSettings.GraphColor;
 
             // This is the order to grab the colors in.
             int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
@@ -874,7 +889,7 @@ namespace GitUI.RevisionGridClasses
                 #region Make sure the graph cache bitmap is setup
 
                 int height = _cacheCountMax * _rowHeight;
-                int width = ColumnGraph.Width;
+                int width = GraphColumn.Width;
                 if (_graphBitmap == null ||
                     //Resize the bitmap when the with or height is changed. The height won't change very often.
                     //The with changes more often, when branches become visible/invisible.
@@ -1067,9 +1082,9 @@ namespace GitUI.RevisionGridClasses
                         Pen brushLineColorPen = null;
                         try
                         {
-                            bool drawBorder = Settings.BranchBorders && highLight; //hide border for "non-relatives"
+                            bool drawBorder = AppSettings.BranchBorders && highLight; //hide border for "non-relatives"
 
-                            if (curColors.Count == 1 || !Settings.StripedBranchChange)
+                            if (curColors.Count == 1 || !AppSettings.StripedBranchChange)
                             {
                                 if (curColors[0] != _nonRelativeColor)
                                 {
@@ -1171,7 +1186,7 @@ namespace GitUI.RevisionGridClasses
                                  (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
                                  (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.Normal);
 
-                bool drawBorder = Settings.BranchBorders && highlight;
+                bool drawBorder = AppSettings.BranchBorders && highlight;
 
                 if (nodeColors.Count == 1)
                 {
@@ -1232,6 +1247,22 @@ namespace GitUI.RevisionGridClasses
         public void HighlightBranch(string aId)
         {
             _graphData.HighlightBranch(aId);
+            Update();
+        }
+
+        public bool IsRevisionRelative(string aGuid)
+        {
+            return _graphData.IsRevisionRelative(aGuid);
+        }
+
+        public GitRevision GetRevision(string guid)
+        {
+            Node node;
+
+            if(_graphData.Nodes.TryGetValue(guid, out node))
+                return node.Data;
+
+            return null;
         }
 
         private void dataGrid_Resize(object sender, EventArgs e)

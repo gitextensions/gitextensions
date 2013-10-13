@@ -145,6 +145,7 @@ namespace GitUIPluginInterfaces
         bool StartRemotesDialog();
         bool StartResolveConflictsDialog();
         bool StartSettingsDialog();
+        bool StartSettingsDialog(IGitPlugin gitPlugin);
         bool StartStashDialog();
         bool StartSvnCloneDialog();
         bool StartSvnDcommitDialog();

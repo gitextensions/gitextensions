@@ -8,7 +8,7 @@ using GitUI.Script;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class ScriptsSettingsPage : SettingsPageBase
+    public partial class ScriptsSettingsPage : SettingsPageWithHeader
     {
         private string IconName = "bug";
 
@@ -61,20 +61,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 			}
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
             LoadScripts();
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             SaveScripts();
         }
 
         private void SaveScripts()
         {
-            Settings.ownScripts = ScriptManager.SerializeIntoXml();
+            AppSettings.ownScripts = ScriptManager.SerializeIntoXml();
         }
 
         private void LoadScripts()
@@ -100,11 +100,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             nameTextBox.Text = scriptInfo.Name;
             commandTextBox.Text = scriptInfo.Command;
             argumentsTextBox.Text = scriptInfo.Arguments;
+            scriptRunInBackground.Checked = scriptInfo.RunInBackground;
             inMenuCheckBox.Checked = scriptInfo.AddToRevisionGridContextMenu;
             scriptEnabled.Checked = scriptInfo.Enabled;
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
-            sbtn_icon.Image = scriptInfo.GetIcon();
+            sbtn_icon.Image = ResizeForSplitButton(scriptInfo.GetIcon());
             IconName = scriptInfo.Icon;
 
             foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
@@ -145,6 +146,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;
                 selectedScriptInfo.AddToRevisionGridContextMenu = inMenuCheckBox.Checked;
                 selectedScriptInfo.Enabled = scriptEnabled.Checked;
+                selectedScriptInfo.RunInBackground = scriptRunInBackground.Checked;
                 selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
                 selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
                 selectedScriptInfo.Icon = IconName;
@@ -239,12 +241,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
 
             //set new image on button
-            sbtn_icon.Image = ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
+            sbtn_icon.Image = ResizeForSplitButton((Bitmap)((ToolStripMenuItem)sender).Image);
 
             IconName = ((ToolStripMenuItem)sender).Text;
 
             //store variables
             ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
+        }
+
+        private Bitmap ResizeForSplitButton(Bitmap b)
+        {
+            return ResizeBitmap(b, 12, 12);
         }
 
         public Bitmap ResizeBitmap(Bitmap b, int nWidth, int nHeight)
@@ -291,6 +298,8 @@ Selected Branch:
 {sLocalBranch}
 {sRemoteBranch}
 {sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
 {sHash}
 {sMessage}
 {sAuthor}
@@ -309,7 +318,9 @@ Current Branch:
 {cCommitter}
 {cAuthorDate}
 {cCommitDate}
-{cDefaultRemote}".Replace("\n", Environment.NewLine);
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}".Replace("\n", Environment.NewLine);
 
             helpDisplayDialog.ShowDialog();
         }

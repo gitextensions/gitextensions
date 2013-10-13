@@ -23,10 +23,14 @@ namespace GitUI
         private const string _putty = "PuTTY";
         private readonly TranslationString _pageantNotFound = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
 
+        private readonly TranslationString _serverHostkeyNotCachedText =
+            new TranslationString("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?");
+        
+
         // internal for FormTranslate
         internal MessageBoxes()
         {
-            Translator.Translate(this, Settings.CurrentTranslation);
+            Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
         private static MessageBoxes instance;
@@ -76,6 +80,11 @@ namespace GitUI
         public static void PAgentNotFound(IWin32Window owner)
         {
             MessageBox.Show(owner, Instance._pageantNotFound.Text, _putty);
+        }
+
+        public static bool CacheHostkey(IWin32Window owner)
+        {
+            return MessageBox.Show(owner, Instance._serverHostkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes;
         }
     }
 }

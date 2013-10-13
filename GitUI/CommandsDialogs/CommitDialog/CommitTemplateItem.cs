@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using System.Xml.Serialization;
+using GitCommands.Utils;
 
 namespace GitUI.CommandsDialogs.CommitDialog
 {
@@ -23,8 +24,6 @@ namespace GitUI.CommandsDialogs.CommitDialog
             get { return _text; }
             set { _text = value; }
         }
-
-        private const bool UseBinaryFormatter = true;
 
         public CommitTemplateItem(string name, string text)
         {
@@ -50,47 +49,47 @@ namespace GitUI.CommandsDialogs.CommitDialog
             info.AddValue("Text", Text);
         }
 
-        public static string SerializeCommitTemplates(CommitTemplateItem[] items)
+        public static void SaveToSettings(CommitTemplateItem[] items)
         {
-            try
-            {
-                if (UseBinaryFormatter)
-                {
-                    // Serialize to a base 64 string
-                    byte[] bytes;
-                    using (MemoryStream ws = new MemoryStream())
-                    {
-                        BinaryFormatter sf = new BinaryFormatter();
-                        sf.Serialize(ws, items);
-                        bytes = ws.GetBuffer();
-                    }
-                    return bytes.Length.ToString() + ":" + Convert.ToBase64String(bytes, 0, bytes.Length, Base64FormattingOptions.None);
-                }
-                else
-                {
-                    using (var sw = new StringWriter())
-                    {
-                        var serializer = new XmlSerializer(typeof(CommitTemplateItem[]));
-                        serializer.Serialize(sw, items);
-                        return sw.ToString();
-                    }
-                }
-            }
-            catch
-            {
-                return null;
-            }
+            string strVal = SerializeCommitTemplates(items);
+            GitCommands.AppSettings.CommitTemplates = strVal ?? string.Empty;
         }
 
-        public static CommitTemplateItem[] DeserializeCommitTemplates(string serializedString)
+        public static CommitTemplateItem[] LoadFromSettings()
         {
+            string serializedString = GitCommands.AppSettings.CommitTemplates;
+            bool shouldBeUpdated;
+            var templates = DeserializeCommitTemplates(serializedString, out shouldBeUpdated);
+            if (shouldBeUpdated)
+                SaveToSettings(templates);
+
+            return templates;
+        }
+
+
+        private static string SerializeCommitTemplates(CommitTemplateItem[] items)
+        {
+            return JsonSerializer.Serialize(items);
+        }
+
+        private static CommitTemplateItem[] DeserializeCommitTemplates(string serializedString, out bool shouldBeUpdated)
+        {
+            shouldBeUpdated = false;
             if (string.IsNullOrEmpty(serializedString))
                 return null;
 
             CommitTemplateItem[] commitTemplateItem = null;
             try
             {
-                if (UseBinaryFormatter)
+                commitTemplateItem = JsonSerializer.Deserialize<CommitTemplateItem[]>(serializedString);
+            }
+            catch (Exception)
+            {
+            }
+
+            if (commitTemplateItem == null)
+            {
+                try
                 {
                     int p = serializedString.IndexOf(':');
                     int length = Convert.ToInt32(serializedString.Substring(0, p));
@@ -98,27 +97,33 @@ namespace GitUI.CommandsDialogs.CommitDialog
                     byte[] memorydata = Convert.FromBase64String(serializedString.Substring(p + 1));
                     using (MemoryStream rs = new MemoryStream(memorydata, 0, length))
                     {
-                        BinaryFormatter sf = new BinaryFormatter();
+                        BinaryFormatter sf = new BinaryFormatter() { Binder = new MoveNamespaceDeserializationBinder() };
                         commitTemplateItem = (CommitTemplateItem[])sf.Deserialize(rs);
                     }
+                    shouldBeUpdated = true;
                 }
-                else
+                catch (Exception /*e*/)
                 {
-                    var serializer = new XmlSerializer(typeof(CommitTemplateItem[]));
-                    using (var stringReader = new StringReader(serializedString))
-                    {
-                        var xmlReader = new XmlTextReader(stringReader);
-                        commitTemplateItem = serializer.Deserialize(xmlReader) as CommitTemplateItem[];
-                    }
+                    return null;
                 }
-            }
-            catch (Exception /*e*/)
-            {
-                return null;
             }
 
             return commitTemplateItem;
         }
     
+    }
+
+    public sealed class MoveNamespaceDeserializationBinder : SerializationBinder
+    {
+        private const string OldNamespace = "GitUI";
+        private const string NewNamespace = "GitUI.CommandsDialogs.CommitDialog";
+
+        public override Type BindToType(string assemblyName, string typeName)
+        {
+            typeName = typeName.Replace(OldNamespace, NewNamespace);
+            //assemblyName = assemblyName.Replace(OldNamespace, NewNamespace);
+            var type = Type.GetType(string.Format("{0}, {1}", typeName, assemblyName));
+            return type;
+        }
     }
 }

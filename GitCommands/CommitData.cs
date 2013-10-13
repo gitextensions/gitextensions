@@ -48,7 +48,7 @@ namespace GitCommands
         /// Generate header.
         /// </summary>
         /// <returns></returns>
-        public string GetHeader()
+        public string GetHeader(bool showRevisionsAsLinks)
         {
             StringBuilder header = new StringBuilder();
             string authorEmail = GetEmail(Author);
@@ -67,7 +67,11 @@ namespace GitCommands
             if (ChildrenGuids != null && ChildrenGuids.Count != 0)
             {
                 header.AppendLine();
-                var commitsString = ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                string commitsString;
+                if (showRevisionsAsLinks)
+                    commitsString  = ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                else
+                    commitsString = ChildrenGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
                 header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetChildrenText()) + ":",
                                            COMMITHEADER_STRING_LENGTH) + commitsString);
             }
@@ -76,7 +80,11 @@ namespace GitCommands
             if (parentGuids.Any())
             {
                 header.AppendLine();
-                var commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                string commitsString;
+                if (showRevisionsAsLinks)
+                    commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                else
+                    commitsString = parentGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
                 header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetParentsText()) + ":",
                                            COMMITHEADER_STRING_LENGTH) + commitsString);
             }
@@ -139,12 +147,7 @@ namespace GitCommands
             //Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
                     "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
-            var info =
-                module.RunCmd(
-                    Settings.GitCommand,
-                    arguments,
-                    GitModule.LosslessEncoding
-                    );
+            var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
             if (info.Trim().StartsWith("fatal"))
             {
@@ -181,12 +184,7 @@ namespace GitCommands
             //Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
                     "log -1 --pretty=\"format:"+LogFormat+"\" {0}", sha1);
-            var info =
-                module.RunCmd(
-                    Settings.GitCommand,
-                    arguments,
-                    GitModule.LosslessEncoding
-                    );
+            var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
             if (info.Trim().StartsWith("fatal"))
             {
@@ -223,7 +221,7 @@ namespace GitCommands
         public static CommitData CreateFromFormatedData(string data, GitModule aModule)
         {
             if (data == null)
-                throw new ArgumentNullException("Data");
+                throw new ArgumentNullException("data");
 
             var lines = data.Split('\n');
             
@@ -267,7 +265,7 @@ namespace GitCommands
         public static void UpdateBodyInCommitData(CommitData commitData, string data, GitModule aModule)
         {
             if (data == null)
-                throw new ArgumentNullException("Data");
+                throw new ArgumentNullException("data");
 
             var lines = data.Split('\n');
 
@@ -317,7 +315,7 @@ namespace GitCommands
             CommitData data = new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
                 String.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
                 String.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
-                revision.Message);
+                revision.Body ?? revision.Message);
             return data;
         }
 

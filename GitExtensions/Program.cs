@@ -28,11 +28,11 @@ namespace GitExtensions
                 // Uncomment the following after testing to see that NBug is working as configured
                 NBug.Settings.ReleaseMode = true;
                 NBug.Settings.ExitApplicationImmediately = false;
-                NBug.Settings.WriteLogToDisk = true;
+                NBug.Settings.WriteLogToDisk = false;
                 NBug.Settings.MaxQueuedReports = 10;
                 NBug.Settings.StopReportingAfter = 90;
                 NBug.Settings.SleepBeforeSend = 30;
-                NBug.Settings.StoragePath = "WindowsTemp";
+                NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
                 
                 AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
                 Application.ThreadException += NBug.Handler.ThreadException;
@@ -45,7 +45,7 @@ namespace GitExtensions
             GitUIExtensions.UISynchronizationContext = SynchronizationContext.Current;
             Application.DoEvents();
 
-            Settings.LoadSettings();
+            AppSettings.LoadSettings();
             if (EnvUtils.RunningOnWindows())
             {
                 //Quick HOME check:
@@ -58,7 +58,7 @@ namespace GitExtensions
             FormSplash.SetAction("Loading plugins...");
             Application.DoEvents();
 
-            if (string.IsNullOrEmpty(Settings.Translation))
+            if (string.IsNullOrEmpty(AppSettings.Translation))
             {
                 using (var formChoose = new FormChooseTranslation())
                 {
@@ -68,17 +68,16 @@ namespace GitExtensions
 
             try
             {
-                if (Application.UserAppDataRegistry == null ||
-                    Settings.GetBool("checksettings", true) ||
-                    string.IsNullOrEmpty(Settings.GitCommand))
+                if (AppSettings.CheckSettings || string.IsNullOrEmpty(AppSettings.GitCommandValue))
                 {
                     FormSplash.SetAction("Checking settings...");
                     Application.DoEvents();
 
                     GitUICommands uiCommands = new GitUICommands(string.Empty);
                     var commonLogic = new CommonLogic(uiCommands.Module);
-                    var checkSettingsLogic = new CheckSettingsLogic(commonLogic, uiCommands.Module);
-                    using (var checklistSettingsPage = new ChecklistSettingsPage(commonLogic, checkSettingsLogic, uiCommands.Module, null))
+                    var checkSettingsLogic = new CheckSettingsLogic(commonLogic);
+                    ISettingsPageHost fakePageHost = new SettingsPageHostMock(checkSettingsLogic);
+                    using (var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost))
                     {
                         if (!checklistSettingsPage.CheckSettings())
                         {
@@ -109,7 +108,7 @@ namespace GitExtensions
                 uCommands.RunCommand(args);
             }
 
-            Settings.SaveSettings();
+            AppSettings.SaveSettings();
         }
 
         private static string GetWorkingDir(string[] args)
@@ -131,10 +130,10 @@ namespace GitExtensions
                 //    Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
             }
 
-            if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && Settings.StartWithRecentWorkingDir)
+            if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && AppSettings.StartWithRecentWorkingDir)
             {
-                if (GitModule.IsValidGitWorkingDir(Settings.RecentWorkingDir))
-                    workingDir = Settings.RecentWorkingDir;
+                if (GitModule.IsValidGitWorkingDir(AppSettings.RecentWorkingDir))
+                    workingDir = AppSettings.RecentWorkingDir;
             }
 
             if (string.IsNullOrEmpty(workingDir))

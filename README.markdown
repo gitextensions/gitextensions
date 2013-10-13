@@ -4,9 +4,15 @@
 
 GitExtensions is a shell extension, a Visual Studio 2005 / 2008 / 2010 / 2012 plugin and a standalone Git repository tool.
 
-## Mailing list
+## Links
 
-The mailing list can be found at [http://groups.google.com/group/gitextensions](http://groups.google.com/group/gitextensions)
+* Download page: [https://sourceforge.net/projects/gitextensions/](https://sourceforge.net/projects/gitextensions/)
+* Online manual: [https://git-extensions-documentation.readthedocs.org/en/latest/](https://git-extensions-documentation.readthedocs.org/en/latest/)
+* Issue tracker: [http://github.com/gitextensions/gitextensions/issues](http://github.com/gitextensions/gitextensions/issues)
+* Mailing list: [http://groups.google.com/group/gitextensions](http://groups.google.com/group/gitextensions)
+* ChangeLog: [ChangeLog.md](GitUI/Resources/ChangeLog.md)
+* Source code: [http://github.com/gitextensions/gitextensions](http://github.com/gitextensions/gitextensions)
+* Wiki: [https://github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
 
 ## How to debug GitExtensions
 
@@ -19,6 +25,7 @@ The installer is build using WiX. You need to install WiX when you want to build
 
 * Login in github (you need an account)
 * Fork the main repository from [github](http://github.com/gitextensions/gitextensions)
+* Read [Project workflow](https://github.com/gitextensions/gitextensions/wiki/Project-Workflow) and [Coding guide](https://github.com/gitextensions/gitextensions/wiki#coding-guide)
 * Push your changes to your fork
 * Send me a pull request
 
@@ -59,11 +66,3 @@ Successfully installed 'Newtonsoft.Json 4.5.11'.
 Successfully installed 'RestSharp 104.1'.
 Successfully installed 'NBug 1.1.1'.
 ```
-
-## Links
-
-* Download page: [http://code.google.com/p/gitextensions/downloads/list](http://code.google.com/p/gitextensions/downloads/list)
-* ChangeLog: [ChangeLog.md](GitUI/Resources/ChangeLog.md)
-* Source code: [http://github.com/gitextensions/gitextensions](http://github.com/gitextensions/gitextensions)
-* Issue tracker: [http://github.com/gitextensions/gitextensions/issues](http://github.com/gitextensions/gitextensions/issues)
-* Mailing list: [http://groups.google.com/group/gitextensions](http://groups.google.com/group/gitextensions)

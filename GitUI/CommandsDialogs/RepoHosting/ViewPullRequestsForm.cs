@@ -82,18 +82,23 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     _hostedRemotes = hostedRemotes;
                     _selectHostedRepoCB.Items.Clear();
                     foreach (var hostedRepo in _hostedRemotes)
-                        _selectHostedRepoCB.Items.Add(hostedRepo.GetHostedRepository());
+                        _selectHostedRepoCB.Items.Add(hostedRepo);
 
-                    SelectNextHostedRepository();
+                    SelectHostedRepositoryForCurrentRemote();
                     this.UnMask();
                 });
         }
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var hostedRepo = _selectHostedRepoCB.SelectedItem as IHostedRepository;
+            var hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
+            if (hostedRemote == null)
+                return;
+
+            var hostedRepo = hostedRemote.GetHostedRepository();
             if (hostedRepo == null)
                 return;
+
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
@@ -125,6 +130,25 @@ namespace GitUI.CommandsDialogs.RepoHosting
             LoadListView();
         }
 
+        private void SelectHostedRepositoryForCurrentRemote()
+        {
+            var currentRemote = Module.GetCurrentRemote();
+            var hostedRemote = _selectHostedRepoCB.Items.
+                Cast<IHostedRemote>().
+                Where(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase)).
+                FirstOrDefault();
+
+            if (hostedRemote == null)
+            {
+                if (_selectHostedRepoCB.Items.Count > 0)
+                    _selectHostedRepoCB.SelectedIndex = 0;
+            }
+            else
+            {
+                _selectHostedRepoCB.SelectedItem = hostedRemote;
+            }
+        }
+        
         private void SelectNextHostedRepository()
         {
             if (_selectHostedRepoCB.Items.Count == 0)
@@ -270,7 +294,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var localBranchName = string.Format("pr/n{0}_{1}", _currentPullRequestInfo.Id, _currentPullRequestInfo.Owner);
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}", _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, localBranchName);
-            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
+            var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
 
             if (errorOccurred)
                 return;
@@ -315,7 +339,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
 
                 var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
-                var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
+                var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
 
                 if (errorOccurred)
                     return;
@@ -323,7 +347,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 UICommands.RepoChangedNotifier.Notify();
 
                 cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
-                if (FormProcess.ShowDialog(this, Settings.GitCommand, cmd))
+                if (FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd))
                     UICommands.RepoChangedNotifier.Notify();
             }
             finally

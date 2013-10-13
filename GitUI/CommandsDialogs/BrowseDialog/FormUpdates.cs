@@ -1,29 +1,38 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using GitCommands.Config;
+using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
-    public partial class FormUpdates : Form
+    public partial class FormUpdates : GitExtensionsForm
     {
+        #region Translation
+        private readonly TranslationString _newVersionAvailable =
+            new TranslationString("There is a new version available");
+        private readonly TranslationString _noUpdatesFound =
+            new TranslationString("No updates found");
+        #endregion
+
         public bool AutoClose;
-        public string CurrentVersion;
+        public Version CurrentVersion;
         public bool UpdateFound;
         public string UpdateUrl;
-        private const string FilesUrl = "gitextensions.googlecode.com/files/GitExtensions";
-        private readonly SynchronizationContext syncContext;
+        private readonly SynchronizationContext _syncContext;
 
-        public FormUpdates(string currentVersion)
+        public FormUpdates(Version currentVersion)
         {
-            syncContext = SynchronizationContext.Current;
+            _syncContext = SynchronizationContext.Current;
             InitializeComponent();
+            Translate();
             UpdateFound = false;
-            link.Visible = false;
-            UpdateLabel.Text = "Searching for updates";
+            _NO_TRANSLATE_link.Visible = false;
             progressBar1.Visible = true;
             CurrentVersion = currentVersion;
             UpdateUrl = "";
@@ -39,7 +48,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             try
             {
-                Process.Start(link.Text);
+                Process.Start(_NO_TRANSLATE_link.Text);
             }
             catch (System.ComponentModel.Win32Exception)
             {
@@ -53,12 +62,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             webClient.Encoding = Encoding.UTF8;
             webClient.DownloadProgressChanged += webClient_DownloadProgressChanged;
             webClient.DownloadStringCompleted += webClient_DownloadStringCompleted;
-            webClient.DownloadStringAsync(new Uri(@"http://code.google.com/p/gitextensions/"));
+            webClient.DownloadStringAsync(new Uri(@"https://raw.github.com/gitextensions/gitextensions/configdata/GitExtensions.releases"));
         }
 
         void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            syncContext.Send(o =>
+            _syncContext.Send(o =>
             {
                 progressBar1.Style = ProgressBarStyle.Continuous;
                 progressBar1.Maximum = 100;
@@ -73,26 +82,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 if (e.Error == null)
                 {
                     string response = e.Result;
-                    // search for string like "http://gitextensions.googlecode.com/files/GitExtensions170SetupComplete.msi"
-                    var regEx = new Regex(FilesUrl + @"(?<ver>\d{3,6})SetupComplete.msi");
+                    var versions = ReleaseVersion.Parse(response);
+                    var updates = versions.Where(version => version.Version.CompareTo(CurrentVersion) > 0);
                     
-                    var matches = regEx.Matches(response);
-
-                    foreach (Match match in matches)
+                    var update = updates.OrderBy(version => version.Version).LastOrDefault();
+                    if (update != null)
                     {
-                        int ver=int.Parse(match.Groups["ver"].Value);
-                        int cver=int.Parse(CurrentVersion);
 
-                            
-                        if (ver <= cver)
-                            continue;
-                        
                         UpdateFound = true;
-                        UpdateUrl = "http://" + match.Value;
+                        UpdateUrl = update.DownloadPage;
                         Done();
                         return;
                     }
-
                 }
                 UpdateUrl = "";
                 UpdateFound = false;
@@ -108,21 +109,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void Done()
         {
-            syncContext.Send(o =>
+            _syncContext.Send(o =>
             {
                 progressBar1.Visible = false;
-                link.Text = UpdateUrl;
+                _NO_TRANSLATE_link.Text = UpdateUrl;
 
                 if (UpdateFound)
                 {
-                    link.Visible = true;
+                    _NO_TRANSLATE_link.Visible = true;
                     linkChangeLog.Visible = true;
 
-                    UpdateLabel.Text = "There is a new version available";
+                    UpdateLabel.Text = _newVersionAvailable.Text;
                 }
                 else
                 {
-                    UpdateLabel.Text = "No updates found";
+                    UpdateLabel.Text = _noUpdatesFound.Text;
                     if (AutoClose)
                         Close();
                 }
@@ -139,4 +140,44 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Process.Start("https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
         }
     }
+
+    public class ReleaseVersion
+    {
+        public Version Version;
+        public string ReleaseType;
+        public string DownloadPage;
+
+        public static ReleaseVersion FromSection(ConfigSection section)
+        {
+            Version ver;
+            try
+            {
+                ver = new Version(section.SubSection);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e);
+                return null;
+            }
+
+            return new ReleaseVersion()
+            {
+                Version = ver,
+                ReleaseType = section.GetValue("ReleaseType"),
+                DownloadPage = section.GetValue("DownloadPage")
+            };
+
+        }
+
+        public static IEnumerable<ReleaseVersion> Parse(string versionsStr)
+        {
+            ConfigFile cfg = new ConfigFile("", true);
+            cfg.LoadFromString(versionsStr);
+            var sections = cfg.GetConfigSections("Version");
+
+            return sections.Select(FromSection).Where(version => version != null);
+        }
+
+    }
+
 }

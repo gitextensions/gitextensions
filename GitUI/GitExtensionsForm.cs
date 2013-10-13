@@ -10,7 +10,7 @@ using GitUI.Properties;
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
 using ResourceManager.Translation;
-using Settings = GitCommands.Settings;
+using Settings = GitCommands.AppSettings;
 using System.Collections.Generic;
 
 namespace GitUI
