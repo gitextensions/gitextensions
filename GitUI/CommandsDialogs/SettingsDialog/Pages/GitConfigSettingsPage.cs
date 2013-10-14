@@ -161,7 +161,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 exeName = Path.GetFileName(exeFile);
             }
             else
-                exeFile = MergeToolsHelper.FindMergeToolFullPath(GlobalMergeTool.Text, out exeName);
+                exeFile = MergeToolsHelper.FindMergeToolFullPath(ConfigFileSettingsSet, GlobalMergeTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.SelectAll();
@@ -206,7 +206,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 exeName = Path.GetFileName(exeFile);
             }
             else
-                exeFile = MergeToolsHelper.FindDiffToolFullPath(GlobalDiffTool.Text, out exeName);
+                exeFile = MergeToolsHelper.FindDiffToolFullPath(ConfigFileSettingsSet, GlobalDiffTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 DifftoolPath.SelectAll();
