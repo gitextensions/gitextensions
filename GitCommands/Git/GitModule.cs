@@ -160,6 +160,14 @@ namespace GitCommands
             }
         }
 
+        public ConfigFileSettings LocalConfigFile
+        {
+            get
+            {
+                return new ConfigFileSettings(null, EffectiveConfigFile.SettingsCache);
+            }
+        }
+
         //encoding for files paths
         private static Encoding _systemEncoding;
         public static Encoding SystemEncoding
@@ -1233,7 +1241,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(superprojectPath))
             {
                 submodulePath = FixPath(currentPath.Substring(superprojectPath.Length));
-                var configFile = new ConfigFile(superprojectPath + ".gitmodules", true);
+                var configFile = GetSubmoduleConfigFile();
                 foreach (ConfigSection configSection in configFile.ConfigSections)
                 {
                     if (configSection.GetPathValue("path") == FixPath(submodulePath))
@@ -1888,71 +1896,44 @@ namespace GitCommands
             return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public ConfigFile GetLocalConfig()
-        {
-            return new ConfigFile(WorkingDirGitDir() + AppSettings.PathSeparator.ToString() + "config", true);
-        }
-
-        public ConfigFile GetGitExtensionsConfig()
-        {
-            return new ConfigFile(FullPath(".gitextensions"), true);
-        }
-
         public IEnumerable<string> GetSettings(string setting)
         {
-            var configFile = GetLocalConfig();
-            return configFile.GetValues(setting);
+            return LocalConfigFile.GetValues(setting);
         }
 
         public string GetSetting(string setting)
         {
-            var configFile = GetLocalConfig();
-            return configFile.GetValue(setting);
+            return LocalConfigFile.GetValue(setting);
         }
 
         public string GetPathSetting(string setting)
         {
-            var configFile = GetLocalConfig();
-            return configFile.GetPathValue(setting);
+            return GetSetting(setting);
         }
 
         public string GetEffectiveSetting(string setting)
         {
-            var localConfig = GetLocalConfig();
-            if (localConfig.HasValue(setting))
-                return localConfig.GetValue(setting);
-
-            return GitCommandHelpers.GetGlobalConfig().GetValue(setting);
+            return EffectiveConfigFile.GetValue(setting);
         }
 
         public string GetEffectivePathSetting(string setting)
         {
-            var localConfig = GetLocalConfig();
-            if (localConfig.HasValue(setting))
-                return localConfig.GetPathValue(setting);
-
-            return GitCommandHelpers.GetGlobalConfig().GetPathValue(setting);
+            return GetEffectiveSetting(setting);
         }
 
         public void UnsetSetting(string setting)
         {
-            var configFile = GetLocalConfig();
-            configFile.RemoveSetting(setting);
-            configFile.Save();
+            SetSetting(setting, null);
         }
 
         public void SetSetting(string setting, string value)
         {
-            var configFile = GetLocalConfig();
-            configFile.SetValue(setting, value);
-            configFile.Save();
+            LocalConfigFile.SetValue(setting, value);
         }
 
         public void SetPathSetting(string setting, string value)
         {
-            var configFile = GetLocalConfig();
-            configFile.SetPathValue(setting, value);
-            configFile.Save();
+            LocalConfigFile.SetPathValue(setting, value);
         }
 
         public IList<Patch> GetStashedItems(string stashName)

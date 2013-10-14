@@ -8,15 +8,14 @@ using GitCommands.Config;
 
 namespace GitCommands.Settings
 {
-    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings>
+    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>
     {
-        public ConfigFileSettings(ConfigFileSettings aLowerPriority, SettingsCache aSettingsCache)
+        public ConfigFileSettings(ConfigFileSettings aLowerPriority, ConfigFileSettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
         {
             core = new CorePath(this);
             mergetool = new MergeToolPath(this);
         }
-
 
         public static ConfigFileSettings CreateEffective(GitModule aModule)
         {
@@ -53,6 +52,11 @@ namespace GitCommands.Settings
             return this.GetString(setting, string.Empty);
         }
 
+        public IList<string> GetValues(string setting)
+        { 
+            return SettingsCache.GetValues(setting);
+        }
+
         public void SetValue(string setting, string value)
         {
             if (value.IsNullOrEmpty())
@@ -67,6 +71,11 @@ namespace GitCommands.Settings
         public void SetPathValue(string setting, string value)
         {
             SetValue(setting, ConfigSection.FixPath(value));
+        }
+
+        public void RemoveConfigSection(string configSectionName)
+        {
+            SettingsCache.RemoveConfigSection(configSectionName);
         }
 
         public Encoding FilesEncoding

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GitCommands.Config;
+using GitCommands.Settings;
 
 namespace GitCommands
 {
@@ -71,7 +72,7 @@ namespace GitCommands
         {
             get
             {
-                return GetTrackingRemote(Module.GetLocalConfig());
+                return GetTrackingRemote(Module.LocalConfigFile);
             }
             set
             {
@@ -98,7 +99,7 @@ namespace GitCommands
         /// every time it is accessed. This method accepts a config file what makes it faster when loading
         /// the revision graph.
         /// </summary>
-        public string GetTrackingRemote(ConfigFile configFile)
+        public string GetTrackingRemote(ConfigFileSettings configFile)
         {
             return configFile.GetValue(_remoteSettingName);
         }
@@ -107,7 +108,7 @@ namespace GitCommands
         {
             get
             {
-                return GetMergeWith(Module.GetLocalConfig());
+                return GetMergeWith(Module.LocalConfigFile);
             }
             set
             {
@@ -123,7 +124,7 @@ namespace GitCommands
         /// every time it is accessed. This method accepts a configfile what makes it faster when loading
         /// the revisiongraph.
         /// </summary>
-        public string GetMergeWith(ConfigFile configFile)
+        public string GetMergeWith(ConfigFileSettings configFile)
         {
             string merge = configFile.GetValue(_mergeSettingName);
             return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;

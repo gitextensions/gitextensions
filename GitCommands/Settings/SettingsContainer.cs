@@ -6,12 +6,12 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
-    public class SettingsContainer<L> : ISettingsSource where L : SettingsContainer<L>
+    public class SettingsContainer<L, C> : ISettingsSource where L : SettingsContainer<L, C> where C : SettingsCache
     {
         public L LowerPriority { get; private set; }
-        public SettingsCache SettingsCache { get; private set; }
+        public C SettingsCache { get; private set; }
 
-        public SettingsContainer(L aLowerPriority, SettingsCache aSettingsCache)
+        public SettingsContainer(L aLowerPriority, C aSettingsCache)
         {
             LowerPriority = aLowerPriority;
             SettingsCache = aSettingsCache;
