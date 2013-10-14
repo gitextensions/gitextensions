@@ -74,6 +74,7 @@ namespace GitUI.UserControls
                OnReloadStashes,
                OnAddStash
             );
+            /*
             AddTreeSet(new TreeNode(Strings.remotes.Text)
                 {
                     ContextMenuStrip = menuRemotes,
@@ -83,14 +84,14 @@ namespace GitUI.UserControls
                 OnReloadRemotes,
                 OnAddRemote
             );
-
+            */
             if (isFirst)
             {// bypass reloading twice 
                 // (once from initial UICommandsSource being set)
                 // (once from FormBrowse Initialize())
                 isFirst = false;
-                NotificationFeed notificationFeed = new NotificationFeed(UICommandsSource);
-                toolbarMain.Items.Insert(0, notificationFeed);
+                //NotificationFeed notificationFeed = new NotificationFeed(UICommandsSource);
+                //toolbarMain.Items.Insert(0, notificationFeed);
             }
             else
             {
