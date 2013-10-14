@@ -47,7 +47,7 @@ namespace GitUI.UserControls
             internal override void OnSelected()
             {
                 base.OnSelected();
-                UiCommands.BrowseRepo.GoToRef(Value.Name, true);
+                UICommands.BrowseRepo.GoToRef(Value.Name, true);
             }
 
             public void Pop()
@@ -62,7 +62,7 @@ namespace GitUI.UserControls
 
             public void Delete()
             {
-                NotifyIf(Git.StashDelete(Value.Name),
+                NotifyIf(Module.StashDelete(Value.Name),
                     () => new Notification(StatusSeverity.Success, "Stash dropped/deleted."),
                     () => new Notification(StatusSeverity.Fail, "Failed to drop/delete stash."));
             }

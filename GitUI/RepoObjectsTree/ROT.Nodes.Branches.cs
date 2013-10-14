@@ -207,7 +207,7 @@ namespace GitUI.UserControls
             internal override void OnSelected()
             {
                 base.OnSelected();
-                UiCommands.BrowseGoToRef(FullPath, true);
+                UICommands.BrowseGoToRef(FullPath, true);
             }
             protected override IEnumerable<DragDropAction> CreateDragDropActions()
             {
@@ -217,12 +217,12 @@ namespace GitUI.UserControls
                     {
                         // normal -> Pop
                         // Alt -> Apply
-                        UiCommands.StartStashDialog();
+                        UICommands.StartStashDialog();
                     });
 
                 var branchDD = new DragDropAction<BranchNode>(draggedBranch =>
                 {
-                    string activeBranch = UiCommands.Module.GetSelectedBranch();
+                    string activeBranch = UICommands.Module.GetSelectedBranch();
                     if (Equals(FullPath, activeBranch))
                     {// target is active -> merge dropped
                         return true;
@@ -234,14 +234,14 @@ namespace GitUI.UserControls
                     return false;
                 }, draggedBranch =>
                 {
-                    string activeBranch = UiCommands.Module.GetSelectedBranch();
+                    string activeBranch = UICommands.Module.GetSelectedBranch();
                     if (Equals(FullPath, activeBranch))
                     {// target is active -> merge dropped
-                        UiCommands.StartMergeBranchDialog(draggedBranch.FullPath);
+                        UICommands.StartMergeBranchDialog(draggedBranch.FullPath);
                     }
                     if (Equals(draggedBranch.FullPath, activeBranch))
                     {// dropped is active -> merge target
-                        UiCommands.StartMergeBranchDialog(FullPath);
+                        UICommands.StartMergeBranchDialog(FullPath);
                     }
                 });
 
@@ -249,13 +249,13 @@ namespace GitUI.UserControls
                 var remoteBranchDD = new DragDropAction<RemoteBranchNode>(
                     remoteBranch =>
                     {
-                        if (Git.IsDirtyDir())
+                        if (Module.IsDirtyDir())
                         {// disallow pull onto the current branch if it's "dirty"
                             // show: "commit changes first"
                             return false;
                         }
                         return remoteBranch.Value.PullConfigs.Any(pull => Equals(pull.LocalBranch, FullPath))
-                            && Git.IsBranchBehind(FullPath, remoteBranch.Value);
+                            && Module.IsBranchBehind(FullPath, remoteBranch.Value);
                     },
                     remoteBranch =>
                     {
@@ -271,24 +271,24 @@ namespace GitUI.UserControls
 
             public void Checkout()
             {
-                UiCommands.StartCheckoutBranch(FullPath, false);
+                UICommands.StartCheckoutBranch(FullPath, false);
             }
 
             public void CreateBranch()
             {
-                UiCommands.StartCreateBranchDialog();
+                UICommands.StartCreateBranchDialog();
             }
 
             public void Delete()
             {
-                UiCommands.StartDeleteBranchDialog(FullPath);
+                UICommands.StartDeleteBranchDialog(FullPath);
             }
 
             public void DeleteForce()
             {
-                var branchHead = GitRef.CreateBranchRef(UiCommands.Module, null, FullPath);
+                var branchHead = GitRef.CreateBranchRef(UICommands.Module, null, FullPath);
                 var cmd = new GitDeleteBranchCmd(new GitRef[] { branchHead }, true);
-                UiCommands.StartCommandLineProcessDialog(cmd, null);
+                UICommands.StartCommandLineProcessDialog(cmd, null);
             }
         }
 
@@ -635,7 +635,7 @@ namespace GitUI.UserControls
             void SetFavorites(ICollection<BaseBranchNode> news)
             {
                 favorites.Clear();
-                var favs = (from section in UiCommands.Module.GetLocalConfig().ConfigSections
+                var favs = (from section in UICommands.Module.GetLocalConfig().ConfigSections
                             where Equals(section.SectionName, "branch")
                             let value = section.GetValue("fav")
                             where value.IsNotNullOrWhitespace()
@@ -686,7 +686,7 @@ namespace GitUI.UserControls
                         branch =>
                         {
                             using (FormCheckoutBranch branchForm = new FormCheckoutBranch(
-                                    UiCommands, branch.FullPath, false))
+                                    UICommands, branch.FullPath, false))
                             {
                                 branchForm.ShowDialog();
                             }

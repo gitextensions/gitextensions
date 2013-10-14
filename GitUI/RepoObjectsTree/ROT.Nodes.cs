@@ -35,9 +35,9 @@ namespace GitUI.UserControls
             public Node ParentNode { get; internal set; }
 
             /// <summary>Gets the <see cref="GitUICommands"/> reference.</summary>
-            public GitUICommands UiCommands { get; private set; }
+            public GitUICommands UICommands { get; private set; }
             /// <summary>Gets the <see cref="GitModule"/> reference.</summary>
-            public GitModule Git { get; private set; }
+            public GitModule Module { get; private set; }
 
             protected Node(GitUICommands uiCommands, TreeNode treeNode = null)
             {
@@ -45,8 +45,8 @@ namespace GitUI.UserControls
                 {
                     TreeNode = treeNode;
                 }
-                UiCommands = uiCommands;
-                Git = uiCommands.Module;
+                UICommands = uiCommands;
+                Module = uiCommands.Module;
                 Notifier = NotificationManager.Get(uiCommands);
                 IsDraggable = false;
                 ContextActions = new ContextAction[0];

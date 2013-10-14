@@ -142,10 +142,10 @@ namespace GitUI.UserControls
                     {
                         GitPush push = Value.CreatePush(branch.FullPath);
 
-                        if (Git.CompareCommits(branch.FullPath, Value.FullPath).State == BranchCompareStatus.AheadPublishable)
+                        if (Module.CompareCommits(branch.FullPath, Value.FullPath).State == BranchCompareStatus.AheadPublishable)
                         {
                             // local is ahead and publishable (remote has NOT diverged)
-                            Git.Push(push);
+                            Module.Push(push);
                             throw new NotImplementedException("tell user about fail or success.");
                             // if fail because remote diverged since Git.CompareCommits conditional (unlikely) -> tell user to fetch/merge or pull
                         }
@@ -161,7 +161,7 @@ namespace GitUI.UserControls
             internal override void OnSelected()
             {
                 base.OnSelected();
-                UiCommands.BrowseRepo.GoToRef(Value.FullPath, true);
+                UICommands.BrowseRepo.GoToRef(Value.FullPath, true);
             }
 
             /// <summary>Download updates from the remote branch.</summary>
@@ -191,7 +191,7 @@ namespace GitUI.UserControls
             /// <summary>Un-track the remote branch and remove the local copy.</summary>
             public void UnTrack()
             {
-                string error = Git.RemoteCmd(GitRemote.UnTrack(Value.Remote, Value));
+                string error = Module.RemoteCmd(GitRemote.UnTrack(Value.Remote, Value));
                 GC.KeepAlive(error);
                 bool isSuccess = true;
                 if (isSuccess)

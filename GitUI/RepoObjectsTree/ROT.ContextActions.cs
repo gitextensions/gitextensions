@@ -57,7 +57,7 @@ namespace GitUI.UserControls
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranchesForce, branchPath => branchPath.DeleteAllForce());
 
-            RegisterClick<RootNode>(mnubtnStashSave, stashes => stashes.UiCommands.StartStashDialog());
+            RegisterClick<RootNode>(mnubtnStashSave, stashes => stashes.UICommands.StartStashDialog());
             //RegisterClick<RootNode>(mnubtnClearStashes, stashes => stashes.UiCommands.Module);
 
             RegisterClick<StashNode>(mnubtnStashPop, stash => stash.Pop());
