@@ -152,6 +152,14 @@ namespace GitCommands
             }
         }
 
+        public ConfigFileSettings GlobalConfigFile
+        {
+            get
+            {
+                return EffectiveConfigFile.LowerPriority;
+            }
+        }
+
         //encoding for files paths
         private static Encoding _systemEncoding;
         public static Encoding SystemEncoding
@@ -351,32 +359,6 @@ namespace GitCommands
                 }
             }
             return submodules;
-        }
-
-        public string GetGlobalSetting(string setting)
-        {
-            var configFile = GitCommandHelpers.GetGlobalConfig();
-            return configFile.GetValue(setting);
-        }
-
-        public string GetGlobalPathSetting(string setting)
-        {
-            var configFile = GitCommandHelpers.GetGlobalConfig();
-            return configFile.GetPathValue(setting);
-        }
-
-        public void SetGlobalSetting(string setting, string value)
-        {
-            var configFile = GitCommandHelpers.GetGlobalConfig();
-            configFile.SetValue(setting, value);
-            configFile.Save();
-        }
-
-        public void SetGlobalPathSetting(string setting, string value)
-        {
-            var configFile = GitCommandHelpers.GetGlobalConfig();
-            configFile.SetPathValue(setting, value);
-            configFile.Save();
         }
 
         public static string FindGitWorkingDir(string startDir)
