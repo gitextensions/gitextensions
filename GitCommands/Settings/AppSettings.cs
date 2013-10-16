@@ -247,6 +247,12 @@ namespace GitCommands
             set { SetInt("commitDialogNumberOfPreviousMessages", value); }
         }
 
+        public static bool CommitDlgShowAdvancedArea
+        {
+          get { return GetBool("commitdlgshowadvancedarea", true); }
+          set { SetBool("commitdlgshowadvancedarea", value); }
+        }
+
         public static string TruncatePathMethod
         {
             get { return GetString("truncatepathmethod", "none"); }
