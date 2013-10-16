@@ -23,6 +23,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;
             AppSettings.UseFormCommitMessage = chkWriteCommitMessageInCommitWindow.Checked;
             AppSettings.CommitDialogNumberOfPreviousMessages = (int) _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value;
+            AppSettings.CommitDlgShowAdvancedArea = chkCommitDlgShowAdvancedArea.Checked;
         }
     }
 }
