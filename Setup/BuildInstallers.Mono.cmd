@@ -2,7 +2,7 @@
 
 cd /d "%~p0"
 
-if "%MONOPATH%"=="" SET MONOPATH=C:\Program Files (x86)\Mono-2.10.9\bin\
+if "%MONOPATH%"=="" SET MONOPATH=C:\Program Files (x86)\Mono-3.2.3\bin\
 
 set version=2.47
 set msbuild="%MONOPATH%\xbuild"
@@ -15,7 +15,7 @@ set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
 %nuget% install ..\Plugins\BackgroundFetch\packages.config -OutputDirectory ..\packages
 
 call %msbuild% %project% /t:clean
-call %msbuild% %project% /p:TargetFrameworkProfile="" /p:Platform="Any CPU" /p:Configuration=Release /t:Rebuild /nologo /v:m
+call %msbuild% %project% /p:TargetFrameworkProfile="" /p:Platform="Any CPU" /p:Configuration=Release /nologo /v:m
 IF ERRORLEVEL 1 EXIT /B 1
 
 set zipversion=%version:.=%
@@ -25,6 +25,7 @@ rd /q %normal%
 xcopy /y ..\GitExtensions\bin\Release\Git.hub.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\GitCommands.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\GitExtensions.exe GitExtensions\
+xcopy /y ..\GitExtensions\bin\Release\GitExtensions.exe.config GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\GitUI.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\GitUIPluginInterfaces.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\Gravatar.dll GitExtensions\
@@ -42,6 +43,7 @@ xcopy /y ..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Interfaces.dll G
 xcopy /y ..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Linq.dll GitExtensions\
 xcopy /y ..\Plugins\BackgroundFetch\bin\Release\System.Reactive.PlatformServices.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\TranslationApp.exe GitExtensions\
+xcopy /y ..\GitExtensions\bin\Release\TranslationApp.exe.config GitExtensions\
 xcopy /y ..\Plugins\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll GitExtensions\Plugins\
 xcopy /y ..\Plugins\BackgroundFetch\bin\Release\BackgroundFetch.dll GitExtensions\Plugins\
 xcopy /y ..\Plugins\CreateLocalBranches\bin\Release\CreateLocalBranches.dll GitExtensions\Plugins\
@@ -55,7 +57,16 @@ xcopy /y ..\Plugins\Statistics\GitStatistics\bin\Release\GitStatistics.dll GitEx
 xcopy /y ..\Plugins\Gource\bin\Release\Gource.dll GitExtensions\Plugins\
 xcopy /y ..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll GitExtensions\Plugins\
 xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll GitExtensions\Plugins\
-xcopy /y ..\GitUI\Translation GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\English.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Dutch.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Francais.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\German.* GitExtensions\Translation\
+REM xcopy /y ..\GitUI\Translation\Italiano.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Japanese.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Russian.* GitExtensions\Translation\
+REM xcopy /y ..\GitUI\Translation\SimplifiedChinese.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Spanish.* GitExtensions\Translation\
+REM xcopy /y ..\GitUI\Translation\TraditionalChinese.* GitExtensions\Translation\
 xcopy /y ..\bin\Dictionaries GitExtensions\Dictionaries\
 xcopy /y ..\bin\Diff-Scripts\merge-* GitExtensions\Diff-Scripts\
 xcopy /y ..\bin\Diff-Scripts\*.txt GitExtensions\Diff-Scripts\
