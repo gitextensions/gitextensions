@@ -209,6 +209,7 @@ namespace GitUI.CommandsDialogs
                 splitMain.SplitterDistance = AppSettings.CommitDialogSplitter;
             if (AppSettings.CommitDialogRightSplitter != -1)
                 splitRight.SplitterDistance = AppSettings.CommitDialogRightSplitter;
+            flowAdvancedButtons.Visible = AppSettings.CommitDlgShowAdvancedArea;
         }
 
         private void FormCommitFormClosing(object sender, FormClosingEventArgs e)

@@ -16,6 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowErrorsWhenStagingFiles.Checked = AppSettings.ShowErrorsWhenStagingFiles;
             chkWriteCommitMessageInCommitWindow.Checked = AppSettings.UseFormCommitMessage;
             _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value = AppSettings.CommitDialogNumberOfPreviousMessages;
+            chkCommitDlgShowAdvancedArea.Checked = AppSettings.CommitDlgShowAdvancedArea;
         }
 
         protected override void PageToSettings()
