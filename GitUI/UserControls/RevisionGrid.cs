@@ -2307,8 +2307,8 @@ namespace GitUI
                 new FormSettings(UICommands).LoadSettings();
                 _settingsLoaded = true;
             }
-            ScriptRunner.RunScript(this, Module, sender.ToString(), this);
-            RefreshRevisions();
+            if (ScriptRunner.RunScript(this, Module, sender.ToString(), this))
+                RefreshRevisions();
         }
 
         #region Drag/drop patch files on revision grid
