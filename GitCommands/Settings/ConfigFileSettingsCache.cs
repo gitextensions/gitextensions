@@ -73,6 +73,23 @@ namespace GitCommands.Settings
             return _configFile.Value.GetValue(key, null);
         }
 
+        public IList<string> GetValues(string key)
+        {
+            return LockedAction<IList<string>>(() =>
+            {
+                EnsureSettingsAreUpToDate();
+                return _configFile.Value.GetValues(key);
+            });
+        }
+
+        public void RemoveConfigSection(string configSectionName)
+        {
+            LockedAction(() =>
+            {
+                EnsureSettingsAreUpToDate();
+                _configFile.Value.RemoveConfigSection(configSectionName);
+            });
+        }
 
     }
 }

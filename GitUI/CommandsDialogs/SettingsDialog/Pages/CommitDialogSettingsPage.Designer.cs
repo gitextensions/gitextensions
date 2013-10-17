@@ -46,7 +46,7 @@
             this.groupBoxBehaviour.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxBehaviour.Location = new System.Drawing.Point(0, 0);
             this.groupBoxBehaviour.Name = "groupBoxBehaviour";
-            this.groupBoxBehaviour.Size = new System.Drawing.Size(1440, 107);
+            this.groupBoxBehaviour.Size = new System.Drawing.Size(1440, 116);
             this.groupBoxBehaviour.TabIndex = 56;
             this.groupBoxBehaviour.TabStop = false;
             this.groupBoxBehaviour.Text = "Behaviour";
@@ -68,12 +68,12 @@
             this.tableLayoutPanelBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelBehaviour.Size = new System.Drawing.Size(1434, 85);
+            this.tableLayoutPanelBehaviour.Size = new System.Drawing.Size(1434, 94);
             this.tableLayoutPanelBehaviour.TabIndex = 57;
             // 
             // _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages
             // 
-            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(338, 59);
+            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(338, 68);
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Maximum = new decimal(new int[] {
             10,
             0,
@@ -97,7 +97,7 @@
             // 
             this.lblCommitDialogNumberOfPreviousMessages.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblCommitDialogNumberOfPreviousMessages.AutoSize = true;
-            this.lblCommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(3, 63);
+            this.lblCommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(3, 72);
             this.lblCommitDialogNumberOfPreviousMessages.Name = "lblCommitDialogNumberOfPreviousMessages";
             this.lblCommitDialogNumberOfPreviousMessages.Size = new System.Drawing.Size(261, 15);
             this.lblCommitDialogNumberOfPreviousMessages.TabIndex = 2;
@@ -107,7 +107,6 @@
             // 
             this.chkShowErrorsWhenStagingFiles.AutoSize = true;
             this.chkShowErrorsWhenStagingFiles.Location = new System.Drawing.Point(3, 3);
-            this.chkShowErrorsWhenStagingFiles.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.chkShowErrorsWhenStagingFiles.Name = "chkShowErrorsWhenStagingFiles";
             this.chkShowErrorsWhenStagingFiles.Size = new System.Drawing.Size(186, 19);
             this.chkShowErrorsWhenStagingFiles.TabIndex = 0;
@@ -117,8 +116,7 @@
             // chkWriteCommitMessageInCommitWindow
             // 
             this.chkWriteCommitMessageInCommitWindow.AutoSize = true;
-            this.chkWriteCommitMessageInCommitWindow.Location = new System.Drawing.Point(3, 22);
-            this.chkWriteCommitMessageInCommitWindow.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            this.chkWriteCommitMessageInCommitWindow.Location = new System.Drawing.Point(3, 28);
             this.chkWriteCommitMessageInCommitWindow.Name = "chkWriteCommitMessageInCommitWindow";
             this.chkWriteCommitMessageInCommitWindow.Size = new System.Drawing.Size(329, 34);
             this.chkWriteCommitMessageInCommitWindow.TabIndex = 1;

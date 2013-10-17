@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
@@ -6,6 +7,8 @@ namespace System
 {
     public static class StringExtensions
     {
+        /// <summary>'\n'</summary>
+        static readonly char[] NewLineSeparator = new char[] { '\n' };
 
         public static string SkipStr(this string str, string toSkip)
         {
@@ -103,7 +106,13 @@ namespace System
         [Pure]
         public static bool IsNullOrWhiteSpace([CanBeNull] this string value)
         {
-            return value == null || value.All(Char.IsWhiteSpace);
+            return string.IsNullOrWhiteSpace(value);
+        }
+
+        /// <summary>Indicates whether the specified string is neither null, nor empty, nor has only whitespace.</summary>
+        public static bool IsNotNullOrWhitespace([CanBeNull] this string value)
+        {
+            return !value.IsNullOrWhiteSpace();
         }
 
         /// <summary>
@@ -127,12 +136,55 @@ namespace System
 
             StringBuilder sb = new StringBuilder();
             string[] lines = value.Split('\n');
-            
+
             foreach (string line in lines)
                 if (!shouldRemoveLine(line))
                     sb.Append(line + '\n');
 
             return sb.ToString();
+        }
+
+        /// <summary>Split a string, removing empty entries, then trim whitespace.</summary>
+        public static IEnumerable<string> SplitThenTrim(this string value, params string[] separator)
+        {
+            return value
+                .Split(separator, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim());
+        }
+
+        /// <summary>Split a string, removing empty entries, then trim whitespace.</summary>
+        public static IEnumerable<string> SplitThenTrim(this string value, params char[] separator)
+        {
+            return value
+                .Split(separator, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim());
+        }
+
+        /// <summary>Split a string, delimited by line-breaks, excluding empty entries.</summary>
+        public static string[] SplitLines(this string value)
+        {
+            return value.Split(NewLineSeparator);
+        }
+
+        /// <summary>Split a string, delimited by line-breaks, excluding empty entries; then trim whitespace.</summary>
+        public static IEnumerable<string> SplitLinesThenTrim(this string value)
+        {
+            return value.SplitThenTrim(NewLineSeparator);
+        }
+
+        /// <summary>Gets the text after the last separator.
+        /// If NO separator OR ends with separator, returns the original value.</summary>
+        public static string SubstringAfterLastSafe(this string value, string separator)
+        {// ex: "origin/master" -> "master"
+            if (value.EndsWith(separator) || !value.Contains(separator))
+            {// "origin/master/" OR "master" -> return original
+                return value;
+            }
+            return value.Substring(1 + value.LastIndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
+        }
+        public static string SubstringAfterFirst(this string value, string separator)
+        {
+            return value.Substring(1 + value.IndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
         }
 
     }
