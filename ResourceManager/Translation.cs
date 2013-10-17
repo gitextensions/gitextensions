@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 
 namespace ResourceManager.Translation
 {
+    /// <summary>Provides a translation for a specific language.</summary>
     public class Translation
     {
         public Translation()

@@ -35,8 +35,8 @@ namespace GitCommands
         public static Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
-        private static SettingsContainer<RepoDistSettings> _SettingsContainer;
-        public static SettingsContainer<RepoDistSettings> SettingsContainer { get { return _SettingsContainer; } }
+        private static SettingsContainer<RepoDistSettings, GitExtSettingsCache> _SettingsContainer;
+        public static SettingsContainer<RepoDistSettings, GitExtSettingsCache> SettingsContainer { get { return _SettingsContainer; } }
 
         static AppSettings()
         {
@@ -54,7 +54,7 @@ namespace GitCommands
             }
             );
 
-            _SettingsContainer = new SettingsContainer<RepoDistSettings>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
+            _SettingsContainer = new SettingsContainer<RepoDistSettings, GitExtSettingsCache>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
             Version version = AppVersion;
 
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
@@ -74,7 +74,7 @@ namespace GitCommands
             }
         }
 
-        public static void UsingContainer(SettingsContainer<RepoDistSettings> aSettingsContainer, Action action)
+        public static void UsingContainer(SettingsContainer<RepoDistSettings, GitExtSettingsCache> aSettingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>
                 {
@@ -683,6 +683,7 @@ namespace GitCommands
             set { SetString("gravatarfallbackservice", value); }
         }
 
+        /// <summary>Gets or sets the path to the git application executable.</summary>
         public static string GitBinDir
         {
             get { return GetString("gitbindir", ""); }
@@ -734,6 +735,7 @@ namespace GitCommands
             set { SetString("puttygen", value); }
         }
 
+        /// <summary>Gets the path to Pageant (SSH auth agent).</summary>
         public static string Pageant
         {
             get { return GetString("pageant", ""); }

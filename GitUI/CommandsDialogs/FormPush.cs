@@ -291,7 +291,7 @@ namespace GitUI.CommandsDialogs
                     if (push || force)
                         pushActions.Add(new GitPushAction(row["Local"].ToString(), row["Remote"].ToString(), force));
                     else if (delete)
-                        pushActions.Add(new GitPushAction(row["Remote"].ToString()));
+                        pushActions.Add(GitPushAction.DeleteRemoteBranch(row["Remote"].ToString()));
                 }
                 pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
