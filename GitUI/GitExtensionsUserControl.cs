@@ -8,6 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
+    /// <summary>Provides translation and hotkey plumbing for GitEx <see cref="UserControl"/>s.</summary>
     public class GitExtensionsControl : UserControl, ITranslate
     {
         public GitExtensionsControl()
@@ -24,8 +25,6 @@ namespace GitUI
             get { return base.Font; }
             set { base.Font = value; }
         }
-
-        private bool translated;
 
         private static bool CheckComponent(object value)
         {
@@ -54,6 +53,7 @@ namespace GitUI
                 OnRuntimeLoad(e);
         }
 
+        private bool translated;
 
         void GitExtensionsControl_Load(object sender, EventArgs e)
         {
@@ -64,6 +64,7 @@ namespace GitUI
                 throw new Exception("The control " + GetType().Name + " is not translated in the constructor. You need to call Translate() right after InitializeComponent().");
         }
 
+        /// <summary>Translates the <see cref="UserControl"/>'s elements.</summary>
         protected void Translate()
         {
             Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
@@ -88,7 +89,7 @@ namespace GitUI
         /// <summary>Gets or sets the hotkeys</summary>
         protected IEnumerable<Hotkey.HotkeyCommand> Hotkeys { get; set; }
 
-        /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
+        /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (HotkeysEnabled && this.Hotkeys != null)
@@ -104,8 +105,8 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Override this method to handle form specific Hotkey commands
-        /// This base method calls script-hotkeys
+        /// Override this method to handle form-specific Hotkey commands.
+        /// <remarks>This base method does nothing and returns false.</remarks>
         /// </summary>
         /// <param name="command"></param>
         protected virtual bool ExecuteCommand(int command)

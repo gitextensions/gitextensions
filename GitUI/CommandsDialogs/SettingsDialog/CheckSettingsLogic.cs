@@ -284,7 +284,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public void AutoConfigMergeToolCmd(bool silent)
         {
             string exeName;
-            string exeFile = MergeToolsHelper.FindMergeToolFullPath(GetGlobalMergeToolText(), out exeName);
+            string exeFile = MergeToolsHelper.FindMergeToolFullPath(CommonLogic.ConfigFileSettingsSet, GetGlobalMergeToolText(), out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 SetMergetoolPathText("");

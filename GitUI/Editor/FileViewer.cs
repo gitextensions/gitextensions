@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -941,5 +942,47 @@ namespace GitUI.Editor
                     GoToLine(formGoToLine.GetLineNumber() - 1);
             }
         }
+
+        private void CopyNotStartingWith(char startChar)
+        {
+            string code = _internalFileViewer.GetSelectedText();
+            if (string.IsNullOrEmpty(code))
+                return;
+
+            if (_currentViewIsPatch)
+            {
+                //add artificail space if selected text is not starting from line begining, it will be removed later
+                int pos = _internalFileViewer.GetSelectionPosition();
+                string fileText = _internalFileViewer.GetText();
+                if (pos > 0)
+                    if (fileText[pos - 1] != '\n')
+                        code = " " + code;
+                IEnumerable<string> lines = code.Split('\n');
+                lines = lines.Where(s => s.Length == 0 || s[0] != startChar);
+                int hpos = fileText.IndexOf("\n@@");
+                //if header is selected then don't remove diff extra chars
+                if (hpos <= pos)
+                {
+                    char[] specials = new char[] { ' ', '-', '+' };
+                    lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s.Substring(1) : s);                    
+                }
+
+                code = string.Join("\n", lines);
+            }
+
+            Clipboard.SetText(code);
+        }
+
+
+        private void copyNewVersionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyNotStartingWith('-');
+        }
+
+        private void copyOldVersionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyNotStartingWith('+');
+        }
+
     }
 }

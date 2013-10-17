@@ -29,7 +29,7 @@ using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormBrowse : GitModuleForm
+    public partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         #region Translation
 
@@ -190,11 +190,14 @@ namespace GitUI.CommandsDialogs
                 RefreshPullIcon();
                 oldcommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+                oldcommands.BrowseRepo = null;
+                UICommands.BrowseRepo = this;
             };
             if (aCommands != null)
             {
                 RefreshPullIcon();
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+                UICommands.BrowseRepo = this;                
             }
 
             FillBuildReport();  // Ensure correct page visibility
@@ -218,6 +221,14 @@ namespace GitUI.CommandsDialogs
                 InternalInitialize(false);
             }
         }
+    
+        #region IBrowseRepo
+        public void GoToRef(string refName, bool showNoRevisionMsg)
+        {
+            RevisionGrid.GoToRef(refName, showNoRevisionMsg);
+        }
+
+        #endregion
 
         private void ShowDashboard()
         {
@@ -618,8 +629,8 @@ namespace GitUI.CommandsDialogs
 
         private void UserMenu_Click(object sender, EventArgs e)
         {
-            ScriptRunner.RunScript(this, Module, ((ToolStripButton)sender).Text, null);
-            RevisionGrid.RefreshRevisions();
+            if (ScriptRunner.RunScript(this, Module, ((ToolStripButton)sender).Text, null))
+                RevisionGrid.RefreshRevisions();
         }
 
         private void UpdateJumplist(bool validWorkingDir)
