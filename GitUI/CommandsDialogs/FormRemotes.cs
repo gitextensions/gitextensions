@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
 
         private void ConfigureRemotes()
         {
-            ConfigFile localConfig = Module.GetLocalConfig();
+            var localConfig = Module.LocalConfigFile;
 
             foreach (var remoteHead in Module.GetRefs(true, true))
             {
