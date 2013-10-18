@@ -374,8 +374,7 @@ namespace GitUI.UserControls
 
             internal override void ApplyStyle()
             {
-                base.ApplyStyle();
-                TreeNode.NodeFont = new Font(TreeNode.NodeFont, FontStyle.Italic);
+                base.ApplyStyle();                
             }
 
             public void CreateWithin()

@@ -23,19 +23,6 @@ namespace GitUI.UserControls
 
             RegisterContextActions();
 
-            imgList.Images.Add(branchesKey, Resources.Branch);
-            imgList.Images.Add(branchKey, Resources.Branch);
-            imgList.Images.Add(branchPathKey, Resources.Namespace);
-            imgList.Images.Add(stashesKey, Resources.Stashes);
-            imgList.Images.Add(stashKey, Resources.Stashes);
-            imgList.Images.Add(remotesKey, Resources.RemoteRepo);
-            imgList.Images.Add(remoteKey, Resources.RemoteRepo);
-            imgList.Images.Add(remotePushMirrorKey, Resources.RemoteMirror);
-            imgList.Images.Add(headBranchKey, Resources.HeadBranch);
-            imgList.Images.Add(remoteBranchStaleKey, Resources.BranchStale);
-            imgList.Images.Add(remoteBranchNewKey, Resources.BranchNew);
-            imgList.Images.Add(remoteBranchUnTrackedKey, Resources.BranchUntracked);
-
             treeMain.ShowNodeToolTips = true;
             treeMain.HideSelection = false;
             treeMain.NodeMouseClick += OnNodeClick;
