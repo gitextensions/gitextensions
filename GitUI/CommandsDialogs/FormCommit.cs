@@ -2171,11 +2171,10 @@ namespace GitUI.CommandsDialogs
             if (unStagedFiles.Count == 0)
                 return;
 
-            var arguments = GitCommandHelpers.StashSaveCmd(AppSettings.IncludeUntrackedFilesInManualStash);
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                GitModule module = Module.GetSubmodule(item.Name);
-                FormProcess.ShowDialog(this, module, arguments);
+                GitUICommands uiCmds = new GitUICommands(Module.GetSubmodule(item.Name));
+                uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
 
             Initialize();
