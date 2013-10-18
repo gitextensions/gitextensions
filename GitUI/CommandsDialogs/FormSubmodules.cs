@@ -134,7 +134,7 @@ namespace GitUI.CommandsDialogs
             else
                 Module.UnstageFile(".gitmodules");
 
-            var configFile = Module.GetLocalConfig();
+            var configFile = Module.LocalConfigFile;
             configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             configFile.Save();
 

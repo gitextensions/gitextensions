@@ -8,10 +8,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     static class MergeToolsHelper
     {     
-        private static string GetGlobalSetting(string setting)
+        private static string GetGlobalSetting(ConfigFileSettingsSet settings, string setting)
         {
-            var configFile = GitCommandHelpers.GetGlobalConfig();
-            return configFile.GetValue(setting);
+            return settings.GlobalSettings.GetValue(setting);
         }
 
         public static string GetFullPath(string fileName)
@@ -137,13 +136,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return null;
         }
 
-        public static string FindDiffToolFullPath(string difftoolText, out string exeName)
+        public static string FindDiffToolFullPath(ConfigFileSettingsSet settings, string difftoolText, out string exeName)
         {
             string diffTool = difftoolText.ToLowerInvariant();
             switch (diffTool)
             {
                 case "beyondcompare3":
-                    string bcomppath = UnquoteString(GetGlobalSetting("difftool.beyondcompare3.path"));
+                    string bcomppath = UnquoteString(GetGlobalSetting(settings, "difftool.beyondcompare3.path"));
                     
                     exeName = "bcomp.exe";
 
@@ -151,7 +150,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                                                           @"Beyond Compare 3 (x86)\",
                                                           @"Beyond Compare 3\");
                 case "kdiff3":
-                    string kdiff3path = UnquoteString(GetGlobalSetting("difftool.kdiff3.path"));
+                    string kdiff3path = UnquoteString(GetGlobalSetting(settings, "difftool.kdiff3.path"));
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
 
                     exeName = "kdiff3.exe";
@@ -159,7 +158,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return FindFileInFolders(exeName, kdiff3path, @"KDiff3\",
                                                           regkdiff3path);
                 case "meld":
-                    string difftoolMeldPath = UnquoteString(GetGlobalSetting("difftool.meld.path"));
+                    string difftoolMeldPath = UnquoteString(GetGlobalSetting(settings, "difftool.meld.path"));
                     string programFilesMeldPath = @"Meld\meld\";
                     exeName = "meld.exe";
                     return FindFileInFolders(exeName, difftoolMeldPath, programFilesMeldPath);
@@ -177,7 +176,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return difftoolPath;
                 case "winmerge":
                     exeName = "winmergeu.exe";
-                    string winmergepath = UnquoteString(GetGlobalSetting("difftool.winmerge.path"));
+                    string winmergepath = UnquoteString(GetGlobalSetting(settings, "difftool.winmerge.path"));
 
                     return FindFileInFolders("winmergeu.exe", winmergepath,
                                                           @"WinMerge\");
@@ -229,7 +228,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return null;
         }
 
-        public static string FindMergeToolFullPath(string mergeToolText, out string exeName)
+        public static string FindMergeToolFullPath(ConfigFileSettingsSet settings, string mergeToolText, out string exeName)
         {
             string mergeTool = mergeToolText.ToLowerInvariant();
 
@@ -241,7 +240,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                                                         @"Araxis 6.5\Araxis Merge\",
                                                         @"Araxis\Araxis Merge v6.5\");
                 case "beyondcompare3":
-                    string bcomppath = UnquoteString(GetGlobalSetting("mergetool.beyondcompare3.path"));
+                    string bcomppath = UnquoteString(GetGlobalSetting(settings, "mergetool.beyondcompare3.path"));
 
                     exeName = "bcomp.exe";
                     return FindFileInFolders(exeName, bcomppath, @"Beyond Compare 3 (x86)\",
@@ -251,14 +250,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return FindFileInFolders(exeName, @"SourceGear\DiffMerge\");
                 case "kdiff3":
                     exeName = "kdiff3.exe";
-                    string kdiff3path = UnquoteString(GetGlobalSetting("mergetool.kdiff3.path"));
+                    string kdiff3path = UnquoteString(GetGlobalSetting(settings, "mergetool.kdiff3.path"));
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "");
                     if (regkdiff3path != "")
                         regkdiff3path += "\\" + exeName;
 
                     return FindFileInFolders(exeName, kdiff3path, @"KDiff3\", regkdiff3path);
                 case "p4merge":
-                    string p4mergepath = UnquoteString(GetGlobalSetting("mergetool.p4merge.path"));
+                    string p4mergepath = UnquoteString(GetGlobalSetting(settings, "mergetool.p4merge.path"));
                     exeName = "p4merge.exe";
                     return FindFileInFolders(exeName, p4mergepath, @"Perforce\");
                 case "tortoisemerge":
@@ -273,7 +272,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
                     return path;
                 case "winmerge":
-                    string winmergepath = UnquoteString(GetGlobalSetting("mergetool.winmerge.path"));
+                    string winmergepath = UnquoteString(GetGlobalSetting(settings, "mergetool.winmerge.path"));
 
                     exeName = "winmergeu.exe";
                     return FindFileInFolders(exeName, winmergepath, @"WinMerge\");
