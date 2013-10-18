@@ -245,7 +245,7 @@ namespace GitCommands
             {
                 selectedRef.Selected = true;
 
-                var localConfigFile = _module.GetLocalConfig();
+                var localConfigFile = _module.LocalConfigFile;
 
                 var selectedHeadMergeSource =
                     result.FirstOrDefault(head => head.IsRemote

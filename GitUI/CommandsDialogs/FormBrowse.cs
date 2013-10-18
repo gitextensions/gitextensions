@@ -638,8 +638,8 @@ namespace GitUI.CommandsDialogs
 
         private void UserMenu_Click(object sender, EventArgs e)
         {
-            ScriptRunner.RunScript(this, Module, ((ToolStripButton)sender).Text, null);
-            RevisionGrid.RefreshRevisions();
+            if (ScriptRunner.RunScript(this, Module, ((ToolStripButton)sender).Text, null))
+                RevisionGrid.RefreshRevisions();
         }
 
         private void UpdateJumplist(bool validWorkingDir)

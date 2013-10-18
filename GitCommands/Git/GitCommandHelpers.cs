@@ -811,14 +811,6 @@ namespace GitCommands
             return command;
         }
 
-        public static ConfigFile GetGlobalConfig()
-        {
-            string configPath = Path.Combine(GetHomeDir(), ".config", "git", "config");
-            if (File.Exists(configPath))
-                return new ConfigFile(configPath, false);
-            return new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
-        }
-
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = 0)
         {
             StringBuilder stringBuilder = new StringBuilder("status --porcelain -z");

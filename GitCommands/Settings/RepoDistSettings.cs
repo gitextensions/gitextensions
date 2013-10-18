@@ -10,12 +10,12 @@ namespace GitCommands.Settings
     /// Settings that can be distributed with repository
     /// they can be overriden for a particular repository
     /// </summary>
-    public class RepoDistSettings : SettingsContainer<RepoDistSettings>
+    public class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
     {
 
         public GitModule Module { get; private set; }
 
-        public RepoDistSettings(RepoDistSettings aLowerPriority, SettingsCache aSettingsCache)
+        public RepoDistSettings(RepoDistSettings aLowerPriority, GitExtSettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
         {
             BuildServer = new BuildServer(this);

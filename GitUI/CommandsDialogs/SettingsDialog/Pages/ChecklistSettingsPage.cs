@@ -205,6 +205,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CheckSettings();
         }
 
+        private string GetGlobalSetting(string settingName)
+        {
+            return CommonLogic.ConfigFileSettingsSet.GlobalSettings.GetValue(settingName);
+        }
+
+        private void SetGlobalPathSetting(string settingName, string value)
+        {
+            CommonLogic.ConfigFileSettingsSet.GlobalSettings.SetPathValue(settingName, value);
+        }
+
         private void gitCredentialWinStore_Fix_Click(object sender, EventArgs e)
         {
             if (CheckSettingsLogic.SolveGitCredentialStore())
@@ -345,7 +355,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             if (CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings).Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(Module.GetGlobalSetting("difftool.kdiff3.path")))
+                string.IsNullOrEmpty(GetGlobalSetting("difftool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 GotoPageGlobalSettings();
@@ -381,12 +391,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 CheckSettingsLogic.AutoConfigMergeToolCmd(true);
 
-                Module.SetGlobalPathSetting(
+                SetGlobalPathSetting(
                     string.Format("mergetool.{0}.cmd", CommonLogic.GetGlobalMergeTool()), CheckSettingsLogic.GetMergeToolCmdText());
             }
 
             if (CommonLogic.IsMergeTool("kdiff3") &&
-                string.IsNullOrEmpty(Module.GetGlobalSetting("mergetool.kdiff3.path")))
+                string.IsNullOrEmpty(GetGlobalSetting("mergetool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 GotoPageGlobalSettings();
@@ -600,7 +610,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings).Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    string p = Module.GetGlobalSetting("difftool.kdiff3.path");
+                    string p = GetGlobalSetting("difftool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         DiffTool.BackColor = Color.LightSalmon;
@@ -636,7 +646,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (CommonLogic.IsMergeTool("kdiff3"))
                 {
-                    string p = Module.GetGlobalSetting("mergetool.kdiff3.path");
+                    string p = GetGlobalSetting("mergetool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
@@ -652,7 +662,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 string mergetool = CommonLogic.GetGlobalMergeTool().ToLowerInvariant();
                 if (mergetool == "p4merge" || mergetool == "tmerge")
                 {
-                    string p = Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
+                    string p = GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
                     if (string.IsNullOrEmpty(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
@@ -675,8 +685,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckGlobalUserSettingsValid()
         {
             UserNameSet.Visible = true;
-            if (string.IsNullOrEmpty(Module.GetGlobalSetting("user.name")) ||
-                string.IsNullOrEmpty(Module.GetGlobalSetting("user.email")))
+            if (string.IsNullOrEmpty(GetGlobalSetting("user.name")) ||
+                string.IsNullOrEmpty(GetGlobalSetting("user.email")))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
                 UserNameSet.Text = _noEmailSet.Text;
