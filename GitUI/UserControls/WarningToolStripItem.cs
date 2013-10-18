@@ -9,7 +9,7 @@ namespace GitUI
     public class WarningToolStripItem : ToolStripButton
     {
         /// <summary>3 seconds</summary>
-        static readonly double TotalBlinkDuration = 3000;
+        //static readonly double TotalBlinkDuration = 3000;
         /// <summary>150ms</summary>
         static readonly int BlinkInterval = 150;
         readonly Timer _blinkTimer = new Timer { Interval = BlinkInterval };

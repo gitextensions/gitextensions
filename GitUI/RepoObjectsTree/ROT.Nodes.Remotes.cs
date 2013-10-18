@@ -95,12 +95,12 @@ namespace GitUI.UserControls
                     toolTip = string.Format(Strings.RemoteBranchNewTipFormat.Text, remoteTrackingBranch.Name);
                     menu = menuRemoteBranchNew;
                 }
-                else if (false)
+                else
                 {// explicitly UN-tracked -> grey, sort to bottom of list
                     // need to parse from settings
-                    throw new NotImplementedException();
                     imgKey = remoteBranchUnTrackedKey;
                     menu = menuRemoteBranchUnTracked;
+                    throw new NotImplementedException();
                 }
                 TreeNode childTreeNode = new TreeNode(remoteTrackingBranch.Name)
                 {

@@ -197,6 +197,10 @@ namespace GitUI.UserControls
                 return false;
             }
 
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
             /// <summary>Checkout the branch.</summary>
             internal override void OnDoubleClick()
             {
@@ -349,6 +353,11 @@ namespace GitUI.UserControls
                 return other != null &&
                     base.Equals(other) &&
                     Children.SequenceEqual(other.Children);
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
             }
 
             public override string ToString()
