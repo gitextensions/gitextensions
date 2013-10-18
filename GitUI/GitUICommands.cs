@@ -325,10 +325,65 @@ namespace GitUI
             return StartCheckoutRevisionDialog(null);
         }
 
-        public void Stash(IWin32Window owner)
+        public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "")
         {
-            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
-            FormProcess.ShowDialog(owner, Module, arguments);
+            Func<bool> action = () =>
+            {
+                var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message);
+                FormProcess.ShowDialog(owner, Module, arguments);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        public bool StashPop(IWin32Window owner)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash pop");
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        /// <summary>Creates and checks out a new branch starting from the commit at which the stash was originally created.
+        /// Applies the changes recorded in the stash to the new working tree and index.</summary>
+        public bool StashBranch(IWin32Window owner, string branchName, string stash = null)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash branch " + branchName.Quote().Combine(" ", stash.QuoteNE()));
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+
+        public bool StashDrop(IWin32Window owner, string stashName)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash drop " + stashName.Quote());
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        public bool StashApply(IWin32Window owner, string stashName)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash apply " + stashName.Quote());
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
         }
 
         public void InvokeEventOnClose(Form form, GitUIEventHandler ev)

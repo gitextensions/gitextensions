@@ -631,11 +631,15 @@ namespace GitCommands
             return "";
         }
 
-        public static string StashSaveCmd(bool untracked)
+        public static string StashSaveCmd(bool untracked, bool keepIndex, string message)
         {
             var cmd = "stash save";
             if (untracked && VersionInUse.StashUntrackedFilesSupported)
                 cmd += " -u";
+            if (keepIndex)
+                cmd += " --keep-index";
+            cmd = cmd.Combine(" ", message.QuoteNE());
+
             return cmd;
         }
 

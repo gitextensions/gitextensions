@@ -52,7 +52,7 @@ namespace GitUI.UserControls
 
             public void Pop()
             {
-                throw new NotImplementedException();
+                UICommands.StashPop(TreeNode.TreeView.FindForm());
             }
 
             public void Apply()
@@ -62,9 +62,7 @@ namespace GitUI.UserControls
 
             public void Delete()
             {
-                NotifyIf(Module.StashDelete(Value.Name),
-                    () => new Notification(StatusSeverity.Success, "Stash dropped/deleted."),
-                    () => new Notification(StatusSeverity.Fail, "Failed to drop/delete stash."));
+                UICommands.StashDrop(TreeNode.TreeView.FindForm(), Value.Name);
             }
 
             public void ShowDiff()

@@ -1709,16 +1709,12 @@ namespace GitUI.CommandsDialogs
 
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
-            FormProcess.ShowDialog(this, arguments);
-            UICommands.RepoChangedNotifier.Notify();
+            UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
         }
 
         private void StashPopToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(this, "stash pop");
-            UICommands.RepoChangedNotifier.Notify();
-            MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
+            UICommands.StashPop(this);
         }
 
         private void ViewStashToolStripMenuItemClick(object sender, EventArgs e)
