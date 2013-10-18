@@ -57,22 +57,12 @@ namespace GitUI.UserControls
 
             public void Apply()
             {
-                throw new NotImplementedException();
+                UICommands.StashApply(TreeNode.TreeView.FindForm(), Value.Name);
             }
 
             public void Delete()
             {
                 UICommands.StashDrop(TreeNode.TreeView.FindForm(), Value.Name);
-            }
-
-            public void ShowDiff()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void CreateBranch()
-            {
-                throw new NotImplementedException();
             }
         }
     }

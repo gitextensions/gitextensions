@@ -64,8 +64,6 @@ namespace GitUI.UserControls
             this.menuStash = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnStashPop = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnStashApply = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnubtnStashShowDiff = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnubtnStashBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnStashDrop = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSubmodule = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuTag = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -317,8 +315,6 @@ namespace GitUI.UserControls
             this.menuStash.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnubtnStashPop,
             this.mnubtnStashApply,
-            this.mnubtnStashShowDiff,
-            this.mnubtnStashBranch,
             this.mnubtnStashDrop});
             this.menuStash.Name = "contextmenuStash";
             this.menuStash.Size = new System.Drawing.Size(158, 114);
@@ -338,22 +334,6 @@ namespace GitUI.UserControls
             this.mnubtnStashApply.Size = new System.Drawing.Size(157, 22);
             this.mnubtnStashApply.Text = "Apply";
             this.mnubtnStashApply.ToolTipText = "Apply to current working tree";
-            // 
-            // mnubtnStashShowDiff
-            // 
-            this.mnubtnStashShowDiff.Image = global::GitUI.Properties.Resources.IconDiff;
-            this.mnubtnStashShowDiff.Name = "mnubtnStashShowDiff";
-            this.mnubtnStashShowDiff.Size = new System.Drawing.Size(157, 22);
-            this.mnubtnStashShowDiff.Text = "Show Diff";
-            this.mnubtnStashShowDiff.ToolTipText = "Show the diff compared its parent";
-            // 
-            // mnubtnStashBranch
-            // 
-            this.mnubtnStashBranch.Image = global::GitUI.Properties.Resources.BranchFrom;
-            this.mnubtnStashBranch.Name = "mnubtnStashBranch";
-            this.mnubtnStashBranch.Size = new System.Drawing.Size(157, 22);
-            this.mnubtnStashBranch.Text = "Create branch...";
-            this.mnubtnStashBranch.ToolTipText = "Create and checkout a new branch with the stash applied to its parent";
             // 
             // mnubtnStashDrop
             // 
@@ -567,10 +547,8 @@ namespace GitUI.UserControls
         private ToolStripMenuItem mnubtnRemoteFetch;
         private ToolStripMenuItem toolbtnRemotePull;
         private ContextMenuStrip menuStash;
-        private ToolStripMenuItem mnubtnStashShowDiff;
         private ToolStripMenuItem mnubtnStashPop;
         private ToolStripMenuItem mnubtnStashApply;
-        private ToolStripMenuItem mnubtnStashBranch;
         private ToolStripMenuItem mnubtnStashDrop;
         private ContextMenuStrip menuSubmodule;
         private ContextMenuStrip menuTag;
