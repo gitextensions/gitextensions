@@ -2088,15 +2088,6 @@ namespace GitCommands
             return GetEffectiveSetting(setting);
         }
 
-        /// <summary>Gets a configuration setting value; checking the local config, then the global config.</summary>
-        string GetConfigSetting(string setting, Func<ConfigFile, string> getValue)
-        {
-            var localConfig = GetLocalConfig();
-            return getValue(localConfig.HasValue(setting)
-                ? localConfig
-                : GitCommandHelpers.GetGlobalConfig());
-        }
-
         public void UnsetSetting(string setting)
         {
             SetSetting(setting, null);

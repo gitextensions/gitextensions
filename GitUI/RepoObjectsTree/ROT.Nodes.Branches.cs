@@ -635,8 +635,7 @@ namespace GitUI.UserControls
             void SetFavorites(ICollection<BaseBranchNode> news)
             {
                 favorites.Clear();
-                var favs = (from section in UICommands.Module.GetLocalConfig().ConfigSections
-                            where Equals(section.SectionName, "branch")
+                var favs = (from section in UICommands.Module.LocalConfigFile.GetConfigSections("branch")
                             let value = section.GetValue("fav")
                             where value.IsNotNullOrWhitespace()
                             select section.SubSection).ToList();
