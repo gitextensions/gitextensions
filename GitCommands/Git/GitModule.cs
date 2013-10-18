@@ -1261,23 +1261,6 @@ namespace GitCommands
             return RunGitCmd(arguments);
         }
 
-        public string Stash()
-        {
-            var arguments = GitCommandHelpers.StashSaveCmd(AppSettings.IncludeUntrackedFilesInAutoStash);
-            return RunGitCmd(arguments);
-        }
-
-        public string StashApply(string stash = null)
-        {
-            return RunGitCmd(string.Format("stash apply {0}", stash));
-        }
-
-        /// <summary>Remove all the stashed states.</summary>
-        public string StashClear()
-        {
-            return RunGitCmd("stash clear");
-        }
-
         public string ResetSoft(string commit)
         {
             return ResetSoft(commit, "");
