@@ -247,10 +247,22 @@ namespace GitCommands
             set { SetInt("commitDialogNumberOfPreviousMessages", value); }
         }
 
-        public static bool CommitDlgShowAdvancedArea
+        public static bool ShowCommitAndPush
         {
-          get { return GetBool("commitdlgshowadvancedarea", true); }
-          set { SetBool("commitdlgshowadvancedarea", value); }
+          get { return GetBool("showcommitandpush", true); }
+          set { SetBool("showcommitandpush", value); }
+        }
+
+        public static bool ShowResetUnstagedChanges
+        {
+          get { return GetBool("showresetunstagedchanges", true); }
+          set { SetBool("showresetunstagedchanges", value); }
+        }
+
+        public static bool ShowResetAllChanges
+        {
+          get { return GetBool("showresetallchanges", true); }
+          set { SetBool("showresetallchanges", value); }
         }
 
         public static string TruncatePathMethod
