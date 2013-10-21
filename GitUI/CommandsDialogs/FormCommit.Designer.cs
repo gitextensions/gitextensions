@@ -347,7 +347,7 @@ namespace GitUI.CommandsDialogs
       // StageInSuperproject
       // 
       this.StageInSuperproject.AutoSize = true;
-      this.StageInSuperproject.Location = new System.Drawing.Point(2, 98);
+      this.StageInSuperproject.Location = new System.Drawing.Point(2, 130);
       this.StageInSuperproject.Margin = new System.Windows.Forms.Padding(2);
       this.StageInSuperproject.Name = "StageInSuperproject";
       this.StageInSuperproject.Size = new System.Drawing.Size(138, 19);
@@ -1100,11 +1100,11 @@ namespace GitUI.CommandsDialogs
       // 
       this.flowCommitButtons.AutoSize = true;
       this.flowCommitButtons.Controls.Add(this.Commit);
+      this.flowCommitButtons.Controls.Add(this.CommitAndPush);
       this.flowCommitButtons.Controls.Add(this.Reset);
       this.flowCommitButtons.Controls.Add(this.ResetUnStaged);
       this.flowCommitButtons.Controls.Add(this.StageInSuperproject);
       this.flowCommitButtons.Controls.Add(this.Amend);
-      this.flowCommitButtons.Controls.Add(this.CommitAndPush);
       this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Fill;
       this.flowCommitButtons.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
       this.flowCommitButtons.Location = new System.Drawing.Point(0, 0);
@@ -1133,7 +1133,7 @@ namespace GitUI.CommandsDialogs
       // 
       this.Reset.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
       this.Reset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.Reset.Location = new System.Drawing.Point(1, 35);
+      this.Reset.Location = new System.Drawing.Point(1, 67);
       this.Reset.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
       this.Reset.Name = "Reset";
       this.Reset.Size = new System.Drawing.Size(171, 26);
@@ -1147,7 +1147,7 @@ namespace GitUI.CommandsDialogs
       // 
       this.ResetUnStaged.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
       this.ResetUnStaged.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.ResetUnStaged.Location = new System.Drawing.Point(1, 67);
+      this.ResetUnStaged.Location = new System.Drawing.Point(1, 99);
       this.ResetUnStaged.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
       this.ResetUnStaged.Name = "ResetUnStaged";
       this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
@@ -1160,7 +1160,7 @@ namespace GitUI.CommandsDialogs
       // Amend
       // 
       this.Amend.AutoSize = true;
-      this.Amend.Location = new System.Drawing.Point(3, 122);
+      this.Amend.Location = new System.Drawing.Point(3, 154);
       this.Amend.Name = "Amend";
       this.Amend.Size = new System.Drawing.Size(112, 19);
       this.Amend.TabIndex = 12;
@@ -1172,7 +1172,7 @@ namespace GitUI.CommandsDialogs
       // 
       this.CommitAndPush.Image = global::GitUI.Properties.Resources.ArrowUp;
       this.CommitAndPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.CommitAndPush.Location = new System.Drawing.Point(1, 147);
+      this.CommitAndPush.Location = new System.Drawing.Point(1, 35);
       this.CommitAndPush.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
       this.CommitAndPush.Name = "CommitAndPush";
       this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
