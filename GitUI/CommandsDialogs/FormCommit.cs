@@ -25,6 +25,8 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm //, IHotkeyable
     {
+        const string USER_NAME_KEY = "user.name";
+        const string USER_EMAIL_KEY = "user.email";
 
         #region Translation
         private readonly TranslationString _amendCommit =
@@ -1821,35 +1823,10 @@ namespace GitUI.CommandsDialogs
 
         private void GetUserSettings()
         {
-            const string USER_NAME_KEY = "user.name";
-            const string USER_EMAIL_KEY = "user.email";
+            _userName = Module.GetEffectiveSetting(USER_NAME_KEY);
+            _userEmail = Module.GetEffectiveSetting(USER_EMAIL_KEY);
 
 
-            ConfigFile config = Module.GetLocalConfig();
-
-            RepoUserSettings = config.HasConfigSection("user");
-            if (!RepoUserSettings)
-                config = GitCommandHelpers.GetGlobalConfig();
-
-            if (config.HasConfigSection("user"))
-            {
-                if (config.HasValue(USER_NAME_KEY))
-                    _userName = config.GetValue(USER_NAME_KEY);
-                else
-                    _userName = "";
-
-                if (config.HasValue(USER_EMAIL_KEY))
-                    _userEmail = config.GetValue(USER_EMAIL_KEY);
-                else
-                {
-                    _userEmail = "";
-                }
-            }
-            else
-            {
-                _userName = "";
-                _userEmail = "";
-            }
 
         }
         private bool SenderToFileStatusList(object sender, out FileStatusList list)
