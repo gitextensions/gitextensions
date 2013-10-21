@@ -1791,6 +1791,9 @@ namespace GitUI.CommandsDialogs
             catch (System.IO.IOException) { }
             catch (System.UnauthorizedAccessException) { }
           }
+
+          Initialize();
+          UICommands.RepoChangedNotifier.Notify();
         }
 
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
