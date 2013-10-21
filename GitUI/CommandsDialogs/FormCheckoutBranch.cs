@@ -227,7 +227,7 @@ namespace GitUI.CommandsDialogs
                     _isDirtyDir = Module.IsDirtyDir();
                 stash = _isDirtyDir == true;
                 if (stash)
-                    UICommands.Stash(owner);
+                    UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
             }
 
             if (UICommands.StartCommandLineProcessDialog(cmd, owner))
@@ -254,8 +254,7 @@ namespace GitUI.CommandsDialogs
                     }
                     if (messageBoxResult ?? false)
                     {
-                        FormProcess.ShowDialog(this, Module, "stash pop");
-                        MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
+                        UICommands.StashPop(this);
                     }
                 }
                 return DialogResult.OK;

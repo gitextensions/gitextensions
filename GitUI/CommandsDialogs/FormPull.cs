@@ -371,8 +371,7 @@ namespace GitUI.CommandsDialogs
                     }
                     if (ShouldStashPop(messageBoxResult ?? false, process, true))
                     {
-                        FormProcess.ShowDialog(owner, Module, "stash pop");
-                        MergeConflictHandler.HandleMergeConflicts(UICommands, owner, false);
+                        UICommands.StashPop(this);
                     }
                 }
 
@@ -435,7 +434,7 @@ namespace GitUI.CommandsDialogs
             if (!Fetch.Checked && AutoStash.Checked && !Module.IsBareRepository() &&
                 Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
             {
-                UICommands.Stash(owner);
+                UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
                 return true;
             }
             return false;
