@@ -1989,7 +1989,7 @@ namespace GitCommands
             configFile.Save();
         }
 
-        public IList<Patch> GetStashedItems(string stashName)
+        public IList<PatchApply.Patch> GetStashedItems(string stashName)
         {
             var patchManager = new PatchManager();
             patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName, LosslessEncoding), false, FilesEncoding);
@@ -2014,7 +2014,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult)
+        public PatchApply.Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult)
         {
             string fileA = null;
             string fileB = null;
@@ -2056,7 +2056,7 @@ namespace GitCommands
                 patch = RunCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
             patchManager.LoadPatch(patch, false, encoding);
 
-            foreach (Patch p in patchManager.Patches)
+            foreach (PatchApply.Patch p in patchManager.Patches)
                 if (p.FileNameA.Equals(fileA) && p.FileNameB.Equals(fileB) ||
                     p.FileNameA.Equals(fileB) && p.FileNameB.Equals(fileA))
                     return p;
@@ -2064,7 +2064,7 @@ namespace GitCommands
             return patchManager.Patches.LastOrDefault();
         }
 
-        public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding, bool allowCache)
+        public PatchApply.Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding, bool allowCache)
         {
             return GetSingleDiff(from, to, fileName, null, extraDiffArguments, encoding, allowCache);
         }
@@ -2205,7 +2205,7 @@ namespace GitCommands
                 {
                     item.SubmoduleStatus = Task.Factory.StartNew(() =>
                     {
-                        Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding, true);
+                        PatchApply.Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding, true);
                         string text = patch != null ? patch.Text : "";
                         var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text);
                         if (submoduleStatus.Commit != submoduleStatus.OldCommit)
@@ -2310,7 +2310,7 @@ namespace GitCommands
             return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count > 0;
         }
 
-        public Patch GetCurrentChangesUseGit(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
+        public PatchApply.Patch GetCurrentChangesUseGit(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
             fileName = string.Concat("\"", FixPath(fileName), "\"");
             if (!string.IsNullOrEmpty(oldFileName))
@@ -2327,9 +2327,9 @@ namespace GitCommands
             return PatchProcessor.CreatePatchFromString(result, encoding);
         }
 
-        public Patch GetCurrentChangesUseLibGit2(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
+        public PatchApply.Patch GetCurrentChangesUseLibGit2(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
-            var changes = Repository.Diff.Compare(Repository.Head.Tip.Tree,
+            var changes = Repository.Diff.Compare<LibGit2Sharp.Patch>(Repository.Head.Tip.Tree,
                                                   staged ? DiffTargets.Index : DiffTargets.WorkingDirectory,
                                                   new[] { fileName }).FirstOrDefault();
 
@@ -2339,7 +2339,7 @@ namespace GitCommands
             return PatchProcessor.CreatePatchFromString(changes.Patch, encoding);
         }
 
-        public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
+        public PatchApply.Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
             if (!AppSettings.UseLibGit2ForDiff)
                 return GetCurrentChangesUseGit(fileName, oldFileName, staged, extraDiffArguments, encoding);
@@ -2897,7 +2897,7 @@ namespace GitCommands
 
         public Stream GetFileStream(string blob)
         {
-            return Repository.Lookup<Blob>(new ObjectId(blob)).ContentStream;
+            return Repository.Lookup<Blob>(new ObjectId(blob)).ContentStream();
         }
 
         public IEnumerable<string> GetPreviousCommitMessages(int count)
