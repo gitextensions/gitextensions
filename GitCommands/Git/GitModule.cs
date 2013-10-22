@@ -1241,7 +1241,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(superprojectPath))
             {
                 submodulePath = FixPath(currentPath.Substring(superprojectPath.Length));
-                var configFile = GetSubmoduleConfigFile();
+                var configFile = new ConfigFile(superprojectPath + ".gitmodules", true);
                 foreach (ConfigSection configSection in configFile.ConfigSections)
                 {
                     if (configSection.GetPathValue("path") == FixPath(submodulePath))
