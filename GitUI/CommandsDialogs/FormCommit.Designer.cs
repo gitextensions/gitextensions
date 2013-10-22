@@ -143,10 +143,10 @@ namespace GitUI.CommandsDialogs
       this.commitEndPadding = new System.Windows.Forms.ToolStripStatusLabel();
       this.flowCommitButtons = new System.Windows.Forms.FlowLayoutPanel();
       this.Commit = new System.Windows.Forms.Button();
+      this.CommitAndPush = new System.Windows.Forms.Button();
       this.Reset = new System.Windows.Forms.Button();
       this.ResetUnStaged = new System.Windows.Forms.Button();
       this.Amend = new System.Windows.Forms.CheckBox();
-      this.CommitAndPush = new System.Windows.Forms.Button();
       this.toolbarCommit = new GitUI.ToolStripEx();
       this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
       this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -1109,6 +1109,7 @@ namespace GitUI.CommandsDialogs
       this.flowCommitButtons.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
       this.flowCommitButtons.Location = new System.Drawing.Point(0, 0);
       this.flowCommitButtons.Margin = new System.Windows.Forms.Padding(0);
+      this.flowCommitButtons.MinimumSize = new System.Drawing.Size(0, 175);
       this.flowCommitButtons.Name = "flowCommitButtons";
       this.tableLayoutPanel1.SetRowSpan(this.flowCommitButtons, 2);
       this.flowCommitButtons.Size = new System.Drawing.Size(175, 192);
@@ -1128,6 +1129,20 @@ namespace GitUI.CommandsDialogs
       this.Commit.Text = "&Commit";
       this.Commit.UseVisualStyleBackColor = true;
       this.Commit.Click += new System.EventHandler(this.CommitClick);
+      // 
+      // CommitAndPush
+      // 
+      this.CommitAndPush.Image = global::GitUI.Properties.Resources.ArrowUp;
+      this.CommitAndPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      this.CommitAndPush.Location = new System.Drawing.Point(1, 35);
+      this.CommitAndPush.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+      this.CommitAndPush.Name = "CommitAndPush";
+      this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
+      this.CommitAndPush.TabIndex = 9;
+      this.CommitAndPush.TabStop = false;
+      this.CommitAndPush.Text = "C&ommit && push";
+      this.CommitAndPush.UseVisualStyleBackColor = true;
+      this.CommitAndPush.Click += new System.EventHandler(this.CommitAndPush_Click);
       // 
       // Reset
       // 
@@ -1167,20 +1182,6 @@ namespace GitUI.CommandsDialogs
       this.Amend.Text = "&Amend Commit";
       this.Amend.UseVisualStyleBackColor = true;
       this.Amend.CheckedChanged += new System.EventHandler(this.Amend_CheckedChanged);
-      // 
-      // CommitAndPush
-      // 
-      this.CommitAndPush.Image = global::GitUI.Properties.Resources.ArrowUp;
-      this.CommitAndPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.CommitAndPush.Location = new System.Drawing.Point(1, 35);
-      this.CommitAndPush.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
-      this.CommitAndPush.Name = "CommitAndPush";
-      this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
-      this.CommitAndPush.TabIndex = 9;
-      this.CommitAndPush.TabStop = false;
-      this.CommitAndPush.Text = "C&ommit && push";
-      this.CommitAndPush.UseVisualStyleBackColor = true;
-      this.CommitAndPush.Click += new System.EventHandler(this.CommitAndPush_Click);
       // 
       // toolbarCommit
       // 
