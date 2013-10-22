@@ -42,14 +42,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.TabControl.SuspendLayout();
             this.tabPageCommandLog.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
+#if !Mono212OrOlder // mono 3 doesn't have this problem
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.tabPageCommandCache.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
+#if !Mono212OrOlder // mono 3 doesn't have this problem
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
@@ -206,14 +206,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.tabPageCommandLog.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
+#if !Mono212OrOlder // mono 3 doesn't have this problem
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
             this.splitContainer2.ResumeLayout(false);
             this.tabPageCommandCache.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
+#if !Mono212OrOlder // mono 3 doesn't have this problem
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
