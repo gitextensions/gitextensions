@@ -209,6 +209,10 @@ namespace GitUI.CommandsDialogs
                 splitMain.SplitterDistance = AppSettings.CommitDialogSplitter;
             if (AppSettings.CommitDialogRightSplitter != -1)
                 splitRight.SplitterDistance = AppSettings.CommitDialogRightSplitter;
+            
+            Reset.Visible = AppSettings.ShowResetAllChanges;
+            ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
+            CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
         }
 
         private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
@@ -1438,6 +1442,11 @@ namespace GitUI.CommandsDialogs
             ResetClick(null, null);
         }
 
+        private void resetUnstagedChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          ResetUnStagedClick(null, null);
+        }
+
         private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartEditGitIgnoreDialog(this);
@@ -1752,6 +1761,39 @@ namespace GitUI.CommandsDialogs
 
             Initialize();
             UICommands.RepoChangedNotifier.Notify();
+        }
+
+        private void ResetUnStagedClick(object sender, EventArgs e)
+        {
+          // Show a form asking the user if they want to reset the changes.
+          FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(this, Unstaged.AllItems.Any(item => !item.IsNew), Unstaged.AllItems.Any(item => item.IsNew));
+          if (resetAction == FormResetChanges.ActionEnum.Cancel)
+          {
+            return;
+          }
+
+          // Similar to the above routine, however, we need to go through the items individually first
+          // and then we can Reset the file using the Module.ResetFile routine...
+          foreach (var item in Unstaged.AllItems)
+          {
+            try
+            {
+              Module.ResetFile(item.Name);
+              if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+              {
+                string path = Path.Combine(Module.WorkingDir, item.Name);
+                if (File.Exists(path))
+                  File.Delete(path);
+                else
+                  Directory.Delete(path, true);
+              }
+            }
+            catch (System.IO.IOException) { }
+            catch (System.UnauthorizedAccessException) { }
+          }
+
+          Initialize();
+          UICommands.RepoChangedNotifier.Notify();
         }
 
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
@@ -2350,6 +2392,10 @@ namespace GitUI.CommandsDialogs
             if (StageInSuperproject.Visible)
                 AppSettings.StageInSuperprojectAfterCommit = StageInSuperproject.Checked;
         }
+
+
+
+
     }
 
     /// <summary>
