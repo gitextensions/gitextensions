@@ -110,7 +110,7 @@
                 <File Source="..\bin\PSTaskDialog.dll" />
             </Component>
             <Component Id="RestSharp.dll" Guid="*">
-                <File Source="..\packages\RestSharp.104.1\lib\net4-client\RestSharp.dll" />
+                <File Source="..\packages\RestSharp.104.2.0\lib\net4-client\RestSharp.dll" />
             </Component>
             <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.dll" />
