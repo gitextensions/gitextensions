@@ -213,6 +213,13 @@ namespace GitUI.CommandsDialogs
             Reset.Visible = AppSettings.ShowResetAllChanges;
             ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
+            AdjustCommitButtonPanelHeight();
+        }
+
+        private void AdjustCommitButtonPanelHeight()
+        {
+            splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
+            splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
         }
 
         private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
@@ -533,6 +540,7 @@ namespace GitUI.CommandsDialogs
             toolStageItem.Enabled = enable;
             toolStageAllItem.Enabled = enable;
             workingToolStripMenuItem.Enabled = enable;
+            ResetUnStaged.Enabled = Unstaged.AllItems.Any();
         }
 
         private bool _initialized;
@@ -552,6 +560,7 @@ namespace GitUI.CommandsDialogs
                 CommitAndPush.Enabled = false;
                 Amend.Enabled = false;
                 Reset.Enabled = false;
+                ResetUnStaged.Enabled = false;
                 EnableStageButtons(false);
 
                 ComputeUnstagedFiles(LoadUnstagedOutput, true);
@@ -627,7 +636,7 @@ namespace GitUI.CommandsDialogs
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
             Amend.Enabled = true;
-            Reset.Enabled = DoChangesExist();
+            Reset.Enabled = DoChangesExist();            
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;

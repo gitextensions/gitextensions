@@ -955,6 +955,7 @@ namespace GitUI
 
                 if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
                     Module.RunGitCmd("clean -df");
+
                 return true;
             };
 
