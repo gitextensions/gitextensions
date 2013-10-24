@@ -1731,69 +1731,14 @@ namespace GitUI.CommandsDialogs
 
         private void ResetClick(object sender, EventArgs e)
         {
-            // Show a form asking the user if they want to reset the changes.
-            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(this, Unstaged.AllItems.Any(item => !item.IsNew), Unstaged.AllItems.Any(item => item.IsNew));
-            if (resetAction == FormResetChanges.ActionEnum.Cancel)
-            {
-                return;
-            }
-
-            // Reset all changes.
-            Module.ResetHard("");
-
-            // Also delete new files, if requested.
-            if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
-            {
-                foreach (var item in Unstaged.AllItems.Where(item => item.IsNew))
-                {
-                    try
-                    {
-                        string path = Path.Combine(Module.WorkingDir, item.Name);
-                        if (File.Exists(path))
-                            File.Delete(path);
-                        else
-                            Directory.Delete(path, true);
-                    }
-                    catch (System.IO.IOException) { }
-                    catch (System.UnauthorizedAccessException) { }
-                }
-            }
-
+            UICommands.StartResetChangesDialog(this, Unstaged.AllItems, false);
             Initialize();
-            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void ResetUnStagedClick(object sender, EventArgs e)
         {
-          // Show a form asking the user if they want to reset the changes.
-          FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(this, Unstaged.AllItems.Any(item => !item.IsNew), Unstaged.AllItems.Any(item => item.IsNew));
-          if (resetAction == FormResetChanges.ActionEnum.Cancel)
-          {
-            return;
-          }
-
-          // Similar to the above routine, however, we need to go through the items individually first
-          // and then we can Reset the file using the Module.ResetFile routine...
-          foreach (var item in Unstaged.AllItems)
-          {
-            try
-            {
-              Module.ResetFile(item.Name);
-              if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
-              {
-                string path = Path.Combine(Module.WorkingDir, item.Name);
-                if (File.Exists(path))
-                  File.Delete(path);
-                else
-                  Directory.Delete(path, true);
-              }
-            }
-            catch (System.IO.IOException) { }
-            catch (System.UnauthorizedAccessException) { }
-          }
-
-          Initialize();
-          UICommands.RepoChangedNotifier.Notify();
+            UICommands.StartResetChangesDialog(this, Unstaged.AllItems, true);
+            Initialize();
         }
 
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
