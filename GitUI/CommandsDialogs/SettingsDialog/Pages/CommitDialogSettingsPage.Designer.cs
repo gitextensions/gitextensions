@@ -53,7 +53,7 @@
             this.groupBoxBehaviour.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxBehaviour.Location = new System.Drawing.Point(0, 0);
             this.groupBoxBehaviour.Name = "groupBoxBehaviour";
-            this.groupBoxBehaviour.Size = new System.Drawing.Size(1146, 238);
+            this.groupBoxBehaviour.Size = new System.Drawing.Size(1146, 201);
             this.groupBoxBehaviour.TabIndex = 56;
             this.groupBoxBehaviour.TabStop = false;
             this.groupBoxBehaviour.Text = "Behaviour";
@@ -79,7 +79,7 @@
             this.tableLayoutPanelBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelBehaviour.Size = new System.Drawing.Size(1140, 218);
+            this.tableLayoutPanelBehaviour.Size = new System.Drawing.Size(1140, 181);
             this.tableLayoutPanelBehaviour.TabIndex = 57;
             // 
             // _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages
@@ -137,25 +137,30 @@
             // 
             // grpAdditionalButtons
             // 
+            this.grpAdditionalButtons.AutoSize = true;
+            this.grpAdditionalButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanelBehaviour.SetColumnSpan(this.grpAdditionalButtons, 2);
             this.grpAdditionalButtons.Controls.Add(this.flowLayoutPanel1);
+            this.grpAdditionalButtons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpAdditionalButtons.Location = new System.Drawing.Point(3, 89);
             this.grpAdditionalButtons.Name = "grpAdditionalButtons";
-            this.grpAdditionalButtons.Size = new System.Drawing.Size(979, 126);
+            this.grpAdditionalButtons.Size = new System.Drawing.Size(1134, 89);
             this.grpAdditionalButtons.TabIndex = 5;
             this.grpAdditionalButtons.TabStop = false;
             this.grpAdditionalButtons.Text = "Show additional buttons in commit button area";
             // 
             // flowLayoutPanel1
             // 
+            this.flowLayoutPanel1.AutoSize = true;
+            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel1.Controls.Add(this.chkShowCommitAndPush);
             this.flowLayoutPanel1.Controls.Add(this.chkShowResetUnstagedChanges);
             this.flowLayoutPanel1.Controls.Add(this.chkShowResetAllChanges);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 19);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(973, 104);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1128, 69);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // chkShowCommitAndPush
@@ -202,6 +207,7 @@
             this.tableLayoutPanelBehaviour.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).EndInit();
             this.grpAdditionalButtons.ResumeLayout(false);
+            this.grpAdditionalButtons.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
