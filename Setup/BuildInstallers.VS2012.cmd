@@ -21,3 +21,13 @@ IF ERRORLEVEL 1 EXIT /B 1
 IF ERRORLEVEL 1 EXIT /B 1
 
 call MakeInstallers.bat
+IF ERRORLEVEL 1 EXIT /B 1
+
+%msbuild% %project% /p:Platform="Any CPU" /p:DefineConstants=__MonoCS__ %msbuildparams%
+IF ERRORLEVEL 1 EXIT /B 1
+
+call MakeMonoArchive.cmd
+IF ERRORLEVEL 1 EXIT /B 1
+
+echo.
+pause

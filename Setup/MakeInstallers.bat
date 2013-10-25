@@ -33,6 +33,3 @@ copy bin\Release\GitExtensions.msi %normal%
 echo Building %complete%
 %build% /p:IncludeRequiredSoftware=1
 copy bin\Release\GitExtensions.msi %complete%
-
-echo.
-pause
