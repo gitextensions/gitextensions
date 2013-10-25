@@ -1173,6 +1173,7 @@ namespace GitUI.CommandsDialogs
             this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
             this.ResetUnStaged.TabIndex = 14;
             this.ResetUnStaged.Text = "Reset unstaged changes";
+            this.ResetUnStaged.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.ResetUnStaged.UseVisualStyleBackColor = true;
             this.ResetUnStaged.Click += new System.EventHandler(this.ResetUnStagedClick);
             // 
