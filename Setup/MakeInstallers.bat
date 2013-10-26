@@ -3,6 +3,7 @@
 rem
 rem Update this version number with every release
 rem
+setlocal
 set version=2.47
 
 set msiversion=%version:.=%

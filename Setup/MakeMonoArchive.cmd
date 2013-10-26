@@ -2,6 +2,10 @@
 
 cd /d "%~p0"
 
+rem
+rem Update this version number with every release
+rem
+setlocal
 set version=2.47
 set zipversion=%version:.=%
 set normal=GitExtensions%zipversion%Mono.zip
