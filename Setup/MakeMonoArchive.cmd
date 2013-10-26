@@ -123,5 +123,8 @@ xcopy /y ..\bin\GitExtensionsUserManual.pdf GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\gitex.cmd GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
+
+set nuget=..\.nuget\nuget.exe
+%nuget% install ..\.nuget\packages.config -OutputDirectory ..\packages
 %szip% a -tzip %normal% GitExtensions
 IF ERRORLEVEL 1 EXIT /B 1

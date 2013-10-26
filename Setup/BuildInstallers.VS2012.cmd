@@ -20,7 +20,7 @@ IF ERRORLEVEL 1 EXIT /B 1
 %msbuild% %projectShellEx% /p:Platform=x64 %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
 
-call MakeInstallers.bat
+call MakeInstallers.cmd
 IF ERRORLEVEL 1 EXIT /B 1
 
 %msbuild% %project% /p:Platform="Any CPU" /p:DefineConstants=__MonoCS__ %msbuildparams%

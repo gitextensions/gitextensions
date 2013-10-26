@@ -9,7 +9,6 @@ set project=..\GitExtensionsMono.sln
 set nuget=..\.nuget\nuget.exe
 set EnableNuGetPackageRestore=true
 
-%nuget% install ..\.nuget\packages.config -OutputDirectory ..\packages
 %nuget% install ..\Plugins\BackgroundFetch\packages.config -OutputDirectory ..\packages
 
 call %msbuild% %project% /t:clean
