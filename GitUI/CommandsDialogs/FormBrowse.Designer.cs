@@ -458,6 +458,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripButtonPull.Size = new System.Drawing.Size(32, 22);
             this.toolStripButtonPull.Text = "Pull";
             this.toolStripButtonPull.ButtonClick += new System.EventHandler(this.ToolStripButtonPullClick);
+            this.toolStripButtonPull.DropDownOpened += new System.EventHandler(this.toolStripButtonPull_DropDownOpened);
             // 
             // mergeToolStripMenuItem
             // 
