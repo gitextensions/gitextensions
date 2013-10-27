@@ -1105,7 +1105,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
         {
-            if (!EnvUtils.RunningOnWindows())
+            if (EnvUtils.IsMonoRuntime())
             {
                 SetXHTMLTextAsPlainText(rtb, xhtmlText);
                 return;
