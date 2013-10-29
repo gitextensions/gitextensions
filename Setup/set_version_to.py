@@ -62,7 +62,7 @@ if __name__ == '__main__':
     outfile = open(filename, "w")
     outfile.writelines(makeInstallers)
     
-    filename = "BuildInstallers.Mono.cmd"
+    filename = "MakeMonoArchive.cmd"
     makeInstallers = open(filename, "r").readlines()
     for i in range(1, len(verSplitted)):
         if len(verSplitted[i]) == 1:

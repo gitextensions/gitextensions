@@ -65,13 +65,13 @@ namespace TranslationApp
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
@@ -80,7 +80,7 @@ namespace TranslationApp
             ((System.ComponentModel.ISupportInitialize)(this.translateGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.translateItemBindingSource)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
 #endif
             this.splitContainer4.Panel1.SuspendLayout();
@@ -498,13 +498,13 @@ namespace TranslationApp
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
             this.splitContainer2.ResumeLayout(false);
@@ -514,7 +514,7 @@ namespace TranslationApp
             this.tableLayoutPanel2.PerformLayout();
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
 #endif
             this.splitContainer4.ResumeLayout(false);
