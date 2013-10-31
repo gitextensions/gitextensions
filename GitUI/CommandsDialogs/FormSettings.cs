@@ -86,7 +86,8 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.AddSettingsPage(new HotkeysSettingsPage(), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new ShellExtensionSettingsPage(), gitExtPageRef);
+            if (EnvUtils.RunningOnWindows())
+                settingsTreeView.AddSettingsPage(new ShellExtensionSettingsPage(), gitExtPageRef);
 
             settingsTreeView.AddSettingsPage(new AdvancedSettingsPage(), gitExtPageRef);
             SettingsPageReference advancedPageRef = AdvancedSettingsPage.GetPageReference();
