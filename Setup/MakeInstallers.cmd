@@ -3,6 +3,7 @@
 rem
 rem Update this version number with every release
 rem
+setlocal
 set version=2.48
 
 set msiversion=%version:.=%
@@ -33,6 +34,3 @@ copy bin\Release\GitExtensions.msi %normal%
 echo Building %complete%
 %build% /p:IncludeRequiredSoftware=1
 copy bin\Release\GitExtensions.msi %complete%
-
-echo.
-pause
