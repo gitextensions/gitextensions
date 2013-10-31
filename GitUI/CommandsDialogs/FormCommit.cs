@@ -209,6 +209,17 @@ namespace GitUI.CommandsDialogs
                 splitMain.SplitterDistance = AppSettings.CommitDialogSplitter;
             if (AppSettings.CommitDialogRightSplitter != -1)
                 splitRight.SplitterDistance = AppSettings.CommitDialogRightSplitter;
+            
+            Reset.Visible = AppSettings.ShowResetAllChanges;
+            ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
+            CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
+            AdjustCommitButtonPanelHeight();
+        }
+
+        private void AdjustCommitButtonPanelHeight()
+        {
+            splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
+            splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
         }
 
         private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
@@ -529,6 +540,7 @@ namespace GitUI.CommandsDialogs
             toolStageItem.Enabled = enable;
             toolStageAllItem.Enabled = enable;
             workingToolStripMenuItem.Enabled = enable;
+            ResetUnStaged.Enabled = Unstaged.AllItems.Any();
         }
 
         private bool _initialized;
@@ -548,6 +560,7 @@ namespace GitUI.CommandsDialogs
                 CommitAndPush.Enabled = false;
                 Amend.Enabled = false;
                 Reset.Enabled = false;
+                ResetUnStaged.Enabled = false;
                 EnableStageButtons(false);
 
                 ComputeUnstagedFiles(LoadUnstagedOutput, true);
@@ -623,7 +636,7 @@ namespace GitUI.CommandsDialogs
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
             Amend.Enabled = true;
-            Reset.Enabled = DoChangesExist();
+            Reset.Enabled = DoChangesExist();            
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
@@ -1438,6 +1451,11 @@ namespace GitUI.CommandsDialogs
             ResetClick(null, null);
         }
 
+        private void resetUnstagedChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+          ResetUnStagedClick(null, null);
+        }
+
         private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartEditGitIgnoreDialog(this);
@@ -1722,36 +1740,14 @@ namespace GitUI.CommandsDialogs
 
         private void ResetClick(object sender, EventArgs e)
         {
-            // Show a form asking the user if they want to reset the changes.
-            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(this, Unstaged.AllItems.Any(item => !item.IsNew), Unstaged.AllItems.Any(item => item.IsNew));
-            if (resetAction == FormResetChanges.ActionEnum.Cancel)
-            {
-                return;
-            }
-
-            // Reset all changes.
-            Module.ResetHard("");
-
-            // Also delete new files, if requested.
-            if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
-            {
-                foreach (var item in Unstaged.AllItems.Where(item => item.IsNew))
-                {
-                    try
-                    {
-                        string path = Path.Combine(Module.WorkingDir, item.Name);
-                        if (File.Exists(path))
-                            File.Delete(path);
-                        else
-                            Directory.Delete(path, true);
-                    }
-                    catch (System.IO.IOException) { }
-                    catch (System.UnauthorizedAccessException) { }
-                }
-            }
-
+            UICommands.StartResetChangesDialog(this, Unstaged.AllItems, false);
             Initialize();
-            UICommands.RepoChangedNotifier.Notify();
+        }
+
+        private void ResetUnStagedClick(object sender, EventArgs e)
+        {
+            UICommands.StartResetChangesDialog(this, Unstaged.AllItems, true);
+            Initialize();
         }
 
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)

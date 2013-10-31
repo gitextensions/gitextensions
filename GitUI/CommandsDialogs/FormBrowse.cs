@@ -681,9 +681,9 @@ namespace GitUI.CommandsDialogs
 #endif
         }
 
+#if !__MonoCS__
         private void CreateOrUpdateTaskBarButtons(bool validRepo)
         {
-#if !__MonoCS__
             if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 if (!_toolbarButtonsCreated)
@@ -708,8 +708,8 @@ namespace GitUI.CommandsDialogs
                 _pushButton.Enabled = validRepo;
                 _pullButton.Enabled = validRepo;
             }
-#endif
         }
+#endif
 
         /// <summary>
         /// Converts an image into an icon.  This was taken off of the interwebs.

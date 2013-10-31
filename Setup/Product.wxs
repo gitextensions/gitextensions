@@ -79,6 +79,9 @@
             <Component Id="TranslationApp.exe" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\TranslationApp.exe" />
             </Component>
+            <Component Id="TranslationApp.exe.config" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\TranslationApp.exe.config" />
+            </Component>
             <Component Id="Gravatar.dll" Guid="*">
                 <File Source="..\Gravatar\bin\Release\Gravatar.dll" />
             </Component>
@@ -110,7 +113,7 @@
                 <File Source="..\bin\PSTaskDialog.dll" />
             </Component>
             <Component Id="RestSharp.dll" Guid="*">
-                <File Source="..\packages\RestSharp.104.1\lib\net4-client\RestSharp.dll" />
+                <File Source="..\packages\RestSharp.104.2.0\lib\net4-client\RestSharp.dll" />
             </Component>
             <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.dll" />
@@ -460,6 +463,7 @@
             <ComponentRef Id="GitExtensions.exe" />
             <ComponentRef Id="GitExtensions.exe.config" />
             <ComponentRef Id="TranslationApp.exe" />
+            <ComponentRef Id="TranslationApp.exe.config" />
             <ComponentRef Id="Gravatar.dll" />
             <ComponentRef Id="GitCommands.dll" />
             <ComponentRef Id="GitUI.dll" />

@@ -1313,7 +1313,8 @@ namespace GitCommands
             {
                 using (StreamReader sr = new StreamReader(path))
                 {
-                    return sr.ReadLine().StartsWith("diff ");
+                    string line = sr.ReadLine();
+                    return line.StartsWith("diff ") || line.StartsWith("Index: ");
                 }
             }
             catch (Exception)

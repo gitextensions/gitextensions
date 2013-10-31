@@ -939,6 +939,11 @@ namespace GitUI
         public bool StartResetChangesDialog(IWin32Window owner)
         {
             var unstagedFiles = Module.GetUnstagedFiles();
+            return StartResetChangesDialog(owner, unstagedFiles, false);
+        }
+
+        public bool StartResetChangesDialog(IWin32Window owner, IEnumerable<GitItemStatus> unstagedFiles, bool onlyUnstaged)
+        {
             // Show a form asking the user if they want to reset the changes.
             FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(owner, unstagedFiles.Any(item => !item.IsNew), unstagedFiles.Any(item => item.IsNew));
 
@@ -947,32 +952,21 @@ namespace GitUI
                 return false;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-
-            // Reset all changes.
-            Module.ResetHard("");
-
-            // Also delete new files, if requested.
-            if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+            Func<bool> action = () =>
             {
-                foreach (var item in unstagedFiles.Where(item => item.IsNew))
-                {
-                    try
-                    {
-                        string path = Path.Combine(Module.WorkingDir, item.Name);
-                        if (File.Exists(path))
-                            File.Delete(path);
-                        else
-                            Directory.Delete(path, true);
-                    }
-                    catch (IOException) { }
-                    catch (UnauthorizedAccessException) { }
-                }
-            }
+                if (onlyUnstaged)
+                    Module.RunGitCmd("checkout -- .");
+                else
+                    // Reset all changes.
+                    Module.ResetHard("");
 
-            Cursor.Current = Cursors.Default;
+                if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+                    Module.RunGitCmd("clean -df");
 
-            return true;
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
         }
 
         public bool StartResetChangesDialog(IWin32Window owner, string fileName)
