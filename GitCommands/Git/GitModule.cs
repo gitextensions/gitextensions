@@ -2576,6 +2576,34 @@ namespace GitCommands
                 .ToList();
         }
 
+        /// <summary>
+        /// Returns list of filenames which would be ignored
+        /// </summary>
+        /// <param name="ignorePatterns">Patterns to ignore (.gitignore syntax)</param>
+        /// <returns></returns>
+        public IList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
+        {
+            var notEmptyPatterns = ignorePatterns
+                    .Where(pattern => !pattern.IsNullOrWhiteSpace());
+            if (notEmptyPatterns.Count() != 0)
+            {
+                var excludeParams = 
+                    notEmptyPatterns
+                    .Select(pattern => "-x " + pattern.Quote())                
+                    .Join(" ");
+                // filter duplicates out of the result because options -c and -m may return 
+                // same files at times
+                return RunGitCmd("ls-files -z -o -m -c -i " + excludeParams)
+                    .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Distinct()
+                    .ToList();
+            }
+            else
+            {
+                return new string[] { };
+            }
+        }
+
         public IList<GitItem> GetFileChanges(string file)
         {
             file = FixPath(file);
