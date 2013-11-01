@@ -10,7 +10,6 @@ namespace ProxySwitcher
     public partial class ProxySwitcherForm : Form
     {
         private readonly IGitPluginSettingsContainer settings;
-        private readonly GitUIBaseEventArgs gitUiCommands;
         private readonly IGitModule gitCommands;
 
         #region Translation
@@ -24,7 +23,6 @@ namespace ProxySwitcher
 
             this.Text = _pluginDescription.Text;
             this.settings = settings;
-            this.gitUiCommands = gitUiCommands;
             this.gitCommands = gitUiCommands.GitModule;
         }
 

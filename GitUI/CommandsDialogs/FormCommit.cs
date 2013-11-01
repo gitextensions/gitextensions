@@ -1559,7 +1559,6 @@ namespace GitUI.CommandsDialogs
                         "..."
                 };
 
-            int count = commitMessageToolStripMenuItem.DropDownItems.Count;
             commitMessageToolStripMenuItem.DropDownItems.Add(toolStripItem);
         }
 

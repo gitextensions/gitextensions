@@ -44,6 +44,12 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="copy_plugins.sh  ${SolutionDir} ${ProjectConfigName}" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,20 +58,24 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="copy_plugins.sh  ${SolutionDir} ${ProjectConfigName}" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NBug, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NBug.1.1.1\lib\net40-client\NBug.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="NBug">
+      <HintPath>..\packages\NBug.1.1.1\lib\net40-client\NBug.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -102,7 +112,7 @@
       <Name>GitUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
-      <Project>{7e5433f4-dd13-4d8e-95b2-59b4ffe7d636}</Project>
+      <Project>{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}</Project>
       <Name>AutoCompileSubmodules</Name>
       <Private>False</Private>
     </ProjectReference>
@@ -127,7 +137,7 @@
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Gerrit\Gerrit.csproj">
-      <Project>{ec6988f6-0e8e-42d2-8e41-e562c5fb65bc}</Project>
+      <Project>{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}</Project>
       <Name>Gerrit</Name>
       <Private>False</Private>
     </ProjectReference>

@@ -121,7 +121,7 @@ xcopy /y ..\bin\Logo\git-extensions-logo-final-256.ico GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\GitExtensionsUserManual.pdf GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\bin\gitex.cmd GitExtensions\
+xcopy /y ..\bin\gitext.sh GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 
 set nuget=..\.nuget\nuget.exe

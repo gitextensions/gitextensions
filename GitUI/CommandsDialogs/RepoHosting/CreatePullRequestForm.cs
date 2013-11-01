@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -12,7 +12,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
     {
         #region Translation
         private readonly TranslationString _strLoading = new TranslationString("Loading...");
-        private readonly TranslationString _strCouldNotLocateARemoteThatBelongsToYourUser = new TranslationString("Could not locate a remote that belongs to your user!");
         private readonly TranslationString _strYouMustSpecifyATitle = new TranslationString("You must specify a title.");
         private readonly TranslationString _strPullRequest = new TranslationString("Pull request");
         private readonly TranslationString _strFailedToCreatePullRequest = new TranslationString("Failed to create pull request.");
