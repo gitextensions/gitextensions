@@ -1640,9 +1640,15 @@ namespace GitUI
             WrapRepoHostingCall("View pull requests", gitHoster,
                                 gh =>
                                 {
-                                    var frm = new ViewPullRequestsForm(this, gitHoster);
-                                    frm.ShowInTaskbar = true;
-                                    frm.Show();
+                                    try
+                                    {
+                                        var frm = new ViewPullRequestsForm(this, gitHoster) {ShowInTaskbar = true};
+                                        frm.Show();
+                                    }
+                                    catch (DllNotFoundException)
+                                    {
+                                        MessageBox.Show(owner, "Mono doesn't have installed WebBrowser.");
+                                    }
                                 });
         }
 

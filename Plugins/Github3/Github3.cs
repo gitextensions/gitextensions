@@ -102,7 +102,15 @@ namespace Github3
         {
             if (GithubLoginInfo.OAuthToken.Length == 0)
             {
-                using (var frm = new OAuth()) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+                try
+                {
+                    using (var frm = new OAuth())
+                        frm.ShowDialog(gitUiCommands.OwnerForm);
+                }
+                catch (DllNotFoundException)
+                {
+                    MessageBox.Show(gitUiCommands.OwnerForm, "Mono doesn't have installed WebBrowser.");
+                }
             }
             else
             {
