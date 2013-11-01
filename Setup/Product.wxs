@@ -363,12 +363,12 @@
             <Component Id="Russian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.gif" />
             </Component>
-            <!--Component Id="SimplifiedChinese.xml" Guid="*">
+            <Component Id="SimplifiedChinese.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.xml" />
             </Component>
             <Component Id="SimplifiedChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
-            </Component-->
+            </Component>
             <Component Id="Spanish.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Spanish.xml" />
             </Component>
@@ -623,10 +623,10 @@
                     <ComponentRef Id="Russian.xml" />
                     <ComponentRef Id="Russian.gif" />
                 </Feature>
-                <!--Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
+                <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
                     <ComponentRef Id="SimplifiedChinese.xml" />
                     <ComponentRef Id="SimplifiedChinese.gif" />
-                </Feature-->
+                </Feature>
                 <Feature Id="Spanish" Title="Spanish" Level="1">
                     <ComponentRef Id="Spanish.xml" />
                     <ComponentRef Id="Spanish.gif" />
