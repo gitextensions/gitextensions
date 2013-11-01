@@ -239,15 +239,15 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="_credentialHelperInstalled" Property="Text">
           <Source>Git credential helper is installed.</Source>
-          <Value>Git 인증기가 설치되었습니다.</Value>
+          <Value>Git 인증기가 설치 되었습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_customMergeToolXConfigured" Property="Text">
           <Source>There is a custom mergetool configured: {0}</Source>
-          <Value>파일머지툴이 설정 되어 있습니다 : {0}</Value>
+          <Value>머지도구가 설정 되었습니다 : {0}</Value>
         </TranslationItem>
         <TranslationItem Name="_diffToolXConfigured" Property="Text">
           <Source>There is a difftool configured: {0}</Source>
-          <Value>파일비교툴이 설정 되어 있습니다 : {0}</Value>
+          <Value>파일비교툴이 설정 되었습니다 : {0}</Value>
         </TranslationItem>
         <TranslationItem Name="_emailSet" Property="Text">
           <Source>A username and an email address are configured.</Source>
@@ -263,7 +263,7 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="_gitCredentialWinStoreHelperInstalled" Property="Text">
           <Source>Git Credential Win Store is installed as credential helper.</Source>
-          <Value>Git Credential Win Store 가 설치되어 있습니다.</Value>
+          <Value>Git Credential Win Store 가 설치 되었습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_gitNotFound" Property="Text">
           <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
@@ -271,11 +271,11 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="_gitVersionFound" Property="Text">
           <Source>Git {0} is found on your computer.</Source>
-          <Value>Git {0} 버전이 설치되어 있습니다.</Value>
+          <Value>Git {0} 버전이 설치 되었습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_kdiffAsDiffConfigured" Property="Text">
           <Source>KDiff3 is configured as difftool.</Source>
-          <Value>KDiff3 가 기본 비교툴로 설정되어 있습니다.</Value>
+          <Value>KDiff3 가 기본 비교툴로 설정 되었습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_kdiffAsDiffConfiguredButNotFound" Property="Text">
           <Source>KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.</Source>
@@ -283,11 +283,11 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="_kdiffAsMergeConfigured" Property="Text">
           <Source>KDiff3 is configured as mergetool.</Source>
-          <Value>KDiff3 가 기본 머지툴로 설정 되었습니다.</Value>
+          <Value>KDiff3 가 기본 머지도구로 설정 되었습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_kdiffAsMergeConfiguredButNotFound" Property="Text">
           <Source>KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.</Source>
-          <Value>KDiff3 가 기본 머지툴이지만, kdiff.exe 경로가 설정되지 않았습니다.</Value>
+          <Value>KDiff3 가 기본 머지도구이지만, kdiff.exe 경로가 설정되지 않았습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_languageConfigured" Property="Text">
           <Source>The configured language is {0}.</Source>
@@ -305,19 +305,19 @@ Please make sure there are linux tools installed (through msysgit or cygwin) or 
         </TranslationItem>
         <TranslationItem Name="_linuxToolsSshFound" Property="Text">
           <Source>Linux tools (sh) found on your computer.</Source>
-          <Value>리눅스 툴(sh)이 검색되었습니다.</Value>
+          <Value>리눅스 툴(sh)이 검색 되었습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_linuxToolsSshNotFound" Property="Text">
           <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
-          <Value>리눅스 툴(sh)을 찾지 못하였습니다. 문제를 해결할려면, 정확한 툴 경로를 설정하십시요.</Value>
+          <Value>리눅스 툴(sh)을 찾지 못하였습니다. 문제를 해결할려면, 정확한 경로를 설정하십시요.</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeToolXConfigured" Property="Text">
           <Source>There is a custom mergetool configured.</Source>
-          <Value>사용자 정의 머지툴이 설정되었습니다.</Value>
+          <Value>전용 머지도구가 설정 되었습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeToolXConfiguredNeedsCmd" Property="Text">
           <Source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</Source>
-          <Value>{0} 가 머지툴로 설정되었지만, 제대로 동작하지 않을 수 있습니다. 커맨드 명령어 설정을 통하여 바로 잡아 주세요.</Value>
+          <Value>{0}가 머지도구로 설정 되었지만, 제대로 동작하지 않을 수 있습니다. 실행 명령어 설정을 통하여 바로 잡아 주세요.</Value>
         </TranslationItem>
         <TranslationItem Name="_noCredentialsHelperInstalled" Property="Text">
           <Source>No credential helper installed.</Source>
@@ -348,16 +348,16 @@ Select no if you want to configure a different difftool yourself.</Source>
         <TranslationItem Name="_noMergeToolConfigured" Property="Text">
           <Source>There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?
 Select no if you want to configure a different mergetool yourself.</Source>
-          <Value>기본 머지툴이 없습니다. kdiff3 툴을 기본 파일비교툴로 설정하시겠습니까?
-선택하지 않을경우 다른 머지툴을 설정하세요.</Value>
+          <Value>기본 머지도구가 없습니다. kdiff3 툴을 기본 파일비교툴로 설정하시겠습니까?
+선택하지 않을경우 다른 머지도구를 설정하세요.</Value>
         </TranslationItem>
         <TranslationItem Name="_noMergeToolConfiguredCaption" Property="Text">
           <Source>Mergetool</Source>
-          <Value>머지툴</Value>
+          <Value>머지도구</Value>
         </TranslationItem>
         <TranslationItem Name="_opensshUsed" Property="Text">
           <Source>Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)</Source>
-          <Value>기본 SSH Client, OpenSSH 가 사용됩니다. (커맨드라인창이 Git pull, push, clone 명령어 실행시 잠시 보여집니다)</Value>
+          <Value>기본 SSH Client, OpenSSH 가 사용됩니다. (git pull, push, clone 명령어 실행시 실행창이 잠시 보여집니다)</Value>
         </TranslationItem>
         <TranslationItem Name="_plinkputtyGenpageantNotFound" Property="Text">
           <Source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</Source>
@@ -1257,9 +1257,9 @@ Do you want to open it?</Source>
           <Source>Failed to fork:</Source>
           <Value>Fork 실패:</Value>
         </TranslationItem>
-        <TranslationItem Name="_strFailedToGetRepos" Property="Text" type="unfinished">
+        <TranslationItem Name="_strFailedToGetRepos" Property="Text">
           <Source>Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu "Plugins/{0}".</Source>
-          <Value />
+          <Value>저장소를 가져올 수 없습니다. 이 경우 대부분 {0}가 설정되지 않았다는 뜻으로, "Plugins/{0}" 에서 설정을 먼저 수행하세요.</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
           <Source> : LOADING : </Source>
@@ -1714,7 +1714,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
           <Source>Create pull requests</Source>
-          <Value>pull 요청 만들기</Value>
+          <Value>Pull request 만들기</Value>
         </TranslationItem>
         <TranslationItem Name="_errorCaption" Property="Text">
           <Source>Error</Source>
@@ -1786,7 +1786,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
           <Source>View pull requests</Source>
-          <Value>pull 요청사항 보기</Value>
+          <Value>Pull request 보기</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
           <Source>Your are in the middle of a bisect</Source>
@@ -1862,7 +1862,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text">
           <Source>Cherry pick</Source>
-          <Value>체리픽</Value>
+          <Value>Cherry pick</Value>
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
           <Source>Cleanup repository</Source>
@@ -1872,9 +1872,9 @@ revision:</Source>
           <Source>Clone SVN repository</Source>
           <Value>SVN 저장소 복제하기</Value>
         </TranslationItem>
-        <TranslationItem Name="cloneToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Source>Clone repository</Source>
-          <Value>저장소 복제(Clone)하기</Value>
+          <Value>저장소 Clone</Value>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close</Source>
@@ -1890,11 +1890,11 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
           <Source>Commit</Source>
-          <Value>Commit</Value>
+          <Value>커밋</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
           <Source>Commit</Source>
-          <Value>Commit</Value>
+          <Value>커밋</Value>
         </TranslationItem>
         <TranslationItem Name="commitcountPerUserToolStripMenuItem" Property="Text">
           <Source>Commits per user</Source>
@@ -1978,7 +1978,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text">
           <Source>Fetch all</Source>
-          <Value>전체 Fetch</Value>
+          <Value>Fetch all</Value>
         </TranslationItem>
         <TranslationItem Name="fetchToolStripMenuItem" Property="Text">
           <Source>Fetch</Source>
@@ -2042,7 +2042,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="goToToolStripMenuItem" Property="Text">
           <Source>Go to commit</Source>
-          <Value>Commit 찾기</Value>
+          <Value>리비전 바로 찾기</Value>
         </TranslationItem>
         <TranslationItem Name="hashToolStripMenuItem" Property="Text">
           <Source>Hash</Source>
@@ -2122,23 +2122,23 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem" Property="Text">
           <Source>Pull</Source>
-          <Value>Pull (가져오기)</Value>
+          <Value>Pull</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem1" Property="Text">
           <Source>Pull</Source>
-          <Value>Pull (가져오기)</Value>
+          <Value>Pull</Value>
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
           <Source>Push</Source>
-          <Value>Push (내보내기)</Value>
+          <Value>Push</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
           <Source>Rebase</Source>
-          <Value>Rebase (브랜치 통합)</Value>
+          <Value>Rebase</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem1" Property="Text">
           <Source>Rebase</Source>
-          <Value>Rebase (브랜치 통합)</Value>
+          <Value>Rebase</Value>
         </TranslationItem>
         <TranslationItem Name="recentToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Recent Repositories</Source>
@@ -2242,7 +2242,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="Text">
           <Source>Commit</Source>
-          <Value>Commit</Value>
+          <Value>커밋</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonLevelUp" Property="Text">
           <Source>Go to superproject</Source>
@@ -2250,11 +2250,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text">
           <Source>Pull</Source>
-          <Value>Pull (가져오기)</Value>
+          <Value>Pull</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="Text">
           <Source>Push</Source>
-          <Value>Push (내보내기)</Value>
+          <Value>Push</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel1" Property="Text">
           <Source>Branches:</Source>
@@ -2642,11 +2642,11 @@ gitex.cmd / gitex (GitExtensions.ex 와 같은 폴더에 있음)</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Commit</Source>
-          <Value>Commit</Value>
+          <Value>커밋</Value>
         </TranslationItem>
         <TranslationItem Name="Amend" Property="Text">
           <Source>&amp;Amend Commit</Source>
-          <Value>마지막 Commit에 반영 (&amp;Amend)</Value>
+          <Value>마지막 커밋에 재반영 (&amp;Amend)</Value>
         </TranslationItem>
         <TranslationItem Name="Cancel" Property="Text" type="unfinished">
           <Source>Cancel</Source>
@@ -2662,7 +2662,7 @@ gitex.cmd / gitex (GitExtensions.ex 와 같은 폴더에 있음)</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Commit</Source>
-          <Value>Commit</Value>
+          <Value>커밋</Value>
         </TranslationItem>
         <TranslationItem Name="Reset" Property="Text" type="unfinished">
           <Source>Reset changes</Source>
@@ -2701,7 +2701,7 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text">
           <Source>Commit Message is requested during commit</Source>
-          <Value>커밋 메시지는 Commit 할 때 필요합니다</Value>
+          <Value>커밋 메시지는 커밋 할 때 필요합니다</Value>
         </TranslationItem>
         <TranslationItem Name="_commitMsgFirstLineInvalid" Property="Text">
           <Source>First line of commit message contains too many characters.
@@ -2779,7 +2779,7 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="_mergeConflicts" Property="Text">
           <Source>There are unresolved mergeconflicts, solve mergeconflicts before committing.</Source>
-          <Value>머지 충돌 파일이 존재합니다. 커밋하기전에 충돌 파일을 정리하세요.</Value>
+          <Value>머지충돌 파일이 존재합니다. 커밋 하기전에 충돌 파일을 정리하세요.</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeConflictsCaption" Property="Text">
           <Source>Merge conflicts</Source>
@@ -2847,9 +2847,9 @@ Do you want to continue?</Source>
           <Source>Are you sure you want to reset the changes to the selected lines?</Source>
           <Value>선택된 라인을 리셋하시겠습니까?</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
           <Source>Unstage chunk of file</Source>
-          <Value />
+          <Value>Unstage 상태 파일</Value>
         </TranslationItem>
         <TranslationItem Name="_selectOnlyOneFile" Property="Text">
           <Source>You must have only one file selected.</Source>
@@ -3021,11 +3021,11 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="signOffToolStripMenuItem" Property="Text">
           <Source>Sign-off commit</Source>
-          <Value>Sign-off commit</Value>
+          <Value>오프라인 커밋</Value>
         </TranslationItem>
-        <TranslationItem Name="stashSubmoduleChangesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="stashSubmoduleChangesToolStripMenuItem" Property="Text">
           <Source>Stash submodule changes</Source>
-          <Value />
+          <Value>서브모듈 변경사항 Stash</Value>
         </TranslationItem>
         <TranslationItem Name="submoduleSummaryMenuItem" Property="Text">
           <Source>View summary</Source>
@@ -3155,21 +3155,21 @@ Do you want to continue?</Source>
           <Source>Name:</Source>
           <Value>이름:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelMaxFirstLineLength" Property="Text" type="unfinished">
+        <TranslationItem Name="labelMaxFirstLineLength" Property="Text">
           <Source>Maximum numbers of characters in first line (0 = check disabled):</Source>
-          <Value />
+          <Value>첫번째 라인의 최대 글자수 (0 = 무제한):</Value>
         </TranslationItem>
-        <TranslationItem Name="labelMaxLineLength" Property="Text" type="unfinished">
+        <TranslationItem Name="labelMaxLineLength" Property="Text">
           <Source>Maximum numbers of characters per line (0 = check disabled):</Source>
-          <Value />
+          <Value>라인별 최대 글자수 (0 = 무제한):</Value>
         </TranslationItem>
-        <TranslationItem Name="labelRegExCheck" Property="Text" type="unfinished">
+        <TranslationItem Name="labelRegExCheck" Property="Text">
           <Source>Commit must match following RegEx (Empty = check disabled):</Source>
-          <Value />
+          <Value>RegEx 형식의 수정 설명이 있을 경우 커밋 (비어있을 경우 설정안됨):</Value>
         </TranslationItem>
-        <TranslationItem Name="labelSecondLineEmpty" Property="Text" type="unfinished">
+        <TranslationItem Name="labelSecondLineEmpty" Property="Text">
           <Source>Second line must be empty:</Source>
-          <Value />
+          <Value>두번째 라인은 빈줄 처리:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3251,34 +3251,37 @@ Do you want to continue?</Source>
           <Source>Delete</Source>
           <Value>제거</Value>
         </TranslationItem>
-        <TranslationItem Name="_cannotDeleteCurrentBranchMessage" Property="Text" type="unfinished">
+        <TranslationItem Name="_cannotDeleteCurrentBranchMessage" Property="Text">
           <Source>Cannot delete the branch “{0}” which you are currently on.</Source>
-          <Value />
+          <Value>브랜치 "{0}"를 삭제할 수 없습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteBranchCaption" Property="Text">
           <Source>Delete branches</Source>
           <Value>브랜치 삭제</Value>
         </TranslationItem>
-        <TranslationItem Name="_deleteBranchQuestion" Property="Text" type="unfinished">
+        <TranslationItem Name="_deleteBranchQuestion" Property="Text">
           <Source>Are you sure you want to delete selected branches?
 Deleting a branch can cause commits to be deleted too!</Source>
-          <Value />
+          <Value>선택된 브랜치를 삭제하시겠습니까?
+브랜치가 삭제시 포함되어 있는 커밋들도 함께 삭제됩니다.</Value>
         </TranslationItem>
-        <TranslationItem Name="_deleteUnmergedBranchForcingSuggestion" Property="Text" type="unfinished">
+        <TranslationItem Name="_deleteUnmergedBranchForcingSuggestion" Property="Text">
           <Source>You cannot delete unmerged branch until you set “force delete” mode.</Source>
-          <Value />
+          <Value>"Force delete" 모드가 아니면 Unmerged 브랜치를 삭제할 수 없습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select branches</Source>
           <Value>브랜치 선택</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>You can only delete branches when they are fully merged in HEAD. 
 When you delete a branch the commits can get lost because nothing point to them.
 When you want to delete a not-fully merged branch, you can override
 this using `force delete´.
 </Source>
-          <Value />
+          <Value>HEAD에 모두 머지된 브랜치만 삭제 가능합니다.
+브랜치가 삭제되면 포함되어 있는 커밋들도 잃게 됩니다.
+Unmerged 브랜치를 삭제하고 싶을때는 "Force delete" 체크 후 수행하세요.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3292,13 +3295,13 @@ this using `force delete´.
           <Source>Delete</Source>
           <Value>제거</Value>
         </TranslationItem>
-        <TranslationItem Name="_deleteFromCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_deleteFromCaption" Property="Text">
           <Source>Delete from '{0}'</Source>
-          <Value />
+          <Value>'{0}' 에서 삭제됨</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteTag" Property="Text" type="unfinished">
+        <TranslationItem Name="deleteTag" Property="Text">
           <Source>Delete tag from '{0}'</Source>
-          <Value />
+          <Value>'{0}'에서 태그 삭제됨</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select tag</Source>
@@ -3328,13 +3331,17 @@ this using `force delete´.
           <Source>Donate</Source>
           <Value>이 프로젝트에 기부하기</Value>
         </TranslationItem>
-        <TranslationItem Name="richTextBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="richTextBox1" Property="Text">
           <Source>Donate
 
 You can help by making a financial contribution to the project. Donations will be used to cover the costs of hosting a website and to get the resources needed to keep the project running. 
 
 Click on the "Support this project" button to get more information about making a donation.</Source>
-          <Value />
+          <Value>기부하기
+
+당신은 이 프로젝트에 금전적인 기부를 통하여 도움을 줄 수 있습니다. 기부된 금전으로 프로젝트 유지를 위해 웹사이트 호스팅 그리고 필요한 자원 획득에 이용 됩니다.
+
+왼쪽 "Support this project" 버튼을 클릭하여 기부에 대한 세부정보를 볼 수 있고, 기부를 하실 수 있습니다.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3386,7 +3393,7 @@ Click on the "Support this project" button to get more information about making 
         </TranslationItem>
         <TranslationItem Name="BlameTab" Property="Text" type="unfinished">
           <Source>Blame</Source>
-          <Value />
+          <Value>Blame</Value>
         </TranslationItem>
         <TranslationItem Name="DiffTab" Property="Text" type="unfinished">
           <Source>Diff</Source>
@@ -3404,25 +3411,25 @@ Click on the "Support this project" button to get more information about making 
           <Source>Difftool selected &lt; - &gt; local</Source>
           <Value>파일비교 선택파일 &lt; - &gt; 로컬파일</Value>
         </TranslationItem>
-        <TranslationItem Name="followFileHistoryToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="followFileHistoryToolStripMenuItem" Property="Text">
           <Source>Detect and follow renames</Source>
-          <Value />
+          <Value>이름이 변경된 파일이 검출되었습니다</Value>
         </TranslationItem>
         <TranslationItem Name="fullHistoryToolStripMenuItem" Property="Text">
           <Source>Full history</Source>
           <Value>전체 히스토리</Value>
         </TranslationItem>
-        <TranslationItem Name="loadBlameOnShowToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="loadBlameOnShowToolStripMenuItem" Property="Text">
           <Source>Load blame on show</Source>
-          <Value />
+          <Value>Blame 로드</Value>
         </TranslationItem>
-        <TranslationItem Name="loadHistoryOnShowToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="loadHistoryOnShowToolStripMenuItem" Property="Text">
           <Source>Load history on show</Source>
-          <Value />
+          <Value>History 로드</Value>
         </TranslationItem>
-        <TranslationItem Name="manipuleerCommitToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="manipuleerCommitToolStripMenuItem" Property="Text">
           <Source>Manipulate commit</Source>
-          <Value />
+          <Value>커밋 수정</Value>
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Open with difftool</Source>
@@ -3460,24 +3467,24 @@ Click on the "Support this project" button to get more information about making 
           <Source>Home</Source>
           <Value>홈</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitGlobalConfigNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitGlobalConfigNotFound" Property="Text">
           <Source>The environment variable HOME does not point to a directory that contains the global git config file:
 " {0} "
 
 Do you want Git Extensions to help locate the correct folder?</Source>
-          <Value />
+          <Value>[입력중] </Value>
         </TranslationItem>
         <TranslationItem Name="_gitGlobalConfigNotFoundCaption" Property="Text">
           <Source>Global config</Source>
           <Value>일반 설정</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitconfigFoundHome" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitconfigFoundHome" Property="Text">
           <Source>Located .gitconfig in %HOME% ({0}). This setting has been chosen automatically.</Source>
-          <Value />
+          <Value>이 설정은 %HOME% ({0}) 폴더의 .gitconfig 으로 자동 적용 됩니다.</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitconfigFoundHomedrive" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitconfigFoundHomedrive" Property="Text">
           <Source>Located .gitconfig in %HOMEDRIVE%%HOMEPATH% ({0}). This setting has been chosen automatically.</Source>
-          <Value />
+          <Value>이 설정은 %HOMEDRIVE%%HOMEPATH% ({0})의 .gitconfig 파일로 자동 적용 됩니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_gitconfigFoundPersonalFolder" Property="Text" type="unfinished">
           <Source>Located .gitconfig in personal folder ({0}). This setting has been chosen automatically.</Source>
@@ -3521,9 +3528,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Browse</Source>
           <Value>찾기</Value>
         </TranslationItem>
-        <TranslationItem Name="userprofileHome" Property="Text" type="unfinished">
+        <TranslationItem Name="userprofileHome" Property="Text">
           <Source>Set HOME to USERPROFILE</Source>
-          <Value />
+          <Value>HOME을 USERPROFILE로 설정</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3617,9 +3624,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Close</Source>
           <Value>닫기</Value>
         </TranslationItem>
-        <TranslationItem Name="labelSubmitted" Property="Text" type="unfinished">
+        <TranslationItem Name="labelSubmitted" Property="Text">
           <Source>Your change has been submitted for review at the following location:</Source>
-          <Value />
+          <Value>리뷰를 위해 변경사항이 다음 폴더에 반영되었습니다:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3637,21 +3644,21 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>&amp;Download</Source>
           <Value>다운로드(&amp;D)</Value>
         </TranslationItem>
-        <TranslationItem Name="_cannotGetChangeDetails" Property="Text" type="unfinished">
+        <TranslationItem Name="_cannotGetChangeDetails" Property="Text">
           <Source>Could not retrieve the change details</Source>
-          <Value />
+          <Value>변경 세부사항을 검색할 수 없습니다</Value>
         </TranslationItem>
-        <TranslationItem Name="_downloadCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_downloadCaption" Property="Text">
           <Source>Download change {0}</Source>
-          <Value />
+          <Value>{0} 변경사항 다운로드</Value>
         </TranslationItem>
         <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
           <Source>Download Gerrit Change</Source>
           <Value>Gerrit Change 다운로드</Value>
         </TranslationItem>
-        <TranslationItem Name="_selectChange" Property="Text" type="unfinished">
+        <TranslationItem Name="_selectChange" Property="Text">
           <Source>Please enter a change</Source>
-          <Value />
+          <Value>변경내용을 입력하세요</Value>
         </TranslationItem>
         <TranslationItem Name="_selectRemote" Property="Text" type="unfinished">
           <Source>Please select a remote repository</Source>
@@ -3685,9 +3692,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Manage remotes</Source>
           <Value>원격 저장소 관리</Value>
         </TranslationItem>
-        <TranslationItem Name="Publish" Property="Text" type="unfinished">
+        <TranslationItem Name="Publish" Property="Text">
           <Source>&amp;Publish</Source>
-          <Value />
+          <Value>제출 (&amp;Publish)</Value>
         </TranslationItem>
         <TranslationItem Name="PublishDraft" Property="Text" type="unfinished">
           <Source>Submit review as draft</Source>
@@ -3697,9 +3704,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Download Gerrit Change</Source>
           <Value>Gerrit Change 다운로드</Value>
         </TranslationItem>
-        <TranslationItem Name="_publishCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_publishCaption" Property="Text">
           <Source>Publish change</Source>
-          <Value />
+          <Value>변경사항 제출</Value>
         </TranslationItem>
         <TranslationItem Name="_selectBranch" Property="Text">
           <Source>Please enter a branch</Source>
@@ -3742,9 +3749,9 @@ Check if file is accessible.</Source>
           <Source>Failed to save .gitattributes</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_noWorkingDirCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_noWorkingDirCaption" Property="Text">
           <Source>No working dir</Source>
-          <Value />
+          <Value>작업폴더 없음</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileQuestion" Property="Text" type="unfinished">
           <Source>Save changes to .gitattributes?</Source>
@@ -3797,32 +3804,33 @@ command "git help gitattributes"
           <Source>Save</Source>
           <Value>저장하기</Value>
         </TranslationItem>
-        <TranslationItem Name="_cannotAccessGitignore" Property="Text" type="unfinished">
+        <TranslationItem Name="_cannotAccessGitignore" Property="Text">
           <Source>Failed to save .gitignore.
 Check if file is accessible.</Source>
-          <Value />
+          <Value>.gitignore 파일 저장 실패
+이 프로그램이 파일에 접근할 수 있는지 확인하세요.</Value>
         </TranslationItem>
-        <TranslationItem Name="_cannotAccessGitignoreCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_cannotAccessGitignoreCaption" Property="Text">
           <Source>Failed to save .gitignore</Source>
-          <Value />
+          <Value>.gitignore 파일 저장 실패</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitignoreOnlyInWorkingDirSupported" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitignoreOnlyInWorkingDirSupported" Property="Text">
           <Source>.gitignore is only supported when there is a working dir.</Source>
-          <Value />
+          <Value>작업 폴더에 있을때만 .gitignore가 적용됩니다.</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitignoreOnlyInWorkingDirSupportedCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitignoreOnlyInWorkingDirSupportedCaption" Property="Text">
           <Source>No working dir</Source>
-          <Value />
+          <Value>작업 폴더 없음</Value>
         </TranslationItem>
-        <TranslationItem Name="_saveFileQuestion" Property="Text" type="unfinished">
+        <TranslationItem Name="_saveFileQuestion" Property="Text">
           <Source>Save changes to .gitignore?</Source>
-          <Value />
+          <Value>모든 변경사항을 .gitignore에 저장할까요?</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileQuestionCaption" Property="Text" type="unfinished">
           <Source>Save changes?</Source>
           <Value>저장할까요?</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Specify filepatterns you want git to ignore.
 
 Example:
@@ -3847,11 +3855,21 @@ Thumbs.db
 obj/
 [Rr]elease*/
 _ReSharper*/</Source>
-          <Value />
+          <Value>git으로 관리되지 않을 무시되는 파일패턴.
+
+예제:
+#윈도우에 의해 자동 생성된 thumbnails 파일 무시
+Thumbs.db
+#Visual Studio 빌드시 생성되는 파일 무시
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c</Value>
         </TranslationItem>
-        <TranslationItem Name="lnkGitIgnorePatterns" Property="Text" type="unfinished">
+        <TranslationItem Name="lnkGitIgnorePatterns" Property="Text">
           <Source>More gitignore patterns</Source>
-          <Value />
+          <Value>추가 gitignore 패턴</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3865,32 +3883,33 @@ _ReSharper*/</Source>
           <Source>Save</Source>
           <Value>저장하기</Value>
         </TranslationItem>
-        <TranslationItem Name="_cannotAccessGitreview" Property="Text" type="unfinished">
+        <TranslationItem Name="_cannotAccessGitreview" Property="Text">
           <Source>Failed to save .gitreview.
 Check if file is accessible.</Source>
-          <Value />
+          <Value>.gitreview 파일 저장 실패.
+이 프로그램이 파일에 접근할 수 있는지 확인하세요.</Value>
         </TranslationItem>
-        <TranslationItem Name="_cannotAccessGitreviewCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_cannotAccessGitreviewCaption" Property="Text">
           <Source>Failed to save .gitreview</Source>
-          <Value />
+          <Value>.gitreview 파일 저장 실패</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupported" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupported" Property="Text">
           <Source>.gitreview is only supported when there is a working dir.</Source>
-          <Value />
+          <Value>작업폴더에 있을때만 .gitreview가 적용됩니다.</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupportedCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupportedCaption" Property="Text">
           <Source>No working dir</Source>
-          <Value />
+          <Value>작업 폴더 없음</Value>
         </TranslationItem>
-        <TranslationItem Name="_saveFileQuestion" Property="Text" type="unfinished">
+        <TranslationItem Name="_saveFileQuestion" Property="Text">
           <Source>Save changes to .gitreview?</Source>
-          <Value />
+          <Value>.gitreview 파일로 저장할까요?</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileQuestionCaption" Property="Text" type="unfinished">
           <Source>Save changes?</Source>
           <Value>저장할까요?</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Provide the configuration for
 .gitreview to setup Gerrit.
 
@@ -3903,11 +3922,21 @@ project=department/project.git
 defaultbranch=master
 defaultremote=review
 defaultrebase=0</Source>
-          <Value />
+          <Value>Gerrit 설정을 위해 
+.gitreview 파일이 제공됩니다.
+
+예제:
+
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review</Value>
         </TranslationItem>
-        <TranslationItem Name="lnkGitReviewHelp" Property="Text" type="unfinished">
+        <TranslationItem Name="lnkGitReviewHelp" Property="Text">
           <Source>GitHub page for git-review</Source>
-          <Value />
+          <Value>git-review를 위한 GitHub 페이지</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3915,27 +3944,31 @@ defaultrebase=0</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Go to commit</Source>
-          <Value>Commit 찾기</Value>
+          <Value>리비전 바로 찾기</Value>
         </TranslationItem>
-        <TranslationItem Name="goButton" Property="Text" type="unfinished">
+        <TranslationItem Name="goButton" Property="Text">
           <Source>Go</Source>
-          <Value />
+          <Value>Go</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
           <Source>Help</Source>
           <Value>도움말</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Commit expression:</Source>
-          <Value />
+          <Value>커밋내용 양식:</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Commit expression examples:
 - complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9
 - partial commit hash (if unique): e. g.: 8eab51fcb9c453
 - tag name
 - branch name</Source>
-          <Value />
+          <Value>커밋내용 양식 예제:
+- 원본 해쉬: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9
+- 간략 해쉬: e. g.: 8eab51fcb9c453
+- 태그 이름
+- 브랜치 이름</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Go to tag:</Source>
@@ -3991,7 +4024,7 @@ defaultrebase=0</Source>
         </TranslationItem>
         <TranslationItem Name="Central" Property="Text" type="unfinished">
           <Source>Central repository, no working dir  (--bare --shared=all)</Source>
-          <Value />
+          <Value>원본 저장소, 작업 폴더 없음 (--bare --shared=all)</Value>
         </TranslationItem>
         <TranslationItem Name="Init" Property="Text">
           <Source>Initialize</Source>
@@ -4058,7 +4091,7 @@ Check if file is accessible.</Source>
         </TranslationItem>
         <TranslationItem Name="_mailmapOnlyInWorkingDirSupportedCaption" Property="Text" type="unfinished">
           <Source>No working dir</Source>
-          <Value />
+          <Value>작업폴더 없음</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileQuestion" Property="Text" type="unfinished">
           <Source>Save changes to .mailmap?</Source>
@@ -4198,7 +4231,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Pull</Source>
-          <Value>Pull (가져오기)</Value>
+          <Value>Pull</Value>
         </TranslationItem>
         <TranslationItem Name="AddRemote" Property="Text">
           <Source>Manage</Source>
@@ -4214,7 +4247,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         </TranslationItem>
         <TranslationItem Name="Merge" Property="Text">
           <Source>&amp;Merge remote branch into current branch</Source>
-          <Value>원격 저장소 파일 머지(&amp;Merge)</Value>
+          <Value>원격 브랜치를 현재 브랜치에 머지(&amp;Merge)</Value>
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Source>Solve conflicts</Source>
@@ -4242,15 +4275,15 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         </TranslationItem>
         <TranslationItem Name="Stash" Property="Text" type="unfinished">
           <Source>Stash changes</Source>
-          <Value />
+          <Value>Stash 변경사항</Value>
         </TranslationItem>
         <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text" type="unfinished">
           <Source>Are all merge conflicts solved? Do you want to commit?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
           <Source>Conflicts solved</Source>
-          <Value />
+          <Value>충돌 처리됨</Value>
         </TranslationItem>
         <TranslationItem Name="_applyShashedItemsAgain" Property="Text" type="unfinished">
           <Source>Apply stashed items to working dir again?</Source>
@@ -4260,44 +4293,51 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
           <Source>Auto stash</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_areYouSureYouWantToRebaseMerge" Property="Text" type="unfinished">
+        <TranslationItem Name="_areYouSureYouWantToRebaseMerge" Property="Text">
           <Source>The current commit is a merge.
 Are you sure you want to rebase this merge?</Source>
-          <Value />
+          <Value>대상 리비전은 머지후 반영된 사항입니다.
+Rebase를 이 리비전으로 하시겠습니까?</Value>
         </TranslationItem>
-        <TranslationItem Name="_areYouSureYouWantToRebaseMergeCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_areYouSureYouWantToRebaseMergeCaption" Property="Text">
           <Source>Rebase merge commit?</Source>
-          <Value />
+          <Value>Rebase 작업을 반영할까요?</Value>
         </TranslationItem>
-        <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text" type="unfinished">
+        <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
           <Source>You can only fetch all remote branches (*) without merge or rebase.
 If you want to fetch all remote branches, choose fetch.
 If you want to fetch and merge a branch, choose a specific branch.</Source>
-          <Value />
+          <Value>모든 원격 브랜치를 머지 또는 Rebase 없이 Fetch 할 수 있습니다.
+모든 원격 브랜치를 Fetch 하고 싶다면, Fetch를 선택하세요.
+Fetch 와 머지를 같이 할려면, 특정 브랜치를 선택하세요.</Value>
         </TranslationItem>
-        <TranslationItem Name="_notOnBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="_notOnBranch" Property="Text">
           <Source>You cannot "pull" when git head detached.
 
 Do you want to continue?</Source>
-          <Value />
+          <Value>Git HEAD가 분리될 때 "pull" 할 수 없습니다.
+
+계속 하시겠습니까?</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchButtons" Property="Text" type="unfinished">
           <Source>Checkout branch|Continue</Source>
-          <Value />
+          <Value>체크아웃 브랜치|계속</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchCaption" Property="Text" type="unfinished">
           <Source>Not on a branch</Source>
-          <Value />
+          <Value>브랜치 소속이 아님</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchMainInstruction" Property="Text" type="unfinished">
           <Source>You are not working on a branch</Source>
-          <Value />
+          <Value>브랜치에서 작업하고 있지 않습니다</Value>
         </TranslationItem>
-        <TranslationItem Name="_questionInitSubmodules" Property="Text" type="unfinished">
+        <TranslationItem Name="_questionInitSubmodules" Property="Text">
           <Source>The pulled has submodules configured.
 Do you want to initialize the submodules?
 This will initialize and update all submodules recursive.</Source>
-          <Value />
+          <Value>Pull 로 받은 서브모듈로 반영되었습니다.
+서브모듈을 초기화 할까요?
+이 명령은 모든 서브모듈을 초기화 및 업데이트하게 됩니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_questionInitSubmodulesCaption" Property="Text" type="unfinished">
           <Source>Submodules</Source>
@@ -4337,7 +4377,7 @@ This will initialize and update all submodules recursive.</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Push</Source>
-          <Value>Push (나의 수정사항 내보내기)</Value>
+          <Value>Push</Value>
         </TranslationItem>
         <TranslationItem Name="AddRemote" Property="Text" type="unfinished">
           <Source>Manage remotes</Source>
@@ -4347,61 +4387,61 @@ This will initialize and update all submodules recursive.</Source>
           <Source>Auto pull on rejected</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="BranchTab" Property="Text" type="unfinished">
+        <TranslationItem Name="BranchTab" Property="Text">
           <Source>Push branches</Source>
-          <Value />
+          <Value>브랜치 Push</Value>
         </TranslationItem>
-        <TranslationItem Name="DeleteColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="DeleteColumn" Property="HeaderText">
           <Source>Delete Remote Branch</Source>
-          <Value />
+          <Value>원격 브랜치 삭제</Value>
         </TranslationItem>
         <TranslationItem Name="ForceColumn" Property="HeaderText" type="unfinished">
           <Source>Push (Force Rewind)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="ForcePushBranches" Property="Text" type="unfinished">
+        <TranslationItem Name="ForcePushBranches" Property="Text">
           <Source>&amp;Force Push</Source>
-          <Value />
+          <Value>&amp;Force Push</Value>
         </TranslationItem>
-        <TranslationItem Name="ForcePushTags" Property="Text" type="unfinished">
+        <TranslationItem Name="ForcePushTags" Property="Text">
           <Source>&amp;Force Push</Source>
-          <Value />
+          <Value>&amp;Force Push</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text" type="unfinished">
           <Source>Load SSH key</Source>
           <Value>SSH 키 불러오기</Value>
         </TranslationItem>
-        <TranslationItem Name="LocalColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="LocalColumn" Property="HeaderText">
           <Source>Local Branch</Source>
-          <Value />
+          <Value>로컬 브랜치</Value>
         </TranslationItem>
-        <TranslationItem Name="MultipleBranchTab" Property="Text" type="unfinished">
+        <TranslationItem Name="MultipleBranchTab" Property="Text">
           <Source>Push multiple branches</Source>
-          <Value />
+          <Value>여러 브랜치 Push</Value>
         </TranslationItem>
-        <TranslationItem Name="NewColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="NewColumn" Property="HeaderText">
           <Source>New at Remote</Source>
-          <Value />
+          <Value>새로운 원격 저장소</Value>
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text" type="unfinished">
           <Source>Pull</Source>
-          <Value>Pull (가져오기)</Value>
+          <Value>Pull</Value>
         </TranslationItem>
-        <TranslationItem Name="Push" Property="Text" type="unfinished">
+        <TranslationItem Name="Push" Property="Text">
           <Source>&amp;Push</Source>
-          <Value />
+          <Value>&amp;Push</Value>
         </TranslationItem>
-        <TranslationItem Name="PushAllBranches" Property="Text" type="unfinished">
+        <TranslationItem Name="PushAllBranches" Property="Text">
           <Source>Push &amp;all branches</Source>
-          <Value />
+          <Value>모든 브랜치 Push (&amp;a)</Value>
         </TranslationItem>
-        <TranslationItem Name="PushAllTags" Property="Text" type="unfinished">
+        <TranslationItem Name="PushAllTags" Property="Text">
           <Source>Push &amp;all tags</Source>
-          <Value />
+          <Value>모든 태그 Push (&amp;a)</Value>
         </TranslationItem>
         <TranslationItem Name="PushColumn" Property="HeaderText" type="unfinished">
           <Source>Push</Source>
-          <Value>Push (나의 수정사항 내보내기)</Value>
+          <Value>Push</Value>
         </TranslationItem>
         <TranslationItem Name="PushToRemote" Property="Text" type="unfinished">
           <Source>Remote</Source>
@@ -4411,13 +4451,13 @@ This will initialize and update all submodules recursive.</Source>
           <Source>Url</Source>
           <Value>Url</Value>
         </TranslationItem>
-        <TranslationItem Name="RemoteColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="RemoteColumn" Property="HeaderText">
           <Source>Remote Branch</Source>
-          <Value />
+          <Value>원격 브랜치</Value>
         </TranslationItem>
-        <TranslationItem Name="ReplaceTrackingReference" Property="Text" type="unfinished">
+        <TranslationItem Name="ReplaceTrackingReference" Property="Text">
           <Source>Replace tracking reference</Source>
-          <Value />
+          <Value>트래킹 참조 교체</Value>
         </TranslationItem>
         <TranslationItem Name="ShowOptions" Property="Text" type="unfinished">
           <Source>Show options</Source>
@@ -4427,18 +4467,19 @@ This will initialize and update all submodules recursive.</Source>
           <Source>Show options</Source>
           <Value>옵션 보기</Value>
         </TranslationItem>
-        <TranslationItem Name="TagTab" Property="Text" type="unfinished">
+        <TranslationItem Name="TagTab" Property="Text">
           <Source>Push tags</Source>
-          <Value />
+          <Value>태그 Push</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchNewForRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="_branchNewForRemote" Property="Text">
           <Source>The branch you are about to push seems to be a new branch for the remote.
 Are you sure you want to push this branch?</Source>
-          <Value />
+          <Value>현재 Push하는 브랜치는 원격 저장소에 신규 브랜치로 생성됩니다.
+계속 진행 할까요?</Value>
         </TranslationItem>
-        <TranslationItem Name="_createPullRequestCB" Property="Text" type="unfinished">
+        <TranslationItem Name="_createPullRequestCB" Property="Text">
           <Source>Create pull request after push</Source>
-          <Value />
+          <Value>Push 한 뒤 Pull request 생성</Value>
         </TranslationItem>
         <TranslationItem Name="_no" Property="Text" type="unfinished">
           <Source>No</Source>
@@ -4446,23 +4487,23 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="_pushCaption" Property="Text" type="unfinished">
           <Source>Push</Source>
-          <Value>Push (나의 수정사항 내보내기)</Value>
+          <Value>Push</Value>
         </TranslationItem>
-        <TranslationItem Name="_pushToCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_pushToCaption" Property="Text">
           <Source>Push to {0}</Source>
-          <Value />
+          <Value>{0}에 Push</Value>
         </TranslationItem>
-        <TranslationItem Name="_selectDestinationDirectory" Property="Text" type="unfinished">
+        <TranslationItem Name="_selectDestinationDirectory" Property="Text">
           <Source>Please select a destination directory</Source>
-          <Value />
+          <Value>타겟 폴더를 선택하세요</Value>
         </TranslationItem>
         <TranslationItem Name="_selectRemote" Property="Text" type="unfinished">
           <Source>Please select a remote repository</Source>
           <Value>원격 저장소를 선택하세요</Value>
         </TranslationItem>
-        <TranslationItem Name="_selectTag" Property="Text" type="unfinished">
+        <TranslationItem Name="_selectTag" Property="Text">
           <Source>You need to select a tag to push or select "Push all tags".</Source>
-          <Value />
+          <Value>Push 또는 모든 태그 Push를 선택할 경우 태그를 선택해야 합니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_updateTrackingReference" Property="Text" type="unfinished">
           <Source>The branch {0} does not have a tracking reference. Do you want to add a tracking reference to {1}?</Source>
@@ -4476,33 +4517,33 @@ Are you sure you want to push this branch?</Source>
           <Source>Branch</Source>
           <Value>브랜치</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox2" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox2" Property="Text">
           <Source>Push to</Source>
-          <Value />
+          <Value>Push to</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox3" Property="Text" type="unfinished">
           <Source>Tag</Source>
           <Value>태그</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox4" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox4" Property="Text">
           <Source>Select Branches to Push</Source>
-          <Value />
+          <Value>Push할 브랜치 선택</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Tag to push</Source>
-          <Value />
+          <Value>Push할 태그</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text" type="unfinished">
           <Source>Recursive submodules</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="labelFrom" Property="Text" type="unfinished">
+        <TranslationItem Name="labelFrom" Property="Text">
           <Source>Branch to push</Source>
-          <Value />
+          <Value>Push할 브랜치</Value>
         </TranslationItem>
-        <TranslationItem Name="labelTo" Property="Text" type="unfinished">
+        <TranslationItem Name="labelTo" Property="Text">
           <Source>to</Source>
-          <Value />
+          <Value>to</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4524,13 +4565,13 @@ Are you sure you want to push this branch?</Source>
           <Source>Retry</Source>
           <Value>재시도</Value>
         </TranslationItem>
-        <TranslationItem Name="lblMustAuthenticate" Property="Text" type="unfinished">
+        <TranslationItem Name="lblMustAuthenticate" Property="Text">
           <Source>You must authenticate to run this command.</Source>
-          <Value />
+          <Value>이 명령을 수행하기 위해 인증이 필요합니다.</Value>
         </TranslationItem>
-        <TranslationItem Name="lblPleaseLoadKey" Property="Text" type="unfinished">
+        <TranslationItem Name="lblPleaseLoadKey" Property="Text">
           <Source>Please load your SSH private key</Source>
-          <Value />
+          <Value>SSH 개인키를 불러오세요</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4538,7 +4579,7 @@ Are you sure you want to push this branch?</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Rebase</Source>
-          <Value>Rebase (브랜치 통합)</Value>
+          <Value>Rebase</Value>
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text" type="unfinished">
           <Source>Abort</Source>
@@ -4554,7 +4595,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text" type="unfinished">
           <Source>Rebase</Source>
-          <Value>Rebase (브랜치 통합)</Value>
+          <Value>Rebase</Value>
         </TranslationItem>
         <TranslationItem Name="Resolved" Property="Text">
           <Source>Continue rebase</Source>
@@ -4564,9 +4605,9 @@ Are you sure you want to push this branch?</Source>
           <Source>Show options</Source>
           <Value>옵션 보기</Value>
         </TranslationItem>
-        <TranslationItem Name="Skip" Property="Text" type="unfinished">
+        <TranslationItem Name="Skip" Property="Text">
           <Source>Skip this commit</Source>
-          <Value />
+          <Value>이 커밋 무시</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text" type="unfinished">
           <Source>There are unresolved mergeconflicts
@@ -4575,12 +4616,13 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="_branchUpToDateCaption" Property="Text" type="unfinished">
           <Source>Rebase</Source>
-          <Value>Rebase (브랜치 통합)</Value>
+          <Value>Rebase</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchUpToDateText" Property="Text" type="unfinished">
+        <TranslationItem Name="_branchUpToDateText" Property="Text">
           <Source>Current branch a is up to date.
 Nothing to rebase.</Source>
-          <Value />
+          <Value>현재 브랜치는 최신입니다.
+Rebase 할 사항이 없습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="_continueRebaseText" Property="Text">
           <Source>Continue rebase</Source>
@@ -4614,9 +4656,9 @@ Nothing to rebase.</Source>
           <Source>Preserve Merges</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="chkSpecificRange" Property="Text" type="unfinished">
+        <TranslationItem Name="chkSpecificRange" Property="Text">
           <Source>Specific range</Source>
-          <Value />
+          <Value>특정 범위</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
           <Source>Rebase current branch on top of another branch</Source>
@@ -4634,29 +4676,29 @@ Nothing to rebase.</Source>
           <Source>Current branch:</Source>
           <Value>현재 브랜치:</Value>
         </TranslationItem>
-        <TranslationItem Name="lblRangeFrom" Property="Text" type="unfinished">
+        <TranslationItem Name="lblRangeFrom" Property="Text">
           <Source>From (exc.)</Source>
-          <Value />
+          <Value>From (exc.)</Value>
         </TranslationItem>
-        <TranslationItem Name="lblRangeTo" Property="Text" type="unfinished">
+        <TranslationItem Name="lblRangeTo" Property="Text">
           <Source>To</Source>
-          <Value />
+          <Value>To</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormRecentReposSettings">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Recent repositories settings</Source>
-          <Value />
+          <Value>최근 저장소 설정</Value>
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text" type="unfinished">
           <Source>Cancel</Source>
           <Value>취소</Value>
         </TranslationItem>
-        <TranslationItem Name="MostRecentLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="MostRecentLabel" Property="Text">
           <Source>Most recent repositories</Source>
-          <Value />
+          <Value>최근 저장소</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text" type="unfinished">
           <Source>OK</Source>
@@ -4670,9 +4712,9 @@ Nothing to rebase.</Source>
           <Source>Anchor to most recent repositories</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="comboMinWidthLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="comboMinWidthLabel" Property="Text">
           <Source>Combobox minimum width (0 = Autosize)</Source>
-          <Value />
+          <Value>콤보박스 최소 가로크기 (0 = 자동설정)</Value>
         </TranslationItem>
         <TranslationItem Name="dontShortenRB" Property="Text" type="unfinished">
           <Source>Do not shorten  </Source>
@@ -4682,9 +4724,9 @@ Nothing to rebase.</Source>
           <Source>Less recent repositories</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="maxRecentRepositories" Property="Text" type="unfinished">
+        <TranslationItem Name="maxRecentRepositories" Property="Text">
           <Source>Maximum number of most recent repositories</Source>
-          <Value />
+          <Value>최근 저장소 최대 표시 갯수</Value>
         </TranslationItem>
         <TranslationItem Name="middleDotRB" Property="Text" type="unfinished">
           <Source>Replace middle part with dots </Source>
@@ -4774,9 +4816,9 @@ Nothing to rebase.</Source>
           <Source>Test connection</Source>
           <Value>연결 테스트</Value>
         </TranslationItem>
-        <TranslationItem Name="UpdateBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="UpdateBranch" Property="Text">
           <Source>Update all remote branch info</Source>
-          <Value />
+          <Value>모든 원격 브랜치 정보 업데이트</Value>
         </TranslationItem>
         <TranslationItem Name="_hintDelete" Property="Text" type="unfinished">
           <Source>Delete</Source>
@@ -4790,55 +4832,57 @@ Nothing to rebase.</Source>
           <Source>Url</Source>
           <Value>Url</Value>
         </TranslationItem>
-        <TranslationItem Name="_questionAutoPullBehaviour" Property="Text" type="unfinished">
+        <TranslationItem Name="_questionAutoPullBehaviour" Property="Text">
           <Source>You have added a new remote repository.
 Do you want to automatically configure the default push and pull behavior for this remote?</Source>
-          <Value />
+          <Value>새로운 원격 저장소가 추가되었습니다.
+Push / Pull 할 수 있는 기본 저장소로 설정하시겠습니까?</Value>
         </TranslationItem>
-        <TranslationItem Name="_questionAutoPullBehaviourCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_questionAutoPullBehaviourCaption" Property="Text">
           <Source>New remote</Source>
-          <Value />
+          <Value>새로운 원격 저장소</Value>
         </TranslationItem>
-        <TranslationItem Name="_questionDeleteRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="_questionDeleteRemote" Property="Text">
           <Source>Are you sure you want to delete this remote?</Source>
-          <Value />
+          <Value>이 원격 저장소를 정말 삭제 하시겠습니까?</Value>
         </TranslationItem>
         <TranslationItem Name="_questionDeleteRemoteCaption" Property="Text" type="unfinished">
           <Source>Delete</Source>
           <Value>제거</Value>
         </TranslationItem>
-        <TranslationItem Name="_remoteBranchDataError" Property="Text" type="unfinished">
+        <TranslationItem Name="_remoteBranchDataError" Property="Text">
           <Source>Invalid ´{1}´ found for branch ´{0}´.
 Value has been reset to empty value.</Source>
-          <Value />
+          <Value>'{0}' 브랜치에 유효하지 않은 '{1}'이 발견되었습니다.
+입력된 유효하지 않는 값은 삭제됩니다.</Value>
         </TranslationItem>
-        <TranslationItem Name="_sshKeyOpenCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_sshKeyOpenCaption" Property="Text">
           <Source>Select ssh key file</Source>
-          <Value />
+          <Value>SSH 키 파일 선택</Value>
         </TranslationItem>
-        <TranslationItem Name="_sshKeyOpenFilter" Property="Text" type="unfinished">
+        <TranslationItem Name="_sshKeyOpenFilter" Property="Text">
           <Source>Private key (*.ppk)</Source>
-          <Value />
+          <Value>개인 키 (*.ppk)</Value>
         </TranslationItem>
-        <TranslationItem Name="_warningNoKeyEntered" Property="Text" type="unfinished">
+        <TranslationItem Name="_warningNoKeyEntered" Property="Text">
           <Source>No SSH key file entered</Source>
-          <Value />
+          <Value>SSH 키 파일이 입력되지 않았습니다</Value>
         </TranslationItem>
-        <TranslationItem Name="_warningValidRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="_warningValidRemote" Property="Text">
           <Source>You need to configure a valid url for this remote</Source>
-          <Value />
+          <Value>유효한 원격 저장소 URL을 입력하셔야 합니다</Value>
         </TranslationItem>
-        <TranslationItem Name="_warningValidRemoteCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_warningValidRemoteCaption" Property="Text">
           <Source>Url needed</Source>
-          <Value />
+          <Value>URL이 필요합니다</Value>
         </TranslationItem>
         <TranslationItem Name="buttonClose" Property="Text" type="unfinished">
           <Source>Close</Source>
           <Value>닫기</Value>
         </TranslationItem>
-        <TranslationItem Name="checkBoxSepPushUrl" Property="Text" type="unfinished">
+        <TranslationItem Name="checkBoxSepPushUrl" Property="Text">
           <Source>Separate Push Url</Source>
-          <Value />
+          <Value>Push URL 분리</Value>
         </TranslationItem>
         <TranslationItem Name="dataGridViewTextBoxColumn1" Property="HeaderText" type="unfinished">
           <Source>Name</Source>
@@ -4856,9 +4900,9 @@ Value has been reset to empty value.</Source>
           <Source>Url</Source>
           <Value>Url</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>Private key file</Source>
-          <Value />
+          <Value>개인 키 파일</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text" type="unfinished">
           <Source>Local branch name</Source>
@@ -4872,9 +4916,9 @@ Value has been reset to empty value.</Source>
           <Source>Default merge with</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="labelPushUrl" Property="Text" type="unfinished">
+        <TranslationItem Name="labelPushUrl" Property="Text">
           <Source>Push Url</Source>
-          <Value />
+          <Value>Push URL</Value>
         </TranslationItem>
         <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
           <Source>Branch</Source>
@@ -4884,9 +4928,9 @@ Value has been reset to empty value.</Source>
           <Source>Remote repositories</Source>
           <Value>원격 저장소:</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPage2" Property="Text" type="unfinished">
+        <TranslationItem Name="tabPage2" Property="Text">
           <Source>Default pull behavior (fetch &amp; merge)</Source>
-          <Value />
+          <Value>기본 Pull 명령어 (Fetch &amp; Merge)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4924,25 +4968,25 @@ Value has been reset to empty value.</Source>
           <Source>Reset</Source>
           <Value>리셋</Value>
         </TranslationItem>
-        <TranslationItem Name="cbDeleteNewFilesAndDirectories" Property="Text" type="unfinished">
+        <TranslationItem Name="cbDeleteNewFilesAndDirectories" Property="Text">
           <Source>Also delete new files and/or directories</Source>
-          <Value />
+          <Value>새로운 파일 그리고/또는 폴더도 함께 삭제</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Are you sure you want to reset your changes?</Source>
-          <Value />
+          <Value>모든 변경사항을 원복 하시겠습니까?</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>This will delete any uncommitted work.</Source>
-          <Value />
+          <Value>모든 미반영 사항은 삭제 됩니다.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormResetCurrentBranch">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Reset current branch</Source>
-          <Value />
+          <Value>현재 브랜치 원래대로</Value>
         </TranslationItem>
         <TranslationItem Name="Cancel" Property="Text" type="unfinished">
           <Source>Cancel</Source>
@@ -4964,45 +5008,45 @@ Value has been reset to empty value.</Source>
           <Source>Soft: leave working dir and index untouched</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="authorInfo" Property="Text" type="unfinished">
+        <TranslationItem Name="authorInfo" Property="Text">
           <Source>Author: {0}</Source>
-          <Value />
+          <Value>작성자: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="branchInfo" Property="Text" type="unfinished">
+        <TranslationItem Name="branchInfo" Property="Text">
           <Source>Reset {0} to:</Source>
-          <Value />
+          <Value>Reset {0} to:</Value>
         </TranslationItem>
-        <TranslationItem Name="commitInfo" Property="Text" type="unfinished">
+        <TranslationItem Name="commitInfo" Property="Text">
           <Source>Commit: {0}</Source>
-          <Value />
+          <Value>커밋: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="commitMessage" Property="Text" type="unfinished">
+        <TranslationItem Name="commitMessage" Property="Text">
           <Source>Message: {0}</Source>
-          <Value />
+          <Value>메시지: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="dateInfo" Property="Text" type="unfinished">
+        <TranslationItem Name="dateInfo" Property="Text">
           <Source>Commit date: {0}</Source>
-          <Value />
+          <Value>커밋 날짜: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
           <Source>Reset type</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="resetCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="resetCaption" Property="Text">
           <Source>Reset branch</Source>
-          <Value />
+          <Value>브랜치 Reset</Value>
         </TranslationItem>
-        <TranslationItem Name="resetHardWarning" Property="Text" type="unfinished">
+        <TranslationItem Name="resetHardWarning" Property="Text">
           <Source>You are about to discard ALL local changes, are you sure?</Source>
-          <Value />
+          <Value>모든 변경사항들은 저장되지 않습니다. 진행 할까요?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormResolveConflicts">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Resolve merge conflicts</Source>
-          <Value />
+          <Value>머지 충돌 해결</Value>
         </TranslationItem>
         <TranslationItem Name="ContextChooseBase" Property="Text" type="unfinished">
           <Source>Choose base</Source>
@@ -5071,23 +5115,25 @@ Do you want to reset changes?</Source>
           <Source>Abort</Source>
           <Value>취소</Value>
         </TranslationItem>
-        <TranslationItem Name="_allFilesFilter" Property="Text" type="unfinished">
+        <TranslationItem Name="_allFilesFilter" Property="Text">
           <Source>All files (*.*)</Source>
-          <Value />
+          <Value>모든 파일 (*.*)</Value>
         </TranslationItem>
-        <TranslationItem Name="_areYouSureYouWantDeleteFiles" Property="Text" type="unfinished">
+        <TranslationItem Name="_areYouSureYouWantDeleteFiles" Property="Text">
           <Source>Are you sure you want to DELETE all changes?
 
 This action cannot be made undone.</Source>
-          <Value />
+          <Value>모든 변경사항을 삭제해도 좋습니까?
+
+이 명령은 되돌릴 수 없습니다.</Value>
         </TranslationItem>
-        <TranslationItem Name="_areYouSureYouWantDeleteFilesCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_areYouSureYouWantDeleteFilesCaption" Property="Text">
           <Source>WARNING!</Source>
-          <Value />
+          <Value>경고!</Value>
         </TranslationItem>
-        <TranslationItem Name="_binaryFileWarningCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_binaryFileWarningCaption" Property="Text">
           <Source>Warning</Source>
-          <Value />
+          <Value>경고</Value>
         </TranslationItem>
         <TranslationItem Name="_button1Text" Property="Text" type="unfinished">
           <Source>Open in</Source>
@@ -5105,9 +5151,9 @@ This action cannot be made undone.</Source>
           <Source>Choose remote file failed.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_conflictedFilesContextMenuText" Property="Text" type="unfinished">
+        <TranslationItem Name="_conflictedFilesContextMenuText" Property="Text">
           <Source>Solve</Source>
-          <Value />
+          <Value>해결</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseLocalMergeText" Property="Text" type="unfinished">
           <Source>Choose local (ours)</Source>
@@ -5133,9 +5179,9 @@ This action cannot be made undone.</Source>
           <Source>Open temporary file failed.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_failureWhileSaveFile" Property="Text" type="unfinished">
+        <TranslationItem Name="_failureWhileSaveFile" Property="Text">
           <Source>Save file failed.</Source>
-          <Value />
+          <Value>파일저장 실패</Value>
         </TranslationItem>
         <TranslationItem Name="_noBaseFileMergeCaption" Property="Text" type="unfinished">
           <Source>Merge</Source>
@@ -5145,22 +5191,23 @@ This action cannot be made undone.</Source>
           <Source>Open in</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_resetItemMergeText" Property="Text" type="unfinished">
+        <TranslationItem Name="_resetItemMergeText" Property="Text">
           <Source>Abort merge</Source>
-          <Value />
+          <Value>머지 취소</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetItemRebaseText" Property="Text" type="unfinished">
+        <TranslationItem Name="_resetItemRebaseText" Property="Text">
           <Source>Abort rebase</Source>
-          <Value />
+          <Value>Rebase 취소</Value>
         </TranslationItem>
-        <TranslationItem Name="allConflictsResolved" Property="Text" type="unfinished">
+        <TranslationItem Name="allConflictsResolved" Property="Text">
           <Source>All mergeconflicts are resolved, you can commit.
 Do you want to commit now?</Source>
-          <Value />
+          <Value>모든 머지충돌이 해결되어 커밋이 가능합니다.
+수정사항을 지금 커밋 할까요?</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolvedCaption" Property="Text" type="unfinished">
           <Source>Commit</Source>
-          <Value>Commit</Value>
+          <Value>커밋</Value>
         </TranslationItem>
         <TranslationItem Name="askMergeConflictSolved" Property="Text" type="unfinished">
           <Source>Is the mergeconflict solved?</Source>
@@ -5173,9 +5220,9 @@ Do you want to commit now?</Source>
 Is the mergeconflict solved?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="askMergeConflictSolvedCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="askMergeConflictSolvedCaption" Property="Text">
           <Source>Conflict solved?</Source>
-          <Value />
+          <Value>충돌이 해결되었습니까?</Value>
         </TranslationItem>
         <TranslationItem Name="authorDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
           <Source>Author</Source>
@@ -5209,10 +5256,11 @@ Is the mergeconflict solved?</Source>
           <Source>deleted</Source>
           <Value>삭제됨</Value>
         </TranslationItem>
-        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text">
           <Source>File ({0}) appears to be a binary file.
 Choose to keep the local({1}), remote({2}) or base file.</Source>
-          <Value />
+          <Value>({0}) 파일은 바이너리로 보입니다.
+충돌된 파일({1})를 remove({2}) 교체 또는 원본파일 유지 둘 중 하나를 선택하세요.</Value>
         </TranslationItem>
         <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text" type="unfinished">
           <Source>The file has been changed both locally({0}) and remotely({1}). Merge the changes.</Source>
@@ -5408,7 +5456,7 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="AutoCommit" Property="Text" type="unfinished">
           <Source>Automatically create a commit</Source>
-          <Value />
+          <Value>커밋 자동 생성</Value>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text" type="unfinished">
           <Source>Revert this commit:</Source>
@@ -5416,7 +5464,7 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="ParentsLabel" Property="Text" type="unfinished">
           <Source>This commit is a merge, select parent:</Source>
-          <Value />
+          <Value>부모노드 선택:</Value>
         </TranslationItem>
         <TranslationItem Name="Revert" Property="Text" type="unfinished">
           <Source>Revert this commit</Source>
@@ -5424,7 +5472,7 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="_noneParentSelectedText" Property="Text" type="unfinished">
           <Source>None parent is selected!</Source>
-          <Value />
+          <Value>부모노드가 선택되지 않았습니다!</Value>
         </TranslationItem>
         <TranslationItem Name="_noneParentSelectedTextCaption" Property="Text" type="unfinished">
           <Source>Error</Source>
@@ -5579,7 +5627,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Stash</Source>
-          <Value />
+          <Value>Stash</Value>
         </TranslationItem>
         <TranslationItem Name="Apply" Property="Text" type="unfinished">
           <Source>Apply Selected</Source>
@@ -5663,7 +5711,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
         </TranslationItem>
         <TranslationItem Name="KeepDialogOpen" Property="Text">
           <Source>Keep dialog open</Source>
-          <Value>현재 창 유지</Value>
+          <Value>수동으로 닫기</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>OK</Source>
@@ -5743,7 +5791,7 @@ Do you want to trust this host key and then try again?</Source>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text" type="unfinished">
           <Source>Commit</Source>
-          <Value>Commit</Value>
+          <Value>커밋</Value>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text" type="unfinished">
           <Source>Branch</Source>
@@ -6266,53 +6314,53 @@ Context menu for additional operations</Source>
           <Source>Git Extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
-        <TranslationItem Name="chkCheckForUncommittedChangesInCheckoutBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="chkCheckForUncommittedChangesInCheckoutBranch" Property="Text">
           <Source>Check for uncommitted changes in checkout branch dialog</Source>
-          <Value />
+          <Value>Checkout 브랜치 창에서 커밋되지 않는 파일 검사</Value>
         </TranslationItem>
-        <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="unfinished">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Source>Close Process dialog when process is succeeded</Source>
-          <Value />
+          <Value>모든 명령이 정상 완료될 경우, 자동으로 명령 진행 표시창 닫기</Value>
         </TranslationItem>
         <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text" type="unfinished">
           <Source>Follow renames in file history (experimental)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="chkPlaySpecialStartupSound" Property="Text" type="unfinished">
+        <TranslationItem Name="chkPlaySpecialStartupSound" Property="Text">
           <Source>Play Special Startup Sound</Source>
-          <Value />
+          <Value>프로그램 실행시 시작 소리 재생하기</Value>
         </TranslationItem>
-        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text" type="unfinished">
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
           <Source>Show current working dir changes in revision graph (slow!)</Source>
-          <Value />
+          <Value>리비전 그래프에서 현재 작업 디렉토리의 변경사항을 보여주기 (느림)</Value>
         </TranslationItem>
-        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text" type="unfinished">
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
           <Source>Show errors when staging files</Source>
-          <Value />
+          <Value>Staging 시 에러 표시</Value>
         </TranslationItem>
-        <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="unfinished">
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
           <Source>Show console window when executing git process</Source>
-          <Value />
+          <Value>Git 실행시 콘솔 창 보여주기</Value>
         </TranslationItem>
-        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text" type="unfinished">
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
           <Source>Show repository status in browse dialog (number of changes in toolbar, restart required)</Source>
-          <Value />
+          <Value>브라우저 창에서 저장소 상태 보여주기 (툴바에 변경된 숫자 표기, 재시작 필요)</Value>
         </TranslationItem>
-        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text" type="unfinished">
+        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Source>Show stash count on status bar in browse window</Source>
-          <Value />
+          <Value>브라우져 창의 상태바에 Stash 수 표시</Value>
         </TranslationItem>
-        <TranslationItem Name="chkStartWithRecentWorkingDir" Property="Text" type="unfinished">
+        <TranslationItem Name="chkStartWithRecentWorkingDir" Property="Text">
           <Source>Open last working dir on startup</Source>
-          <Value />
+          <Value>시작시 마지막 작업 폴더 열기</Value>
         </TranslationItem>
-        <TranslationItem Name="chkStashUntrackedFiles" Property="Text" type="unfinished">
+        <TranslationItem Name="chkStashUntrackedFiles" Property="Text">
           <Source>Include untracked files in stash</Source>
-          <Value />
+          <Value>Stash에 비관리 파일도 포함하기</Value>
         </TranslationItem>
-        <TranslationItem Name="chkUseFastChecks" Property="Text" type="unfinished">
+        <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Source>Use FileSystemWatcher to check if index is changed</Source>
-          <Value />
+          <Value>인덱스가 변경되는 것을 FileSystemWatcher 로 감지하기</Value>
         </TranslationItem>
         <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text" type="unfinished">
           <Source>Use patience diff algorithm</Source>
@@ -6323,25 +6371,25 @@ Context menu for additional operations</Source>
 (otherwise the message will be requested during commit)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="groupBox11" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox11" Property="Text">
           <Source>Performance</Source>
-          <Value />
+          <Value>성능</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox12" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox12" Property="Text">
           <Source>Behaviour</Source>
-          <Value />
+          <Value>동작</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text" type="unfinished">
           <Source>Limit number of commits that will be loaded at startup</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label23" Property="Text" type="unfinished">
+        <TranslationItem Name="label23" Property="Text">
           <Source>Smtp server for sending patches by email</Source>
-          <Value />
+          <Value>Email로 Patch를 보내기 위한 STMP 서버</Value>
         </TranslationItem>
-        <TranslationItem Name="label24" Property="Text" type="unfinished">
+        <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
-          <Value />
+          <Value>리비전 도표의 빠른 검색 타임아웃 [ms]</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6450,7 +6498,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="PathToKDiff3" Property="Text">
           <Source>Path to mergetool</Source>
-          <Value>머지툴 위치</Value>
+          <Value>머지도구 실행파일 위치</Value>
         </TranslationItem>
         <TranslationItem Name="__diffToolSuggestCaption" Property="Text">
           <Source>Suggest difftool cmd</Source>
@@ -6474,7 +6522,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="label19" Property="Text">
           <Source>Mergetool command</Source>
-          <Value>머지툴 실행 방법	</Value>
+          <Value>머지도구 실행 방법</Value>
         </TranslationItem>
         <TranslationItem Name="label28" Property="Text">
           <Source>Keep backup (.orig) after merge</Source>
@@ -6514,7 +6562,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="label7" Property="Text">
           <Source>Mergetool</Source>
-          <Value>머지툴</Value>
+          <Value>머지도구</Value>
         </TranslationItem>
         <TranslationItem Name="label9" Property="Text">
           <Source>You need to set the correct path to 
@@ -6640,7 +6688,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="label8" Property="Text" type="unfinished">
           <Source>Mergetool</Source>
-          <Value>머지툴</Value>
+          <Value>머지도구</Value>
         </TranslationItem>
         <TranslationItem Name="localAutoCrlfFalse" Property="Text" type="unfinished">
           <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
@@ -6676,7 +6724,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="_middleOfRebaseCaption" Property="Text" type="unfinished">
           <Source>Rebase</Source>
-          <Value>Rebase (브랜치 통합)</Value>
+          <Value>Rebase</Value>
         </TranslationItem>
         <TranslationItem Name="_notValidGitDirectory" Property="Text" type="unfinished">
           <Source>The current directory is not a valid git repository.</Source>
@@ -6987,7 +7035,7 @@ If this is a central repository (bare repository without a working dir):
         </TranslationItem>
         <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Stop bisect</Source>
-          <Value />
+          <Value>Stop bisect</Value>
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
           <Source>Tag</Source>
@@ -7293,46 +7341,47 @@ When OpenSSH is used, command line dialogs are shown!
           <Source>Refresh</Source>
           <Value>새로고침</Value>
         </TranslationItem>
-        <TranslationItem Name="_strCouldNotAddRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="_strCouldNotAddRemote" Property="Text">
           <Source>Could not add remote with name {0} and URL {1}</Source>
-          <Value />
+          <Value>원격 저장소 {0} (URL: {1}) 를 추가하지 못하였습니다.</Value>
         </TranslationItem>
-        <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text" type="unfinished">
+        <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
           <Source>Could not load discussion!</Source>
-          <Value />
+          <Value>의견을 읽어 올 수 없습니다!</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text" type="unfinished">
           <Source>Error</Source>
           <Value>에러</Value>
         </TranslationItem>
-        <TranslationItem Name="_strFailedToClosePullRequest" Property="Text" type="unfinished">
+        <TranslationItem Name="_strFailedToClosePullRequest" Property="Text">
           <Source>Failed to close pull request!</Source>
-          <Value />
+          <Value>Pull request 를 닫을 수 없습니다!</Value>
         </TranslationItem>
-        <TranslationItem Name="_strFailedToFetchPullData" Property="Text" type="unfinished">
+        <TranslationItem Name="_strFailedToFetchPullData" Property="Text">
           <Source>Failed to fetch pull data!</Source>
-          <Value />
+          <Value>Fetch 실패!</Value>
         </TranslationItem>
-        <TranslationItem Name="_strFailedToLoadDiffData" Property="Text" type="unfinished">
+        <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
           <Source>Failed to load diff data!</Source>
-          <Value />
+          <Value>파일비교 데이터 로드 실패!</Value>
         </TranslationItem>
-        <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text">
           <Source>Failed to post discussion item!</Source>
-          <Value />
+          <Value>의견 제출 실패!</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text" type="unfinished">
           <Source> : LOADING : </Source>
           <Value> : 불러오는중 :</Value>
         </TranslationItem>
-        <TranslationItem Name="_strRemoteAlreadyExist" Property="Text" type="unfinished">
+        <TranslationItem Name="_strRemoteAlreadyExist" Property="Text">
           <Source>ERROR: Remote with name {0} already exists but it does not point to the same repository!
 Details: Is {1} expected {2}</Source>
-          <Value />
+          <Value>오류: 원격 저장소 {0}는 존재하고 있지만, 동일한 저장소가 아닙니다.
+세부사항: {1} 는 {2} 로 보임</Value>
         </TranslationItem>
-        <TranslationItem Name="_strUnableUnderstandPatch" Property="Text" type="unfinished">
+        <TranslationItem Name="_strUnableUnderstandPatch" Property="Text">
           <Source>Error: Unable to understand patch</Source>
-          <Value />
+          <Value>오류: 패치를 분석할 수 없습니다</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader2" Property="Text" type="unfinished">
           <Source>Heading</Source>
