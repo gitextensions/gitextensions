@@ -16,10 +16,17 @@ namespace Github3
 
         protected override void OnLoad(System.EventArgs e)
         {
-            webBrowser1.ScriptErrorsSuppressed = true;
-            webBrowser1.CausesValidation = false;
-            string url = "https://github.com/login/oauth/authorize?client_id=" + GithubAPIInfo.client_id + "&scope=repo,public_repo";
-            this.webBrowser1.Navigate(url);
+            try
+            {
+                webBrowser1.ScriptErrorsSuppressed = true;
+                webBrowser1.CausesValidation = false;
+                string url = "https://github.com/login/oauth/authorize?client_id=" + GithubAPIInfo.client_id + "&scope=repo,public_repo";
+                this.webBrowser1.Navigate(url);
+            }
+            catch (NullReferenceException)
+            {
+                MessageBox.Show(this, "Mono doesn't have installed WebBrowser.");
+            }
         }
 
         private bool gotToken = false;
