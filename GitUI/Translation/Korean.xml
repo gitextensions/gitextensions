@@ -3337,7 +3337,7 @@ Unmerged 브랜치를 삭제하고 싶을때는 "Force delete" 체크 후 수행
 You can help by making a financial contribution to the project. Donations will be used to cover the costs of hosting a website and to get the resources needed to keep the project running. 
 
 Click on the "Support this project" button to get more information about making a donation.</Source>
-          <Value>기부하기
+          <Value>보다 좋은 프로그램을 만들기 위한 방법
 
 당신은 이 프로젝트에 금전적인 기부를 통하여 도움을 줄 수 있습니다. 기부된 금전으로 프로젝트 유지를 위해 웹사이트 호스팅 그리고 필요한 자원 획득에 이용 됩니다.
 
@@ -4770,7 +4770,7 @@ Rebase 할 사항이 없습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="BranchName" Property="HeaderText">
           <Source>Local branch name</Source>
-          <Value>로컬 브랜치 이름</Value>
+          <Value>로컬 브랜치</Value>
         </TranslationItem>
         <TranslationItem Name="Delete" Property="Text" type="unfinished">
           <Source>Delete</Source>
@@ -4782,15 +4782,15 @@ Rebase 할 사항이 없습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="MergeWith" Property="HeaderText" type="unfinished">
           <Source>Default merge with</Source>
-          <Value />
+          <Value>매칭 대상</Value>
         </TranslationItem>
         <TranslationItem Name="New" Property="Text" type="unfinished">
           <Source>New</Source>
-          <Value>새로 만들기</Value>
+          <Value>신규</Value>
         </TranslationItem>
         <TranslationItem Name="Prune" Property="Text" type="unfinished">
           <Source>Prune remote branches</Source>
-          <Value />
+          <Value>원격 브랜치 제거</Value>
         </TranslationItem>
         <TranslationItem Name="PuTTYSSH" Property="Text">
           <Source>PuTTY SSH</Source>
@@ -4950,7 +4950,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>New name</Source>
-          <Value>새로운 이름</Value>
+          <Value>새이름</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5014,7 +5014,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="branchInfo" Property="Text">
           <Source>Reset {0} to:</Source>
-          <Value>Reset {0} to:</Value>
+          <Value>리셋 {0} to:</Value>
         </TranslationItem>
         <TranslationItem Name="commitInfo" Property="Text">
           <Source>Commit: {0}</Source>
@@ -6348,7 +6348,7 @@ Context menu for additional operations</Source>
         </TranslationItem>
         <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Source>Show stash count on status bar in browse window</Source>
-          <Value>브라우져 창의 상태바에 Stash 수 표시</Value>
+          <Value>메인 화면의 상태바에 Stash 수 표시</Value>
         </TranslationItem>
         <TranslationItem Name="chkStartWithRecentWorkingDir" Property="Text">
           <Source>Open last working dir on startup</Source>
@@ -6364,12 +6364,13 @@ Context menu for additional operations</Source>
         </TranslationItem>
         <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text" type="unfinished">
           <Source>Use patience diff algorithm</Source>
-          <Value />
+          <Value>향상된 파일 비교 알고리즘 사용</Value>
         </TranslationItem>
         <TranslationItem Name="chkWriteCommitMessageInCommitWindow" Property="Text" type="unfinished">
           <Source>Compose commit messages in Commit dialog
 (otherwise the message will be requested during commit)</Source>
-          <Value />
+          <Value>커밋 대화상자에서 커밋 메시지 작성
+(커밋 버튼을 누른 뒤 메세지를 입력할 수 있는 대화상자가 나타납니다)</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox11" Property="Text">
           <Source>Performance</Source>
@@ -6381,7 +6382,7 @@ Context menu for additional operations</Source>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text" type="unfinished">
           <Source>Limit number of commits that will be loaded at startup</Source>
-          <Value />
+          <Value>프로그램 시작 시 리비전 로드 최대 갯수 제한</Value>
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text">
           <Source>Smtp server for sending patches by email</Source>
