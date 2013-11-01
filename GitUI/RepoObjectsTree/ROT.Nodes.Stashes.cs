@@ -12,8 +12,9 @@ namespace GitUI.UserControls
         static readonly string stashKey = Guid.NewGuid().ToString();
         static readonly string stashesKey = Guid.NewGuid().ToString();
 
+        /*
         /// <summary>Reloads the stashes.</summary>
-        static void OnReloadStashes(ICollection<StashNode> stashes, RootNode<StashNode> stashesNode)
+        static void OnReloadStashes(ICollection<StashNode> stashes, Tree<StashNode> stashesNode)
         {
             stashesNode.TreeNode.Text = string.Format("{0} ({1})", Strings.stashes, stashes.Count);
         }
@@ -36,34 +37,39 @@ namespace GitUI.UserControls
         }
 
         /// <summary>Stash node.</summary>
-        sealed class StashNode : Node<GitStash, RootNode<StashNode>>
+        sealed class StashNode : Node<StashNode>
         {
-            public StashNode(GitStash stash, GitUICommands uiCommands)
-                : base(stash, null, uiCommands)
+            public readonly GitStash Stash;
+
+            public StashNode(GitStash aStash, Tree<StashNode> aTree, StashNode aParentNode)
+                : base(aTree, aParentNode)
             {
+                Stash = aStash;
                 IsDraggable = true;
             }
 
             internal override void OnSelected()
             {
                 base.OnSelected();
-                UICommands.BrowseRepo.GoToRef(Value.Name, true);
+                UICommands.BrowseRepo.GoToRef(Stash.Name, true);
             }
 
             public void Pop()
             {
-                UICommands.StashPop(TreeNode.TreeView.FindForm());
+                UICommands.StashPop(ParentWindow());
             }
 
             public void Apply()
             {
-                UICommands.StashApply(TreeNode.TreeView.FindForm(), Value.Name);
+                UICommands.StashApply(ParentWindow(), Stash.Name);
             }
 
             public void Delete()
             {
-                UICommands.StashDrop(TreeNode.TreeView.FindForm(), Value.Name);
+                UICommands.StashDrop(ParentWindow(), Stash.Name);
             }
         }
+         *          */
+
     }
 }

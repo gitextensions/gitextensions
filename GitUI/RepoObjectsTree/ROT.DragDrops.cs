@@ -67,7 +67,7 @@ namespace GitUI.UserControls
             var treeNode = GetDraggedTreeNode(data);
             if (treeNode == null) { return false; }
 
-            Node node = Node.GetNodeSafe(treeNode);
+            Node node = Node.GetNodeSafe<Node>(treeNode);
             return (node != null) && node.IsDraggable;
         }
 
@@ -171,20 +171,20 @@ namespace GitUI.UserControls
         /// <summary>Occurs when a <see cref="TreeNode"/> is selected.</summary>
         void OnNodeSelected(object sender, TreeViewEventArgs e)
         {
-            Node.OnNode(e.Node, node => node.OnSelected());
+            Node.OnNode<Node>(e.Node, node => node.OnSelected());
         }
 
         /// <summary>Occurs when a <see cref="TreeNode"/> is clicked.</summary>
         void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Node.OnNode(e.Node, node => node.OnClick());
+            Node.OnNode<Node>(e.Node, node => node.OnClick());
         }
 
         /// <summary>Occurs when a <see cref="TreeNode"/> is double-clicked.
         /// <remarks>Expand/Collapse still executes for any node with children.</remarks></summary>
         void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Node.OnNode(e.Node, node => node.OnDoubleClick());
+            Node.OnNode<Node>(e.Node, node => node.OnDoubleClick());
         }
     }
 }

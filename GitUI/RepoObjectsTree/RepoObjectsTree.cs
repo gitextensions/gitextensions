@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Notifications;
@@ -11,7 +13,7 @@ namespace GitUI.UserControls
     /// <summary>Tree-like structure for a repo's objects.</summary>
     public partial class RepoObjectsTree : GitModuleControl
     {
-        List<RootNode> rootNodes = new List<RootNode>();
+        List<Tree> rootNodes = new List<Tree>();
         /// <summary>Image key for a head branch.</summary>
         static readonly string headBranchKey = Guid.NewGuid().ToString();
 
@@ -29,38 +31,33 @@ namespace GitUI.UserControls
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
         }
 
-
-        bool isFirst = true;
-
         protected override void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
         {
             base.OnUICommandsSourceChanged(sender, newSource);
 
             DragDrops();
 
-            AddRootNode(new BranchesNode(
-                new TreeNode(Strings.branches.Text)
-                {
-                    ContextMenuStrip = menuBranches,
-                    ImageKey = branchesKey
-                },
-                UICommands,
-                () =>
-                {
-                    var branchNames = Module.GetBranchNames().ToArray();
-                    return BranchesNode.GetBranchTree(UICommands, branchNames);
-                },
-                OnAddBranchNode
-            ));
-            AddTreeSet(new TreeNode(Strings.stashes.Text)
-                {
-                    ContextMenuStrip = menuStashes,
-                    ImageKey = stashesKey
-                },
-               () => Module.GetStashes().Select(stash => new StashNode(stash, UICommands)).ToList(),
-               OnReloadStashes,
-               OnAddStash
-            );
+            TreeNode branchesNode = new TreeNode(Strings.branches.Text)
+            {
+                ContextMenuStrip = menuBranches,
+            };
+
+            AddTree(new BranchTree(branchesNode, newSource) 
+            {
+                BranchContextMenu = menuBranch,
+                BranchPathContextMenu = menuBranchPath
+            }
+                );
+
+            /*            AddTreeSet(new TreeNode(Strings.stashes.Text)
+                            {
+                                ContextMenuStrip = menuStashes,
+                                ImageKey = stashesKey
+                            },
+                           () => Module.GetStashes().Select(stash => new StashNode(stash, UICommands)).ToList(),
+                           OnReloadStashes,
+                           OnAddStash
+                        );*/
             /*
             AddTreeSet(new TreeNode(Strings.remotes.Text)
                 {
@@ -72,66 +69,46 @@ namespace GitUI.UserControls
                 OnAddRemote
             );
             */
-            if (isFirst)
-            {// bypass reloading twice 
-                // (once from initial UICommandsSource being set)
-                // (once from FormBrowse Initialize())
-                isFirst = false;
-                //NotificationFeed notificationFeed = new NotificationFeed(UICommandsSource);
-                //toolbarMain.Items.Insert(0, notificationFeed);
-            }
-            else
+        }
+
+        void AddTree(Tree aTree)
+        {
+            aTree.TreeViewNode.SelectedImageKey = aTree.TreeViewNode.ImageKey;
+            aTree.TreeViewNode.Tag = aTree;
+            treeMain.Nodes.Add(aTree.TreeViewNode);
+            rootNodes.Add(aTree);
+        }
+
+        private CancellationTokenSource _cancelledTokenSource;
+        private void Cancel()
+        {
+            if (_cancelledTokenSource != null)
             {
-                RepoChanged();
-            }
-        }
-
-        void AddTreeSet<T>(
-            TreeNode rootTreeNode,
-            Func<ICollection<T>> getValues,
-            Action<ICollection<T>, RootNode<T>> onReload,
-            Func<TreeNodeCollection, T, TreeNode> itemToTreeNode)
-            where T : Node
-        {
-            AddRootNode(new RootNode<T>(rootTreeNode, UICommands, getValues, null, onReload, itemToTreeNode));
-        }
-
-        void AddRootNode(RootNode rootNode)
-        {
-            rootNode.TreeNode.SelectedImageKey = rootNode.TreeNode.ImageKey;
-            rootNode.TreeNode.Tag = rootNode;
-            treeMain.Nodes.Add(rootNode.TreeNode);
-            rootNodes.Add(rootNode);
-        }
-
-        /// <summary>Sets up the objects tree for a new repo, then reloads the objects tree.</summary>
-        public void RepoChanged()
-        {
-            foreach (RootNode rootNode in rootNodes)
-            {
-                rootNode.RepoChanged();
+                _cancelledTokenSource.Dispose();
+                _cancelledTokenSource = null;
             }
         }
 
         /// <summary>Reloads the repo's objects tree.</summary>
         public void Reload()
         {
-            // todo: async CancellationToken(s)
             // todo: task exception handling
+            Cancel();
+            _cancelledTokenSource = new CancellationTokenSource();
+            Task previousTask = null;
 
-            foreach (RootNode rootNode in rootNodes)
+            foreach (Tree rootNode in rootNodes)
             {
-                rootNode.ReloadAsync();
+                Task task = rootNode.ReloadTask(_cancelledTokenSource.Token);
+                if (previousTask == null)
+                {
+                    task.Start(TaskScheduler.Default);
+                }
+                else
+                {
+                    previousTask.ContinueWith((t) => task.Start(Task.Factory.Scheduler));
+                }
             }
-
-            // update tree little by little OR after all data retrieved?
-
-            //Task.Factory.ContinueWhenAll(
-            //    new[] { taskBranches },
-            //    tasks => treeMain.EndUpdate(),
-            //    new CancellationToken(),
-            //    TaskContinuationOptions.NotOnCanceled,
-            //    uiScheduler);
         }
     }
 }

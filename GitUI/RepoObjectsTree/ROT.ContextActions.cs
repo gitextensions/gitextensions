@@ -30,10 +30,9 @@ namespace GitUI.UserControls
         }
 
         /// <summary>Hooks an action onto the Click event of a <see cref="ToolStripMenuItem"/>.</summary>
-        void RegisterClick<TNode>(ToolStripMenuItem item, Action<TNode> onClick)
-            where TNode : Node
+        void RegisterClick<T>(ToolStripMenuItem item, Action<T> onClick) where T: Node           
         {
-            item.Click += (o, e) => Node.OnNode(rightClickNode, onClick);
+            item.Click += (o, e) => Node.OnNode<T>(rightClickNode, onClick);
         }
 
         /// <summary>Registers the context menu actions.</summary>
@@ -45,7 +44,7 @@ namespace GitUI.UserControls
 
             treeMain.NodeMouseClick += OnNodeMouseClick;
 
-            RegisterClick<BranchesNode>(mnubtnNewBranch, branches => branches.CreateBranch());
+            //RegisterClick<BranchesNode>(mnubtnNewBranch, branches => branches.CreateBranch());
 
 
             RegisterClick<BranchNode>(mnubtnBranchCheckout, branch => branch.Checkout());
@@ -57,18 +56,19 @@ namespace GitUI.UserControls
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranchesForce, branchPath => branchPath.DeleteAllForce());
 
-            RegisterClick<RootNode>(mnubtnStashSave, stashes => stashes.UICommands.StartStashDialog());
+            //RegisterClick<RootNode>(mnubtnStashSave, stashes => stashes.UICommands.StartStashDialog());
+            /*
 
-            RegisterClick<StashNode>(mnubtnStashPop, stash => stash.Pop());
-            RegisterClick<StashNode>(mnubtnStashApply, stash => stash.Apply());
-            RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
+RegisterClick<StashNode>(mnubtnStashPop, stash => stash.Pop());
+RegisterClick<StashNode>(mnubtnStashApply, stash => stash.Apply());
+RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
 
-            RegisterClick<RemoteBranchNode>(mnubtnTrackedFetch, remoteBranch => remoteBranch.Fetch());
-            RegisterClick<RemoteBranchNode>(mnubtnTrackedPull, remoteBranch => remoteBranch.Pull());
-            RegisterClick<RemoteBranchNode>(mnubtnTrackedCreateBranch, remoteBranch => remoteBranch.CreateBranch());
-            RegisterClick<RemoteBranchNode>(mnubtnTrackedUnTrack, remoteBranch => remoteBranch.UnTrack());
-            RegisterClick<RemoteBranchNode>(mnubtnTrackedDelete, remoteBranch => remoteBranch.Delete());
-
+RegisterClick<RemoteBranchNode>(mnubtnTrackedFetch, remoteBranch => remoteBranch.Fetch());
+RegisterClick<RemoteBranchNode>(mnubtnTrackedPull, remoteBranch => remoteBranch.Pull());
+RegisterClick<RemoteBranchNode>(mnubtnTrackedCreateBranch, remoteBranch => remoteBranch.CreateBranch());
+RegisterClick<RemoteBranchNode>(mnubtnTrackedUnTrack, remoteBranch => remoteBranch.UnTrack());
+RegisterClick<RemoteBranchNode>(mnubtnTrackedDelete, remoteBranch => remoteBranch.Delete());
+*/
             // TODO: context actions for RemoteBranchNode depending on its current state 
             // can either create additional remote branch Node classes OR use method overloads
 

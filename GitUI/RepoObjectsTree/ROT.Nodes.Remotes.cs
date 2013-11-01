@@ -34,9 +34,9 @@ namespace GitUI.UserControls
         static readonly string remoteBranchNewKey = Guid.NewGuid().ToString();
         static readonly string remoteBranchUnTrackedKey = Guid.NewGuid().ToString();
 
-
+        /*
         /// <summary>Reloads the remotes.</summary>
-        static void OnReloadRemotes(ICollection<RemoteNode> remotes, RootNode<RemoteNode> remotesNode)
+        static void OnReloadRemotes(ICollection<RemoteNode> remotes, Tree<RemoteNode> remotesNode)
         {
             remotesNode.TreeNode.Text = string.Format("{0} ({1})", Strings.remotes, remotes.Count);
         }
@@ -214,6 +214,7 @@ namespace GitUI.UserControls
 
 
         }
+         */
 
     }
 }
