@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 
 namespace GitUI.SpellChecker
 {
@@ -175,11 +176,14 @@ namespace GitUI.SpellChecker
 
         private int LineHeight()
         {
-            if (_lineHeight == 0)
-                if (_richTextBox.Lines.Any(line => line.Length != 0))
-                {
-                    _lineHeight = TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, 0);
+            if (!EnvUtils.RunningOnWindows())
+                return 12;
+
+            if (_lineHeight == 0 && !EnvUtils.RunningOnWindows ()) {
+                if (_richTextBox.Lines.Any (line => line.Length != 0)) {
+                    _lineHeight = TextBoxHelper.GetBaselineOffsetAtCharIndex (_richTextBox, 0);
                 }
+            }
 
             return _lineHeight == 0 ? 12 : _lineHeight;
         }
@@ -190,7 +194,7 @@ namespace GitUI.SpellChecker
         {
             Wave,
             Mark
-        } ;
+        };
 
         #endregion
     }
