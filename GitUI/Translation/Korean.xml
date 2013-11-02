@@ -2030,7 +2030,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="gitMaintenanceToolStripMenuItem" Property="Text">
           <Source>Git maintenance</Source>
-          <Value>Git maintenance</Value>
+          <Value>Git 유지보수</Value>
         </TranslationItem>
         <TranslationItem Name="gitToolStripMenuItem" Property="Text">
           <Source>Git</Source>
@@ -3686,7 +3686,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Publish Gerrit Change</Source>
-          <Value />
+          <Value>Gerrit 변경사항 게재하기</Value>
         </TranslationItem>
         <TranslationItem Name="AddRemote" Property="Text" type="unfinished">
           <Source>Manage remotes</Source>
@@ -5160,9 +5160,9 @@ This action cannot be made undone.</Source>
           <Source>Choose local (ours)</Source>
           <Value>로컬 수정사항으로 적용</Value>
         </TranslationItem>
-        <TranslationItem Name="_contextChooseLocalRebaseText" Property="Text" type="unfinished">
+        <TranslationItem Name="_contextChooseLocalRebaseText" Property="Text">
           <Source>Choose local (theirs)</Source>
-          <Source>로컬 수정사항으로 적용 (theirs)</Source>
+          <Value>로컬 수정사항으로 적용 (theirs)</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseRemoteMergeText" Property="Text" type="unfinished">
           <Source>Choose remote (theirs)</Source>
@@ -5172,13 +5172,13 @@ This action cannot be made undone.</Source>
           <Source>Choose remote (ours)</Source>
           <Value>원격 저장소 수정사항으로 적용 (ours)</Value>
         </TranslationItem>
-        <TranslationItem Name="_currentFormatFilter" Property="Text" type="unfinished">
+        <TranslationItem Name="_currentFormatFilter" Property="Text">
           <Source>Current format (*.{0})</Source>
-          <Value />
+          <Value>현재 포맷 (*.{0})</Value>
         </TranslationItem>
-        <TranslationItem Name="_failureWhileOpenFile" Property="Text" type="unfinished">
+        <TranslationItem Name="_failureWhileOpenFile" Property="Text">
           <Source>Open temporary file failed.</Source>
-          <Value />
+          <Value>임시 파일 열기 실패.</Value>
         </TranslationItem>
         <TranslationItem Name="_failureWhileSaveFile" Property="Text">
           <Source>Save file failed.</Source>
@@ -5210,9 +5210,9 @@ Do you want to commit now?</Source>
           <Source>Commit</Source>
           <Value>커밋</Value>
         </TranslationItem>
-        <TranslationItem Name="askMergeConflictSolved" Property="Text" type="unfinished">
+        <TranslationItem Name="askMergeConflictSolved" Property="Text">
           <Source>Is the mergeconflict solved?</Source>
-          <Value />
+          <Value>충돌파일이 처리되었습니까?</Value>
         </TranslationItem>
         <TranslationItem Name="askMergeConflictSolvedAfterCustomMergeScript" Property="Text" type="unfinished">
           <Source>The merge conflict need to be solved and the result must be saved as:
@@ -5309,9 +5309,9 @@ The file has been modified locally({1}) but deleted remotely({2}).
 Choose to delete the file or keep the modified version.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="fileNameDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="fileNameDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>FileName</Source>
-          <Value />
+          <Value>파일이름</Value>
         </TranslationItem>
         <TranslationItem Name="fileUnchangedAfterMerge" Property="Text" type="unfinished">
           <Source>The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location.
@@ -5319,25 +5319,25 @@ Choose to delete the file or keep the modified version.</Source>
 The merge conflict will not be marked as solved. Please try again.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="guidDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="guidDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Guid</Source>
-          <Value />
+          <Value>Guid</Value>
         </TranslationItem>
-        <TranslationItem Name="itemTypeDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="itemTypeDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>ItemType</Source>
-          <Value />
+          <Value>아이템형식</Value>
         </TranslationItem>
-        <TranslationItem Name="keepBaseButtonText" Property="Text" type="unfinished">
+        <TranslationItem Name="keepBaseButtonText" Property="Text">
           <Source>Keep base file</Source>
-          <Value />
+          <Value>기준파일 유지</Value>
         </TranslationItem>
-        <TranslationItem Name="keepModifiedButtonText" Property="Text" type="unfinished">
+        <TranslationItem Name="keepModifiedButtonText" Property="Text">
           <Source>Keep modified</Source>
-          <Value />
+          <Value>수정사항 유지</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
           <Source>Unresolved merge conflicts</Source>
-          <Value>충돌처리가 필요한 파일목록</Value>		  
+          <Value>충돌처리가 필요한 파일목록</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text" type="unfinished">
           <Source>Base</Source>
@@ -5396,21 +5396,21 @@ Fall back to 2-way merge?</Source>
           <Source>Open With</Source>
           <Value>연결 프로그램</Value>
         </TranslationItem>
-        <TranslationItem Name="ours" Property="Text" type="unfinished">
+        <TranslationItem Name="ours" Property="Text">
           <Source>ours</Source>
-          <Value />
+          <Value>ours</Value>
         </TranslationItem>
-        <TranslationItem Name="stageFilename" Property="Text" type="unfinished">
+        <TranslationItem Name="stageFilename" Property="Text">
           <Source>Stage {0}</Source>
-          <Value />
+          <Value>Stage {0}</Value>
         </TranslationItem>
         <TranslationItem Name="startMergetool" Property="Text" type="unfinished">
           <Source>Start mergetool</Source>
           <Value>머지 실행</Value>
         </TranslationItem>
-        <TranslationItem Name="theirs" Property="Text" type="unfinished">
+        <TranslationItem Name="theirs" Property="Text">
           <Source>theirs</Source>
-          <Value />
+          <Value>theirs</Value>
         </TranslationItem>
         <TranslationItem Name="uskUseCustomMergeScript" Property="Text" type="unfinished">
           <Source>There is a custom merge script ({0}) for this file type.
@@ -5430,9 +5430,9 @@ Do you want to use this custom merge script?</Source>
           <Source>Revert file changes</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Revert" Property="Text" type="unfinished">
+        <TranslationItem Name="Revert" Property="Text">
           <Source>Revert changes</Source>
-          <Value />
+          <Value>변경사항 되돌리기</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text" type="unfinished">
           <Source>Reset changes</Source>
@@ -5459,9 +5459,9 @@ Do you want to use this custom merge script?</Source>
           <Source>Automatically create a commit</Source>
           <Value>커밋 자동 생성</Value>
         </TranslationItem>
-        <TranslationItem Name="BranchInfo" Property="Text" type="unfinished">
+        <TranslationItem Name="BranchInfo" Property="Text">
           <Source>Revert this commit:</Source>
-          <Value />
+          <Value>이 커밋 되돌리기:</Value>
         </TranslationItem>
         <TranslationItem Name="ParentsLabel" Property="Text" type="unfinished">
           <Source>This commit is a merge, select parent:</Source>
@@ -5971,11 +5971,11 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="_pushToCaption" Property="Text" type="unfinished">
           <Source>Push tag to '{0}'</Source>
-          <Value />
+          <Value>'{0}'에 태그 Push</Value>
         </TranslationItem>
         <TranslationItem Name="annotate" Property="Text" type="unfinished">
           <Source>Create annotated tag</Source>
-          <Value />
+          <Value>Annotated 태그 생성</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Tag name</Source>
@@ -5987,7 +5987,7 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="pushTag" Property="Text" type="unfinished">
           <Source>Push tag to '{0}'</Source>
-          <Value />
+          <Value>'{0}'에 태그 Push</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
