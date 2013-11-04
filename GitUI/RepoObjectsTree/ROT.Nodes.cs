@@ -17,11 +17,13 @@ namespace GitUI.UserControls
     {
         class Nodes
         {
+            public readonly Tree Tree;
             public readonly Node OwnerNode;
             private readonly IList<Node> NodesList = new List<Node>();
 
-            public Nodes(Node aOwnerNode)
+            public Nodes(Tree aTree, Node aOwnerNode)
             {
+                Tree = aTree;
                 OwnerNode = aOwnerNode;
             }
 
@@ -40,6 +42,23 @@ namespace GitUI.UserControls
             {
                 var e = NodesList.GetEnumerator();
                 return e;
+            }
+
+            /// <summary>
+            /// Returns all nodes of a given TNode type using depth-first, pre-order method
+            /// </summary>
+            /// <typeparam name="TNode"></typeparam>
+            /// <returns></returns>
+            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : Node
+            {
+                foreach (var node in this)
+                {
+                    if(node is TNode)
+                        yield return (TNode)node;
+
+                    foreach (var subnode in node.Nodes.DepthEnumerator<TNode>())
+                        yield return subnode;
+                }
             }
 
             internal void FillTreeViewNode(TreeNode aTreeViewNode)
@@ -97,7 +116,7 @@ namespace GitUI.UserControls
 
             public Tree(TreeNode aTreeNode, IGitUICommandsSource uiCommands)
             {
-                Nodes = new Nodes(null);
+                Nodes = new Nodes(this, null);
                 UICommandsSource = uiCommands;
                 TreeViewNode = aTreeNode;
             }
@@ -138,15 +157,18 @@ namespace GitUI.UserControls
 
         abstract class Node
         {
-
             /// <summary>Gets the parent node.</summary>
             public Node ParentNode { get; internal set; }
             public readonly Nodes Nodes;
+            public Tree Tree { get { return Nodes.Tree; } }
+            /// <summary>Gets the <see cref="GitUICommands"/> reference.</summary>
+            public GitUICommands UICommands { get { return Tree.UICommands; } }
+            /// <summary>Gets the <see cref="GitModule"/> reference.</summary>
+            public GitModule Module { get { return UICommands.Module; } }
 
-
-            protected Node(Node aParentNode)
+            protected Node(Tree aTree, Node aParentNode)
             {
-                Nodes = new Nodes(this);
+                Nodes = new Nodes(aTree, this);
                 //Notifier = NotificationManager.Get(UICommands);
                 IsDraggable = false;
                 AllowDrop = false;
@@ -165,8 +187,23 @@ namespace GitUI.UserControls
                     _TreeViewNode = value;
                     _TreeViewNode.Tag = this;
                     _TreeViewNode.Text = DisplayText();
+                    _TreeViewNode.ContextMenuStrip = GetContextMenuStrip();
                     ApplyStyle();
                 }
+            }
+
+            private static Dictionary<Type, ContextMenuStrip> DefaultContextMenus = new Dictionary<Type, ContextMenuStrip>();
+
+            public static void RegisterContextMenu(Type aType, ContextMenuStrip aMenu)
+            {
+                DefaultContextMenus.Add(aType, aMenu);
+            }
+
+            protected virtual ContextMenuStrip GetContextMenuStrip()
+            {
+                ContextMenuStrip result = null;
+                DefaultContextMenus.TryGetValue(GetType(), out result);
+                return result;
             }
 
             public IWin32Window ParentWindow()
@@ -183,6 +220,11 @@ namespace GitUI.UserControls
             protected virtual void ApplyStyle()
             {
                 TreeViewNode.NodeFont = AppSettings.Font;
+            }
+
+            public void Select()
+            {
+                TreeViewNode.TreeView.SelectedNode = TreeViewNode;
             }
 
             /// <summary>Occurs when the <see cref="Node"/> is selected.</summary>
@@ -285,6 +327,9 @@ namespace GitUI.UserControls
             /// <summary>Casts the <see cref="System.Windows.Forms.TreeNode.Tag"/> to a <see cref="Node"/>.</summary>
             public static T GetNodeSafe<T>(TreeNode treeNode) where T : Node
             {
+                if (treeNode == null)
+                    return null;
+
                 return treeNode.Tag as T;
             }
 
@@ -298,22 +343,6 @@ namespace GitUI.UserControls
                     return true;
                 }
                 return false;
-            }
-        }
-
-        /// <summary>base class for a node</summary>
-        abstract class Node<TTree> : Node where TTree : Tree
-        {
-            public TTree Tree { get; private set; }
-            /// <summary>Gets the <see cref="GitUICommands"/> reference.</summary>
-            public GitUICommands UICommands { get { return Tree.UICommands; } }
-            /// <summary>Gets the <see cref="GitModule"/> reference.</summary>
-            public GitModule Module { get { return UICommands.Module; } }
-
-            protected Node(TTree aTree, Node aParentNode)
-                : base(aParentNode)
-            {
-                Tree = aTree;
             }
         }
     }

@@ -13,26 +13,10 @@ namespace GitUI.UserControls
     // "branches"
     public partial class RepoObjectsTree
     {
-        /// <summary>Adds a <see cref="BaseBranchNode"/>, and recursivley, its children.</summary>
-        TreeNode OnAddBranchNode(TreeNodeCollection nodes, BaseBranchNode branchNode)
-        {
-            bool isBranch = branchNode is BranchNode;
-            TreeNode treeNode = new TreeNode(branchNode.Name)
-            {
-                Name = branchNode.FullPath,
-                ContextMenuStrip = isBranch ? menuBranch : menuBranchPath,
-            };
-
-            nodes.Add(treeNode);
-            branchNode.TreeViewNode = treeNode;
-
-            return null;// return null bypass duplicate call to ApplyStyle
-        }
-
         #region private classes
 
         /// <summary>base class for a branch node</summary>
-        abstract class BaseBranchNode : Node<BranchTree>
+        abstract class BaseBranchNode : Node
         {
             protected readonly char PathSeparator = '/';
             /// <summary>Short name of the branch/branch path. <example>"issue1344"</example></summary>
@@ -69,7 +53,7 @@ namespace GitUI.UserControls
                 return Equals(obj as BaseBranchNode);
             }
 
-            protected BaseBranchNode(BranchTree aTree, string aFullPath)
+            protected BaseBranchNode(Tree aTree, string aFullPath)
                 : base(aTree, null)
             {
                 aFullPath = aFullPath.Trim();
@@ -115,7 +99,7 @@ namespace GitUI.UserControls
         /// <summary>Local branch node.</summary>
         sealed class BranchNode : BaseBranchNode
         {
-            public BranchNode(BranchTree aTree, string aFullPath)
+            public BranchNode(Tree aTree, string aFullPath)
                 : base(aTree, aFullPath.TrimStart(GitModule.ActiveBranchIndicator))
             {
                 IsDraggable = true;
@@ -136,7 +120,6 @@ namespace GitUI.UserControls
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ContextMenuStrip = Tree.BranchContextMenu;
                 if (IsActive)
                 {
                     TreeViewNode.NodeFont = new Font(TreeViewNode.NodeFont, FontStyle.Bold);
@@ -238,7 +221,7 @@ namespace GitUI.UserControls
         class BranchPathNode : BaseBranchNode
         {
             /// <summary>Creates a new <see cref="BranchPathNode"/>.</summary>
-            public BranchPathNode(BranchTree aTree, string aFullPath)
+            public BranchPathNode(Tree aTree, string aFullPath)
                 : base(aTree, aFullPath)
             {
             }
@@ -251,7 +234,6 @@ namespace GitUI.UserControls
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ContextMenuStrip = Tree.BranchPathContextMenu;
             }
 
             public void CreateWithin()
@@ -299,6 +281,7 @@ namespace GitUI.UserControls
         class BranchTree : Tree
         {
             public const char PathSeparator = '/';
+            private string SelectedBranch;
 
             public BranchTree(TreeNode aTreeNode, IGitUICommandsSource uiCommands)
                 : base(aTreeNode, uiCommands)
@@ -308,9 +291,6 @@ namespace GitUI.UserControls
             {
                 FillBranchTree(Module.GetBranchNames());
             }
-
-            public ContextMenuStrip BranchContextMenu { get; set; }
-            public ContextMenuStrip BranchPathContextMenu { get; set; }
 
             /// <summary>Gets the hierarchical branch tree from the specified list of <paramref name="branches"/>.</summary>
             public void FillBranchTree(IEnumerable<string> branches)
@@ -357,6 +337,25 @@ namespace GitUI.UserControls
             {
                 base.FillTreeViewNode();
                 TreeViewNode.Text = string.Format("{0} ({1})", Strings.branches, Nodes.Count);
+
+                var selectedNode = Node.GetNodeSafe<BranchNode>(TreeViewNode.TreeView.SelectedNode);
+                if (selectedNode == null)
+                {
+                    var activeBranch = Nodes.DepthEnumerator<BranchNode>().Where(b => b.IsActive).FirstOrDefault();
+                    if (activeBranch != null)
+                    {
+                        if (!activeBranch.FullPath.Equals(SelectedBranch))
+                        {
+                            activeBranch.Select();                            
+                        }
+                        SelectedBranch = activeBranch.FullPath;
+                    }
+                }
+                else
+                {
+                    selectedNode.OnSelected();
+                    SelectedBranch = selectedNode.FullPath;
+                }
             }
 
         }

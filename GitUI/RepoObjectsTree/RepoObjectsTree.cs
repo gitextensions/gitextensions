@@ -42,12 +42,7 @@ namespace GitUI.UserControls
                 ContextMenuStrip = menuBranches,
             };
 
-            AddTree(new BranchTree(branchesNode, newSource) 
-            {
-                BranchContextMenu = menuBranch,
-                BranchPathContextMenu = menuBranchPath
-            }
-                );
+            AddTree(new BranchTree(branchesNode, newSource));
 
             /*            AddTreeSet(new TreeNode(Strings.stashes.Text)
                             {

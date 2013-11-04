@@ -559,21 +559,23 @@ namespace GitUI
             Revisions.Select();
         }
 
-        public void SetSelectedRevision(string revision)
+        public bool SetSelectedRevision(string revision)
         {
             if (revision != null)
             {
                 for (var i = 0; i < Revisions.RowCount; i++)
                 {
-                    if (GetRevision(i).Guid != revision)
-                        continue;
+                    if (GetRevision(i).Guid == revision)
+                    {
                         SetSelectedIndex(i);
-                        return;
+                        return true;
                     }
                 }
+            }
 
             Revisions.ClearSelection();
             Revisions.Select();
+            return false;
         }
 
         public GitRevision GetRevision(string guid)
@@ -581,9 +583,9 @@ namespace GitUI
             return Revisions.GetRevision(guid);
         }
 
-        public void SetSelectedRevision(GitRevision revision)
+        public bool SetSelectedRevision(GitRevision revision)
         {
-            SetSelectedRevision(revision != null ? revision.Guid : null);
+            return SetSelectedRevision(revision != null ? revision.Guid : null);
         }
 
         public void HighlightBranch(string aId)
@@ -2704,7 +2706,16 @@ namespace GitUI
             string revisionGuid = Module.RevParse(refName);
             if (!string.IsNullOrEmpty(revisionGuid))
             {
-                SetSelectedRevision(new GitRevision(Module, revisionGuid));
+                if (_isLoading)
+                {
+                    _initialSelectedRevision = revisionGuid;
+                    Revisions.SelectedIds = null;
+                    LastSelectedRows = null;
+                }
+                else
+                {
+                    SetSelectedRevision(new GitRevision(Module, revisionGuid));
+                }
             }
             else if(showNoRevisionMsg)
             {
