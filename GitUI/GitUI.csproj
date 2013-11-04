@@ -996,7 +996,6 @@
     <Compile Include="RepoObjectsTree\ROT.Nodes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RepoObjectsTree\ValueWatcher.cs" />
     <Compile Include="RepoObjectsTree\ROT.Nodes.Branches.cs">
       <SubType>UserControl</SubType>
     </Compile>
