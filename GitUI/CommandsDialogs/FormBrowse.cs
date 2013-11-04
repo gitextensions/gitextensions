@@ -1464,7 +1464,7 @@ namespace GitUI.CommandsDialogs
 
         private void DeleteBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartDeleteBranchDialog(this, null);
+            UICommands.StartDeleteBranchDialog(this, string.Empty);
         }
 
         private void DeleteTagToolStripMenuItemClick(object sender, EventArgs e)

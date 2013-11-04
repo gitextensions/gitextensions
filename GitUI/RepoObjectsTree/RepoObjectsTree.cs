@@ -37,12 +37,7 @@ namespace GitUI.UserControls
 
             DragDrops();
 
-            TreeNode branchesNode = new TreeNode(Strings.branches.Text)
-            {
-                ContextMenuStrip = menuBranches,
-            };
-
-            AddTree(new BranchTree(branchesNode, newSource));
+            AddTree(new BranchTree(new TreeNode(Strings.branches.Text), newSource));
 
             /*            AddTreeSet(new TreeNode(Strings.stashes.Text)
                             {

@@ -48,12 +48,10 @@ namespace GitUI.UserControls
 
 
             RegisterClick<BranchNode>(mnubtnBranchCheckout, branch => branch.Checkout());
-            RegisterClick<BranchNode>(mnubtnBranchCreateFrom, branch => branch.CreateBranch());
             RegisterClick<BranchNode>(mnubtnBranchDelete, branch => branch.Delete());
             RegisterClick<BranchNode>(mnubtnBranchDeleteForce, branch => branch.DeleteForce());
             Node.RegisterContextMenu(typeof(BranchNode), menuBranch);
 
-            RegisterClick<BranchPathNode>(mnubtnCreateBranchWithin, branchPath => branchPath.CreateWithin());
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranchesForce, branchPath => branchPath.DeleteAllForce());
             Node.RegisterContextMenu(typeof(BranchPathNode), menuBranchPath);

@@ -199,14 +199,9 @@ namespace GitUI.UserControls
                 UICommands.StartCheckoutBranch(FullPath, false);
             }
 
-            public void CreateBranch()
-            {
-                UICommands.StartCreateBranchDialog();
-            }
-
             public void Delete()
             {
-                UICommands.StartDeleteBranchDialog(FullPath);
+                UICommands.StartDeleteBranchDialog(ParentWindow(), new string[] { FullPath });
             }
 
             public void DeleteForce()
@@ -236,19 +231,18 @@ namespace GitUI.UserControls
                 base.ApplyStyle();
             }
 
-            public void CreateWithin()
-            {
-                throw new NotImplementedException();
-            }
-
             public void DeleteAll()
             {
-                throw new NotImplementedException();
+                var branches = Nodes.DepthEnumerator<BranchNode>().Select(branch => branch.FullPath);
+                UICommands.StartDeleteBranchDialog(ParentWindow(), branches);
             }
 
             public void DeleteAllForce()
             {
-                throw new NotImplementedException();
+                var branches = Nodes.DepthEnumerator<BranchNode>();
+                var branchHeads = branches.Select(branch => GitRef.CreateBranchRef(UICommands.Module, null, branch.FullPath));
+                var cmd = new GitDeleteBranchCmd(branchHeads, true);
+                UICommands.StartCommandLineProcessDialog(cmd, null);
             }
         }
 
