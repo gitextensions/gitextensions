@@ -279,7 +279,16 @@ namespace GitUI.UserControls
 
             public BranchTree(TreeNode aTreeNode, IGitUICommandsSource uiCommands)
                 : base(aTreeNode, uiCommands)
-            { }
+            {
+                uiCommands.GitUICommandsChanged += uiCommands_GitUICommandsChanged;
+            }
+
+            void uiCommands_GitUICommandsChanged(IGitUICommandsSource sender, GitUICommands oldCommands)
+            {
+                //select active branch after repo change
+                TreeViewNode.TreeView.SelectedNode = null;
+                SelectedBranch = null;
+            }
 
             protected override void LoadNodes(System.Threading.CancellationToken token)
             {
@@ -322,36 +331,44 @@ namespace GitUI.UserControls
                 {
                     BranchNode branchNode = new BranchNode(this, branch);
                     BaseBranchNode parent = branchNode.CreateRootNode(nodes);
-                    if(parent != null)
+                    if (parent != null)
                         Nodes.AddNode(parent);
                 }
             }
 
             protected override void FillTreeViewNode()
             {
+                var selectedNode = Node.GetNodeSafe<BranchNode>(TreeViewNode.TreeView.SelectedNode);
+                if (selectedNode != null)
+                {
+                    SelectedBranch = selectedNode.FullPath;
+                }
+
                 base.FillTreeViewNode();
+
                 TreeViewNode.Text = string.Format("{0} ({1})", Strings.branches, Nodes.Count);
 
-                var selectedNode = Node.GetNodeSafe<BranchNode>(TreeViewNode.TreeView.SelectedNode);
-                if (selectedNode == null)
+                if (SelectedBranch != null)
                 {
-                    var activeBranch = Nodes.DepthEnumerator<BranchNode>().Where(b => b.IsActive).FirstOrDefault();
-                    if (activeBranch != null)
+                    selectedNode = Nodes.DepthEnumerator<BranchNode>().Where(b => b.FullPath.Equals(SelectedBranch)).FirstOrDefault();
+                    if (selectedNode != null)
                     {
-                        if (!activeBranch.FullPath.Equals(SelectedBranch))
-                        {
-                            activeBranch.Select();                            
-                        }
-                        SelectedBranch = activeBranch.FullPath;
+                        selectedNode.Select();
+                        return;
                     }
+                }
+
+                var activeBranch = Nodes.DepthEnumerator<BranchNode>().Where(b => b.IsActive).FirstOrDefault();
+                if (activeBranch == null)
+                {
+                    TreeViewNode.TreeView.SelectedNode = null;
                 }
                 else
                 {
-                    selectedNode.OnSelected();
-                    SelectedBranch = selectedNode.FullPath;
+                    activeBranch.Select();
+                    SelectedBranch = activeBranch.FullPath;
                 }
             }
-
         }
 
         #endregion private classes

@@ -98,7 +98,6 @@ namespace GitUI.UserControls
                 while (oldNodeIdx < aTreeViewNode.Nodes.Count)
                 {
                     aTreeViewNode.Nodes.RemoveAt(oldNodeIdx);
-                    oldNodeIdx++;
                 }
 
             }
@@ -224,7 +223,14 @@ namespace GitUI.UserControls
 
             public void Select()
             {
-                TreeViewNode.TreeView.SelectedNode = TreeViewNode;
+                if (TreeViewNode.TreeView.SelectedNode == TreeViewNode)
+                {
+                    OnSelected();
+                }
+                else
+                {
+                    TreeViewNode.TreeView.SelectedNode = TreeViewNode;
+                }
             }
 
             /// <summary>Occurs when the <see cref="Node"/> is selected.</summary>

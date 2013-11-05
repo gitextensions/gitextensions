@@ -2706,15 +2706,11 @@ namespace GitUI
             string revisionGuid = Module.RevParse(refName);
             if (!string.IsNullOrEmpty(revisionGuid))
             {
-                if (_isLoading)
+                if (_isLoading || !SetSelectedRevision(new GitRevision(Module, revisionGuid)))
                 {
                     _initialSelectedRevision = revisionGuid;
                     Revisions.SelectedIds = null;
                     LastSelectedRows = null;
-                }
-                else
-                {
-                    SetSelectedRevision(new GitRevision(Module, revisionGuid));
                 }
             }
             else if(showNoRevisionMsg)
