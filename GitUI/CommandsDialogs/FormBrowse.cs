@@ -78,9 +78,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _configureWorkingDirMenu =
             new TranslationString("Configure this menu");
 
-        private readonly TranslationString _alwaysShowCheckoutDlgStr =
-            new TranslationString("Always show checkout dialog");
-
         private readonly TranslationString directoryIsNotAValidRepositoryCaption =
             new TranslationString("Open");
 

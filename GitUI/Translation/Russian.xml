@@ -5907,7 +5907,7 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>The selected mergeconflict is a submodule.
 Stage current submodule commit?</Source>
           <Value>Выбранный конфликт - субмодуль.
-Stage текущий коммит убмодуля?</Value>
+Stage текущий коммит субмодуля?</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
           <Source>Submodule</Source>

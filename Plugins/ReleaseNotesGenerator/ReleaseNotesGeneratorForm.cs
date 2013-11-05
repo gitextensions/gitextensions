@@ -13,7 +13,6 @@ namespace ReleaseNotesGenerator
     /// </summary>
     public partial class ReleaseNotesGeneratorForm : Form
     {
-        private readonly IGitPluginSettingsContainer _settings;
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private IEnumerable<LogLine> _lastGeneratedLogLines;
 
@@ -21,7 +20,6 @@ namespace ReleaseNotesGenerator
         {
             InitializeComponent();
 
-            _settings = settings;
             _gitUiCommands = gitUiCommands;
             Icon = _gitUiCommands.GitUICommands.FormIcon;
         }

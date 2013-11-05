@@ -1700,8 +1700,7 @@ namespace GitUI
             WrapRepoHostingCall("View pull requests", gitHoster,
                                 gh =>
                                 {
-                                    var frm = new ViewPullRequestsForm(this, gitHoster);
-                                    frm.ShowInTaskbar = true;
+                                    var frm = new ViewPullRequestsForm(this, gitHoster) {ShowInTaskbar = true};
                                     frm.Show();
                                 });
         }
