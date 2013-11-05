@@ -97,8 +97,8 @@ xcopy /y ..\GitUI\Translation\Japanese.* GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Russian.* GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y ..\GitUI\Translation\SimplifiedChinese.* GitExtensions\Translation\
-REM IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y "..\GitUI\Translation\Simplified Chinese.*" GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Spanish.* GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y ..\GitUI\Translation\TraditionalChinese.* GitExtensions\Translation\
