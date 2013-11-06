@@ -1131,9 +1131,8 @@ Do you want to open it?</Source>
           <Source>Find and replace</Source>
           <Value>查找和替换</Value>
         </TranslationItem>
-        <TranslationItem Name="_findAndReplaceString" Property="Text" type="unfinished">
+        <TranslationItem Name="_findAndReplaceString" Property="Text">
           <Source>Find &amp; replace</Source>
-          <OldSource>Find &amp; replace(&amp;r)</OldSource>
           <Value>查找和替换</Value>
         </TranslationItem>
         <TranslationItem Name="_findString" Property="Text">
@@ -2527,10 +2526,9 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Date</Source>
           <Value>日期</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
 revision:</Source>
-          <OldSource>Choose another revision:</OldSource>
           <Value>选择另一个修订：</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="obsolete">
@@ -2762,7 +2760,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
         </TranslationItem>
         <TranslationItem Name="Reset" Property="Text">
           <Source>Reset all changes</Source>
-          <Value>复位更改</Value>
+          <Value>复位所有变更</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Source>There are unresolved mergeconflicts
@@ -2780,6 +2778,7 @@ Only use amend if the commit is not published yet!
 Do you want to continue?</Source>
           <Value>您将要改写历史。
 如果提交还没有被发布，只用修改就可以了！
+
 你想继续吗？</Value>
         </TranslationItem>
         <TranslationItem Name="_amendCommitCaption" Property="Text">
@@ -2891,7 +2890,7 @@ Are you sure you want to commit?</Source>
         </TranslationItem>
         <TranslationItem Name="_noUnstagedChanges" Property="Text">
           <Source>There are no unstaged changes</Source>
-          <Value>没有反载入的更改</Value>
+          <Value>没有未载入的更改</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranch" Property="Text">
           <Source>This commit will be unreferenced when switching to another branch and can be lost.
@@ -2940,7 +2939,7 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
           <Source>Unstage chunk of file</Source>
-          <Value>反载入文件块</Value>
+          <Value>未载入的文件</Value>
         </TranslationItem>
         <TranslationItem Name="_selectOnlyOneFile" Property="Text">
           <Source>You must have only one file selected.</Source>
@@ -2976,7 +2975,7 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="_unstageSelectedLines" Property="Text">
           <Source>Unstage selected line(s)</Source>
-          <Value>反载入选择的行</Value>
+          <Value>未载入选择的行</Value>
         </TranslationItem>
         <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
           <Source>Add file to .gitignore</Source>
@@ -3496,17 +3495,12 @@ Deleting a branch can cause commits to be deleted too!</Source>
           <Source>Select branches</Source>
           <Value>选择分支</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>You can only delete branches when they are fully merged in HEAD. 
 When you delete a branch the commits can get lost because nothing point to them.
 When you want to delete a not-fully merged branch, you can override
 this using `force delete´.
 </Source>
-          <OldSource>You can only delete branches when they are fully merged in HEAD. 
-When you delete a branch the commits can get lost because nothing point to them.
-When you want to delete a not-fully merged branch, you can override
-this using `force delete′.
-</OldSource>
           <Value>您只能删除已经在HEAD中完全合并的分支。
 如果您删除一分支，对应的提交会丢失，因为已经没有分支指向它们了。
 如果您想删除一个没有完全合并的分支，请选中“强制删除”</Value>
@@ -5786,7 +5780,7 @@ The merge conflict will not be marked as solved. Please try again.</Source>
         <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
           <Source>The selected mergeconflict is a submodule.
 Stage current submodule commit?</Source>
-          <Value>所选定的合并冲突是一个子模块。把冲突标记成已解决吗？</Value>
+          <Value>所选定的合并冲突是一个子模块。把当前子模块的提交标记为载入吗？</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
           <Source>Submodule</Source>
@@ -5812,7 +5806,7 @@ Fall back to 2-way merge?</Source>
         </TranslationItem>
         <TranslationItem Name="noMergeTool" Property="Text">
           <Source>There is no mergetool configured. Please go to settings and set a mergetool!</Source>
-          <Value>没有配置mergetool。请到设置菜单设置合并工具！</Value>
+          <Value>没有配置合并工具。请到设置菜单设置合并工具！</Value>
         </TranslationItem>
         <TranslationItem Name="openMergeToolBtn" Property="Text">
           <Source>Open in mergetool</Source>
@@ -6789,7 +6783,7 @@ Context menu for additional operations</Source>
         </TranslationItem>
         <TranslationItem Name="lblDefaultCloneDestination" Property="Text">
           <Source>Default clone destination</Source>
-          <Value>默认克隆存储目录</Value>
+          <Value>默认克隆存储路径</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6853,9 +6847,8 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
     </TranslationCategory>
     <TranslationCategory Name="GlobalSettingsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Global settings</Source>
-          <OldSource>Global settings</OldSource>
           <Value>全局设置</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseCommitTemplate" Property="Text">
@@ -7030,10 +7023,9 @@ global settings.
           <Source>Hide help</Source>
           <Value>隐藏帮助</Value>
         </TranslationItem>
-        <TranslationItem Name="linkLabelShowHelp" Property="Text" type="unfinished">
+        <TranslationItem Name="linkLabelShowHelp" Property="Text">
           <Source>Show
 help</Source>
-          <OldSource>Show help</OldSource>
           <Value>显示帮助</Value>
         </TranslationItem>
       </translationItems>
@@ -7192,7 +7184,7 @@ local settings.
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Plugins Settings</Source>
-          <Value>起始页</Value>
+          <Value>插件的配置</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select one of the subnodes to view or edit the settings of a Git Extensions Plugin.</Source>
@@ -7314,10 +7306,9 @@ local settings.
           <Source>Skip revision</Source>
           <Value>跳过版本</Value>
         </TranslationItem>
-        <TranslationItem Name="branchNameToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="branchNameToolStripMenuItem" Property="Text">
           <Source>Branch name</Source>
-          <OldSource>Branch name:</OldSource>
-          <Value>分支名称：</Value>
+          <Value>分支名称</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
           <Source>Checkout branch</Source>
