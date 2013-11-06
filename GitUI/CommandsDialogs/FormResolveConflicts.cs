@@ -459,6 +459,8 @@ namespace GitUI.CommandsDialogs
 
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
             {
+                if (string.IsNullOrEmpty(mergetoolPath))
+                    mergetoolPath = "kdiff3";
                 mergetoolCmd = "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
             }
             else
