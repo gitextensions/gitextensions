@@ -2897,7 +2897,7 @@ namespace GitCommands
 
         public Stream GetFileStream(string blob)
         {
-            return Repository.Lookup<Blob>(new ObjectId(blob)).ContentStream();
+            return Repository.Lookup<Blob>(new ObjectId(blob)).GetContentStream();
         }
 
         public IEnumerable<string> GetPreviousCommitMessages(int count)
