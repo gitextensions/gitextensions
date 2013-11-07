@@ -341,7 +341,7 @@ namespace GitUI.CommandsDialogs
         private IList<string> GetContainsRevisionBranches()
         {
             return Module.GetAllBranchesWhichContainGivenCommit(_containRevison, LocalBranch.Checked, !LocalBranch.Checked)
-                        .Where(a => !Module.IsDetachedHead(a) && 
+                        .Where(a => !GitModule.IsDetachedHead(a) && 
                             !a.EndsWith("/HEAD")).ToList();
         }
 
