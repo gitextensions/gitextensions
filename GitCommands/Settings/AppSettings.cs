@@ -103,7 +103,7 @@ namespace GitCommands
             var path = gitExtDir.Substring(gitExtDir.Length - len);
             if (debugPath.Replace('\\', '/').Equals(path.Replace('\\', '/')))
             {
-                string projectPath = gitExtDir.Substring(0, len + 2);
+                string projectPath = gitExtDir.Substring(0, gitExtDir.Length - len);
                 return Path.Combine(projectPath, "Bin");
             }
 #endif

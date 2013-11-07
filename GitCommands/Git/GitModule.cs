@@ -2501,7 +2501,7 @@ namespace GitCommands
             return IsDetachedHead(GetSelectedBranch());
         }
 
-        public bool IsDetachedHead(string branch)
+        public static bool IsDetachedHead(string branch)
         {
             return DetachedPrefixes.Any(a => branch.StartsWith(a, StringComparison.Ordinal));
         }

@@ -1542,7 +1542,7 @@
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
-    <None Include="Resources\Icons\User.png" />
+    <None Include="Resources\Icons\User.PNG" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\Logo\cow-head-blue.ico">

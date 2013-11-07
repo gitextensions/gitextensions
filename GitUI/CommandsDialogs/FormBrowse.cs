@@ -79,9 +79,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _configureWorkingDirMenu =
             new TranslationString("Configure this menu");
 
-        private readonly TranslationString _alwaysShowCheckoutDlgStr =
-            new TranslationString("Always show checkout dialog");
-
         private readonly TranslationString directoryIsNotAValidRepositoryCaption =
             new TranslationString("Open");
 
@@ -2902,7 +2899,7 @@ namespace GitUI.CommandsDialogs
         private string GetModuleBranch(string path)
         {
             string branch = GitModule.GetSelectedBranchFast(path);
-            if (Module.IsDetachedHead(branch))
+            if (GitModule.IsDetachedHead(branch))
                 return "[no branch]";
             return "[" + branch + "]";
         }
