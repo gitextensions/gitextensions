@@ -332,6 +332,12 @@
             <Component Id="Japanese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.gif" />
             </Component>
+            <Component Id="Korean.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Korean.xml" />
+            </Component>
+            <Component Id="Korean.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Korean.gif" />
+            </Component>
             <Component Id="Russian.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.xml" />
             </Component>
