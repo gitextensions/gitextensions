@@ -118,54 +118,54 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UI_Console_Full_Message" xml:space="preserve">
-    <value>처리되지 않은 예외가 발생했습니다. 프로그램을 종료합니다.</value>
+    <value>Došlo je do greške. Zatvaram aplikaciju.</value>
   </data>
   <data name="UI_Console_Minimal_Message" xml:space="preserve">
-    <value>처리되지 않은 예외가 발생했습니다. 프로그램을 종료합니다.</value>
+    <value>Došlo je do greške. Zatvaram aplikaciju.</value>
   </data>
   <data name="UI_Console_Normal_Message" xml:space="preserve">
-    <value>처리되지 않은 예외가 발생했습니다. 프로그램을 종료합니다.</value>
+    <value>Došlo je do greške. Zatvaram aplikaciju.</value>
   </data>
   <data name="UI_Dialog_Full_Exception_Tab" xml:space="preserve">
-    <value>예외</value>
+    <value>Greška</value>
   </data>
   <data name="UI_Dialog_Full_General_Tab" xml:space="preserve">
-    <value>일반</value>
+    <value>Opće</value>
   </data>
   <data name="UI_Dialog_Full_How_to_Reproduce_the_Error_Notification" xml:space="preserve">
-    <value>오류를 재현할 수 있도록 간단한 설명을 적어주십시오:</value>
+    <value>Molimo dodajte kratak opis kako bi nam pomogli reproducirati grešku:</value>
   </data>
   <data name="UI_Dialog_Full_Message" xml:space="preserve">
-    <value>이 프로그램은 충돌이 발생하였으며 종료됩니다. '종료'를 선택하시면 프로그램이 바로 종료됩니다. '보내고 종료'를 선택하시면 프로그램이 닫히고 버그 레포트가 전송됩니다.</value>
+    <value>Aplikacija je proizvela grešku i biti će zatvorena. Ako kliknete Izlaz, aplikacija će se odmah zatvoriti. Ako kliknete Pošalji i izađi, aplikacija će se zatvoriti i poslati izvještaj razvojnom timu.</value>
   </data>
   <data name="UI_Dialog_Full_Quit_Button" xml:space="preserve">
-    <value>종료(&amp;Q)</value>
+    <value>&amp;Izlaz</value>
   </data>
   <data name="UI_Dialog_Full_Report_Contents_Tab" xml:space="preserve">
-    <value>레포트 내용</value>
+    <value>Sadržaj izvještaja</value>
   </data>
   <data name="UI_Dialog_Full_Send_and_Quit_Button" xml:space="preserve">
-    <value>보내고 종료(&amp;S)</value>
+    <value>&amp;Pošalji i izađi</value>
   </data>
   <data name="UI_Dialog_Full_Title" xml:space="preserve">
-    <value>오류</value>
+    <value>Greška</value>
   </data>
   <data name="UI_Dialog_Minimal_Message" xml:space="preserve">
-    <value>이 프로그램은 충돌이 발생하였으며 종료됩니다. 버그 레포트가 개발자에게 보내졌습니다. 불편을 끼쳐드려 죄송합니다.</value>
+    <value>Aplikacija je proizvela grešku i biti će zatvorena. Izvještaj o grešci poslan je razvojnom timu. Ispričavamo se na neugodnosti.</value>
   </data>
   <data name="UI_Dialog_Minimal_Title" xml:space="preserve">
-    <value>오류</value>
+    <value>Greška</value>
   </data>
   <data name="UI_Dialog_Normal_Continue_Button" xml:space="preserve">
-    <value>계속(&amp;C)</value>
+    <value>&amp;Nastavi</value>
   </data>
   <data name="UI_Dialog_Normal_Message" xml:space="preserve">
-    <value>이 프로그램에서 처리되지 않은 예외가 발생했습니다. '계속'을 선택하시면 이 오류를 무시하고 계속 실행하도록 시도합니다. '종료'를 선택하시면 프로그램이 바로 닫힙니다.</value>
+    <value>Došlo je do greške u aplikaciji. Ako kliknete na Nastavi, aplikacija će ignorirati ovu grešku i pokušati nastaviti sa radom. Ako kliknete Odustani aplikacija će se odmah zatvoriti.</value>
   </data>
   <data name="UI_Dialog_Normal_Quit_Button" xml:space="preserve">
-    <value>종료(&amp;Q)</value>
+    <value>&amp;Odustani</value>
   </data>
   <data name="UI_Dialog_Normal_Title" xml:space="preserve">
-    <value>오류</value>
+    <value>Greška</value>
   </data>
 </root>

@@ -4,6 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Configuration;
+
 namespace NBug.Core.UI.WinForms
 {
 	using System.Windows.Forms;
@@ -17,7 +19,7 @@ namespace NBug.Core.UI.WinForms
 			MessageBox.Show(
 				new Form { TopMost = true }, 
 				Settings.Resources.UI_Dialog_Minimal_Message, 
-				report.GeneralInfo.HostApplication + " Error", 
+				report.GeneralInfo.HostApplication + " " + Properties.Localization.UI_Dialog_Minimal_Title, 
 				MessageBoxButtons.OK, 
 				MessageBoxIcon.Warning);
 

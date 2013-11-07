@@ -104,6 +104,11 @@
     <Compile Include="Enums\UIProvider.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Handler.cs" />
+    <Compile Include="Properties\Localization.hr.Designer.cs">
+      <DependentUpon>Localization.hr.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Properties\Localization.ja.Designer.cs">
       <DependentUpon>Localization.ja.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -223,6 +228,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core\UI\WinForms\Panels\ExceptionDetails.resx">
       <DependentUpon>ExceptionDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.hr.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.hr.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Localization.ko-KR.resx">
       <Generator>ResXFileCodeGenerator</Generator>
