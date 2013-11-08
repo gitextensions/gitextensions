@@ -90,6 +90,7 @@
     <Compile Include="Integration\HandlerTests.cs" />
     <Compile Include="Unit\BugReportTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Unit\Helpers\EmailDestinationBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NBug\NBug.csproj">
