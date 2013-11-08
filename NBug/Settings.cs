@@ -96,7 +96,7 @@ namespace NBug
 				var path2 = Path.Combine(NBugDirectory, "NBug.dll.config");
 
 				/*string path3; // This is automatically handled by System.Configuration*/
-				if (File.Exists(path1))
+                if (File.Exists(path1) && new FileInfo(path1).Length > 0) //check if file is empty to avoid false exceptions
 				{
 					try
 					{
@@ -110,7 +110,7 @@ namespace NBug
 						Logger.Error("Default configuration file was either corrupt or empty. Loading default app.config settings. File location: " + path1, exception);
 					}
 				}
-				else if (File.Exists(path2))
+                else if (File.Exists(path2) && new FileInfo(path2).Length > 0) //check if file is empty to avoid false exceptions
 				{
 					try
 					{

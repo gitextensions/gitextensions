@@ -4,6 +4,9 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Diagnostics;
+using NBug.Events;
+
 namespace NBug.Examples.WPF
 {
 	using System;
@@ -19,6 +22,12 @@ namespace NBug.Examples.WPF
 		public MainWindow()
 		{
 			this.InitializeComponent();
+
+            //we want to display custom dialog to the user when bug occurs (optional)
+            Settings.CustomUIEvent += this.Settings_CustomUIEvent;
+
+            //we want to add custom submission processing to our application (optional)
+            Settings.CustomSubmissionEvent += Settings_CustomSubmissionEvent; 
 
 			this.crashTypeComboBox.SelectedIndex = 0;
 		}
@@ -58,5 +67,26 @@ namespace NBug.Examples.WPF
 					break;
 			}
 		}
+
+        /// <summary>
+        /// Handles CustomUIEvent to show custom dialog when bug has occured
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Settings_CustomUIEvent(object sender, CustomUIEventArgs e)
+        {
+            MessageBox.Show(e.Exception.Message, "Custom Dialog", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        /// <summary>
+        /// Handles CustomSubmissionEvent to submit bug
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void Settings_CustomSubmissionEvent(object sender, CustomSubmissionEventArgs e)
+        {
+            Debug.WriteLine(string.Format("Custom submission for exception {0}", e.Exception.Message));
+            e.Result = true;
+        }
 	}
 }

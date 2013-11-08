@@ -121,6 +121,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SubmitPanels\Custom\Custom.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SubmitPanels\Custom\Custom.Designer.cs">
+      <DependentUpon>Custom.cs</DependentUpon>
+    </Compile>
     <Compile Include="SubmitPanels\ISubmitPanel.cs" />
     <Compile Include="SubmitPanels\Web\Ftp.cs">
       <SubType>UserControl</SubType>
@@ -175,6 +181,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SubmitPanels\Custom\Custom.resx">
+      <DependentUpon>Custom.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SubmitPanels\Web\Ftp.resx">
       <DependentUpon>Ftp.cs</DependentUpon>
     </EmbeddedResource>
