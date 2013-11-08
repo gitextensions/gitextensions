@@ -29,9 +29,9 @@
 		private void InitializeComponent()
 		{
             this.selectorPanel = new System.Windows.Forms.Panel();
+            this.btnRemove = new System.Windows.Forms.Button();
             this.submitComboBox = new System.Windows.Forms.ComboBox();
             this.submitLabel = new System.Windows.Forms.Label();
-            this.btnRemove = new System.Windows.Forms.Button();
             this.selectorPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,6 +46,16 @@
             this.selectorPanel.Size = new System.Drawing.Size(650, 45);
             this.selectorPanel.TabIndex = 2;
             // 
+            // btnRemove
+            // 
+            this.btnRemove.Location = new System.Drawing.Point(244, 7);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnRemove.TabIndex = 4;
+            this.btnRemove.Text = "Remove";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
             // submitComboBox
             // 
             this.submitComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -55,7 +65,8 @@
             "E-Mail",
             "Redmine Issue Tracker",
             "FTP",
-            "HTTP"});
+            "HTTP",
+            "Custom"});
             this.submitComboBox.Location = new System.Drawing.Point(72, 9);
             this.submitComboBox.Name = "submitComboBox";
             this.submitComboBox.Size = new System.Drawing.Size(166, 21);
@@ -71,16 +82,6 @@
             this.submitLabel.Size = new System.Drawing.Size(68, 13);
             this.submitLabel.TabIndex = 2;
             this.submitLabel.Text = "Submit To:";
-            // 
-            // btnRemove
-            // 
-            this.btnRemove.Location = new System.Drawing.Point(244, 7);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(75, 23);
-            this.btnRemove.TabIndex = 4;
-            this.btnRemove.Text = "Remove";
-            this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // PanelLoader
             // 
