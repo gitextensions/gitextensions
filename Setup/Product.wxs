@@ -496,6 +496,7 @@
             <ComponentRef Id="puttygen.exe" />
             <ComponentRef Id="puttygen.reg" />
             <ComponentRef Id="gitcredentialwinstore.exe" />
+            <ComponentRef Id="GitExtSshAskPass.exe" />
             <ComponentRef Id="GitExtensions.newstartmenu" />
             <ComponentRef Id="GitExtensions.startmenu" />
             <ComponentRef Id="English.gif" />
@@ -548,14 +549,14 @@
                 <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
                     <ComponentRef Id="ReleaseNotesGenerator.dll" />
                 </Feature>
-        <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
-          <ComponentRef Id="System.Net.Http.dll" />
-          <ComponentRef Id="System.Net.Http.WebRequest.dll" />
-          <ComponentRef Id="System.Net.Http.Primitives.dll" />
-          <ComponentRef Id="System.Runtime.dll" />
-          <ComponentRef Id="System.Threading.Tasks.dll" />
-          <ComponentRef Id="TeamCityIntegration.dll" />
-        </Feature>
+                <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
+                  <ComponentRef Id="System.Net.Http.dll" />
+                  <ComponentRef Id="System.Net.Http.WebRequest.dll" />
+                  <ComponentRef Id="System.Net.Http.Primitives.dll" />
+                  <ComponentRef Id="System.Runtime.dll" />
+                  <ComponentRef Id="System.Threading.Tasks.dll" />
+                  <ComponentRef Id="TeamCityIntegration.dll" />
+                </Feature>
             </Feature>
             <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
                 <ComponentRef Id="GitExtensions.desktop" />
