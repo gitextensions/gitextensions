@@ -82,13 +82,14 @@ namespace GitCommands
             Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
             //to prevent from leaking processes see issue #1092 for details
             Environment.SetEnvironmentVariable("TERM", "msys");
-#if USE_ASKPASS
-            string sshAskPass = Path.Combine(Settings.GetInstallDir(), @"GitExtSshAskPass.exe");
+            string sshAskPass = Path.Combine(AppSettings.GetInstallDir(), @"GitExtSshAskPass.exe");
             if (EnvUtils.RunningOnWindows())
-                Environment.SetEnvironmentVariable("SSH_ASKPASS", sshAskPass);
+            {
+                if (File.Exists(sshAskPass))
+                    Environment.SetEnvironmentVariable("SSH_ASKPASS", sshAskPass);
+            }
             else if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SSH_ASKPASS")))
                 Environment.SetEnvironmentVariable("SSH_ASKPASS", "ssh-askpass");
-#endif
         }
 
         public static string GetHomeDir()
