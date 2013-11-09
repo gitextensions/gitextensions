@@ -9,6 +9,7 @@ namespace GitCommands
         private static readonly GitVersion v1_7_1 = new GitVersion("1.7.1");
         private static readonly GitVersion v1_7_7 = new GitVersion("1.7.7");
         private static readonly GitVersion v1_7_11 = new GitVersion("1.7.11");
+        private static readonly GitVersion v1_8_1 = new GitVersion("1.8.1");
 
         public static readonly GitVersion LastSupportedVersion = v1_7_0;
 
@@ -54,6 +55,11 @@ namespace GitCommands
         public bool SupportPushWithRecursiveSubmodulesOnDemand
         {
             get { return this >= v1_7_11; }
+        }
+
+        public bool HasBuiltinCredentialHelper
+        {
+            get { return this >= v1_8_1; }
         }
 
         public bool IsUnknown
