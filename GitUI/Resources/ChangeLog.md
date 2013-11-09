@@ -71,6 +71,9 @@
 * Updated Japanese translation
 * Updated Dutch translation
 * Updated Russian translation
+* Updated German translation
+* Updated Simplified Chinese translation
+* Added Korean translation
 
 ### Version 2.46
 * Fixed issue 1387: Shell extensions not work under Windows XP
