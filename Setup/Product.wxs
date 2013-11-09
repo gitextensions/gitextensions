@@ -157,6 +157,9 @@
                 <?include RegisterShellExtension.wxi?>
                 <?endforeach ?>
             </Component>
+            <Component Id="GitExtSshAskPass.exe" Guid="*">
+                <File Source="..\GitExtSshAskPass\Release\GitExtSshAskPass.exe" />
+            </Component>
             <Component Id="checksettings.reg" Guid="*">
                 <RegistryValue Name="CheckSettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
             </Component>

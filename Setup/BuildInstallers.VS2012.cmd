@@ -5,6 +5,7 @@ cd /d "%~p0"
 set msbuild="%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
 set project=..\GitExtensions.VS2012.sln
 set projectShellEx=..\GitExtensionsShellEx\GitExtensionsShellEx.VS2012.sln
+set projectSshAskPass=..\GitExtSshAskPass\GitExtSshAskPass.VS2012.sln
 set nuget=..\.nuget\nuget.exe
 set SkipShellExtRegistration=1
 set EnableNuGetPackageRestore=true
@@ -20,6 +21,8 @@ IF ERRORLEVEL 1 EXIT /B 1
 %msbuild% %projectShellEx% /p:Platform=Win32 %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
 %msbuild% %projectShellEx% /p:Platform=x64 %msbuildparams%
+IF ERRORLEVEL 1 EXIT /B 1
+%msbuild% %projectSshAskPass% /p:Platform=Win32 %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
 
 call MakeInstallers.cmd
