@@ -50,18 +50,12 @@ namespace GitUI
 
         protected override CreateParams CreateParams
         {
-
             get
             {
-
                 CreateParams mdiCp = base.CreateParams;
-
                 mdiCp.ClassStyle = mdiCp.ClassStyle | NativeConstants.CP_NOCLOSE_BUTTON;
-
                 return mdiCp;
-
             }
-
         }
 
         public bool ErrorOccurred()
@@ -176,8 +170,8 @@ namespace GitUI
                 // proper parent centering...
                 WindowState = FormWindowState.Normal;
                 CenterToParent();
-                Visible = true;
             }
+            Visible = showOnError && !isSuccess;
 
             if (isSuccess && (showOnError || (UseDialogSettings && GitCommands.AppSettings.CloseProcessDialog)))
             {
