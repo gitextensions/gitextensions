@@ -123,7 +123,7 @@ void MarkWindowAsUnpinnable(HWND hWnd)
 {
 	typedef HRESULT (WINAPI *SHGPSFW) (HWND hwnd,REFIID riid,void** ppv);
 
-	HMODULE hShell = AtlLoadSystemLibraryUsingFullPath(_T("Shell32.dll"));
+	HMODULE hShell = ::LoadLibrary(_T("Shell32.dll"));
 
 	if (hShell) {
 		SHGPSFW pfnSHGPSFW = (SHGPSFW)::GetProcAddress(hShell, "SHGetPropertyStoreForWindow");
