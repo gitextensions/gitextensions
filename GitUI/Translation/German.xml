@@ -3822,11 +3822,12 @@ Wollen Sie dass Git Extensions Ihnen hilft das korrekte Verzeichnis zu finden?</
           <Value>Umgebung</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Die globale Git Konfigurationsdatei wird gespeichert in dem unter der Umgebungsvariable %HOME% angegebenen Verzeichnis.
-Standardmäßig wird %HOME% zu %HOMEDRIVE%%HOMEPATH% gesetzt, falls diese leer ist. Ändern Sie die Standardeinstellung
-nur, wenn Sie mit dieser Probleme auftreten.</Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>Die globale git Konfigurationsdatei wird im Verzeichnis der Umgebungsvariable %HOME% gespeichert.
+Standardmäßig wird %HOME% auf %HOMEDRIVE%%HOMEPATH% gesetzt, falls diese leer ist. 
+Ändern Sie die Standardeinstellung nur, wenn mit dieser Konfiguration Probleme auftreten.</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Source>OK</Source>
@@ -7009,22 +7010,24 @@ Mehr Optionen im Kontextmenü</Value>
         </TranslationItem>
         <TranslationItem Name="label13" Property="Text">
           <Source>Command used to run git (git.cmd or git.exe)</Source>
-          <Value>Kommando, welches für Git verwendet wird (git.cmd oder git.exe)</Value>
+          <Value>Pfad zu git (git.cmd oder git.exe)</Value>
         </TranslationItem>
         <TranslationItem Name="label14" Property="Text">
           <Source>Path to linux tools (sh). Leave empty when it is in the path.</Source>
-          <Value>Pfad zu den Linux Tools (sh)</Value>
+          <Value>Pfad zu den Linux Tools (sh). 
+Nur angeben wenn nicht im Pfad.</Value>
         </TranslationItem>
         <TranslationItem Name="label50" Property="Text">
           <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
-          <Value>Git Extensions kann msysgit oder cygwin verwenden um auf Git Repositorys zuzugreifen. Setzen Sie hier die korrekten Pfade.</Value>
+          <Value>Git Extensions kann msysgit oder cygwin verwenden, um auf Git Repositorys zuzugreifen. Setzen Sie hier die korrekten Pfade.</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Die globale Konfigurationsdatei ist im Verzeichnis %HOME% gespeichert. Standardmäßig wird %HOME% auf 
-%HOMEDRIVE%%HOMEPATH% gesetzt, wenn diese leer ist. Ändern Sie das Standardverhalten nur, wenn Probleme 
-bei der Benutzung auftreten.</Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>Die globale Konfigurationsdatei ist im Verzeichnis %HOME% gespeichert. 
+Standardmäßig wird %HOME% auf %HOMEDRIVE%%HOMEPATH% gesetzt, wenn diese leer ist. 
+Ändern Sie das Standardverhalten nur, wenn Probleme bei der Benutzung auftreten.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
