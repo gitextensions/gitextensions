@@ -124,7 +124,7 @@ Diese Aktion wird dann ohne Warnung beim Auschecken eines Branch angewendet.</Va
         </TranslationItem>
         <TranslationItem Name="label22" Property="Text">
           <Source>Dictionary for spelling checker</Source>
-          <Value>Wörterbuch für Rechtschreibprüfprogramm</Value>
+          <Value>Wörterbuch für Rechtschreibprüfung</Value>
         </TranslationItem>
         <TranslationItem Name="label26" Property="Text">
           <Source>Application font</Source>
@@ -6176,8 +6176,7 @@ Therefore the Cancel button does NOT revert any changes made.</Source>
           <OldSource>Changes made on this page will be saved instantly. 
 Thus the Cancel and Discard button will have no effect for this page.</OldSource>
           <Value>Änderungen auf dieser Seite werden sofort gespeichert.
-
-Deswegen haben die Schaltflächen Abbrechen und Verwerfen keine Funktion auf dieser Seite.</Value>
+Abbrechen macht darum auf dieser Seite keine Änderungen rückgängig.</Value>
         </TranslationItem>
         <TranslationItem Name="labelSettingsPageTitle" Property="Text" type="obsolete">
           <Source>...title...</Source>
