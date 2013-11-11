@@ -3782,11 +3782,12 @@ Do you want Git Extensions to help locate the correct folder?</Source>
           <Value>Ambiente</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>El archivo de configuración global que se encuentra almacenado en la variable de entorno %HOME%. De
-forma predeterminada %HOME% será %HOMEDRIVE %%HOMEPATH% si está vacío. Cambiar el comportamiento 
-por defecto sólo si tiene problemas.</Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>El archivo de configuración global que se encuentra almacenado en la variable de entorno %HOME%. 
+De forma predeterminada %HOME% será %HOMEDRIVE %%HOMEPATH% si está vacío. 
+Cambiar el comportamiento por defecto sólo si tiene problemas.</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Source>OK</Source>
@@ -6914,10 +6915,12 @@ Dejar en blanco cuando están en el PATH.</Value>
           <Value>Git Extensions puede utilizar msysgit o cygwin para acceder a repositorios. Establecer las rutas correctas a continuación.</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>El archivo de configuración global se almacena en la ubicación dada por la variable de entorno %HOME%. Por defecto %HOME%
-					se establecerá como %HOMEDRIVE%%HOMEPATH% si está vacía. Cambie el comportamiento por defecto sólo si experimenta problemas.</Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>El archivo de configuración global se almacena en la ubicación dada por la variable de entorno %HOME%. 
+Por defecto %HOME% se establecerá como %HOMEDRIVE%%HOMEPATH% si está vacía. 
+Cambie el comportamiento por defecto sólo si experimenta problemas.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

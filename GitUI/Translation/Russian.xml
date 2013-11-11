@@ -3834,10 +3834,12 @@ Do you want Git Extensions to help locate the correct folder?</Source>
           <Value>Окружение</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Глобальный конфигурационный файл расположен в папке хранящейся в переменную среды %HOME%. По умолчанию %HOME% будет
-установлен в %HOMEDRIVE%%HOMEPATH% если не указана. Измените поведение по умолчанию, только если у вас возникли проблемы.</Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>Глобальный конфигурационный файл расположен в папке хранящейся в переменную среды %HOME%. 
+По умолчанию %HOME% будет установлен в %HOMEDRIVE%%HOMEPATH% если не указана. 
+Измените поведение по умолчанию, только если у вас возникли проблемы.</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Source>OK</Source>
@@ -6984,17 +6986,20 @@ Context menu for additional operations</Source>
         </TranslationItem>
         <TranslationItem Name="label14" Property="Text">
           <Source>Path to linux tools (sh). Leave empty when it is in the path.</Source>
-          <Value>Путь к linux утилитам (sh). Оставьте пустым когда он находиться в переменной PATH.</Value>
+          <Value>Путь к linux утилитам (sh). 
+Оставьте пустым когда он находиться в переменной PATH.</Value>
         </TranslationItem>
         <TranslationItem Name="label50" Property="Text">
           <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
           <Value>Для доступа к git репозиториям в Git Extensions возможно использовать как msysgit, так и cygwin. Установите корректный путь ниже.</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Глобальный конфигурационный файл расположен в папке хранящейся в переменную среды %HOME%. По умолчанию %HOME% будет
-установлен в %HOMEDRIVE%%HOMEPATH% если не указана. Измените поведение по умолчанию, только если у вас возникли проблемы.</Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>Глобальный конфигурационный файл расположен в папке хранящейся в переменную среды %HOME%. 
+По умолчанию %HOME% будет установлен в %HOMEDRIVE%%HOMEPATH% если не указана. 
+Измените поведение по умолчанию, только если у вас возникли проблемы.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
