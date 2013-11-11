@@ -4474,7 +4474,6 @@ defaultrebase=0</Value>
 - tag name
 - branch name</Source>
           <Value>Commit Ausdruck Beispiele:
-
 - Vollständiger Commit Hash: z.B.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9
 - Teil des Commit Hashes (wenn eindeutig): z.B.: 8eab51fcb9c453
 - Name des Tags
@@ -4648,6 +4647,10 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
           <Source>&amp;Merge</Source>
           <Value>&amp;Merge</Value>
         </TranslationItem>
+        <TranslationItem Name="_formMergeBranchHoverShowImageLabelText" Property="Text">
+          <Source>Hover to see scenario when fast forward is possible.</Source>
+          <Value>Fast-Forward Szenario Anzeige (Maus-Hover)</Value>
+        </TranslationItem>
         <TranslationItem Name="_strategyTooltipText" Property="Text">
           <Source>resolve 
 This can only resolve two heads (i.e. the current branch and another branch you pulled from) using a 3-way merge algorithm.
@@ -4694,10 +4697,10 @@ Diese Option kann eine beliebige Anzahl von Zweigen auflösen, aber der resultie
 Die Option ignoriert alle Änderungen der anderen Branches. Diese Merge-Strategie ist dafür gedacht die Historie von alten Branches 
 zu überschrieben.
 
-subtree 
-This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
-match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
-ancestor tree.</Value>
+subtree
+Diese Option ist eine modifizierte rekursive Option. Beim Mergen von zwei Bäumen A und B wird wenn B einem Unterbaum von A entspricht,
+zuerst B an die Verzeichnisstruktur von A angepasst anstatt beide Bäume auf demselben Level zu lesen. Diese Anpassung wird auch
+auf den gemeinsamen Vorfahrenbaum angewendet.</Value>
         </TranslationItem>
         <TranslationItem Name="advanced" Property="Text">
           <Source>Show advanced options</Source>
