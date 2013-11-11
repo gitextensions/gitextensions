@@ -4,7 +4,7 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=2.47
+set version=2.47.01
 
 set msiversion=%version:.=%
 set normal=GitExtensions%msiversion%Setup.msi

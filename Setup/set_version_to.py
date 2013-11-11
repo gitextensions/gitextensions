@@ -75,7 +75,7 @@ if __name__ == '__main__':
     outfile = open(filename, "w")
     outfile.writelines(gitExtSshAskPass)
     
-    filename = "MakeInstallers.bat"
+    filename = "MakeInstallers.cmd"
     makeInstallers = open(filename, "r").readlines()
     for i in range(1, len(verSplitted)):
         if len(verSplitted[i]) == 1:
