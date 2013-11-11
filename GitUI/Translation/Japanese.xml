@@ -3738,8 +3738,9 @@ Git Extensionsによって、正しいフォルダに配置しますか？</Valu
           <Value>環境</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
           <Value>グローバルな設定ファイルは、環境変数%HOME%の場所に配置されます。%HOME%が空の場合、
 %HOMEDRIVE%%HOMEPATH%に設定されます。問題があった時のみこの振る舞いを変更してください。</Value>
         </TranslationItem>
@@ -6855,8 +6856,9 @@ Context menu for additional operations</Source>
           <Value>Git ExtensionsはGitのリポジトリへのアクセスにmsysgitかcygwinが使用可能です。正しいパスを設定してください。</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
           <Value>グローバルな設定ファイルは、環境変数%HOME%の場所に配置されます。%HOME%が空の場合、
 %HOMEDRIVE%%HOMEPATH%に設定されます。問題があった時のみこの振る舞いを変更してください。</Value>
         </TranslationItem>
