@@ -383,8 +383,8 @@ namespace GitUI.CommandsDialogs
             if (Settings.LastUpdateCheck.AddDays(7) < DateTime.Now)
             {
                 Settings.LastUpdateCheck = DateTime.Now;
-                using (var updateForm = new FormUpdates(Module.AppVersion) { AutoClose = true })
-                    updateForm.ShowDialog(Owner);
+                using (var updateForm = new FormUpdates(Module.AppVersion))
+                    updateForm.SearchForUpdatesAndShow(Owner, false);
             }
 
             bool validWorkingDir = Module.IsValidGitWorkingDir();
@@ -3057,7 +3057,7 @@ namespace GitUI.CommandsDialogs
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var updateForm = new FormUpdates(Module.AppVersion))
-                updateForm.ShowDialog(Owner);
+                updateForm.SearchForUpdatesAndShow(Owner, true);
         }
 
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
