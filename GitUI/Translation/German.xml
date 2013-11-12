@@ -2584,11 +2584,11 @@ Gültigen Branch Namen eingeben oder vordefinierten Wert auswählen.</Value>
         <TranslationItem Name="Force" Property="Text" type="unfinished">
           <Source>Force (reset local changes)</Source>
           <OldSource>Force</OldSource>
-          <Value>Erzwingen</Value>
+          <Value>Erzwingen (Lokale Änderungen zurücksetzen)</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
+        <TranslationItem Name="OkCheckout" Property="Text">
           <Source>Checkout</Source>
-          <Value>Checkout</Value>
+          <Value>Auschecken</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text">
           <Source>Select 1 revision to checkout.</Source>
