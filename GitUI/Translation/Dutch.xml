@@ -3773,10 +3773,12 @@ Wilt u dat Git Extensions helpt met het vinden van de juiste directorie?</Value>
           <Value>Omgeving</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH%
-wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen optreden. </Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. 
+Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH% wanneer deze leeg is. 
+Verander het standaard gedrag alleen wanneer problemen optreden.</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Source>OK</Source>
@@ -6882,9 +6884,10 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH%
-wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen optreden. </Value>
+to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</Source>
+          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. 
+Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH% wanneer deze leeg is. 
+Verander het standaard gedrag alleen wanneer problemen optreden.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

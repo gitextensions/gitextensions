@@ -3744,10 +3744,11 @@ Do you want Git Extensions to help locate the correct folder?</Source>
           <Value>環境</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
           <Value>全體設定檔案位於%HOME%的位置。預設情形下，如果%HOME%為空，%HOME%將被設置為%HOMEDRIVE%%HOMEPATH%。 
-你應該只在遇到問題的時候才考慮改變預設設置。 </Value>
+你應該只在遇到問題的時候才考慮改變預設設置。</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Source>OK</Source>
@@ -6773,10 +6774,11 @@ Context menu for additional operations</Source>
           <Value>Git Extensions可以使用msysgit或cygwin訪問git版本庫庫。在下面的設定它們正確的路徑。 </Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems. </Source>
           <Value>整體設定檔案位於%HOME%的位置。預設情形下，如果%HOME%為空，%HOME%將被設定為%HOMEDRIVE%%HOMEPATH%。 
-你應該只在遇到問題的時候才考慮改變預設設置。 </Value>
+你應該只在遇到問題的時候才考慮改變預設設置。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
