@@ -66,7 +66,8 @@
             "Redmine Issue Tracker",
             "FTP",
             "HTTP",
-            "Custom"});
+            "Custom",
+            "Mantis Bug Tracker"});
             this.submitComboBox.Location = new System.Drawing.Point(72, 9);
             this.submitComboBox.Name = "submitComboBox";
             this.submitComboBox.Size = new System.Drawing.Size(166, 21);
