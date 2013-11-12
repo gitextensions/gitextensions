@@ -3655,7 +3655,7 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
           <Source>Force delete</Source>
           <Value>Löschen erzwingen</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
+        <TranslationItem Name="Delete" Property="Text">
           <Source>Delete</Source>
           <Value>Löschen</Value>
         </TranslationItem>
@@ -3677,21 +3677,20 @@ Ein Branch zu löschen kann zu gelöschten Commits führen!</Value>
           <Source>You cannot delete unmerged branch until you set “force delete” mode.</Source>
           <Value>Sie können den nicht gemergten Branch nicht löschen ohne vorher den Modus "Löschen Erzwingen" zu setzen.</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Select branches</Source>
-          <Value>Branch auswählen</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
+        <TranslationItem Name="labelDeleteBranchWarning" Property="Text" type="unfinished">
           <Source>You can only delete branches when they are fully merged in HEAD. 
-When you delete a branch the commits can get lost because nothing point to them.
-When you want to delete a not-fully merged branch, you can override
-this using `force delete´.
+When you delete a branch the commits can get lost because nothing points to them.
+When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
 </Source>
           <Value>Sie können ein Branch nur löschen wenn er komplett mit HEAD gemergt ist. 
-Wenn Sie einen Branch löschen, können Commits verlorgen gehen, weil nichts 
+Wenn Sie einen Branch löschen, können Commits verloren gehen, weil nichts 
 mehr auf diese zeigt. Wenn Sie einen nicht vollständig gemergten Branch 
 löschen wollen, können Sie dies mit der Option 'Löschen erzwingen' erreichen.
 </Value>
+        </TranslationItem>
+        <TranslationItem Name="labelSelectBranches" Property="Text">
+          <Source>Select branches</Source>
+          <Value>Branch(es) auswählen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7291,6 +7290,10 @@ können.</Value>
     </TranslationCategory>
     <TranslationCategory Name="GotoUserManualControl">
       <translationItems>
+        <TranslationItem Name="_gotoUserManualControlTooltip" Property="Text">
+          <Source>Read more about this feature at {0}</Source>
+          <Value>Lesen Sie mehr über dieses Feature bei {0}</Value>
+        </TranslationItem>
         <TranslationItem Name="linkLabelHelp" Property="Text" type="unfinished">
           <Source>Help</Source>
           <Value>Hilfe</Value>
