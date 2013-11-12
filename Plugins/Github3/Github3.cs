@@ -102,7 +102,8 @@ namespace Github3
         {
             if (GithubLoginInfo.OAuthToken.Length == 0)
             {
-                using (var frm = new OAuth()) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+                using (var frm = new OAuth())
+                    frm.ShowDialog(gitUiCommands.OwnerForm);
             }
             else
             {

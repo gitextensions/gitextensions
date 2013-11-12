@@ -50,16 +50,16 @@
             this.groupBox8.Controls.Add(this.label51);
             this.groupBox8.Location = new System.Drawing.Point(12, 12);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(723, 145);
+            this.groupBox8.Size = new System.Drawing.Size(730, 153);
             this.groupBox8.TabIndex = 11;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Environment";
             // 
             // otherHomeBrowse
             // 
-            this.otherHomeBrowse.Location = new System.Drawing.Point(618, 100);
+            this.otherHomeBrowse.Location = new System.Drawing.Point(595, 114);
             this.otherHomeBrowse.Name = "otherHomeBrowse";
-            this.otherHomeBrowse.Size = new System.Drawing.Size(100, 25);
+            this.otherHomeBrowse.Size = new System.Drawing.Size(129, 25);
             this.otherHomeBrowse.TabIndex = 10;
             this.otherHomeBrowse.Text = "Browse";
             this.otherHomeBrowse.UseVisualStyleBackColor = true;
@@ -67,17 +67,17 @@
             // 
             // otherHomeDir
             // 
-            this.otherHomeDir.Location = new System.Drawing.Point(88, 102);
+            this.otherHomeDir.Location = new System.Drawing.Point(141, 115);
             this.otherHomeDir.Name = "otherHomeDir";
-            this.otherHomeDir.Size = new System.Drawing.Size(527, 23);
+            this.otherHomeDir.Size = new System.Drawing.Size(448, 23);
             this.otherHomeDir.TabIndex = 4;
             // 
             // otherHome
             // 
             this.otherHome.AutoSize = true;
-            this.otherHome.Location = new System.Drawing.Point(11, 103);
+            this.otherHome.Location = new System.Drawing.Point(11, 118);
             this.otherHome.Name = "otherHome";
-            this.otherHome.Size = new System.Drawing.Size(55, 19);
+            this.otherHome.Size = new System.Drawing.Size(58, 20);
             this.otherHome.TabIndex = 3;
             this.otherHome.TabStop = true;
             this.otherHome.Text = "Other";
@@ -86,9 +86,9 @@
             // userprofileHome
             // 
             this.userprofileHome.AutoSize = true;
-            this.userprofileHome.Location = new System.Drawing.Point(11, 80);
+            this.userprofileHome.Location = new System.Drawing.Point(11, 95);
             this.userprofileHome.Name = "userprofileHome";
-            this.userprofileHome.Size = new System.Drawing.Size(167, 19);
+            this.userprofileHome.Size = new System.Drawing.Size(181, 20);
             this.userprofileHome.TabIndex = 2;
             this.userprofileHome.TabStop = true;
             this.userprofileHome.Text = "Set HOME to USERPROFILE";
@@ -97,9 +97,9 @@
             // defaultHome
             // 
             this.defaultHome.AutoSize = true;
-            this.defaultHome.Location = new System.Drawing.Point(11, 57);
+            this.defaultHome.Location = new System.Drawing.Point(11, 72);
             this.defaultHome.Name = "defaultHome";
-            this.defaultHome.Size = new System.Drawing.Size(140, 19);
+            this.defaultHome.Size = new System.Drawing.Size(148, 20);
             this.defaultHome.TabIndex = 1;
             this.defaultHome.TabStop = true;
             this.defaultHome.Text = "Use default for HOME";
@@ -110,13 +110,13 @@
             this.label51.AutoSize = true;
             this.label51.Location = new System.Drawing.Point(8, 19);
             this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(624, 30);
+            this.label51.Size = new System.Drawing.Size(490, 48);
             this.label51.TabIndex = 0;
             this.label51.Text = resources.GetString("label51.Text");
             // 
             // ok
             // 
-            this.ok.Location = new System.Drawing.Point(660, 177);
+            this.ok.Location = new System.Drawing.Point(667, 181);
             this.ok.Name = "ok";
             this.ok.Size = new System.Drawing.Size(75, 25);
             this.ok.TabIndex = 12;
@@ -128,7 +128,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(754, 226);
+            this.ClientSize = new System.Drawing.Size(754, 218);
             this.ControlBox = false;
             this.Controls.Add(this.ok);
             this.Controls.Add(this.groupBox8);
