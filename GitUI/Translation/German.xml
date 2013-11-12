@@ -7494,6 +7494,42 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="ProxySwitcherForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Proxy Switcher</Source>
+          <Value>Proxy Switcher</Value>
+        </TranslationItem>
+        <TranslationItem Name="ApplyGlobally_CheckBox" Property="Text">
+          <Source>Apply globally</Source>
+          <Value>Global anwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="GlobalHttpProxy_Label" Property="Text">
+          <Source>Global http.proxy:</Source>
+          <Value>Globaler HTTP Proxy:</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalHttpProxy_Label" Property="Text">
+          <Source>Local http.proxy:</Source>
+          <Value>Lokaler HTTP Proxy:</Value>
+        </TranslationItem>
+        <TranslationItem Name="SetProxy_Button" Property="Text">
+          <Source>Set proxy</Source>
+          <Value>Proxy setzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="UnsetProxy_Button" Property="Text">
+          <Source>Unset proxy</Source>
+          <Value>Proxy zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pleaseSetProxy" Property="Text">
+          <Source>There is no proxy configured. Please set the proxy host in the plugin settings.</Source>
+          <Value>Es ist kein Proxy konfiguriert. Bitte setzen Sie den Proxy-Host in den Plugin Einstellungen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pluginDescription" Property="Text">
+          <Source>Proxy Switcher</Source>
+          <Value>Proxy Wechsler</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="RevisionGrid">
       <translationItems>
         <TranslationItem Name="AuthorDataGridViewColumn" Property="HeaderText" type="unfinished">
