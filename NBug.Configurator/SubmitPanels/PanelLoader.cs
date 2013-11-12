@@ -4,6 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using NBug.Configurator.SubmitPanels.Tracker;
+
 namespace NBug.Configurator.SubmitPanels
 {
     using System;
@@ -52,6 +54,10 @@ namespace NBug.Configurator.SubmitPanels
             {
                 this.submitComboBox.SelectedItem = "Custom";
             }
+            else if (protocol == typeof(Core.Submission.Tracker.Mantis.Mantis).Name)
+            {
+                this.submitComboBox.SelectedItem = "Mantis Bug Tracker";
+            }
             else
             {
                 MessageBox.Show("Undefined protocol type was selected. This is an internal error, please notify the developers.");
@@ -97,6 +103,10 @@ namespace NBug.Configurator.SubmitPanels
 
                 case "Custom":
                     this.Controls.Add(new Custom.Custom());
+                    break;
+
+                case "Mantis Bug Tracker":
+                    this.Controls.Add(new Mantis());
                     break;
             }
 

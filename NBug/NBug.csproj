@@ -12,14 +12,10 @@
     <AssemblyName>NBug</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
+    <SccProjectName>%24/Kase/NBug/NBug</SccProjectName>
+    <SccLocalPath>.</SccLocalPath>
+    <SccAuxPath>https://zeba.visualstudio.com/defaultcollection</SccAuxPath>
+    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -58,6 +54,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -74,6 +71,18 @@
     <Compile Include="Core\Submission\IProtocol.cs" />
     <Compile Include="Core\Submission\IProtocolFactory.cs" />
     <Compile Include="Core\Submission\Tracker\BugNet.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\AccountData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\AttachmentData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\CustomFieldValueForIssueData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\IMantisConnectService.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\IssueData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\IssueNoteData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\Mantis.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\MantisConnectService.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\ObjectRef.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\ProjectVersionData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\RelationshipData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\UserData.cs" />
     <Compile Include="Core\UI\Custom\CustomUI.cs" />
     <Compile Include="Core\UI\Developer\InternalExceptionViewer.cs">
       <SubType>Form</SubType>
