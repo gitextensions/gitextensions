@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Git.hub;
 using GitCommands.Config;
 using ResourceManager.Translation;
 
@@ -20,7 +21,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             new TranslationString("No updates found");
         #endregion
 
-        public bool AutoClose;
+        public IWin32Window OwnerWindow;
         public Version CurrentVersion;
         public bool UpdateFound;
         public string UpdateUrl;
@@ -44,6 +45,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Close();
         }
 
+        public void SearchForUpdatesAndShow(IWin32Window aOwnerWindow, bool alwaysShow)
+        {
+            OwnerWindow = aOwnerWindow;
+            new Thread(SearchForUpdates).Start();
+            if (alwaysShow)
+                ShowDialog(aOwnerWindow);
+        }
+
         private void LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
@@ -57,53 +66,55 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void SearchForUpdates()
         {
-            var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
-            webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
-            webClient.Encoding = Encoding.UTF8;
-            webClient.DownloadProgressChanged += webClient_DownloadProgressChanged;
-            webClient.DownloadStringCompleted += webClient_DownloadStringCompleted;
-            webClient.DownloadStringAsync(new Uri(@"https://raw.github.com/gitextensions/gitextensions/configdata/GitExtensions.releases"));
-        }
-
-        void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            _syncContext.Send(o =>
-            {
-                progressBar1.Style = ProgressBarStyle.Continuous;
-                progressBar1.Maximum = 100;
-                progressBar1.Value = e.ProgressPercentage;
-            }, this);
-        }
-
-        void webClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
-        {
             try
             {
-                if (e.Error == null)
-                {
-                    string response = e.Result;
-                    var versions = ReleaseVersion.Parse(response);
-                    var updates = versions.Where(version => version.Version.CompareTo(CurrentVersion) > 0);
-                    
-                    var update = updates.OrderBy(version => version.Version).LastOrDefault();
-                    if (update != null)
-                    {
+                Client github = new Client();
+                Repository gitExtRepo = github.getRepository("gitextensions", "gitextensions");
+                if (gitExtRepo == null)
+                    return;
 
-                        UpdateFound = true;
-                        UpdateUrl = update.DownloadPage;
-                        Done();
-                        return;
-                    }
+                var configData = gitExtRepo.GetRef("heads/configdata");
+                if (configData == null)
+                    return;
+
+                var tree = configData.GetTree();
+                if (tree == null)
+                    return;
+
+                var releases = tree.Tree.Where(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                if (releases != null && releases.Blob.Value != null)
+                {
+                    CheckForNewerVersion(releases.Blob.Value.GetContent());
                 }
-                UpdateUrl = "";
-                UpdateFound = false;
-                Done();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, "Exception");
+                _syncContext.Send((state) =>
+                    {
+                        GitCommands.ExceptionUtils.ShowException(this, ex, string.Empty, true);
+                    }, null);
                 Done();
             }
+
+        }
+
+        void CheckForNewerVersion(string releases)
+        {
+            var versions = ReleaseVersion.Parse(releases);
+            var updates = versions.Where(version => version.Version.CompareTo(CurrentVersion) > 0);
+
+            var update = updates.OrderBy(version => version.Version).LastOrDefault();
+            if (update != null)
+            {
+
+                UpdateFound = true;
+                UpdateUrl = update.DownloadPage;
+                Done();
+                return;
+            }
+            UpdateUrl = "";
+            UpdateFound = false;
+            Done();
         }
 
 
@@ -120,19 +131,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     linkChangeLog.Visible = true;
 
                     UpdateLabel.Text = _newVersionAvailable.Text;
+                    if (!Visible)
+                        ShowDialog(OwnerWindow);
                 }
                 else
                 {
                     UpdateLabel.Text = _noUpdatesFound.Text;
-                    if (AutoClose)
-                        Close();
                 }
             }, this);
-        }
-
-        private void UpdatesShown(object sender, EventArgs e)
-        {
-            new Thread(SearchForUpdates).Start();
         }
 
         private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
