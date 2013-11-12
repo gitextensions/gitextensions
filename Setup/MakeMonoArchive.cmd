@@ -91,6 +91,8 @@ xcopy /y ..\Plugins\Gource\bin\Release\Gource.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\Stash\bin\Release\Stash.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\English.* GitExtensions\Translation\
@@ -104,6 +106,8 @@ IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y ..\GitUI\Translation\Italiano.* GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Japanese.* GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Korean.* GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Russian.* GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1

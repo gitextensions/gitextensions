@@ -48,7 +48,34 @@ if __name__ == '__main__':
     outfile = open(filename, "w")
     outfile.writelines(gitExtensionsShellEx)
     
-    filename = "MakeInstallers.bat"
+    filename = "..\GitExtSshAskPass\SshAskPass.rc2 "
+    gitExtSshAskPass = open(filename, "r").readlines()
+    verData = ["0"] * 4
+    verSplitted = args.version.split('.')
+    for i in range(len(verSplitted)):
+        verData[i] = verSplitted[i]
+    for i in range(len(gitExtSshAskPass)):
+        line = gitExtSshAskPass[i]
+        if line.find("FILEVERSION") != -1:
+           data = line.split(' ')
+           data[2] = ','.join(verData) + '\n'
+           gitExtSshAskPass[i] = ' '.join(data)
+        elif line.find("PRODUCTVERSION") != -1:
+           data = line.split(' ')
+           data[2] = ','.join(verData) + '\n'
+           gitExtSshAskPass[i] = ' '.join(data)
+        elif line.find('"FileVersion"') != -1:
+           data = line.split(', ', 1)
+           data[1] = '"' + '.'.join(verSplitted) + '"\n'
+           gitExtSshAskPass[i] = ', '.join(data)
+        elif line.find('"ProductVersion"') != -1:
+           data = line.split(', ', 1)
+           data[1] = '"' + '.'.join(verSplitted) + '"\n'
+           gitExtSshAskPass[i] = ', '.join(data)
+    outfile = open(filename, "w")
+    outfile.writelines(gitExtSshAskPass)
+    
+    filename = "MakeInstallers.cmd"
     makeInstallers = open(filename, "r").readlines()
     for i in range(1, len(verSplitted)):
         if len(verSplitted[i]) == 1:
