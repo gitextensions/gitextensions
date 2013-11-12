@@ -79,6 +79,9 @@
             <Component Id="TranslationApp.exe" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\TranslationApp.exe" />
             </Component>
+            <Component Id="TranslationApp.exe.config" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\TranslationApp.exe.config" />
+            </Component>
             <Component Id="Gravatar.dll" Guid="*">
                 <File Source="..\Gravatar\bin\Release\Gravatar.dll" />
             </Component>
@@ -110,7 +113,7 @@
                 <File Source="..\bin\PSTaskDialog.dll" />
             </Component>
             <Component Id="RestSharp.dll" Guid="*">
-                <File Source="..\packages\RestSharp.104.1\lib\net4-client\RestSharp.dll" />
+                <File Source="..\packages\RestSharp.104.2.0\lib\net4-client\RestSharp.dll" />
             </Component>
             <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.dll" />
@@ -125,16 +128,16 @@
                 <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
             </Component>
             <Component Id="System.Reactive.Core.dll" Guid="*">
-                <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll"/>
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll" />
             </Component>
             <Component Id="System.Reactive.Interfaces.dll" Guid="*">
-                <File Source="..\GitExtensions\bin\Release\System.Reactive.Interfaces.dll"/>
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Interfaces.dll" />
             </Component>
             <Component Id="System.Reactive.Linq.dll" Guid="*">
-                <File Source="..\GitExtensions\bin\Release\System.Reactive.Linq.dll"/>
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Linq.dll" />
             </Component>
             <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
-                <File Source="..\GitExtensions\bin\Release\System.Reactive.PlatformServices.dll"/>
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.PlatformServices.dll" />
             </Component>
             <!--Remove unused dll, installed in versions <= 2.31-->
             <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
@@ -153,6 +156,9 @@
                 <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
                 <?include RegisterShellExtension.wxi?>
                 <?endforeach ?>
+            </Component>
+            <Component Id="GitExtSshAskPass.exe" Guid="*">
+                <File Source="..\GitExtSshAskPass\Release\GitExtSshAskPass.exe" />
             </Component>
             <Component Id="checksettings.reg" Guid="*">
                 <RegistryValue Name="CheckSettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
@@ -237,25 +243,27 @@
             <Component Id="ProxySwitcher.dll" Guid="*">
                 <File Source="..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll" />
             </Component>
-        
-      <Component Id="System.Net.Http.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll"/>
-      </Component>
-      <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.WebRequest.dll"/>
-      </Component>
-      <Component Id="System.Net.Http.Primitives.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll"/>
-      </Component>
-      <Component Id="System.Runtime.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll"/>
-      </Component>
-      <Component Id="System.Threading.Tasks.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll"/>
-      </Component>
-      <Component Id="TeamCityIntegration.dll" Guid="*">
-          <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll"/>
-      </Component>
+            <Component Id="Stash.dll" Guid="*">
+                <File Source="..\Plugins\Stash\bin\Release\Stash.dll" />
+            </Component>
+            <Component Id="System.Net.Http.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll" />
+            </Component>
+            <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.WebRequest.dll" />
+            </Component>
+            <Component Id="System.Net.Http.Primitives.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll" />
+            </Component>
+            <Component Id="System.Runtime.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll" />
+            </Component>
+            <Component Id="System.Threading.Tasks.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll" />
+            </Component>
+            <Component Id="TeamCityIntegration.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
+            </Component>
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
             <Component Id="Blue.ico" Guid="*">
@@ -354,18 +362,24 @@
             <Component Id="Japanese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.gif" />
             </Component>
+            <Component Id="Korean.xml" Guid="*">
+                <File Source="..\GitUI\Translation\Korean.xml" />
+            </Component>
+            <Component Id="Korean.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Korean.gif" />
+            </Component>
             <Component Id="Russian.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.xml" />
             </Component>
             <Component Id="Russian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.gif" />
             </Component>
-            <!--Component Id="SimplifiedChinese.xml" Guid="*">
+            <Component Id="SimplifiedChinese.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.xml" />
             </Component>
             <Component Id="SimplifiedChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
-            </Component-->
+            </Component>
             <Component Id="Spanish.xml" Guid="*">
                 <File Source="..\GitUI\Translation\Spanish.xml" />
             </Component>
@@ -460,6 +474,7 @@
             <ComponentRef Id="GitExtensions.exe" />
             <ComponentRef Id="GitExtensions.exe.config" />
             <ComponentRef Id="TranslationApp.exe" />
+            <ComponentRef Id="TranslationApp.exe.config" />
             <ComponentRef Id="Gravatar.dll" />
             <ComponentRef Id="GitCommands.dll" />
             <ComponentRef Id="GitUI.dll" />
@@ -483,6 +498,7 @@
             <ComponentRef Id="puttygen.exe" />
             <ComponentRef Id="puttygen.reg" />
             <ComponentRef Id="gitcredentialwinstore.exe" />
+            <ComponentRef Id="GitExtSshAskPass.exe" />
             <ComponentRef Id="GitExtensions.newstartmenu" />
             <ComponentRef Id="GitExtensions.startmenu" />
             <ComponentRef Id="English.gif" />
@@ -535,14 +551,17 @@
                 <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
                     <ComponentRef Id="ReleaseNotesGenerator.dll" />
                 </Feature>
-        <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
-          <ComponentRef Id="System.Net.Http.dll" />
-          <ComponentRef Id="System.Net.Http.WebRequest.dll" />
-          <ComponentRef Id="System.Net.Http.Primitives.dll" />
-          <ComponentRef Id="System.Runtime.dll" />
-          <ComponentRef Id="System.Threading.Tasks.dll" />
-          <ComponentRef Id="TeamCityIntegration.dll" />
-        </Feature>
+                <Feature Id="Stash" Title="Atlassian Stash integration" Level="1">
+                    <ComponentRef Id="Stash.dll" />
+                </Feature>
+                <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
+                    <ComponentRef Id="System.Net.Http.dll" />
+                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
+                    <ComponentRef Id="System.Net.Http.Primitives.dll" />
+                    <ComponentRef Id="System.Runtime.dll" />
+                    <ComponentRef Id="System.Threading.Tasks.dll" />
+                    <ComponentRef Id="TeamCityIntegration.dll" />
+                </Feature>
             </Feature>
             <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
                 <ComponentRef Id="GitExtensions.desktop" />
@@ -619,10 +638,10 @@
                     <ComponentRef Id="Russian.xml" />
                     <ComponentRef Id="Russian.gif" />
                 </Feature>
-                <!--Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
+                <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
                     <ComponentRef Id="SimplifiedChinese.xml" />
                     <ComponentRef Id="SimplifiedChinese.gif" />
-                </Feature-->
+                </Feature>
                 <Feature Id="Spanish" Title="Spanish" Level="1">
                     <ComponentRef Id="Spanish.xml" />
                     <ComponentRef Id="Spanish.gif" />

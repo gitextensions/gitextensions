@@ -149,6 +149,7 @@ namespace GitUI.CommandsDialogs
             }
             Cursor.Current = Cursors.WaitCursor;
             if (PatchFileMode.Checked)
+            {
                 if (IgnoreWhitespace.Checked)
                 {
                     FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text));
@@ -157,7 +158,9 @@ namespace GitUI.CommandsDialogs
                 {
                     FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmd(PatchFile.Text));
                 }
+            }
             else
+            {
                 if (IgnoreWhitespace.Checked)
                 {
                     Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmdIgnoreWhitespace());
@@ -166,6 +169,7 @@ namespace GitUI.CommandsDialogs
                 {
                     Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmd());
                 }
+            }
 
             UICommands.RepoChangedNotifier.Notify();
 

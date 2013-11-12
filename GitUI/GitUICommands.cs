@@ -318,10 +318,65 @@ namespace GitUI
             return StartCheckoutRevisionDialog(null);
         }
 
-        public void Stash(IWin32Window owner)
+        public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "")
         {
-            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
-            FormProcess.ShowDialog(owner, Module, arguments);
+            Func<bool> action = () =>
+            {
+                var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message);
+                FormProcess.ShowDialog(owner, Module, arguments);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        public bool StashPop(IWin32Window owner)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash pop");
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        /// <summary>Creates and checks out a new branch starting from the commit at which the stash was originally created.
+        /// Applies the changes recorded in the stash to the new working tree and index.</summary>
+        public bool StashBranch(IWin32Window owner, string branchName, string stash = null)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash branch " + branchName.Quote().Combine(" ", stash.QuoteNE()));
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+
+        public bool StashDrop(IWin32Window owner, string stashName)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash drop " + stashName.Quote());
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        public bool StashApply(IWin32Window owner, string stashName)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash apply " + stashName.Quote());
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
         }
 
         public void InvokeEventOnClose(Form form, GitUIEventHandler ev)
@@ -877,6 +932,11 @@ namespace GitUI
         public bool StartResetChangesDialog(IWin32Window owner)
         {
             var unstagedFiles = Module.GetUnstagedFiles();
+            return StartResetChangesDialog(owner, unstagedFiles, false);
+        }
+
+        public bool StartResetChangesDialog(IWin32Window owner, IEnumerable<GitItemStatus> unstagedFiles, bool onlyUnstaged)
+        {
             // Show a form asking the user if they want to reset the changes.
             FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(owner, unstagedFiles.Any(item => !item.IsNew), unstagedFiles.Any(item => item.IsNew));
 
@@ -885,32 +945,21 @@ namespace GitUI
                 return false;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-
-            // Reset all changes.
-            Module.ResetHard("");
-
-            // Also delete new files, if requested.
-            if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+            Func<bool> action = () =>
             {
-                foreach (var item in unstagedFiles.Where(item => item.IsNew))
-                {
-                    try
-                    {
-                        string path = Path.Combine(Module.WorkingDir, item.Name);
-                        if (File.Exists(path))
-                            File.Delete(path);
-                        else
-                            Directory.Delete(path, true);
-                    }
-                    catch (IOException) { }
-                    catch (UnauthorizedAccessException) { }
-                }
-            }
+                if (onlyUnstaged)
+                    Module.RunGitCmd("checkout -- .");
+                else
+                    // Reset all changes.
+                    Module.ResetHard("");
 
-            Cursor.Current = Cursors.Default;
+                if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+                    Module.RunGitCmd("clean -df");
 
-            return true;
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
         }
 
         public bool StartResetChangesDialog(IWin32Window owner, string fileName)
@@ -1651,8 +1700,7 @@ namespace GitUI
             WrapRepoHostingCall("View pull requests", gitHoster,
                                 gh =>
                                 {
-                                    var frm = new ViewPullRequestsForm(this, gitHoster);
-                                    frm.ShowInTaskbar = true;
+                                    var frm = new ViewPullRequestsForm(this, gitHoster) {ShowInTaskbar = true};
                                     frm.Show();
                                 });
         }

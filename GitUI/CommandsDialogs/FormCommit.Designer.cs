@@ -106,6 +106,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetUnstagedChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetAlltrackedChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.editGitIgnoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -144,6 +145,7 @@ namespace GitUI.CommandsDialogs
             this.Commit = new System.Windows.Forms.Button();
             this.CommitAndPush = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
+            this.ResetUnStaged = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.CheckBox();
             this.toolbarCommit = new GitUI.ToolStripEx();
             this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
@@ -162,13 +164,13 @@ namespace GitUI.CommandsDialogs
             this.StagedFileContext.SuspendLayout();
             this.UnstagedSubmoduleContext.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
 #endif
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).BeginInit();
 #endif
             this.splitLeft.Panel1.SuspendLayout();
@@ -182,7 +184,7 @@ namespace GitUI.CommandsDialogs
             this.toolbarSelectionFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LoadingStaged)).BeginInit();
             this.toolbarStaged.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12			
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitRight)).BeginInit();
 #endif
             this.splitRight.Panel1.SuspendLayout();
@@ -351,10 +353,10 @@ namespace GitUI.CommandsDialogs
             // StageInSuperproject
             // 
             this.StageInSuperproject.AutoSize = true;
-            this.StageInSuperproject.Location = new System.Drawing.Point(2, 127);
+            this.StageInSuperproject.Location = new System.Drawing.Point(2, 130);
             this.StageInSuperproject.Margin = new System.Windows.Forms.Padding(2);
             this.StageInSuperproject.Name = "StageInSuperproject";
-            this.StageInSuperproject.Size = new System.Drawing.Size(158, 23);
+            this.StageInSuperproject.Size = new System.Drawing.Size(130, 17);
             this.StageInSuperproject.TabIndex = 13;
             this.StageInSuperproject.Text = "Stage in Superproject";
             this.fileTooltip.SetToolTip(this.StageInSuperproject, "Stage current submodule in superproject after commit");
@@ -702,6 +704,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator3,
             this.deleteSelectedFilesToolStripMenuItem,
             this.resetSelectedFilesToolStripMenuItem,
+            this.resetUnstagedChangesToolStripMenuItem,
             this.resetAlltrackedChangesToolStripMenuItem,
             this.toolStripSeparator1,
             this.editGitIgnoreToolStripMenuItem,
@@ -747,6 +750,14 @@ namespace GitUI.CommandsDialogs
             this.resetSelectedFilesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.resetSelectedFilesToolStripMenuItem.Text = "Reset selected files";
             this.resetSelectedFilesToolStripMenuItem.Click += new System.EventHandler(this.ResetSelectedFilesToolStripMenuItemClick);
+            // 
+            // resetUnstagedChangesToolStripMenuItem
+            // 
+            this.resetUnstagedChangesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
+            this.resetUnstagedChangesToolStripMenuItem.Name = "resetUnstagedChangesToolStripMenuItem";
+            this.resetUnstagedChangesToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.resetUnstagedChangesToolStripMenuItem.Text = "Reset unstaged changes";
+            this.resetUnstagedChangesToolStripMenuItem.Click += new System.EventHandler(this.resetUnstagedChangesToolStripMenuItem_Click);
             // 
             // resetAlltrackedChangesToolStripMenuItem
             // 
@@ -1097,8 +1108,9 @@ namespace GitUI.CommandsDialogs
             this.flowCommitButtons.Controls.Add(this.Commit);
             this.flowCommitButtons.Controls.Add(this.CommitAndPush);
             this.flowCommitButtons.Controls.Add(this.Reset);
-            this.flowCommitButtons.Controls.Add(this.Amend);
+            this.flowCommitButtons.Controls.Add(this.ResetUnStaged);
             this.flowCommitButtons.Controls.Add(this.StageInSuperproject);
+            this.flowCommitButtons.Controls.Add(this.Amend);
             this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowCommitButtons.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowCommitButtons.Location = new System.Drawing.Point(0, 0);
@@ -1151,12 +1163,26 @@ namespace GitUI.CommandsDialogs
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.ResetClick);
             // 
+            // ResetUnStaged
+            // 
+            this.ResetUnStaged.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
+            this.ResetUnStaged.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ResetUnStaged.Location = new System.Drawing.Point(1, 99);
+            this.ResetUnStaged.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+            this.ResetUnStaged.Name = "ResetUnStaged";
+            this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
+            this.ResetUnStaged.TabIndex = 14;
+            this.ResetUnStaged.Text = "Reset unstaged changes";
+            this.ResetUnStaged.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.ResetUnStaged.UseVisualStyleBackColor = true;
+            this.ResetUnStaged.Click += new System.EventHandler(this.ResetUnStagedClick);
+            // 
             // Amend
             // 
             this.Amend.AutoSize = true;
-            this.Amend.Location = new System.Drawing.Point(3, 99);
+            this.Amend.Location = new System.Drawing.Point(3, 152);
             this.Amend.Name = "Amend";
-            this.Amend.Size = new System.Drawing.Size(125, 23);
+            this.Amend.Size = new System.Drawing.Size(97, 17);
             this.Amend.TabIndex = 12;
             this.Amend.Text = "&Amend Commit";
             this.Amend.UseVisualStyleBackColor = true;
@@ -1302,13 +1328,13 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.splitMain.Panel1.ResumeLayout(false);
             this.splitMain.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
 #endif
             this.splitMain.ResumeLayout(false);
             this.splitLeft.Panel1.ResumeLayout(false);
             this.splitLeft.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).EndInit();
 #endif
             this.splitLeft.ResumeLayout(false);
@@ -1328,7 +1354,7 @@ namespace GitUI.CommandsDialogs
             this.splitRight.Panel1.ResumeLayout(false);
             this.splitRight.Panel1.PerformLayout();
             this.splitRight.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12			
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12			
             ((System.ComponentModel.ISupportInitialize)(this.splitRight)).EndInit();
 #endif
             this.splitRight.ResumeLayout(false);
@@ -1462,5 +1488,7 @@ namespace GitUI.CommandsDialogs
         private TableLayoutPanel tableLayoutPanel1;
         private CheckBox Amend;
         private CheckBox StageInSuperproject;
+        private Button ResetUnStaged;
+        private ToolStripMenuItem resetUnstagedChangesToolStripMenuItem;
     }
 }
