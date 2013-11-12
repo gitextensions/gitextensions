@@ -1241,7 +1241,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(superprojectPath))
             {
                 submodulePath = FixPath(currentPath.Substring(superprojectPath.Length));
-                var configFile = GetSubmoduleConfigFile();
+                var configFile = new ConfigFile(superprojectPath + ".gitmodules", true);
                 foreach (ConfigSection configSection in configFile.ConfigSections)
                 {
                     if (configSection.GetPathValue("path") == FixPath(submodulePath))
@@ -1259,23 +1259,6 @@ namespace GitCommands
         {
             var arguments = string.Format("submodule summary {0}", submodule);
             return RunGitCmd(arguments);
-        }
-
-        public string Stash()
-        {
-            var arguments = GitCommandHelpers.StashSaveCmd(AppSettings.IncludeUntrackedFilesInAutoStash);
-            return RunGitCmd(arguments);
-        }
-
-        public string StashApply(string stash = null)
-        {
-            return RunGitCmd(string.Format("stash apply {0}", stash));
-        }
-
-        /// <summary>Remove all the stashed states.</summary>
-        public string StashClear()
-        {
-            return RunGitCmd("stash clear");
         }
 
         public string ResetSoft(string commit)
@@ -2352,7 +2335,7 @@ namespace GitCommands
             return IsDetachedHead(GetSelectedBranch());
         }
 
-        public bool IsDetachedHead(string branch)
+        public static bool IsDetachedHead(string branch)
         {
             return DetachedPrefixes.Any(a => branch.StartsWith(a, StringComparison.Ordinal));
         }
@@ -2591,6 +2574,34 @@ namespace GitCommands
                 .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .Distinct()
                 .ToList();
+        }
+
+        /// <summary>
+        /// Returns list of filenames which would be ignored
+        /// </summary>
+        /// <param name="ignorePatterns">Patterns to ignore (.gitignore syntax)</param>
+        /// <returns></returns>
+        public IList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
+        {
+            var notEmptyPatterns = ignorePatterns
+                    .Where(pattern => !pattern.IsNullOrWhiteSpace());
+            if (notEmptyPatterns.Count() != 0)
+            {
+                var excludeParams = 
+                    notEmptyPatterns
+                    .Select(pattern => "-x " + pattern.Quote())                
+                    .Join(" ");
+                // filter duplicates out of the result because options -c and -m may return 
+                // same files at times
+                return RunGitCmd("ls-files -z -o -m -c -i " + excludeParams)
+                    .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Distinct()
+                    .ToList();
+            }
+            else
+            {
+                return new string[] { };
+            }
         }
 
         public IList<GitItem> GetFileChanges(string file)

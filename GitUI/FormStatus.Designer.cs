@@ -103,7 +103,7 @@ namespace GitUI
             this.Abort.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Abort.Location = new System.Drawing.Point(380, 5);
             this.Abort.Name = "Abort";
-            this.Abort.Size = new System.Drawing.Size(75, 23);
+            this.Abort.Size = new System.Drawing.Size(82, 23);
             this.Abort.TabIndex = 3;
             this.Abort.Text = "Abort";
             this.Abort.UseCompatibleTextRendering = true;

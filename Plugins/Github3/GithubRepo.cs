@@ -74,6 +74,8 @@ namespace Github3
 
         public List<IPullRequestInformation> GetPullRequests()
         {
+            if (repo == null)
+                return new List<IPullRequestInformation>();
             return repo.GetPullRequests().Select(pullrequest => (IPullRequestInformation)new GithubPullRequest(pullrequest)).ToList();
         }
 

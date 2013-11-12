@@ -78,9 +78,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _configureWorkingDirMenu =
             new TranslationString("Configure this menu");
 
-        private readonly TranslationString _alwaysShowCheckoutDlgStr =
-            new TranslationString("Always show checkout dialog");
-
         private readonly TranslationString directoryIsNotAValidRepositoryCaption =
             new TranslationString("Open");
 
@@ -672,9 +669,9 @@ namespace GitUI.CommandsDialogs
 #endif
         }
 
+#if !__MonoCS__
         private void CreateOrUpdateTaskBarButtons(bool validRepo)
         {
-#if !__MonoCS__
             if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 if (!_toolbarButtonsCreated)
@@ -699,8 +696,8 @@ namespace GitUI.CommandsDialogs
                 _pushButton.Enabled = validRepo;
                 _pullButton.Enabled = validRepo;
             }
-#endif
         }
+#endif
 
         /// <summary>
         /// Converts an image into an icon.  This was taken off of the interwebs.
@@ -1700,16 +1697,12 @@ namespace GitUI.CommandsDialogs
 
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
-            FormProcess.ShowDialog(this, arguments);
-            UICommands.RepoChangedNotifier.Notify();
+            UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
         }
 
         private void StashPopToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(this, "stash pop");
-            UICommands.RepoChangedNotifier.Notify();
-            MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
+            UICommands.StashPop(this);
         }
 
         private void ViewStashToolStripMenuItemClick(object sender, EventArgs e)
@@ -2885,7 +2878,7 @@ namespace GitUI.CommandsDialogs
         private string GetModuleBranch(string path)
         {
             string branch = GitModule.GetSelectedBranchFast(path);
-            if (Module.IsDetachedHead(branch))
+            if (GitModule.IsDetachedHead(branch))
                 return "[no branch]";
             return "[" + branch + "]";
         }
