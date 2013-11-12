@@ -1482,7 +1482,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="IgnoreWhitespace" Property="Text">
           <Source>Ignore Wh.spc.</Source>
-          <Value>Wh.spc. 무시</Value>
+          <Value>화이트 스페이스 무시</Value>
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text" type="unfinished">
           <Source>Solve conflicts</Source>
@@ -1507,7 +1507,7 @@ You will have push access. {2}</Source>
         <TranslationItem Name="SolveMergeconflicts" Property="Text" type="unfinished">
           <Source>There are unresolved mergeconflicts
 </Source>
-          <Value>미해결된 충돌파일이 존재합니다</Value>
+          <Value>충돌파일이 존재합니다</Value>
         </TranslationItem>
         <TranslationItem Name="_applyPatchMsgBox" Property="Text" type="unfinished">
           <Source>Apply patch</Source>
@@ -1523,7 +1523,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="_noFileSelectedText" Property="Text">
           <Source>Please select a patch to apply</Source>
-          <Value>적용할 패치를 선택하세요</Value>
+          <Value>적용 할 패치를 선택하세요</Value>
         </TranslationItem>
         <TranslationItem Name="_selectPatchFileCaption" Property="Text">
           <Source>Select patch file</Source>
@@ -2167,7 +2167,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text" type="unfinished">
           <Source>View patch file...</Source>
           <OldSource>View patch file</OldSource>
-          <Value>패치파일 보기</Value>
+          <Value>패치 파일 보기...</Value>
         </TranslationItem>
         <TranslationItem Name="pluginSettingsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Settings</Source>
@@ -2218,7 +2218,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="repoSettingsToolStripMenuItem" Property="Text">
           <Source>Repository settings</Source>
-          <Value>저장소 설정</Value>
+          <Value>현재 저장소 설정</Value>
         </TranslationItem>
         <TranslationItem Name="reportAnIssueToolStripMenuItem" Property="Text">
           <Source>Report an issue</Source>
@@ -3723,7 +3723,7 @@ Do you want Git Extensions to help locate the correct folder?</Source>
         </TranslationItem>
         <TranslationItem Name="_gitGlobalConfigNotFoundCaption" Property="Text">
           <Source>Global config</Source>
-          <Value>일반 설정</Value>
+          <Value>기본 설정</Value>
         </TranslationItem>
         <TranslationItem Name="_gitconfigFoundHome" Property="Text">
           <Source>Located .gitconfig in %HOME% ({0}). This setting has been chosen automatically.</Source>
@@ -4311,6 +4311,10 @@ defaultremote=review</Value>
         <TranslationItem Name="Central" Property="Text" type="unfinished">
           <Source>Central repository, no working dir  (--bare --shared=all)</Source>
           <Value>원본 저장소, 작업 폴더 없음 (--bare --shared=all)</Value>
+        </TranslationItem>
+        <TranslationItem Name="Directory" Property="Text" type="unfinished">
+          <Source>D:\Projects</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="Init" Property="Text">
           <Source>Initialize</Source>
@@ -5727,7 +5731,7 @@ The merge conflict will not be marked as solved. Please try again.</Source>
         </TranslationItem>
         <TranslationItem Name="itemTypeDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>ItemType</Source>
-          <Value>아이템형식</Value>
+          <Value>형식</Value>
         </TranslationItem>
         <TranslationItem Name="keepBaseButtonText" Property="Text">
           <Source>Keep base file</Source>
@@ -5992,7 +5996,7 @@ GitExtensions 를 사용하기 위해 정확한 경로를 설정하십시요.
 git.cmd before you can change
 any global setting.
 </Source>
-          <Value>일반 설정을 바꾸기전에 먼저 정확한 git.cmd 경로를 설정해야 합니다.</Value>
+          <Value>기본 설정을 바꾸기전에 먼저 정확한 git.cmd 경로를 설정해야 합니다.</Value>
         </TranslationItem>
         <TranslationItem Name="labelInstantSaveNotice" Property="Text" type="unfinished">
           <Source>Changes on the selected page will be saved instantly. 
@@ -6538,7 +6542,7 @@ Context 메뉴에서 추가적으로 작업할 수 있습니다.</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>View patch file</Source>
-          <Value>패치파일 보기</Value>
+          <Value>패치 파일 보기</Value>
         </TranslationItem>
         <TranslationItem Name="BrowsePatch" Property="Text" type="unfinished">
           <Source>Browse</Source>
@@ -6546,15 +6550,15 @@ Context 메뉴에서 추가적으로 작업할 수 있습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="File" Property="HeaderText" type="unfinished">
           <Source>Type</Source>
-          <Value>종류</Value>
+          <Value>Type</Value>
         </TranslationItem>
         <TranslationItem Name="FileNameA" Property="HeaderText">
           <Source>Filename</Source>
-          <Value>파일이름</Value>
+          <Value>Filename</Value>
         </TranslationItem>
         <TranslationItem Name="_patchFileFilterString" Property="Text" type="unfinished">
           <Source>Patch file (*.Patch)</Source>
-          <Value>패치파일 (*.Patch)</Value>
+          <Value>패치 파일 (*.Patch)</Value>
         </TranslationItem>
         <TranslationItem Name="_patchFileFilterTitle" Property="Text" type="unfinished">
           <Source>Select patch file</Source>
@@ -6566,7 +6570,7 @@ Context 메뉴에서 추가적으로 작업할 수 있습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Change</Source>
-          <Value>변경사항</Value>
+          <Value>Change</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6742,7 +6746,7 @@ Context 메뉴에서 추가적으로 작업할 수 있습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
-          <Value>빠른 검색 키 입력 타임아웃 [ms]</Value>
+          <Value>리비전 도표의 빠른 검색 타임아웃 [ms]</Value>
         </TranslationItem>
         <TranslationItem Name="lblDefaultCloneDestination" Property="Text">
           <Source>Default clone destination</Source>
@@ -6811,7 +6815,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Global settings</Source>
-          <Value>일반 설정</Value>
+          <Value>기본 설정</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseCommitTemplate" Property="Text">
           <Source>Browse</Source>
@@ -7003,11 +7007,11 @@ help</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Local settings</Source>
-          <Value>개인 설정</Value>
+          <Value>저장소 개별 설정</Value>
         </TranslationItem>
         <TranslationItem Name="NoGitRepo" Property="Text">
           <Source>Not in a git repository</Source>
-          <Value>Git 저장소에 없습니다</Value>
+          <Value>현재 로드 된 저장소가 없습니다</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox10" Property="Text" type="unfinished">
           <Source>Line endings</Source>
@@ -7026,9 +7030,9 @@ help</Source>
 if you want to override the 
 global settings for the current
 repository.</Source>
-          <Value>개인설정이 입력되면 일반설정 
-내용이 개인설정 값으로 변경되어
-현재 저장소에 대해서만 
+          <Value>저장소 개별 설정이 입력되면 기본 설정 
+내용이 저장소 개별 설정 값으로 변경되어
+현재 로드된 저장소에 대해서만 
 적용됩니다.</Value>
         </TranslationItem>
         <TranslationItem Name="label21" Property="Text">
@@ -7122,7 +7126,7 @@ local settings.
       <translationItems>
         <TranslationItem Name="FileName" Property="HeaderText">
           <Source>Name</Source>
-          <Value>이름</Value>
+          <Value>ID</Value>
         </TranslationItem>
         <TranslationItem Name="Status" Property="HeaderText">
           <Source>Status</Source>
@@ -7560,7 +7564,7 @@ Context 메뉴 미리보기:</Value>
         </TranslationItem>
         <TranslationItem Name="AutostartPageant" Property="Text">
           <Source>Automatically start authentication client when a private key is configured for a remote</Source>
-          <Value>원격 저장소를 위한 개인키가 설정되었을 때 클라이언트 인증이 자동으로 시작합니다.</Value>
+          <Value>원격 저장소를 위한 개인키가 설정 되었을 때 클라이언트 인증이 자동으로 시작됩니다.</Value>
         </TranslationItem>
         <TranslationItem Name="OpenSSH" Property="Text">
           <Source>OpenSSH</Source>
