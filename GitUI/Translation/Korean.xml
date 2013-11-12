@@ -6746,7 +6746,7 @@ Context 메뉴에서 추가적으로 작업할 수 있습니다.</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
-          <Value>리비전 도표의 빠른 검색 타임아웃 [ms]</Value>
+          <Value>빠른 검색 키 입력 타임아웃 [ms]</Value>
         </TranslationItem>
         <TranslationItem Name="lblDefaultCloneDestination" Property="Text">
           <Source>Default clone destination</Source>
