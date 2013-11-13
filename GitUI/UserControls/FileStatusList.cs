@@ -49,6 +49,7 @@ namespace GitUI
                 _images.Images.Add(Resources.IconSubmoduleRevisionUpDirty); // 7
                 _images.Images.Add(Resources.IconSubmoduleRevisionDown); // 8
                 _images.Images.Add(Resources.IconSubmoduleRevisionDownDirty); // 9
+                _images.Images.Add(Resources.IconFileStatusUnknown); // 10
             }
             FileStatusListView.SmallImageList = _images;
             FileStatusListView.LargeImageList = _images;
@@ -437,7 +438,7 @@ namespace GitUI
                 return 3;
             if (gitItemStatus.IsCopied)
                 return 4;
-            return -1;
+            return 10;//icon unknown
         }
 
         [Browsable(false)]
