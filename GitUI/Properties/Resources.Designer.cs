@@ -1100,6 +1100,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconFileStatusUnknown {
+            get {
+                object obj = ResourceManager.GetObject("IconFileStatusUnknown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>

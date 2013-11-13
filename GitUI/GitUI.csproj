@@ -1491,6 +1491,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Externals\Git.hub\Git.hub\Git.hub.csproj">
+      <Project>{f50b1dbf-1c9f-4437-87ec-7aba805cc446}</Project>
+      <Name>Git.hub</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
@@ -1753,6 +1757,7 @@
     <None Include="Resources\Icons\IconGotoManual.png" />
     <None Include="Resources\Icons\IconWarning.png" />
     <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
+    <None Include="Resources\Icons\IconFileStatusUnknown.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
