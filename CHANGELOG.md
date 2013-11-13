@@ -1,3 +1,9 @@
+# 1.2.1
+
+*November 13, 2013*
+
+* Fix for exception serialization bug.
+
 # 1.2
 
 *November 9, 2013*
