@@ -170,8 +170,8 @@ namespace GitUI
                 // proper parent centering...
                 WindowState = FormWindowState.Normal;
                 CenterToParent();
+                Visible = true;
             }
-            Visible = showOnError && !isSuccess;
 
             if (isSuccess && (showOnError || (UseDialogSettings && GitCommands.AppSettings.CloseProcessDialog)))
             {
