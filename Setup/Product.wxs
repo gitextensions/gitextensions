@@ -49,9 +49,9 @@
         </Directory>
         <?define VsVersions = 2005;2008;2010;2012;2013?>
         <?foreach VsVersion in $(var.VsVersions)?>
-        <Property Id="VS$(var.VsVersion)">
-            <DirectorySearch Id="VS$(var.VsVersion)" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
-        </Property>
+            <Property Id="VS$(var.VsVersion)">
+                <DirectorySearch Id="VS$(var.VsVersion)" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
+            </Property>
         <?endforeach ?>
         <DirectoryRef Id="INSTALLDIR">
             <Component Id="gitextensions.ico" Guid="*">
@@ -122,7 +122,7 @@
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.Shell.dll" />
             </Component>
             <Component Id="NBug.dll" Guid="*">
-                <File Source="..\packages\NBug\lib\net40-client\NBug.dll" />
+                <File Source="..\Externals\NBug\NBug\bin\Release\NBug.dll" />
             </Component>
             <Component Id="SmartFormat.dll" Guid="*">
                 <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
@@ -147,14 +147,14 @@
             <Component Id="GitExtensionsShellEx32.dll" Guid="*">
                 <File Name="GitExtensionsShellEx32.dll" Source="..\GitExtensionsShellEx\Release\GitExtensionsShellEx32.dll" KeyPath="yes" />
                 <?foreach ShellExFileName in GitExtensionsShellEx32.dll?>
-                <?include RegisterShellExtension.wxi?>
+                    <?include RegisterShellExtension.wxi?>
                 <?endforeach ?>
             </Component>
             <Component Id="GitExtensionsShellEx64.dll" Guid="*" Win64="yes">
                 <Condition>VersionNT64</Condition>
                 <File Name="GitExtensionsShellEx64.dll" Source="..\GitExtensionsShellEx\Release-x64\GitExtensionsShellEx64.dll" KeyPath="yes" />
                 <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
-                <?include RegisterShellExtension.wxi?>
+                    <?include RegisterShellExtension.wxi?>
                 <?endforeach ?>
             </Component>
             <Component Id="GitExtSshAskPass.exe" Guid="*">
@@ -427,26 +427,26 @@
             </Component>
         </DirectoryRef>
         <?foreach VsVersion in $(var.VsVersions)?>
-        <DirectoryRef Id="VS$(var.VsVersion)">
-            <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
-                <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
-                    <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugIn\GitPlugin.AddIn" />
-                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall" />
-                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
-                </Component>
-                <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
-                    <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugIn\obj\Release\GitPlugin.dll" />
-                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall" />
-                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
-                </Component>
-                <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
-                    <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
-                        <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugIn\bin\en-US\GitPlugin.resources.dll" />
-                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall" />
+            <DirectoryRef Id="VS$(var.VsVersion)">
+                <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
+                    <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
+                        <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugIn\GitPlugin.AddIn" />
+                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall" />
+                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
                     </Component>
+                    <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
+                        <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugIn\obj\Release\GitPlugin.dll" />
+                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall" />
+                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
+                    </Component>
+                    <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
+                        <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
+                            <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugIn\bin\en-US\GitPlugin.resources.dll" />
+                            <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall" />
+                        </Component>
+                    </Directory>
                 </Directory>
-            </Directory>
-        </DirectoryRef>
+            </DirectoryRef>
         <?endforeach ?>
         <DirectoryRef Id="ProgramMenuFolder">
             <Component Id="GitExtensions.newstartmenu" Guid="*">
@@ -634,6 +634,10 @@
                     <ComponentRef Id="Japanese.xml" />
                     <ComponentRef Id="Japanese.gif" />
                 </Feature>
+                <Feature Id="Korean" Title="Korean" Level="1">
+                    <ComponentRef Id="Korean.xml" />
+                    <ComponentRef Id="Korean.gif" />
+                </Feature>
                 <Feature Id="Russian" Title="Russian" Level="1">
                     <ComponentRef Id="Russian.xml" />
                     <ComponentRef Id="Russian.gif" />
@@ -659,12 +663,12 @@
                 <ComponentRef Id="Path" />
             </Feature>
             <?foreach VsVersion in $(var.VsVersions)?>
-            <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
-                <Condition Level="2">NOT VS$(var.VsVersion)</Condition>
-                <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
-                <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
-                <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
-            </Feature>
+                <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
+                    <Condition Level="2">NOT VS$(var.VsVersion)</Condition>
+                    <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
+                    <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
+                    <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
+                </Feature>
             <?endforeach ?>
             <Feature Id="Protocol.git" Title="Assign with git://-links" Level="1">
                 <ComponentRef Id="Protocol.git" />
