@@ -3359,10 +3359,6 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Source>Working dir changes</Source>
           <Value>Änderungen im Arbeitsverzeichnis</Value>
         </TranslationItem>
-        <TranslationItem Name="commitTemplatesToolStripMenuItem" Property="ToolTipText" type="obsolete">
-          <Source>Commit templates</Source>
-          <Value>Commit-Vorlagen</Value>
-        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text" type="obsolete">
           <Source>Do you also want to delete the new files that are in the selection?
 
@@ -3635,13 +3631,13 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
           <Source>Delete branch</Source>
           <Value>Branch löschen</Value>
         </TranslationItem>
-        <TranslationItem Name="ForceDelete" Property="Text">
-          <Source>Force delete</Source>
-          <Value>Löschen erzwingen</Value>
-        </TranslationItem>
         <TranslationItem Name="Delete" Property="Text">
           <Source>Delete</Source>
           <Value>Löschen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForceDelete" Property="Text">
+          <Source>Force delete</Source>
+          <Value>Löschen erzwingen</Value>
         </TranslationItem>
         <TranslationItem Name="_cannotDeleteCurrentBranchMessage" Property="Text">
           <Source>Cannot delete the branch “{0}” which you are currently on.</Source>
@@ -5757,7 +5753,7 @@ Wert wurde mit leerem Wert ersetzt.</Value>
         </TranslationItem>
         <TranslationItem Name="OpenMergetool" Property="Text">
           <Source>Open in mergetool</Source>
-          <Value>Öffnen mit Vergleichsprogrammm</Value>
+          <Value>Öffnen mit Vergleichsprogramm</Value>
         </TranslationItem>
         <TranslationItem Name="Rescan" Property="Text">
           <Source>Rescan mergeconflicts</Source>
@@ -5874,8 +5870,7 @@ Diese Aktion kann nicht rückgängig gemacht werden.</Value>
           <Source>All mergeconflicts are resolved, you can commit.
 Do you want to commit now?</Source>
           <Value>Alle Merge-Konflikte wurden gelöst, Sie können nun commiten.
-Wollen Sie nun commiten?
-</Value>
+Wollen Sie nun commiten?</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolvedCaption" Property="Text">
           <Source>Commit</Source>
@@ -7064,14 +7059,6 @@ Mehr Optionen im Kontextmenü</Value>
           <Source>Default clone destination</Source>
           <Value>Standard Clone Ziel</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox11" Property="Text" type="obsolete">
-          <Source>Performance</Source>
-          <Value>Leistung</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox12" Property="Text" type="obsolete">
-          <Source>Behaviour</Source>
-          <Value>Verhalten</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="GitSettingsPage">
@@ -7866,6 +7853,76 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
           <Source>OnEvent</Source>
           <Value>Bei Event</Value>
         </TranslationItem>
+        <TranslationItem Name="_scriptSettingsPageHelpDisplayArgumentsHelp" Property="Text">
+          <Source>Arguments help</Source>
+          <Value>Parameter Hilfe</Value>
+        </TranslationItem>
+        <TranslationItem Name="_scriptSettingsPageHelpDisplayContent" Property="Text">
+          <Source>User Input:
+{UserInput}
+
+Selected Branch:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+Current Branch:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}</Source>
+          <Value>Benutzereingabe:
+{UserInput}
+
+Ausgewählter Branch:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+Aktueller Branch:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}</Value>
+        </TranslationItem>
         <TranslationItem Name="addScriptButton" Property="Text">
           <Source>Add</Source>
           <Value>Hinzufügen</Value>
@@ -8127,10 +8184,6 @@ Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
           <Source>{0} {1:year|years} ago</Source>
           <Value>vor {0} {1:Jahr|Jahren}</Value>
         </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ViewPullRequestsForm">
@@ -8260,14 +8313,6 @@ können.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormBranchSmall">
-      <translationItems>
-        <TranslationItem Name="Orphan" Property="Text" type="obsolete">
-          <Source>Orphan</Source>
-          <Value>Orphan</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FormRevert">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="obsolete">
@@ -8304,10 +8349,6 @@ können.</Value>
     </TranslationCategory>
     <TranslationCategory Name="FormCherryPickCommitSmall">
       <translationItems>
-        <TranslationItem Name="Author" Property="Text" type="obsolete">
-          <Source>Author:</Source>
-          <Value>Autor:</Value>
-        </TranslationItem>
         <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
           <Source>Automatically creates a commit</Source>
           <Value>Automatisch ein Commit erzeugen</Value>
