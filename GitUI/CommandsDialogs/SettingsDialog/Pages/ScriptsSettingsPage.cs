@@ -5,11 +5,48 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using GitUI.Script;
+using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ScriptsSettingsPage : SettingsPageWithHeader
     {
+        #region translation
+        private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new TranslationString("Arguments help");
+        private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new TranslationString(@"User Input:
+{UserInput}
+
+Selected Branch:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+Current Branch:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}");
+        #endregion translation
+
         private string IconName = "bug";
 
         public ScriptsSettingsPage()
@@ -288,39 +325,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void buttonShowArgumentsHelp_Click(object sender, EventArgs e)
         {
             var helpDisplayDialog = new SimpleHelpDisplayDialog();
-            helpDisplayDialog.DialogTitle = "Arguments help";
-            helpDisplayDialog.ContentText = @"User Input:
-{UserInput}
-
-Selected Branch:
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-Current Branch:
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cHash}
-{cMessage}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}".Replace("\n", Environment.NewLine);
+            helpDisplayDialog.DialogTitle = _scriptSettingsPageHelpDisplayArgumentsHelp.Text;
+            helpDisplayDialog.ContentText = @_scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
 
             helpDisplayDialog.ShowDialog();
         }
