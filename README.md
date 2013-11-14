@@ -15,4 +15,4 @@ Install-Package NBug
 ```
 
 ## CodePlex Home
-Original (up to v1.1.1 release) project source is hosted at CodePlex, where you can find more information about the project: http://nbug.codeplex.com/
+Old (up to v1.1.1 release) project source is hosted at CodePlex, where you can find more information about the project: http://nbug.codeplex.com/
