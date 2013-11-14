@@ -10,3 +10,7 @@
 [submodule "Externals/Git.hub"]
 	path = Externals/Git.hub
 	url = git://github.com/gitextensions/Git.hub.git
+[submodule "Bin/Tools"]
+	path = Bin/Tools
+	url = https://github.com/vbjay/Externals-BinTools.git
+	branch = master
