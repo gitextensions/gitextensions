@@ -1,6 +1,12 @@
 ﻿Changelog
 =========
-### Version 2.47
+### Version 2.47.1 (14 November 2013)
+* Fixed issue 2006: Check for updates using GitHub api. There is a bug in WebClient that causes AV
+* Fixed issue 2117: Create branch/tag command in VS fixed
+* Fixed issue 2114: "Keep dialog open" doesn't work
+* Added IconFileStatusUnknown - when git exits with error then GitExt crashes with IndexOutOfBounds
+
+### Version 2.47 (8 November 2013)
 * Main menu restructured. Issues: 1576, 1629
 * Added BackgroundFetch plugin in order to allow perioding fetching of all remotes automatically.
 * Putty updated to version beta 0.63 (released 2013-08-06)
@@ -75,10 +81,10 @@
 * Updated Simplified Chinese translation
 * Added Korean translation
 
-### Version 2.46
+### Version 2.46 (26 June 2013)
 * Fixed issue 1387: Shell extensions not work under Windows XP
 
-### Version 2.45
+### Version 2.45 (26 June 2013)
 * Setup files moved to sourceforge http://sourceforge.net/projects/gitextensions/
 * Putty updated to version 0.62.9768.0 (80% faster for me when cloning repository from GitHub)
 * FormCheckoutBranch behavior fixed again when called from commit dialog
@@ -94,7 +100,7 @@
 * Updated French translation
 * Updated German translation
 
-### Version 2.44
+### Version 2.44 (18 February 2013)
 * Fixed issue 710: Added icons to shell extensions
 * Fixed issue 1336: Prefix context menu entries with
 * Fixed issue 1354: Dashboard item description label is cut off at the top
@@ -147,7 +153,7 @@
 * Updated Russion translation
 * Updated French translation
 
-### Version 2.43
+### Version 2.43 (31 October 2012)
 * Fixed issue 47: Support non-standard SSH port for Test Connection
 * Fixed issue 85: Integrated git-credential-winstore to installer to handle HTTP authentication
 * Fixed issue 407: Added links to parent commit, branches and tags to commit info
@@ -194,7 +200,7 @@
 * Renamed Visual Studio plugin renamed from Visual Git to Git Extensions
 * Updated merge scripts
 
-### Version 2.41
+### Version 2.41 (22 September 2012)
 * Fixed issue 1254: Visual Studio 2005 plugin not working
 * Fixed issue 1225: Visual Studio 2008 plugin not working
 * Fixed window position in multi monitor configuration
@@ -206,7 +212,7 @@
 * Updated msysgit to a more stable build of version 1.7.11
 * German translation updated
 
-### Version 2.40
+### Version 2.40 (19 August 2012)
 * fixed issue 79: Don't offer to commit when resolving a stash conflict
 * Fixed issue 875: Show untracked files in stash
 * Fixed issue 980: spell check only covers first 5 visible lines in commit dialog
@@ -240,7 +246,7 @@
 * Russian translation updated
 * Updated msysgit to version 1.7.11
 
-### Version 2.33
+### Version 2.33 (6 June 2012)
 * Fixed issue 843: toolbar is disabled when in a wxs file
 * Fixed issue 922: error during merge conflict resolve
 * Fixed issue 951: install Git Extensions into 'All Progams' instead of 'All Programs\Git Extensions'
@@ -253,7 +259,7 @@
 * Seprate commit button status icon if dirty only submodules
 * Many bugfixes and minor changes
 
-### Version 2.32
+### Version 2.32 (20 May 2012)
 * Fixed issue 85: http authentication support
 * Fixed issue 357: commit Author name not using the correct encoding
 * Fixed issue 570: Cut, Copy, Paste, Delete, Select all menu items in the Commit message field
@@ -292,14 +298,14 @@
 * Fixed diff between "copied from file" vs "copied to file"
 * Many bugfixes and minor changes
 
-### Version 2.31
+### Version 2.31 (18 March 2012)
 * Fixed issue 745: test connection does not work with non-uri
 * Fixed issue 829: Browse submodules menu item does not work
 * Fixed issue 831: Remote Repositories dialog does not show Url
 * Fixed issue 840: Positions of splitters of main screen aren't persisted
 * Fix for "Index out of range exception" when no recent repositories are present.
 
-### Version 2.29
+### Version 2.29 (10 March 2012)
 * Fixed issue 276: Make splitter visible on Dashboard
 * Fixed issue 745: Test connection does not work with non-uri
 * Fixed issue 756: Push dialog advanced options are cut off
@@ -328,11 +334,11 @@
 * Many bugfixes and minor changes
 
 
-### Version 2.28
+### Version 2.28 (11 December 2011)
 * Fixed issue 738: RevisionGrid error when option "Show current working dir changes" is enabled
 * Fixed issue: all tabs are trimmed in blame control
 
-### Version 2.27
+### Version 2.27 (7 December 2011)
 * Fixed issue 124: Submodules form now can remove submodule
 * Fixed issue 127: Preview disabled for files larger than 5Mb, but available by link
 * Fixed issue 138: Avoid auto stash when there is nothing to stash
@@ -378,7 +384,7 @@
 * German translation updated
 * Many bugfixes and minor changes
 
-### Version 2.26
+### Version 2.26 (29 October 2011)
 * Fixed issue 629: Support of separate Fetch/Pull Urls for remotes
 * Fixed issue 685: Unable to set location of global git config file in Environment tab
 * Fixed revert commit dialog
@@ -389,7 +395,7 @@
 * German transation updated
 * Many bugfixes and minor changes
 
-### Version 2.25
+### Version 2.25 (16 October 2011)
 * Fixed issue 283: Splitter position on dashboard is not remembered
 * Fixed issue 543: Show current branch in main screen
 * Fixed issue 533: UI/translation bugs on lost commits recover form
@@ -421,10 +427,10 @@
 * Added German translation
 * Many bugfixes and minor changes
 
-### Version 2.24
+### Version 2.24 (25 July 2011)
 * Fixed revision filter
 
-### Version 2.23
+### Version 2.23 (23 July 2011)
 * Fixed issue 452: "Show repository status" always updates status every second
 * Fixed issue 455: Cannot initialize repository in Visual Studio solution root
 * Fixed issue 464: Added option to add custom script to toolbar in browse dialog
@@ -451,7 +457,7 @@
 * New application logo
 * Many bugfixes and minor changes
 
-### Version 2.22
+### Version 2.22 (16 May 2011)
 * Fixed issue 142: Changed main window title to repository name instead of path
 * Fixed issue 375: Save on Commit in Visual Studio
 * Fixed issue 436: Cannot order branches by date in "Delete obsolete branches" plugin
@@ -463,10 +469,10 @@
 * Added Traditional Chinese translation
 * Added plugin to create local tracking branches for all remote branches
 
-### Version 2.21
+### Version 2.21 (16 April 2011)
 * Fixed issue 423: "GitExtensions has stopped working" at startup
 
-### Version 2.20
+### Version 2.20 (14 April 2011)
 * Fixed issue 406: keyboard language changes in commit dialog
 * Fixed issue 415: Diffs in Stash view are reversed
 * Fixed issue 417: popup complains about missing .gitconfig on Linux
@@ -479,14 +485,14 @@
 * Show current branch in Visual Studio toolbar (default off)
 * Scripts can be executed before and after actions* * 
 
-### Version 2.17
+### Version 2.17 (15 March 2011)
 * Fixed exception thrown while loading Visual Studio plugin
 * Fixed refresh issues
 
-### Version 2.16
+### Version 2.16 (13 March 2011)
 * Fixed refresh issues
 
-### Version 2.15
+### Version 2.15 (10 March 2011)
 * Fixed issue 399: blame is showing source code double space
 * Fixed issue 400: commit summary with polish letters in author names shown incorrect
 * Fixed "show ignored files" in commit dialog
@@ -503,7 +509,7 @@
 * Updated kdiff3 to version 0.9.95-2
 * Various bugfixes and minor changes
 
-### Version 2.14
+### Version 2.14 (5 March 2011)
 * Fixed crash when viewing binary file in blame
 * Fixed settings dialog on Linux host
 * Fixed commit dialog on Linux host
@@ -511,11 +517,11 @@
 * Added settings page to configure hotkeys
 * Removed shell extensions check when it is not installed
 
-### Version 2.13
+### Version 2.13 (3 March 2011)
 * Fixed issue 391: application crashes when repository favourites contains empty item
 * Double click on line in blame jumps to commit instead of opening commit
 
-### Version 2.12
+### Version 2.12 (2 March 2011)
 * Fixed issue 368: Browse button does not open dialog in HOME dialog
 * Fixed issue 373: Archive command is not working
 * Fixed issue 376: Added "Save As" button to file history
@@ -530,10 +536,10 @@
 * Added support for git notes
 * Various bugfixes and minor changes
 
-### Version 2.11
+### Version 2.11 (28 January 2011)
 * Fixed crash when refreshing repository grid
 
-### Version 2.10
+### Version 2.10 (27 January 2011)
 * Fixed issue 78: refresh commit dialog on focus (optional)
 * Fixed "Recover lost objects"
 * Fixed layout issues in gource plugin dialog
@@ -550,7 +556,7 @@
 * Added icons to most messageboxes
 * Added "pull all" button to pull dialog
 
-### Version 2.09
+### Version 2.09 (30 December 2010)
 * Fixed issue 92: added AcceptButton on Push dialog and fixed tab order in push and pull dialog.
 * Fixed issue 289: added support for MonsterId, Identicon and Wavatar when user has no Gravatar
 * Fixed issue 304: cannot load commit log
@@ -580,7 +586,7 @@
 * Improved merge conflict handling
 * Various bugfixes and minor changes
 
-### Version 2.08
+### Version 2.08 (25 November 2010)
 * Fixed bug: installing MSysGit or KDiff3 using complete settup doesn't work when UAC is enabled
 * Fixed bug: slashes in tag name not supported
 * Fixed bug: filtering does not work with characters outside ASCII range
@@ -590,7 +596,7 @@
 * Added shortcut key F3 to open diff tool op file
 * Added stash count to toolbar (is turned off by default)
 
-### Version 2.07
+### Version 2.07 (15 November 2010)
 * Fixed issue 263: spanish translation added
 * Fixed issue 262: application crashes on system where only .Net 4.0 is installed
 * Fixed issue 255, 257, 261, 266: application crashes in Windows 7
@@ -599,7 +605,7 @@
 * Fixed bug: GitExtensions now uses .gitattributes to determine if a file is binary
 * Added bisect function
 
-### Version 2.06
+### Version 2.06 (10 November 2010)
 * Fixed issue 218: GitCommandLog now in LIFO order
 * Fixed issue 235, 242 and 248: GitExtensions hangs when loading putty key into pageant
 * Fixed bug: comboboxes affected each other in clone dialog
@@ -611,7 +617,7 @@
 * The "Format patch" dialog now remembers the last (valid) directory
 * Startup speed improved
 
-### Version 2.05
+### Version 2.05 (30 October 2010)
 * Fixed issue 194: Remote branches combo contained tags also
 * Fixed bug: fixed pre-selecting tracking branch in push dialog
 * Fixed bug: pull form no longer shows default remote branch to pull, this caused unwanted behaviour
@@ -628,7 +634,7 @@
 * Added statusbar for warnings
 * Added option to also show remote branches that contain the selected commit in the commitinfo
 
-### Version 2.04
+### Version 2.04 (30 September 2010)
 * Fixed issue 173: Unhandled exception when selecting files in Commit dialog - Working dir changes
 * Fixed bug: spellings checker allows using Japanese
 * Added possibility to pull non-default remote branch into current branch
@@ -640,7 +646,7 @@
 * Removed ctr-c key from commit info control to allow copy part of commit info
 * GitExtensions now can be used in Linux using Mono
 
-### Version 2.03
+### Version 2.03 (18 September 2010)
 * Fixed bug: exception when deleting repository form dashboad using dashboardeditor
 * Fixed bug: Settings for autocrlf are now the same as in the msysgit installer
 * Fixed bug: revision header in commitinfo was not cleard between changing selection
@@ -653,7 +659,7 @@
 * Added "Delete obsolete branches" plugin
 * Improved cygwin support
 
-### Version 2.02
+### Version 2.02 (1 September 2010)
 * Fixed issue 149: the system just hangs during a fetch
 * Fixed bug: changing encoding in settings is not saved properly
 * Fixed bug: no branches found in remotes dialog
@@ -665,12 +671,12 @@
 * Added "Copy filename to clipboard" to context menu's in browse dialog
 * Last commit message is stored in settings so it can be used in multiple repositories
 
-### Version 2.01
+### Version 2.01 (26 August 2010)
 * Fixed issue 144: encoding in 'Diff' view ignores settings
 * Fixed issue 143: hitting refresh in browse dialog causes application to freeze
 * Fixed bug where multiple value entries in a config file section were being stripped from config file
 
-### Version 2.00
+### Version 2.00 (22 August 2010)
 * Fixed bug: refreshing and loading gravatars caused GitExtensions to crash
 * Fixed bug: settings check not shown properly when a problem was found
 
