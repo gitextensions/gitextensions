@@ -14,7 +14,7 @@ set msbuild="%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
 set output=bin\Release\GitExtensions.msi
 set project=Setup.wixproj
 
-set build=%msbuild% %project% /t:Rebuild /p:Version=%Version% /p:Configuration=Release /nologo /v:m
+set build=%msbuild% %project% /t:Rebuild /p:Version=%Version% /p:NumericVersion=%Version% /p:Configuration=Release /nologo /v:m
 
 echo Creating installers for Git Extensions %version%
 echo.
