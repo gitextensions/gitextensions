@@ -506,6 +506,8 @@
             <ComponentRef Id="System.Reactive.Interfaces.dll" />
             <ComponentRef Id="System.Reactive.Linq.dll" />
             <ComponentRef Id="System.Reactive.PlatformServices.dll" />
+            <ComponentRef Id="Git.hub.dll" />
+            <ComponentRef Id="RestSharp.dll" />            
             <!--Remove unused dll, installed in versions <= 2.31-->
             <ComponentRef Id="Github.dll" />
             <!--Remove unused dll, installed in versions <= 2.31-->
@@ -532,8 +534,6 @@
                 </Feature>
                 <Feature Id="Github" Title="Github integration" Level="1">
                     <ComponentRef Id="Github3.dll" />
-                    <ComponentRef Id="Git.hub.dll" />
-                    <ComponentRef Id="RestSharp.dll" />
                 </Feature>
                 <Feature Id="Gource" Title="Gource visualization" Level="1">
                     <ComponentRef Id="Gource.dll" />
