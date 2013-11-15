@@ -104,6 +104,16 @@ namespace System
         }
 
         /// <summary>
+        /// Adds parentheses if string is not null and not empty
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string AddParenthesesNE(this string s)
+        {
+            return s.IsNullOrEmpty() ? s : "(" + s + ")";
+        }
+
+        /// <summary>
         /// Indicates whether a specified string is null, empty, or consists only of white-space characters.
         /// </summary>
         /// <param name="value">The string to test.</param>

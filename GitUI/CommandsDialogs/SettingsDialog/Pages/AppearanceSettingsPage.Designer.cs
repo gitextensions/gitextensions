@@ -288,7 +288,8 @@
             this._NO_TRANSLATE_truncatePathMethod.Items.AddRange(new object[] {
             "none",
             "compact",
-            "trimstart"});
+            "trimstart",
+            "fileNameOnly"});
             this._NO_TRANSLATE_truncatePathMethod.Location = new System.Drawing.Point(221, 101);
             this._NO_TRANSLATE_truncatePathMethod.Name = "_NO_TRANSLATE_truncatePathMethod";
             this._NO_TRANSLATE_truncatePathMethod.Size = new System.Drawing.Size(242, 24);
