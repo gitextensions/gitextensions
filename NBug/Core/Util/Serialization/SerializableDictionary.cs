@@ -6,73 +6,84 @@
 
 namespace NBug.Core.Util.Serialization
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Xml;
-	using System.Xml.Linq;
-	using System.Xml.Schema;
-	using System.Xml.Serialization;
+    using System;
+    using System.Collections.Generic;
+    using System.Xml;
+    using System.Xml.Linq;
+    using System.Xml.Schema;
+    using System.Xml.Serialization;
 
-	[Serializable]
-	[XmlRoot("dictionary")]
-	public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
-	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SerializableDictionary{TKey,TValue}"/> class.
-		/// This is the default constructor provided for XML serializer.
-		/// </summary>
-		public SerializableDictionary()
-		{
-		}
+    [Serializable]
+    [XmlRoot("dictionary")]
+    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerializableDictionary{TKey,TValue}"/> class.
+        /// This is the default constructor provided for XML serializer.
+        /// </summary>
+        public SerializableDictionary()
+        {
+        }
 
-		public SerializableDictionary(IDictionary<TKey, TValue> dictionary)
-		{
-			if (dictionary == null)
-			{
-				throw new ArgumentNullException();
-			}
+        public SerializableDictionary(IDictionary<TKey, TValue> dictionary)
+        {
+            if (dictionary == null)
+            {
+                throw new ArgumentNullException();
+            }
 
-			foreach (var pair in dictionary)
-			{
-				this.Add(pair.Key, pair.Value);
-			}
-		}
+            foreach (var pair in dictionary)
+            {
+                this.Add(pair.Key, pair.Value);
+            }
+        }
 
-		public XmlSchema GetSchema()
-		{
-			return null;
-		}
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
 
-		public void ReadXml(XmlReader reader)
-		{
-			/*if (reader.IsEmptyElement)
-			{
-				return;
-			}*/
-			var inner = reader.ReadSubtree();
+        public void ReadXml(XmlReader reader)
+        {
+            /*if (reader.IsEmptyElement)
+            {
+                return;
+            }*/
+            var inner = reader.ReadSubtree();
 
-			var xElement = XElement.Load(inner);
-			if (xElement.HasElements)
-			{
-				foreach (var element in xElement.Elements())
-				{
-					this.Add((TKey)Convert.ChangeType(element.Name.ToString(), typeof(TKey)), (TValue)Convert.ChangeType(element.Value, typeof(TValue)));
-				}
-			}
+            var xElement = XElement.Load(inner);
+            if (xElement.HasElements)
+            {
+                foreach (var element in xElement.Elements())
+                {
+                    this.Add((TKey)Convert.ChangeType(element.Name.ToString(), typeof(TKey)), (TValue)Convert.ChangeType(element.Value, typeof(TValue)));
+                }
+            }
 
-			inner.Close();
+            inner.Close();
 
-			reader.ReadEndElement();
-		}
+            reader.ReadEndElement();
+        }
 
-		public void WriteXml(XmlWriter writer)
-		{
-			foreach (var key in this.Keys)
-			{
-				writer.WriteStartElement(key.ToString());
-				writer.WriteValue(this[key]);
-				writer.WriteEndElement();
-			}
-		}
-	}
+        public void WriteXml(XmlWriter writer)
+        {
+            foreach (var key in this.Keys)
+            {
+                writer.WriteStartElement(key.ToString());
+                // Check to see if we can actually serialize element
+                if (this[key].GetType().IsSerializable)
+                {
+                    writer.WriteValue(this[key]);
+                }
+                else
+                {
+                    // If Type has custom implementation of ToString() we'll get something useful here
+                    // Otherwise we'll get Type string. (Still better than crashing).
+                    writer.WriteValue(this[key].ToString());
+                }
+                writer.WriteEndElement();
+            }
+        }
+
+    }
 }
