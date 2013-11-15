@@ -277,7 +277,7 @@ namespace GitCommands
             if (data == null)
                 throw new ArgumentNullException("Data");
 
-            var lines = data.Split('\n');
+            var lines = data.Replace("\r\n", "\n").Split('\n');
 
             var guid = lines[0];
 
