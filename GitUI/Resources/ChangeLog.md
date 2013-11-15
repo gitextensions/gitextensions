@@ -1,6 +1,6 @@
 ﻿Changelog
 =========
-### Version 2.47.2 (15 November 2013)
+### Version 2.47.3 (15 November 2013)
 * Fixed issue #2124: GitHub integration not working in 2.47.1
 
 ### Version 2.47.1 (14 November 2013)
