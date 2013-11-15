@@ -73,7 +73,16 @@ namespace NBug.Core.Util.Serialization
                 // Check to see if we can actually serialize element
                 if (this[key].GetType().IsSerializable)
                 {
-                    writer.WriteValue(this[key]);
+                    // if it's Serializable doesn't mean serialization will succeed (IE. GUID and SQLError types)
+                    try
+                    {
+                        writer.WriteValue(this[key]);
+                    }
+                    catch (Exception)
+                    {
+                        // we're not Throwing anything here, otherwise evil thing will happen
+                        writer.WriteValue(this[key].ToString());
+                    }
                 }
                 else
                 {

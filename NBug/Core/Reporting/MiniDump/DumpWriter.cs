@@ -89,17 +89,18 @@ namespace NBug.Core.Reporting.MiniDump
 			}
 			else if (dumpType.ToLower() == MiniDumpType.Normal.ToString().ToLower())
 			{
-				// If the debugger is attached, it is not possible to access private read-write memory
-				if (Debugger.IsAttached)
-				{
-					return Write(fileHandle, DumpTypeFlag.WithDataSegs | DumpTypeFlag.WithHandleData | DumpTypeFlag.WithUnloadedModules);
-				}
-				else
-				{
-					// Bug: Combination of WithPrivateReadWriteMemory + WithDataSegs hangs Visual Studio 2010 SP1 on some cases while loading the minidump for debugging in mixed mode which was created in by a release build application
-					return Write(
-						fileHandle, DumpTypeFlag.WithPrivateReadWriteMemory | DumpTypeFlag.WithDataSegs | DumpTypeFlag.WithHandleData | DumpTypeFlag.WithUnloadedModules);
-				}
+                //// If the debugger is attached, it is not possible to access private read-write memory
+                //if (Debugger.IsAttached)
+                //{
+                //    return Write(fileHandle, DumpTypeFlag.WithDataSegs | DumpTypeFlag.WithHandleData | DumpTypeFlag.WithUnloadedModules);
+                //}
+                //else
+                //{
+                //    // Bug: Combination of WithPrivateReadWriteMemory + WithDataSegs hangs Visual Studio 2010 SP1 on some cases while loading the minidump for debugging in mixed mode which was created in by a release build application
+                //    return Write(
+                //        fileHandle, DumpTypeFlag.WithPrivateReadWriteMemory | DumpTypeFlag.WithDataSegs | DumpTypeFlag.WithHandleData | DumpTypeFlag.WithUnloadedModules);
+                //}
+                return Write(fileHandle, DumpTypeFlag.Normal);
 			}
 			else if (dumpType.ToLower() == MiniDumpType.Full.ToString().ToLower())
 			{
