@@ -130,14 +130,14 @@ namespace NBug.Core.Util.Serialization
 
 		private SerializableDictionary<string, object> GetExtendedInformation(Exception exception)
 		{
-			var extendedProperties = from property in exception.GetType().GetProperties()
+			var extendedProperties = (from property in exception.GetType().GetProperties()
 			                         where
 				                         property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException"
 				                         && property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace"
 				                         && property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
-			                         select property;
+			                         select property).ToArray();
 
-			if (extendedProperties.Count() > 0)
+			if (extendedProperties.Any())
 			{
 				var extendedInformation = new SerializableDictionary<string, object>();
 
