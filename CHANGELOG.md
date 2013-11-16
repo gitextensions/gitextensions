@@ -1,5 +1,12 @@
 # 1.2.1
 
+*November 16, 2013*
+
+* More elaborate fixes for serialization problems.
+* Fixes for memory dump issues.
+
+# 1.2.1
+
 *November 13, 2013*
 
 * Fix for exception serialization bug.
