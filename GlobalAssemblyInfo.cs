@@ -46,7 +46,7 @@ using System.Reflection;
 // This is also assigned to 'AssemblyInformationalVersion' which is the product version
 // Standard Way: [major].[minor].[bugfix].[build]
 // .NET Convention: Third digit is the auto-incremented build version. Fourth digit is revision, which is service pack no
-[assembly: AssemblyFileVersion("1.2.1.0")]
+[assembly: AssemblyFileVersion("1.2.0.0")]
 /*
  * AssemblyVersion should only be changed for major changes or breaking changes since any change to the
  * AssemblyVersion would force every .NET application referencing the assembly to re-compile against the
