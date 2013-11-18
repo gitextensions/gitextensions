@@ -636,7 +636,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
 
 (andernfalls wird die Nachricht während des Commits abgefragt)</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBoxBehaviour" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBoxBehaviour" Property="Text">
           <Source>Behaviour</Source>
           <Value>Verhalten</Value>
         </TranslationItem>
@@ -708,7 +708,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
           <Source>n/a</Source>
           <Value>n.a.</Value>
         </TranslationItem>
-        <TranslationItem Name="labelAuthorCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="labelAuthorCaption" Property="Text">
           <Source>Author:</Source>
           <Value>Autor:</Value>
         </TranslationItem>
@@ -770,10 +770,9 @@ Wert:  {2} = {3}</Value>
           <Source>Apply stashed changes after successful checkout (stash will be popped automatically)</Source>
           <Value>Gestashte Änderungen anwenden (Stash wird automatisch gepoppt nach einem erfolreichen Checkout)</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
+        <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text">
           <Source>Apply stashed changes after successful pull (stash will be popped automatically)</Source>
-          <OldSource>Apply stashed changes (Stash will be popped automatically after successful pull)</OldSource>
-          <Value>Gestashte Änderungen anwenden (Stash wird automatisch gepoppt nach einem erfolgreichen Pull)</Value>
+          <Value>Gestashte Änderungen anwenden (Stash wird automatisch gepoppt)</Value>
         </TranslationItem>
         <TranslationItem Name="chkPushNewBranch" Property="Text">
           <Source>Push a new branch for the remote</Source>
@@ -1647,7 +1646,7 @@ You will have push access. {2}</Source>
           <Source>You need to choose a target revision.</Source>
           <Value>Es muss eine Ziel Revision ausgewählt werden.</Value>
         </TranslationItem>
-        <TranslationItem Name="_noRevisionSelectedCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_noRevisionSelectedCaption" Property="Text">
           <Source>Error</Source>
           <Value>Fehler</Value>
         </TranslationItem>
@@ -1683,10 +1682,9 @@ You will have push access. {2}</Source>
           <Source>Filter files</Source>
           <Value>Dateien filtern</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>This revision will be archived:</Source>
-          <OldSource>Selected revision to archive:</OldSource>
-          <Value>Wählen Sie eine Revision aus, die Sie archivieren möchten</Value>
+          <Value>Diese Revision wird archiviert:</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
@@ -1698,7 +1696,7 @@ auswählen</Value>
           <Source>separate each new path by new line</Source>
           <Value>jeden einzelnen neuen Pfad in eine Zeile</Value>
         </TranslationItem>
-        <TranslationItem Name="labelAuthorCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="labelAuthorCaption" Property="Text">
           <Source>Author:</Source>
           <Value>Autor:</Value>
         </TranslationItem>
@@ -1864,10 +1862,9 @@ compare with first:</Source>
           <Source>Node not found. File tree selection was not changed.</Source>
           <Value>Knoten nicht gefunden. Dateibaum Auswahl wurde nicht verändert.</Value>
         </TranslationItem>
-        <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text">
           <Source>(Repository hosts)</Source>
-          <OldSource>Repository hosts</OldSource>
-          <Value>Repository Hosts</Value>
+          <Value>(Repository Hosts)</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileFilterAllFiles" Property="Text">
           <Source>All files</Source>
@@ -1893,10 +1890,9 @@ compare with first:</Source>
           <Source>Update current submodule</Source>
           <Value>Aktuelles Untermodul updaten</Value>
         </TranslationItem>
-        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
           <Source>View pull requests...</Source>
-          <OldSource>View pull requests</OldSource>
-          <Value>Pull Requests anzeigen</Value>
+          <Value>Pull Requests anzeigen...</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
           <Source>You are in the middle of a bisect</Source>
@@ -1978,10 +1974,9 @@ compare with first:</Source>
           <Source>Cherry pick...</Source>
           <Value>Cherry Pick...</Value>
         </TranslationItem>
-        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
           <Source>Clean working tree...</Source>
-          <OldSource>Cleanup repository...</OldSource>
-          <Value>Aufräumen...</Value>
+          <Value>Arbeitsbaum aufräumen...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
           <Source>Clone SVN repository...</Source>
@@ -1991,10 +1986,9 @@ compare with first:</Source>
           <Source>Clone repository...</Source>
           <Value>Repository klonen...</Value>
         </TranslationItem>
-        <TranslationItem Name="closeToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close (go to Dashboard)</Source>
-          <OldSource>Close</OldSource>
-          <Value>Schließen</Value>
+          <Value>Schließen (Zum Dashboard)</Value>
         </TranslationItem>
         <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text">
           <Source>Collapse all</Source>
@@ -2028,10 +2022,9 @@ compare with first:</Source>
           <Source>Copy full path</Source>
           <Value>Dateiname in Zwischenablage kopieren</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text" type="unfinished">
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
           <Source>Copy full path(s)</Source>
-          <OldSource>Copy full path</OldSource>
-          <Value>Dateiname in Zwischenablage kopieren</Value>
+          <Value>Volle(n) Pfad(e) kopieren</Value>
         </TranslationItem>
         <TranslationItem Name="dashboardToolStripMenuItem" Property="Text">
           <Source>Dashboard</Source>
@@ -2125,10 +2118,9 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Source>File history</Source>
           <Value>Datei-Historie</Value>
         </TranslationItem>
-        <TranslationItem Name="fileToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fileToolStripMenuItem" Property="Text">
           <Source>Start</Source>
-          <OldSource>File</OldSource>
-          <Value>Datei</Value>
+          <Value>Start</Value>
         </TranslationItem>
         <TranslationItem Name="fileTreeArchiveToolStripMenuItem" Property="Text">
           <Source>Archive...</Source>
@@ -2194,15 +2186,13 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Source>Local</Source>
           <Value>Local</Value>
         </TranslationItem>
-        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text" type="unfinished">
+        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
           <Source>Remote repositories...</Source>
-          <OldSource>Manage remote repositories</OldSource>
-          <Value>Remote Repositorys verwalten</Value>
+          <Value>Remote Repositories...</Value>
         </TranslationItem>
-        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text">
           <Source>Submodules...</Source>
-          <OldSource>Manage submodules</OldSource>
-          <Value>Untermodule verwalten</Value>
+          <Value>Untermodule..</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge branches...</Source>
@@ -2216,9 +2206,8 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Source>Navigate</Source>
           <Value>Navigieren</Value>
         </TranslationItem>
-        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text">
           <Source>Open containing folder(s)</Source>
-          <OldSource>Open containing folder</OldSource>
           <Value>Ordner öffnen</Value>
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
@@ -2253,7 +2242,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Source>View patch file...</Source>
           <Value>Patch-Datei anzeigen...</Value>
         </TranslationItem>
-        <TranslationItem Name="pluginSettingsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="pluginSettingsToolStripMenuItem" Property="Text">
           <Source>Settings</Source>
           <Value>Einstellungen</Value>
         </TranslationItem>
@@ -2285,7 +2274,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Source>Recent Repositories</Source>
           <Value>Kürzlich verwendete Repositorys</Value>
         </TranslationItem>
-        <TranslationItem Name="refreshDashboardToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="refreshDashboardToolStripMenuItem" Property="Text">
           <Source>Refresh</Source>
           <Value>Aktualisieren</Value>
         </TranslationItem>
@@ -2349,7 +2338,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Source>Settings</Source>
           <Value>Einstellungen</Value>
         </TranslationItem>
-        <TranslationItem Name="settingsToolStripMenuItem3" Property="Text" type="unfinished">
+        <TranslationItem Name="settingsToolStripMenuItem3" Property="Text">
           <Source>Settings</Source>
           <Value>Einstellungen</Value>
         </TranslationItem>
@@ -2505,7 +2494,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Source>Apply stashed items to working dir again?</Source>
           <Value>Wollen Sie die gestashten Objekte wieder auf das Arbeitsverzeichnis anwenden?</Value>
         </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text">
           <Source>Auto stash</Source>
           <Value>Auto-Stash</Value>
         </TranslationItem>
@@ -2581,14 +2570,13 @@ Gültigen Branch Namen eingeben oder vordefinierten Wert auswählen.</Value>
           <Source>Checkout revision</Source>
           <Value>Revision auschecken</Value>
         </TranslationItem>
-        <TranslationItem Name="Force" Property="Text" type="unfinished">
+        <TranslationItem Name="Force" Property="Text">
           <Source>Force (reset local changes)</Source>
-          <OldSource>Force</OldSource>
-          <Value>Erzwingen</Value>
+          <Value>Erzwingen (Lokale Änderungen zurücksetzen)</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
+        <TranslationItem Name="OkCheckout" Property="Text">
           <Source>Checkout</Source>
-          <Value>Checkout</Value>
+          <Value>Auschecken</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text">
           <Source>Select 1 revision to checkout.</Source>
@@ -2658,7 +2646,7 @@ Gültigen Branch Namen eingeben oder vordefinierten Wert auswählen.</Value>
           <Source>Date</Source>
           <Value>Datum</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
 revision:</Source>
           <Value>Andere Revision
@@ -2716,10 +2704,9 @@ auswählen</Value>
     </TranslationCategory>
     <TranslationCategory Name="FormCleanupRepository">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Clean working tree</Source>
-          <OldSource>Cleanup repository</OldSource>
-          <Value>Repository säubern</Value>
+          <Value>Arbeitsbaum Säubern</Value>
         </TranslationItem>
         <TranslationItem Name="Cancel" Property="Text">
           <Source>Cancel</Source>
@@ -2761,10 +2748,9 @@ auswählen</Value>
           <Source>Affect the following path(s) only:</Source>
           <Value>Nur die folgenden Pfade einschliessen:</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox1" Property="Text">
           <Source>Remove untracked files from working tree</Source>
-          <OldSource>Cleanup repository</OldSource>
-          <Value>Repository säubern</Value>
+          <Value>Entferne ungetrackte Dateien vom Arbeitsbaum</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Log:</Source>
@@ -2909,10 +2895,9 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Source>Commit</Source>
           <Value>Commiten</Value>
         </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text" type="unfinished">
+        <TranslationItem Name="Reset" Property="Text">
           <Source>Reset all changes</Source>
-          <OldSource>Reset changes</OldSource>
-          <Value>Änderungen zurücksetzen</Value>
+          <Value>Alle Änderungen zurücksetzen</Value>
         </TranslationItem>
         <TranslationItem Name="ResetUnStaged" Property="Text">
           <Source>Reset unstaged changes</Source>
@@ -3374,10 +3359,6 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Source>Working dir changes</Source>
           <Value>Änderungen im Arbeitsverzeichnis</Value>
         </TranslationItem>
-        <TranslationItem Name="commitTemplatesToolStripMenuItem" Property="ToolTipText" type="obsolete">
-          <Source>Commit templates</Source>
-          <Value>Commit-Vorlagen</Value>
-        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text" type="obsolete">
           <Source>Do you also want to delete the new files that are in the selection?
 
@@ -3406,7 +3387,7 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
     </TranslationCategory>
     <TranslationCategory Name="FormCommitDiff">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Diff</Source>
           <Value>Vergleichen</Value>
         </TranslationItem>
@@ -3430,7 +3411,7 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
           <Source>OK</Source>
           <Value>OK</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBoxCommitTemplates" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBoxCommitTemplates" Property="Text">
           <Source>Commit templates</Source>
           <Value>Commit-Vorlagen</Value>
         </TranslationItem>
@@ -3506,9 +3487,8 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
     </TranslationCategory>
     <TranslationCategory Name="FormCreateBranch">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Create branch</Source>
-          <OldSource>Create Branch</OldSource>
           <Value>Branch erzeugen</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
@@ -3539,7 +3519,7 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
           <Source>Select 1 revision to create the branch on.</Source>
           <Value>Wählen Sie eine Revision aus worauf der Branch basieren soll.</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox1" Property="Text">
           <Source>Orphan</Source>
           <Value>Orphan</Value>
         </TranslationItem>
@@ -3563,7 +3543,7 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
           <Source>Create tag</Source>
           <Value>Tag erzeugen</Value>
         </TranslationItem>
-        <TranslationItem Name="ForceTag" Property="Text" type="unfinished">
+        <TranslationItem Name="ForceTag" Property="Text">
           <Source>Force</Source>
           <Value>Erzwingen</Value>
         </TranslationItem>
@@ -3571,7 +3551,7 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
           <Source>Create tag</Source>
           <Value>Tag erzeugen</Value>
         </TranslationItem>
-        <TranslationItem Name="_messageCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_messageCaption" Property="Text">
           <Source>Tag</Source>
           <Value>Tag</Value>
         </TranslationItem>
@@ -3595,7 +3575,7 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
           <Source>Tag name</Source>
           <Value>Tag Name</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Message</Source>
           <Value>Nachricht</Value>
         </TranslationItem>
@@ -3651,13 +3631,13 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
           <Source>Delete branch</Source>
           <Value>Branch löschen</Value>
         </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text">
+          <Source>Delete</Source>
+          <Value>Löschen</Value>
+        </TranslationItem>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Source>Force delete</Source>
           <Value>Löschen erzwingen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Source>Delete</Source>
-          <Value>Löschen</Value>
         </TranslationItem>
         <TranslationItem Name="_cannotDeleteCurrentBranchMessage" Property="Text">
           <Source>Cannot delete the branch “{0}” which you are currently on.</Source>
@@ -3677,21 +3657,20 @@ Ein Branch zu löschen kann zu gelöschten Commits führen!</Value>
           <Source>You cannot delete unmerged branch until you set “force delete” mode.</Source>
           <Value>Sie können den nicht gemergten Branch nicht löschen ohne vorher den Modus "Löschen Erzwingen" zu setzen.</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Select branches</Source>
-          <Value>Branch auswählen</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
+        <TranslationItem Name="labelDeleteBranchWarning" Property="Text">
           <Source>You can only delete branches when they are fully merged in HEAD. 
-When you delete a branch the commits can get lost because nothing point to them.
-When you want to delete a not-fully merged branch, you can override
-this using `force delete´.
+When you delete a branch the commits can get lost because nothing points to them.
+When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
 </Source>
           <Value>Sie können ein Branch nur löschen wenn er komplett mit HEAD gemergt ist. 
-Wenn Sie einen Branch löschen, können Commits verlorgen gehen, weil nichts 
+Wenn Sie einen Branch löschen, können Commits verloren gehen, weil nichts 
 mehr auf diese zeigt. Wenn Sie einen nicht vollständig gemergten Branch 
 löschen wollen, können Sie dies mit der Option 'Löschen erzwingen' erreichen.
 </Value>
+        </TranslationItem>
+        <TranslationItem Name="labelSelectBranches" Property="Text">
+          <Source>Select branches</Source>
+          <Value>Branch(es) auswählen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4025,9 +4004,8 @@ Standardmäßig wird %HOME% auf %HOMEDRIVE%%HOMEPATH% gesetzt, falls diese leer 
           <Source>You need to select two revisions</Source>
           <Value>Sie müssen zwei Revisionen angeben</Value>
         </TranslationItem>
-        <TranslationItem Name="_wrongSmtpSettingsText" Property="Text" type="unfinished">
+        <TranslationItem Name="_wrongSmtpSettingsText" Property="Text">
           <Source>You need to enter a valid smtp in the settings dialog.</Source>
-          <OldSource>You need to enter a valid SMTP in the settings dialog.</OldSource>
           <Value>Sie müssen einen gültigen SMTP-Server im Einstellungen-Dialog angeben.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -4038,7 +4016,7 @@ Standardmäßig wird %HOME% auf %HOMEDRIVE%%HOMEPATH% gesetzt, falls diese leer 
           <Source>Body</Source>
           <Value>Text</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>To</Source>
           <Value>bis</Value>
         </TranslationItem>
@@ -4200,7 +4178,7 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</Value>
           <Source>Save changes?</Source>
           <Value>Änderungen speichern?</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Edit the git attributes
 Define attributes per path
 
@@ -4217,34 +4195,21 @@ weirdchars.txt text
 For more information run
 command "git help gitattributes"
 </Source>
-          <OldSource>Edit the git attributes
-Define attributes per path
-
-Examples
-Mark all jpg files as binary:
-*.jpg binary
-
-Mark sln files as binary:
-*.sln binary
-
-Mark single file as text:
-weirdchars.txt text
-</OldSource>
           <Value>Git Attribute bearbeiten
 Attribute pro Pfad definieren
 
 Beispiele
-Alle jpg-Dateien als Binärdateien kennzeichnen
+Alle jpg-Dateien als Binärdateien kennzeichnen:
 *.jpg binary
 
-Alle sln-Dateien als Binärdateien kennzeichen
+Alle sln-Dateien als Binärdateien kennzeichen:
 *.sln binary
 
-Einzelne Datei als Textdatei kennzeichnen
+Einzelne Datei als Textdatei kennzeichnen:
 bloedezeichen.txt text
 
-Für nähere Informationen schauen
-Sie in der Git Hilfe nach</Value>
+Für weitere Informationen folgenden Befehl ausführen:
+"git help gitattributes"</Value>
         </TranslationItem>
         <TranslationItem Name="noWorkingDir" Property="Text">
           <Source>.gitattributes is only supported when there is a working dir.</Source>
@@ -4412,7 +4377,7 @@ Stellen Sie sicher dass Zugriff auf die Datei möglich ist.</Value>
           <Source>Save changes to .gitreview?</Source>
           <Value>Änderungen an .gitreview speichern?</Value>
         </TranslationItem>
-        <TranslationItem Name="_saveFileQuestionCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_saveFileQuestionCaption" Property="Text">
           <Source>Save changes?</Source>
           <Value>Änderungen speichern?</Value>
         </TranslationItem>
@@ -4487,10 +4452,9 @@ defaultrebase=0</Value>
           <Source>Go to branch:</Source>
           <Value>Gehe zu Branch:</Value>
         </TranslationItem>
-        <TranslationItem Name="linkGitRevParse" Property="Text" type="unfinished">
+        <TranslationItem Name="linkGitRevParse" Property="Text">
           <Source>More see git-rev-parse</Source>
-          <OldSource>More (git-rev-parse, section SPECIFYING REVISIONS)</OldSource>
-          <Value>Mehr (git-rev-parse, section SPECIFYING REVISIONS)</Value>
+          <Value>Mehr unter git-rev-parse</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4604,7 +4568,7 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</Value>
           <Source>Save changes?</Source>
           <Value>Änderungen speichern?</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Edit the mailmap.
 This file is meant to correct usernames.
 
@@ -4614,14 +4578,8 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
 
 For more information run
 command "git help shortlog"</Source>
-          <OldSource>Edit the mailmap.
-This file is meant to correct usernames.
-
-Example:
-Henk Westhuis &lt;Henk@.(none)&gt;
-Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</OldSource>
           <Value>Mailmap bearbeiten.
-Diese Datei ist für korrekte Benutzernamen vorgesehen.
+Diese Datei ist zum Korrigieren von Benutzernamen vorgesehen.
 
 Beispiel:
 Henk Westhuis &lt;Henk@.(none)&gt;
@@ -4787,13 +4745,10 @@ auf den gemeinsamen Vorfahrenbaum angewendet.</Value>
           <Source>Close</Source>
           <Value>Schließen</Value>
         </TranslationItem>
-        <TranslationItem Name="informationLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="informationLabel" Property="Text">
           <Source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</Source>
-          <OldSource>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
-
-To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Settings | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</OldSource>
           <Value>Das Gerrit Plugin für GitExtensions integriert Gerrit in GitExtensions. Dieses Plugin basiert auf dem git-review Tool.
 
 Um Gerrit Support für ein Repository zu aktivieren muss eine .gitreview Datei angelegt werden. Dies kann über die Option Einstellungen | Editiere .gitreview Menüoption ausgewählt werden.
@@ -5694,11 +5649,11 @@ Wert wurde mit leerem Wert ersetzt.</Value>
           <Source>Cancel</Source>
           <Value>Abbrechen</Value>
         </TranslationItem>
-        <TranslationItem Name="Hard" Property="Text" type="unfinished">
+        <TranslationItem Name="Hard" Property="Text">
           <Source>Hard: reset working dir and index
 (discard ALL local changes, even uncommitted changes)</Source>
-          <OldSource>Hard: reset working dir and index (discard ALL local changes, even uncommitted changes)</OldSource>
-          <Value>Hart: Arbeitsverzeichnis und Index zurücksetzen (Vorsicht: Alle Änderungen gehen verloren) </Value>
+          <Value>Hart: Arbeitsverzeichnis und Index zurücksetzen 
+(ALLE - auch ungesicherte - Änderungen gehen verloren) </Value>
         </TranslationItem>
         <TranslationItem Name="Mixed" Property="Text">
           <Source>Mixed: leave working dir untouched, reset index</Source>
@@ -5712,10 +5667,9 @@ Wert wurde mit leerem Wert ersetzt.</Value>
           <Source>Soft: leave working dir and index untouched</Source>
           <Value>Soft: Arbeitsverzeichnis und Index unverändert belassen</Value>
         </TranslationItem>
-        <TranslationItem Name="branchInfo" Property="Text" type="unfinished">
+        <TranslationItem Name="branchInfo" Property="Text">
           <Source>Reset branch '{0}' to revision:</Source>
-          <OldSource>Reset {0} to:</OldSource>
-          <Value>{0} zurücksetzen nach:</Value>
+          <Value>Branch '{0}' zurücksetzen nach Revision:</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Reset type</Source>
@@ -5799,7 +5753,7 @@ Wert wurde mit leerem Wert ersetzt.</Value>
         </TranslationItem>
         <TranslationItem Name="OpenMergetool" Property="Text">
           <Source>Open in mergetool</Source>
-          <Value>Öffnen mit Vergleichsprogrammm</Value>
+          <Value>Öffnen mit Vergleichsprogramm</Value>
         </TranslationItem>
         <TranslationItem Name="Rescan" Property="Text">
           <Source>Rescan mergeconflicts</Source>
@@ -5916,8 +5870,7 @@ Diese Aktion kann nicht rückgängig gemacht werden.</Value>
           <Source>All mergeconflicts are resolved, you can commit.
 Do you want to commit now?</Source>
           <Value>Alle Merge-Konflikte wurden gelöst, Sie können nun commiten.
-Wollen Sie nun commiten?
-</Value>
+Wollen Sie nun commiten?</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolvedCaption" Property="Text">
           <Source>Commit</Source>
@@ -6083,11 +6036,11 @@ Der Merge-Konflikt wird als nicht-gelöst markiert. Bitte versuchen Sie es noch 
           <Source>Merge</Source>
           <Value>Mergen</Value>
         </TranslationItem>
-        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text" type="unfinished">
+        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
           <Source>The selected mergeconflict is a submodule.
 Stage current submodule commit?</Source>
-          <OldSource>The selected mergeconflict is a submodule. Mark conflict as resolved?</OldSource>
-          <Value>Der ausgewählte Merge-Konflikt ist ein Untermodul. Konflikt als gelöst markieren?</Value>
+          <Value>Der ausgewählte Merge-Konflikt ist ein Untermodul. 
+Aktuellen Untermodul Commit stagen?</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
           <Source>Submodule</Source>
@@ -6320,11 +6273,9 @@ zu git.cmd angeben bevor Sie die
 globalen Einstellungen ändern
 können.</Value>
         </TranslationItem>
-        <TranslationItem Name="labelInstantSaveNotice" Property="Text" type="unfinished">
+        <TranslationItem Name="labelInstantSaveNotice" Property="Text">
           <Source>Changes on the selected page will be saved instantly. 
 Therefore the Cancel button does NOT revert any changes made.</Source>
-          <OldSource>Changes made on this page will be saved instantly. 
-Thus the Cancel and Discard button will have no effect for this page.</OldSource>
           <Value>Änderungen auf dieser Seite werden sofort gespeichert.
 Abbrechen macht darum auf dieser Seite keine Änderungen rückgängig.</Value>
         </TranslationItem>
@@ -6768,7 +6719,7 @@ Wollen Sie zuerst einen Ländercode auswählen?</Value>
           <Source>No updates found</Source>
           <Value>Keine Updates gefunden</Value>
         </TranslationItem>
-        <TranslationItem Name="closeButton" Property="Text" type="unfinished">
+        <TranslationItem Name="closeButton" Property="Text">
           <Source>Close</Source>
           <Value>Schließen</Value>
         </TranslationItem>
@@ -7020,7 +6971,7 @@ Mehr Optionen im Kontextmenü</Value>
           <Source>Git Extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
-        <TranslationItem Name="btnDefaultDestinationBrowse" Property="Text" type="unfinished">
+        <TranslationItem Name="btnDefaultDestinationBrowse" Property="Text">
           <Source>Browse</Source>
           <Value>Durchsuchen</Value>
         </TranslationItem>
@@ -7028,10 +6979,9 @@ Mehr Optionen im Kontextmenü</Value>
           <Source>Check for uncommitted changes in checkout branch dialog</Source>
           <Value>Auf nicht comittete Änderungen im Branch Checkout Dialog prüfen</Value>
         </TranslationItem>
-        <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="unfinished">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Source>Close Process dialog when process succeeds</Source>
-          <OldSource>Close Process dialog when process is succeeded</OldSource>
-          <Value>Prozessfenster schließen wenn der Prozess erfolgreich war</Value>
+          <Value>Dialog schließen wenn der Prozess erfolgreich war</Value>
         </TranslationItem>
         <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Source>Follow renames in file history (experimental)</Source>
@@ -7077,7 +7027,7 @@ Mehr Optionen im Kontextmenü</Value>
           <Source>Use SSL/TLS</Source>
           <Value>Verwende SSL/TLS</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBoxBehaviour" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBoxBehaviour" Property="Text">
           <Source>Behaviour</Source>
           <Value>Verhalten</Value>
         </TranslationItem>
@@ -7085,7 +7035,7 @@ Mehr Optionen im Kontextmenü</Value>
           <Source>Email settings for sending patches</Source>
           <Value>Email Einstellungen für den Versand von Patches</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBoxPerformance" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBoxPerformance" Property="Text">
           <Source>Performance</Source>
           <Value>Leistung</Value>
         </TranslationItem>
@@ -7108,14 +7058,6 @@ Mehr Optionen im Kontextmenü</Value>
         <TranslationItem Name="lblDefaultCloneDestination" Property="Text">
           <Source>Default clone destination</Source>
           <Value>Standard Clone Ziel</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox11" Property="Text" type="obsolete">
-          <Source>Performance</Source>
-          <Value>Leistung</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox12" Property="Text" type="obsolete">
-          <Source>Behaviour</Source>
-          <Value>Verhalten</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7170,12 +7112,9 @@ Nur angeben wenn nicht im Pfad.</Value>
           <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
           <Value>Git Extensions kann msysgit oder cygwin verwenden, um auf Git Repositorys zuzugreifen. Setzen Sie hier die korrekten Pfade.</Value>
         </TranslationItem>
-        <TranslationItem Name="label51" Property="Text" type="unfinished">
+        <TranslationItem Name="label51" Property="Text">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</Source>
-          <OldSource>The global config file located in the location stored environment variable %HOME%. 
-By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
-Change the default behaviour only if you experience problems.</OldSource>
           <Value>Die globale Konfigurationsdatei ist im Verzeichnis %HOME% gespeichert. 
 Standardmäßig wird %HOME% auf %HOMEDRIVE%%HOMEPATH% gesetzt, wenn diese leer ist. 
 Ändern Sie das Standardverhalten nur, wenn Probleme bei der Benutzung auftreten.</Value>
@@ -7184,10 +7123,9 @@ Standardmäßig wird %HOME% auf %HOMEDRIVE%%HOMEPATH% gesetzt, wenn diese leer i
     </TranslationCategory>
     <TranslationCategory Name="GlobalSettingsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Git Config</Source>
-          <OldSource>Global settings</OldSource>
-          <Value>Globale Einstellungen</Value>
+          <Value>Git Konfiguration</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseCommitTemplate" Property="Text">
           <Source>Browse</Source>
@@ -7291,7 +7229,11 @@ können.</Value>
     </TranslationCategory>
     <TranslationCategory Name="GotoUserManualControl">
       <translationItems>
-        <TranslationItem Name="linkLabelHelp" Property="Text" type="unfinished">
+        <TranslationItem Name="_gotoUserManualControlTooltip" Property="Text">
+          <Source>Read more about this feature at {0}</Source>
+          <Value>Lesen Sie mehr über dieses Feature bei {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="linkLabelHelp" Property="Text">
           <Source>Help</Source>
           <Value>Hilfe</Value>
         </TranslationItem>
@@ -7409,7 +7351,7 @@ Hilfe</Value>
           <Source>The current directory is not a valid git-svn repository.</Source>
           <Value>Das aktuelle Verzeichnis ist kein gültiges Git-SVN Repository.</Value>
         </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_pageantNotFound" Property="Text">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
         </TranslationItem>
@@ -7491,9 +7433,45 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="ProxySwitcherForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Proxy Switcher</Source>
+          <Value>Proxy Switcher</Value>
+        </TranslationItem>
+        <TranslationItem Name="ApplyGlobally_CheckBox" Property="Text">
+          <Source>Apply globally</Source>
+          <Value>Global anwenden</Value>
+        </TranslationItem>
+        <TranslationItem Name="GlobalHttpProxy_Label" Property="Text">
+          <Source>Global http.proxy:</Source>
+          <Value>Globaler HTTP Proxy:</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalHttpProxy_Label" Property="Text">
+          <Source>Local http.proxy:</Source>
+          <Value>Lokaler HTTP Proxy:</Value>
+        </TranslationItem>
+        <TranslationItem Name="SetProxy_Button" Property="Text">
+          <Source>Set proxy</Source>
+          <Value>Proxy setzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="UnsetProxy_Button" Property="Text">
+          <Source>Unset proxy</Source>
+          <Value>Proxy zurücksetzen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pleaseSetProxy" Property="Text">
+          <Source>There is no proxy configured. Please set the proxy host in the plugin settings.</Source>
+          <Value>Es ist kein Proxy konfiguriert. Bitte setzen Sie den Proxy-Host in den Plugin Einstellungen.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pluginDescription" Property="Text">
+          <Source>Proxy Switcher</Source>
+          <Value>Proxy Wechsler</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="RevisionGrid">
       <translationItems>
-        <TranslationItem Name="AuthorDataGridViewColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="AuthorDataGridViewColumn" Property="HeaderText">
           <Source>Author</Source>
           <Value>Autor</Value>
         </TranslationItem>
@@ -7505,7 +7483,7 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
           <Source>Commit</Source>
           <Value>Commiten</Value>
         </TranslationItem>
-        <TranslationItem Name="DateDataGridViewColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="DateDataGridViewColumn" Property="HeaderText">
           <Source>Date</Source>
           <Value>Datum</Value>
         </TranslationItem>
@@ -7537,7 +7515,7 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
           <Source>IsMessageMultiline</Source>
           <Value>Ist Message mehrere Zeilen lang</Value>
         </TranslationItem>
-        <TranslationItem Name="MessageDataGridViewColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="MessageDataGridViewColumn" Property="HeaderText">
           <Source>Message</Source>
           <Value>Nachricht</Value>
         </TranslationItem>
@@ -7597,7 +7575,7 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
           <Source>Archive revision</Source>
           <Value>Archivieren</Value>
         </TranslationItem>
-        <TranslationItem Name="authorCopyToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="authorCopyToolStripMenuItem" Property="Text">
           <Source>Author</Source>
           <Value>Autor</Value>
         </TranslationItem>
@@ -7633,7 +7611,7 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
           <Source>Create new tag</Source>
           <Value>Neuen Tag erzeugen</Value>
         </TranslationItem>
-        <TranslationItem Name="dateCopyToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="dateCopyToolStripMenuItem" Property="Text">
           <Source>Date</Source>
           <Value>Datum</Value>
         </TranslationItem>
@@ -7699,11 +7677,11 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
           <Source>Merge into current branch</Source>
           <Value>Mit aktuellem Branch mergen</Value>
         </TranslationItem>
-        <TranslationItem Name="messageCopyToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="messageCopyToolStripMenuItem" Property="Text">
           <Source>Message</Source>
           <Value>Nachricht</Value>
         </TranslationItem>
-        <TranslationItem Name="navigateToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="navigateToolStripMenuItem" Property="Text">
           <Source>Navigate</Source>
           <Value>Navigieren</Value>
         </TranslationItem>
@@ -7771,7 +7749,7 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
           <Source>Tag name:</Source>
           <Value>Tag Name:</Value>
         </TranslationItem>
-        <TranslationItem Name="viewToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="viewToolStripMenuItem" Property="Text">
           <Source>View</Source>
           <Value>Ansicht</Value>
         </TranslationItem>
@@ -7795,19 +7773,19 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
           <Source>Revision links</Source>
           <Value>Revision Links</Value>
         </TranslationItem>
-        <TranslationItem Name="Add" Property="Text" type="unfinished">
+        <TranslationItem Name="Add" Property="Text">
           <Source>Add</Source>
           <Value>Hinzufügen</Value>
         </TranslationItem>
-        <TranslationItem Name="CaptionCol" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="CaptionCol" Property="HeaderText">
           <Source>Caption</Source>
           <Value>Titel</Value>
         </TranslationItem>
-        <TranslationItem Name="CategoriesLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="CategoriesLabel" Property="Text">
           <Source>Categories</Source>
           <Value>Kategorien</Value>
         </TranslationItem>
-        <TranslationItem Name="EnabledChx" Property="Text" type="unfinished">
+        <TranslationItem Name="EnabledChx" Property="Text">
           <Source>Enabled</Source>
           <Value>Aktiv</Value>
         </TranslationItem>
@@ -7815,7 +7793,7 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
           <Source>Local branch</Source>
           <Value>Lokaler Branch</Value>
         </TranslationItem>
-        <TranslationItem Name="MessageChx" Property="Text" type="unfinished">
+        <TranslationItem Name="MessageChx" Property="Text">
           <Source>Message</Source>
           <Value>Nachricht</Value>
         </TranslationItem>
@@ -7823,7 +7801,7 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
           <Source>Remote branch</Source>
           <Value>Remote Branch</Value>
         </TranslationItem>
-        <TranslationItem Name="Remove" Property="Text" type="unfinished">
+        <TranslationItem Name="Remove" Property="Text">
           <Source>Remove</Source>
           <Value>Entfernen</Value>
         </TranslationItem>
@@ -7831,11 +7809,11 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
           <Source>URI</Source>
           <Value>URI</Value>
         </TranslationItem>
-        <TranslationItem Name="dataGridViewTextBoxColumn1" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="dataGridViewTextBoxColumn1" Property="HeaderText">
           <Source>Title</Source>
           <Value>Titel</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Name</Source>
           <Value>Name</Value>
         </TranslationItem>
@@ -7874,6 +7852,76 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
         <TranslationItem Name="OnEvent" Property="HeaderText">
           <Source>OnEvent</Source>
           <Value>Bei Event</Value>
+        </TranslationItem>
+        <TranslationItem Name="_scriptSettingsPageHelpDisplayArgumentsHelp" Property="Text">
+          <Source>Arguments help</Source>
+          <Value>Parameter Hilfe</Value>
+        </TranslationItem>
+        <TranslationItem Name="_scriptSettingsPageHelpDisplayContent" Property="Text">
+          <Source>User Input:
+{UserInput}
+
+Selected Branch:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+Current Branch:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}</Source>
+          <Value>Benutzereingabe:
+{UserInput}
+
+Ausgewählter Branch:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+Aktueller Branch:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}</Value>
         </TranslationItem>
         <TranslationItem Name="addScriptButton" Property="Text">
           <Source>Add</Source>
@@ -7973,13 +8021,11 @@ when all items are shown:</Source>
           <Value>Kontextmenü Voransicht
 wenn alle Einträge angezeigt werden:</Value>
         </TranslationItem>
-        <TranslationItem Name="lblMenuEntries" Property="Text" type="unfinished">
+        <TranslationItem Name="lblMenuEntries" Property="Text">
           <Source>Select items to be shown in the cascaded context menu.
 (Unchecked items will be shown top level for direct access.)</Source>
-          <OldSource>Select items to be shown in
-the cascaded context menu:</OldSource>
-          <Value>Einträge auswählen zur Anzeige im
-kaskadierten Kontextmenü:</Value>
+          <Value>Einträge auswählen zur Anzeige im kaskadierten Kontextmenü:
+(Nicht ausgewählte Einträge werden ganz oben für direkten Zugriff angezeigt.)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -8138,10 +8184,6 @@ Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
           <Source>{0} {1:year|years} ago</Source>
           <Value>vor {0} {1:Jahr|Jahren}</Value>
         </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ViewPullRequestsForm">
@@ -8271,14 +8313,6 @@ können.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormBranchSmall">
-      <translationItems>
-        <TranslationItem Name="Orphan" Property="Text" type="obsolete">
-          <Source>Orphan</Source>
-          <Value>Orphan</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FormRevert">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="obsolete">
@@ -8315,10 +8349,6 @@ können.</Value>
     </TranslationCategory>
     <TranslationCategory Name="FormCherryPickCommitSmall">
       <translationItems>
-        <TranslationItem Name="Author" Property="Text" type="obsolete">
-          <Source>Author:</Source>
-          <Value>Autor:</Value>
-        </TranslationItem>
         <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
           <Source>Automatically creates a commit</Source>
           <Value>Automatisch ein Commit erzeugen</Value>

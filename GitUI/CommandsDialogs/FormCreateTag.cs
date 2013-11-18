@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
-                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? null : revision.Guid);
+                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
         }
 
         private void FormCreateTag_Load(object sender, EventArgs e)

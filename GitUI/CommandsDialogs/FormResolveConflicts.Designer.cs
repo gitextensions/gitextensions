@@ -99,7 +99,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(151, 15);
+            this.label1.Size = new System.Drawing.Size(162, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "Unresolved merge conflicts";
             // 
@@ -118,14 +118,14 @@
             this.ConflictedFiles.ContextMenuStrip = this.ConflictedFilesContextMenu;
             this.ConflictedFiles.DataSource = this.gitItemBindingSource;
             this.ConflictedFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ConflictedFiles.Location = new System.Drawing.Point(3, 18);
+            this.ConflictedFiles.Location = new System.Drawing.Point(3, 19);
             this.ConflictedFiles.MultiSelect = false;
             this.ConflictedFiles.Name = "ConflictedFiles";
             this.ConflictedFiles.ReadOnly = true;
             this.ConflictedFiles.RowHeadersVisible = false;
             this.ConflictedFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ConflictedFiles.Size = new System.Drawing.Size(448, 225);
-            this.ConflictedFiles.TabIndex = 5;
+            this.ConflictedFiles.Size = new System.Drawing.Size(455, 221);
+            this.ConflictedFiles.TabIndex = 1;
             this.ConflictedFiles.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ConflictedFiles_CellMouseDown);
             this.ConflictedFiles.SelectionChanged += new System.EventHandler(this.ConflictedFiles_SelectionChanged);
             this.ConflictedFiles.DoubleClick += new System.EventHandler(this.ConflictedFiles_DoubleClick);
@@ -316,14 +316,14 @@
             this.tableLayoutPanel1.Controls.Add(this.label5, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.remoteFileName, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 299);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 296);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(460, 63);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(467, 66);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // label7
@@ -333,7 +333,7 @@
             this.label7.Location = new System.Drawing.Point(3, 0);
             this.label7.Name = "label7";
             this.label7.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.label7.Size = new System.Drawing.Size(35, 21);
+            this.label7.Size = new System.Drawing.Size(37, 22);
             this.label7.TabIndex = 1;
             this.label7.Text = "Local";
             // 
@@ -341,9 +341,9 @@
             // 
             this.localFileName.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.localFileName.AutoSize = true;
-            this.localFileName.Location = new System.Drawing.Point(57, 3);
+            this.localFileName.Location = new System.Drawing.Point(61, 3);
             this.localFileName.Name = "localFileName";
-            this.localFileName.Size = new System.Drawing.Size(16, 15);
+            this.localFileName.Size = new System.Drawing.Size(20, 16);
             this.localFileName.TabIndex = 3;
             this.localFileName.Text = "...";
             // 
@@ -351,9 +351,9 @@
             // 
             this.baseFileName.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.baseFileName.AutoSize = true;
-            this.baseFileName.Location = new System.Drawing.Point(57, 24);
+            this.baseFileName.Location = new System.Drawing.Point(61, 25);
             this.baseFileName.Name = "baseFileName";
-            this.baseFileName.Size = new System.Drawing.Size(16, 15);
+            this.baseFileName.Size = new System.Drawing.Size(20, 16);
             this.baseFileName.TabIndex = 4;
             this.baseFileName.Text = "...";
             // 
@@ -361,10 +361,10 @@
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 21);
+            this.label2.Location = new System.Drawing.Point(3, 22);
             this.label2.Name = "label2";
             this.label2.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.label2.Size = new System.Drawing.Size(31, 21);
+            this.label2.Size = new System.Drawing.Size(35, 22);
             this.label2.TabIndex = 2;
             this.label2.Text = "Base";
             // 
@@ -372,10 +372,10 @@
             // 
             this.label5.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 42);
+            this.label5.Location = new System.Drawing.Point(3, 44);
             this.label5.Name = "label5";
             this.label5.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.label5.Size = new System.Drawing.Size(48, 21);
+            this.label5.Size = new System.Drawing.Size(52, 22);
             this.label5.TabIndex = 5;
             this.label5.Text = "Remote";
             // 
@@ -383,9 +383,9 @@
             // 
             this.remoteFileName.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.remoteFileName.AutoSize = true;
-            this.remoteFileName.Location = new System.Drawing.Point(57, 45);
+            this.remoteFileName.Location = new System.Drawing.Point(61, 47);
             this.remoteFileName.Name = "remoteFileName";
-            this.remoteFileName.Size = new System.Drawing.Size(16, 15);
+            this.remoteFileName.Size = new System.Drawing.Size(20, 16);
             this.remoteFileName.TabIndex = 6;
             this.remoteFileName.Text = "...";
             // 
@@ -400,12 +400,12 @@
             this.tableLayoutPanel3.Controls.Add(this.conflictDescription, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.pictureBox1, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 246);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 243);
             this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(454, 27);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(461, 27);
             this.tableLayoutPanel3.TabIndex = 6;
             // 
             // merge
@@ -413,11 +413,11 @@
             this.merge.ContextMenuStrip = this.ConflictedFilesContextMenu;
             this.merge.Image = global::GitUI.Properties.Resources.Select;
             this.merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.merge.Location = new System.Drawing.Point(324, 0);
+            this.merge.Location = new System.Drawing.Point(331, 0);
             this.merge.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.merge.Name = "merge";
             this.merge.Size = new System.Drawing.Size(130, 25);
-            this.merge.TabIndex = 8;
+            this.merge.TabIndex = 2;
             this.merge.TabStop = false;
             this.merge.Text = "Merge";
             this.merge.UseVisualStyleBackColor = true;
@@ -428,9 +428,9 @@
             this.conflictDescription.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.conflictDescription.AutoSize = true;
             this.conflictDescription.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.conflictDescription.Location = new System.Drawing.Point(19, 6);
+            this.conflictDescription.Location = new System.Drawing.Point(19, 5);
             this.conflictDescription.Name = "conflictDescription";
-            this.conflictDescription.Size = new System.Drawing.Size(57, 15);
+            this.conflictDescription.Size = new System.Drawing.Size(64, 16);
             this.conflictDescription.TabIndex = 2;
             this.conflictDescription.Text = "Select file";
             this.conflictDescription.Click += new System.EventHandler(this.conflictDescription_Click);
@@ -451,8 +451,8 @@
             // 
             this.startMergetool.Location = new System.Drawing.Point(3, 34);
             this.startMergetool.Name = "startMergetool";
-            this.startMergetool.Size = new System.Drawing.Size(132, 25);
-            this.startMergetool.TabIndex = 10;
+            this.startMergetool.Size = new System.Drawing.Size(140, 25);
+            this.startMergetool.TabIndex = 4;
             this.startMergetool.Text = "Start mergetool";
             this.startMergetool.UseVisualStyleBackColor = true;
             this.startMergetool.Click += new System.EventHandler(this.Mergetool_Click);
@@ -461,8 +461,8 @@
             // 
             this.openMergeToolBtn.Location = new System.Drawing.Point(3, 3);
             this.openMergeToolBtn.Name = "openMergeToolBtn";
-            this.openMergeToolBtn.Size = new System.Drawing.Size(132, 25);
-            this.openMergeToolBtn.TabIndex = 1;
+            this.openMergeToolBtn.Size = new System.Drawing.Size(140, 25);
+            this.openMergeToolBtn.TabIndex = 3;
             this.openMergeToolBtn.Text = "Open in mergetool";
             this.openMergeToolBtn.UseVisualStyleBackColor = true;
             this.openMergeToolBtn.Click += new System.EventHandler(this.OpenMergetool_Click);
@@ -471,8 +471,8 @@
             // 
             this.Rescan.Location = new System.Drawing.Point(3, 65);
             this.Rescan.Name = "Rescan";
-            this.Rescan.Size = new System.Drawing.Size(132, 25);
-            this.Rescan.TabIndex = 7;
+            this.Rescan.Size = new System.Drawing.Size(140, 25);
+            this.Rescan.TabIndex = 5;
             this.Rescan.Text = "Rescan mergeconflicts";
             this.Rescan.UseVisualStyleBackColor = true;
             this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
@@ -481,8 +481,8 @@
             // 
             this.Reset.Location = new System.Drawing.Point(3, 96);
             this.Reset.Name = "Reset";
-            this.Reset.Size = new System.Drawing.Size(132, 25);
-            this.Reset.TabIndex = 9;
+            this.Reset.Size = new System.Drawing.Size(140, 25);
+            this.Reset.TabIndex = 6;
             this.Reset.Text = "Abort";
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.Reset_Click);
@@ -564,7 +564,7 @@
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(604, 392);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(619, 392);
             this.tableLayoutPanel4.TabIndex = 2;
             // 
             // flowLayoutPanel1
@@ -576,9 +576,9 @@
             this.flowLayoutPanel1.Controls.Add(this.Reset);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(463, 3);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(470, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(138, 293);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(146, 290);
             this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -597,7 +597,7 @@
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(454, 293);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(461, 290);
             this.tableLayoutPanel5.TabIndex = 1;
             // 
             // gotoUserManualControl1
@@ -617,7 +617,7 @@
             this.AcceptButton = this.merge;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(604, 392);
+            this.ClientSize = new System.Drawing.Size(619, 392);
             this.Controls.Add(this.tableLayoutPanel4);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(450, 299);
