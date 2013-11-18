@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs
 
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
-                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? null : revision.Guid);
+                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
         }
 
         private void FormCreateBranch_Load(object sender, EventArgs e)

@@ -122,7 +122,7 @@
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.Shell.dll" />
             </Component>
             <Component Id="NBug.dll" Guid="*">
-                <File Source="..\packages\NBug\lib\net40-client\NBug.dll" />
+                <File Source="..\Externals\NBug\NBug\bin\Release\NBug.dll" />
             </Component>
             <Component Id="SmartFormat.dll" Guid="*">
                 <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
@@ -502,20 +502,20 @@
             <ComponentRef Id="GitExtensions.newstartmenu" />
             <ComponentRef Id="GitExtensions.startmenu" />
             <ComponentRef Id="English.gif" />
-            <ComponentRef Id="System.Reactive.Core.dll" />
-            <ComponentRef Id="System.Reactive.Interfaces.dll" />
-            <ComponentRef Id="System.Reactive.Linq.dll" />
-            <ComponentRef Id="System.Reactive.PlatformServices.dll" />
-            <!--Remove unused dll, installed in versions <= 2.31-->
+            <ComponentRef Id="GithubSharp.Core.dll" />
             <ComponentRef Id="Github.dll" />
             <!--Remove unused dll, installed in versions <= 2.31-->
-            <ComponentRef Id="GithubSharp.Core.dll" />
+            <!--Remove unused dll, installed in versions <= 2.31-->
             <Feature Id="Plugins" Title="Plugins" Level="1">
                 <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
                     <ComponentRef Id="AutoCompileSubmodules.dll" />
                 </Feature>
                 <Feature Id="BackgroundFetch" Title="Periodic background fetch" Level="1">
                     <ComponentRef Id="BackgroundFetch.dll" />
+                    <ComponentRef Id="System.Reactive.Core.dll" />
+                    <ComponentRef Id="System.Reactive.Interfaces.dll" />
+                    <ComponentRef Id="System.Reactive.Linq.dll" />
+                    <ComponentRef Id="System.Reactive.PlatformServices.dll" />
                 </Feature>
                 <Feature Id="CreateLocalBranches" Title="Create local branches" Level="1">
                     <ComponentRef Id="CreateLocalBranches.dll" />
@@ -545,10 +545,10 @@
                 <Feature Id="Statistics" Title="Statistics" Level="1">
                     <ComponentRef Id="GitStatistics.dll" />
                 </Feature>
-                <Feature Id="ProxySwitcher" Title="ProxySwitcher" Level="1">
+                <Feature Id="ProxySwitcher" Title="Proxy switcher" Level="1">
                     <ComponentRef Id="ProxySwitcher.dll" />
                 </Feature>
-                <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
+                <Feature Id="ReleaseNotesGenerator" Title="Release notes generator" Level="1">
                     <ComponentRef Id="ReleaseNotesGenerator.dll" />
                 </Feature>
                 <Feature Id="Stash" Title="Atlassian Stash integration" Level="1">
@@ -634,6 +634,10 @@
                     <ComponentRef Id="Japanese.xml" />
                     <ComponentRef Id="Japanese.gif" />
                 </Feature>
+                <Feature Id="Korean" Title="Korean" Level="1">
+                    <ComponentRef Id="Korean.xml" />
+                    <ComponentRef Id="Korean.gif" />
+                </Feature>
                 <Feature Id="Russian" Title="Russian" Level="1">
                     <ComponentRef Id="Russian.xml" />
                     <ComponentRef Id="Russian.gif" />
@@ -658,14 +662,16 @@
             <Feature Id="AddToPath" Title="Add installation directory to PATH" Level="1">
                 <ComponentRef Id="Path" />
             </Feature>
-            <?foreach VsVersion in $(var.VsVersions)?>
-            <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
-                <Condition Level="2">NOT VS$(var.VsVersion)</Condition>
-                <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
-                <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
-                <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
+            <Feature Id="VSExtension" Title="Visual Studio extension" Level="1">
+                <?foreach VsVersion in $(var.VsVersions)?>
+                <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
+                    <Condition Level="2">NOT VS$(var.VsVersion)</Condition>
+                    <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
+                    <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
+                    <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
+                </Feature>
+                <?endforeach ?>
             </Feature>
-            <?endforeach ?>
             <Feature Id="Protocol.git" Title="Assign with git://-links" Level="1">
                 <ComponentRef Id="Protocol.git" />
             </Feature>
