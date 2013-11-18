@@ -95,27 +95,47 @@ xcopy /y ..\Plugins\Stash\bin\Release\Stash.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\English.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\English.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Dutch.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Dutch.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Francais.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Dutch.xml GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\German.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Francais.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y ..\GitUI\Translation\Italiano.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Francais.xml GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\German.gif GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\German.xml GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Italiano.gif GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Japanese.* GitExtensions\Translation\
+REM xcopy /y ..\GitUI\Translation\Italiano.xml GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Japanese.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Korean.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Japanese.xml GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Russian.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Korean.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Simplified Chinese.*" GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Korean.xml GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Spanish.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Russian.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y ..\GitUI\Translation\TraditionalChinese.* GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Russian.xml GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y "..\GitUI\Translation\Simplified Chinese.gif" GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y "..\GitUI\Translation\Simplified Chinese.xml" GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Spanish.gif GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Spanish.xml GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\TraditionalChinese.gif GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\TraditionalChinese.xml GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Dictionaries GitExtensions\Dictionaries\
 IF ERRORLEVEL 1 EXIT /B 1
