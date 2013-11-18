@@ -223,7 +223,7 @@ namespace NBug.Core.Util.Storage
 			{
 				var path = Path.Combine(new[] { Path.GetTempPath(), Settings.EntryAssembly.GetName().Name });
 
-				if (Directory.Exists(path) && Directory.EnumerateFiles(path, "Exception_*.zip").Count() > 0)
+				if (Directory.Exists(path) && Directory.EnumerateFiles(path, "Exception_*.zip").Any())
 				{
 					try
 					{
@@ -249,7 +249,7 @@ namespace NBug.Core.Util.Storage
 			{
 				var path = Settings.NBugDirectory;
 
-				if (path != null && Directory.Exists(path) && Directory.EnumerateFiles(path, "Exception_*.zip").Count() > 0)
+				if (path != null && Directory.Exists(path) && Directory.EnumerateFiles(path, "Exception_*.zip").Any())
 				{
 					try
 					{
@@ -275,7 +275,7 @@ namespace NBug.Core.Util.Storage
 			{
 				this.isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly | IsolatedStorageScope.Domain, null, null);
 
-				if (this.isoStore.GetFileNames("Exception_*.zip").Count() > 0)
+				if (this.isoStore.GetFileNames("Exception_*.zip").Any())
 				{
 					try
 					{
@@ -304,7 +304,7 @@ namespace NBug.Core.Util.Storage
 			{
 				var path = Path.GetFullPath(Settings.StoragePath);
 
-				if (Directory.Exists(path) && Directory.EnumerateFiles(path, "Exception_*.zip").Count() > 0)
+				if (Directory.Exists(path) && Directory.EnumerateFiles(path, "Exception_*.zip").Any())
 				{
 					try
 					{

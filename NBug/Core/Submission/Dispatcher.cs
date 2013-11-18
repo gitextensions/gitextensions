@@ -66,7 +66,7 @@ namespace NBug.Core.Submission
 				Thread.Sleep(Settings.SleepBeforeSend * 1000);
 			}
 
-			// Turncate extra report files and try to send the first one in the queue
+			// Truncate extra report files and try to send the first one in the queue
 			Storer.TruncateReportFiles();
 
 			// Now go through configured destinations and submit to all automatically
@@ -77,7 +77,20 @@ namespace NBug.Core.Submission
 				{
 					if (stream != null)
 					{
-						var exceptionData = this.GetDataFromZip(stream);
+						// Extract crash/exception report data from the zip file. Delete the zip file if no data can be retrieved (i.e. corrupt file)
+					  ExceptionData exceptionData;
+					  try
+					  {
+              exceptionData = this.GetDataFromZip(stream);
+					  }
+            catch (Exception exception)
+					  {
+              Logger.Error("An exception occurred while extraction report data from zip file. Check the inner exception for details.", exception);
+              storer.DeleteCurrentReportFile();
+					    return;
+					  }
+            
+            // Now submit the report file to all configured bug report submission targets
 						if (this.EnumerateDestinations(stream, exceptionData) == false)
 						{
 							break;
