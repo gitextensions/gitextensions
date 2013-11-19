@@ -1,3 +1,9 @@
+# 1.2.3
+
+*TBD*
+
+* Handle invalid/corrupt report files gracefully.
+
 # 1.2.2
 
 *November 16, 2013*
