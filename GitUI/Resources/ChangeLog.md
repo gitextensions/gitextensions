@@ -1,5 +1,8 @@
 ﻿Changelog
 =========
+### Version 2.47.3 (15 November 2013)
+* Fixed issue #2124: GitHub integration not working in 2.47.1
+
 ### Version 2.47.1 (14 November 2013)
 * Fixed issue #2006: Check for updates using GitHub api. There is a bug in WebClient that causes AV
 * Fixed issue #2117: Create branch/tag command in VS fixed
