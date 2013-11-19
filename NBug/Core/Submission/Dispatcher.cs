@@ -85,8 +85,8 @@ namespace NBug.Core.Submission
 					  }
             catch (Exception exception)
 					  {
-              Logger.Error("An exception occurred while extraction report data from zip file. Check the inner exception for details.", exception);
               storer.DeleteCurrentReportFile();
+              Logger.Error("An exception occurred while extraction report data from zip file. Check the inner exception for details.", exception);
 					    return;
 					  }
             
