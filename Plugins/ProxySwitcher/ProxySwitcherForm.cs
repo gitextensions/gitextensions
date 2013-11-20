@@ -4,13 +4,13 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using ResourceManager.Translation;
+using Settings = GitCommands.AppSettings;
 
 namespace ProxySwitcher
 {
-    public partial class ProxySwitcherForm : Form
+    public partial class ProxySwitcherForm : Form, ITranslate
     {
         private readonly IGitPluginSettingsContainer settings;
-        private readonly GitUIBaseEventArgs gitUiCommands;
         private readonly IGitModule gitCommands;
 
         #region Translation
@@ -18,13 +18,23 @@ namespace ProxySwitcher
         private readonly TranslationString _pleaseSetProxy = new TranslationString("There is no proxy configured. Please set the proxy host in the plugin settings.");
         #endregion
 
+        /// <summary>
+        /// Default constructor added to register all strings to be translated
+        /// Use the other constructor:
+        /// ProxySwitcherForm(IGitPluginSettingsContainer settings, GitUIBaseEventArgs gitUiCommands)
+        /// </summary>
+        public ProxySwitcherForm()
+        {
+            InitializeComponent();
+        }
+
         public ProxySwitcherForm(IGitPluginSettingsContainer settings, GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
+            Translate();
 
             this.Text = _pluginDescription.Text;
             this.settings = settings;
-            this.gitUiCommands = gitUiCommands;
             this.gitCommands = gitUiCommands.GitModule;
         }
 
@@ -105,6 +115,23 @@ namespace ProxySwitcher
                 gitCommands.RunGitCmd("config --unset http.proxy");
             }
             RefreshProxy();
+        }
+
+        protected void Translate()
+        {
+            Translator.Translate(this, Settings.CurrentTranslation);
+        }
+
+        private const string ProxySwitcherFormName = "ProxySwitcherForm";
+
+        public virtual void AddTranslationItems(Translation translation)
+        {
+            TranslationUtl.AddTranslationItemsFromFields(ProxySwitcherFormName, this, translation);
+        }
+
+        public virtual void TranslateItems(Translation translation)
+        {
+            TranslationUtl.TranslateItemsFromFields(ProxySwitcherFormName, this, translation);
         }
     }
 }

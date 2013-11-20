@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using GitCommands;
@@ -58,6 +59,18 @@ namespace GitUI
         public string FormatTextForDrawing(int width, string name, string oldName)
         {
             string truncatePathMethod = AppSettings.TruncatePathMethod;
+
+            if (truncatePathMethod.Equals("fileNameOnly"))
+            {
+                var fileName = Path.GetFileName(name);
+                var oldFileName = Path.GetFileName(oldName);
+                
+                if (fileName.Equals(oldFileName))
+                    oldFileName = null;
+
+                return fileName.Combine(" ", oldFileName.AddParenthesesNE());
+            }
+
             if ((!truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) || !EnvUtils.RunningOnWindows()) &&
                 !truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
                 return FormatString(name, oldName, 0, false);

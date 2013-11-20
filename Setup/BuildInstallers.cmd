@@ -5,6 +5,7 @@ cd /d "%~p0"
 set msbuild="%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
 set project=..\GitExtensions.VS2010.sln
 set projectShellEx=..\GitExtensionsShellEx\GitExtensionsShellEx.VS2010.sln
+set projectSshAskPass=..\GitExtSshAskPass\GitExtSshAskPass.sln
 set nuget=..\.nuget\nuget.exe
 set SkipShellExtRegistration=1
 set EnableNuGetPackageRestore=true
@@ -21,5 +22,17 @@ IF ERRORLEVEL 1 EXIT /B 1
 IF ERRORLEVEL 1 EXIT /B 1
 %msbuild% %projectShellEx% /p:Platform=x64 %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
+%msbuild% %projectSshAskPass% /p:Platform=Win32 %msbuildparams%
+IF ERRORLEVEL 1 EXIT /B 1
 
-call MakeInstallers.bat
+call MakeInstallers.cmd
+IF ERRORLEVEL 1 EXIT /B 1
+
+%msbuild% %project% /p:Platform="Any CPU" /p:DefineConstants=__MonoCS__ %msbuildparams%
+IF ERRORLEVEL 1 EXIT /B 1
+
+call MakeMonoArchive.cmd
+IF ERRORLEVEL 1 EXIT /B 1
+
+echo.
+pause

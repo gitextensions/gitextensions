@@ -50,18 +50,12 @@ namespace GitUI
 
         protected override CreateParams CreateParams
         {
-
             get
             {
-
                 CreateParams mdiCp = base.CreateParams;
-
                 mdiCp.ClassStyle = mdiCp.ClassStyle | NativeConstants.CP_NOCLOSE_BUTTON;
-
                 return mdiCp;
-
             }
-
         }
 
         public bool ErrorOccurred()

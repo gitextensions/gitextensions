@@ -528,7 +528,7 @@ namespace GitUI.CommandsDialogs
 
             curRemoteBranch = Branches.Text;
 
-            if (Module.IsDetachedHead(_branch))
+            if (GitModule.IsDetachedHead(_branch))
             {
                 curLocalBranch = null;
                 return true;
