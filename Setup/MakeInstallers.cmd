@@ -3,6 +3,7 @@
 rem
 rem Update this version number with every release
 rem
+setlocal
 set version=2.48
 
 set msiversion=%version:.=%
@@ -13,7 +14,7 @@ set msbuild="%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
 set output=bin\Release\GitExtensions.msi
 set project=Setup.wixproj
 
-set build=%msbuild% %project% /t:Rebuild /p:Version=%Version% /p:Configuration=Release /nologo /v:m
+set build=%msbuild% %project% /t:Rebuild /p:Version=%Version% /p:NumericVersion=%Version% /p:Configuration=Release /nologo /v:m
 
 echo Creating installers for Git Extensions %version%
 echo.
@@ -33,6 +34,3 @@ copy bin\Release\GitExtensions.msi %normal%
 echo Building %complete%
 %build% /p:IncludeRequiredSoftware=1
 copy bin\Release\GitExtensions.msi %complete%
-
-echo.
-pause

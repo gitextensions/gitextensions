@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
+using ResourceManager.Translation;
 
 namespace GitUI.UserControls
 {
     public partial class GotoUserManualControl : GitExtensionsControl
     {
+        private readonly TranslationString _gotoUserManualControlTooltip =
+            new TranslationString("Read more about this feature at {0}");
+
         public GotoUserManualControl()
         {
             InitializeComponent();
@@ -35,7 +39,7 @@ namespace GitUI.UserControls
 
         private void UpdateTooltip()
         {
-            string caption = string.Format("Read more about this feature at {0}", GetUrl());
+            string caption = string.Format(_gotoUserManualControlTooltip.Text, GetUrl());
             toolTip1.SetToolTip(pictureBoxHelpIcon, caption);
             toolTip1.SetToolTip(linkLabelHelp, caption);
         }

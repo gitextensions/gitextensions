@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -21,8 +21,6 @@ namespace GitUI.SpellChecker
         private readonly TranslationString deleteMenuItemText = new TranslationString("Delete");
         private readonly TranslationString selectAllMenuItemText = new TranslationString("Select all");
 
-        private readonly TranslationString translateEntireText = new TranslationString("Translate entire text to {0}");
-        private readonly TranslationString translateCurrentWord = new TranslationString("Translate '{0}' to {1}");
         private readonly TranslationString addToDictionaryText = new TranslationString("Add to dictionary");
         private readonly TranslationString ignoreWordText = new TranslationString("Ignore word");
         private readonly TranslationString removeWordText = new TranslationString("Remove word");

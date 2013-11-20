@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdatePreviewPanel()
         {
-            _NO_TRANSLATE_Preview.DataSource = Module.GetFiles(GetCurrentPatterns());
+            _NO_TRANSLATE_Preview.DataSource = Module.GetIgnoredFiles(GetCurrentPatterns());
             _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.Items.Count);
             noMatchPanel.Visible = _NO_TRANSLATE_Preview.Items.Count == 0;
         }
