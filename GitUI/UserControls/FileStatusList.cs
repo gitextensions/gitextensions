@@ -49,6 +49,7 @@ namespace GitUI
                 _images.Images.Add(Resources.IconSubmoduleRevisionUpDirty); // 7
                 _images.Images.Add(Resources.IconSubmoduleRevisionDown); // 8
                 _images.Images.Add(Resources.IconSubmoduleRevisionDownDirty); // 9
+                _images.Images.Add(Resources.IconFileStatusUnknown); // 10
             }
             FileStatusListView.SmallImageList = _images;
             FileStatusListView.LargeImageList = _images;
@@ -113,13 +114,14 @@ namespace GitUI
                 return;
 
             e.DrawBackground();
+            Color color;
             if (e.Item.Selected)
             {
                 e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
-                e.Item.ForeColor = SystemColors.HighlightText;
+                color = SystemColors.HighlightText;
             }
             else
-                e.Item.ForeColor = SystemColors.WindowText;
+                color = SystemColors.WindowText;
             e.DrawFocusRectangle();
 
             e.Graphics.FillRectangle(Brushes.White, e.Bounds.Left, e.Bounds.Top, ImageSize, e.Bounds.Height);
@@ -128,21 +130,17 @@ namespace GitUI
             if ((e.Bounds.Height - ImageSize) > 1)
                 centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - ImageSize) / 2);
 
-            if (e.Item.ImageIndex != -1)
-            {
-                var image = e.Item.ImageList.Images[e.Item.ImageIndex];
+            var image = e.Item.ImageList.Images[e.Item.ImageIndex];
+
+            if (image != null)
                 e.Graphics.DrawImage(image, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
-            }
 
             GitItemStatus gitItemStatus = (GitItemStatus)e.Item.Tag;
 
             string text = GetItemText(e.Graphics, gitItemStatus);
 
-            using (var solidBrush = new SolidBrush(e.Item.ForeColor))
-            {
-                e.Graphics.DrawString(text, e.Item.ListView.Font,
-                                      solidBrush, e.Bounds.Left + ImageSize, e.Bounds.Top);
-            }
+            e.Graphics.DrawString(text, e.Item.ListView.Font,
+                                  new SolidBrush(color), e.Bounds.Left + ImageSize, e.Bounds.Top);
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
@@ -440,7 +438,7 @@ namespace GitUI
                 return 3;
             if (gitItemStatus.IsCopied)
                 return 4;
-            return -1;
+            return 10;//icon unknown
         }
 
         [Browsable(false)]
