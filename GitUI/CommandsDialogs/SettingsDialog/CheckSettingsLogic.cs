@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 {
                     ConfigFile config = GitCommandHelpers.GetGlobalConfig();
                     if (EnvUtils.RunningOnWindows())
-                        config.SetValue("credential.helper", "!\\\"" + GitCommandHelpers.FixPath(gcsFileName) + "\\\"");
+                        config.SetPathValue("credential.helper", "!\"" + gcsFileName + "\"");
                     else if (EnvUtils.RunningOnMacOSX())
                         config.SetValue("credential.helper", "osxkeychain");
                     else
