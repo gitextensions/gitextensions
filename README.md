@@ -8,6 +8,9 @@ It can also be set up as a user feedback system (i.e. feature requests).
 ## Quickstart
 Read the quickstart here: http://www.soygul.com/projects/nbug/
 
+## Questions
+You can post your question on StackOverflow with NBug tag: http://stackoverflow.com/questions/tagged/nbug
+
 ## Get it on [NuGet] (https://www.nuget.org/packages/NBug/)
 
 ```powershell
