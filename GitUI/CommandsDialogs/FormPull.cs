@@ -510,7 +510,7 @@ namespace GitUI.CommandsDialogs
             if (_branch == localBranch.Text)
             {
                 var currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", localBranch.Text));
-                if (remote.Equals(currentBranchRemote))
+                if (remote.Equals(currentBranchRemote) || currentBranchRemote.IsNullOrEmpty())
                 {
                     return string.IsNullOrEmpty(Branches.Text) ? null : _branch;
                 }
