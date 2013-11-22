@@ -491,7 +491,7 @@ namespace GitUI
         }
 
         private GitItemsWithParents _itemsDictionary = new Dictionary<string, IList<GitItemStatus>>();
-
+        private bool _itemsChanging = false;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitItemsWithParents GitItemStatusesWithParents
@@ -502,6 +502,7 @@ namespace GitUI
             }
             set
             {
+                _itemsChanging = true;
                 if (value == null || !value.Any())
                     NoFiles.Visible = true;
                 else
@@ -550,6 +551,8 @@ namespace GitUI
                     };
                 }
                 FileStatusListView.Items.AddRange(list.ToArray());
+                _itemsChanging = false;
+                FileStatusListView_SizeChanged(null, null);
                 foreach (ListViewItem item in FileStatusListView.Items)
                 {
                     string parentRev = item.Group != null ? item.Group.Tag as string : "";
@@ -596,11 +599,16 @@ namespace GitUI
 
         private void FileStatusListView_SizeChanged(object sender, EventArgs e)
         {
+            if (_itemsChanging)
+                return;
+
             NoFiles.Location = new Point(5, 5);
             NoFiles.Size = new Size(Size.Width - 10, Size.Height - 10);
             Refresh();
             FileStatusListView.BeginUpdate();
-            FileStatusListView.Columns[0].Width = FileStatusListView.ClientSize.Width;
+
+            FileStatusListView.AutoResizeColumn(0,
+                ColumnHeaderAutoResizeStyle.HeaderSize);
             FileStatusListView.EndUpdate();
         }
 
