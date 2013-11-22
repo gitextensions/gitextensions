@@ -158,6 +158,18 @@ namespace GitUI.CommandsDialogs
             return remoteHead == null ? null : remoteHead.Name;
         }
 
+        private bool IsBranchKnownToRemote(string remote, string branch)
+        { 
+            var refs = Module.GetRefs(true, true);
+
+            var remoteRefs = refs.Where(r => r.IsRemote && r.LocalName == branch && r.Remote == remote);
+            if (remoteRefs.Any())
+                return true;
+
+            var localRefs = refs.Where(r => r.IsHead && r.Name == branch && r.TrackingRemote == remote);
+            return localRefs.Any();
+        }
+
         private bool PushChanges(IWin32Window owner)
         {
             ErrorOccurred = false;
@@ -187,7 +199,7 @@ namespace GitUI.CommandsDialogs
                 //(as far as we know since we are disconnected....)
                 if (_NO_TRANSLATE_Branch.Text != AllRefs &&
                     RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text, _NO_TRANSLATE_Branch.Text) &&
-                    !Module.GetRefs(false, true).Any(x => x.TrackingRemote == _NO_TRANSLATE_Remotes.Text && x.Name == RemoteBranch.Text))
+                    !IsBranchKnownToRemote(_NO_TRANSLATE_Remotes.Text, RemoteBranch.Text))
                 {
                     //Ask if this is really what the user wants
                     if (!AppSettings.DontConfirmPushNewBranch &&
