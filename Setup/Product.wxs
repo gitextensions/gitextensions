@@ -471,10 +471,12 @@
             <ComponentRef Id="GitExtensions.startmenu" />
             <ComponentRef Id="GitExtensions.desktop" />
             <ComponentRef Id="English.gif" />
+            <ComponentRef Id="Git.hub.dll" />
+            <ComponentRef Id="RestSharp.dll" />
+            <!--Remove unused dll, installed in versions <= 2.31-->
             <ComponentRef Id="GithubSharp.Core.dll" />
+            <!--Remove unused dll, installed in versions <= 2.31-->
             <ComponentRef Id="Github.dll" />
-            <!--Remove unused dll, installed in versions <= 2.31-->
-            <!--Remove unused dll, installed in versions <= 2.31-->
             <Feature Id="Plugins" Title="Plugins" Level="1">
                 <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
                     <ComponentRef Id="AutoCompileSubmodules.dll" />
@@ -501,8 +503,6 @@
                 </Feature>
                 <Feature Id="Github" Title="Github integration" Level="1">
                     <ComponentRef Id="Github3.dll" />
-                    <ComponentRef Id="Git.hub.dll" />
-                    <ComponentRef Id="RestSharp.dll" />
                 </Feature>
                 <Feature Id="Gource" Title="Gource visualization" Level="1">
                     <ComponentRef Id="Gource.dll" />
