@@ -9,7 +9,7 @@ namespace Stash
     class Settings
     {
         private const string StashHttpRegex =
-            @"https?:\/\/([\w\.]+\@)?(?<url>([\w\.]+):?(\d+)?)\/scm\/(?<project>\w+)\/(?<repo>\w+).git";
+            @"(?<prefix>https?:\/\/)([\w\.]+\@)?(?<url>([a-zA-Z0-9\.\-]+):?(\d+)?)\/scm\/(?<project>\w+)\/(?<repo>\w+).git";
         private const string StashSshRegex =
             @"ssh:\/\/([\w\.]+\@)?(?<url>([\w\.]+):?(\d+)?)\/(?<project>\w+)\/(?<repo>\w+).git";
 
@@ -35,7 +35,7 @@ namespace Stash
                 {
                     result.ProjectKey = match.Groups["project"].Value;
                     result.RepoSlug = match.Groups["repo"].Value;
-                    result.StashUrl = match.Groups["url"].Value;
+                    result.StashUrl = match.Groups["prefix"].Value + match.Groups["url"].Value;
                     return result;
                 }
             }
