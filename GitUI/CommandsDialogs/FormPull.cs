@@ -538,7 +538,7 @@ namespace GitUI.CommandsDialogs
 
             if (_branch == localBranch.Text)
             {
-                if (remote.Equals(currentBranchRemote.Value))
+                if (remote.Equals(currentBranchRemote.Value) || currentBranchRemote.Value.IsNullOrEmpty())
                 {
                     curLocalBranch = Branches.Text.IsNullOrEmpty() ? null : _branch;
                 }
