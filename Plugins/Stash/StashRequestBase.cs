@@ -25,7 +25,7 @@ namespace Stash
         public StashResponse<T> Send()
         {
             var client = new RestClient();
-            client.BaseUrl = "http://" + Settings.StashUrl;
+            client.BaseUrl = Settings.StashUrl;
             client.Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password);
 
             var request = new RestRequest(ApiUrl, RequestMethod);
