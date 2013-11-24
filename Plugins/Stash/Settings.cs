@@ -18,7 +18,8 @@ namespace Stash
             var result = new Settings
                              {
                                  Username = setting.GetSetting(StashPlugin.StashUsername),
-                                 Password = setting.GetSetting(StashPlugin.StashPassword)
+                                 Password = setting.GetSetting(StashPlugin.StashPassword),
+                                 DisableSSL = setting.GetSetting(StashPlugin.StashDisableSSL)
                              };
 
             var module = ((GitModule)gitModule);
@@ -45,6 +46,7 @@ namespace Stash
 
         public string Username { get; private set; }
         public string Password { get; private set; }
+        public string DisableSSL { get; private set; }
         public string ProjectKey { get; private set; }
         public string RepoSlug { get; private set; }
         public string StashUrl { get; private set; }
