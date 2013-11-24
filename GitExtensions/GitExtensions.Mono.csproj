@@ -214,10 +214,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
-  <PropertyGroup Condition="$(Platform) == 'WINDOWS_NT'">
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
     <PostBuildEvent>$(ProjectDir)copy_plugins.cmd $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
-  <PropertyGroup Condition="$(Platform) != 'WINDOWS_NT'">                                                                                                                                            
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">                                                                                                                                            
       <PostBuildEvent>$(ProjectDir)copy_plugins.sh $(SolutionDir) $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
