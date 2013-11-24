@@ -7,6 +7,7 @@ namespace Stash
     {
         public const string StashUsername = "Stash Username";
         public const string StashPassword = "Stash Password";
+        public const string StashDisableSSL = "Disable SSL verification (\"yes\" or \"no\")";
 
         public override string Description
         {
@@ -26,6 +27,7 @@ namespace Stash
 
             Settings.AddSetting(StashUsername, string.Empty);
             Settings.AddSetting(StashPassword, string.Empty);
+            Settings.AddSetting(StashDisableSSL, "no");
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 
 namespace Stash
 {
@@ -24,6 +26,7 @@ namespace Stash
 
         public StashResponse<T> Send()
         {
+            if (Settings.DisableSSL == "yes") { System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; }
             var client = new RestClient();
             client.BaseUrl = "http://" + Settings.StashUrl;
             client.Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password);
