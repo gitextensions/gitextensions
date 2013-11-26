@@ -1,5 +1,13 @@
 ﻿Changelog
 =========
+### Version 2.47.4 (22 November 2013)
+* Fixed issue #2142: Fetch in 2.47.3 creating remote ref from remote HEAD using current local branch's name
+* Fixed issue #2137: Strange push behaviour 
+* Fixed issue #2136: Git credential helper does not load 
+* Fixed issue #2135: In v2.47.03 the SSH setting defaults to OpenSSH even though PuTTY is selected during installation
+* Fixed issue #2131: No horizontal scrollbar in the main window Diff tab file list
+* Fixed issue #2013: "the branch seems to be new for the remote" is shown but the branch is already there
+
 ### Version 2.47.3 (15 November 2013)
 * Fixed issue #2124: GitHub integration not working in 2.47.1
 
