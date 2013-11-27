@@ -55,6 +55,9 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ApprovePullRequest.cs" />
+    <Compile Include="GetPullRequest.cs" />
+    <Compile Include="MergePullRequest.cs" />
     <Compile Include="GetBranchesRequest.cs" />
     <Compile Include="CreatePullRequestRequest.cs" />
     <Compile Include="GetHeadCommitRequest.cs" />
