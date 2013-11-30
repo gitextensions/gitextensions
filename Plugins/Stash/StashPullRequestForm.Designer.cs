@@ -61,6 +61,7 @@
             this.label16 = new System.Windows.Forms.Label();
             this.lblPRAuthor = new System.Windows.Forms.Label();
             this.btnMerge = new System.Windows.Forms.Button();
+            this.btnApprove = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.lblPRDescription = new System.Windows.Forms.Label();
             this.lblPRTitle = new System.Windows.Forms.Label();
@@ -381,6 +382,7 @@
             // 
             this.tabView.Controls.Add(this.splitContainer3);
             this.tabView.Controls.Add(this.btnMerge);
+            this.tabView.Controls.Add(this.btnApprove);
             this.tabView.Controls.Add(this.groupBox6);
             this.tabView.Controls.Add(this.splitContainer2);
             this.tabView.Location = new System.Drawing.Point(4, 22);
@@ -465,7 +467,7 @@
             this.lblPRAuthor.Name = "lblPRAuthor";
             this.lblPRAuthor.Size = new System.Drawing.Size(34, 13);
             this.lblPRAuthor.TabIndex = 5;
-            this.lblPRAuthor.Text = "Bryan";
+            this.lblPRAuthor.Text = "";
             // 
             // btnMerge
             // 
@@ -473,9 +475,19 @@
             this.btnMerge.Name = "btnMerge";
             this.btnMerge.Size = new System.Drawing.Size(134, 23);
             this.btnMerge.TabIndex = 7;
-            this.btnMerge.Text = "Approve and Merge";
+            this.btnMerge.Text = "Merge";
             this.btnMerge.UseVisualStyleBackColor = true;
             this.btnMerge.Click += new System.EventHandler(this.BtnMergeClick);
+            // 
+            // btnApprove
+            // 
+            this.btnApprove.Location = new System.Drawing.Point(508, 588);
+            this.btnApprove.Name = "btnApprove";
+            this.btnApprove.Size = new System.Drawing.Size(134, 23);
+            this.btnApprove.TabIndex = 7;
+            this.btnApprove.Text = "Approve";
+            this.btnApprove.UseVisualStyleBackColor = true;
+            this.btnApprove.Click += new System.EventHandler(this.BtnApproveClick);
             // 
             // groupBox6
             // 
@@ -751,6 +763,7 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label lblPRAuthor;
         private System.Windows.Forms.Button btnMerge;
+        private System.Windows.Forms.Button btnApprove;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Label lblPRState;
