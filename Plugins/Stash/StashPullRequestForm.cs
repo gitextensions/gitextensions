@@ -16,6 +16,7 @@ namespace Stash
         private readonly BindingList<StashUser> _reviewers = new BindingList<StashUser>();
         private readonly List<string> _stashUsers = new List<string>();
 
+
         public StashPullRequestForm(GitUIBaseEventArgs gitUiCommands,
             IGitPluginSettingsContainer settings)
         {
@@ -44,6 +45,12 @@ namespace Stash
 
             ReviewersDataGrid.DataSource = _reviewers;
         }
+        private void StashViewPullRequestFormLoad(object sender, EventArgs e)
+        {
+            var pullReqs = GetPullRequests();
+            lbxPullRequests.DataSource = pullReqs;
+            lbxPullRequests.DisplayMember = "DisplayName";
+        }
 
         private List<Repository> GetRepositories()
         {
@@ -61,25 +68,40 @@ namespace Stash
             return list;
         }
 
+        private List<PullRequest> GetPullRequests()
+        {
+            var list = new List<PullRequest>();
+            var getPullReqs = new GetPullRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
+            var result = getPullReqs.Send();
+            if (result.Success)
+            {
+                list.AddRange(result.Result);
+            }
+            return list;
+        }
+
         private void BtnCreateClick(object sender, EventArgs e)
         {
             var info = new PullRequestInfo
-                           {
-                               Title = txtTitle.Text,
-                               Description = txtDescription.Text,
-                               SourceBranch = txtSourceBranch.Text,
-                               TargetBranch = txtTargetBranch.Text,
-                               SourceRepo = (Repository) ddlRepositorySource.SelectedValue,
-                               TargetRepo = (Repository) ddlRepositoryTarget.SelectedValue,
-                               Reviewers = _reviewers
-                           };
+            {
+                Title = txtTitle.Text,
+                Description = txtDescription.Text,
+                SourceBranch = txtSourceBranch.Text,
+                TargetBranch = txtTargetBranch.Text,
+                SourceRepo = (Repository)ddlRepositorySource.SelectedValue,
+                TargetRepo = (Repository)ddlRepositoryTarget.SelectedValue,
+                Reviewers = _reviewers
+            };
 
             var pullRequest = new CreatePullRequestRequest(_settings, info);
             var response = pullRequest.Send();
             if (response.Success)
+            {
                 MessageBox.Show("Success");
+                StashViewPullRequestFormLoad(null, null);
+            }
             else
-                MessageBox.Show(string.Join(Environment.NewLine, response.Messages), 
+                MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
@@ -127,7 +149,7 @@ namespace Stash
 
         private void DdlRepositorySourceSelectedValueChanged(object sender, EventArgs e)
         {
-            RefreshAutoCompleteBranch(txtSourceBranch, ((ComboBox) sender).SelectedValue);
+            RefreshAutoCompleteBranch(txtSourceBranch, ((ComboBox)sender).SelectedValue);
         }
 
         private void DdlRepositoryTargetSelectedValueChanged(object sender, EventArgs e)
@@ -144,7 +166,7 @@ namespace Stash
 
         private void TxtSourceBranchTextChanged(object sender, EventArgs e)
         {
-            var commit = GetCommitInfo((Repository) ddlRepositorySource.SelectedValue,
+            var commit = GetCommitInfo((Repository)ddlRepositorySource.SelectedValue,
                                                 txtSourceBranch.Text);
             txtSourceBranch.Tag = commit;
             UpdateCommitInfo(lblCommitInfoSource, commit);
@@ -153,7 +175,7 @@ namespace Stash
 
         private void TxtTargetBranchTextChanged(object sender, EventArgs e)
         {
-            var commit = GetCommitInfo((Repository) ddlRepositoryTarget.SelectedValue,
+            var commit = GetCommitInfo((Repository)ddlRepositoryTarget.SelectedValue,
                                                 txtTargetBranch.Text);
             txtTargetBranch.Tag = commit;
             UpdateCommitInfo(lblCommitInfoTarget, commit);
@@ -171,10 +193,10 @@ namespace Stash
 
         private void UpdateCommitInfo(Label label, Commit commit)
         {
-            if (commit == null) 
+            if (commit == null)
                 label.Text = string.Empty;
-            else 
-                label.Text = string.Format("{0} committed{1}{2}", 
+            else
+                label.Text = string.Format("{0} committed{1}{2}",
                     commit.AuthorName, Environment.NewLine, commit.Message);
         }
 
@@ -187,10 +209,10 @@ namespace Stash
                 return;
 
             var getCommitsInBetween = new GetInBetweenCommitsRequest(
-                (Repository) ddlRepositorySource.SelectedValue,
-                (Repository) ddlRepositoryTarget.SelectedValue,
-                (Commit) txtSourceBranch.Tag,
-                (Commit) txtTargetBranch.Tag,
+                (Repository)ddlRepositorySource.SelectedValue,
+                (Repository)ddlRepositoryTarget.SelectedValue,
+                (Commit)txtSourceBranch.Tag,
+                (Commit)txtTargetBranch.Tag,
                 _settings);
 
             var result = getCommitsInBetween.Send();
@@ -198,13 +220,61 @@ namespace Stash
             {
                 var sb = new StringBuilder();
                 sb.AppendLine();
-                foreach(var commit in result.Result)
+                foreach (var commit in result.Result)
                 {
                     if (!commit.IsMerge)
                         sb.Append("* ").AppendLine(commit.Message);
                 }
                 txtDescription.Text = sb.ToString();
             }
+        }
+        private void PullRequestChanged(object sender, EventArgs e)
+        {
+            var curItem = lbxPullRequests.SelectedItem as PullRequest;
+
+            lblPRTitle.Text = curItem.Title;
+            lblPRDescription.Text = curItem.Description;
+            lblPRAuthor.Text = curItem.Author;
+            lblPRState.Text = curItem.State;
+            lblPRReviewers.Text = curItem.Reviewers;
+            lblPRSourceRepo.Text = curItem.SrcDisplayName;
+            lblPRSourceBranch.Text = curItem.SrcBranch;
+            lblPRDestRepo.Text = curItem.DestDisplayName;
+            lblPRDestBranch.Text = curItem.DestBranch;
+        }
+
+        private void BtnMergeClick(object sender, EventArgs e)
+        {
+            var curItem = lbxPullRequests.SelectedItem as PullRequest;
+            var mergeInfo = new MergeRequestInfo
+            {
+                Id = curItem.Id,
+                Version = curItem.Version,
+                ProjectKey = curItem.DestProjectKey,
+                TargetRepo = curItem.DestRepo,
+            };
+
+            //Approve
+            var approveRequest = new ApprovePullRequest(_settings, mergeInfo);
+            var response = approveRequest.Send();
+            if (response.Success)
+            {
+                //Merge
+                var mergeRequest = new MergePullRequest(_settings, mergeInfo);
+                response = mergeRequest.Send();
+                if (response.Success)
+                {
+                    MessageBox.Show("Success");
+                    StashViewPullRequestFormLoad(null, null);
+                }
+                else
+                    MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+                MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //GitUI.CommandsDialogs.FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote, string containRevison)
         }
     }
 }
