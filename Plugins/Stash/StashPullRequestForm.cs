@@ -47,6 +47,9 @@ namespace Stash
         }
         private void StashViewPullRequestFormLoad(object sender, EventArgs e)
         {
+            _settings = Settings.Parse(_gitUiCommands.GitModule, _settingsContainer);
+            if (_settings == null)
+                return;
             var pullReqs = GetPullRequests();
             lbxPullRequests.DataSource = pullReqs;
             lbxPullRequests.DisplayMember = "DisplayName";
@@ -254,27 +257,40 @@ namespace Stash
                 TargetRepo = curItem.DestRepo,
             };
 
+            //Merge
+            var mergeRequest = new MergePullRequest(_settings, mergeInfo);
+            var response = mergeRequest.Send();
+            if (response.Success)
+            {
+                MessageBox.Show("Success");
+                StashViewPullRequestFormLoad(null, null);
+            }
+            else
+                MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        private void BtnApproveClick(object sender, EventArgs e)
+        {
+            var curItem = lbxPullRequests.SelectedItem as PullRequest;
+            var mergeInfo = new MergeRequestInfo
+            {
+                Id = curItem.Id,
+                Version = curItem.Version,
+                ProjectKey = curItem.DestProjectKey,
+                TargetRepo = curItem.DestRepo,
+            };
+
             //Approve
             var approveRequest = new ApprovePullRequest(_settings, mergeInfo);
             var response = approveRequest.Send();
             if (response.Success)
             {
-                //Merge
-                var mergeRequest = new MergePullRequest(_settings, mergeInfo);
-                response = mergeRequest.Send();
-                if (response.Success)
-                {
                     MessageBox.Show("Success");
                     StashViewPullRequestFormLoad(null, null);
-                }
-                else
-                    MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //GitUI.CommandsDialogs.FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote, string containRevison)
         }
     }
 }

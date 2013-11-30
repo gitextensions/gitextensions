@@ -27,9 +27,15 @@ namespace Stash
                 DestBranch = json["toRef"]["displayId"].ToString()
             };
             var reviewers = json["reviewers"];
-            reviewers.ForEach(r => request.Reviewers += r["user"]["displayName"] + ", ");
-            if (request.Reviewers.EndsWith(", "))
-                request.Reviewers = request.Reviewers.Substring(0, request.Reviewers.Length - 2);
+            if (reviewers.ToString().Equals("[]"))
+                request.Reviewers = "None";
+            else
+            {
+                reviewers.ForEach(r => request.Reviewers += r["user"]["displayName"] + "(" + r["approved"] + ")" + System.Environment.NewLine);
+                if (request.Reviewers.EndsWith(", "))
+                    request.Reviewers = request.Reviewers.Substring(0, request.Reviewers.Length - 2);
+            }
+
             return request;
         }
         public string Id { get; set; }
@@ -56,7 +62,7 @@ namespace Stash
         }
         public string DisplayName
         {
-            get { return string.Format("#{0}: {1} -> {2}", Id, SrcBranch, DestBranch); }
+            get { return string.Format("#{0}: {1} \u2192 {2}", Id, SrcBranch, DestBranch); }
         }
     }
 
