@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System.Linq;
+using System;
 
 namespace Stash
 {
@@ -24,10 +25,13 @@ namespace Stash
                 DestProjectName = json["toRef"]["repository"]["project"]["name"].ToString(),
                 DestProjectKey = json["toRef"]["repository"]["project"]["key"].ToString(),
                 DestRepo = json["toRef"]["repository"]["name"].ToString(),
-                DestBranch = json["toRef"]["displayId"].ToString()
+                DestBranch = json["toRef"]["displayId"].ToString(),
+                CreatedDate = Convert.ToDouble(json["createdDate"].ToString().Substring(0,10))
+                
             };
             var reviewers = json["reviewers"];
-            if (reviewers.ToString().Equals("[]"))
+
+            if (!reviewers.HasValues)
                 request.Reviewers = "None";
             else
             {
@@ -52,6 +56,7 @@ namespace Stash
         public string SrcBranch { get; set; }
         public string DestRepo { get; set; }
         public string DestBranch { get; set; }
+        public double CreatedDate { get; set; }
         public string SrcDisplayName
         {
             get { return string.Format("{0}/{1}", SrcProjectName, SrcRepo); }
@@ -62,7 +67,12 @@ namespace Stash
         }
         public string DisplayName
         {
-            get { return string.Format("#{0}: {1} \u2192 {2}", Id, SrcBranch, DestBranch); }
+            get { return string.Format("#{0}: {1}, {2}", Id, Title, (ConvertFromUnixTimestamp(CreatedDate)).ToString("yyyy-MM-dd")); }
+        }
+        public static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return origin.AddSeconds(timestamp);
         }
     }
 
