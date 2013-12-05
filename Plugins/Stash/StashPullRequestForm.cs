@@ -5,6 +5,8 @@ using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using System.Linq;
+using System.Threading;
+using System.Data;
 
 namespace Stash
 {
@@ -35,24 +37,33 @@ namespace Stash
                 Close();
                 return;
             }
-
-            _stashUsers.AddRange(GetStashUsers().Select(a => a.Slug));
-
-            var repositories = GetRepositories();
-
-            ddlRepositorySource.DataSource = repositories.ToList();
-            ddlRepositoryTarget.DataSource = repositories.ToList();
-
-            ReviewersDataGrid.DataSource = _reviewers;
+            //_stashUsers.AddRange(GetStashUsers().Select(a => a.Slug));
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                var repositories = GetRepositories();
+                this.Invoke((MethodInvoker)delegate
+                {
+                    ddlRepositorySource.DataSource = repositories.ToList();
+                    ddlRepositoryTarget.DataSource = repositories.ToList();
+                    //ReviewersDataGrid.DataSource = _reviewers;
+                    ddlRepositorySource.Enabled = true;
+                    ddlRepositoryTarget.Enabled = true;
+                });
+            });
         }
         private void StashViewPullRequestFormLoad(object sender, EventArgs e)
         {
-            _settings = Settings.Parse(_gitUiCommands.GitModule, _settingsContainer);
             if (_settings == null)
                 return;
-            var pullReqs = GetPullRequests();
-            lbxPullRequests.DataSource = pullReqs;
-            lbxPullRequests.DisplayMember = "DisplayName";
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                var pullReqs = GetPullRequests();
+                this.Invoke((MethodInvoker)delegate
+                {
+                    lbxPullRequests.DataSource = pullReqs;
+                    lbxPullRequests.DisplayMember = "DisplayName";
+                });
+            });
         }
 
         private List<Repository> GetRepositories()
@@ -89,13 +100,12 @@ namespace Stash
             {
                 Title = txtTitle.Text,
                 Description = txtDescription.Text,
-                SourceBranch = txtSourceBranch.Text,
-                TargetBranch = txtTargetBranch.Text,
+                SourceBranch = ddlBranchSource.SelectedValue.ToString(),
+                TargetBranch = ddlBranchTarget.SelectedValue.ToString(),
                 SourceRepo = (Repository)ddlRepositorySource.SelectedValue,
                 TargetRepo = (Repository)ddlRepositoryTarget.SelectedValue,
                 Reviewers = _reviewers
             };
-
             var pullRequest = new CreatePullRequestRequest(_settings, info);
             var response = pullRequest.Send();
             if (response.Success)
@@ -122,9 +132,13 @@ namespace Stash
             }
             return list;
         }
-
+        Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
         private IEnumerable<string> GetStashBranches(Repository selectedRepo)
         {
+            if (Branches.ContainsKey(selectedRepo))
+            {
+                return Branches[selectedRepo];
+            }
             var list = new List<string>();
             var getBranches = new GetBranchesRequest(selectedRepo, _settings);
             var result = getBranches.Send();
@@ -135,6 +149,7 @@ namespace Stash
                     list.Add(value["displayId"].ToString());
                 }
             }
+            Branches.Add(selectedRepo, list);
             return list;
         }
 
@@ -152,35 +167,41 @@ namespace Stash
 
         private void DdlRepositorySourceSelectedValueChanged(object sender, EventArgs e)
         {
-            RefreshAutoCompleteBranch(txtSourceBranch, ((ComboBox)sender).SelectedValue);
+            RefreshDDLBranch(ddlBranchSource, ((ComboBox)sender).SelectedValue);
         }
 
         private void DdlRepositoryTargetSelectedValueChanged(object sender, EventArgs e)
         {
-            RefreshAutoCompleteBranch(txtTargetBranch, ((ComboBox)sender).SelectedValue);
+            RefreshDDLBranch(ddlBranchTarget, ((ComboBox)sender).SelectedValue);
         }
 
-        private void RefreshAutoCompleteBranch(TextBox textBox, object selectedValue)
+        private void RefreshDDLBranch(ComboBox comboBox, object selectedValue)
         {
-            var branches = GetStashBranches((Repository)selectedValue);
-            textBox.AutoCompleteCustomSource.Clear();
-            textBox.AutoCompleteCustomSource.AddRange(branches.ToArray());
+            List<string> lsNames = (GetStashBranches((Repository)selectedValue)).ToList();
+            lsNames.Sort();
+            lsNames.Insert(0, "");
+            comboBox.DataSource = lsNames;
         }
 
-        private void TxtSourceBranchTextChanged(object sender, EventArgs e)
+        private void DdlBranchSourceSelectedValueChanged(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(ddlBranchSource.SelectedValue.ToString())) return;
             var commit = GetCommitInfo((Repository)ddlRepositorySource.SelectedValue,
-                                                txtSourceBranch.Text);
-            txtSourceBranch.Tag = commit;
+                                                ddlBranchSource.SelectedValue.ToString());
+
+            ddlBranchSource.Tag = commit;
             UpdateCommitInfo(lblCommitInfoSource, commit);
+            txtTitle.Text = ddlBranchSource.SelectedValue.ToString().Replace("-"," ");
             UpdatePullRequestDescription();
         }
 
-        private void TxtTargetBranchTextChanged(object sender, EventArgs e)
+        private void DdlBranchTargetSelectedValueChanged(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(ddlBranchTarget.SelectedValue.ToString())) return;
             var commit = GetCommitInfo((Repository)ddlRepositoryTarget.SelectedValue,
-                                                txtTargetBranch.Text);
-            txtTargetBranch.Tag = commit;
+                                                ddlBranchTarget.SelectedValue.ToString());
+
+            ddlBranchTarget.Tag = commit;
             UpdateCommitInfo(lblCommitInfoTarget, commit);
             UpdatePullRequestDescription();
         }
@@ -207,15 +228,15 @@ namespace Stash
         {
             if (ddlRepositorySource.SelectedValue == null
                 || ddlRepositoryTarget.SelectedValue == null
-                || txtSourceBranch.Tag == null
-                || txtTargetBranch.Tag == null)
+                || ddlBranchSource.Tag == null
+                || ddlBranchTarget.Tag == null)
                 return;
 
             var getCommitsInBetween = new GetInBetweenCommitsRequest(
                 (Repository)ddlRepositorySource.SelectedValue,
                 (Repository)ddlRepositoryTarget.SelectedValue,
-                (Commit)txtSourceBranch.Tag,
-                (Commit)txtTargetBranch.Tag,
+                (Commit)ddlBranchSource.Tag,
+                (Commit)ddlBranchTarget.Tag,
                 _settings);
 
             var result = getCommitsInBetween.Send();
