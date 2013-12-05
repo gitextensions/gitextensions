@@ -30,8 +30,6 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtSourceBranch = new System.Windows.Forms.TextBox();
-            this.txtTargetBranch = new System.Windows.Forms.TextBox();
             this.lblReviewers = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtDescription = new System.Windows.Forms.TextBox();
@@ -43,6 +41,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ddlRepositorySource = new System.Windows.Forms.ComboBox();
+            this.ddlBranchSource = new System.Windows.Forms.ComboBox();
+            this.ddlBranchTarget = new System.Windows.Forms.ComboBox();
             this.lblCommitInfoSource = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ddlRepositoryTarget = new System.Windows.Forms.ComboBox();
@@ -122,30 +122,6 @@
             this.label2.Size = new System.Drawing.Size(41, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "Branch";
-            // 
-            // txtSourceBranch
-            // 
-            this.txtSourceBranch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSourceBranch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.txtSourceBranch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.txtSourceBranch.Location = new System.Drawing.Point(127, 58);
-            this.txtSourceBranch.Name = "txtSourceBranch";
-            this.txtSourceBranch.Size = new System.Drawing.Size(178, 20);
-            this.txtSourceBranch.TabIndex = 1;
-            this.txtSourceBranch.Leave += new System.EventHandler(this.TxtSourceBranchTextChanged);
-            // 
-            // txtTargetBranch
-            // 
-            this.txtTargetBranch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtTargetBranch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.txtTargetBranch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.txtTargetBranch.Location = new System.Drawing.Point(127, 58);
-            this.txtTargetBranch.Name = "txtTargetBranch";
-            this.txtTargetBranch.Size = new System.Drawing.Size(178, 20);
-            this.txtTargetBranch.TabIndex = 1;
-            this.txtTargetBranch.Leave += new System.EventHandler(this.TxtTargetBranchTextChanged);
             // 
             // lblReviewers
             // 
@@ -238,9 +214,9 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.ddlRepositorySource);
+            this.groupBox1.Controls.Add(this.ddlBranchSource);
             this.groupBox1.Controls.Add(this.lblCommitInfoSource);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.txtSourceBranch);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
@@ -261,7 +237,21 @@
             this.ddlRepositorySource.Name = "ddlRepositorySource";
             this.ddlRepositorySource.Size = new System.Drawing.Size(178, 21);
             this.ddlRepositorySource.TabIndex = 0;
+            this.ddlRepositorySource.Enabled = false;
             this.ddlRepositorySource.SelectedValueChanged += new System.EventHandler(this.DdlRepositorySourceSelectedValueChanged);
+            // 
+            // ddlBranchSource
+            // 
+            this.ddlBranchSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddlBranchSource.DisplayMember = "DisplayName";
+            this.ddlBranchSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlBranchSource.FormattingEnabled = true;
+            this.ddlBranchSource.Location = new System.Drawing.Point(128, 58);
+            this.ddlBranchSource.Name = "ddlBranchSource";
+            this.ddlBranchSource.Size = new System.Drawing.Size(178, 21);
+            this.ddlBranchSource.TabIndex = 0;
+            this.ddlBranchSource.SelectedValueChanged += new System.EventHandler(this.DdlBranchSourceSelectedValueChanged);
             // 
             // lblCommitInfoSource
             // 
@@ -279,7 +269,7 @@
             this.groupBox2.Controls.Add(this.lblCommitInfoTarget);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.txtTargetBranch);
+            this.groupBox2.Controls.Add(this.ddlBranchTarget);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
@@ -299,7 +289,21 @@
             this.ddlRepositoryTarget.Name = "ddlRepositoryTarget";
             this.ddlRepositoryTarget.Size = new System.Drawing.Size(178, 21);
             this.ddlRepositoryTarget.TabIndex = 0;
+            this.ddlRepositoryTarget.Enabled = false;
             this.ddlRepositoryTarget.SelectedValueChanged += new System.EventHandler(this.DdlRepositoryTargetSelectedValueChanged);
+            // 
+            // ddlBranchTarget
+            // 
+            this.ddlBranchTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddlBranchTarget.DisplayMember = "DisplayName";
+            this.ddlBranchTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlBranchTarget.FormattingEnabled = true;
+            this.ddlBranchTarget.Location = new System.Drawing.Point(127, 58);
+            this.ddlBranchTarget.Name = "ddlBranchTarget";
+            this.ddlBranchTarget.Size = new System.Drawing.Size(178, 21);
+            this.ddlBranchTarget.TabIndex = 0;
+            this.ddlBranchTarget.SelectedValueChanged += new System.EventHandler(this.DdlBranchTargetSelectedValueChanged);
             // 
             // lblCommitInfoTarget
             // 
@@ -719,8 +723,6 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtSourceBranch;
-        private System.Windows.Forms.TextBox txtTargetBranch;
         private System.Windows.Forms.Label lblReviewers;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtDescription;
@@ -737,6 +739,8 @@
         private System.Windows.Forms.Label lblCommitInfoSource;
         private System.Windows.Forms.Label lblCommitInfoTarget;
         private System.Windows.Forms.ComboBox ddlRepositorySource;
+        private System.Windows.Forms.ComboBox ddlBranchSource;
+        private System.Windows.Forms.ComboBox ddlBranchTarget;
         private System.Windows.Forms.ComboBox ddlRepositoryTarget;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TabControl tabControl1;
