@@ -103,6 +103,12 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
+    <Compile Include="CommandsDialogs\FormMergeSubmodule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormMergeSubmodule.Designer.cs">
+      <DependentUpon>FormMergeSubmodule.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -918,6 +924,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormUpdates.resx">
       <DependentUpon>FormUpdates.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\FormMergeSubmodule.resx">
+      <DependentUpon>FormMergeSubmodule.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.resx">
