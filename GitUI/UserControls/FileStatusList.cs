@@ -49,7 +49,11 @@ namespace GitUI
                 _images.Images.Add(Resources.IconSubmoduleRevisionUpDirty); // 7
                 _images.Images.Add(Resources.IconSubmoduleRevisionDown); // 8
                 _images.Images.Add(Resources.IconSubmoduleRevisionDownDirty); // 9
-                _images.Images.Add(Resources.IconFileStatusUnknown); // 10
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiUp); // 10
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiUpDirty); // 11
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiDown); // 12
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiDownDirty); // 13
+                _images.Images.Add(Resources.IconFileStatusUnknown); // 14
             }
             FileStatusListView.SmallImageList = _images;
             FileStatusListView.LargeImageList = _images;
@@ -428,17 +432,21 @@ namespace GitUI
                 var status = gitItemStatus.SubmoduleStatus.Result;
                 if (status == null)
                     return 2;
-                if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
+                if (status.Status == SubmoduleStatus.FastForward)
                     return 6 + (status.IsDirty ? 1 : 0);
-                if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
+                if (status.Status == SubmoduleStatus.Rewind)
                     return 8 + (status.IsDirty ? 1 : 0);
+                if (status.Status == SubmoduleStatus.NewerTime)
+                    return 10 + (status.IsDirty ? 1 : 0);
+                if (status.Status == SubmoduleStatus.OlderTime)
+                    return 12 + (status.IsDirty ? 1 : 0);
                 return !status.IsDirty ? 2 : 5;
             }
             if (gitItemStatus.IsRenamed)
                 return 3;
             if (gitItemStatus.IsCopied)
                 return 4;
-            return 10;//icon unknown
+            return 14;//icon unknown
         }
 
         [Browsable(false)]
