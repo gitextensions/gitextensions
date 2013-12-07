@@ -983,6 +983,23 @@ namespace GitCommands
             return hashes;
         }
 
+        public Dictionary<GitRef, GitItem> GetSubmoduleItemsForEachRef(string filename, Func<GitRef, bool> showRemoteRef)
+        {
+            filename = FixPath(filename);
+
+            var tree = RunGitCmd("show-ref --dereference", SystemEncoding);
+            var refs = GetTreeRefs(tree);
+
+            return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleGuid(filename, r.Name));
+        }
+
+        private GitItem GetSubmoduleGuid(string filename, string refName)
+        {
+            string str = RunGitCmd("ls-tree " + refName + " \"" + filename + "\"");
+
+            return GitItem.CreateGitItemFromString(this, str);
+        }
+
         public static string GetGitDirectory(string repositoryPath)
         {
             if (File.Exists(repositoryPath + ".git"))
