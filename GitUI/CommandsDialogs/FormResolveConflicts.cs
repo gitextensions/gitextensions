@@ -325,24 +325,18 @@ namespace GitUI.CommandsDialogs
                 string fullname = Path.Combine(Module.WorkingDir, filename);
                 if (Directory.Exists(fullname) && !File.Exists(fullname))
                 {
-                    var submodulesList = Module.GetSubmodulesLocalPathes();
-                    if (submodulesList.Any(configSection => configSection.Equals(filename.Trim())))
+                    if (Module.GetSubmodulesLocalPathes().Contains(filename.Trim()))
                     {
-                        string[] hashes = Module.GetConflictedSubmoduleHashes(filename);
-                        var submodule = Module.GetSubmodule(filename);
-                        string submoduleHash = submodule != null ? submodule.GetCurrentCheckout() : "";
-                        string text = string.Format("\n\nBASE:\t{0}\nLOCAL:\t{1}\nREMOTE:\t{2}\n\nCURRENT:{3}\n",
-                            hashes[0], hashes[1], hashes[2], submoduleHash);
-                        if (MessageBox.Show(this, mergeConflictIsSubmodule.Text + text, mergeConflictIsSubmoduleCaption.Text,
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                        {
+                        var form = new FormMergeSubmodule(UICommands, filename);
+                        if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                             stageFile(filename);
-                        }
-                        return;
+
                     }
                 }
-
-                ResolveFilesConflict(filename);
+                else
+                {
+                    ResolveFilesConflict(filename);
+                }
             }
             finally
             {
