@@ -34,11 +34,57 @@ namespace GitUI.UserControls.RevisionGridClasses
         #region BusinessLogic
 
         bool _showRemoteBranches = true;
-
         public bool ShowRemoteBranches
         {
             get { return _showRemoteBranches; }
             set { _showRemoteBranches = value; _revisionGrid.InvalidateRevisions(); OnPropertyChanged(); }
+        }
+
+        bool _showSuperprojectTags = true;
+        public bool ShowSuperprojectTags
+        {
+            get { return _showSuperprojectTags; }
+            set
+            {
+                _showSuperprojectTags = value;
+                if (value)
+                    _revisionGrid.ForceRefreshRevisions();
+                else
+                    _revisionGrid.InvalidateRevisions();
+
+                OnPropertyChanged();
+            }
+        }
+
+        bool _showSuperprojectBranches = true;
+        public bool ShowSuperprojectBranches
+        {
+            get { return _showSuperprojectBranches; }
+            set
+            {
+                _showSuperprojectBranches = value;
+                if (value)
+                    _revisionGrid.ForceRefreshRevisions();
+                else
+                    _revisionGrid.InvalidateRevisions();
+                OnPropertyChanged();
+            }
+        }
+
+        bool _showSuperprojectRemoteBranches = true;
+        public bool ShowSuperprojectRemoteBranches
+        {
+            get { return _showSuperprojectRemoteBranches; }
+            set
+            {
+                _showSuperprojectRemoteBranches = value;
+                if (value)
+                    _revisionGrid.ForceRefreshRevisions();
+                else
+                    _revisionGrid.InvalidateRevisions();
+
+                OnPropertyChanged();
+            }
         }
 
         #endregion
@@ -208,6 +254,38 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Text = "Show remote branches";
                 menuCommand.ExecuteAction = () => ShowRemoteBranches = !ShowRemoteBranches;
                 menuCommand.IsCheckedFunc = () => ShowRemoteBranches;
+
+                resultList.Add(menuCommand);
+            }
+
+            resultList.Add(MenuCommand.CreateSeparator());
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowSuperprojectTags";
+                menuCommand.Text = "Show superproject tags";
+                menuCommand.ExecuteAction = () => ShowSuperprojectTags = !ShowSuperprojectTags;
+                menuCommand.IsCheckedFunc = () => ShowSuperprojectTags;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowSuperprojectBranches";
+                menuCommand.Text = "Show superproject branches";
+                menuCommand.ExecuteAction = () => ShowSuperprojectBranches = !ShowSuperprojectBranches;
+                menuCommand.IsCheckedFunc = () => ShowSuperprojectBranches;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowSuperprojectRemoteBranches";
+                menuCommand.Text = "Show superproject remote branches";
+                menuCommand.ExecuteAction = () => ShowSuperprojectRemoteBranches = !ShowSuperprojectRemoteBranches;
+                menuCommand.IsCheckedFunc = () => ShowSuperprojectRemoteBranches;
 
                 resultList.Add(menuCommand);
             }
