@@ -1600,6 +1600,11 @@
     <None Include="Resources\Icons\IconGotoManual.png" />
     <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
     <None Include="Resources\Icons\IconFileStatusUnknown.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionDown2.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiDown.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiDownDirty.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiUp.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiUpDirty.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
