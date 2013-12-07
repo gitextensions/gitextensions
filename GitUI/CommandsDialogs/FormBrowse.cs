@@ -2864,7 +2864,12 @@ namespace GitUI.CommandsDialogs
                     }
                     return submoduleStatus;
                 }, token)
-                .ContinueWith((task) => mi.Image = GetItemImage(task.Result),
+                .ContinueWith((task) =>
+                {
+                    mi.Image = GetItemImage(task.Result);
+                    if (task.Result != null)
+                        mi.Text += " " + task.Result.AddedAndRemovedString();
+                },
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext());

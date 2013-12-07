@@ -2449,7 +2449,7 @@ namespace GitCommands
                     {
                         Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding, true);
                         string text = patch != null ? patch.Text : "";
-                        var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text);
+                        var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text, this, item.Name);
                         if (submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
                             var submodule = submoduleStatus.GetSubmodule(this);
@@ -3557,5 +3557,11 @@ namespace GitCommands
         }
 
         #endregion
+
+        public int GetCommitCount(string parentHash, string childHash)
+        {
+            string result = this.RunGitCmd("rev-list " + parentHash + " ^" + childHash + " --count");
+            return int.Parse(result);
+        }
     }
 }

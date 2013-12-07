@@ -143,6 +143,9 @@ namespace GitUI
 
             string text = GetItemText(e.Graphics, gitItemStatus);
 
+            if (gitItemStatus.IsSubmodule && gitItemStatus.SubmoduleStatus != null && gitItemStatus.SubmoduleStatus.IsCompleted)
+                text += " " + gitItemStatus.SubmoduleStatus.Result.AddedAndRemovedString();
+
             e.Graphics.DrawString(text, e.Item.ListView.Font,
                                   new SolidBrush(color), e.Bounds.Left + ImageSize, e.Bounds.Top);
         }
