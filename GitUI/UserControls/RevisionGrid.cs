@@ -85,11 +85,16 @@ namespace GitUI
             _revisionGridMenuCommands.CreateOrUpdateMenuCommands();
 
             // add "ShowRemoteBranches" to context menu
+            
+            
             {
-                var menuCommand = _revisionGridMenuCommands.GetViewMenuCommands().Single(a => a.Name == "ShowRemoteBranches");
-                var toolStripMenuItem = (ToolStripMenuItem)MenuCommand.CreateToolStripItem(menuCommand);
-                menuCommand.RegisterMenuItem(toolStripMenuItem);
-                showBranchesToolStripMenuItem.DropDownItems.Add(toolStripMenuItem);
+                foreach (var str in new[] { "ShowRemoteBranches", "ShowSuperprojectTags", "ShowSuperprojectBranches", "ShowSuperprojectRemoteBranches" })
+                {
+                    var menuCommand = _revisionGridMenuCommands.GetViewMenuCommands().Single(a => a.Name == str);
+                    var toolStripMenuItem = (ToolStripMenuItem)MenuCommand.CreateToolStripItem(menuCommand);
+                    menuCommand.RegisterMenuItem(toolStripMenuItem);
+                    showBranchesToolStripMenuItem.DropDownItems.Add(toolStripMenuItem);
+                }
             }
 
             NormalFont = Settings.Font;
@@ -208,7 +213,7 @@ namespace GitUI
         [Browsable(false)]
         private string FiltredCurrentCheckout { get; set; }
         [Browsable(false)]
-        public Task<string[]> SuperprojectCurrentCheckout { get; private set; }
+        public Task<SuperProjectInfo> SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
         public int LastRow { get; private set; }
 
@@ -745,6 +750,20 @@ namespace GitUI
             Translate();
         }
 
+        public bool ShowRemoteRef(GitRef r)
+        {
+            if (r.IsTag)
+                return _revisionGridMenuCommands.ShowSuperprojectTags;
+
+            if (r.IsHead)
+                return _revisionGridMenuCommands.ShowSuperprojectBranches;
+            
+            if(r.IsRemote)
+                return _revisionGridMenuCommands.ShowSuperprojectRemoteBranches;
+
+            return false;
+        }
+
         public void ForceRefreshRevisions()
         {
             try
@@ -758,9 +777,9 @@ namespace GitUI
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
-                Task<string[]> newSuperprojectCurrentCheckout =
-                    Task.Factory.StartNew(() => GetSuperprojectCheckout());
-                newSuperprojectCurrentCheckout.ContinueWith((task) => Refresh(),
+                Task<SuperProjectInfo> newSuperPrjectInfo =
+                    Task.Factory.StartNew(() => GetSuperprojectCheckout(ShowRemoteRef));
+                newSuperPrjectInfo.ContinueWith((task) => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
@@ -778,7 +797,7 @@ namespace GitUI
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
                 FiltredCurrentCheckout = CurrentCheckout;
-                SuperprojectCurrentCheckout = newSuperprojectCurrentCheckout;
+                SuperprojectCurrentCheckout = newSuperPrjectInfo;
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -850,17 +869,43 @@ namespace GitUI
             }
         }
 
-        private string[] GetSuperprojectCheckout()
+        public class SuperProjectInfo
+        {
+            public string CurrentBranch;
+            public string Conflict_Base;
+            public string Conflict_Remote;
+            public string Conflict_Local;
+            public Dictionary<string, List<GitRef>> Refs; 
+        }
+
+        private SuperProjectInfo GetSuperprojectCheckout(Func<GitRef, bool> showRemoteRef)
         {
             if (Module.SuperprojectModule == null)
-                return new string[] {};
+                return null;
+
+            SuperProjectInfo spi = new SuperProjectInfo();
             var currentCheckout = Module.GetSuperprojectCurrentCheckout();
             if (currentCheckout.Key == 'U')
             {
                 // return local and remote hashes
-                return Module.SuperprojectModule.GetConflictedSubmoduleHashes(Module.SubmodulePath).Skip(1).ToArray();
+                var array = Module.SuperprojectModule.GetConflictedSubmoduleHashes(Module.SubmodulePath);
+                spi.Conflict_Base = array[0];
+                spi.Conflict_Local = array[1];
+                spi.Conflict_Remote = array[2];
             }
-            return new[] { currentCheckout.Value };
+            else
+            {
+                spi.CurrentBranch = currentCheckout.Value;
+            }
+
+            var refs = Module.SuperprojectModule.GetSubmoduleItemsForEachRef(Module.SubmodulePath, showRemoteRef);
+
+            if (refs != null)
+            {
+                spi.Refs = refs.Where(a => a.Value != null).GroupBy(a => a.Value.Guid).ToDictionary(gr => gr.Key, gr => gr.Select(a => a.Key).ToList());
+            }
+
+            return spi;
         }
 
         private static readonly Regex PotentialShaPattern = new Regex(@"^[a-f0-9]{5,}", RegexOptions.Compiled);
@@ -1118,10 +1163,12 @@ namespace GitUI
 
             using (Brush foreBrush = new SolidBrush(foreColor))
             {
+                var spi = SuperprojectCurrentCheckout.IsCompleted ? SuperprojectCurrentCheckout.Result : null;
+
                 var rowFont = NormalFont;
                 if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
                     rowFont = HeadFont;
-                else if (SuperprojectCurrentCheckout.IsCompleted && SuperprojectCurrentCheckout.Result.Contains(revision.Guid))
+                else if (spi != null && spi.CurrentBranch == revision.Guid)
                     rowFont = SuperprojectFont;
 
                 switch (column)
@@ -1164,6 +1211,21 @@ namespace GitUI
                             float offset = baseOffset;
                             var gitRefs = revision.Refs;
 
+                            Font refsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
+
+                            if (spi != null)
+                            {
+                                if (spi.Conflict_Base == revision.Guid)
+                                    offset = DrawRef(e, isRowSelected, offset, "Base", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
+
+                                if (spi.Conflict_Local == revision.Guid)
+                                    offset = DrawRef(e, isRowSelected, offset, "Local", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
+
+                                if (spi.Conflict_Remote == revision.Guid)
+                                    offset = DrawRef(e, isRowSelected, offset, "Remote", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
+
+                            }
+
                             if (gitRefs.Count > 0)
                             {
                                 gitRefs.Sort((left, right) =>
@@ -1177,8 +1239,6 @@ namespace GitUI
 
                                 foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || _revisionGridMenuCommands.ShowRemoteBranches)))
                                 {
-                                    Font refsFont;
-
                                     if (gitRef.IsTag)
                                     {
                                         if (!showTagsToolStripMenuItem.Checked)
@@ -1186,70 +1246,31 @@ namespace GitUI
                                             continue;
                                         }
                                     }
-
-                                    if (IsFilledBranchesLayout())
-                                    {
-                                        //refsFont = head.Selected ? rowFont : new Font(rowFont, FontStyle.Regular);
-                                        refsFont = rowFont;
-
-                                        //refsFont = head.Selected
-                                        //    ? new Font(rowFont, rowFont.Style | FontStyle.Italic)
-                                        //    : rowFont;
-                                    }
-                                    else
-                                    {
-                                        refsFont = RefsFont;
-                                    }
+           
 
                                     Color headColor = GetHeadColor(gitRef);
-                                    Brush textBrush = new SolidBrush(headColor);
 
-                                    string headName;
+                                    ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
+                                                          gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
 
-                                    if (IsCardLayout())
-                                    {
-                                        headName = gitRef.Name;
-                                        offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
-                                        PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
-                                        var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
-                                                             e.Graphics.MeasureString(headName, RefsFont).Height);
-                                        e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
-                                                                 location.Y - 1, size.Width + 3, size.Height + 2);
-                                        e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
-                                                                 location.Y - 1, size.Width + 3, size.Height + 2);
-                                        e.Graphics.DrawString(headName, refsFont, textBrush, location);
-                                    }
-                                    else
-                                    {
-                                        headName = IsFilledBranchesLayout()
-                                                       ? gitRef.Name
-                                                       : string.Concat("[", gitRef.Name, "] ");
-
-                                        var headBounds = AdjustCellBounds(e.CellBounds, offset);
-                                        SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
-
-                                        offset += textSize.Width;
-
-                                        if (IsFilledBranchesLayout())
-                                        {
-                                            offset += 9;
-
-                                            float extraOffset = DrawHeadBackground(isRowSelected, e.Graphics,
-                                                                                   headColor, headBounds.X,
-                                                                                   headBounds.Y,
-                                                                                   RoundToEven(textSize.Width + 3),
-                                                                                   RoundToEven(textSize.Height), 3,
-                                                                                   gitRef.Selected,
-                                                                                   gitRef.SelectedHeadMergeSource);
-
-                                            offset += extraOffset;
-                                            headBounds.Offset((int)(extraOffset + 1), 0);
-                                        }
-
-                                        DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
-                                    }
+                                    offset = DrawRef(e, isRowSelected, offset, gitRef.Name, refsFont, headColor, arrowType, true);
                                 }
                             }
+
+
+                            if (spi != null && spi.Refs != null && spi.Refs.ContainsKey(revision.Guid))
+                            {
+                                foreach (var gitRef in spi.Refs[revision.Guid].Where(ShowRemoteRef))
+                                {
+                                    Color headColor = GetHeadColor(gitRef);
+
+                                    ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
+                                                          gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
+
+                                    offset = DrawRef(e, isRowSelected, offset, gitRef.Name, refsFont, headColor, arrowType, false);
+                                }
+                            }
+             
 
                             if (IsCardLayout())
                                 offset = baseOffset;
@@ -1321,6 +1342,61 @@ namespace GitUI
             }
         }
 
+        private float DrawRef(DataGridViewCellPaintingEventArgs e, bool isRowSelected, float offset, string name, Font refsFont, Color headColor, ArrowType arrowType, bool fill)
+        {
+            var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
+
+            if (IsCardLayout())
+            {
+                Brush textBrush = new SolidBrush(textColor);
+
+                string headName = name;
+                offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
+                PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
+                var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
+                                     e.Graphics.MeasureString(headName, RefsFont).Height);
+                if (fill)
+                    e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
+                                             location.Y - 1, size.Width + 3, size.Height + 2);
+
+                e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
+                                         location.Y - 1, size.Width + 3, size.Height + 2);
+                e.Graphics.DrawString(headName, refsFont, textBrush, location);
+            }
+            else
+            {
+                string headName = IsFilledBranchesLayout()
+                               ? name
+                               : string.Concat("[", name, "] ");
+
+                var headBounds = AdjustCellBounds(e.CellBounds, offset);
+                SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
+
+                offset += textSize.Width;
+
+                if (IsFilledBranchesLayout())
+                {
+                    offset += 9;
+
+                    float extraOffset = DrawHeadBackground(isRowSelected, e.Graphics,
+                                                           headColor, headBounds.X,
+                                                           headBounds.Y,
+                                                           RoundToEven(textSize.Width + 3),
+                                                           RoundToEven(textSize.Height), 3,
+                                                           arrowType, fill);
+
+                    offset += extraOffset;
+                    headBounds.Offset((int)(extraOffset + 1), 0);
+                }
+
+
+
+                DrawColumnText(e.Graphics, headName, refsFont, textColor, headBounds);
+            }
+
+            return offset;
+        }
+
         private void RevisionsCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             var column = e.ColumnIndex;
@@ -1390,11 +1466,19 @@ namespace GitUI
             return result < value ? result + 2 : result;
         }
 
-        private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
-            float x, float y, float width, float height, float radius, bool isCurrentBranch,
-            bool isCurentBranchMergeSource)
+        enum ArrowType
         {
-            float additionalOffset = isCurrentBranch || isCurentBranchMergeSource ? GetArrowSize(height) : 0;
+            None, 
+            Filled,
+            NotFilled
+        }
+
+        static readonly float[] dashPattern = new float[] { 4, 4 };
+
+        private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
+            float x, float y, float width, float height, float radius, ArrowType arrowType, bool fill)
+        {
+            float additionalOffset = arrowType != ArrowType.None ? GetArrowSize(height) : 0;
             width += additionalOffset;
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -1402,30 +1486,36 @@ namespace GitUI
             try
             {
                 // shade
-                using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
-                {
-                    var shadeBrush = isSelected ? Brushes.Black : Brushes.Gray;
-                    graphics.FillPath(shadeBrush, shadePath);
-                }
+                if(fill)
+                    using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
+                    {
+                        var shadeBrush = isSelected ? Brushes.Black : Brushes.Gray;
+                        graphics.FillPath(shadeBrush, shadePath);
+                    }
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
                 {
                     Color fillColor = Lerp(color, Color.White, 0.92F);
 
-                    using (var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor, Lerp(fillColor, Color.White, 0.9F), 90))
-                    {
-                        // fore rectangle
-                        graphics.FillPath(fillBrush, forePath);
-                        // frame
-                        using (var pen = new Pen(Lerp(color, Color.White, 0.83F)))
-                            graphics.DrawPath(pen, forePath);
+                    if (fill)
+                        using (var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor, Lerp(fillColor, Color.White, 0.9F), 90))
+                            graphics.FillPath(fillBrush, forePath);
+                    else if(isSelected)
+                        graphics.FillPath(Brushes.White, forePath);
+                        
 
-                        // arrow if the head is the current branch 
-                        if (isCurrentBranch)
-                            DrawArrow(graphics, x, y, height, color, true);
-                        else if (isCurentBranchMergeSource)
-                            DrawArrow(graphics, x, y, height, color, false);
+                    // frame
+                    using (var pen = new Pen(Lerp(color, Color.White, 0.83F)))
+                    {
+                        if (!fill)
+                            pen.DashPattern = dashPattern;
+
+                        graphics.DrawPath(pen, forePath);
                     }
+
+                    // arrow if the head is the current branch 
+                    if (arrowType != ArrowType.None)
+                        DrawArrow(graphics, x, y, height, color, arrowType == ArrowType.Filled);
                 }
             }
             finally
