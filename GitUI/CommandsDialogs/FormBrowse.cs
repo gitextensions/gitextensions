@@ -577,7 +577,7 @@ namespace GitUI.CommandsDialogs
 
         private void UserMenu_Click(object sender, EventArgs e)
         {
-            ScriptRunner.RunScript(this, Module, ((ToolStripButton)sender).Text, null);
+            ScriptRunner.RunScript(this, Module, ((ToolStripButton)sender).Text, this.RevisionGrid);
             RevisionGrid.RefreshRevisions();
         }
 
