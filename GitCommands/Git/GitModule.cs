@@ -3563,5 +3563,18 @@ namespace GitCommands
             string result = this.RunGitCmd("rev-list " + parentHash + " ^" + childHash + " --count");
             return int.Parse(result);
         }
+
+        public string GetCommitCountString(string from, string to)
+        {
+            int removed = this.GetCommitCount(from, to);
+            int added = this.GetCommitCount(to, from);
+
+            if (removed == 0 && added == 0)
+                return "=";
+
+            return 
+                (removed > 0 ? ("-" + removed) : "") +
+                (added > 0 ? ("+" + added) : "");
+        }
     }
 }

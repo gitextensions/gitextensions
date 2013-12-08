@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitUI.HelperDialogs;
 
@@ -42,10 +43,13 @@ namespace GitUI.UserControls
             if (_selectedCommitHash.IsNullOrEmpty())
             {
                 textBoxCommitHash.Text = "";
+                lbCommits.Text = "";
             }
             else
             {
                 textBoxCommitHash.Text = _selectedCommitHash.Substring(0, 10);
+                Task.Factory.StartNew(() => this.Module.GetCommitCountString(this.Module.GetCurrentCheckout(), _selectedCommitHash))
+                     .ContinueWith(t => lbCommits.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
             }
         }
 
