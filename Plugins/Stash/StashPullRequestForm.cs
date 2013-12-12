@@ -41,14 +41,20 @@ namespace Stash
             ThreadPool.QueueUserWorkItem(state =>
             {
                 var repositories = GetRepositories();
-                this.Invoke((MethodInvoker)delegate
+                try
                 {
-                    ddlRepositorySource.DataSource = repositories.ToList();
-                    ddlRepositoryTarget.DataSource = repositories.ToList();
-                    //ReviewersDataGrid.DataSource = _reviewers;
-                    ddlRepositorySource.Enabled = true;
-                    ddlRepositoryTarget.Enabled = true;
-                });
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        ddlRepositorySource.DataSource = repositories.ToList();
+                        ddlRepositoryTarget.DataSource = repositories.ToList();
+                        ddlRepositorySource.Enabled = true;
+                        ddlRepositoryTarget.Enabled = true;
+                    });
+                }
+                catch (System.InvalidOperationException)
+                {
+                    return;
+                }
             });
         }
         private void StashViewPullRequestFormLoad(object sender, EventArgs e)
@@ -58,11 +64,18 @@ namespace Stash
             ThreadPool.QueueUserWorkItem(state =>
             {
                 var pullReqs = GetPullRequests();
-                this.Invoke((MethodInvoker)delegate
+                try
                 {
-                    lbxPullRequests.DataSource = pullReqs;
-                    lbxPullRequests.DisplayMember = "DisplayName";
-                });
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        lbxPullRequests.DataSource = pullReqs;
+                        lbxPullRequests.DisplayMember = "DisplayName";
+                    });
+                }
+                catch(System.InvalidOperationException){
+                    return;
+                }
+                
             });
         }
 

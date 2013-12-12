@@ -30,12 +30,22 @@ namespace Stash
                 
             };
             var reviewers = json["reviewers"];
+            var participants = json["participants"];
 
             if (!reviewers.HasValues)
                 request.Reviewers = "None";
             else
             {
                 reviewers.ForEach(r => request.Reviewers += r["user"]["displayName"] + "(" + r["approved"] + ")" + System.Environment.NewLine);
+                if (request.Reviewers.EndsWith(", "))
+                    request.Reviewers = request.Reviewers.Substring(0, request.Reviewers.Length - 2);
+            }
+
+            if (!participants.HasValues)
+                request.Participants = "None";
+            else
+            {
+                participants.ForEach(r => request.Reviewers += r["user"]["displayName"] + "(" + r["approved"] + ")" + System.Environment.NewLine);
                 if (request.Reviewers.EndsWith(", "))
                     request.Reviewers = request.Reviewers.Substring(0, request.Reviewers.Length - 2);
             }
@@ -51,6 +61,7 @@ namespace Stash
         public string Title { get; set; }
         public string Description { get; set; }
         public string Reviewers { get; set; }
+        public string Participants { get; set; }
         public string Author { get; set; }
         public string SrcRepo { get; set; }
         public string SrcBranch { get; set; }
