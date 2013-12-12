@@ -86,12 +86,12 @@ namespace Stash
             var defaultRepo = getDefaultRepo.Send();
             if (defaultRepo.Success)
                 list.Add(defaultRepo.Result);
-            var getRelatedRepos = new GetRelatedRepoRequest(_settings);
-            var result = getRelatedRepos.Send();
-            if (result.Success)
-            {
-                list.AddRange(result.Result);
-            }
+            //var getRelatedRepos = new GetRelatedRepoRequest(_settings);
+            //var result = getRelatedRepos.Send();
+            //if (result.Success)
+            //{
+            //    list.AddRange(result.Result);
+            //}
             return list;
         }
 
@@ -269,11 +269,11 @@ namespace Stash
         {
             var curItem = lbxPullRequests.SelectedItem as PullRequest;
 
-            lblPRTitle.Text = curItem.Title;
-            lblPRDescription.Text = curItem.Description;
+            txtPRTitle.Text = curItem.Title;
+            txtPRDescription.Text = curItem.Description;
             lblPRAuthor.Text = curItem.Author;
             lblPRState.Text = curItem.State;
-            lblPRReviewers.Text = curItem.Reviewers;
+            txtPRReviewers.Text = curItem.Reviewers;
             lblPRSourceRepo.Text = curItem.SrcDisplayName;
             lblPRSourceBranch.Text = curItem.SrcBranch;
             lblPRDestRepo.Text = curItem.DestDisplayName;
