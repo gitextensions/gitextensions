@@ -63,9 +63,9 @@
             this.btnMerge = new System.Windows.Forms.Button();
             this.btnApprove = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.lblPRDescription = new System.Windows.Forms.Label();
-            this.lblPRTitle = new System.Windows.Forms.Label();
-            this.lblPRReviewers = new System.Windows.Forms.Label();
+            this.txtPRDescription = new System.Windows.Forms.TextBox();
+            this.txtPRTitle = new System.Windows.Forms.TextBox();
+            this.txtPRReviewers = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -495,9 +495,9 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.lblPRDescription);
-            this.groupBox6.Controls.Add(this.lblPRTitle);
-            this.groupBox6.Controls.Add(this.lblPRReviewers);
+            this.groupBox6.Controls.Add(this.txtPRDescription);
+            this.groupBox6.Controls.Add(this.txtPRTitle);
+            this.groupBox6.Controls.Add(this.txtPRReviewers);
             this.groupBox6.Controls.Add(this.label10);
             this.groupBox6.Controls.Add(this.label13);
             this.groupBox6.Controls.Add(this.label14);
@@ -508,33 +508,40 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Pull Request Info";
             // 
-            // lblPRDescription
+            // txtPRDescription
             // 
-            this.lblPRDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.txtPRDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblPRDescription.Location = new System.Drawing.Point(131, 224);
-            this.lblPRDescription.Name = "lblPRDescription";
-            this.lblPRDescription.Size = new System.Drawing.Size(594, 138);
-            this.lblPRDescription.TabIndex = 14;
+            this.txtPRDescription.Location = new System.Drawing.Point(131, 224);
+            this.txtPRDescription.Multiline = true;
+            this.txtPRDescription.Name = "txtPRDescription";
+            this.txtPRReviewers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtPRDescription.Size = new System.Drawing.Size(594, 138);
+            this.txtPRDescription.TabIndex = 14;
+            this.txtPRDescription.ReadOnly = true;
             // 
-            // lblPRTitle
+            // txtPRTitle
             // 
-            this.lblPRTitle.AutoSize = true;
-            this.lblPRTitle.Location = new System.Drawing.Point(131, 192);
-            this.lblPRTitle.Name = "lblPRTitle";
-            this.lblPRTitle.Size = new System.Drawing.Size(0, 13);
-            this.lblPRTitle.TabIndex = 13;
+            this.txtPRTitle.AutoSize = true;
+            this.txtPRTitle.Location = new System.Drawing.Point(131, 192);
+            this.txtPRTitle.Name = "txtPRTitle";
+            this.txtPRTitle.Size = new System.Drawing.Size(593, 20);
+            this.txtPRTitle.TabIndex = 13;
+            this.txtPRTitle.ReadOnly = true;
             // 
-            // lblPRReviewers
+            // txtPRReviewers
             // 
-            this.lblPRReviewers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.txtPRReviewers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblPRReviewers.Location = new System.Drawing.Point(128, 38);
-            this.lblPRReviewers.Name = "lblPRReviewers";
-            this.lblPRReviewers.Size = new System.Drawing.Size(594, 138);
-            this.lblPRReviewers.TabIndex = 12;
+            this.txtPRReviewers.Location = new System.Drawing.Point(128, 38);
+            this.txtPRReviewers.Multiline = true;
+            this.txtPRReviewers.Name = "txtPRReviewers";
+            this.txtPRReviewers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtPRReviewers.Size = new System.Drawing.Size(594, 138);
+            this.txtPRReviewers.TabIndex = 12;
+            this.txtPRReviewers.ReadOnly = true;
             // 
             // label10
             // 
@@ -753,9 +760,9 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Label lblPRDescription;
-        private System.Windows.Forms.Label lblPRTitle;
-        private System.Windows.Forms.Label lblPRReviewers;
+        private System.Windows.Forms.TextBox txtPRDescription;
+        private System.Windows.Forms.TextBox txtPRTitle;
+        private System.Windows.Forms.TextBox txtPRReviewers;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
