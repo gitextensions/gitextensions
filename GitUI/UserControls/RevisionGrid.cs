@@ -95,7 +95,7 @@ namespace GitUI
             // fill View context menu from MenuCommands
             var viewMenuCommands = _revisionGridMenuCommands.GetViewMenuCommands();
             FillMenuFromMenuCommands(viewMenuCommands, viewToolStripMenuItem);
-            
+
             // fill Navigate context menu from MenuCommands
             var navigateMenuCommands = _revisionGridMenuCommands.GetNavigateMenuCommands();
             FillMenuFromMenuCommands(navigateMenuCommands, navigateToolStripMenuItem);
@@ -248,7 +248,8 @@ namespace GitUI
         [DefaultValue(false)]
         public bool ShowUncommitedChangesIfPossible
         {
-            get; set;
+            get;
+            set;
         }
 
         [Description("Show build server information in revision grid if enabled in settings.")]
@@ -567,10 +568,10 @@ namespace GitUI
                 {
                     if (GetRevision(i).Guid != revision)
                         continue;
-                        SetSelectedIndex(i);
-                        return;
-                    }
+                    SetSelectedIndex(i);
+                    return;
                 }
+            }
 
             Revisions.ClearSelection();
             Revisions.Select();
@@ -785,8 +786,8 @@ namespace GitUI
 
             if (r.IsHead)
                 return _revisionGridMenuCommands.ShowSuperprojectBranches;
-            
-            if(r.IsRemote)
+
+            if (r.IsRemote)
                 return _revisionGridMenuCommands.ShowSuperprojectRemoteBranches;
 
             return false;
@@ -909,7 +910,7 @@ namespace GitUI
             public string Conflict_Base;
             public string Conflict_Remote;
             public string Conflict_Local;
-            public Dictionary<string, List<GitRef>> Refs; 
+            public Dictionary<string, List<GitRef>> Refs;
         }
 
         private SuperProjectInfo GetSuperprojectCheckout(Func<GitRef, bool> showRemoteRef)
@@ -967,7 +968,7 @@ namespace GitUI
             this.InvokeAsync(() =>
                 {
                     throw e.Exception;
-        }
+                }
             );
             e.Handled = true;
         }
@@ -1038,7 +1039,7 @@ namespace GitUI
                                           SelectInitialRevision();
                                           _isLoading = false;
                                           if (ShowBuildServerInfo)
-                                            BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
+                                              BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
                                       }, this);
             }
 
@@ -1116,7 +1117,7 @@ namespace GitUI
             var allrevisions = Module.ReadGitOutputLines(revListParams + initRevision);
             graphRevision = allrevisions.FirstOrDefault(rev => dict.TryGetValue(rev, out index));
             if (graphRevision != null)
-                    return index;
+                return index;
             return -1;
         }
 
@@ -1227,168 +1228,168 @@ namespace GitUI
                     rowFont = SuperprojectFont;
 
                 if (columnIndex == messageColIndex)
-                        {
-                            int baseOffset = 0;
-                            if (IsCardLayout())
-                            {
-                                baseOffset = 5;
+                {
+                    int baseOffset = 0;
+                    if (IsCardLayout())
+                    {
+                        baseOffset = 5;
 
-                                Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
+                        Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
 
                         if (!AppSettings.RevisionGraphDrawNonRelativesGray || Revisions.RowIsRelative(e.RowIndex))
-                                {
-                                    e.Graphics.FillRectangle(
-                                        new LinearGradientBrush(cellRectangle,
-                                                                Color.FromArgb(255, 220, 220, 231),
-                                                                Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
-                                    using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
-                                    {
-                                        e.Graphics.DrawRectangle(pen, cellRectangle);
-                                    }
-                                }
-                                else
-                                {
-                                    e.Graphics.FillRectangle(
-                                        new LinearGradientBrush(cellRectangle,
-                                                                Color.FromArgb(255, 240, 240, 240),
-                                                                Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
-                                }
-
-                                if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                                {
-                                    using (var penSelectionBackColor = new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
-                                        e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
-                                }
-                            }
-
-                            float offset = baseOffset;
-                            var gitRefs = revision.Refs;
-
-
- 							Font refsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
-
-                            if (spi != null)
+                        {
+                            e.Graphics.FillRectangle(
+                                new LinearGradientBrush(cellRectangle,
+                                                        Color.FromArgb(255, 220, 220, 231),
+                                                        Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
+                            using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
                             {
-                                if (spi.Conflict_Base == revision.Guid)
-                                    offset = DrawRef(e, isRowSelected, offset, "Base", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
-
-                                if (spi.Conflict_Local == revision.Guid)
-                                    offset = DrawRef(e, isRowSelected, offset, "Local", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
-
-                                if (spi.Conflict_Remote == revision.Guid)
-                                    offset = DrawRef(e, isRowSelected, offset, "Remote", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
-
+                                e.Graphics.DrawRectangle(pen, cellRectangle);
                             }
+                        }
+                        else
+                        {
+                            e.Graphics.FillRectangle(
+                                new LinearGradientBrush(cellRectangle,
+                                                        Color.FromArgb(255, 240, 240, 240),
+                                                        Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
+                        }
 
-                    		if (gitRefs.Any())
+                        if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
+                        {
+                            using (var penSelectionBackColor = new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
+                                e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
+                        }
+                    }
+
+                    float offset = baseOffset;
+                    var gitRefs = revision.Refs;
+
+
+                    Font refsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
+
+                    if (spi != null)
+                    {
+                        if (spi.Conflict_Base == revision.Guid)
+                            offset = DrawRef(e, isRowSelected, offset, "Base", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
+
+                        if (spi.Conflict_Local == revision.Guid)
+                            offset = DrawRef(e, isRowSelected, offset, "Local", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
+
+                        if (spi.Conflict_Remote == revision.Guid)
+                            offset = DrawRef(e, isRowSelected, offset, "Remote", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
+
+                    }
+
+                    if (gitRefs.Any())
+                    {
+                        gitRefs.Sort((left, right) =>
+                                       {
+                                           if (left.IsTag != right.IsTag)
+                                               return right.IsTag.CompareTo(left.IsTag);
+                                           if (left.IsRemote != right.IsRemote)
+                                               return left.IsRemote.CompareTo(right.IsRemote);
+                                           return left.Name.CompareTo(right.Name);
+                                       });
+
+                        foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || _revisionGridMenuCommands.ShowRemoteBranches)))
+                        {
+                            if (gitRef.IsTag)
                             {
-                                gitRefs.Sort((left, right) =>
-                                               {
-                                                   if (left.IsTag != right.IsTag)
-                                                       return right.IsTag.CompareTo(left.IsTag);
-                                                   if (left.IsRemote != right.IsRemote)
-                                                       return left.IsRemote.CompareTo(right.IsRemote);
-                                                   return left.Name.CompareTo(right.Name);
-                                               });
-
-                                foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || _revisionGridMenuCommands.ShowRemoteBranches)))
-                                {
-                                    if (gitRef.IsTag)
-                                    {
                                 if (!AppSettings.ShowTags)
-                                        {
-                                            continue;
-                                        }
-                                    }
-
-
-                                    Color headColor = GetHeadColor(gitRef);
-
-                                    ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
-                                                          gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
-
-                                    offset = DrawRef(e, isRowSelected, offset, gitRef.Name, refsFont, headColor, arrowType, true);
-                                }
-                                    }
-
-
-                            if (spi != null && spi.Refs != null && spi.Refs.ContainsKey(revision.Guid))
-                                        {
-                                foreach (var gitRef in spi.Refs[revision.Guid].Where(ShowRemoteRef))
                                 {
-                                    Color headColor = GetHeadColor(gitRef);
-
-                                    ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
-                                                          gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
-
-                                    offset = DrawRef(e, isRowSelected, offset, gitRef.Name, refsFont, headColor, arrowType, false);
+                                    continue;
                                 }
-                                        }
+                            }
 
 
-                            if (IsCardLayout())
-                                offset = baseOffset;
+                            Color headColor = GetHeadColor(gitRef);
 
-                            var text = (string)e.FormattedValue;
-                            var bounds = AdjustCellBounds(e.CellBounds, offset);
-                            DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
+                            ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
+                                                  gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
 
-                            if (IsCardLayout())
-                            {
-                                int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
-                                int gravatarSize = _rowHeigth - textHeight - 12;
-                                int gravatarTop = e.CellBounds.Top + textHeight + 6;
-                                int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
+                            offset = DrawRef(e, isRowSelected, offset, gitRef.Name, refsFont, headColor, arrowType, true);
+                        }
+                    }
+
+
+                    if (spi != null && spi.Refs != null && spi.Refs.ContainsKey(revision.Guid))
+                    {
+                        foreach (var gitRef in spi.Refs[revision.Guid].Where(ShowRemoteRef))
+                        {
+                            Color headColor = GetHeadColor(gitRef);
+
+                            ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
+                                                  gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
+
+                            offset = DrawRef(e, isRowSelected, offset, gitRef.Name, refsFont, headColor, arrowType, false);
+                        }
+                    }
+
+
+                    if (IsCardLayout())
+                        offset = baseOffset;
+
+                    var text = (string)e.FormattedValue;
+                    var bounds = AdjustCellBounds(e.CellBounds, offset);
+                    DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
+
+                    if (IsCardLayout())
+                    {
+                        int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
+                        int gravatarSize = _rowHeigth - textHeight - 12;
+                        int gravatarTop = e.CellBounds.Top + textHeight + 6;
+                        int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
 
 
                         Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, FallBackService.MonsterId);
 
-                                if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
-                                {
-                                    ThreadPool.QueueUserWorkItem(o =>
-                                    Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
-                                }
+                        if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
+                        {
+                            ThreadPool.QueueUserWorkItem(o =>
+                            Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
+                        }
 
-                                if (gravatar != null)
-                                    e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
+                        if (gravatar != null)
+                            e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
 
-                                e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
+                        e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
 
-                                string authorText;
-                                string timeText;
+                        string authorText;
+                        string timeText;
 
-                                if (_rowHeigth >= 60)
-                                {
-                                    authorText = revision.Author;
+                        if (_rowHeigth >= 60)
+                        {
+                            authorText = revision.Author;
                             timeText = TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
-                                }
-                                else
-                                {
+                        }
+                        else
+                        {
                             timeText = string.Concat(revision.Author, " (", TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate), ")");
-                                    authorText = string.Empty;
-                                }
-
-
-
-                                e.Graphics.DrawString(authorText, rowFont, foreBrush,
-                                                      new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
-                                e.Graphics.DrawString(timeText, rowFont, foreBrush,
-                                                      new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
-                            }
+                            authorText = string.Empty;
                         }
+
+
+
+                        e.Graphics.DrawString(authorText, rowFont, foreBrush,
+                                              new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
+                        e.Graphics.DrawString(timeText, rowFont, foreBrush,
+                                              new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
+                    }
+                }
                 else if (columnIndex == authorColIndex)
-                        {
-                            var text = (string)e.FormattedValue;
-                            e.Graphics.DrawString(text, rowFont, foreBrush,
-                                                  new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                        }
+                {
+                    var text = (string)e.FormattedValue;
+                    e.Graphics.DrawString(text, rowFont, foreBrush,
+                                          new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                }
                 else if (columnIndex == dateColIndex)
-                        {
+                {
                     var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
-                            var text = TimeToString(time);
-                            e.Graphics.DrawString(text, rowFont, foreBrush,
-                                                  new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                        }
+                    var text = TimeToString(time);
+                    e.Graphics.DrawString(text, rowFont, foreBrush,
+                                          new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                }
                 else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
                 {
                     BuildInfoDrawingLogic.BuildStatusImageColumnCellPainting(e, revision, foreBrush, rowFont);
@@ -1412,22 +1413,22 @@ namespace GitUI
 
             if (IsCardLayout())
             {
-                using(Brush textBrush = new SolidBrush(textColor))
-				{
+                using (Brush textBrush = new SolidBrush(textColor))
+                {
 
-                	string headName = name;
-                	offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
-                	PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
-                	var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
+                    string headName = name;
+                    offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
+                    PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
+                    var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
                                      e.Graphics.MeasureString(headName, RefsFont).Height);
-                	if (fill)
-						e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
+                    if (fill)
+                        e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
                                              location.Y - 1, size.Width + 3, size.Height + 2);
 
-                	e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
+                    e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
                                          location.Y - 1, size.Width + 3, size.Height + 2);
-                	e.Graphics.DrawString(headName, refsFont, textBrush, location);
-				}
+                    e.Graphics.DrawString(headName, refsFont, textBrush, location);
+                }
             }
             else
             {
@@ -1486,24 +1487,24 @@ namespace GitUI
 
             if (columnIndex == graphColIndex)
             {
-                    e.Value = revision.Guid;
+                e.Value = revision.Guid;
             }
             else if (columnIndex == messageColIndex)
             {
-                    e.Value = revision.Message;
+                e.Value = revision.Message;
             }
             else if (columnIndex == authorColIndex)
             {
-                    e.Value = revision.Author ?? "";
+                e.Value = revision.Author ?? "";
             }
             else if (columnIndex == dateColIndex)
-                    {
+            {
                 var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
-                        if (time == DateTime.MinValue || time == DateTime.MaxValue)
-                            e.Value = "";
-                        else
-                            e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
-                    }
+                if (time == DateTime.MinValue || time == DateTime.MaxValue)
+                    e.Value = "";
+                else
+                    e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
+            }
             else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
             {
                 BuildInfoDrawingLogic.BuildStatusImageColumnCellFormatting(e, Revisions, revision);
@@ -1530,7 +1531,7 @@ namespace GitUI
             }
             else
             {
-                    e.FormattingApplied = false;
+                e.FormattingApplied = false;
             }
         }
 
@@ -1558,7 +1559,7 @@ namespace GitUI
                 if (Revisions == null || Revisions.RowCount == 0 || Revisions.RowCount <= rowIndex || Revisions.RowCount != totalRowCount)
                 {
                     return;
-            }
+                }
                 Revisions.InvalidateCell(colIndex, rowIndex);
             });
         }
@@ -1593,7 +1594,7 @@ namespace GitUI
 
         enum ArrowType
         {
-            None, 
+            None,
             Filled,
             NotFilled
         }
@@ -1611,34 +1612,34 @@ namespace GitUI
             try
             {
                 // shade
-                if(fill)
-                using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
-                {
-                    var shadeBrush = isSelected ? Brushes.Black : Brushes.Gray;
-                    graphics.FillPath(shadeBrush, shadePath);
-                }
+                if (fill)
+                    using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
+                    {
+                        var shadeBrush = isSelected ? Brushes.Black : Brushes.Gray;
+                        graphics.FillPath(shadeBrush, shadePath);
+                    }
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
                 {
                     Color fillColor = Lerp(color, Color.White, 0.92F);
 
                     if (fill)
-                    using (var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor, Lerp(fillColor, Color.White, 0.9F), 90))
-                        graphics.FillPath(fillBrush, forePath);
-                    else if(isSelected)
+                        using (var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor, Lerp(fillColor, Color.White, 0.9F), 90))
+                            graphics.FillPath(fillBrush, forePath);
+                    else if (isSelected)
                         graphics.FillPath(Brushes.White, forePath);
-                        
 
-                        // frame
-                        using (var pen = new Pen(Lerp(color, Color.White, 0.83F)))
+
+                    // frame
+                    using (var pen = new Pen(Lerp(color, Color.White, 0.83F)))
                     {
                         if (!fill)
                             pen.DashPattern = dashPattern;
 
-                            graphics.DrawPath(pen, forePath);
+                        graphics.DrawPath(pen, forePath);
                     }
 
-                        // arrow if the head is the current branch 
+                    // arrow if the head is the current branch 
                     if (arrowType != ArrowType.None)
                         DrawArrow(graphics, x, y, height, color, arrowType == ArrowType.Filled);
                 }
@@ -2395,7 +2396,7 @@ namespace GitUI
                 _settingsLoaded = true;
             }
             if (ScriptRunner.RunScript(this, Module, sender.ToString(), this))
-            RefreshRevisions();
+                RefreshRevisions();
         }
 
         #region Drag/drop patch files on revision grid
@@ -2503,27 +2504,27 @@ namespace GitUI
                 ForceRefreshRevisions();
             }
             else
-            Refresh();
+                Refresh();
         }
 
         private void ToggleRevisionGraph()
         {
-            if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.Small)
-                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.SmallWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.Card)
-                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.CardWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.LargeCard)
-                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.LargeCardWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.SmallWithGraph)
-                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.Small;
-            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.CardWithGraph)
-                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.Card;
-            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.LargeCardWithGraph)
-                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.LargeCard;
-            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.FilledBranchesSmall)
-                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.FilledBranchesSmallWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.FilledBranchesSmallWithGraph)
-                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.FilledBranchesSmall;
+            if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Small)
+                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card)
+                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.CardWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCard)
+                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCardWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph)
+                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.Small;
+            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph)
+                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.Card;
+            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph)
+                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCard;
+            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmall)
+                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmallWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmallWithGraph)
+                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmall;
         }
 
         internal void ShowTagsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2532,7 +2533,7 @@ namespace GitUI
             _revisionGridMenuCommands.TriggerPropertyChanged();
             Refresh();
         }
-        
+
         public void ToggleRevisionCardLayout()
         {
             var layouts = new List<RevisionGridLayout>((RevisionGridLayout[])Enum.GetValues(typeof(RevisionGridLayout)));
@@ -2697,11 +2698,11 @@ namespace GitUI
                 case Commands.NextQuickSearch: NextQuickSearch(true); break;
                 case Commands.PrevQuickSearch: NextQuickSearch(false); break;
                 default:
-                {
-                    bool result = base.ExecuteCommand(cmd);
-                    RefreshRevisions();
-                    return result;
-                }
+                    {
+                        bool result = base.ExecuteCommand(cmd);
+                        RefreshRevisions();
+                        return result;
+                    }
             }
 
             return true;
@@ -2793,10 +2794,10 @@ namespace GitUI
             {
                 SetSelectedRevision(new GitRevision(Module, revisionGuid));
             }
-            else if(showNoRevisionMsg)
-        {
+            else if (showNoRevisionMsg)
+            {
                 MessageBox.Show((ParentForm as IWin32Window) ?? this, _noRevisionFoundError.Text);
-        }
+            }
         }
 
         /// <summary>
