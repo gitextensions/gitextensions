@@ -39,7 +39,7 @@ namespace FindLargeFiles
                     DateTime date;
                     if (!revData.ContainsKey(commit))
                     {
-                        string revDate = gitCommands.RunGit(string.Format("show -s {0} --format=\"%ci\"", commit));
+                        string revDate = gitCommands.RunGitCmd(string.Format("show -s {0} --format=\"%ci\"", commit));
                         DateTime.TryParse(revDate, out date);
                         revData.Add(commit, date);
                     }
@@ -66,7 +66,7 @@ namespace FindLargeFiles
                     var packFiles = Directory.GetFiles(objectsPackDirectory, "pack-*.idx");
                     foreach (var pack in packFiles)
                     {
-                        string[] objects = gitCommands.RunGit(string.Concat("verify-pack -v ", pack)).Split('\n');
+                        string[] objects = gitCommands.RunGitCmd(string.Concat("verify-pack -v ", pack)).Split('\n');
                         pbRevisions.Invoke((Action)(() => pbRevisions.Value = pbRevisions.Value + (int)((revList.Length * 0.1f) / packFiles.Length)));
                         foreach (var gitobj in objects.Where(x => x.Contains(" blob ")))
                         {
@@ -95,7 +95,7 @@ namespace FindLargeFiles
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            revList = gitCommands.RunGit("rev-list HEAD").Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            revList = gitCommands.RunGitCmd("rev-list HEAD").Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             pbRevisions.Maximum = (int)(revList.Length * 1.1f);
             BranchesGrid.DataSource = gitObjects;
             Thread MyThread = new Thread(findLargeFilesFunction);
@@ -109,7 +109,7 @@ namespace FindLargeFiles
             {
                 pbRevisions.Invoke((Action)(() => pbRevisions.Value = i));
                 string rev = revList[i];
-                string[] objects = gitCommands.RunGit(string.Concat("ls-tree -zrl ", rev)).Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] objects = gitCommands.RunGitCmd(string.Concat("ls-tree -zrl ", rev)).Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string objData in objects)
                 {
                     // "100644 blob b17a497cdc6140aa3b9a681344522f44768165ac 2120195\tBin/Dictionaries/de-DE.dic"

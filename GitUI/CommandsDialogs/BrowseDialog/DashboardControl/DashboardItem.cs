@@ -3,12 +3,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Repository;
 using GitUI.Properties;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
     public sealed partial class DashboardItem : GitExtensionsControl
     {
         private ToolTip toolTip;
+        private readonly AsyncLoader _branchNameLoader;
 
         private DashboardItem()
         {
@@ -25,21 +27,27 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Bitmap icon = GetRepositoryIcon(repository);
 
 
-            string branchName = string.Empty;
-
-            if (GitCommands.Settings.DashboardShowCurrentBranch)
+            if (GitCommands.AppSettings.DashboardShowCurrentBranch)
             {
-                if (!GitCommands.GitModule.IsBareRepository(repository.Path))
-                    branchName = GitCommands.GitModule.GetSelectedBranchFast(repository.Path);
+                _branchNameLoader = new AsyncLoader();
+                _branchNameLoader.Load(() =>
+                {
+                    if (!GitCommands.GitModule.IsBareRepository(repository.Path))
+                    {
+                        return GitCommands.GitModule.GetSelectedBranchFast(repository.Path);
+                    }
+                    return string.Empty;
+                },
+                UpdateBranchName);
             }
 
-            Initialize(icon, repository.Path, repository.Title, repository.Description, branchName);
+            Initialize(icon, repository.Path, repository.Title, repository.Description);
         }
 
         public DashboardItem(Bitmap icon, string title)
             : this()
         {
-            Initialize(icon, title, title, null, null);
+            Initialize(icon, title, title, null);
         }
 
         public void Close()
@@ -48,7 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 toolTip.RemoveAll();
         }
 
-        private void Initialize(Bitmap icon, string path, string title, string text, string branchName)
+        private void Initialize(Bitmap icon, string path, string title, string text)
         {
             _NO_TRANSLATE_Title.Text = title;
             _NO_TRANSLATE_Title.AutoEllipsis = true;
@@ -61,9 +69,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             bool hasDescription = !string.IsNullOrEmpty(text);
             _NO_TRANSLATE_Description.Visible = hasDescription;
             _NO_TRANSLATE_Description.Text = text;
-
-            _NO_TRANSLATE_BranchName.Visible = !string.IsNullOrEmpty(branchName);
-            _NO_TRANSLATE_BranchName.Text = branchName;
 
             if (icon != null)
                 Icon.Image = icon;
@@ -83,6 +88,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             _NO_TRANSLATE_Title.Click += Title_Click;
             _NO_TRANSLATE_Description.Click += Title_Click;
             Icon.Click += Title_Click;
+        }
+
+        private void UpdateBranchName(string branchName)
+        {
+            _NO_TRANSLATE_BranchName.Visible = !string.IsNullOrEmpty(branchName);
+            _NO_TRANSLATE_BranchName.Text = branchName;
+        }
+
+        private void CancelBranchNameLoad()
+        {
+            if (_branchNameLoader != null)
+            {
+                _branchNameLoader.Cancel();
+            }
         }
 
         void Title_Click(object sender, EventArgs e)
@@ -115,6 +134,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void DashboardItem_MouseLeave(object sender, EventArgs e)
         {
             BackColor = SystemColors.Control;
+        }
+
+        void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
+        {
+            if (!Visible)
+            {
+                CancelBranchNameLoad();
+            }
         }
 
         private static Bitmap GetRepositoryIcon(Repository repository)

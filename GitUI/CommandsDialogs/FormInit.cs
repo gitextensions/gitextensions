@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
 
             if (string.IsNullOrEmpty(dir))
             {
-                Directory.Text = Settings.DefaultCloneDestinationPath;
+                Directory.Text = AppSettings.DefaultCloneDestinationPath;
             }
             else
             {

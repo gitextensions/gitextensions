@@ -27,11 +27,11 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
         private void LoadSettings()
         {
-            _NO_TRANSLATE_numericMaxFirstLineLength.Value = Settings.CommitValidationMaxCntCharsFirstLine;
-            _NO_TRANSLATE_numericMaxLineLength.Value = Settings.CommitValidationMaxCntCharsPerLine;
-            checkBoxSecondLineEmpty.Checked = Settings.CommitValidationSecondLineMustBeEmpty;
-            checkBoxUseIndent.Checked = Settings.CommitValidationIndentAfterFirstLine;
-            _NO_TRANSLATE_textBoxCommitValidationRegex.Text = Settings.CommitValidationRegEx;
+            _NO_TRANSLATE_numericMaxFirstLineLength.Value = AppSettings.CommitValidationMaxCntCharsFirstLine;
+            _NO_TRANSLATE_numericMaxLineLength.Value = AppSettings.CommitValidationMaxCntCharsPerLine;
+            checkBoxSecondLineEmpty.Checked = AppSettings.CommitValidationSecondLineMustBeEmpty;
+            checkBoxUseIndent.Checked = AppSettings.CommitValidationIndentAfterFirstLine;
+            _NO_TRANSLATE_textBoxCommitValidationRegex.Text = AppSettings.CommitValidationRegEx;
 
             _commitTemplates = CommitTemplateItem.LoadFromSettings();
 
@@ -51,20 +51,20 @@ namespace GitUI.CommandsDialogs.CommitDialog
             }
 
             _NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex = 0;
-            checkBoxAutoWrap.Checked = Settings.CommitValidationAutoWrap;
+            checkBoxAutoWrap.Checked = AppSettings.CommitValidationAutoWrap;
 
         }
 
         private void SaveSettings()
         {
-            Settings.CommitValidationMaxCntCharsFirstLine = Convert.ToInt32(_NO_TRANSLATE_numericMaxFirstLineLength.Value);
-            Settings.CommitValidationMaxCntCharsPerLine = Convert.ToInt32(_NO_TRANSLATE_numericMaxLineLength.Value);
-            Settings.CommitValidationSecondLineMustBeEmpty = checkBoxSecondLineEmpty.Checked;
-            Settings.CommitValidationIndentAfterFirstLine = checkBoxUseIndent.Checked;
-            Settings.CommitValidationRegEx = _NO_TRANSLATE_textBoxCommitValidationRegex.Text;
+            AppSettings.CommitValidationMaxCntCharsFirstLine = Convert.ToInt32(_NO_TRANSLATE_numericMaxFirstLineLength.Value);
+            AppSettings.CommitValidationMaxCntCharsPerLine = Convert.ToInt32(_NO_TRANSLATE_numericMaxLineLength.Value);
+            AppSettings.CommitValidationSecondLineMustBeEmpty = checkBoxSecondLineEmpty.Checked;
+            AppSettings.CommitValidationIndentAfterFirstLine = checkBoxUseIndent.Checked;
+            AppSettings.CommitValidationRegEx = _NO_TRANSLATE_textBoxCommitValidationRegex.Text;
 
             CommitTemplateItem.SaveToSettings(_commitTemplates);
-            Settings.CommitValidationAutoWrap = checkBoxAutoWrap.Checked;
+            AppSettings.CommitValidationAutoWrap = checkBoxAutoWrap.Checked;
         }
 
 

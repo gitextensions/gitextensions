@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -166,7 +167,7 @@ namespace GitUI.Editor
         protected override void OnRuntimeLoad(EventArgs e)
         {
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            Font = Settings.DiffFont;
+            Font = AppSettings.DiffFont;
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -859,8 +860,9 @@ namespace GitUI.Editor
             IncreaseNumberOfVisibleLines,
             DecreaseNumberOfVisibleLines,
             ShowEntireFile,
-            TreatFileAsText
-
+            TreatFileAsText,
+            NextChange,
+            PreviousChange
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -875,6 +877,8 @@ namespace GitUI.Editor
                 case Commands.DecreaseNumberOfVisibleLines: this.DescreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowEntireFile: this.ShowEntireFileToolStripMenuItemClick(null, null); break;
                 case Commands.TreatFileAsText: this.TreatAllFilesAsTextToolStripMenuItemClick(null, null); break;
+                case Commands.NextChange: this.NextChangeButtonClick(null, null); break;
+                case Commands.PreviousChange: this.PreviousChangeButtonClick(null, null); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -938,5 +942,47 @@ namespace GitUI.Editor
                     GoToLine(formGoToLine.GetLineNumber() - 1);
             }
         }
+
+        private void CopyNotStartingWith(char startChar)
+        {
+            string code = _internalFileViewer.GetSelectedText();
+            if (string.IsNullOrEmpty(code))
+                return;
+
+            if (_currentViewIsPatch)
+            {
+                //add artificail space if selected text is not starting from line begining, it will be removed later
+                int pos = _internalFileViewer.GetSelectionPosition();
+                string fileText = _internalFileViewer.GetText();
+                if (pos > 0)
+                    if (fileText[pos - 1] != '\n')
+                        code = " " + code;
+                IEnumerable<string> lines = code.Split('\n');
+                lines = lines.Where(s => s.Length == 0 || s[0] != startChar);
+                int hpos = fileText.IndexOf("\n@@");
+                //if header is selected then don't remove diff extra chars
+                if (hpos <= pos)
+                {
+                    char[] specials = new char[] { ' ', '-', '+' };
+                    lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s.Substring(1) : s);                    
+                }
+
+                code = string.Join("\n", lines);
+            }
+
+            Clipboard.SetText(code);
+        }
+
+
+        private void copyNewVersionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyNotStartingWith('-');
+        }
+
+        private void copyOldVersionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyNotStartingWith('+');
+        }
+
     }
 }

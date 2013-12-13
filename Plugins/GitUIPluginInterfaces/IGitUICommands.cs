@@ -101,6 +101,7 @@ namespace GitUIPluginInterfaces
         IGitRemoteCommand CreateRemoteCommand();
         void CacheAvatar(string email);
         Icon FormIcon { get; }
+        IBrowseRepo BrowseRepo { get; }
         /// <summary>
         /// RepoChangedNotifier.Notify() should be called after each action that changess repo state
         /// </summary>

@@ -2,7 +2,7 @@
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class AdvancedSettingsPage : SettingsPageBase
+    public partial class AdvancedSettingsPage : SettingsPageWithHeader
     {
         public AdvancedSettingsPage()
         {
@@ -11,18 +11,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
-            chkAlwaysShowCheckoutDlg.Checked = Settings.AlwaysShowCheckoutBranchDlg;
-            chkUseLocalChangesAction.Checked = Settings.UseDefaultCheckoutBranchAction;
-            chkDontSHowHelpImages.Checked = Settings.DontShowHelpImages;
+            chkAlwaysShowCheckoutDlg.Checked = AppSettings.AlwaysShowCheckoutBranchDlg;
+            chkUseLocalChangesAction.Checked = AppSettings.UseDefaultCheckoutBranchAction;
+            chkDontSHowHelpImages.Checked = AppSettings.DontShowHelpImages;
+            chkAlwaysShowAdvOpt.Checked = AppSettings.AlwaysShowAdvOpt;
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
-            Settings.AlwaysShowCheckoutBranchDlg = chkAlwaysShowCheckoutDlg.Checked;
-            Settings.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;
-            Settings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
+            AppSettings.AlwaysShowCheckoutBranchDlg = chkAlwaysShowCheckoutDlg.Checked;
+            AppSettings.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;
+            AppSettings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
+            AppSettings.AlwaysShowAdvOpt = chkAlwaysShowAdvOpt.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

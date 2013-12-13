@@ -4,10 +4,11 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using ResourceManager.Translation;
+using Settings = GitCommands.AppSettings;
 
 namespace ProxySwitcher
 {
-    public partial class ProxySwitcherForm : Form
+    public partial class ProxySwitcherForm : Form, ITranslate
     {
         private readonly IGitPluginSettingsContainer settings;
         private readonly IGitModule gitCommands;
@@ -17,9 +18,20 @@ namespace ProxySwitcher
         private readonly TranslationString _pleaseSetProxy = new TranslationString("There is no proxy configured. Please set the proxy host in the plugin settings.");
         #endregion
 
+        /// <summary>
+        /// Default constructor added to register all strings to be translated
+        /// Use the other constructor:
+        /// ProxySwitcherForm(IGitPluginSettingsContainer settings, GitUIBaseEventArgs gitUiCommands)
+        /// </summary>
+        public ProxySwitcherForm()
+        {
+            InitializeComponent();
+        }
+
         public ProxySwitcherForm(IGitPluginSettingsContainer settings, GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
+            Translate();
 
             this.Text = _pluginDescription.Text;
             this.settings = settings;
@@ -41,8 +53,8 @@ namespace ProxySwitcher
 
         private void RefreshProxy()
         {
-            LocalHttpProxy_TextBox.Text = HidePassword(gitCommands.RunGit("config --get http.proxy"));
-            GlobalHttpProxy_TextBox.Text = HidePassword(gitCommands.RunGit("config --global --get http.proxy"));
+            LocalHttpProxy_TextBox.Text = HidePassword(gitCommands.RunGitCmd("config --get http.proxy"));
+            GlobalHttpProxy_TextBox.Text = HidePassword(gitCommands.RunGitCmd("config --global --get http.proxy"));
             ApplyGlobally_CheckBox.Checked = string.Equals(LocalHttpProxy_TextBox.Text, GlobalHttpProxy_TextBox.Text);
         }
 
@@ -83,11 +95,11 @@ namespace ProxySwitcher
             var httpproxy = BuildHttpProxy();
             if (ApplyGlobally_CheckBox.Checked)
             {
-                gitCommands.RunGit("config --global http.proxy " + httpproxy);
+                gitCommands.RunGitCmd("config --global http.proxy " + httpproxy);
             }
             else
             {
-                gitCommands.RunGit("config http.proxy " + httpproxy);
+                gitCommands.RunGitCmd("config http.proxy " + httpproxy);
             }
             RefreshProxy();
         }
@@ -96,13 +108,30 @@ namespace ProxySwitcher
         {
             if (ApplyGlobally_CheckBox.Checked)
             {
-                gitCommands.RunGit("config --global --unset http.proxy");
+                gitCommands.RunGitCmd("config --global --unset http.proxy");
             }
             else
             {
-                gitCommands.RunGit("config --unset http.proxy");
+                gitCommands.RunGitCmd("config --unset http.proxy");
             }
             RefreshProxy();
+        }
+
+        protected void Translate()
+        {
+            Translator.Translate(this, Settings.CurrentTranslation);
+        }
+
+        private const string ProxySwitcherFormName = "ProxySwitcherForm";
+
+        public virtual void AddTranslationItems(Translation translation)
+        {
+            TranslationUtl.AddTranslationItemsFromFields(ProxySwitcherFormName, this, translation);
+        }
+
+        public virtual void TranslateItems(Translation translation)
+        {
+            TranslationUtl.TranslateItemsFromFields(ProxySwitcherFormName, this, translation);
         }
     }
 }

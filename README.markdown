@@ -25,7 +25,7 @@ The installer is build using WiX. You need to install WiX when you want to build
 
 * Login in github (you need an account)
 * Fork the main repository from [github](http://github.com/gitextensions/gitextensions)
-* Read [Coding guide](https://github.com/gitextensions/gitextensions/wiki#coding-guide)
+* Read [Project workflow](https://github.com/gitextensions/gitextensions/wiki/Project-Workflow) and [Coding guide](https://github.com/gitextensions/gitextensions/wiki#coding-guide)
 * Push your changes to your fork
 * Send me a pull request
 

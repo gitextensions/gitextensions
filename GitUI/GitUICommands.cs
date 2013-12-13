@@ -12,10 +12,11 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
-using Settings = GitCommands.Settings;
+using Settings = GitCommands.AppSettings;
 
 namespace GitUI
 {
+    /// <summary>Contains methods to invoke GitEx forms, dialogs, etc.</summary>
     public sealed class GitUICommands : IGitUICommands
     {
         public GitUICommands(GitModule module)
@@ -160,6 +161,7 @@ namespace GitUI
         public event GitUIEventHandler PostRegisterPlugin;
 
         public ILockableNotifier RepoChangedNotifier { get; private set; }
+        public IBrowseRepo BrowseRepo { get; set; }
 
         #endregion
 
@@ -316,10 +318,65 @@ namespace GitUI
             return StartCheckoutRevisionDialog(null);
         }
 
-        public void Stash(IWin32Window owner)
+        public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "")
         {
-            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
-            FormProcess.ShowDialog(owner, Module, arguments);
+            Func<bool> action = () =>
+            {
+                var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message);
+                FormProcess.ShowDialog(owner, Module, arguments);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        public bool StashPop(IWin32Window owner)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash pop");
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        /// <summary>Creates and checks out a new branch starting from the commit at which the stash was originally created.
+        /// Applies the changes recorded in the stash to the new working tree and index.</summary>
+        public bool StashBranch(IWin32Window owner, string branchName, string stash = null)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash branch " + branchName.Quote().Combine(" ", stash.QuoteNE()));
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+
+        public bool StashDrop(IWin32Window owner, string stashName)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash drop " + stashName.Quote());
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        public bool StashApply(IWin32Window owner, string stashName)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash apply " + stashName.Quote());
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
         }
 
         public void InvokeEventOnClose(Form form, GitUIEventHandler ev)
@@ -413,6 +470,8 @@ namespace GitUI
             return DoActionOnRepo(null, false, true, null, null, action);
         }
 
+        #region Checkout
+
         public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string containRevison)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
@@ -438,6 +497,11 @@ namespace GitUI
             return StartCheckoutBranch(owner, "", false, null);
         }
 
+        public bool StartCheckoutBranch(string branch, bool remote)
+        {
+            return StartCheckoutBranch(null, branch, remote, null);
+        }
+
         public bool StartCheckoutBranch()
         {
             return StartCheckoutBranch(null, "", false, null);
@@ -447,6 +511,8 @@ namespace GitUI
         {
             return StartCheckoutBranch(owner, branch, true);
         }
+
+        #endregion Checkout
 
         public bool StartCompareRevisionsDialog(IWin32Window owner)
         {
@@ -565,15 +631,13 @@ namespace GitUI
             return StartSvnCloneDialog(null, null);
         }
 
-        public void StartCleanupRepositoryDialog(IWin32Window owner)
+        public void StartCleanupRepositoryDialog(IWin32Window owner = null, string path = null)
         {
-            using (var frm = new FormCleanupRepository(this))
-                frm.ShowDialog(owner);
-        }
-
-        public void StartCleanupRepositoryDialog()
-        {
-            StartCleanupRepositoryDialog(null);
+            using (var form = new FormCleanupRepository(this))
+            {
+                form.SetPathArgument(path);
+                form.ShowDialog(owner);
+            }
         }
 
         public bool StartSquashCommitDialog(IWin32Window owner, GitRevision revision)
@@ -708,11 +772,6 @@ namespace GitUI
         public bool StartInitializeDialog(string dir)
         {
             return StartInitializeDialog(null, dir, null);
-        }
-
-        public bool StartPushDialog()
-        {
-            return StartPushDialog(false);
         }
 
         /// <summary>
@@ -873,6 +932,11 @@ namespace GitUI
         public bool StartResetChangesDialog(IWin32Window owner)
         {
             var unstagedFiles = Module.GetUnstagedFiles();
+            return StartResetChangesDialog(owner, unstagedFiles, false);
+        }
+
+        public bool StartResetChangesDialog(IWin32Window owner, IEnumerable<GitItemStatus> unstagedFiles, bool onlyUnstaged)
+        {
             // Show a form asking the user if they want to reset the changes.
             FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(owner, unstagedFiles.Any(item => !item.IsNew), unstagedFiles.Any(item => item.IsNew));
 
@@ -881,32 +945,21 @@ namespace GitUI
                 return false;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-
-            // Reset all changes.
-            Module.ResetHard("");
-
-            // Also delete new files, if requested.
-            if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+            Func<bool> action = () =>
             {
-                foreach (var item in unstagedFiles.Where(item => item.IsNew))
-                {
-                    try
-                    {
-                        string path = Path.Combine(Module.WorkingDir, item.Name);
-                        if (File.Exists(path))
-                            File.Delete(path);
-                        else
-                            Directory.Delete(path, true);
-                    }
-                    catch (System.IO.IOException) { }
-                    catch (System.UnauthorizedAccessException) { }
-                }
-            }
+                if (onlyUnstaged)
+                    Module.RunGitCmd("checkout -- .");
+                else
+                    // Reset all changes.
+                    Module.ResetHard("");
 
-            Cursor.Current = Cursors.Default;
+                if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+                    Module.RunGitCmd("clean -df");
 
-            return true;
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
         }
 
         public bool StartResetChangesDialog(IWin32Window owner, string fileName)
@@ -917,7 +970,7 @@ namespace GitUI
             if (resetAction == FormResetChanges.ActionEnum.Cancel)
             {
                 return false;
-            }
+        }
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -1059,6 +1112,9 @@ namespace GitUI
             return StartCherryPickDialog(null);
         }
 
+        /// <summary>Start Merge dialog, using the specified branch.</summary>
+        /// <param name="owner">Owner of the dialog.</param>
+        /// <param name="branch">Branch to merge into the current branch.</param>
         public bool StartMergeBranchDialog(IWin32Window owner, string branch)
         {
 
@@ -1073,6 +1129,8 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreMergeBranch, PostMergeBranch, action);
         }
 
+        /// <summary>Start Merge dialog, using the specified branch.</summary>
+        /// <param name="branch">Branch to merge into the current branch.</param>
         public bool StartMergeBranchDialog(string branch)
         {
             return StartMergeBranchDialog(null, branch);
@@ -1152,14 +1210,11 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreEditGitIgnore, PostEditGitIgnore, action);
         }
 
-        public bool StartSettingsDialog(IWin32Window owner, SettingsPageReference initalPage = null)
+        public bool StartSettingsDialog(IWin32Window owner, SettingsPageReference initialPage = null)
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormSettings(this, initalPage))
-                {
-                    form.ShowDialog(owner);
-                }
+                FormSettings.ShowSettingsDialog(this, owner, initialPage);
 
                 return true;
             };
@@ -1381,7 +1436,7 @@ namespace GitUI
 
         public bool StartRepoSettingsDialog(IWin32Window owner)
         {
-            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
+            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
         public bool StartBrowseDialog(IWin32Window owner, string filter)
@@ -1440,6 +1495,11 @@ namespace GitUI
         public void StartFileHistoryDialog(string fileName)
         {
             StartFileHistoryDialog(fileName, null);
+        }
+
+        public bool StartPushDialog()
+        {
+            return StartPushDialog(false);
         }
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted)
@@ -1935,9 +1995,9 @@ namespace GitUI
             StartRebaseDialog(branch);
         }
 
-        public bool StartFileEditorDialog(string filename)
+        public bool StartFileEditorDialog(string filename, bool showWarning = false)
         {
-            using (var formEditor = new FormEditor(this, filename))
+            using (var formEditor = new FormEditor(this, filename, showWarning))
                 return formEditor.ShowDialog() != DialogResult.Cancel;
         }
 
@@ -2052,6 +2112,12 @@ namespace GitUI
             InvokeEvent(owner, PostRegisterPlugin);
         }
 
+        public void BrowseGoToRef(string refName, bool showNoRevisionMsg)
+        {
+            if (BrowseRepo != null)
+                BrowseRepo.GoToRef(refName, showNoRevisionMsg);
+        }
+
         public IGitRemoteCommand CreateRemoteCommand()
         {
             return new GitRemoteCommand(Module);
@@ -2114,6 +2180,22 @@ namespace GitUI
 
                 return e.Handled;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            GitUICommands other = obj as GitUICommands;
+            return (other != null) && Equals(other);
+        }
+
+        bool Equals(GitUICommands other)
+        {
+            return Equals(Module, other.Module);
+        }
+
+        public override int GetHashCode()
+        {
+            return Module.GetHashCode();
         }
     }
 }

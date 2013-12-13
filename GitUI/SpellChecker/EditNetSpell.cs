@@ -226,7 +226,7 @@ namespace GitUI.SpellChecker
 
         private void LoadDictionary()
         {
-            string dictionaryFile = string.Concat(Path.Combine(Settings.GetDictionaryDir(), Settings.Dictionary), ".dic");
+            string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), AppSettings.Dictionary), ".dic");
 
             if (_wordDictionary == null || _wordDictionary.DictionaryFile != dictionaryFile)
             {
@@ -276,7 +276,7 @@ namespace GitUI.SpellChecker
 
         private void MarkLines()
         {
-            if (!Settings.MarkIllFormedLinesInCommitMsg)
+            if (!AppSettings.MarkIllFormedLinesInCommitMsg)
                 return;
             var numLines = TextBox.Lines.Length;
             var chars = 0;
@@ -423,7 +423,7 @@ namespace GitUI.SpellChecker
 
                 var noDicToolStripMenuItem = new ToolStripMenuItem("None");
                 noDicToolStripMenuItem.Click += DicToolStripMenuItemClick;
-                if (Settings.Dictionary == "None")
+                if (AppSettings.Dictionary == "None")
                     noDicToolStripMenuItem.Checked = true;
 
 
@@ -431,7 +431,7 @@ namespace GitUI.SpellChecker
 
                 foreach (
                     var fileName in
-                        Directory.GetFiles(Settings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
+                        Directory.GetFiles(AppSettings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
                 {
                     var file = new FileInfo(fileName);
 
@@ -440,7 +440,7 @@ namespace GitUI.SpellChecker
                     var dicToolStripMenuItem = new ToolStripMenuItem(dic);
                     dicToolStripMenuItem.Click += DicToolStripMenuItemClick;
 
-                    if (Settings.Dictionary == dic)
+                    if (AppSettings.Dictionary == dic)
                         dicToolStripMenuItem.Checked = true;
 
                     toolStripDropDown.Items.Add(dicToolStripMenuItem);
@@ -458,7 +458,7 @@ namespace GitUI.SpellChecker
             var mi =
                 new ToolStripMenuItem(markIllFormedLinesText.Text)
                     {
-                        Checked = Settings.MarkIllFormedLinesInCommitMsg
+                        Checked = AppSettings.MarkIllFormedLinesInCommitMsg
                     };
             mi.Click += MarkIllFormedLinesInCommitMsgClick;
             SpellCheckContextMenu.Items.Add(mi);
@@ -480,7 +480,7 @@ namespace GitUI.SpellChecker
         {
             try
             {
-                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(Settings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName);
+                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(AppSettings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName);
             }
             catch (Exception ex)
             {
@@ -492,7 +492,7 @@ namespace GitUI.SpellChecker
         {
             try
             {
-                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(Settings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName));
+                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(AppSettings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName));
             }
             catch (Exception ex)
             {
@@ -520,7 +520,7 @@ namespace GitUI.SpellChecker
 
         private void MarkIllFormedLinesInCommitMsgClick(object sender, EventArgs e)
         {
-            Settings.MarkIllFormedLinesInCommitMsg = !Settings.MarkIllFormedLinesInCommitMsg;
+            AppSettings.MarkIllFormedLinesInCommitMsg = !AppSettings.MarkIllFormedLinesInCommitMsg;
             CheckSpelling();
         }
 
@@ -532,7 +532,7 @@ namespace GitUI.SpellChecker
 
         private void DicToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Settings.Dictionary = ((ToolStripItem)sender).Text;
+            AppSettings.Dictionary = ((ToolStripItem)sender).Text;
             LoadDictionary();
             CheckSpelling();
         }
@@ -558,7 +558,7 @@ namespace GitUI.SpellChecker
                 OnTextChanged(e);
             }
 
-            if (Settings.Dictionary == "None" || TextBox.Text.Length < 4)
+            if (AppSettings.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
             SpellCheckTimer.Enabled = false;
