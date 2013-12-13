@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
 
         private void ConfigureRemotes()
         {
-            ConfigFile localConfig = Module.GetLocalConfig();
+            var localConfig = Module.LocalConfigFile;
 
             foreach (var remoteHead in Module.GetRefs(true, true))
             {
@@ -272,9 +272,9 @@ namespace GitUI.CommandsDialogs
             }
             else
                 sshURL = Url.Text;
-            Module.RunRealCmdDetached(
+            Module.RunExternalCmdDetachedShowConsole(
                 "cmd.exe",
-                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, sshURL));
+                string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, sshURL));
         }
 
         private void PruneClick(object sender, EventArgs e)

@@ -89,13 +89,13 @@ namespace GitUI.CommandsDialogs
 
                 //The dirty check is very expensive on large repositories. Without this setting
                 //the checkout branch dialog is too slow.
-                if (Settings.CheckForUncommittedChangesInCheckoutBranch)
+                if (AppSettings.CheckForUncommittedChangesInCheckoutBranch)
                     _isDirtyDir = Module.IsDirtyDir();
                 else
                     _isDirtyDir = null;
 
                 localChangesGB.Visible = IsThereUncommittedChanges();
-                ChangesMode = Settings.CheckoutBranchAction;
+                ChangesMode = AppSettings.CheckoutBranchAction;
             }
             finally
             {
@@ -111,8 +111,8 @@ namespace GitUI.CommandsDialogs
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
         {
             bool localBranchSelected = !Branches.Text.IsNullOrWhiteSpace() && !Remotebranch.Checked;
-            if (!Settings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
-                (!IsThereUncommittedChanges() || Settings.UseDefaultCheckoutBranchAction))
+            if (!AppSettings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
+                (!IsThereUncommittedChanges() || AppSettings.UseDefaultCheckoutBranchAction))
                 return OkClick();
             else
                 return ShowDialog(owner);
@@ -144,7 +144,7 @@ namespace GitUI.CommandsDialogs
             else
                 Branches.Text = null;
             remoteOptionsPanel.Visible = Remotebranch.Checked;
-            rbCreateBranchWithCustomName.Checked = Settings.CreateLocalBranchForRemote;
+            rbCreateBranchWithCustomName.Checked = AppSettings.CreateLocalBranchForRemote;
         }
 
         private LocalChangesAction ChangesMode
@@ -212,9 +212,9 @@ namespace GitUI.CommandsDialogs
             }
 
             LocalChangesAction changes = ChangesMode;
-            Settings.CheckoutBranchAction = changes;
+            AppSettings.CheckoutBranchAction = changes;
 
-            if ((Visible || Settings.UseDefaultCheckoutBranchAction) && IsThereUncommittedChanges())
+            if ((Visible || AppSettings.UseDefaultCheckoutBranchAction) && IsThereUncommittedChanges())
                 cmd.LocalChanges = changes;
             else
                 cmd.LocalChanges = LocalChangesAction.DontChange;
@@ -228,14 +228,14 @@ namespace GitUI.CommandsDialogs
                     _isDirtyDir = Module.IsDirtyDir();
                 stash = _isDirtyDir == true;
                 if (stash)
-                    UICommands.Stash(owner);
+                    UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
             }
 
             if (UICommands.StartCommandLineProcessDialog(cmd, owner))
             {
                 if (stash)
                 {
-                    bool? messageBoxResult = Settings.AutoPopStashAfterCheckoutBranch;
+                    bool? messageBoxResult = AppSettings.AutoPopStashAfterCheckoutBranch;
                     if (messageBoxResult == null)
                     {
                         DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
@@ -251,12 +251,11 @@ namespace GitUI.CommandsDialogs
                             PSTaskDialog.eSysIcons.Question);
                         messageBoxResult = (res == DialogResult.Yes);
                         if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                            Settings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
+                            AppSettings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
                     }
                     if (messageBoxResult ?? false)
                     {
-                        FormProcess.ShowDialog(this, Module, "stash pop");
-                        MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
+                        UICommands.StashPop(this);
                     }
                 }
                 return DialogResult.OK;
@@ -352,7 +351,7 @@ namespace GitUI.CommandsDialogs
         private IList<string> GetContainsRevisionBranches()
         {
             return Module.GetAllBranchesWhichContainGivenCommit(_containRevison, LocalBranch.Checked, !LocalBranch.Checked)
-                        .Where(a => !Module.IsDetachedHead(a) && 
+                        .Where(a => !GitModule.IsDetachedHead(a) && 
                             !a.EndsWith("/HEAD")).ToList();
         }
 

@@ -3738,8 +3738,9 @@ Git Extensionsによって、正しいフォルダに配置しますか？</Valu
           <Value>環境</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
           <Value>グローバルな設定ファイルは、環境変数%HOME%の場所に配置されます。%HOME%が空の場合、
 %HOMEDRIVE%%HOMEPATH%に設定されます。問題があった時のみこの振る舞いを変更してください。</Value>
         </TranslationItem>
@@ -3935,9 +3936,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Submit review as draft</Source>
           <Value>ドラフトとしてレビューを提出</Value>
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text">
-          <Source>Download Gerrit Change</Source>
-          <Value>Gerrit Changeをダウンロード</Value>
+        <TranslationItem Name="_publishGerritChangeCaption" Property="Text" type="unfinished">
+          <Source>Publish Gerrit Change</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_publishCaption" Property="Text">
           <Source>Publish change</Source>
@@ -6183,14 +6184,6 @@ GitとGitExtensionsから切り離されてコネクションが開いている�
           <Source>Host Fingerprint not registered</Source>
           <Value>ホストのフィンガープリントが登録されていません</Value>
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value>サーバのホストキーがレジストリにキャッシュされていません。
-
-このホストキーを信頼し、再実行しますか？</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -6863,8 +6856,9 @@ Context menu for additional operations</Source>
           <Value>Git ExtensionsはGitのリポジトリへのアクセスにmsysgitかcygwinが使用可能です。正しいパスを設定してください。</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
           <Value>グローバルな設定ファイルは、環境変数%HOME%の場所に配置されます。%HOME%が空の場合、
 %HOMEDRIVE%%HOMEPATH%に設定されます。問題があった時のみこの振る舞いを変更してください。</Value>
         </TranslationItem>
@@ -7168,7 +7162,13 @@ Git の 正しいパスを入力してください。</Value>
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>SSH鍵が読み込めません。PuTTYが正しく設定されていません。</Value>
         </TranslationItem>
-        <TranslationItem Name="_unableGetSVNInformation" Property="Text">
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text" type="unfinished">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
           <Value>UpstreamのSVN情報を決定できません。</Value>
         </TranslationItem>
@@ -7739,40 +7739,24 @@ When OpenSSH is used, command line dialogs are shown!
           <Source>Date</Source>
           <Value>日付</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>{0}日前</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
+          <Source>{0} {1:day|days} ago</Source>
           <Value>{0}日前</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>{0}時間前</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
+          <Source>{0} {1:hour|hours} ago</Source>
           <Value>{0}時間前</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>メッセージ</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>{0}分前</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
+          <Source>{0} {1:minute|minutes} ago</Source>
           <Value>{0}分前</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>{0}か月前</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
+          <Source>{0} {1:month|months} ago</Source>
           <Value>{0}か月前</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">

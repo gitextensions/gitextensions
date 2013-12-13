@@ -17,7 +17,7 @@ namespace GitUI.Script
         {
             if (Scripts == null)
             {
-                DeserializeFromXml(Settings.ownScripts);
+                DeserializeFromXml(AppSettings.ownScripts);
             }
 
             return Scripts;
@@ -137,6 +137,18 @@ namespace GitUI.Script
             openHashOnGitHub.AddToRevisionGridContextMenu = true;
             openHashOnGitHub.Enabled = false;
             Scripts.Add(openHashOnGitHub);
+
+            ScriptInfo FetchAll = new ScriptInfo();
+            FetchAll.HotkeyCommandIdentifier = 9004;
+            FetchAll.Name = "Fetch All Submodules";
+            FetchAll.Command = "git";
+            FetchAll.Arguments = "submodule foreach --recursive git fetch --all";
+            FetchAll.RunInBackground = false;
+            FetchAll.AskConfirmation = false;
+            FetchAll.OnEvent = 0;
+            FetchAll.AddToRevisionGridContextMenu = true;
+            FetchAll.Enabled = false;
+            Scripts.Add(FetchAll);
 
         }
 

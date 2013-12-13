@@ -3736,11 +3736,12 @@ Do you want Git Extensions to help locate the correct folder?</Source>
           <Value>Ambiente</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>File di configurazione globale situato nella posizione memorizzata nella variabile d'ambiente %HOME%. Di default
-%HOME% sarà impostata a %HOMEDRIVE%%HOMEPATH%, se vuota. Cambia il comportamento default solo in
-caso di problemi.</Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>File di configurazione globale situato nella posizione memorizzata nella variabile d'ambiente %HOME%. 
+Di default %HOME% sarà impostata a %HOMEDRIVE%%HOMEPATH%, se vuota. 
+Cambia il comportamento default solo in caso di problemi.</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Source>OK</Source>
@@ -3934,8 +3935,8 @@ caso di problemi.</Value>
           <Source>Submit review as draft</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
-          <Source>Download Gerrit Change</Source>
+        <TranslationItem Name="_publishGerritChangeCaption" Property="Text" type="unfinished">
+          <Source>Publish Gerrit Change</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_publishCaption" Property="Text" type="unfinished">
@@ -6140,12 +6141,6 @@ Do you want to register the host's fingerprint and restart the process?</Source>
           <Source>Host Fingerprint not registered</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value />
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -6782,17 +6777,20 @@ quando si esegue "Cancella tutti gli oggetti vaganti".</Value>
         </TranslationItem>
         <TranslationItem Name="label14" Property="Text">
           <Source>Path to linux tools (sh). Leave empty when it is in the path.</Source>
-          <Value>Percorso per gli strumenti Linux (sh). Lasciare vuoto se è nel PATH</Value>
+          <Value>Percorso per gli strumenti Linux (sh). 
+Lasciare vuoto se è nel PATH</Value>
         </TranslationItem>
         <TranslationItem Name="label50" Property="Text">
           <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
           <Value>GitExtensions può utilizzare mSysGit o cygwin per accedere ai repository Git. Imposta i percorsi corretti qui sotto.</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Il file di configurazione globale situato nella posizione memorizzata nella variable ambiente %HOME%. Di default %HOME%
-sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento default solo se si hanno problemi. </Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>Il file di configurazione globale situato nella posizione memorizzata nella variable ambiente %HOME%. 
+Di default %HOME% sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. 
+Cambiare il comportamento default solo se si hanno problemi.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7094,6 +7092,12 @@ locali.</Value>
         <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>Impossibile caricare la chiave SSH. PuTTY non è configurato correttamente.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text" type="unfinished">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7653,68 +7657,40 @@ Quando si usa OpenSSH, vengono visualizzate finestre della linea di comando!</Va
           <Source>Date</Source>
           <Value>Data</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>{0} giorni fa</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
+          <Source>{0} {1:day|days} ago</Source>
           <Value>{0} giorni fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>{0} ora fa</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
-          <Value>{0} ore fa</Value>
+          <Source>{0} {1:hour|hours} ago</Source>
+          <Value>{0} {1:ora|ore} fa</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>Messaggio</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>{0} minuti fa</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
+          <Source>{0} {1:minute|minutes} ago</Source>
           <Value>{0} minuti fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>{0} mese fa</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
-          <Value>{0} mesi fa</Value>
+          <Source>{0} {1:month|months} ago</Source>
+          <Value>{0} {1:mese|mesi} fa</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text" type="unfinished">
           <Source>Parent(s)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_secondAgo" Property="Text">
-          <Source>{0} second ago</Source>
-          <Value>{0} secondi fa</Value>
-        </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Source>{0} seconds ago</Source>
+          <Source>{0} {1:second|seconds} ago</Source>
           <Value>{0} secondi fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_weekAgo" Property="Text" type="unfinished">
-          <Source>{0} week ago</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="_weeksAgo" Property="Text" type="unfinished">
-          <Source>{0} weeks ago</Source>
+          <Source>{0} {1:week|weeks} ago</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_yearAgo" Property="Text">
-          <Source>{0} year ago</Source>
-          <Value>{0} anni fa</Value>
-        </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Source>{0} years ago</Source>
+          <Source>{0} {1:year|years} ago</Source>
           <Value>{0} anni fa</Value>
         </TranslationItem>
         <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">

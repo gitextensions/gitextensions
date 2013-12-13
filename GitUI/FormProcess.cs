@@ -36,7 +36,7 @@ namespace GitUI
         {
             ProcessCallback = processStart;
             AbortCallback = processAbort;
-            ProcessString = process ?? Settings.GitCommand;
+            ProcessString = process ?? AppSettings.GitCommand;
             ProcessArguments = arguments;
             Remote = "";
             ProcessInput = input;
@@ -125,7 +125,7 @@ namespace GitUI
             if (QuotedProcessString.IndexOf(' ') != -1)
                 QuotedProcessString = QuotedProcessString.Quote();
             AddMessageLine(QuotedProcessString + " " + ProcessArguments);
-            gitCommand = new GitCommandsInstance(WorkingDirectory) { CollectOutput = false };
+            gitCommand = new GitCommandsInstance(WorkingDirectory);
 
             try
             {

@@ -52,9 +52,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void Init()
         {
-            if (!string.IsNullOrEmpty(Settings.DefaultCloneDestinationPath))
+            if (!string.IsNullOrEmpty(AppSettings.DefaultCloneDestinationPath))
             {
-                _destinationTB.Text = Settings.DefaultCloneDestinationPath;
+                _destinationTB.Text = AppSettings.DefaultCloneDestinationPath;
             }
             else
             {
@@ -287,7 +287,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
 
-            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), Settings.GitCommand, cmd);
+            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), AppSettings.GitCommand, cmd);
             formRemoteProcess.Remote = repoSrc;
             formRemoteProcess.ShowDialog();
 
@@ -370,8 +370,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return null;
             }
 
-            if (!targetDir.EndsWith(Settings.PathSeparator.ToString()) && !targetDir.EndsWith(Settings.PathSeparatorWrong.ToString()))
-                targetDir += Settings.PathSeparator.ToString();
+            if (!targetDir.EndsWith(AppSettings.PathSeparator.ToString()) && !targetDir.EndsWith(AppSettings.PathSeparatorWrong.ToString()))
+                targetDir += AppSettings.PathSeparator.ToString();
             targetDir = targetDir + _createDirTB.Text;
             return targetDir;
         }

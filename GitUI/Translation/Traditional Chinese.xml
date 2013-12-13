@@ -3744,10 +3744,11 @@ Do you want Git Extensions to help locate the correct folder?</Source>
           <Value>環境</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
           <Value>全體設定檔案位於%HOME%的位置。預設情形下，如果%HOME%為空，%HOME%將被設置為%HOMEDRIVE%%HOMEPATH%。 
-你應該只在遇到問題的時候才考慮改變預設設置。 </Value>
+你應該只在遇到問題的時候才考慮改變預設設置。</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Source>OK</Source>
@@ -3941,8 +3942,8 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Submit review as draft</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
-          <Source>Download Gerrit Change</Source>
+        <TranslationItem Name="_publishGerritChangeCaption" Property="Text" type="unfinished">
+          <Source>Publish Gerrit Change</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_publishCaption" Property="Text" type="unfinished">
@@ -6132,12 +6133,6 @@ Do you want to register the host's fingerprint and restart the process?</Source>
           <Source>Host Fingerprint not registered</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value />
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -6779,10 +6774,11 @@ Context menu for additional operations</Source>
           <Value>Git Extensions可以使用msysgit或cygwin訪問git版本庫庫。在下面的設定它們正確的路徑。 </Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems. </Source>
           <Value>整體設定檔案位於%HOME%的位置。預設情形下，如果%HOME%為空，%HOME%將被設定為%HOMEDRIVE%%HOMEPATH%。 
-你應該只在遇到問題的時候才考慮改變預設設置。 </Value>
+你應該只在遇到問題的時候才考慮改變預設設置。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7080,6 +7076,12 @@ local settings.
         <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>無法載入SSH密鑰。 PuTTY設定的不正確。 </Value>
+        </TranslationItem>
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text" type="unfinished">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7642,68 +7644,40 @@ When OpenSSH is used, command line dialogs are shown!
           <Source>Date</Source>
           <Value>日期</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>{0}天前</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
+          <Source>{0} {1:day|days} ago</Source>
           <Value>{0}天前</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>{0}小時前</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
+          <Source>{0} {1:hour|hours} ago</Source>
           <Value>{0}小時前</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>訊息</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>{0}分鐘前</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
+          <Source>{0} {1:minute|minutes} ago</Source>
           <Value>{0}分鐘前</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>{0}月前</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
+          <Source>{0} {1:month|months} ago</Source>
           <Value>{0}月前</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text" type="unfinished">
           <Source>Parent(s)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_secondAgo" Property="Text">
-          <Source>{0} second ago</Source>
-          <Value>{0}秒前</Value>
-        </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Source>{0} seconds ago</Source>
+          <Source>{0} {1:second|seconds} ago</Source>
           <Value>{0}秒前</Value>
-        </TranslationItem>
-        <TranslationItem Name="_weekAgo" Property="Text" type="unfinished">
-          <Source>{0} week ago</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="_weeksAgo" Property="Text" type="unfinished">
-          <Source>{0} weeks ago</Source>
+          <Source>{0} {1:week|weeks} ago</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_yearAgo" Property="Text">
-          <Source>{0} year ago</Source>
-          <Value>{0}年前</Value>
-        </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Source>{0} years ago</Source>
+          <Source>{0} {1:year|years} ago</Source>
           <Value>{0}年前</Value>
         </TranslationItem>
         <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">

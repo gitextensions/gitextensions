@@ -46,7 +46,7 @@ namespace TranslationApp
             FillNeutralTranslation();
             allCategories.Name = allText.Text;
             UpdateCategoriesList();
-            translations.SelectedItem = GitCommands.Settings.Translation; // should be called after FillNeutralTranslation()
+            translations.SelectedItem = GitCommands.AppSettings.Translation; // should be called after FillNeutralTranslation()
             if (translation == null)
                 LoadTranslation();
             translateCategories.SelectedItem = allCategories;
@@ -156,7 +156,7 @@ namespace TranslationApp
             try
             {
                 //Set language to neutral to get neutral translations
-                GitCommands.Settings.CurrentTranslation = "";
+                GitCommands.AppSettings.CurrentTranslation = "";
 
                 List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
                 progressBar.Maximum = translatableTypes.Count;
@@ -179,7 +179,7 @@ namespace TranslationApp
                 neutralTranslation.Sort();
                 
                 //Restore translation
-                GitCommands.Settings.CurrentTranslation = null;
+                GitCommands.AppSettings.CurrentTranslation = null;
                 progressBar.Visible = false;
             }
         }

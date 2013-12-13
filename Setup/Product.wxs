@@ -8,7 +8,7 @@
         <PropertyRef Id="NETFRAMEWORK40CLIENT" />
         <Condition Message=".NET Framework 4.0 must be installed prior to installation of Git Extensions.">
       Installed OR NETFRAMEWORK40CLIENT
-    </Condition>
+        </Condition>
         <Icon Id="gitextensions.ico" SourceFile="../bin/logo/git-extensions-logo-final-256.ico" />
         <?include AddRemove.wxi?>
         <?include EnableUpgrades.wxi?>
@@ -43,12 +43,15 @@
                 <Directory Id="StartMenuDir" Name="$(var.ProductName)" />
             </Directory>
             <Directory Id="DesktopFolder" />
+            <Component Id="Path" Guid="{DAC97FD8-A869-4458-AABD-C27D2C892643}">
+                <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
+            </Component>
         </Directory>
         <?define VsVersions = 2005;2008;2010;2012;2013?>
         <?foreach VsVersion in $(var.VsVersions)?>
-            <Property Id="VS$(var.VsVersion)">
-                <DirectorySearch Id="VS$(var.VsVersion)" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
-            </Property>
+        <Property Id="VS$(var.VsVersion)">
+            <DirectorySearch Id="VS$(var.VsVersion)" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
+        </Property>
         <?endforeach ?>
         <DirectoryRef Id="INSTALLDIR">
             <Component Id="gitextensions.ico" Guid="*">
@@ -121,17 +124,20 @@
             <Component Id="NBug.dll" Guid="*">
                 <File Source="..\Externals\NBug\NBug\bin\Release\NBug.dll" />
             </Component>
+            <Component Id="SmartFormat.dll" Guid="*">
+                <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
+            </Component>
             <Component Id="System.Reactive.Core.dll" Guid="*">
-                <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Core.dll" />
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll" />
             </Component>
             <Component Id="System.Reactive.Interfaces.dll" Guid="*">
-                <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Interfaces.dll" />
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Interfaces.dll" />
             </Component>
             <Component Id="System.Reactive.Linq.dll" Guid="*">
-                <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Linq.dll" />
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Linq.dll" />
             </Component>
             <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
-                <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.PlatformServices.dll" />
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.PlatformServices.dll" />
             </Component>
             <!--Remove unused dll, installed in versions <= 2.31-->
             <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
@@ -141,15 +147,18 @@
             <Component Id="GitExtensionsShellEx32.dll" Guid="*">
                 <File Name="GitExtensionsShellEx32.dll" Source="..\GitExtensionsShellEx\Release\GitExtensionsShellEx32.dll" KeyPath="yes" />
                 <?foreach ShellExFileName in GitExtensionsShellEx32.dll?>
-                    <?include RegisterShellExtension.wxi?>
+                <?include RegisterShellExtension.wxi?>
                 <?endforeach ?>
             </Component>
             <Component Id="GitExtensionsShellEx64.dll" Guid="*" Win64="yes">
                 <Condition>VersionNT64</Condition>
                 <File Name="GitExtensionsShellEx64.dll" Source="..\GitExtensionsShellEx\Release-x64\GitExtensionsShellEx64.dll" KeyPath="yes" />
                 <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
-                    <?include RegisterShellExtension.wxi?>
+                <?include RegisterShellExtension.wxi?>
                 <?endforeach ?>
+            </Component>
+            <Component Id="GitExtSshAskPass.exe" Guid="*">
+                <File Source="..\GitExtSshAskPass\Release\GitExtSshAskPass.exe" />
             </Component>
             <Component Id="checksettings.reg" Guid="*">
                 <RegistryValue Name="CheckSettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
@@ -233,6 +242,27 @@
             </Component>
             <Component Id="ProxySwitcher.dll" Guid="*">
                 <File Source="..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll" />
+            </Component>
+            <Component Id="Stash.dll" Guid="*">
+                <File Source="..\Plugins\Stash\bin\Release\Stash.dll" />
+            </Component>
+            <Component Id="System.Net.Http.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll" />
+            </Component>
+            <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.WebRequest.dll" />
+            </Component>
+            <Component Id="System.Net.Http.Primitives.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll" />
+            </Component>
+            <Component Id="System.Runtime.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll" />
+            </Component>
+            <Component Id="System.Threading.Tasks.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll" />
+            </Component>
+            <Component Id="TeamCityIntegration.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
@@ -397,26 +427,26 @@
             </Component>
         </DirectoryRef>
         <?foreach VsVersion in $(var.VsVersions)?>
-            <DirectoryRef Id="VS$(var.VsVersion)">
-                <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
-                    <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
-                        <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugIn\GitPlugin.AddIn" />
-                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall" />
-                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
+        <DirectoryRef Id="VS$(var.VsVersion)">
+            <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
+                <Component Id="VS$(var.VsVersion)_GitPlugin.AddIn" Guid="*">
+                    <File Id="VS$(var.VsVersion)_GitPlugin.AddIn" Source="..\GitPlugIn\GitPlugin.AddIn" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn" On="uninstall" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.AddIn_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
+                </Component>
+                <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
+                    <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugIn\obj\Release\GitPlugin.dll" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
+                </Component>
+                <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
+                    <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
+                        <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugIn\bin\en-US\GitPlugin.resources.dll" />
+                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall" />
                     </Component>
-                    <Component Id="VS$(var.VsVersion)_GitPlugin.dll" Guid="*">
-                        <File Id="VS$(var.VsVersion)_GitPlugin.dll" Source="..\GitPlugIn\obj\Release\GitPlugin.dll" />
-                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall" />
-                        <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
-                    </Component>
-                    <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
-                        <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
-                            <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugIn\bin\en-US\GitPlugin.resources.dll" />
-                            <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.resources.dll" On="uninstall" />
-                        </Component>
-                    </Directory>
                 </Directory>
-            </DirectoryRef>
+            </Directory>
+        </DirectoryRef>
         <?endforeach ?>
         <DirectoryRef Id="ProgramMenuFolder">
             <Component Id="GitExtensions.newstartmenu" Guid="*">
@@ -453,6 +483,7 @@
             <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
             <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
             <ComponentRef Id="NBug.dll" />
+            <ComponentRef Id="SmartFormat.dll" />
             <ComponentRef Id="NetSpell.SpellChecker.dll" />
             <ComponentRef Id="ResourceManager.dll" />
             <ComponentRef Id="GitUIPluginInterfaces.dll" />
@@ -467,26 +498,26 @@
             <ComponentRef Id="puttygen.exe" />
             <ComponentRef Id="puttygen.reg" />
             <ComponentRef Id="gitcredentialwinstore.exe" />
+            <ComponentRef Id="GitExtSshAskPass.exe" />
             <ComponentRef Id="GitExtensions.newstartmenu" />
             <ComponentRef Id="GitExtensions.startmenu" />
-            <ComponentRef Id="GitExtensions.desktop" />
             <ComponentRef Id="English.gif" />
-            <ComponentRef Id="System.Reactive.Core.dll" />
-            <ComponentRef Id="System.Reactive.Interfaces.dll" />
-            <ComponentRef Id="System.Reactive.Linq.dll" />
-            <ComponentRef Id="System.Reactive.PlatformServices.dll" />
             <ComponentRef Id="Git.hub.dll" />
-            <ComponentRef Id="RestSharp.dll" />            
-            <!--Remove unused dll, installed in versions <= 2.31-->
-            <ComponentRef Id="Github.dll" />
+            <ComponentRef Id="RestSharp.dll" />
             <!--Remove unused dll, installed in versions <= 2.31-->
             <ComponentRef Id="GithubSharp.Core.dll" />
+            <!--Remove unused dll, installed in versions <= 2.31-->
+            <ComponentRef Id="Github.dll" />
             <Feature Id="Plugins" Title="Plugins" Level="1">
                 <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
                     <ComponentRef Id="AutoCompileSubmodules.dll" />
                 </Feature>
                 <Feature Id="BackgroundFetch" Title="Periodic background fetch" Level="1">
                     <ComponentRef Id="BackgroundFetch.dll" />
+                    <ComponentRef Id="System.Reactive.Core.dll" />
+                    <ComponentRef Id="System.Reactive.Interfaces.dll" />
+                    <ComponentRef Id="System.Reactive.Linq.dll" />
+                    <ComponentRef Id="System.Reactive.PlatformServices.dll" />
                 </Feature>
                 <Feature Id="CreateLocalBranches" Title="Create local branches" Level="1">
                     <ComponentRef Id="CreateLocalBranches.dll" />
@@ -514,12 +545,26 @@
                 <Feature Id="Statistics" Title="Statistics" Level="1">
                     <ComponentRef Id="GitStatistics.dll" />
                 </Feature>
-                <Feature Id="ProxySwitcher" Title="ProxySwitcher" Level="1">
+                <Feature Id="ProxySwitcher" Title="Proxy switcher" Level="1">
                     <ComponentRef Id="ProxySwitcher.dll" />
                 </Feature>
-                <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
+                <Feature Id="ReleaseNotesGenerator" Title="Release notes generator" Level="1">
                     <ComponentRef Id="ReleaseNotesGenerator.dll" />
                 </Feature>
+                <Feature Id="Stash" Title="Atlassian Stash integration" Level="1">
+                    <ComponentRef Id="Stash.dll" />
+                </Feature>
+                <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
+                    <ComponentRef Id="System.Net.Http.dll" />
+                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
+                    <ComponentRef Id="System.Net.Http.Primitives.dll" />
+                    <ComponentRef Id="System.Runtime.dll" />
+                    <ComponentRef Id="System.Threading.Tasks.dll" />
+                    <ComponentRef Id="TeamCityIntegration.dll" />
+                </Feature>
+            </Feature>
+            <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
+                <ComponentRef Id="GitExtensions.desktop" />
             </Feature>
             <Feature Id="Icons" Title="Extra application icons" Level="2">
                 <ComponentRef Id="Blue.ico" />
@@ -614,14 +659,19 @@
                 <ComponentRef Id="GitExtensionsShellEx32.dll" />
                 <ComponentRef Id="GitExtensionsShellEx64.dll" />
             </Feature>
-            <?foreach VsVersion in $(var.VsVersions)?>
+            <Feature Id="AddToPath" Title="Add installation directory to PATH" Level="1">
+                <ComponentRef Id="Path" />
+            </Feature>
+            <Feature Id="VSExtension" Title="Visual Studio extension" Level="1">
+                <?foreach VsVersion in $(var.VsVersions)?>
                 <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
                     <Condition Level="2">NOT VS$(var.VsVersion)</Condition>
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
                 </Feature>
-            <?endforeach ?>
+                <?endforeach ?>
+            </Feature>
             <Feature Id="Protocol.git" Title="Assign with git://-links" Level="1">
                 <ComponentRef Id="Protocol.git" />
             </Feature>

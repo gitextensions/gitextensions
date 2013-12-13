@@ -3773,10 +3773,12 @@ Wilt u dat Git Extensions helpt met het vinden van de juiste directorie?</Value>
           <Value>Omgeving</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH%
-wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen optreden. </Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. 
+Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH% wanneer deze leeg is. 
+Verander het standaard gedrag alleen wanneer problemen optreden.</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Source>OK</Source>
@@ -6196,12 +6198,6 @@ Do you want to register the host's fingerprint and restart the process?</Source>
           <Source>Host Fingerprint not registered</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value />
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -6888,9 +6884,10 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH%
-wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen optreden. </Value>
+to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</Source>
+          <Value>Het globale configuratie bestand is opgeslagen in de directory %HOME%. 
+Standaard is %HOME% gezet naar %HOMEDRIVE%%HOMEPATH% wanneer deze leeg is. 
+Verander het standaard gedrag alleen wanneer problemen optreden.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7193,6 +7190,12 @@ kunnen wijzigen.</Value>
         <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>De SSH sleutel kan niet worden geladen. PuTTY is niet juist geconfigureerd.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text" type="unfinished">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7767,68 +7770,40 @@ voor windows gebruikers.</Value>
           <Source>Date</Source>
           <Value>Datum</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>{0} dag geleden</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
-          <Value>{0} dagen geleden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>{0} uur geleden</Value>
+          <Source>{0} {1:day|days} ago</Source>
+          <Value>{0} {1:dag|dagen} geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
-          <Value>{0} uren geleden</Value>
+          <Source>{0} {1:hour|hours} ago</Source>
+          <Value>{0} {1:uur|uren} geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>Bericht</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>{0} minuten geleden</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
+          <Source>{0} {1:minute|minutes} ago</Source>
           <Value>{0} minuten geleden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>{0} maand geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
-          <Value>{0} maanden geleden</Value>
+          <Source>{0} {1:month|months} ago</Source>
+          <Value>{0} {1:maand|maanden} geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">
           <Source>Parent(s)</Source>
           <Value>Ouder{s}</Value>
         </TranslationItem>
-        <TranslationItem Name="_secondAgo" Property="Text">
-          <Source>{0} second ago</Source>
-          <Value>{0} seconden geleden</Value>
-        </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Source>{0} seconds ago</Source>
+          <Source>{0} {1:second|seconds} ago</Source>
           <Value>{0} seconden geleden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_weekAgo" Property="Text">
-          <Source>{0} week ago</Source>
-          <Value>{0} week geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_weeksAgo" Property="Text">
-          <Source>{0} weeks ago</Source>
-          <Value>{0} weken geleden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_yearAgo" Property="Text">
-          <Source>{0} year ago</Source>
-          <Value>{0} jaar geleden</Value>
+          <Source>{0} {1:week|weeks} ago</Source>
+          <Value>{0} {1:week|weken} geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Source>{0} years ago</Source>
+          <Source>{0} {1:year|years} ago</Source>
           <Value>{0} jaar geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
