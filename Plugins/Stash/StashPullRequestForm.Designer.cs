@@ -516,7 +516,7 @@
             this.txtPRDescription.Location = new System.Drawing.Point(131, 224);
             this.txtPRDescription.Multiline = true;
             this.txtPRDescription.Name = "txtPRDescription";
-            this.txtPRReviewers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtPRDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtPRDescription.Size = new System.Drawing.Size(594, 138);
             this.txtPRDescription.TabIndex = 14;
             this.txtPRDescription.ReadOnly = true;
@@ -550,7 +550,7 @@
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(63, 13);
             this.label10.TabIndex = 4;
-            this.label10.Text = "Reviewer(s)";
+            this.label10.Text = "Reviewer (approved)";
             // 
             // label13
             // 
