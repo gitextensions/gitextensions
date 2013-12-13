@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GitCommands.Config;
+using GitCommands.Settings;
 
 namespace GitCommands
 {
@@ -9,6 +10,16 @@ namespace GitCommands
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
         private IList<IGitItem> _subItems;
+       
+        /// <summary>"refs/tags/"</summary>
+        public static readonly string RefsTagsPrefix = "refs/tags/";
+        /// <summary>"refs/heads/"</summary>
+        public static readonly string RefsHeadsPrefix = "refs/heads/";
+        /// <summary>"refs/remotes/"</summary>
+        public static readonly string RefsRemotesPrefix = "refs/remotes/";
+        /// <summary>"refs/bisect/"</summary>
+        public static readonly string RefsBisectPrefix = "refs/bisect/";
+       
         public GitModule Module { get; private set; }
 
         public GitRef(GitModule module, string guid, string completeName)
@@ -21,27 +32,20 @@ namespace GitCommands
             Selected = false;
             CompleteName = completeName;
             Remote = remote;
-            if (CompleteName.StartsWith("refs/heads/"))
-            {
-                IsHead = true;
-            }
-            else if (CompleteName.StartsWith("refs/tags/"))
-            {
-                IsTag = true;
-            }
-            else if (CompleteName.StartsWith("refs/remotes/"))
-            {
-                IsRemote = true;
-            }
-            else if (CompleteName.StartsWith("refs/bisect/"))
-            {
-                IsBisect = true;
-            }
+            IsTag = CompleteName.StartsWith(RefsTagsPrefix);
+            IsHead = CompleteName.StartsWith(RefsHeadsPrefix);
+            IsRemote = CompleteName.StartsWith(RefsRemotesPrefix);
+            IsBisect = CompleteName.StartsWith(RefsBisectPrefix);
 
             ParseName();
 
-            _remoteSettingName = String.Format("branch.{0}.remote", Name);
+            _remoteSettingName = RemoteSettingName(Name);
             _mergeSettingName = String.Format("branch.{0}.merge", Name);
+        }
+
+        public static GitRef CreateBranchRef(GitModule module, string guid, string name)
+        {
+            return new GitRef(module, guid, RefsHeadsPrefix + name);
         }
 
         public string CompleteName { get; private set; }
@@ -68,7 +72,7 @@ namespace GitCommands
         {
             get
             {
-                return GetTrackingRemote(Module.GetLocalConfig());
+                return GetTrackingRemote(Module.LocalConfigFile);
             }
             set
             {
@@ -84,12 +88,18 @@ namespace GitCommands
             }
         }
 
+        /// <summary>Gets the setting name for a branch's remote.</summary>
+        public static string RemoteSettingName(string branch)
+        {
+            return String.Format("branch.{0}.remote", branch);
+        }
+
         /// <summary>
         /// This method is a faster than the property above. The property reads the config file
         /// every time it is accessed. This method accepts a config file what makes it faster when loading
         /// the revision graph.
         /// </summary>
-        public string GetTrackingRemote(ConfigFile configFile)
+        public string GetTrackingRemote(ConfigFileSettings configFile)
         {
             return configFile.GetValue(_remoteSettingName);
         }
@@ -98,7 +108,7 @@ namespace GitCommands
         {
             get
             {
-                return GetMergeWith(Module.GetLocalConfig());
+                return GetMergeWith(Module.LocalConfigFile);
             }
             set
             {
@@ -114,10 +124,10 @@ namespace GitCommands
         /// every time it is accessed. This method accepts a configfile what makes it faster when loading
         /// the revisiongraph.
         /// </summary>
-        public string GetMergeWith(ConfigFile configFile)
+        public string GetMergeWith(ConfigFileSettings configFile)
         {
             string merge = configFile.GetValue(_mergeSettingName);
-            return merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge;
+            return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;
         }
 
 
@@ -145,17 +155,11 @@ namespace GitCommands
 
         private void ParseName()
         {
-            if (CompleteName.Length == 0 || !CompleteName.Contains("/"))
-            {
-                Name = CompleteName;
-                return;
-            }
             if (IsRemote)
             {
                 Name = CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
-                return;
-            }
-            if (IsTag)
+            } 
+            else if (IsTag)
             {
                 // we need the one containing ^{}, because it contains the reference
                 var temp =
@@ -164,14 +168,14 @@ namespace GitCommands
                         : CompleteName;
 
                 Name = temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
-                return;
             }
-            if (IsHead)
+            else if (IsHead)
             {
                 Name = CompleteName.Substring(CompleteName.LastIndexOf("heads/") + 6);
-                return;
             }
-            Name = CompleteName.Substring(CompleteName.LastIndexOf("/") + 1);
+            else
+                //if we don't know ref type then we don't know if '/' is a valid ref character
+                Name = CompleteName.SkipStr("refs/");
         }
     }
 }

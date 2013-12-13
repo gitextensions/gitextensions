@@ -357,6 +357,7 @@
             this.localBranch.Name = "localBranch";
             this.localBranch.Size = new System.Drawing.Size(293, 26);
             this.localBranch.TabIndex = 9;
+            this.localBranch.Leave += new System.EventHandler(this.localBranch_Leave);
             // 
             // Branches
             // 

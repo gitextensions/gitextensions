@@ -1,46 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 
 namespace GitUIPluginInterfaces
 {
+    /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule
     {
-        IEnumerable<IGitSubmodule> GetSubmodules();
+        /// <summary>
+        /// Run git command, console window is hidden, redirect output
+        /// </summary>
+        Process RunGitCmdDetached(string arguments, Encoding encoding = null);
 
-        string RunGit(string arguments);
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        string RunGitCmd(string arguments, out int exitCode, Encoding encoding = null, byte[] stdInput = null);
 
-        string RunGit(string arguments, out int exitCode);
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null);
+
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        string RunCmd(string cmd, string arguments, out int exitCode, Encoding encoding = null, byte[] stdIn = null);
+
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdIn = null);
 
         string RunBatchFile(string batchFile);
 
+        /// <summary>Gets the directory which contains the git repository.</summary>
         string GitWorkingDir { get; }
 
+        /// <summary>Gets the ".git" directory path.</summary>
         string GetGitDirectory();
 
+        /// <summary>Indicates whether the specified directory contains a git repository.</summary>
         bool IsValidGitWorkingDir();
 
+        /// <summary>Gets the path to the git application executable.</summary>
         string GitCommand { get; }
 
         Version AppVersion { get; }
 
         string GravatarCacheDir { get; }
 
-        IList<string> GetSubmodulesLocalPathes();
+        IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
 
-        IGitModule GetISubmodule(string submoduleName);
+        IList<string> GetSubmodulesLocalPathes(bool recursive = true);
+
+        IGitModule GetSubmodule(string submoduleName);
 
         string[] GetRemotes(bool allowEmpty);
 
-        string GetISetting(string setting);
+        string GetSetting(string setting);
 
         bool StartPageantForRemote(string remote);
 
-        string RunCmd(string cmd, string arguments);
-
-        string RunCmd(string cmd, string arguments, byte[] stdIn);
-
+        /// <summary>Gets the current branch; or "(no branch)" if HEAD is detached.</summary>
         string GetSelectedBranch();
 
+        /// <summary>true if ".git" directory does NOT exist.</summary>
         bool IsBareRepository();
 
         bool IsRunningGitProcess();

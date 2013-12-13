@@ -44,23 +44,46 @@ namespace GitPlugin.Git
             return result;
         }
 
-        public static void RunGitEx(string command, string filename)
+        private static ProcessStartInfo CreateStartInfo(string command, string arguments, string workingDir, Encoding encoding = null)
+        {
+            return new ProcessStartInfo
+            {
+                UseShellExecute = false,
+                ErrorDialog = false,
+                CreateNoWindow = true,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                StandardOutputEncoding = encoding,
+                StandardErrorEncoding = encoding,
+                FileName = command,
+                Arguments = arguments,
+                WorkingDirectory = workingDir
+            };
+        }
+
+        public static Process RunGitEx(string command, string filename)
         {
             if (!string.IsNullOrEmpty(filename))
                 command += " \"" + filename + "\"";
 
             string path = GetGitExRegValue("InstallDir");
-            Run(path + "\\GitExtensions.exe", command);
+
+            ProcessStartInfo startInfo = CreateStartInfo(path + "\\GitExtensions.exe", command, new FileInfo(filename).DirectoryName, Encoding.UTF8);
+
+            try
+            {
+                return Process.Start(startInfo);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static string RunGitExWait(string command, string filename)
         {
-            string path = GetGitExRegValue("InstallDir");
-
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            SetupProcessStartInfo(startInfo, path + "\\GitExtensions.exe", command, new FileInfo(filename).DirectoryName, false, false);
-
-            using (var process = Process.Start(startInfo))
+            using (var process = RunGitEx(command, filename))
             {
                 string output = process.StandardOutput.ReadToEnd();
                 process.WaitForExit();
@@ -72,8 +95,7 @@ namespace GitPlugin.Git
         {
             string gitcommand = GetGitExRegValue("gitcommand");
 
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            SetupProcessStartInfo(startInfo, gitcommand, arguments, filename, false, false);
+            ProcessStartInfo startInfo = CreateStartInfo(gitcommand, arguments, filename);
 
             using (var process = Process.Start(startInfo))
             {
@@ -91,7 +113,7 @@ namespace GitPlugin.Git
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     string head;
-                    string headFileName = GitCommands.FindGitWorkingDir(fileName) + ".git\\HEAD";
+                    string headFileName = FindGitWorkingDir(fileName) + ".git\\HEAD";
                     if (File.Exists(headFileName))
                     {
                         head = File.ReadAllText(headFileName);
@@ -101,7 +123,7 @@ namespace GitPlugin.Git
                     else
                     {
                         int exitCode;
-                        head = GitCommands.RunGit("symbolic-ref HEAD", new FileInfo(fileName).DirectoryName, out exitCode);
+                        head = RunGit("symbolic-ref HEAD", new FileInfo(fileName).DirectoryName, out exitCode);
                         if (exitCode == 1)
                             head = "no branch";
                     }
@@ -153,43 +175,6 @@ namespace GitPlugin.Git
                    Directory.Exists(dir + "\\" + "info") &&
                    Directory.Exists(dir + "\\" + "objects") &&
                    Directory.Exists(dir + "\\" + "refs");
-        }
-
-        private static void SetupProcessStartInfo(ProcessStartInfo startInfo, string command, string arguments, string workingDir, bool useUTF8, bool show)
-        {
-            startInfo.UseShellExecute = false;
-            startInfo.ErrorDialog = false;
-            startInfo.RedirectStandardInput = true;
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-            if (useUTF8)
-            {
-                startInfo.StandardOutputEncoding = Encoding.UTF8;
-                startInfo.StandardErrorEncoding = Encoding.UTF8;
-            }
-            startInfo.CreateNoWindow = true;
-            startInfo.LoadUserProfile = true;
-
-            startInfo.FileName = command;
-            startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = workingDir;
-            if (show)
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-        }
-
-        private static void Run(string cmd, string arguments)
-        {
-            try
-            {
-                //process used to execute external commands
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                SetupProcessStartInfo(process.StartInfo, cmd, arguments, "", true, true);
-
-                process.Start();
-            }
-            catch
-            {
-            }
         }
 
         public static bool GetShowCurrentBranchSetting()

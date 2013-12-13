@@ -1,12 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows.Forms;
 using GitCommands;
 
 namespace GitUI
 {
+    /// <summary>Base class for a <see cref="Form"/> requiring 
+    /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
         private GitUICommands _uiCommands;
+        /// <summary>Gets a <see cref="GitUICommands"/> reference.</summary>
         [Browsable(false)]
         public GitUICommands UICommands
         {
@@ -27,6 +31,7 @@ namespace GitUI
             }
         }
 
+        /// <summary>true if <see cref="UICommands"/> has been initialzed.</summary>
         public bool IsUICommandsInitialized
         {
             get
@@ -35,6 +40,7 @@ namespace GitUI
             }
         }
 
+        /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
         public GitModule Module { get { return UICommands.Module; } }
         public event GitUICommandsChangedEventHandler GitUICommandsChanged;

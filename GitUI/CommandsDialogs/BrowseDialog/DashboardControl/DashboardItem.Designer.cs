@@ -13,6 +13,8 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            CancelBranchNameLoad();
+
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -91,6 +93,7 @@
             this._NO_TRANSLATE_BranchName.Size = new System.Drawing.Size(72, 20);
             this._NO_TRANSLATE_BranchName.TabIndex = 4;
             this._NO_TRANSLATE_BranchName.Text = "##branch";
+            this._NO_TRANSLATE_BranchName.Visible = false;
             this._NO_TRANSLATE_BranchName.Click += new System.EventHandler(this.Title_Click);
             this._NO_TRANSLATE_BranchName.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             this._NO_TRANSLATE_BranchName.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
@@ -138,6 +141,7 @@
             this.SizeChanged += new System.EventHandler(this.DashboardItem_SizeChanged);
             this.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             this.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
+            this.VisibleChanged += new System.EventHandler(DashboardItem_VisibleChanged);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);

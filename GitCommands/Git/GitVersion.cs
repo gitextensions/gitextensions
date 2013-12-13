@@ -31,16 +31,6 @@ namespace GitCommands
             d = Get(numbers, 3);
         }
 
-        public bool SupportGitStatusPorcelain
-        {
-            get { return this >= v1_7_0; }
-        }
-
-        public bool CloneCanAskForProgress
-        {
-            get { return this >= v1_7_0; }
-        }
-
         public bool FetchCanAskForProgress
         {
             get { return this >= v1_7_1; }
@@ -49,11 +39,6 @@ namespace GitCommands
         public bool PushCanAskForProgress
         {
             get { return this >= v1_7_1; }
-        }
-
-        public bool GuiDiffToolExist
-        {
-            get { return this >= v1_7_0; }
         }
 
         public bool StashUntrackedFilesSupported

@@ -162,7 +162,7 @@
             // 
             // gitSubmoduleBindingSource
             // 
-            this.gitSubmoduleBindingSource.DataSource = typeof(GitCommands.GitSubmodule);
+            this.gitSubmoduleBindingSource.DataSource = typeof(GitCommands.GitSubmoduleInfo);
             // 
             // tableLayoutPanel3
             // 

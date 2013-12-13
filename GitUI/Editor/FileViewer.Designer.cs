@@ -56,6 +56,8 @@
             this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.PictureBox = new System.Windows.Forms.PictureBox();
+            this.copyNewVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyOldVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
@@ -66,6 +68,8 @@
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyToolStripMenuItem,
             this.copyPatchToolStripMenuItem,
+            this.copyNewVersionToolStripMenuItem,
+            this.copyOldVersionToolStripMenuItem,
             this.findToolStripMenuItem,
             this.toolStripSeparator1,
             this.ignoreWhitespaceChangesToolStripMenuItem,
@@ -77,7 +81,7 @@
             this.showNonprintableCharactersToolStripMenuItem,
             this.goToLineToolStripMenuItem});
             this.contextMenu.Name = "ContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(244, 236);
+            this.contextMenu.Size = new System.Drawing.Size(244, 302);
             // 
             // copyToolStripMenuItem
             // 
@@ -285,6 +289,20 @@
             this.PictureBox.TabStop = false;
             this.PictureBox.Visible = false;
             // 
+            // copyNewVersionToolStripMenuItem
+            // 
+            this.copyNewVersionToolStripMenuItem.Name = "copyNewVersionToolStripMenuItem";
+            this.copyNewVersionToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.copyNewVersionToolStripMenuItem.Text = "Copy new version";
+            this.copyNewVersionToolStripMenuItem.Click += new System.EventHandler(this.copyNewVersionToolStripMenuItem_Click);
+            // 
+            // copyOldVersionToolStripMenuItem
+            // 
+            this.copyOldVersionToolStripMenuItem.Name = "copyOldVersionToolStripMenuItem";
+            this.copyOldVersionToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.copyOldVersionToolStripMenuItem.Text = "Copy old version";
+            this.copyOldVersionToolStripMenuItem.Click += new System.EventHandler(this.copyOldVersionToolStripMenuItem_Click);
+            // 
             // FileViewer
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -329,5 +347,7 @@
         private System.Windows.Forms.PictureBox PictureBox;
         private System.Windows.Forms.ToolStripComboBox encodingToolStripComboBox;
         private System.Windows.Forms.ToolStripMenuItem goToLineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyNewVersionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyOldVersionToolStripMenuItem;
     }
 }

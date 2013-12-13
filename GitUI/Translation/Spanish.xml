@@ -3782,11 +3782,12 @@ Do you want Git Extensions to help locate the correct folder?</Source>
           <Value>Ambiente</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>El archivo de configuración global que se encuentra almacenado en la variable de entorno %HOME%. De
-forma predeterminada %HOME% será %HOMEDRIVE %%HOMEPATH% si está vacío. Cambiar el comportamiento 
-por defecto sólo si tiene problemas.</Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>El archivo de configuración global que se encuentra almacenado en la variable de entorno %HOME%. 
+De forma predeterminada %HOME% será %HOMEDRIVE %%HOMEPATH% si está vacío. 
+Cambiar el comportamiento por defecto sólo si tiene problemas.</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text">
           <Source>OK</Source>
@@ -3980,9 +3981,9 @@ por defecto sólo si tiene problemas.</Value>
           <Source>Submit review as draft</Source>
           <Value>Enviar revisión como borrador</Value>
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text">
-          <Source>Download Gerrit Change</Source>
-          <Value>Descargar cambio Gerrit</Value>
+        <TranslationItem Name="_publishGerritChangeCaption" Property="Text">
+          <Source>Publish Gerrit Change</Source>
+          <Value>Publicar cambio Gerrit</Value>
         </TranslationItem>
         <TranslationItem Name="_publishCaption" Property="Text">
           <Source>Publish change</Source>
@@ -6240,14 +6241,6 @@ También puede agregar la huella del host manualmente o ejecutar Probar conexió
           <Source>Host Fingerprint not registered</Source>
           <Value>Huella del host no registrada</Value>
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value>La clave del host del servidor no está almacenada en el registro.
-
-¿Desea confiar en esta clave del host e intentarlo de nuevo?</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormSubmodules">
@@ -6922,10 +6915,12 @@ Dejar en blanco cuando están en el PATH.</Value>
           <Value>Git Extensions puede utilizar msysgit o cygwin para acceder a repositorios. Establecer las rutas correctas a continuación.</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>El archivo de configuración global se almacena en la ubicación dada por la variable de entorno %HOME%. Por defecto %HOME%
-					se establecerá como %HOMEDRIVE%%HOMEPATH% si está vacía. Cambie el comportamiento por defecto sólo si experimenta problemas.</Value>
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <Value>El archivo de configuración global se almacena en la ubicación dada por la variable de entorno %HOME%. 
+Por defecto %HOME% se establecerá como %HOMEDRIVE%%HOMEPATH% si está vacía. 
+Cambie el comportamiento por defecto sólo si experimenta problemas.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7226,6 +7221,14 @@ la configuración local.</Value>
         <TranslationItem Name="_pageantNotFound" Property="Text">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
+          <Value>La clave del host del servidor no está almacenada en el registro.
+
+¿Desea confiar en esta clave del host e intentarlo de nuevo?</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7802,68 +7805,40 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
           <Source>Date</Source>
           <Value>Fecha</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>hace {0} día</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
-          <Value>hace {0} días</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>hace {0} hora</Value>
+          <Source>{0} {1:day|days} ago</Source>
+          <Value>hace {0} {1:día|días}</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
-          <Value>hace {0} horas</Value>
+          <Source>{0} {1:hour|hours} ago</Source>
+          <Value>hace {0} {1:hora|horas}</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>Mensaje</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>hace {0} minutos</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
+          <Source>{0} {1:minute|minutes} ago</Source>
           <Value>hace {0} minutos</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>hace {0} mes</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
-          <Value>hace {0} meses</Value>
+          <Source>{0} {1:month|months} ago</Source>
+          <Value>hace {0} {1:mes|meses}</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">
           <Source>Parent(s)</Source>
           <Value>Padre(s)</Value>
         </TranslationItem>
-        <TranslationItem Name="_secondAgo" Property="Text">
-          <Source>{0} second ago</Source>
-          <Value>hace {0} segundos</Value>
-        </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Source>{0} seconds ago</Source>
+          <Source>{0} {1:second|seconds} ago</Source>
           <Value>hace {0} segundos</Value>
-        </TranslationItem>
-        <TranslationItem Name="_weekAgo" Property="Text">
-          <Source>{0} week ago</Source>
-          <Value>hace {0} semana</Value>
         </TranslationItem>
         <TranslationItem Name="_weeksAgo" Property="Text">
-          <Source>{0} weeks ago</Source>
-          <Value>hace {0} semanas</Value>
-        </TranslationItem>
-        <TranslationItem Name="_yearAgo" Property="Text">
-          <Source>{0} year ago</Source>
-          <Value>hace {0} años</Value>
+          <Source>{0} {1:week|weeks} ago</Source>
+          <Value>hace {0} {1:semana|semanas}</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Source>{0} years ago</Source>
+          <Source>{0} {1:year|years} ago</Source>
           <Value>hace {0} años</Value>
         </TranslationItem>
       </translationItems>

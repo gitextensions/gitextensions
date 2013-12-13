@@ -52,12 +52,12 @@ namespace GitUI.CommandsDialogs.CommitDialog
         public static void SaveToSettings(CommitTemplateItem[] items)
         {
             string strVal = SerializeCommitTemplates(items);
-            GitCommands.Settings.CommitTemplates = strVal ?? string.Empty;
+            GitCommands.AppSettings.CommitTemplates = strVal ?? string.Empty;
         }
 
         public static CommitTemplateItem[] LoadFromSettings()
         {
-            string serializedString = GitCommands.Settings.CommitTemplates;
+            string serializedString = GitCommands.AppSettings.CommitTemplates;
             bool shouldBeUpdated;
             var templates = DeserializeCommitTemplates(serializedString, out shouldBeUpdated);
             if (shouldBeUpdated)

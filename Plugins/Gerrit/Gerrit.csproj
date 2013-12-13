@@ -146,10 +146,15 @@
     <Content Include="Resources\GerritInstallHook.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
     <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
 copy "$(TargetDir)\Newtonsoft.Json.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
 </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+  <PostBuildEvent>cp "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
+      cp "$(TargetDir)\Newtonsoft.Json.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
+  </PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

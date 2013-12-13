@@ -41,14 +41,14 @@ namespace GitUI.CommandsDialogs
 
         private void FormStashFormClosing(object sender, FormClosingEventArgs e)
         {
-            Settings.StashKeepIndex = StashKeepIndex.Checked;
-            Settings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.Checked;
+            AppSettings.StashKeepIndex = StashKeepIndex.Checked;
+            AppSettings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.Checked;
         }
 
         private void FormStashLoad(object sender, EventArgs e)
         {
-            StashKeepIndex.Checked = Settings.StashKeepIndex;
-            chkIncludeUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInManualStash;
+            StashKeepIndex.Checked = AppSettings.StashKeepIndex;
+            chkIncludeUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInManualStash;
 
             splitContainer2_SplitterMoved(null, null);
         }
@@ -163,27 +163,16 @@ namespace GitUI.CommandsDialogs
 
         private void StashClick(object sender, EventArgs e)
         {
+            if (chkIncludeUntrackedFiles.Checked && !GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
+            {
+                if (MessageBox.Show(stashUntrackedFilesNotSupported.Text, stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
+                    return;
+            }
+
             Cursor.Current = Cursors.WaitCursor;
 
             var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
-            var arguments = string.Empty;
-            if (StashKeepIndex.Checked)
-                arguments += " --keep-index";
-
-            if (chkIncludeUntrackedFiles.Checked)
-            {
-                if (GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported)
-                {
-                    arguments += " -u";
-                }
-                else
-                {
-                    if (MessageBox.Show(stashUntrackedFilesNotSupported.Text, stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.Cancel)
-                        return;
-                }
-            }
-            if (FormProcess.ShowDialog(this, String.Format("stash save {0}{1}", arguments, msg)))
-                UICommands.RepoChangedNotifier.Notify();
+            UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg);
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -192,7 +181,7 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (Settings.StashConfirmDropShow)
+            if (AppSettings.StashConfirmDropShow)
             {
                 DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
                                         this,
@@ -207,21 +196,19 @@ namespace GitUI.CommandsDialogs
                                        PSTaskDialog.eSysIcons.Information);
                 if (res == DialogResult.OK)
                 {
-                    if (FormProcess.ShowDialog(this, string.Format("stash drop \"{0}\"", Stashes.Text)))
-                        UICommands.RepoChangedNotifier.Notify();
+                    UICommands.StashDrop(this, Stashes.Text);
                     Initialize();
                     Cursor.Current = Cursors.Default;
                 }
 
                 if (PSTaskDialog.cTaskDialog.VerificationChecked)
                 {
-                    Settings.StashConfirmDropShow = false;
+                    AppSettings.StashConfirmDropShow = false;
                 }
             }
             else
             {
-                if (FormProcess.ShowDialog(this, string.Format("stash drop \"{0}\"", Stashes.Text)))
-                    UICommands.RepoChangedNotifier.Notify();
+                UICommands.StashDrop(this, Stashes.Text);
                 Initialize();
                 Cursor.Current = Cursors.Default;
             }
@@ -229,12 +216,7 @@ namespace GitUI.CommandsDialogs
 
         private void ApplyClick(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(this, string.Format("stash apply \"{0}\"", Stashes.Text));
-
-            MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
-            
-            UICommands.RepoChangedNotifier.Notify();
-            
+            UICommands.StashApply(this, Stashes.Text);            
             Initialize();
         }
 

@@ -147,12 +147,7 @@ namespace GitCommands
             //Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
                     "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
-            var info =
-                module.RunCmd(
-                    Settings.GitCommand,
-                    arguments,
-                    GitModule.LosslessEncoding
-                    );
+            var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
             if (info.Trim().StartsWith("fatal"))
             {
@@ -189,12 +184,7 @@ namespace GitCommands
             //Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
                     "log -1 --pretty=\"format:"+LogFormat+"\" {0}", sha1);
-            var info =
-                module.RunCmd(
-                    Settings.GitCommand,
-                    arguments,
-                    GitModule.LosslessEncoding
-                    );
+            var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
             if (info.Trim().StartsWith("fatal"))
             {
@@ -231,7 +221,7 @@ namespace GitCommands
         public static CommitData CreateFromFormatedData(string data, GitModule aModule)
         {
             if (data == null)
-                throw new ArgumentNullException("Data");
+                throw new ArgumentNullException("data");
 
             var lines = data.Split('\n');
             
@@ -275,7 +265,7 @@ namespace GitCommands
         public static void UpdateBodyInCommitData(CommitData commitData, string data, GitModule aModule)
         {
             if (data == null)
-                throw new ArgumentNullException("Data");
+                throw new ArgumentNullException("data");
 
             var lines = data.Split('\n');
 
