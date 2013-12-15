@@ -26,6 +26,15 @@ namespace GitUI.BuildServerIntegration
                     case BuildInfo.BuildStatus.Unknown:
                         buildStatusImage = Resources.BuildCancelled;
                         break;
+                    case BuildInfo.BuildStatus.InProgress:
+                        buildStatusImage = Resources.Icon_77;
+                        break;
+                    case BuildInfo.BuildStatus.Unstable:
+                        buildStatusImage = Resources.bug;
+                        break;
+                    case BuildInfo.BuildStatus.Stopped:
+                        buildStatusImage = Resources.BuildCancelled;
+                        break;
                 }
 
                 if (buildStatusImage != null)
@@ -48,6 +57,15 @@ namespace GitUI.BuildServerIntegration
                         break;
                     case BuildInfo.BuildStatus.Failure:
                         buildStatusForebrush = Brushes.DarkRed;
+                        break;
+                    case BuildInfo.BuildStatus.InProgress:
+                        buildStatusForebrush = Brushes.Blue;
+                        break;
+                    case BuildInfo.BuildStatus.Unstable:
+                        buildStatusForebrush = Brushes.OrangeRed;
+                        break;
+                    case BuildInfo.BuildStatus.Stopped:
+                        buildStatusForebrush = Brushes.Gray;
                         break;
                 }
 

@@ -264,6 +264,9 @@
             <Component Id="TeamCityIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
             </Component>
+            <Component Id="JenkinsIntegration.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\Release\JenkinsIntegration.dll" />
+            </Component>		
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
             <Component Id="Blue.ico" Guid="*">
@@ -561,6 +564,14 @@
                     <ComponentRef Id="System.Runtime.dll" />
                     <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="TeamCityIntegration.dll" />
+                </Feature>
+                <Feature Id="JenkinsIntegration" Title="Jenkins integration" Level="1">
+                    <ComponentRef Id="System.Net.Http.dll" />
+                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
+                    <ComponentRef Id="System.Net.Http.Primitives.dll" />
+                    <ComponentRef Id="System.Runtime.dll" />
+                    <ComponentRef Id="System.Threading.Tasks.dll" />
+                    <ComponentRef Id="JenkinsIntegration.dll" />
                 </Feature>
             </Feature>
             <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
