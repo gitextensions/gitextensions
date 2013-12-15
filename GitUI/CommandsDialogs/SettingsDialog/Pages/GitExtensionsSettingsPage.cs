@@ -16,9 +16,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
+        bool loadedDefaultClone = false;
+        private void defaultCloneDropDown(object sender, EventArgs e)
+        {
+            if (!loadedDefaultClone)
+            {
+                FillDefaultCloneDestinationDropDown();
+                loadedDefaultClone = true;
+            }
+        }
+
         protected override void SettingsToPage()
         {
-            FillDefaultCloneDestinationDropDown();
+
 
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
             chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir;
@@ -93,7 +103,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             return x =>
             {
-                if (!Directory.Exists(x.Path))
+                if (x.Path.StartsWith(@"\\") || !Directory.Exists(x.Path))
                 {
                     return string.Empty;
                 }
@@ -114,6 +124,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 if (dialog.ShowDialog(this) == DialogResult.OK)
                     cbDefaultCloneDestination.Text = dialog.SelectedPath;
             }
-        }        
+        }
     }
 }
