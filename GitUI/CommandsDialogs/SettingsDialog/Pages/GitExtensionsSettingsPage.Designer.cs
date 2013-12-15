@@ -185,6 +185,7 @@
             this.cbDefaultCloneDestination.Name = "cbDefaultCloneDestination";
             this.cbDefaultCloneDestination.Size = new System.Drawing.Size(543, 24);
             this.cbDefaultCloneDestination.TabIndex = 18;
+            this.cbDefaultCloneDestination.DropDown += new System.EventHandler(this.defaultCloneDropDown);
             // 
             // chkShowGitCommandLine
             // 
