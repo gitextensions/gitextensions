@@ -641,16 +641,7 @@ namespace GitUI
 
         public List<string> GetRevisionChildren(string revision)
         {
-            var rows = Revisions
-                .Rows
-                .Cast<DataGridViewRow>()
-                .Where(row => Revisions.RowCount > row.Index);
-
-            return rows
-                .Select(row => GetRevision(row.Index))
-                .Where(row => row.ParentGuids.Contains(revision))
-                .Select(row => row.Guid)
-                .ToList();
+			return Revisions.GetRevisionChildren(revision);
         }
 
         public GitRevision GetRevision(int aRow)
@@ -1490,9 +1481,9 @@ namespace GitUI
             });
         }
 
-        private void DrawColumnText(IDeviceContext dc, string text, Font font, Color color, Rectangle bounds)
+        private void DrawColumnText(Graphics gc, string text, Font font, Color color, Rectangle bounds)
         {
-            TextRenderer.DrawText(dc, text, font, bounds, color, TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
+            TextRenderer.DrawText(gc, text, font, bounds, color, TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
         }
 
         private static Rectangle AdjustCellBounds(Rectangle cellBounds, float offset)
