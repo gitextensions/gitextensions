@@ -44,6 +44,9 @@ namespace GitUI.RevisionGridClasses
 
         #endregion
 
+		private ReaderWriterLockSlim _graphLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+		private const int _graphLockTimeout = 30000;
+
         private int _nodeDimension = 8;
         private int _laneWidth = 13;
         private int _laneLineWidth = 2;
@@ -202,7 +205,7 @@ namespace GitUI.RevisionGridClasses
                                 _backgroundScrollTo = 0;
                                 _graphDataCount = 0;
                             }
-                            lock (_graphData)
+							using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.FilterMode"))
                             {
                                 _filterMode = value;
                                 _graphData.IsFilter = (_filterMode & FilterType.Hide) == FilterType.Hide;
@@ -252,7 +255,7 @@ namespace GitUI.RevisionGridClasses
             }
             set
             {
-                lock (_graphData)
+				using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.SelectedIds"))
                 {
                     ClearSelection();
                     CurrentCell = null;
@@ -346,7 +349,7 @@ namespace GitUI.RevisionGridClasses
 
         public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
         {
-            lock (_graphData)
+			using (_graphLock.EnterWriteLockOrFail(_graphLockTimeout, "DvcsGraph.Add"))
             {
                 _graphData.Add(aId, aParentIds, aType, aData);
             }
@@ -360,7 +363,7 @@ namespace GitUI.RevisionGridClasses
             {
                 _backgroundScrollTo = 0;
             }
-            lock (_graphData)
+			using (_graphLock.EnterWriteLockOrFail(_graphLockTimeout, "DvcsGraph.Clear"))
             {
                 SetRowCount(0);
                 _junctionColors.Clear();
@@ -373,7 +376,7 @@ namespace GitUI.RevisionGridClasses
 
         public void FilterClear()
         {
-            lock (_graphData)
+			using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.FilterClear"))
             {
                 foreach (Node n in _graphData.Nodes.Values)
                 {
@@ -385,7 +388,7 @@ namespace GitUI.RevisionGridClasses
 
         public void Filter(string aId)
         {
-            lock (_graphData)
+			using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.Filter"))
             {
                 _graphData.Filter(aId);
             }
@@ -393,7 +396,7 @@ namespace GitUI.RevisionGridClasses
 
         public bool RowIsRelative(int aRow)
         {
-            lock (_graphData)
+			using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.RowIsRelative"))
             {
                 Graph.ILaneRow row = _graphData[aRow];
                 if (row == null)
@@ -410,7 +413,7 @@ namespace GitUI.RevisionGridClasses
 
         public GitRevision GetRowData(int aRow)
         {
-            lock (_graphData)
+			using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.GetRowData"))
             {
                 Graph.ILaneRow row = _graphData[aRow];
                 return row == null ? null : row.Node.Data;
@@ -419,7 +422,7 @@ namespace GitUI.RevisionGridClasses
 
         public string GetRowId(int aRow)
         {
-            lock (_graphData)
+			using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.GetRowId"))
             {
                 Graph.ILaneRow row = _graphData[aRow];
                 if (row == null)
@@ -432,7 +435,7 @@ namespace GitUI.RevisionGridClasses
 
         public int FindRow(string aId)
         {
-            lock (_graphData)
+			using(_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.FindRow"))
             {
                 int i;
                 for (i = 0; i < _graphData.CachedCount; i++)
@@ -450,7 +453,7 @@ namespace GitUI.RevisionGridClasses
         public void Prune()
         {
             int count;
-            lock (_graphData)
+			using (_graphLock.EnterWriteLockOrFail(_graphLockTimeout, "DvcsGraph.Prune"))
             {
                 _graphData.Prune();
                 count = _graphData.Count;
@@ -519,7 +522,7 @@ namespace GitUI.RevisionGridClasses
                 dataGrid_Scroll(null, null);
             }
 
-            lock (_graphData)
+			using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.dataGrid_CellPainting"))
             {
                 Graph.ILaneRow row = _graphData[e.RowIndex];
                 if (row == null || (e.State & DataGridViewElementStates.Visible) == 0)
@@ -573,7 +576,7 @@ namespace GitUI.RevisionGridClasses
                     }
 
                     int curCount;
-                    lock (_graphData)
+					using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.BackgroundThreadEntry"))
                     {
                         curCount = _graphDataCount;
                         _graphDataCount = _graphData.CachedCount;
@@ -595,7 +598,7 @@ namespace GitUI.RevisionGridClasses
         {
             while (curCount < scrollTo)
             {
-                lock (_graphData)
+				using (_graphLock.EnterWriteLockOrFail(_graphLockTimeout, "DvcsGraph.UpdateGraph"))
                 {
                     // Cache the next item
                     if (!_graphData.CacheTo(curCount))
@@ -683,7 +686,7 @@ namespace GitUI.RevisionGridClasses
 
         private void UpdateRow(int row)
         {
-            lock (_graphData)
+			using (_graphLock.EnterWriteLockOrFail(_graphLockTimeout, "DvcsGraph.UpdateRow"))
             {
                 if (RowCount < _graphData.Count)
                 {
@@ -734,7 +737,7 @@ namespace GitUI.RevisionGridClasses
 
         private void UpdateColumnWidth()
         {
-            lock (_graphData)
+			using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.UpdateColumnWidth"))
             {
                 // Auto scale width on scroll
                 if (GraphColumn.Visible)
@@ -879,7 +882,7 @@ namespace GitUI.RevisionGridClasses
 
         private Rectangle DrawGraph(int aNeededRow)
         {
-            lock (_graphData)
+			using (_graphLock.EnterReadLockOrFail(_graphLockTimeout, "DvcsGraph.DrawGraph"))
             {
                 if (aNeededRow < 0 || _graphData.Count == 0 || _graphData.Count <= aNeededRow)
                 {
