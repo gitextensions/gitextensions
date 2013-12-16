@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
+using System.Windows.Forms;
 
 namespace Stash
 {
@@ -67,7 +68,18 @@ namespace Stash
 
         private static StashResponse<T> ParseErrorResponse(string jsonString)
         {
-            var json = (JObject) JsonConvert.DeserializeObject(jsonString);
+            var json = new JObject();
+            try
+            {
+                System.Console.WriteLine(jsonString);
+                json = (JObject)JsonConvert.DeserializeObject(jsonString);
+            }
+            catch (JsonReaderException e)
+            {
+                MessageBox.Show(jsonString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                var errorResponse = new StashResponse<T> { Success = false };
+                return errorResponse;
+            }
             if (json["errors"] != null)
             {
                 var messages = new List<string>();

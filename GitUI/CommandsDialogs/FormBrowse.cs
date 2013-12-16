@@ -1049,7 +1049,8 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var revision = RevisionGrid.GetSelectedRevisions()[0];
-            var children = RevisionGrid.GetRevisionChildren(revision.Guid);
+            
+			var children = RevisionGrid.GetRevisionChildren(revision.Guid);
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
@@ -1314,7 +1315,7 @@ namespace GitUI.CommandsDialogs
                 Process process = new Process();
                 process.StartInfo.FileName = Application.ExecutablePath;
                 process.StartInfo.Arguments = "browse";
-                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.Name + Settings.PathSeparator.ToString());
+                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName + Settings.PathSeparator.ToString());
                 process.Start();
             }
         }
