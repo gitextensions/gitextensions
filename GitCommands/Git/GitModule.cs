@@ -850,10 +850,12 @@ namespace GitCommands
 
         public Dictionary<GitRef, GitItem> GetSubmoduleItemsForEachRef(string filename, Func<GitRef, bool> showRemoteRef)
         {
-            filename = FixPath(filename);
-
-            
             string command = GetShowRefCommand();
+
+            if (command == null)
+                return new Dictionary<GitRef, GitItem>();
+
+            filename = FixPath(filename);
 
             var tree = RunGitCmd(command, SystemEncoding);
 
@@ -867,9 +869,12 @@ namespace GitCommands
             if (AppSettings.ShowSuperprojectRemoteBranches)
                 return "show-ref --dereference";
 
-            return "show-ref --dereference"
-                + (AppSettings.ShowSuperprojectBranches? " --heads" : null) 
-                + (AppSettings.ShowTags? " --tags": null);
+            if (AppSettings.ShowSuperprojectBranches || AppSettings.ShowSuperprojectTags)
+                return "show-ref --dereference"
+                    + (AppSettings.ShowSuperprojectBranches ? " --heads" : null)
+                    + (AppSettings.ShowSuperprojectTags ? " --tags" : null);
+
+            return null;
         }
 
         private GitItem GetSubmoduleGuid(string filename, string refName)
