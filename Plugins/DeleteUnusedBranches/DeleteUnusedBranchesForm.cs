@@ -58,7 +58,7 @@ namespace DeleteUnusedBranches
         private IEnumerable<string> GetObsoleteBranchNames()
         {
             // TODO: skip current branch
-            return gitCommands.RunGitCmd("branch " + (IncludeRemoteBranches.Checked ? "-r " : "") + " --merged " + referenceBranch)
+            return gitCommands.RunGitCmd("branch" + (IncludeRemoteBranches.Checked ? " -r" : "") + (includeUnmergedBranches.Checked ? "" : " --merged " + referenceBranch))
                 .Split('\n')
                 .Where(branchName => !string.IsNullOrEmpty(branchName))
                 .Select(branchName => branchName.Trim('*', ' ', '\n', '\r'))
@@ -74,7 +74,7 @@ namespace DeleteUnusedBranches
             {
                 if (IncludeRemoteBranches.Checked)
                 {
-                    if (MessageBox.Show(this, "DANGEROUS ACTION!" + Environment.NewLine + "Branches will be delete on the remote '" + remote.Text + "'. This can not be undone.", "Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    if (MessageBox.Show(this, "DANGEROUS ACTION!" + Environment.NewLine + "Branches will be delete on the remote '" + remote.Text + "'. This can not be undone." + Environment.NewLine + "Are you sure you want to continue?", "Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
                         return;
                 }
 
@@ -126,6 +126,14 @@ namespace DeleteUnusedBranches
             clearResults();
         }
 
+        private void includeUnmergedBranches_CheckedChanged(object sender, EventArgs e)
+        {
+            clearResults();
+
+            if (includeUnmergedBranches.Checked)
+                MessageBox.Show(this, "Deleting unmerged branches will result in dangling commits. Use with caution!", "Delete", MessageBoxButtons.OK);
+        }
+
         private void olderThanDays_ValueChanged(object sender, EventArgs e)
         {
             days = (int)olderThanDays.Value;
@@ -149,7 +157,6 @@ namespace DeleteUnusedBranches
             branches.ResetBindings();
             refreshHint.Text = branches.Count(b => b.Delete).ToString() + "/" + branches.Count().ToString() + " branches selected.";
         }
-
 
     }
 }

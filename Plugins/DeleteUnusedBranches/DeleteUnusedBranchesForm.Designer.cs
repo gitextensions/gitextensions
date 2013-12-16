@@ -38,27 +38,28 @@
             this.Cancel = new System.Windows.Forms.Button();
             this.Delete = new System.Windows.Forms.Button();
             this.instructionLabel = new System.Windows.Forms.Label();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.regexFilter = new System.Windows.Forms.TextBox();
             this.IncludeRemoteBranches = new System.Windows.Forms.CheckBox();
             this.remote = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.useRegexFilter = new System.Windows.Forms.CheckBox();
-            this.regexFilter = new System.Windows.Forms.TextBox();
             this.Refresh = new System.Windows.Forms.Button();
             this.refreshHint = new System.Windows.Forms.Label();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.deleteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.branchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.mergedIntoBranch = new System.Windows.Forms.TextBox();
             this.olderThanDays = new System.Windows.Forms.NumericUpDown();
+            this.includeUnmergedBranches = new System.Windows.Forms.CheckBox();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.deleteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.branchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.BranchesGrid)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.branchBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.olderThanDays)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.branchBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // BranchesGrid
@@ -74,10 +75,10 @@
             this.Result});
             this.BranchesGrid.DataSource = this.branchBindingSource;
             this.BranchesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BranchesGrid.Location = new System.Drawing.Point(3, 188);
+            this.BranchesGrid.Location = new System.Drawing.Point(3, 218);
             this.BranchesGrid.Name = "BranchesGrid";
             this.BranchesGrid.RowHeadersVisible = false;
-            this.BranchesGrid.Size = new System.Drawing.Size(754, 193);
+            this.BranchesGrid.Size = new System.Drawing.Size(754, 163);
             this.BranchesGrid.TabIndex = 0;
             // 
             // Result
@@ -103,7 +104,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 190F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(760, 421);
@@ -170,6 +171,45 @@
             this.instructionLabel.TabIndex = 1;
             this.instructionLabel.Text = "....";
             // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.regexFilter, 1, 3);
+            this.tableLayoutPanel3.Controls.Add(this.IncludeRemoteBranches, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.remote, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this.useRegexFilter, 0, 3);
+            this.tableLayoutPanel3.Controls.Add(this.Refresh, 1, 5);
+            this.tableLayoutPanel3.Controls.Add(this.refreshHint, 0, 5);
+            this.tableLayoutPanel3.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.label2, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.mergedIntoBranch, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.olderThanDays, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.includeUnmergedBranches, 0, 4);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 28);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 6;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(754, 184);
+            this.tableLayoutPanel3.TabIndex = 3;
+            // 
+            // regexFilter
+            // 
+            this.regexFilter.Location = new System.Drawing.Point(380, 93);
+            this.regexFilter.Name = "regexFilter";
+            this.regexFilter.Size = new System.Drawing.Size(218, 20);
+            this.regexFilter.TabIndex = 6;
+            this.regexFilter.Text = "/(feature|develop)/";
+            this.regexFilter.TextChanged += new System.EventHandler(this.regexFilter_TextChanged);
+            // 
             // IncludeRemoteBranches
             // 
             this.IncludeRemoteBranches.AutoSize = true;
@@ -190,33 +230,6 @@
             this.remote.Text = "origin";
             this.remote.TextChanged += new System.EventHandler(this.remote_TextChanged);
             // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.regexFilter, 1, 3);
-            this.tableLayoutPanel3.Controls.Add(this.IncludeRemoteBranches, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.remote, 1, 2);
-            this.tableLayoutPanel3.Controls.Add(this.useRegexFilter, 0, 3);
-            this.tableLayoutPanel3.Controls.Add(this.Refresh, 1, 4);
-            this.tableLayoutPanel3.Controls.Add(this.refreshHint, 0, 4);
-            this.tableLayoutPanel3.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.label2, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.mergedIntoBranch, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.olderThanDays, 1, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 28);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 5;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(754, 154);
-            this.tableLayoutPanel3.TabIndex = 3;
-            // 
             // useRegexFilter
             // 
             this.useRegexFilter.AutoSize = true;
@@ -228,18 +241,9 @@
             this.useRegexFilter.UseVisualStyleBackColor = true;
             this.useRegexFilter.CheckedChanged += new System.EventHandler(this.useRegexFilter_CheckedChanged);
             // 
-            // regexFilter
-            // 
-            this.regexFilter.Location = new System.Drawing.Point(380, 93);
-            this.regexFilter.Name = "regexFilter";
-            this.regexFilter.Size = new System.Drawing.Size(218, 20);
-            this.regexFilter.TabIndex = 6;
-            this.regexFilter.Text = "/(feature|develop)/";
-            this.regexFilter.TextChanged += new System.EventHandler(this.regexFilter_TextChanged);
-            // 
             // Refresh
             // 
-            this.Refresh.Location = new System.Drawing.Point(380, 123);
+            this.Refresh.Location = new System.Drawing.Point(380, 153);
             this.Refresh.Name = "Refresh";
             this.Refresh.Size = new System.Drawing.Size(124, 23);
             this.Refresh.TabIndex = 7;
@@ -251,10 +255,62 @@
             // 
             this.refreshHint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.refreshHint.AutoSize = true;
-            this.refreshHint.Location = new System.Drawing.Point(3, 141);
+            this.refreshHint.Location = new System.Drawing.Point(3, 171);
             this.refreshHint.Name = "refreshHint";
             this.refreshHint.Size = new System.Drawing.Size(0, 13);
             this.refreshHint.TabIndex = 8;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 5);
+            this.label1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(168, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Delete branches older than x days";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 35);
+            this.label2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(200, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Delete branches fully merged into branch";
+            // 
+            // mergedIntoBranch
+            // 
+            this.mergedIntoBranch.Location = new System.Drawing.Point(380, 33);
+            this.mergedIntoBranch.Name = "mergedIntoBranch";
+            this.mergedIntoBranch.Size = new System.Drawing.Size(218, 20);
+            this.mergedIntoBranch.TabIndex = 12;
+            this.mergedIntoBranch.TextChanged += new System.EventHandler(this.mergedIntoBranch_TextChanged);
+            // 
+            // olderThanDays
+            // 
+            this.olderThanDays.Location = new System.Drawing.Point(380, 3);
+            this.olderThanDays.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.olderThanDays.Name = "olderThanDays";
+            this.olderThanDays.Size = new System.Drawing.Size(120, 20);
+            this.olderThanDays.TabIndex = 13;
+            this.olderThanDays.ValueChanged += new System.EventHandler(this.olderThanDays_ValueChanged);
+            // 
+            // includeUnmergedBranches
+            // 
+            this.includeUnmergedBranches.AutoSize = true;
+            this.includeUnmergedBranches.Location = new System.Drawing.Point(3, 123);
+            this.includeUnmergedBranches.Name = "includeUnmergedBranches";
+            this.includeUnmergedBranches.Size = new System.Drawing.Size(158, 17);
+            this.includeUnmergedBranches.TabIndex = 14;
+            this.includeUnmergedBranches.Text = "Include unmerged branches";
+            this.includeUnmergedBranches.UseVisualStyleBackColor = true;
+            this.includeUnmergedBranches.CheckedChanged += new System.EventHandler(this.includeUnmergedBranches_CheckedChanged);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -288,42 +344,6 @@
             // 
             this.branchBindingSource.DataSource = typeof(DeleteUnusedBranches.Branch);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 5);
-            this.label1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(168, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Delete branches older than x days";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 35);
-            this.label2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(200, 13);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Delete branches fully merged into branch";
-            // 
-            // mergedIntoBranch
-            // 
-            this.mergedIntoBranch.Location = new System.Drawing.Point(380, 33);
-            this.mergedIntoBranch.Name = "mergedIntoBranch";
-            this.mergedIntoBranch.Size = new System.Drawing.Size(218, 20);
-            this.mergedIntoBranch.TabIndex = 12;
-            this.mergedIntoBranch.TextChanged += new System.EventHandler(this.mergedIntoBranch_TextChanged);
-            // 
-            // olderThanDays
-            // 
-            this.olderThanDays.Location = new System.Drawing.Point(380, 3);
-            this.olderThanDays.Name = "olderThanDays";
-            this.olderThanDays.Size = new System.Drawing.Size(120, 20);
-            this.olderThanDays.TabIndex = 13;
-            this.olderThanDays.ValueChanged += new System.EventHandler(this.olderThanDays_ValueChanged);
-            // 
             // DeleteUnusedBranchesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -342,8 +362,8 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.branchBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.olderThanDays)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.branchBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -373,5 +393,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox mergedIntoBranch;
         private System.Windows.Forms.NumericUpDown olderThanDays;
+        private System.Windows.Forms.CheckBox includeUnmergedBranches;
     }
 }
