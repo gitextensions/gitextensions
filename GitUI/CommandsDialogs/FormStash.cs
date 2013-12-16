@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
                         if (patch == null)
                             return String.Empty;
                         if (stashedItem.IsSubmodule)
-                            return GitCommandHelpers.ProcessSubmodulePatch(Module, patch);
+                            return GitCommandHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch);
                         return patch.Text;
                     });
                 }

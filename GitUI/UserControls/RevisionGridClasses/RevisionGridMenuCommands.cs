@@ -13,7 +13,7 @@ using GitCommands;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    internal class RevisionGridMenuCommands : MenuCommandsBase, INotifyPropertyChanged
+    internal class RevisionGridMenuCommands : MenuCommandsBase
     {
         private readonly TranslationString _quickSearchQuickHelp =
             new TranslationString("Start typing in revision grid to start quick search.");
@@ -34,18 +34,6 @@ namespace GitUI.UserControls.RevisionGridClasses
             TranslationCategoryName = "RevisionGrid";
             Translate();
         }
-
-        #region BusinessLogic
-
-        bool _showRemoteBranches = true;
-
-        public bool ShowRemoteBranches
-        {
-            get { return _showRemoteBranches; }
-            set { _showRemoteBranches = value; _revisionGrid.InvalidateRevisions(); OnPropertyChanged(); }
-        }
-
-        #endregion
 
         /// <summary>
         /// ... "Update" because the hotkey settings might change
@@ -68,15 +56,15 @@ namespace GitUI.UserControls.RevisionGridClasses
 
                 if (_revisionGrid != null) // null when TranslationApp is started
                 {
-                    TriggerPropertyChanged(); // trigger refresh
+                    TriggerMenuChanged(); // trigger refresh
                 }
             }
         }
 
-        public void TriggerPropertyChanged()
+        public void TriggerMenuChanged()
         {
-            Debug.WriteLine("RevisionGridMenuCommands.TriggerPropertyChanged()");
-            OnPropertyChanged();
+            Debug.WriteLine("RevisionGridMenuCommands.TriggerMenuChanged()");
+            OnMenuChanged();
         }
 
         private void UpdateMenuCommandShortcutKeyDisplayString(IEnumerable<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
@@ -202,8 +190,8 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowAllBranches";
                 menuCommand.Text = "Show all branches";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowAllBranchesToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowAllBranchesToolStripMenuItemChecked;
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowAllBranches_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowAllBranches_ToolStripMenuItemChecked;
 
                 resultList.Add(menuCommand);
             }
@@ -212,8 +200,8 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowCurrentBranchOnly";
                 menuCommand.Text = "Show current branch only";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowCurrentBranchOnlyToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowCurrentBranchOnlyToolStripMenuItemChecked;
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemChecked;
 
                 resultList.Add(menuCommand);
             }
@@ -222,8 +210,8 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowFilteredBranches";
                 menuCommand.Text = "Show filtered branches";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowFilteredBranchesToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowFilteredBranchesToolStripMenuItemChecked;
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowFilteredBranches_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowFilteredBranches_ToolStripMenuItemChecked;
 
                 resultList.Add(menuCommand);
             }
@@ -234,8 +222,40 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowRemoteBranches";
                 menuCommand.Text = "Show remote branches";
-                menuCommand.ExecuteAction = () => ShowRemoteBranches = !ShowRemoteBranches;
-                menuCommand.IsCheckedFunc = () => ShowRemoteBranches;
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowRemoteBranches_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowRemoteBranches;
+
+                resultList.Add(menuCommand);
+            }
+
+            resultList.Add(MenuCommand.CreateSeparator());
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowSuperprojectTags";
+                menuCommand.Text = "Show superproject tags";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowSuperprojectTags_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowSuperprojectTags;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowSuperprojectBranches";
+                menuCommand.Text = "Show superproject branches";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowSuperprojectBranches_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowSuperprojectBranches;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowSuperprojectRemoteBranches";
+                menuCommand.Text = "Show superproject remote branches";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowSuperprojectRemoteBranches_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowSuperprojectRemoteBranches;
 
                 resultList.Add(menuCommand);
             }
@@ -246,7 +266,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showRevisionGraphToolStripMenuItem";
                 menuCommand.Text = "Show revision graph";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowRevisionGraphToolStripMenuItemClick(null, null);
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowRevisionGraph_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => _revisionGrid.IsGraphLayout();
 
                 resultList.Add(menuCommand);
@@ -256,7 +276,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "drawNonrelativesGrayToolStripMenuItem";
                 menuCommand.Text = "Draw non relatives gray";
-                menuCommand.ExecuteAction = () => _revisionGrid.DrawNonrelativesGrayToolStripMenuItemClick(null, null);
+                menuCommand.ExecuteAction = () => _revisionGrid.DrawNonrelativesGray_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.RevisionGraphDrawNonRelativesGray;
 
                 resultList.Add(menuCommand);
@@ -266,7 +286,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "orderRevisionsByDateToolStripMenuItem";
                 menuCommand.Text = "Order revisions by date";
-                menuCommand.ExecuteAction = () => _revisionGrid.OrderRevisionsByDateToolStripMenuItemClick(null, null);
+                menuCommand.ExecuteAction = () => _revisionGrid.OrderRevisionsByDate_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.OrderRevisionByDate;
 
                 resultList.Add(menuCommand);
@@ -276,7 +296,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showAuthorDateToolStripMenuItem";
                 menuCommand.Text = "Show author date";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowAuthorDateToolStripMenuItemClick(null, null);
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowAuthorDate_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.ShowAuthorDate;
 
                 resultList.Add(menuCommand);
@@ -286,7 +306,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showRelativeDateToolStripMenuItem";
                 menuCommand.Text = "Show relative date";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowRelativeDateToolStripMenuItemClick(null, null);
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowRelativeDate_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.RelativeDate;
 
                 resultList.Add(menuCommand);
@@ -296,7 +316,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showMergeCommitsToolStripMenuItem";
                 menuCommand.Text = "Show merge commits";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowMergeCommitsToolStripMenuItem_Click(null, null);
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowMergeCommits_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.ShowMergeCommits;
 
                 resultList.Add(menuCommand);
@@ -306,7 +326,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showTagsToolStripMenuItem";
                 menuCommand.Text = "Show tags";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowTagsToolStripMenuItem_Click(null, null);
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.ShowTags;
 
                 resultList.Add(menuCommand);
@@ -316,7 +336,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showGitNotesToolStripMenuItem";
                 menuCommand.Text = "Show git notes";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowGitNotesToolStripMenuItem_Click(null, null);
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowGitNotes_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.ShowGitNotes;
 
                 resultList.Add(menuCommand);
@@ -368,18 +388,18 @@ namespace GitUI.UserControls.RevisionGridClasses
             return _viewMenuCommands;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler MenuChanged;
 
         // taken from http://stackoverflow.com/questions/5058254/inotifypropertychanged-propertychangedeventhandler-event-is-always-null
         // paramenter name not used
-        protected void OnPropertyChanged(string name = null)
+        protected void OnMenuChanged()
         {
             Debug.WriteLine("RevisionGridMenuCommands.OnPropertyChanged()");
 
-            PropertyChangedEventHandler handler = PropertyChanged;
+            EventHandler handler = MenuChanged;
             if (handler != null)
             {
-                handler(this, new PropertyChangedEventArgs(name));
+                handler(this, null);
             }
 
             foreach (var menuCommand in GetMenuCommandsWithoutSeparators())
