@@ -852,10 +852,24 @@ namespace GitCommands
         {
             filename = FixPath(filename);
 
-            var tree = RunGitCmd("show-ref --dereference", SystemEncoding);
+            
+            string command = GetShowRefCommand();
+
+            var tree = RunGitCmd(command, SystemEncoding);
+
             var refs = GetTreeRefs(tree);
 
             return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleGuid(filename, r.Name));
+        }
+
+        private string GetShowRefCommand()
+        {
+            if (AppSettings.ShowSuperprojectRemoteBranches)
+                return "show-ref --dereference";
+
+            return "show-ref --dereference"
+                + (AppSettings.ShowSuperprojectBranches? " --heads" : null) 
+                + (AppSettings.ShowTags? " --tags": null);
         }
 
         private GitItem GetSubmoduleGuid(string filename, string refName)
