@@ -138,8 +138,10 @@ namespace GitUI.CommitInfo
             {
                 CommitData.UpdateCommitMessage(data, Module, _revision.Guid, ref error);
                 _revision.Body = data.Body;
-                ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
             }
+
+			ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
+
             data.ChildrenGuids = _children;
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
 
