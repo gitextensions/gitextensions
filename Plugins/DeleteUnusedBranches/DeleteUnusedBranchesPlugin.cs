@@ -13,7 +13,7 @@ namespace DeleteUnusedBranches
         protected override void RegisterSettings()
         {
             base.RegisterSettings();
-            Settings.AddSetting("Delete obsolete branches older than (days)", "30");
+            Settings.AddSetting("Delete obsolete branches older than (days)", "90");
             Settings.AddSetting("Branch where all branches should be merged in", "HEAD");
         }
 
