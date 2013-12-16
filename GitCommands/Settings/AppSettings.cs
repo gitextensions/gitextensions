@@ -605,8 +605,8 @@ namespace GitCommands
 
         public static bool ShowRemoteBranches
         {
-            get { return GetBool("showSuperprojectTags", true); }
-            set { SetBool("showSuperprojectTags", value); }
+            get { return GetBool("showRemoteBranches", true); }
+            set { SetBool("showRemoteBranches", value); }
         }
 
         public static bool ShowSuperprojectTags
