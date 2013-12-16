@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
@@ -24,6 +25,9 @@ namespace GitUI.CommandsDialogs
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
                 commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
+
+            cbUpdateSubmodules.Visible = Module.GetSubmodulesLocalPathes().Any();
+            cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
         }
 
         private void FormCreateBranch_Load(object sender, EventArgs e)
@@ -72,6 +76,14 @@ namespace GitUI.CommandsDialogs
                     cmd = GitCommandHelpers.RemoveCmd();
                     FormProcess.ShowDialog(this, cmd);
                 }
+                
+                if (Module.GetSubmodulesLocalPathes().Any())
+                {
+                    if (cbUpdateSubmodules.Checked)
+                        UICommands.StartUpdateSubmodulesDialog(this);
+
+                    AppSettings.UpdateSubmodulesOnCheckout = cbUpdateSubmodules.Checked;
+                }
 
                 DialogResult = DialogResult.OK;
             }
@@ -91,6 +103,12 @@ namespace GitUI.CommandsDialogs
             {
                 CheckoutAfterCreate.Checked = true;
             }
+        }
+
+        private void CheckoutAfterCreate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbUpdateSubmodules.Visible)
+                cbUpdateSubmodules.Enabled = CheckoutAfterCreate.Checked;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
@@ -26,6 +27,9 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+
+            cbUpdateSubmodules.Visible = Module.GetSubmodulesLocalPathes().Any();
+            cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
         }
 
         private void FormCheckoutLoad(object sender, EventArgs e)
@@ -53,6 +57,14 @@ namespace GitUI.CommandsDialogs
                 string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
 
                 FormProcess.ShowDialog(this, command);
+                
+                if (Module.GetSubmodulesLocalPathes().Any())
+                {
+                    if (cbUpdateSubmodules.Checked)
+                        UICommands.StartUpdateSubmodulesDialog(this);
+
+                    AppSettings.UpdateSubmodulesOnCheckout = cbUpdateSubmodules.Checked;
+                }
 
                 DialogResult = System.Windows.Forms.DialogResult.OK;
 
