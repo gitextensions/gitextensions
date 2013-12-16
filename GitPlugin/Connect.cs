@@ -65,164 +65,179 @@ namespace GitPlugin
                 var cultureInfo = new CultureInfo("en-US");
                 Thread.CurrentThread.CurrentCulture = cultureInfo;
 
-                _gitPlugin =
-                    new Plugin((DTE2)application, (AddIn)addInInst, "GitExtensions", "GitPlugin.Connect");
+                _gitPlugin = 
+                    new Plugin((DTE2) application, (AddIn) addInInst, "GitExtensions", "GitPlugin.Connect");
             }
 
-            if (connectMode == ext_ConnectMode.ext_cm_UISetup)
-                this.GitPluginUISetup();
-            if (connectMode == ext_ConnectMode.ext_cm_AfterStartup ||
-                connectMode == ext_ConnectMode.ext_cm_Startup)
-                this.GitPluginInit();
+            switch (connectMode)
+            {
+                case ext_ConnectMode.ext_cm_UISetup:
+                    // Install CommandBar permanently (only runs once per AddIn)
+                    GitPluginUISetup();
+                    break;
 
+                case ext_ConnectMode.ext_cm_Startup:
+                    // The add-in was marked to load on startup
+                    // Do nothing at this point because the IDE may not be fully initialized
+                    // Visual Studio will call OnStartupComplete when fully initialized
+                    break;
+
+                case ext_ConnectMode.ext_cm_AfterStartup:
+                    // The add-in was loaded by hand after startup using the Add-In Manager
+                    // Initialize it in the same way that when is loaded on startup
+                    GitPluginInit();
+                    break;
+            }
         }
 
         private void GitPluginInit()
-        {
-            this.GitPluginUISetup();
-        }
-
-        private void GitPluginUISetup()
         {
             if (_gitPlugin == null) return;
 
             try
             {
 #if DEBUG
-                this._gitPlugin.OutputPane.OutputString("Git Extensions plugin connected" + Environment.NewLine);
+                _gitPlugin.OutputPane.OutputString("Git Extensions plugin connected" + Environment.NewLine);
 #endif
+                RegiserGitPluginCommand();
+            }
+            catch (Exception ex)
+            {
+                _gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex);
+            }
+        }
 
-                this.RegiserGitPluginCommand();
+        private void GitPluginUISetupMainMenu()
+        {
+            // Try to delete the commandbar if it exists from a previous execution, 
+            // because the /resetaddin command-line switch of VS 2005 (or higher) add-in 
+            // projects only resets commands and buttons, not commandbars
+            _gitPlugin.DeleteGitMainMenuBar();
 
-                //Place the command on the tools menu.
-                //Find the MenuBar command bar, which is the top-level command bar holding all the main menu items:
-                var menuBarCommandBar = _gitPlugin.GetMenuBar();
+            try
+            {
+                // Add a new commandbar popup 
+                CommandBar mainMenuBar = _gitPlugin.AddGitMainMenuBar(GetToolsMenuName());
+                CommandBarPopup mainMenuPopup = (CommandBarPopup)mainMenuBar.Parent;
 
-                CommandBarControl toolsControl;
-                CommandBarPopup mainMenuPopup = null;
-                try
+                var n = 1;
+
+                // Add commands
                 {
-                    toolsControl = menuBarCommandBar.Controls["Git"];
-                }
-                catch
-                {
-                    toolsControl = null;
-                }
-
-                try
-                {
-                    if (toolsControl == null)
-                    {
-
-                        toolsControl = menuBarCommandBar.Controls.Add(MsoControlType.msoControlPopup, Type.Missing,
-                                                                      Type.Missing, 4, false);
-                        toolsControl.Caption = "&Git";
-                    }
-
-                    mainMenuPopup = (CommandBarPopup)toolsControl;
-                    mainMenuPopup.Caption = "&Git";
-
-                }
-                catch (Exception ex)
-                {
-                    try
-                    {
-                        _gitPlugin.OutputPane.OutputString(
-                            "Error creating git menu (trying to add commands to tools menu): " + ex);
-                        if (toolsControl == null)
-                        {
-                            toolsControl = menuBarCommandBar.Controls[this.GetToolsMenuName()];
-                            mainMenuPopup = (CommandBarPopup)toolsControl;
-                        }
-                    }
-                    catch (Exception ex2)
-                    {
-                        _gitPlugin.OutputPane.OutputString("Error menu: " + ex2);
-                    }
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsBrowse", "&Browse", "Browse repository", 12, n++, true);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsClone", "Clone &repository", "Clone existing Git", 14, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsInitRepository", "Initialize new repositor&y", "Initialize new Git repository", 13, n++);
                 }
 
-                try
                 {
-                    // add the toolbar and menu commands
-                    var commandBar = _gitPlugin.AddGitCommandBar(MsoBarPosition.msoBarTop);
-
-                    _gitPlugin.AddToolbarCommandWithText(commandBar, "GitExtensionsCommit", "Commit", "Commit changes", 7, 1);
-                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsBrowse", "Browse", "Browse repository", 12, 2);
-                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPull", "Pull", "Pull changes from remote repository", 9, 3);
-                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPush", "Push", "Push changes to remote repository", 8, 4);
-                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsStash", "Stash", "Stash changes", 3, 5);
-                    _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsSettings", "Settings", "Settings", 2, 6);
-                }
-                catch (Exception ex)
-                {
-                    _gitPlugin.OutputPane.OutputString("Error creating toolbar: " + ex);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsCommit", "&Commit", "Commit changes", 7, n++, true);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsPull", "P&ull", "Pull changes from remote repository", 9, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsPush", "Pu&sh", "Push changes to remote repository", 8, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsStash", "Stas&h", "Stash changes", 3, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsRemotes", "Manage rem&otes", "Manage remote repositories", 17, n++);
                 }
 
-                try
                 {
-                    var n = 1;
-
-                    // Add commands
-                    {
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsBrowse", "&Browse", "Browse repository", 12, n++, true);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsClone", "Clone &repository", "Clone existing Git", 14, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsInitRepository", "Initialize new repositor&y", "Initialize new Git repository", 13, n++);
-                    }
-
-                    {
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsCommit", "&Commit", "Commit changes", 7, n++, true);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsPull", "P&ull", "Pull changes from remote repository", 9, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsPush", "Pu&sh", "Push changes to remote repository", 8, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsStash", "Stas&h", "Stash changes", 3, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsRemotes", "Manage rem&otes", "Manage remote repositories", 17, n++);
-                    }
-
-                    {
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsApplyPatch", "&Apply patch", "Apply patch", 0, n++, true);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsFormatPatch", "&Format patch", "Format patch", 0, n++);
-                    }
-
-                    {
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsViewChanges", "V&iew changes", "View commit change history", 0, n++, true);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsFindFile", "Find fi&le", "Search for a file in the repository", 23, n++);
-                    }
-
-                    {
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSwitchBranch", "Chec&kout branch", "Switch to branch", 16, n++, true);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsCreateBranch", "Create bra&nch", "Create new branch", 10, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsMerge", "&Merge", "merge", 18, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsRebase", "R&ebase", "Rebase", 19, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSolveMergeConflicts", "Sol&ve mergeconflicts", "Solve mergeconflicts", 0, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsCherryPick", "Cherry &pick", "Cherry pick commit", 15, n++);
-                    }
-
-                    {
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsBash", "&Git bash", "Start git bash", 21, n++, true);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsGitIgnore", "Edit &.gitignore", "Edit .gitignore file", 22, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSettings", "Se&ttings", "Settings", 2, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsAbout", "About Git E&xtensions", "About Git Extensions", 20, n++);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _gitPlugin.OutputPane.OutputString("Error creating contextmenu: " + ex);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsApplyPatch", "&Apply patch", "Apply patch", 0, n++, true);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsFormatPatch", "&Format patch", "Format patch", 0, n++);
                 }
 
+                {
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsViewChanges", "V&iew changes", "View commit change history", 0, n++, true);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsFindFile", "Find fi&le", "Search for a file in the repository", 23, n++);
+                }
+
+                {
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSwitchBranch", "Chec&kout branch", "Switch to branch", 16, n++, true);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsCreateBranch", "Create bra&nch", "Create new branch", 10, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsMerge", "&Merge", "merge", 18, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsRebase", "R&ebase", "Rebase", 19, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSolveMergeConflicts", "Sol&ve mergeconflicts", "Solve mergeconflicts", 0, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsCherryPick", "Cherry &pick", "Cherry pick commit", 15, n++);
+                }
+
+                {
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsBash", "&Git bash", "Start git bash", 21, n++, true);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsGitIgnore", "Edit &.gitignore", "Edit .gitignore file", 22, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSettings", "Se&ttings", "Settings", 2, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsAbout", "About Git E&xtensions", "About Git Extensions", 20, n++);
+                }
+            }
+            catch (Exception ex)
+            {
+                _gitPlugin.OutputPane.OutputString("Error creating contextmenu: " + ex);
+            }
+        }
+
+        private void GitPluginUISetupCommandBar()
+        {
+            // Try to delete the commandbar if it exists from a previous execution, 
+            // because the /resetaddin command-line switch of VS 2005 (or higher) add-in 
+            // projects only resets commands and buttons, not commandbars
+            _gitPlugin.DeleteGitCommandBar();
+
+            try
+            {
+                CommandBar commandBar = _gitPlugin.AddGitCommandBar(MsoBarPosition.msoBarTop);
+
+                _gitPlugin.AddToolbarCommandWithText(commandBar, "GitExtensionsCommit", "Commit", "Commit changes", 7, 1);
+                _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsBrowse", "Browse", "Browse repository", 12, 2);
+                _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPull", "Pull", "Pull changes from remote repository", 9, 3);
+                _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsPush", "Push", "Push changes to remote repository", 8, 4);
+                _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsStash", "Stash", "Stash changes", 3, 5);
+                _gitPlugin.AddToolbarCommand(commandBar, "GitExtensionsSettings", "Settings", "Settings", 2, 6);
+
+            }
+            catch (Exception ex)
+            {
+                _gitPlugin.OutputPane.OutputString("Error creating toolbar: " + ex);
+            }
+        }
+
+        private void GitPluginUISetupContextMenu()
+        {
+            try
+            {
                 AddContextMenuItemsToContextMenu("Web Item");
                 AddContextMenuItemsToContextMenu("Item");
                 AddContextMenuItemsToContextMenu("Easy MDI Document Window");
                 AddContextMenuItemsToContextMenu("Code Window");
                 AddContextMenuItemsToContextMenu("Script Context");
                 AddContextMenuItemsToContextMenu("ASPX Context");
+            }
+            catch (Exception ex)
+            {
+                _gitPlugin.OutputPane.OutputString("Error creating context menu: " + ex);
+            }
+        }
 
-                /*
-                 * Uncomment the code block below to help find the name of commandbars in
-                 * visual studio. All commandbars (and context menu's) will get a new entry
-                 * with the name of that commandbar.
-                foreach (var commandBar in _gitPlugin.CommandBars)
-                {
-                    _gitPlugin.OutputPane.OutputString(((CommandBar)commandBar).Name + Environment.NewLine);
-                }*/
+        private void GitPluginUISetup()
+        {
+            if (_gitPlugin == null) return;
+
+            // TODO: After Setup call: devenv.exe /ResetAddin GitPlugin.Connect or  
+            //       Delete RegistryKey: HKEY_CURRENT_USER\Software\Microsoft\VisualStudio\[version]\PreloadAddinStateManager\[GitPlugin.Connect-Key]
+
+            try
+            {
+#if DEBUG
+                this._gitPlugin.OutputPane.OutputString("Git Extensions plugin UI setup" + Environment.NewLine);
+#endif
+
+                this.GitPluginInit();
+                this.GitPluginUISetupMainMenu();
+                this.GitPluginUISetupCommandBar();
+                this.GitPluginUISetupContextMenu();
+
+                //    /*
+                //     * Uncomment the code block below to help find the name of commandbars in
+                //     * visual studio. All commandbars (and context menu's) will get a new entry
+                //     * with the name of that commandbar.
+                //    foreach (var commandBar in _gitPlugin.CommandBars)
+                //    {
+                //        _gitPlugin.OutputPane.OutputString(((CommandBar)commandBar).Name + Environment.NewLine);
+                //    }*/
+
             }
             catch (Exception ex)
             {
@@ -278,7 +293,7 @@ namespace GitPlugin
                 _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsResetChanges", "Git: Reset file changes",
                                          "Undo changes made to this file", 4, 6);
             }
-            catch
+            catch (Exception)
             {
                 //ignore all exceptions....
                 //When a commandbar is not found, an exception will be thrown -> todo avoid exceptions!
@@ -353,7 +368,7 @@ namespace GitPlugin
                 }
                 toolsMenuName = resourceManager.GetString(resourceName);
             }
-            catch
+            catch (Exception)
             {
                 //We tried to find a localized version of the word Tools, but one was not found.
                 //  Default to the en-US word, which may work for the current culture.

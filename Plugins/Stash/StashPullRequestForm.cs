@@ -5,6 +5,8 @@ using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using System.Linq;
+using System.Threading;
+using System.Data;
 
 namespace Stash
 {
@@ -15,6 +17,7 @@ namespace Stash
         private readonly IGitPluginSettingsContainer _settingsContainer;
         private readonly BindingList<StashUser> _reviewers = new BindingList<StashUser>();
         private readonly List<string> _stashUsers = new List<string>();
+
 
         public StashPullRequestForm(GitUIBaseEventArgs gitUiCommands,
             IGitPluginSettingsContainer settings)
@@ -34,15 +37,46 @@ namespace Stash
                 Close();
                 return;
             }
-
-            _stashUsers.AddRange(GetStashUsers().Select(a => a.Slug));
-
-            var repositories = GetRepositories();
-
-            ddlRepositorySource.DataSource = repositories.ToList();
-            ddlRepositoryTarget.DataSource = repositories.ToList();
-
-            ReviewersDataGrid.DataSource = _reviewers;
+            //_stashUsers.AddRange(GetStashUsers().Select(a => a.Slug));
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                var repositories = GetRepositories();
+                try
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        ddlRepositorySource.DataSource = repositories.ToList();
+                        ddlRepositoryTarget.DataSource = repositories.ToList();
+                        ddlRepositorySource.Enabled = true;
+                        ddlRepositoryTarget.Enabled = true;
+                    });
+                }
+                catch (System.InvalidOperationException)
+                {
+                    return;
+                }
+            });
+        }
+        private void StashViewPullRequestFormLoad(object sender, EventArgs e)
+        {
+            if (_settings == null)
+                return;
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                var pullReqs = GetPullRequests();
+                try
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        lbxPullRequests.DataSource = pullReqs;
+                        lbxPullRequests.DisplayMember = "DisplayName";
+                    });
+                }
+                catch(System.InvalidOperationException){
+                    return;
+                }
+                
+            });
         }
 
         private List<Repository> GetRepositories()
@@ -52,8 +86,20 @@ namespace Stash
             var defaultRepo = getDefaultRepo.Send();
             if (defaultRepo.Success)
                 list.Add(defaultRepo.Result);
-            var getRelatedRepos = new GetRelatedRepoRequest(_settings);
-            var result = getRelatedRepos.Send();
+            //var getRelatedRepos = new GetRelatedRepoRequest(_settings);
+            //var result = getRelatedRepos.Send();
+            //if (result.Success)
+            //{
+            //    list.AddRange(result.Result);
+            //}
+            return list;
+        }
+
+        private List<PullRequest> GetPullRequests()
+        {
+            var list = new List<PullRequest>();
+            var getPullReqs = new GetPullRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
+            var result = getPullReqs.Send();
             if (result.Success)
             {
                 list.AddRange(result.Result);
@@ -64,22 +110,24 @@ namespace Stash
         private void BtnCreateClick(object sender, EventArgs e)
         {
             var info = new PullRequestInfo
-                           {
-                               Title = txtTitle.Text,
-                               Description = txtDescription.Text,
-                               SourceBranch = txtSourceBranch.Text,
-                               TargetBranch = txtTargetBranch.Text,
-                               SourceRepo = (Repository) ddlRepositorySource.SelectedValue,
-                               TargetRepo = (Repository) ddlRepositoryTarget.SelectedValue,
-                               Reviewers = _reviewers
-                           };
-
+            {
+                Title = txtTitle.Text,
+                Description = txtDescription.Text,
+                SourceBranch = ddlBranchSource.SelectedValue.ToString(),
+                TargetBranch = ddlBranchTarget.SelectedValue.ToString(),
+                SourceRepo = (Repository)ddlRepositorySource.SelectedValue,
+                TargetRepo = (Repository)ddlRepositoryTarget.SelectedValue,
+                Reviewers = _reviewers
+            };
             var pullRequest = new CreatePullRequestRequest(_settings, info);
             var response = pullRequest.Send();
             if (response.Success)
+            {
                 MessageBox.Show("Success");
+                StashViewPullRequestFormLoad(null, null);
+            }
             else
-                MessageBox.Show(string.Join(Environment.NewLine, response.Messages), 
+                MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
@@ -97,9 +145,13 @@ namespace Stash
             }
             return list;
         }
-
+        Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
         private IEnumerable<string> GetStashBranches(Repository selectedRepo)
         {
+            if (Branches.ContainsKey(selectedRepo))
+            {
+                return Branches[selectedRepo];
+            }
             var list = new List<string>();
             var getBranches = new GetBranchesRequest(selectedRepo, _settings);
             var result = getBranches.Send();
@@ -110,6 +162,7 @@ namespace Stash
                     list.Add(value["displayId"].ToString());
                 }
             }
+            Branches.Add(selectedRepo, list);
             return list;
         }
 
@@ -127,35 +180,41 @@ namespace Stash
 
         private void DdlRepositorySourceSelectedValueChanged(object sender, EventArgs e)
         {
-            RefreshAutoCompleteBranch(txtSourceBranch, ((ComboBox) sender).SelectedValue);
+            RefreshDDLBranch(ddlBranchSource, ((ComboBox)sender).SelectedValue);
         }
 
         private void DdlRepositoryTargetSelectedValueChanged(object sender, EventArgs e)
         {
-            RefreshAutoCompleteBranch(txtTargetBranch, ((ComboBox)sender).SelectedValue);
+            RefreshDDLBranch(ddlBranchTarget, ((ComboBox)sender).SelectedValue);
         }
 
-        private void RefreshAutoCompleteBranch(TextBox textBox, object selectedValue)
+        private void RefreshDDLBranch(ComboBox comboBox, object selectedValue)
         {
-            var branches = GetStashBranches((Repository)selectedValue);
-            textBox.AutoCompleteCustomSource.Clear();
-            textBox.AutoCompleteCustomSource.AddRange(branches.ToArray());
+            List<string> lsNames = (GetStashBranches((Repository)selectedValue)).ToList();
+            lsNames.Sort();
+            lsNames.Insert(0, "");
+            comboBox.DataSource = lsNames;
         }
 
-        private void TxtSourceBranchTextChanged(object sender, EventArgs e)
+        private void DdlBranchSourceSelectedValueChanged(object sender, EventArgs e)
         {
-            var commit = GetCommitInfo((Repository) ddlRepositorySource.SelectedValue,
-                                                txtSourceBranch.Text);
-            txtSourceBranch.Tag = commit;
+            if (string.IsNullOrEmpty(ddlBranchSource.SelectedValue.ToString())) return;
+            var commit = GetCommitInfo((Repository)ddlRepositorySource.SelectedValue,
+                                                ddlBranchSource.SelectedValue.ToString());
+
+            ddlBranchSource.Tag = commit;
             UpdateCommitInfo(lblCommitInfoSource, commit);
+            txtTitle.Text = ddlBranchSource.SelectedValue.ToString().Replace("-"," ");
             UpdatePullRequestDescription();
         }
 
-        private void TxtTargetBranchTextChanged(object sender, EventArgs e)
+        private void DdlBranchTargetSelectedValueChanged(object sender, EventArgs e)
         {
-            var commit = GetCommitInfo((Repository) ddlRepositoryTarget.SelectedValue,
-                                                txtTargetBranch.Text);
-            txtTargetBranch.Tag = commit;
+            if (string.IsNullOrEmpty(ddlBranchTarget.SelectedValue.ToString())) return;
+            var commit = GetCommitInfo((Repository)ddlRepositoryTarget.SelectedValue,
+                                                ddlBranchTarget.SelectedValue.ToString());
+
+            ddlBranchTarget.Tag = commit;
             UpdateCommitInfo(lblCommitInfoTarget, commit);
             UpdatePullRequestDescription();
         }
@@ -171,10 +230,10 @@ namespace Stash
 
         private void UpdateCommitInfo(Label label, Commit commit)
         {
-            if (commit == null) 
+            if (commit == null)
                 label.Text = string.Empty;
-            else 
-                label.Text = string.Format("{0} committed{1}{2}", 
+            else
+                label.Text = string.Format("{0} committed{1}{2}",
                     commit.AuthorName, Environment.NewLine, commit.Message);
         }
 
@@ -182,15 +241,15 @@ namespace Stash
         {
             if (ddlRepositorySource.SelectedValue == null
                 || ddlRepositoryTarget.SelectedValue == null
-                || txtSourceBranch.Tag == null
-                || txtTargetBranch.Tag == null)
+                || ddlBranchSource.Tag == null
+                || ddlBranchTarget.Tag == null)
                 return;
 
             var getCommitsInBetween = new GetInBetweenCommitsRequest(
-                (Repository) ddlRepositorySource.SelectedValue,
-                (Repository) ddlRepositoryTarget.SelectedValue,
-                (Commit) txtSourceBranch.Tag,
-                (Commit) txtTargetBranch.Tag,
+                (Repository)ddlRepositorySource.SelectedValue,
+                (Repository)ddlRepositoryTarget.SelectedValue,
+                (Commit)ddlBranchSource.Tag,
+                (Commit)ddlBranchTarget.Tag,
                 _settings);
 
             var result = getCommitsInBetween.Send();
@@ -198,13 +257,74 @@ namespace Stash
             {
                 var sb = new StringBuilder();
                 sb.AppendLine();
-                foreach(var commit in result.Result)
+                foreach (var commit in result.Result)
                 {
                     if (!commit.IsMerge)
                         sb.Append("* ").AppendLine(commit.Message);
                 }
                 txtDescription.Text = sb.ToString();
             }
+        }
+        private void PullRequestChanged(object sender, EventArgs e)
+        {
+            var curItem = lbxPullRequests.SelectedItem as PullRequest;
+
+            txtPRTitle.Text = curItem.Title;
+            txtPRDescription.Text = curItem.Description;
+            lblPRAuthor.Text = curItem.Author;
+            lblPRState.Text = curItem.State;
+            txtPRReviewers.Text = curItem.Reviewers;
+            lblPRSourceRepo.Text = curItem.SrcDisplayName;
+            lblPRSourceBranch.Text = curItem.SrcBranch;
+            lblPRDestRepo.Text = curItem.DestDisplayName;
+            lblPRDestBranch.Text = curItem.DestBranch;
+        }
+
+        private void BtnMergeClick(object sender, EventArgs e)
+        {
+            var curItem = lbxPullRequests.SelectedItem as PullRequest;
+            var mergeInfo = new MergeRequestInfo
+            {
+                Id = curItem.Id,
+                Version = curItem.Version,
+                ProjectKey = curItem.DestProjectKey,
+                TargetRepo = curItem.DestRepo,
+            };
+
+            //Merge
+            var mergeRequest = new MergePullRequest(_settings, mergeInfo);
+            var response = mergeRequest.Send();
+            if (response.Success)
+            {
+                MessageBox.Show("Success");
+                StashViewPullRequestFormLoad(null, null);
+            }
+            else
+                MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        private void BtnApproveClick(object sender, EventArgs e)
+        {
+            var curItem = lbxPullRequests.SelectedItem as PullRequest;
+            var mergeInfo = new MergeRequestInfo
+            {
+                Id = curItem.Id,
+                Version = curItem.Version,
+                ProjectKey = curItem.DestProjectKey,
+                TargetRepo = curItem.DestRepo,
+            };
+
+            //Approve
+            var approveRequest = new ApprovePullRequest(_settings, mergeInfo);
+            var response = approveRequest.Send();
+            if (response.Success)
+            {
+                    MessageBox.Show("Success");
+                    StashViewPullRequestFormLoad(null, null);
+            }
+            else
+                MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
