@@ -49,7 +49,7 @@
             this.btStageCurrent.Location = new System.Drawing.Point(263, 170);
             this.btStageCurrent.Name = "btStageCurrent";
             this.btStageCurrent.Size = new System.Drawing.Size(173, 25);
-            this.btStageCurrent.TabIndex = 4;
+            this.btStageCurrent.TabIndex = 16;
             this.btStageCurrent.Text = "Stage Current";
             this.btStageCurrent.UseVisualStyleBackColor = true;
             this.btStageCurrent.Click += new System.EventHandler(this.btStageCurrent_Click);
@@ -172,13 +172,12 @@
             // 
             // FormMergeSubmodule
             // 
-            this.AcceptButton = this.btStageCurrent;
+            this.AcceptButton = this.btOpenSubmodule;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(476, 203);
             this.Controls.Add(this.lbSubmodule);
             this.Controls.Add(this.btRefresh);
-            this.Controls.Add(this.btOpenSubmodule);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.tbCurrent);
             this.Controls.Add(this.tbRemote);
@@ -188,6 +187,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btStageCurrent);
+            this.Controls.Add(this.btOpenSubmodule);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
