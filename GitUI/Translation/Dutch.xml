@@ -1574,10 +1574,9 @@ U heeft rechten om commits te verzenden. {2}
           <Source>Filter files</Source>
           <Value>Filter bestanden</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>This revision will be archived:</Source>
-          <OldSource>Selected revision to archive:</OldSource>
-          <Value>Selecteer een revisie om te archiveren</Value>
+          <Value>Revisie om te archiveren:</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
@@ -1769,10 +1768,9 @@ compare with first:</Source>
           <Source>Node not found. File tree selection was not changed.</Source>
           <Value>Node niet gevonden. Selectie in bestandsboon niet gewijzigd.</Value>
         </TranslationItem>
-        <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text">
           <Source>(Repository hosts)</Source>
-          <OldSource>Repository hosts</OldSource>
-          <Value>Opslagplaats host</Value>
+          <Value>(Opslagplaats hosts)</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileFilterAllFiles" Property="Text">
           <Source>All files</Source>
@@ -1798,10 +1796,9 @@ compare with first:</Source>
           <Source>Update current submodule</Source>
           <Value>Huidige submodule bijwerken</Value>
         </TranslationItem>
-        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
           <Source>View pull requests...</Source>
-          <OldSource>View pull requests</OldSource>
-          <Value>Bekijk binnenhaal verzoek</Value>
+          <Value>Bekijk binnenhaal verzoeken</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
           <Source>You are in the middle of a bisect</Source>
@@ -1883,9 +1880,8 @@ compare with first:</Source>
           <Source>Cherry pick...</Source>
           <Value>Cherry pick...</Value>
         </TranslationItem>
-        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
           <Source>Clean working tree...</Source>
-          <OldSource>Cleanup repository...</OldSource>
           <Value>Opschonen...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
@@ -1896,9 +1892,8 @@ compare with first:</Source>
           <Source>Clone repository...</Source>
           <Value>Kloon opslagplaats...</Value>
         </TranslationItem>
-        <TranslationItem Name="closeToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close (go to Dashboard)</Source>
-          <OldSource>Close</OldSource>
           <Value>Sluiten</Value>
         </TranslationItem>
         <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text">
@@ -1933,9 +1928,8 @@ compare with first:</Source>
           <Source>Copy full path</Source>
           <Value>Kopieer bestandsnaam naar klembord</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text" type="unfinished">
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
           <Source>Copy full path(s)</Source>
-          <OldSource>Copy full path</OldSource>
           <Value>Kopieer bestandsnaam naar klembord</Value>
         </TranslationItem>
         <TranslationItem Name="dashboardToolStripMenuItem" Property="Text">
@@ -2024,10 +2018,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>File history</Source>
           <Value>Bestands history</Value>
         </TranslationItem>
-        <TranslationItem Name="fileToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fileToolStripMenuItem" Property="Text">
           <Source>Start</Source>
-          <OldSource>File</OldSource>
-          <Value>Bestand</Value>
+          <Value>Start</Value>
         </TranslationItem>
         <TranslationItem Name="fileTreeArchiveToolStripMenuItem" Property="Text">
           <Source>Archive...</Source>
@@ -2089,14 +2082,12 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Local</Source>
           <Value>Lokaal</Value>
         </TranslationItem>
-        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text" type="unfinished">
+        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
           <Source>Remote repositories...</Source>
-          <OldSource>Manage remote repositories</OldSource>
           <Value>Beheer externe opslagplaatsen</Value>
         </TranslationItem>
-        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text">
           <Source>Submodules...</Source>
-          <OldSource>Manage submodules</OldSource>
           <Value>Beheer submodulen</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
@@ -2111,10 +2102,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Navigate</Source>
           <Value>Navigeer</Value>
         </TranslationItem>
-        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text">
           <Source>Open containing folder(s)</Source>
-          <OldSource>Open containing folder</OldSource>
-          <Value>Open bestands directorie</Value>
+          <Value>Open bestands directorie(s)</Value>
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
           <Source>Open this revision (temp file)</Source>
@@ -2460,9 +2450,8 @@ Voer een geldige naam in of selecteeer een voorgedefinieerde keuze.</Value>
           <Source>Checkout revision</Source>
           <Value>Revisie uitchecken</Value>
         </TranslationItem>
-        <TranslationItem Name="Force" Property="Text" type="unfinished">
+        <TranslationItem Name="Force" Property="Text">
           <Source>Force (reset local changes)</Source>
-          <OldSource>Force</OldSource>
           <Value>Forceer</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
@@ -2777,10 +2766,9 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Source>Commit</Source>
           <Value>Commit</Value>
         </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text" type="unfinished">
+        <TranslationItem Name="Reset" Property="Text">
           <Source>Reset all changes</Source>
-          <OldSource>Reset changes</OldSource>
-          <Value>Reset wijzigingen</Value>
+          <Value>Reset alle wijzigingen</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Source>There are unresolved mergeconflicts
@@ -3349,9 +3337,8 @@ Kies 'Nee' om nieuwe bestanden te behouden.</Value>
     </TranslationCategory>
     <TranslationCategory Name="FormCreateBranch">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Create branch</Source>
-          <OldSource>Create Branch</OldSource>
           <Value>Vertakking aanmaken</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
@@ -3547,10 +3534,9 @@ verwijderen die niet is samengevoegd, selecteer de optie 'Geforceerd verwijderen
           <Source>Delete</Source>
           <Value>Verwijderen</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteTag" Property="Text" type="unfinished">
+        <TranslationItem Name="deleteTag" Property="Text">
           <Source>Delete tag also from the following remote(s):</Source>
-          <OldSource>Delete tag from '{0}'</OldSource>
-          <Value>Verwijder label van '{0}'</Value>
+          <Value>Verwijder label ook uit externe repositories:</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select tag</Source>
@@ -3860,9 +3846,8 @@ Verander het standaard gedrag alleen wanneer problemen optreden.</Value>
           <Source>You need to select two revisions</Source>
           <Value>Er moeten 2 revisies geselecteerd worden.</Value>
         </TranslationItem>
-        <TranslationItem Name="_wrongSmtpSettingsText" Property="Text" type="unfinished">
+        <TranslationItem Name="_wrongSmtpSettingsText" Property="Text">
           <Source>You need to enter a valid smtp in the settings dialog.</Source>
-          <OldSource>You need to enter a valid SMTP in the settings dialog.</OldSource>
           <Value>Er is geen SMTP server ingesteld in het instellingen dialoog.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -4618,10 +4603,9 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
           <Source>Solve conflicts</Source>
           <Value>Conflicten oplossen</Value>
         </TranslationItem>
-        <TranslationItem Name="NoTags" Property="Text" type="unfinished">
+        <TranslationItem Name="NoTags" Property="Text">
           <Source>Fetch no tag</Source>
-          <OldSource>No tags</OldSource>
-          <Value>Geen labels</Value>
+          <Value>Geen labels ophalen</Value>
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text">
           <Source>&amp;Pull</Source>
@@ -5428,11 +5412,11 @@ De waarde is teruggezet naar een lege waarde.</Value>
           <Source>Cancel</Source>
           <Value>Annuleren</Value>
         </TranslationItem>
-        <TranslationItem Name="Hard" Property="Text" type="unfinished">
+        <TranslationItem Name="Hard" Property="Text">
           <Source>Hard: reset working dir and index
 (discard ALL local changes, even uncommitted changes)</Source>
-          <OldSource>Hard: reset working dir and index (discard ALL local changes, even uncommitted changes)</OldSource>
-          <Value>Hard: reset werk directory en indes (maak ALLE lokale wijzigingen ongedaan, ook wijzigingen die nog niet gecommit zijn)</Value>
+          <Value>Hard: reset werk directory en indes 
+(maak ALLE lokale wijzigingen ongedaan, ook wijzigingen die nog niet gecommit zijn)</Value>
         </TranslationItem>
         <TranslationItem Name="Mixed" Property="Text">
           <Source>Mixed: leave working dir untouched, reset index</Source>
@@ -5446,10 +5430,9 @@ De waarde is teruggezet naar een lege waarde.</Value>
           <Source>Soft: leave working dir and index untouched</Source>
           <Value>Zacht: laat werk directory en index ongedeerd</Value>
         </TranslationItem>
-        <TranslationItem Name="branchInfo" Property="Text" type="unfinished">
+        <TranslationItem Name="branchInfo" Property="Text">
           <Source>Reset branch '{0}' to revision:</Source>
-          <OldSource>Reset {0} to:</OldSource>
-          <Value>Reset {0} naar:</Value>
+          <Value>Reset {0} naar revisie:</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Reset type</Source>
@@ -5807,11 +5790,11 @@ Het samenvoegen conflict zal niet worden gemarkeerd als opgelost. Probeer het op
           <Source>Merge</Source>
           <Value>Samenvoegen</Value>
         </TranslationItem>
-        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text" type="unfinished">
+        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
           <Source>The selected mergeconflict is a submodule.
 Stage current submodule commit?</Source>
-          <OldSource>The selected mergeconflict is a submodule. Mark conflict as resolved?</OldSource>
-          <Value>Het geselecteerde samenvoeg conflict is een submodule. Wilt u dit conflict als opgelost markeren?</Value>
+          <Value>Het geselecteerde samenvoeg conflict is een submodule. 
+Wilt u dit conflict als opgelost markeren?</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
           <Source>Submodule</Source>
@@ -6392,11 +6375,9 @@ Wilt u de nieuwe repository "{0}" openen?</Value>
           <Source>&amp;Next</Source>
           <Value>&amp;Volgende</Value>
         </TranslationItem>
-        <TranslationItem Name="noLanguageCodeSelected" Property="Text" type="unfinished">
+        <TranslationItem Name="noLanguageCodeSelected" Property="Text">
           <Source>There is no language code selected.
 Do you want to select a language code first?</Source>
-          <OldSource>There is no languagecode selected.
-Do you want to select a language code first?</OldSource>
           <Value>Er is geen taalcode geselecteerd.
 Wilt u eerst een taalcode selecteren?</Value>
         </TranslationItem>
@@ -6817,10 +6798,9 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
           <Source>Port</Source>
           <Value>Poort</Value>
         </TranslationItem>
-        <TranslationItem Name="label23" Property="Text" type="unfinished">
+        <TranslationItem Name="label23" Property="Text">
           <Source>SMTP server name</Source>
-          <OldSource>SMTP server for sending patches by email</OldSource>
-          <Value>SMTP server voor het versturen van patches per email</Value>
+          <Value>SMTP server</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
