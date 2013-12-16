@@ -8,10 +8,10 @@ namespace Stash
 {
     class Settings
     {
-        private const string StashHttpRegex =
-            @"(?<prefix>https?:\/\/)([\w\.]+\@)?(?<url>([a-zA-Z0-9\.\-]+):?(\d+)?)\/scm\/(?<project>\w+)\/(?<repo>\w+).git";
+        private const string StashHttpRegex = 
+            @"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/scm\/(?<project>~?\w+)\/(?<repo>\w+).git";
         private const string StashSshRegex =
-            @"ssh:\/\/([\w\.]+\@)?(?<url>([\w\.]+):?(\d+)?)\/(?<project>\w+)\/(?<repo>\w+).git";
+            @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?\w+)\/(?<repo>\w+).git";
 
         public static Settings Parse(IGitModule gitModule, IGitPluginSettingsContainer setting)
         {
@@ -19,6 +19,7 @@ namespace Stash
                              {
                                  Username = setting.GetSetting(StashPlugin.StashUsername),
                                  Password = setting.GetSetting(StashPlugin.StashPassword),
+                                 StashUrl = setting.GetSetting(StashPlugin.StashBaseURL),
                                  DisableSSL = setting.GetSetting(StashPlugin.StashDisableSSL)
                              };
 
@@ -32,11 +33,10 @@ namespace Stash
             {
                 var pattern = url.Contains("http") ? StashHttpRegex : StashSshRegex;
                 var match = Regex.Match(url, pattern);
-                if (match.Success)
+                if (match.Success && result.StashUrl.Contains(match.Groups["url"].Value))
                 {
                     result.ProjectKey = match.Groups["project"].Value;
                     result.RepoSlug = match.Groups["repo"].Value;
-                    result.StashUrl = match.Groups["prefix"].Value + match.Groups["url"].Value;
                     return result;
                 }
             }

@@ -184,7 +184,7 @@ namespace GitUI
                 return string.Empty;
 
             if (file.IsSubmodule)
-                return GitCommandHelpers.ProcessSubmodulePatch(diffViewer.Module, patch);
+                return GitCommandHelpers.ProcessSubmodulePatch(diffViewer.Module, file.Name, patch);
             return patch.Text;
         }
 

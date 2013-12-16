@@ -34,7 +34,6 @@
             this.Force = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.commitPickerSmallControl1 = new GitUI.UserControls.CommitPickerSmallControl();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -101,7 +100,6 @@
             // 
             this.flowLayoutPanel1.Controls.Add(this.label2);
             this.flowLayoutPanel1.Controls.Add(this.commitPickerSmallControl1);
-            this.flowLayoutPanel1.Controls.Add(this.label3);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -118,23 +116,13 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Checkout this revision";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(267, 5);
-            this.label3.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(141, 16);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "or choose another one.";
-            // 
             // commitPickerSmallControl1
             // 
             this.commitPickerSmallControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.commitPickerSmallControl1.Location = new System.Drawing.Point(141, 3);
             this.commitPickerSmallControl1.MinimumSize = new System.Drawing.Size(100, 26);
             this.commitPickerSmallControl1.Name = "commitPickerSmallControl1";
-            this.commitPickerSmallControl1.Size = new System.Drawing.Size(120, 26);
+            this.commitPickerSmallControl1.Size = new System.Drawing.Size(207, 26);
             this.commitPickerSmallControl1.TabIndex = 3;
             // 
             // FormCheckoutRevision
@@ -167,6 +155,5 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label label2;
         private UserControls.CommitPickerSmallControl commitPickerSmallControl1;
-        private System.Windows.Forms.Label label3;
     }
 }

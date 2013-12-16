@@ -49,7 +49,7 @@ namespace GitUI.RevisionGridClasses
         private int _laneLineWidth = 2;
         private const int MaxLanes = 40;
         private Brush _selectionBrush;
-        
+
         private Pen _whiteBorderPen;
         private Pen _blackBorderPen;
 
@@ -57,7 +57,7 @@ namespace GitUI.RevisionGridClasses
         private readonly Graph _graphData;
         private readonly Dictionary<Junction, int> _junctionColors = new Dictionary<Junction, int>();
         private readonly Color _nonRelativeColor = Color.LightGray;
-        
+
         private readonly Color[] _possibleColors =
             {
                 Color.Red,
@@ -108,7 +108,7 @@ namespace GitUI.RevisionGridClasses
             _backgroundThread = new Thread(BackgroundThreadEntry)
                                    {
                                        IsBackground = true,
-                                       Priority = ThreadPriority.BelowNormal,
+                                       Priority = ThreadPriority.Normal,
                                        Name = "DvcsGraph.backgroundThread"
                                    };
             _backgroundThread.Start();
@@ -125,7 +125,7 @@ namespace GitUI.RevisionGridClasses
 
             _whiteBorderPen = new Pen(Brushes.White, _laneLineWidth + 2);
             _blackBorderPen = new Pen(Brushes.Black, _laneLineWidth + 1);
-            
+
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             CellPainting += dataGrid_CellPainting;
             ColumnWidthChanged += dataGrid_ColumnWidthChanged;
@@ -519,31 +519,26 @@ namespace GitUI.RevisionGridClasses
                 dataGrid_Scroll(null, null);
             }
 
-            lock (_graphData)
+            if ((e.State & DataGridViewElementStates.Visible) == 0 || e.ColumnIndex != 0)
+                return;
+
+            var brush = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
+                            ? _selectionBrush : Brushes.White;
+            e.Graphics.FillRectangle(brush, e.CellBounds);
+
+            Rectangle srcRect = DrawGraph(e.RowIndex);
+            if (!srcRect.IsEmpty)
             {
-                Graph.ILaneRow row = _graphData[e.RowIndex];
-                if (row == null || (e.State & DataGridViewElementStates.Visible) == 0)
-                    return;
-                if (e.ColumnIndex != 0)
-                    return;
-                var brush = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
-                                ? _selectionBrush : Brushes.White;
-                e.Graphics.FillRectangle(brush, e.CellBounds);
-
-                Rectangle srcRect = DrawGraph(e.RowIndex);
-                if (!srcRect.IsEmpty)
-                {
-                    e.Graphics.DrawImage
-                        (
-                            _graphBitmap,
-                            e.CellBounds,
-                            srcRect,
-                            GraphicsUnit.Pixel
-                        );
-                }
-
-                e.Handled = true;
+                e.Graphics.DrawImage
+                    (
+                        _graphBitmap,
+                        e.CellBounds,
+                        srcRect,
+                        GraphicsUnit.Pixel
+                    );
             }
+
+            e.Handled = true;
         }
 
         private void dataGrid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
@@ -559,33 +554,35 @@ namespace GitUI.RevisionGridClasses
 
         private void BackgroundThreadEntry()
         {
-            while (_shouldRun && _backgroundEvent.WaitOne())
+            while (_shouldRun)
             {
-                lock (_backgroundEvent)
+                if (_backgroundEvent.WaitOne(500))
                 {
-                    if (!_shouldRun)
-                        return;
-
-                    int scrollTo;
-                    lock (_backgroundThread)
+                    lock (_backgroundEvent)
                     {
-                        scrollTo = _backgroundScrollTo;
-                    }
+                        if (!_shouldRun)
+                            return;
 
-                    int curCount;
-                    lock (_graphData)
-                    {
-                        curCount = _graphDataCount;
-                        _graphDataCount = _graphData.CachedCount;
-                    }
+                        int scrollTo;
+                        lock (_backgroundThread)
+                        {
+                            scrollTo = _backgroundScrollTo;
+                        }
 
-                    if (RevisionGraphVisible)
-                        UpdateGraph(curCount, scrollTo);
-                    else
-                    {
-                        //do nothing... do not cache, the graph is invisible
-                        this.InvokeAsync(o => UpdateRow((int) o), curCount);
-                        Thread.Sleep(100);
+                        int curCount;
+                        lock (_graphData)
+                        {
+                            curCount = _graphDataCount;
+                            _graphDataCount = _graphData.CachedCount;
+                        }
+
+                        if (RevisionGraphVisible)
+                            UpdateGraph(curCount, scrollTo);
+                        else
+                        {
+                            //do nothing... do not cache, the graph is invisible
+                            Thread.Sleep(10);
+                        }
                     }
                 }
             }
@@ -628,98 +625,81 @@ namespace GitUI.RevisionGridClasses
 
         private void UpdateData()
         {
-            lock (_backgroundThread)
+            _visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
+            _visibleBottom = _rowHeight > 0 ? _visibleTop + (Height / _rowHeight) : _visibleTop;
+
+            //Add 5 for safe merge (1 for rounding and 1 for whitespace)....
+            if (_visibleBottom + 2 > _graphData.Count)
             {
-                _visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
-                _visibleBottom = _rowHeight > 0 ? _visibleTop + (Height / _rowHeight) : _visibleTop;
-
-                //Add 2 for safe merge (1 for rounding and 1 for whitespace)....
-                if (_visibleBottom + 2 > _graphData.Count)
+                //Currently we are doing some important work; we are recieving
+                //rows that the user is viewing
+                if (Loading != null && _graphData.Count > RowCount)// && graphData.Count != RowCount)
                 {
-                    //Currently we are doing some important work; we are recieving
-                    //rows that the user is viewing
-                    SetBackgroundThreadToNormalPriority();
-                    if (Loading != null && _graphData.Count > RowCount)// && graphData.Count != RowCount)
-                    {
-                        Loading(true);
-                    }
-                }
-                else
-                {
-                    //All rows that the user is viewing are loaded. We now can hide the loading
-                    //animation that is shown. (the event Loading(bool) triggers this!)
-                    //Since the graph is not drawn for the visible graph yet, keep the
-                    //priority on Normal. Lower it when the graph is visible.                            
-                    if (Loading != null)
-                    {
-                        Loading(false);
-                    }
-                }
-
-                if (_visibleBottom > _graphData.Count)
-                {
-                    _visibleBottom = _graphData.Count;
-                }
-
-                int targetBottom = _visibleBottom + 2000;
-                targetBottom = Math.Min(targetBottom, _graphData.Count);
-                if (_backgroundScrollTo < targetBottom)
-                {
-                    _backgroundScrollTo = targetBottom;
-                    _backgroundEvent.Set();
+                    Loading(true);
                 }
             }
-        }
+            else
+            {
+                //All rows that the user is viewing are loaded. We now can hide the loading
+                //animation that is shown. (the event Loading(bool) triggers this!)
+                if (Loading != null)
+                {
+                    Loading(false);
+                }
+            }
 
-        private void SetBackgroundThreadToNormalPriority()
-        {
-            _backgroundThread.Priority = ThreadPriority.Normal;
-        }
+            if (_visibleBottom >= _graphData.Count)
+            {
+                _visibleBottom = _graphData.Count;
+            }
 
-        private void SetBackgroundThreadToLowPriority()
-        {
-            _backgroundThread.Priority = ThreadPriority.BelowNormal;
+            int targetBottom = _visibleBottom + 250;
+            targetBottom = Math.Min(targetBottom, _graphData.Count);
+            if (_backgroundScrollTo < targetBottom)
+            {
+                _backgroundScrollTo = targetBottom;
+                _backgroundEvent.Set();
+            }
         }
 
         private void UpdateRow(int row)
         {
-            lock (_graphData)
+            if (RowCount < _graphData.Count)
             {
-                if (RowCount < _graphData.Count)
-                {
-                    SetRowCount(_graphData.Count);
-                }
+                SetRowCount(_graphData.Count);
+            }
 
-                // Check to see if the newly added item should be selected
+            // Check to see if the newly added item should be selected
+            if (_toBeSelected.Count > 0)
+            {
                 if (_graphData.Count > row)
                 {
-                    string id = _graphData[row].Node.Id;
-                    if (_toBeSelected.Contains(id))
+                    lock (_graphData)
                     {
-                        _toBeSelected.Remove(id);
-                        Rows[row].Selected = true;
-                        if (CurrentCell == null)
+                        if (_graphData.Count > row)
                         {
-                            // Set the current cell to the first item. We use cell
-                            // 1 because cell 0 could be hidden if they've chosen to
-                            // not see the graph
-                            CurrentCell = Rows[row].Cells[1];
+                            string id = _graphData[row].Node.Id;
+                            if (_toBeSelected.Contains(id))
+                            {
+                                _toBeSelected.Remove(id);
+                                Rows[row].Selected = true;
+                                if (CurrentCell == null)
+                                {
+                                    // Set the current cell to the first item. We use cell
+                                    // 1 because cell 0 could be hidden if they've chosen to
+                                    // not see the graph
+                                    CurrentCell = Rows[row].Cells[1];
+                                }
+                            }
                         }
                     }
                 }
+            }
 
-
-                if (_visibleBottom < _graphDataCount)
-                {
-                    //All data for the current view is loaded! Lower the thread priority.
-                    SetBackgroundThreadToLowPriority();
-                }
-                else
-                {
-                    //We need to draw the graph for the visible part of the grid. Higher the priority.
-                    SetBackgroundThreadToNormalPriority();
-                }
-
+            //We only need to invalidate if the row is visible
+            if (_visibleBottom >= row &&
+                _visibleTop <= row)
+            {
                 try
                 {
                     InvalidateRow(row);
@@ -734,7 +714,7 @@ namespace GitUI.RevisionGridClasses
 
         private void UpdateColumnWidth()
         {
-            lock (_graphData)
+            //lock (_graphData)
             {
                 // Auto scale width on scroll
                 if (GraphColumn.Visible)
@@ -776,6 +756,7 @@ namespace GitUI.RevisionGridClasses
             return colors;
         }
 
+
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
         [DefaultValue(RevisionGraphDrawStyleEnum.DrawNonRelativesGray)]
         [Browsable(false)]
@@ -800,11 +781,11 @@ namespace GitUI.RevisionGridClasses
         private Color GetJunctionColor(Junction aJunction)
         {
             //Draw non-relative branches gray
-            if (!aJunction.IsRelative && RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
+            if (!aJunction.IsRelative && revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
                 return _nonRelativeColor;
 
             //Draw non-highlighted branches gray
-            if (!aJunction.HighLight && RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
+            if (!aJunction.HighLight && revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected)
                 return _nonRelativeColor;
 
             if (!AppSettings.MulticolorBranches)
@@ -879,101 +860,98 @@ namespace GitUI.RevisionGridClasses
 
         private Rectangle DrawGraph(int aNeededRow)
         {
-            lock (_graphData)
+            if (aNeededRow < 0 || _graphData.Count == 0 || _graphData.Count <= aNeededRow)
             {
-                if (aNeededRow < 0 || _graphData.Count == 0 || _graphData.Count <= aNeededRow)
-                {
-                    return Rectangle.Empty;
-                }
+                return Rectangle.Empty;
+            }
 
-                #region Make sure the graph cache bitmap is setup
+            #region Make sure the graph cache bitmap is setup
 
-                int height = _cacheCountMax * _rowHeight;
-                int width = GraphColumn.Width;
-                if (_graphBitmap == null ||
-                    //Resize the bitmap when the with or height is changed. The height won't change very often.
-                    //The with changes more often, when branches become visible/invisible.
-                    //Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
-                    //but never shrink the bitmap since the huge performance hit is worse than the little extra memory.
-                    _graphBitmap.Width < width || _graphBitmap.Height != height)
+            int height = _cacheCountMax * _rowHeight;
+            int width = GraphColumn.Width;
+            if (_graphBitmap == null ||
+                //Resize the bitmap when the with or height is changed. The height won't change very often.
+                //The with changes more often, when branches become visible/invisible.
+                //Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
+                //but never shrink the bitmap since the huge performance hit is worse than the little extra memory.
+                _graphBitmap.Width < width || _graphBitmap.Height != height)
+            {
+                if (_graphBitmap != null)
                 {
-                    if (_graphBitmap != null)
-                    {
-                        _graphBitmap.Dispose();
-                        _graphBitmap = null;
-                    }
-                    if (width > 0 && height > 0)
-                    {
-                        _graphBitmap = new Bitmap(Math.Max(width, _laneWidth * 3), height, PixelFormat.Format32bppPArgb);
-                        _graphWorkArea = Graphics.FromImage(_graphBitmap);
-                        _graphWorkArea.SmoothingMode = SmoothingMode.AntiAlias;
-                        _cacheHead = 0;
-                        _cacheCount = 0;
-                    }
-                    else
-                    {
-                        return Rectangle.Empty;
-                    }
+                    _graphBitmap.Dispose();
+                    _graphBitmap = null;
                 }
-
-                #endregion
-
-                // Compute how much the head needs to move to show the requested item. 
-                int neededHeadAdjustment = aNeededRow - _cacheHead;
-                if (neededHeadAdjustment > 0)
+                if (width > 0 && height > 0)
                 {
-                    neededHeadAdjustment -= _cacheCountMax - 1;
-                    if (neededHeadAdjustment < 0)
-                    {
-                        neededHeadAdjustment = 0;
-                    }
-                }
-                int newRows = 0;
-                if (_cacheCount < _cacheCountMax)
-                {
-                    newRows = (aNeededRow - _cacheCount) + 1;
-                }
-
-                // Adjust the head of the cache
-                _cacheHead = _cacheHead + neededHeadAdjustment;
-                _cacheHeadRow = (_cacheHeadRow + neededHeadAdjustment) % _cacheCountMax;
-                if (_cacheHeadRow < 0)
-                {
-                    _cacheHeadRow = _cacheCountMax + _cacheHeadRow;
-                }
-
-                int start;
-                int end;
-                if (newRows > 0)
-                {
-                    start = _cacheHead + _cacheCount;
-                    _cacheCount = Math.Min(_cacheCount + newRows, _cacheCountMax);
-                    end = _cacheHead + _cacheCount;
-                }
-                else if (neededHeadAdjustment > 0)
-                {
-                    end = _cacheHead + _cacheCount;
-                    start = Math.Max(_cacheHead, end - neededHeadAdjustment);
-                }
-                else if (neededHeadAdjustment < 0)
-                {
-                    start = _cacheHead;
-                    end = start + Math.Min(_cacheCountMax, -neededHeadAdjustment);
+                    _graphBitmap = new Bitmap(Math.Max(width, _laneWidth * 3), height, PixelFormat.Format32bppPArgb);
+                    _graphWorkArea = Graphics.FromImage(_graphBitmap);
+                    _graphWorkArea.SmoothingMode = SmoothingMode.AntiAlias;
+                    _cacheHead = 0;
+                    _cacheCount = 0;
                 }
                 else
                 {
-                    // Item already in the cache
-                    return CreateRectangle(aNeededRow, width);
+                    return Rectangle.Empty;
                 }
+            }
 
-                if (RevisionGraphVisible)
+            #endregion
+
+            // Compute how much the head needs to move to show the requested item. 
+            int neededHeadAdjustment = aNeededRow - _cacheHead;
+            if (neededHeadAdjustment > 0)
+            {
+                neededHeadAdjustment -= _cacheCountMax - 1;
+                if (neededHeadAdjustment < 0)
                 {
-                    if (!DrawVisibleGraph(start, end))
-                        return Rectangle.Empty;
+                    neededHeadAdjustment = 0;
                 }
+            }
+            int newRows = 0;
+            if (_cacheCount < _cacheCountMax)
+            {
+                newRows = (aNeededRow - _cacheCount) + 1;
+            }
 
+            // Adjust the head of the cache
+            _cacheHead = _cacheHead + neededHeadAdjustment;
+            _cacheHeadRow = (_cacheHeadRow + neededHeadAdjustment) % _cacheCountMax;
+            if (_cacheHeadRow < 0)
+            {
+                _cacheHeadRow = _cacheCountMax + _cacheHeadRow;
+            }
+
+            int start;
+            int end;
+            if (newRows > 0)
+            {
+                start = _cacheHead + _cacheCount;
+                _cacheCount = Math.Min(_cacheCount + newRows, _cacheCountMax);
+                end = _cacheHead + _cacheCount;
+            }
+            else if (neededHeadAdjustment > 0)
+            {
+                end = _cacheHead + _cacheCount;
+                start = Math.Max(_cacheHead, end - neededHeadAdjustment);
+            }
+            else if (neededHeadAdjustment < 0)
+            {
+                start = _cacheHead;
+                end = start + Math.Min(_cacheCountMax, -neededHeadAdjustment);
+            }
+            else
+            {
+                // Item already in the cache
                 return CreateRectangle(aNeededRow, width);
-            } // end lock
+            }
+
+            if (RevisionGraphVisible)
+            {
+                if (!DrawVisibleGraph(start, end))
+                    return Rectangle.Empty;
+            }
+
+            return CreateRectangle(aNeededRow, width);
         }
 
         private bool DrawVisibleGraph(int start, int end)
@@ -1044,6 +1022,7 @@ namespace GitUI.RevisionGridClasses
 
         // end drawGraph
 
+        private RevisionGraphDrawStyleEnum revisionGraphDrawStyleCache;
         private bool DrawItem(Graphics wa, Graph.ILaneRow row)
         {
             if (row == null || row.NodeLane == -1)
@@ -1062,109 +1041,112 @@ namespace GitUI.RevisionGridClasses
             wa.Clip = newClip;
             wa.Clear(Color.Transparent);
 
+            //Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
+            revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
+
             //for (int r = 0; r < 2; r++)
-                for (int lane = 0; lane < row.Count; lane++)
+            for (int lane = 0; lane < row.Count; lane++)
+            {
+                int mid = wa.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);
+
+                for (int item = 0; item < row.LaneInfoCount(lane); item++)
                 {
-                    int mid = wa.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);
+                    Graph.LaneInfo laneInfo = row[lane, item];
 
-                    for (int item = 0; item < row.LaneInfoCount(lane); item++)
+                    bool highLight = (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && laneInfo.Junctions.Any(j => j.IsRelative)) ||
+                                     (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && laneInfo.Junctions.Any(j => j.HighLight)) ||
+                                     (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
+
+                    List<Color> curColors = GetJunctionColors(laneInfo.Junctions);
+
+                    // Create the brush for drawing the line
+                    Brush brushLineColor = null;
+                    Pen brushLineColorPen = null;
+                    try
                     {
-                        Graph.LaneInfo laneInfo = row[lane, item];
+                        bool drawBorder = highLight && AppSettings.BranchBorders; //hide border for "non-relatives"
 
-                        bool highLight = (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && laneInfo.Junctions.Any(j => j.IsRelative)) ||
-                                         (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected && laneInfo.Junctions.Any(j => j.HighLight)) ||
-                                         (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.Normal);
-
-                        List<Color> curColors = GetJunctionColors(laneInfo.Junctions);
-
-                        // Create the brush for drawing the line
-                        Brush brushLineColor = null;
-                        Pen brushLineColorPen = null;
-                        try
+                        if (curColors.Count == 1 || !AppSettings.StripedBranchChange)
                         {
-                            bool drawBorder = AppSettings.BranchBorders && highLight; //hide border for "non-relatives"
-
-                            if (curColors.Count == 1 || !AppSettings.StripedBranchChange)
+                            if (curColors[0] != _nonRelativeColor)
                             {
-                                if (curColors[0] != _nonRelativeColor)
-                                {
-                                    brushLineColor = new SolidBrush(curColors[0]);
-                                }
-                                else if (curColors.Count > 1 && curColors[1] != _nonRelativeColor)
-                                {
-                                    brushLineColor = new SolidBrush(curColors[1]);
-                                }
-                                else
-                                {
-                                    drawBorder = false;
-                                    brushLineColor = new SolidBrush(_nonRelativeColor);
-                                }
+                                brushLineColor = new SolidBrush(curColors[0]);
+                            }
+                            else if (curColors.Count > 1 && curColors[1] != _nonRelativeColor)
+                            {
+                                brushLineColor = new SolidBrush(curColors[1]);
                             }
                             else
                             {
-                                Color lastRealColor = curColors.LastOrDefault(c => c != _nonRelativeColor);
-
-
-                                if (lastRealColor.IsEmpty)
-                                {
-                                    brushLineColor = new SolidBrush(_nonRelativeColor);
-                                    drawBorder = false;
-                                }
-                                else
-                                {
-                                    brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], lastRealColor);
-                                }
-                            }
-
-                            for (int i = drawBorder ? 0 : 2; i < 3; i++)
-                            {
-                                Pen penLine = null;
-                                if (i == 0)
-                                {
-                                    penLine = _whiteBorderPen;
-                                }
-                                else if (i == 1)
-                                {
-                                    penLine = _blackBorderPen;
-                                }
-                                else
-                                {
-                                    if (brushLineColorPen == null)
-                                        brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
-                                    penLine = brushLineColorPen;
-                                }
-
-                                if (laneInfo.ConnectLane == lane)
-                                {
-                                    wa.DrawLine
-                                        (
-                                            penLine,
-                                            new Point(mid, top - 1),
-                                            new Point(mid, top + _rowHeight + 2)
-                                        );
-                                }
-                                else
-                                {
-                                    wa.DrawBezier
-                                        (
-                                            penLine,
-                                            new Point(mid, top - 1),
-                                            new Point(mid, top + _rowHeight + 2),
-                                            new Point(mid + (laneInfo.ConnectLane - lane) * _laneWidth, top - 1),
-                                            new Point(mid + (laneInfo.ConnectLane - lane) * _laneWidth, top + _rowHeight + 2)
-                                        );
-                                }
+                                drawBorder = false;
+                                brushLineColor = new SolidBrush(_nonRelativeColor);
                             }
                         }
-                        finally
+                        else
                         {
-                            if (brushLineColorPen != null)
-                                ((IDisposable)brushLineColorPen).Dispose();
-                            if (brushLineColor != null)
-                                ((IDisposable)brushLineColor).Dispose();
+                            Color lastRealColor = curColors.LastOrDefault(c => c != _nonRelativeColor);
+
+
+                            if (lastRealColor.IsEmpty)
+                            {
+                                brushLineColor = new SolidBrush(_nonRelativeColor);
+                                drawBorder = false;
+                            }
+                            else
+                            {
+                                brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], lastRealColor);
+                            }
+                        }
+
+                        for (int i = drawBorder ? 0 : 2; i < 3; i++)
+                        {
+                            Pen penLine = null;
+                            if (i == 0)
+                            {
+                                penLine = _whiteBorderPen;
+                            }
+                            else if (i == 1)
+                            {
+                                penLine = _blackBorderPen;
+                            }
+                            else
+                            {
+                                if (brushLineColorPen == null)
+                                    brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
+                                penLine = brushLineColorPen;
+                            }
+
+                            if (laneInfo.ConnectLane == lane)
+                            {
+                                wa.DrawLine
+                                    (
+                                        penLine,
+                                        new Point(mid, top - 1),
+                                        new Point(mid, top + _rowHeight + 2)
+                                    );
+                            }
+                            else
+                            {
+                                wa.DrawBezier
+                                    (
+                                        penLine,
+                                        new Point(mid, top - 1),
+                                        new Point(mid, top + _rowHeight + 2),
+                                        new Point(mid + (laneInfo.ConnectLane - lane) * _laneWidth, top - 1),
+                                        new Point(mid + (laneInfo.ConnectLane - lane) * _laneWidth, top + _rowHeight + 2)
+                                    );
+                            }
                         }
                     }
+                    finally
+                    {
+                        if (brushLineColorPen != null)
+                            ((IDisposable)brushLineColorPen).Dispose();
+                        if (brushLineColor != null)
+                            ((IDisposable)brushLineColor).Dispose();
+                    }
                 }
+            }
 
             // Reset the clip region
             wa.Clip = oldClip;
@@ -1179,12 +1161,12 @@ namespace GitUI.RevisionGridClasses
                     );
 
                 Brush nodeBrush;
-                
+
                 List<Color> nodeColors = GetJunctionColors(row.Node.Ancestors);
-                
-                bool highlight = (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
-                                 (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
-                                 (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.Normal);
+
+                bool highlight = (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
+                                 (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
+                                 (revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
 
                 bool drawBorder = AppSettings.BranchBorders && highlight;
 
@@ -1197,7 +1179,7 @@ namespace GitUI.RevisionGridClasses
                 {
                     nodeBrush = new LinearGradientBrush(nodeRect, nodeColors[0], nodeColors[1],
                                                         LinearGradientMode.Horizontal);
-                    if (nodeColors.All(c => c == _nonRelativeColor)) 
+                    if (nodeColors.All(c => c == _nonRelativeColor))
                         drawBorder = false;
                 }
 
@@ -1259,11 +1241,33 @@ namespace GitUI.RevisionGridClasses
         {
             Node node;
 
-            if(_graphData.Nodes.TryGetValue(guid, out node))
+            if (_graphData.Nodes.TryGetValue(guid, out node))
                 return node.Data;
 
             return null;
         }
+
+        public List<string> GetRevisionChildren(string guid)
+        {
+            Node node;
+
+            List<string> childrenIds = new List<string>();
+
+            //We do not need a lock here since we load the data from the first commit and walkt through all
+            //parents. Children are always loaded, since we start at the newest commit.
+            //With lock, loading the commit info slows down terrible.
+            if (_graphData.Nodes.TryGetValue(guid, out node))
+            {
+                foreach (var descendant in node.Descendants)
+                {
+                    childrenIds.Add(descendant.Child.Id);
+                }
+            }
+
+            return childrenIds;
+        }
+
+
 
         private void dataGrid_Resize(object sender, EventArgs e)
         {
