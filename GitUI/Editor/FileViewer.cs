@@ -374,7 +374,7 @@ namespace GitUI.Editor
                         return GitCommandHelpers.ProcessSubmoduleStatus(Module, status.Result);
                     }, ViewPatch);
             else
-                _async.Load(() => GitCommandHelpers.ProcessSubmodulePatch(Module, 
+                _async.Load(() => GitCommandHelpers.ProcessSubmodulePatch(Module, fileName,
                     Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)), ViewPatch);
         }
 

@@ -603,6 +603,30 @@ namespace GitCommands
             set { SetBool("orderrevisionbydate", value); }
         }
 
+        public static bool ShowRemoteBranches
+        {
+            get { return GetBool("showRemoteBranches", true); }
+            set { SetBool("showRemoteBranches", value); }
+        }
+
+        public static bool ShowSuperprojectTags
+        {
+            get { return GetBool("showSuperprojectTags", false); }
+            set { SetBool("showSuperprojectTags", value); }
+        }
+
+        public static bool ShowSuperprojectBranches
+        {
+            get { return GetBool("showSuperprojectBranches", true); }
+            set { SetBool("showSuperprojectBranches", value); }
+        }
+
+        public static bool ShowSuperprojectRemoteBranches
+        {
+            get { return GetBool("showSuperprojectRemoteBranches", false); }
+            set { SetBool("showSuperprojectRemoteBranches", value); }
+        }
+
         public static string Dictionary
         {
             get { return GetString("dictionary", "en-US"); }

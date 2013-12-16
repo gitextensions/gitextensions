@@ -202,7 +202,7 @@ namespace GitUI.CommandsDialogs
 
             _formBrowseMenuCommands = new FormBrowseMenuCommands(this, RevisionGrid);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
-            RevisionGrid.MenuCommands.PropertyChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
+            RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
@@ -626,7 +626,7 @@ namespace GitUI.CommandsDialogs
 
         private void UserMenu_Click(object sender, EventArgs e)
         {
-            if (ScriptRunner.RunScript(this, Module, ((ToolStripButton)sender).Text, null))
+            if (ScriptRunner.RunScript(this, Module, ((ToolStripButton)sender).Text, this.RevisionGrid))
                 RevisionGrid.RefreshRevisions();
         }
 
@@ -1049,7 +1049,8 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var revision = RevisionGrid.GetSelectedRevisions()[0];
-            var children = RevisionGrid.GetRevisionChildren(revision.Guid);
+            
+			var children = RevisionGrid.GetRevisionChildren(revision.Guid);
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
@@ -1314,7 +1315,7 @@ namespace GitUI.CommandsDialogs
                 Process process = new Process();
                 process.StartInfo.FileName = Application.ExecutablePath;
                 process.StartInfo.Arguments = "browse";
-                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.Name + Settings.PathSeparator.ToString());
+                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName + Settings.PathSeparator.ToString());
                 process.Start();
             }
         }
@@ -2903,15 +2904,20 @@ namespace GitUI.CommandsDialogs
         }
 
         private CancellationTokenSource _submodulesStatusImagesCTS = new CancellationTokenSource();
-            
+
         private static Image GetItemImage(GitSubmoduleStatus gitSubmoduleStatus)
         {
             if (gitSubmoduleStatus == null)
                 return Resources.IconFolderSubmodule;
-            if (gitSubmoduleStatus.Status == SubmoduleStatus.FastForward || gitSubmoduleStatus.Status == SubmoduleStatus.NewerTime)
+            if (gitSubmoduleStatus.Status == SubmoduleStatus.FastForward)
                 return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
-            if (gitSubmoduleStatus.Status == SubmoduleStatus.Rewind || gitSubmoduleStatus.Status == SubmoduleStatus.OlderTime)
+            if (gitSubmoduleStatus.Status == SubmoduleStatus.Rewind)
                 return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
+            if (gitSubmoduleStatus.Status == SubmoduleStatus.NewerTime)
+                return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionSemiUpDirty : Resources.IconSubmoduleRevisionSemiUp;
+            if (gitSubmoduleStatus.Status == SubmoduleStatus.OlderTime)
+                return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionSemiDownDirty : Resources.IconSubmoduleRevisionSemiDown;
+
             return !gitSubmoduleStatus.IsDirty ? Resources.Modified : Resources.IconSubmoduleDirty;
         }
 
@@ -2933,7 +2939,12 @@ namespace GitUI.CommandsDialogs
                     }
                     return submoduleStatus;
                 }, token)
-                .ContinueWith((task) => mi.Image = GetItemImage(task.Result),
+                .ContinueWith((task) =>
+                {
+                    mi.Image = GetItemImage(task.Result);
+                    if (task.Result != null)
+                        mi.Text += " " + task.Result.AddedAndRemovedString();
+                },
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext());

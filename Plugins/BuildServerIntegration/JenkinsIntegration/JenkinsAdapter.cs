@@ -20,7 +20,6 @@ using Newtonsoft.Json.Linq;
 
 namespace JenkinsIntegration
 {
-
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class JenkinsIntegrationMetadata : BuildServerAdapterMetadataAttribute
@@ -39,8 +38,6 @@ namespace JenkinsIntegration
         }
     }
 
-
-
     [Export(typeof(IBuildServerAdapter))]
     [JenkinsIntegrationMetadata("Jenkins")]
     [PartCreationPolicy(CreationPolicy.NonShared)]
@@ -50,10 +47,7 @@ namespace JenkinsIntegration
 
         private HttpClient _httpClient;
 
-        private Task<IEnumerable<string>> _getBuildTypesTask;
-
-        private string ProjectName { get; set; }
-        private string ProjectUrl { get; set; }
+        private Task<IEnumerable<string>> _getBuildUrls;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config)
         {
@@ -62,14 +56,15 @@ namespace JenkinsIntegration
 
             _buildServerWatcher = buildServerWatcher;
 
-            ProjectName = config.GetString("ProjectName", null);
+            var projectName = config.GetString("ProjectName", null);
             var hostName = config.GetString("BuildServerUrl", null);
-            if (!string.IsNullOrEmpty(hostName))
+
+            if (!string.IsNullOrEmpty(hostName) && !string.IsNullOrEmpty(projectName))
             {
                 var baseAdress = hostName.Contains("://")
                                      ? new Uri(hostName, UriKind.Absolute)
                                      : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
-                
+
                 _httpClient = new HttpClient
                     {
                         Timeout = TimeSpan.FromMinutes(2),
@@ -80,20 +75,16 @@ namespace JenkinsIntegration
 
                 UpdateHttpClientOptions(buildServerCredentials);
 
-                ProjectUrl = baseAdress + "job/" + ProjectName + "/";
+                var projectUrl = baseAdress + "job/" + projectName + "/";
 
-                if (!string.IsNullOrEmpty(ProjectName))
-                {
-                    _getBuildTypesTask =
-                        GetProjectFromNameJsonResponseAsync(CancellationToken.None)
-                            .ContinueWith(
-                                task =>
-                                    {
-                                        JObject jobDescription = JObject.Parse(task.Result);
-                                        return jobDescription["builds"].Select(b => b["number"].ToObject<string>());
-                                    },
-                                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent);
-                }
+                _getBuildUrls = GetResponseAsync(FormatToGetJson(projectUrl), CancellationToken.None)
+                    .ContinueWith(
+                        task =>
+                            {
+                                JObject jobDescription = JObject.Parse(task.Result);
+                                return jobDescription["builds"].Select(b => b["url"].ToObject<string>());
+                            },
+                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent);
             }
         }
 
@@ -117,7 +108,7 @@ namespace JenkinsIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (_httpClient == null || _httpClient.BaseAddress == null || string.IsNullOrEmpty(ProjectName))
+            if (_getBuildUrls == null)
             {
                 return Observable.Empty<BuildInfo>(scheduler);
             }
@@ -131,15 +122,16 @@ namespace JenkinsIntegration
         {
             try
             {
-                if (PropagateTaskAnomalyToObserver(_getBuildTypesTask, observer))
+                if (PropagateTaskAnomalyToObserver(_getBuildUrls, observer))
                 {
                     return;
                 }
 
-                var buildIds = _getBuildTypesTask.Result;
-                var buildTasks = buildIds.Select(buildId => GetResponseAsync(FormatToGetJson(ProjectUrl + buildId), cancellationToken)).ToArray();
+                var buildContents = _getBuildUrls.Result
+                    .Select(buildUrl => GetResponseAsync(FormatToGetJson(buildUrl), cancellationToken).Result)
+                    .Where(s => !string.IsNullOrEmpty(s)).ToArray();
 
-                foreach (var buildDetails in buildTasks.Select(b=>b.Result))
+                foreach (var buildDetails in buildContents)
                 {
                     JObject buildDescription = JObject.Parse(buildDetails);
                     var startDate = TimestampToDateTime(buildDescription["timestamp"].ToObject<long>());
@@ -339,6 +331,8 @@ namespace JenkinsIntegration
             return getStreamTask.ContinueWith(
                 task =>
                     {
+                        if (task.Status != TaskStatus.RanToCompletion)
+                            return string.Empty;
                         using (var responseStream = task.Result)
                         {
                             return new StreamReader(responseStream).ReadToEnd();
@@ -354,11 +348,6 @@ namespace JenkinsIntegration
             if (!restServicePath.EndsWith("/"))
                 restServicePath += "/";
             return restServicePath + "api/json";
-        }
-
-        private Task<string> GetProjectFromNameJsonResponseAsync(CancellationToken cancellationToken)
-        {
-            return GetResponseAsync(FormatToGetJson(ProjectUrl), cancellationToken);
         }
 
         public void Dispose()
