@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -295,6 +296,8 @@ namespace GitUI.CommandsDialogs
 
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
         {
+            this.lbChanges.Text = "";
+
             var _branch = Branches.Text;
 
             if (_branch.IsNullOrWhiteSpace() || !Remotebranch.Checked)
@@ -320,7 +323,14 @@ namespace GitUI.CommandsDialogs
             rbResetBranch.Text = existsLocalBranch ? _rbResetBranchDefaultText : _createBranch.Text;
             branchName.Text = "'" + _localBranchName + "'";
             txtCustomBranchName.Text = _newLocalBranchName;
+
+            if (_branch.IsNullOrWhiteSpace())
+                lbChanges.Text = "";
+            else
+                Task.Factory.StartNew(() => this.Module.GetCommitCountString(this.Module.GetCurrentCheckout(), _branch))
+                    .ContinueWith(t => lbChanges.Text = t.Result, TaskScheduler.FromCurrentSynchronizationContext());
         }
+
 
         private IList<string> GetLocalBranches()
         {

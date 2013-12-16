@@ -115,6 +115,10 @@
       <Name>BackgroundFetch</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\BuildServerIntegration\JenkinsIntegration\JenkinsIntegration.csproj">
+      <Project>{e6aac693-815b-4d1a-83d7-f4de36072793}</Project>
+      <Name>JenkinsIntegration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\CreateLocalBranches\CreateLocalBranches.csproj">
       <Project>{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}</Project>
       <Name>CreateLocalBranches</Name>
