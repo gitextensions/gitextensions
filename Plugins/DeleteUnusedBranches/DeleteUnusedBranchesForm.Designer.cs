@@ -30,11 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.StatusStrip statusStrip1;
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeleteUnusedBranchesForm));
             this.pnlBranchesArea = new System.Windows.Forms.Panel();
             this.imgLoading = new System.Windows.Forms.PictureBox();
             this.BranchesGrid = new System.Windows.Forms.DataGridView();
-            this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.buttonSettings = new System.Windows.Forms.Button();
@@ -53,10 +54,12 @@
             this.olderThanDays = new System.Windows.Forms.NumericUpDown();
             this.includeUnmergedBranches = new System.Windows.Forms.CheckBox();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.branchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.deleteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.deleteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.branchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
             statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.pnlBranchesArea.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgLoading)).BeginInit();
@@ -68,6 +71,21 @@
             statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.branchBindingSource)).BeginInit();
             this.SuspendLayout();
+            // 
+            // statusStrip1
+            // 
+            statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblStatus});
+            statusStrip1.Location = new System.Drawing.Point(0, 399);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new System.Drawing.Size(760, 22);
+            statusStrip1.TabIndex = 2;
+            statusStrip1.Text = "statusStrip1";
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(0, 17);
             // 
             // pnlBranchesArea
             // 
@@ -98,10 +116,11 @@
             this.BranchesGrid.AutoGenerateColumns = false;
             this.BranchesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.BranchesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.deleteDataGridViewCheckBoxColumn,
             this.nameDataGridViewTextBoxColumn,
             this.dateDataGridViewTextBoxColumn,
-            this.deleteDataGridViewCheckBoxColumn,
-            this.Result});
+            this.Author,
+            this.Message});
             this.BranchesGrid.DataSource = this.branchBindingSource;
             this.BranchesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BranchesGrid.Location = new System.Drawing.Point(0, 0);
@@ -109,16 +128,63 @@
             this.BranchesGrid.RowHeadersVisible = false;
             this.BranchesGrid.Size = new System.Drawing.Size(754, 141);
             this.BranchesGrid.TabIndex = 0;
+            this.BranchesGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.BranchesGrid_CellContentClick);
             // 
-            // Result
+            // deleteDataGridViewCheckBoxColumn
             // 
-            this.Result.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Result.DataPropertyName = "Result";
-            this.Result.FillWeight = 2F;
-            this.Result.HeaderText = "Result";
-            this.Result.Name = "Result";
-            this.Result.ReadOnly = true;
-            this.Result.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.deleteDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.deleteDataGridViewCheckBoxColumn.DataPropertyName = "Delete";
+            this.deleteDataGridViewCheckBoxColumn.FillWeight = 20F;
+            this.deleteDataGridViewCheckBoxColumn.HeaderText = "Delete";
+            this.deleteDataGridViewCheckBoxColumn.Name = "deleteDataGridViewCheckBoxColumn";
+            this.deleteDataGridViewCheckBoxColumn.Width = 50;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.nameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.nameDataGridViewTextBoxColumn.FillWeight = 2F;
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.MinimumWidth = 100;
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // dateDataGridViewTextBoxColumn
+            // 
+            this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dateDataGridViewTextBoxColumn.DataPropertyName = "Date";
+            this.dateDataGridViewTextBoxColumn.FillWeight = 300F;
+            this.dateDataGridViewTextBoxColumn.HeaderText = "Last activity";
+            this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
+            this.dateDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dateDataGridViewTextBoxColumn.Width = 175;
+            // 
+            // Author
+            // 
+            this.Author.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Author.DataPropertyName = "Author";
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.Author.DefaultCellStyle = dataGridViewCellStyle2;
+            this.Author.FillWeight = 2F;
+            this.Author.HeaderText = "Last author";
+            this.Author.Name = "Author";
+            this.Author.ReadOnly = true;
+            this.Author.Width = 85;
+            // 
+            // Message
+            // 
+            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Message.DataPropertyName = "Message";
+            this.Message.HeaderText = "Last message";
+            this.Message.Name = "Message";
+            this.Message.ReadOnly = true;
+            this.Message.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // branchBindingSource
+            // 
+            this.branchBindingSource.DataSource = typeof(DeleteUnusedBranches.Branch);
             // 
             // tableLayoutPanel1
             // 
@@ -331,53 +397,6 @@
             this.includeUnmergedBranches.UseVisualStyleBackColor = true;
             this.includeUnmergedBranches.CheckedChanged += new System.EventHandler(this.includeUnmergedBranches_CheckedChanged);
             // 
-            // statusStrip1
-            // 
-            statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblStatus});
-            statusStrip1.Location = new System.Drawing.Point(0, 399);
-            statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new System.Drawing.Size(760, 22);
-            statusStrip1.TabIndex = 2;
-            statusStrip1.Text = "statusStrip1";
-            // 
-            // lblStatus
-            // 
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(0, 17);
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.FillWeight = 2F;
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // dateDataGridViewTextBoxColumn
-            // 
-            this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dateDataGridViewTextBoxColumn.DataPropertyName = "Date";
-            this.dateDataGridViewTextBoxColumn.FillWeight = 300F;
-            this.dateDataGridViewTextBoxColumn.HeaderText = "Last activity";
-            this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
-            this.dateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.dateDataGridViewTextBoxColumn.Width = 175;
-            // 
-            // deleteDataGridViewCheckBoxColumn
-            // 
-            this.deleteDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.deleteDataGridViewCheckBoxColumn.DataPropertyName = "Delete";
-            this.deleteDataGridViewCheckBoxColumn.FillWeight = 20F;
-            this.deleteDataGridViewCheckBoxColumn.HeaderText = "Delete";
-            this.deleteDataGridViewCheckBoxColumn.Name = "deleteDataGridViewCheckBoxColumn";
-            this.deleteDataGridViewCheckBoxColumn.Width = 50;
-            // 
-            // branchBindingSource
-            // 
-            this.branchBindingSource.DataSource = typeof(DeleteUnusedBranches.Branch);
-            // 
             // DeleteUnusedBranchesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -417,10 +436,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Button Cancel;
         private System.Windows.Forms.Button Delete;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn deleteDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Result;
         private System.Windows.Forms.Button buttonSettings;
         private System.Windows.Forms.CheckBox IncludeRemoteBranches;
         private System.Windows.Forms.TextBox remote;
@@ -436,5 +451,10 @@
         private System.Windows.Forms.PictureBox imgLoading;
         private System.Windows.Forms.Panel pnlBranchesArea;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn deleteDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
     }
 }
