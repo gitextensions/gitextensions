@@ -50,11 +50,13 @@ namespace DeleteUnusedBranches
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
-                var commitLog = context.Commands.RunGitCmd(string.Concat("log --pretty=%ci ", branchName, "^1..", branchName)).Split('\n');
+                var commitLog = context.Commands.RunGitCmd(string.Concat("log --pretty=%ci\n%an\n%s ", branchName, "^1..", branchName)).Split('\n');
                 DateTime commitDate;
                 DateTime.TryParse(commitLog[0], out commitDate);
+                var authorName = commitLog[1];
+                var message = commitLog[2];
 
-                yield return new Branch(branchName, commitDate, commitDate < DateTime.Now - context.ObsolescenceDuration);
+                yield return new Branch(branchName, commitDate, authorName, message, commitDate < DateTime.Now - context.ObsolescenceDuration);
             }
         }
 
@@ -83,18 +85,14 @@ namespace DeleteUnusedBranches
                         return;
                 }
 
-                foreach (Branch branch in branches.Where(branch => branch.Delete))
+                foreach (var branch in branches.Where(branch => branch.Delete))
                 {
-                    if (IncludeRemoteBranches.Checked && branch.Name.StartsWith(remote.Text + "/"))
-                    {
-                        branch.Result = gitCommands.RunGitCmd("push " + remote.Text + " :" + branch.Name.Substring((remote.Text + "/").Length)).Trim();
-                    }
-                    else
-                    {
-                        branch.Result = gitCommands.RunGitCmd("branch -d " + branch.Name).Trim();
-                    }
+                    var command = IncludeRemoteBranches.Checked && branch.Name.StartsWith(remote.Text + "/")
+                        ? "push " + remote.Text + " :" + branch.Name.Substring((remote.Text + "/").Length)
+                        : "branch -d " + branch.Name;
+                    gitCommands.RunGitCmd(command);
                 }
-                BranchesGrid.Refresh();
+                RefreshObsoleteBranches();
             }
         }
 
@@ -158,6 +156,16 @@ namespace DeleteUnusedBranches
             RefreshObsoleteBranches();
         }
 
+        private void BranchesGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // track only “Deleted” column
+            if (e.ColumnIndex != 0)
+                return;
+
+            BranchesGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            lblStatus.Text = GetDefaultStatusText();
+        }
+
         private void RefreshObsoleteBranches()
         {
             if (IsRefreshing)
@@ -202,8 +210,13 @@ namespace DeleteUnusedBranches
                 refreshCancellation = value ? new CancellationTokenSource() : null;
                 Refresh.Text = value ? "Cancel" : "Search branches";
                 imgLoading.Visible = value;
-                lblStatus.Text = value ? "Loading..." : string.Format("{0}/{1} branches selected.", branches.Count(b => b.Delete), branches.Count);
+                lblStatus.Text = value ? "Loading..." : GetDefaultStatusText();
             }
+        }
+
+        private string GetDefaultStatusText()
+        {
+            return string.Format("{0}/{1} branches selected.", branches.Count(b => b.Delete), branches.Count);
         }
 
         private static bool IsMonoRuntime()
