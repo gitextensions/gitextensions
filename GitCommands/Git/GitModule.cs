@@ -345,6 +345,11 @@ namespace GitCommands
             return Directory.Exists(candidatePath) ? candidatePath : repositoryPath;
         }
 
+        public bool HasSubmodules()
+        {
+            return GetSubmodulesLocalPathes(recursive: false).Any();
+        }
+
         /// <summary>
         /// This is a faster function to get the names of all submodules then the 
         /// GetSubmodules() function. The command @git submodule is very slow.
