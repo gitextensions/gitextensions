@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            cbUpdateSubmodules.Visible = Module.GetSubmodulesLocalPathes().Any();
+            cbUpdateSubmodules.Visible = Module.HasSubmodules();
             cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
         }
 
@@ -57,8 +57,8 @@ namespace GitUI.CommandsDialogs
                 string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
 
                 FormProcess.ShowDialog(this, command);
-                
-                if (Module.GetSubmodulesLocalPathes().Any())
+
+                if (Module.HasSubmodules())
                 {
                     if (cbUpdateSubmodules.Checked)
                         UICommands.StartUpdateSubmodulesDialog(this);
