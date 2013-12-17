@@ -30,10 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.Tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.PullFromUrl = new System.Windows.Forms.RadioButton();
-            this.PullFromRemote = new System.Windows.Forms.RadioButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.Pull = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.helpImageDisplayUserControl1 = new GitUI.Help.HelpImageDisplayUserControl();
@@ -42,6 +38,8 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.folderBrowserButton1 = new GitUI.UserControls.FolderBrowserButton();
             this.comboBoxPullSource = new System.Windows.Forms.ComboBox();
+            this.PullFromUrl = new System.Windows.Forms.RadioButton();
+            this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.AddRemote = new System.Windows.Forms.Button();
             this._NO_TRANSLATE_Remotes = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -51,7 +49,10 @@
             this.Fetch = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.localBranch = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cbUpdateSubmodules = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.ReachableTags = new System.Windows.Forms.RadioButton();
@@ -61,7 +62,6 @@
             this.Mergetool = new System.Windows.Forms.Button();
             this.Stash = new System.Windows.Forms.Button();
             this.AutoStash = new System.Windows.Forms.CheckBox();
-            this.cbUpdateSubmodules = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -73,52 +73,6 @@
             this.flowLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // PullFromUrl
-            // 
-            this.PullFromUrl.AutoSize = true;
-            this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
-            this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(40, 19);
-            this.PullFromUrl.TabIndex = 1;
-            this.PullFromUrl.Text = "Url";
-            this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
-            this.PullFromUrl.UseVisualStyleBackColor = true;
-            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrlCheckedChanged);
-            // 
-            // PullFromRemote
-            // 
-            this.PullFromRemote.AutoSize = true;
-            this.PullFromRemote.Checked = true;
-            this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
-            this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
-            this.PullFromRemote.TabIndex = 0;
-            this.PullFromRemote.TabStop = true;
-            this.PullFromRemote.Text = "Remote";
-            this.Tooltip.SetToolTip(this.PullFromRemote, "Remote repository to pull from");
-            this.PullFromRemote.UseVisualStyleBackColor = true;
-            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemoteCheckedChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(75, 15);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Local branch";
-            this.Tooltip.SetToolTip(this.label1, "Remote branch to pull. Leave empty to pull all branches.");
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 49);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 15);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "Remote branch";
-            this.Tooltip.SetToolTip(this.label2, "Remote branch to pull. Leave empty to pull all branches.");
             // 
             // Pull
             // 
@@ -185,19 +139,20 @@
             this.tableLayoutPanel2.Controls.Add(this.groupBox2, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.groupBox1, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.groupBox3, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.groupBox4, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.cbUpdateSubmodules, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.groupBox4, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 5);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 5;
+            this.tableLayoutPanel2.RowCount = 6;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(622, 473);
             this.tableLayoutPanel2.TabIndex = 42;
             // 
@@ -240,6 +195,32 @@
             this.comboBoxPullSource.TabIndex = 4;
             this.comboBoxPullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
+            // PullFromUrl
+            // 
+            this.PullFromUrl.AutoSize = true;
+            this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
+            this.PullFromUrl.Name = "PullFromUrl";
+            this.PullFromUrl.Size = new System.Drawing.Size(40, 19);
+            this.PullFromUrl.TabIndex = 1;
+            this.PullFromUrl.Text = "Url";
+            this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
+            this.PullFromUrl.UseVisualStyleBackColor = true;
+            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrlCheckedChanged);
+            // 
+            // PullFromRemote
+            // 
+            this.PullFromRemote.AutoSize = true;
+            this.PullFromRemote.Checked = true;
+            this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
+            this.PullFromRemote.Name = "PullFromRemote";
+            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
+            this.PullFromRemote.TabIndex = 0;
+            this.PullFromRemote.TabStop = true;
+            this.PullFromRemote.Text = "Remote";
+            this.Tooltip.SetToolTip(this.PullFromRemote, "Remote repository to pull from");
+            this.PullFromRemote.UseVisualStyleBackColor = true;
+            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemoteCheckedChanged);
+            // 
             // AddRemote
             // 
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -274,7 +255,7 @@
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
             this.groupBox1.Location = new System.Drawing.Point(3, 169);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(616, 133);
+            this.groupBox1.Size = new System.Drawing.Size(616, 103);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge options";
@@ -285,12 +266,11 @@
             this.flowLayoutPanel1.Controls.Add(this.Merge);
             this.flowLayoutPanel1.Controls.Add(this.Rebase);
             this.flowLayoutPanel1.Controls.Add(this.Fetch);
-            this.flowLayoutPanel1.Controls.Add(this.cbUpdateSubmodules);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 19);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(610, 111);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(610, 81);
             this.flowLayoutPanel1.TabIndex = 11;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -361,6 +341,16 @@
             this.localBranch.TabIndex = 9;
             this.localBranch.Leave += new System.EventHandler(this.localBranch_Leave);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(75, 15);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Local branch";
+            this.Tooltip.SetToolTip(this.label1, "Remote branch to pull. Leave empty to pull all branches.");
+            // 
             // Branches
             // 
             this.Branches.FormattingEnabled = true;
@@ -370,12 +360,33 @@
             this.Branches.TabIndex = 6;
             this.Branches.DropDown += new System.EventHandler(this.BranchesDropDown);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 49);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(88, 15);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Remote branch";
+            this.Tooltip.SetToolTip(this.label2, "Remote branch to pull. Leave empty to pull all branches.");
+            // 
+            // cbUpdateSubmodules
+            // 
+            this.cbUpdateSubmodules.AutoSize = true;
+            this.cbUpdateSubmodules.Location = new System.Drawing.Point(10, 278);
+            this.cbUpdateSubmodules.Margin = new System.Windows.Forms.Padding(10, 3, 3, 3);
+            this.cbUpdateSubmodules.Name = "cbUpdateSubmodules";
+            this.cbUpdateSubmodules.Size = new System.Drawing.Size(132, 19);
+            this.cbUpdateSubmodules.TabIndex = 11;
+            this.cbUpdateSubmodules.Text = "Update submodules";
+            this.cbUpdateSubmodules.UseVisualStyleBackColor = true;
+            // 
             // groupBox4
             // 
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.flowLayoutPanel2);
-            this.groupBox4.Location = new System.Drawing.Point(3, 308);
+            this.groupBox4.Location = new System.Drawing.Point(3, 303);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(616, 124);
             this.groupBox4.TabIndex = 15;
@@ -445,7 +456,7 @@
             this.tableLayoutPanel3.Controls.Add(this.Stash, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.AutoStash, 2, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 438);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 433);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.tableLayoutPanel3.RowCount = 1;
@@ -485,16 +496,6 @@
             this.AutoStash.TabIndex = 13;
             this.AutoStash.Text = "Auto stash";
             this.AutoStash.UseVisualStyleBackColor = true;
-            // 
-            // cbUpdateSubmodules
-            // 
-            this.cbUpdateSubmodules.AutoSize = true;
-            this.cbUpdateSubmodules.Location = new System.Drawing.Point(3, 84);
-            this.cbUpdateSubmodules.Name = "cbUpdateSubmodules";
-            this.cbUpdateSubmodules.Size = new System.Drawing.Size(132, 19);
-            this.cbUpdateSubmodules.TabIndex = 11;
-            this.cbUpdateSubmodules.Text = "Update submodules";
-            this.cbUpdateSubmodules.UseVisualStyleBackColor = true;
             // 
             // FormPull
             // 
