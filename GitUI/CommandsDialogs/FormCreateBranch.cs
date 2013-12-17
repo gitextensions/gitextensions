@@ -76,8 +76,8 @@ namespace GitUI.CommandsDialogs
                     cmd = GitCommandHelpers.RemoveCmd();
                     FormProcess.ShowDialog(this, cmd);
                 }
-                
-                if (Module.GetSubmodulesLocalPathes().Any())
+
+                if (CheckoutAfterCreate.Checked && Module.HasSubmodules())
                 {
                     if (cbUpdateSubmodules.Checked)
                         UICommands.StartUpdateSubmodulesDialog(this);
