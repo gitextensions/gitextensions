@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs
             if (IsUICommandsInitialized)
                 commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
 
-            cbUpdateSubmodules.Visible = Module.GetSubmodulesLocalPathes().Any();
+            cbUpdateSubmodules.Visible = Module.HasSubmodules();
             cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
         }
 

@@ -145,7 +145,7 @@ namespace GitUI.CommandsDialogs
                 Branches.Text = null;
             remoteOptionsPanel.Visible = Remotebranch.Checked;
 
-            cbUpdateSubmodules.Visible = Module.GetSubmodulesLocalPathes().Any();
+            cbUpdateSubmodules.Visible = Module.HasSubmodules();
             cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
             rbCreateBranchWithCustomName.Checked = AppSettings.CreateLocalBranchForRemote;
         }
@@ -262,7 +262,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                if (Module.GetSubmodulesLocalPathes().Any())
+                if (Module.HasSubmodules())
                 {
                     if (cbUpdateSubmodules.Checked)
                         UICommands.StartUpdateSubmodulesDialog(this);
