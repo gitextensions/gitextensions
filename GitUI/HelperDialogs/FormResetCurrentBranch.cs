@@ -28,6 +28,9 @@ namespace GitUI.HelperDialogs
 
             _NO_TRANSLATE_BranchInfo.Text = string.Format(branchInfo.Text, Module.GetSelectedBranch());
             commitSummaryUserControl1.Revision = Revision;
+
+            cbUpdateSubmodules.Visible = Module.HasSubmodules();
+            cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -45,6 +48,14 @@ namespace GitUI.HelperDialogs
                 if (MessageBox.Show(this, resetHardWarning.Text, resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     FormProcess.ShowDialog(this, GitCommandHelpers.ResetHardCmd(Revision.Guid));
+
+                    if (Module.HasSubmodules())
+                    {
+                        if (cbUpdateSubmodules.Checked)
+                            UICommands.StartUpdateSubmodulesDialog(this);
+
+                        AppSettings.UpdateSubmodulesOnCheckout = cbUpdateSubmodules.Checked;
+                    }
                 }
                 else
                 {
@@ -59,6 +70,11 @@ namespace GitUI.HelperDialogs
         private void Cancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void Radio_CheckedChanged(object sender, EventArgs e)
+        {
+            cbUpdateSubmodules.Enabled = Hard.Checked;
         }
     }
 }
