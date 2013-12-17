@@ -629,7 +629,7 @@ namespace GitCommands
 
         public static bool UpdateSubmodulesOnCheckout
         {
-            get { return GetBool("updateSubmodulesOnCheckout", false); }
+            get { return GetBool("updateSubmodulesOnCheckout", true); }
             set { SetBool("updateSubmodulesOnCheckout", value); }
         }
 
