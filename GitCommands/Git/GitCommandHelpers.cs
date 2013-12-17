@@ -871,7 +871,7 @@ namespace GitCommands
         {
             PatchApply.Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
             string text = patch != null ? patch.Text : "";
-            return GetSubmoduleStatus(text);
+            return GetSubmoduleStatus(text, module, fileName);
         }
 
         [CanBeNull]
@@ -880,7 +880,7 @@ namespace GitCommands
             return GetCurrentSubmoduleChanges(module, submodule, submodule, false);
         }
 
-        public static GitSubmoduleStatus GetSubmoduleStatus(string text)
+        public static GitSubmoduleStatus GetSubmoduleStatus(string text, GitModule module, string fileName)
         {
             if (string.IsNullOrEmpty(text))
                 return null;
@@ -933,6 +933,15 @@ namespace GitCommands
                     // TODO: Support combined merge
                 }
             }
+
+            if (status.OldCommit != null && status.Commit != null)
+            {
+                var submodule = module.GetSubmodule(fileName);
+                status.AddedCommits = submodule.GetCommitCount(status.Commit, status.OldCommit);
+                status.RemovedCommits = submodule.GetCommitCount(status.OldCommit, status.Commit);
+            }
+
+
             return status;
         }
 
@@ -1101,10 +1110,10 @@ namespace GitCommands
             return sb.ToString();
         }
 
-        public static string ProcessSubmodulePatch(GitModule module, PatchApply.Patch patch)
+        public static string ProcessSubmodulePatch(GitModule module, string fileName, PatchApply.Patch patch)
         {
             string text = patch != null ? patch.Text : null;
-            var status = GetSubmoduleStatus(text);
+            var status = GetSubmoduleStatus(text, module, fileName);
             if (status == null)
                 return "";
             return ProcessSubmoduleStatus(module, status);
@@ -1187,6 +1196,23 @@ namespace GitCommands
                 default:
                     sb.AppendLine("Unknown");
                     break;
+            }
+
+           
+
+            if (status.AddedCommits != null || status.RemovedCommits != null)
+            {
+                sb.Append("Commits: ");
+
+                if (status.RemovedCommits != null && status.RemovedCommits > 0)
+                    sb.Append(status.RemovedCommits + " removed");
+
+                if (status.RemovedCommits != null && status.RemovedCommits > 0 &&
+                    status.AddedCommits != null && status.AddedCommits > 0)
+                    sb.Append(", ");
+
+                if (status.AddedCommits != null && status.AddedCommits > 0)
+                    sb.Append(status.AddedCommits + " added");
             }
 
             if (status.Commit != null && status.OldCommit != null)

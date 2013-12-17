@@ -264,6 +264,9 @@
             <Component Id="TeamCityIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
             </Component>
+            <Component Id="JenkinsIntegration.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\Release\JenkinsIntegration.dll" />
+            </Component>		
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
             <Component Id="Blue.ico" Guid="*">
@@ -502,10 +505,12 @@
             <ComponentRef Id="GitExtensions.newstartmenu" />
             <ComponentRef Id="GitExtensions.startmenu" />
             <ComponentRef Id="English.gif" />
+            <ComponentRef Id="Git.hub.dll" />
+            <ComponentRef Id="RestSharp.dll" />
+            <!--Remove unused dll, installed in versions <= 2.31-->
             <ComponentRef Id="GithubSharp.Core.dll" />
+            <!--Remove unused dll, installed in versions <= 2.31-->
             <ComponentRef Id="Github.dll" />
-            <!--Remove unused dll, installed in versions <= 2.31-->
-            <!--Remove unused dll, installed in versions <= 2.31-->
             <Feature Id="Plugins" Title="Plugins" Level="1">
                 <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
                     <ComponentRef Id="AutoCompileSubmodules.dll" />
@@ -532,8 +537,6 @@
                 </Feature>
                 <Feature Id="Github" Title="Github integration" Level="1">
                     <ComponentRef Id="Github3.dll" />
-                    <ComponentRef Id="Git.hub.dll" />
-                    <ComponentRef Id="RestSharp.dll" />
                 </Feature>
                 <Feature Id="Gource" Title="Gource visualization" Level="1">
                     <ComponentRef Id="Gource.dll" />
@@ -561,6 +564,14 @@
                     <ComponentRef Id="System.Runtime.dll" />
                     <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="TeamCityIntegration.dll" />
+                </Feature>
+                <Feature Id="JenkinsIntegration" Title="Jenkins integration" Level="1">
+                    <ComponentRef Id="System.Net.Http.dll" />
+                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
+                    <ComponentRef Id="System.Net.Http.Primitives.dll" />
+                    <ComponentRef Id="System.Runtime.dll" />
+                    <ComponentRef Id="System.Threading.Tasks.dll" />
+                    <ComponentRef Id="JenkinsIntegration.dll" />
                 </Feature>
             </Feature>
             <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
@@ -682,7 +693,7 @@
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
         <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe" />
         <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
-        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.3-preview20130601.exe" />
+        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.4-preview20130916.exe" />
         <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore" />
         <InstallExecuteSequence>
             <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>

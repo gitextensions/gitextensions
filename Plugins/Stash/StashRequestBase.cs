@@ -3,6 +3,9 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
+using System.Windows.Forms;
 
 namespace Stash
 {
@@ -24,8 +27,9 @@ namespace Stash
 
         public StashResponse<T> Send()
         {
+            if (Settings.DisableSSL == "yes") { System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; }
             var client = new RestClient();
-            client.BaseUrl = "http://" + Settings.StashUrl;
+            client.BaseUrl = Settings.StashUrl;
             client.Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password);
 
             var request = new RestRequest(ApiUrl, RequestMethod);
@@ -64,7 +68,18 @@ namespace Stash
 
         private static StashResponse<T> ParseErrorResponse(string jsonString)
         {
-            var json = (JObject) JsonConvert.DeserializeObject(jsonString);
+            var json = new JObject();
+            try
+            {
+                System.Console.WriteLine(jsonString);
+                json = (JObject)JsonConvert.DeserializeObject(jsonString);
+            }
+            catch (JsonReaderException e)
+            {
+                MessageBox.Show(jsonString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                var errorResponse = new StashResponse<T> { Success = false };
+                return errorResponse;
+            }
             if (json["errors"] != null)
             {
                 var messages = new List<string>();

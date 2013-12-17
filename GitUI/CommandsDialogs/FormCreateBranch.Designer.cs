@@ -30,20 +30,19 @@
         {
             this.components = new System.ComponentModel.Container();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.Orphan = new System.Windows.Forms.CheckBox();
+            this.ClearOrphan = new System.Windows.Forms.CheckBox();
             this.Ok = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
             this.commitPickerSmallControl1 = new GitUI.UserControls.CommitPickerSmallControl();
-            this.label3 = new System.Windows.Forms.Label();
             this.gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
             this.table = new System.Windows.Forms.TableLayoutPanel();
             this.BranchNameTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.Orphan = new System.Windows.Forms.CheckBox();
-            this.ClearOrphan = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.CheckoutAfterCreate = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
@@ -53,6 +52,32 @@
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // Orphan
+            // 
+            this.Orphan.AutoSize = true;
+            this.Orphan.Location = new System.Drawing.Point(3, 3);
+            this.Orphan.Name = "Orphan";
+            this.Orphan.Size = new System.Drawing.Size(101, 19);
+            this.Orphan.TabIndex = 7;
+            this.Orphan.Text = "Create orphan";
+            this.toolTip.SetToolTip(this.Orphan, "New branch will have NO parents");
+            this.Orphan.UseVisualStyleBackColor = true;
+            this.Orphan.CheckedChanged += new System.EventHandler(this.Orphan_CheckedChanged);
+            // 
+            // ClearOrphan
+            // 
+            this.ClearOrphan.AutoSize = true;
+            this.ClearOrphan.Checked = true;
+            this.ClearOrphan.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ClearOrphan.Enabled = false;
+            this.ClearOrphan.Location = new System.Drawing.Point(110, 3);
+            this.ClearOrphan.Name = "ClearOrphan";
+            this.ClearOrphan.Size = new System.Drawing.Size(170, 19);
+            this.ClearOrphan.TabIndex = 8;
+            this.ClearOrphan.Text = "Clear working dir and index";
+            this.toolTip.SetToolTip(this.ClearOrphan, "Remove files from the working tree and from the index");
+            this.ClearOrphan.UseVisualStyleBackColor = true;
             // 
             // Ok
             // 
@@ -94,7 +119,6 @@
             // 
             this.flowLayoutPanel1.Controls.Add(this.label2);
             this.flowLayoutPanel1.Controls.Add(this.commitPickerSmallControl1);
-            this.flowLayoutPanel1.Controls.Add(this.label3);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(50, 30);
@@ -118,18 +142,8 @@
             this.commitPickerSmallControl1.Location = new System.Drawing.Point(169, 3);
             this.commitPickerSmallControl1.MinimumSize = new System.Drawing.Size(100, 26);
             this.commitPickerSmallControl1.Name = "commitPickerSmallControl1";
-            this.commitPickerSmallControl1.Size = new System.Drawing.Size(129, 26);
+            this.commitPickerSmallControl1.Size = new System.Drawing.Size(207, 26);
             this.commitPickerSmallControl1.TabIndex = 0;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(304, 5);
-            this.label3.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(129, 15);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "or choose another one.";
             // 
             // gotoUserManualControl1
             // 
@@ -203,32 +217,6 @@
             this.flowLayoutPanel2.Size = new System.Drawing.Size(432, 28);
             this.flowLayoutPanel2.TabIndex = 0;
             // 
-            // Orphan
-            // 
-            this.Orphan.AutoSize = true;
-            this.Orphan.Location = new System.Drawing.Point(3, 3);
-            this.Orphan.Name = "Orphan";
-            this.Orphan.Size = new System.Drawing.Size(101, 19);
-            this.Orphan.TabIndex = 7;
-            this.Orphan.Text = "Create orphan";
-            this.toolTip.SetToolTip(this.Orphan, "New branch will have NO parents");
-            this.Orphan.UseVisualStyleBackColor = true;
-            this.Orphan.CheckedChanged += new System.EventHandler(this.Orphan_CheckedChanged);
-            // 
-            // ClearOrphan
-            // 
-            this.ClearOrphan.AutoSize = true;
-            this.ClearOrphan.Checked = true;
-            this.ClearOrphan.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ClearOrphan.Enabled = false;
-            this.ClearOrphan.Location = new System.Drawing.Point(110, 3);
-            this.ClearOrphan.Name = "ClearOrphan";
-            this.ClearOrphan.Size = new System.Drawing.Size(170, 19);
-            this.ClearOrphan.TabIndex = 8;
-            this.ClearOrphan.Text = "Clear working dir and index";
-            this.toolTip.SetToolTip(this.ClearOrphan, "Remove files from the working tree and from the index");
-            this.ClearOrphan.UseVisualStyleBackColor = true;
-            // 
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.Controls.Add(this.CheckoutAfterCreate);
@@ -294,7 +282,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label label2;
         private UserControls.CommitPickerSmallControl commitPickerSmallControl1;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private UserControls.GotoUserManualControl gotoUserManualControl1;

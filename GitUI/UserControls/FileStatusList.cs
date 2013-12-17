@@ -49,7 +49,11 @@ namespace GitUI
                 _images.Images.Add(Resources.IconSubmoduleRevisionUpDirty); // 7
                 _images.Images.Add(Resources.IconSubmoduleRevisionDown); // 8
                 _images.Images.Add(Resources.IconSubmoduleRevisionDownDirty); // 9
-                _images.Images.Add(Resources.IconFileStatusUnknown); // 10
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiUp); // 10
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiUpDirty); // 11
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiDown); // 12
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiDownDirty); // 13
+                _images.Images.Add(Resources.IconFileStatusUnknown); // 14
             }
             FileStatusListView.SmallImageList = _images;
             FileStatusListView.LargeImageList = _images;
@@ -138,6 +142,9 @@ namespace GitUI
             GitItemStatus gitItemStatus = (GitItemStatus)e.Item.Tag;
 
             string text = GetItemText(e.Graphics, gitItemStatus);
+
+            if (gitItemStatus.IsSubmodule && gitItemStatus.SubmoduleStatus != null && gitItemStatus.SubmoduleStatus.IsCompleted)
+                text += " " + gitItemStatus.SubmoduleStatus.Result.AddedAndRemovedString();
 
             e.Graphics.DrawString(text, e.Item.ListView.Font,
                                   new SolidBrush(color), e.Bounds.Left + ImageSize, e.Bounds.Top);
@@ -428,17 +435,21 @@ namespace GitUI
                 var status = gitItemStatus.SubmoduleStatus.Result;
                 if (status == null)
                     return 2;
-                if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
+                if (status.Status == SubmoduleStatus.FastForward)
                     return 6 + (status.IsDirty ? 1 : 0);
-                if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
+                if (status.Status == SubmoduleStatus.Rewind)
                     return 8 + (status.IsDirty ? 1 : 0);
+                if (status.Status == SubmoduleStatus.NewerTime)
+                    return 10 + (status.IsDirty ? 1 : 0);
+                if (status.Status == SubmoduleStatus.OlderTime)
+                    return 12 + (status.IsDirty ? 1 : 0);
                 return !status.IsDirty ? 2 : 5;
             }
             if (gitItemStatus.IsRenamed)
                 return 3;
             if (gitItemStatus.IsCopied)
                 return 4;
-            return 10;//icon unknown
+            return 14;//icon unknown
         }
 
         [Browsable(false)]
@@ -491,7 +502,7 @@ namespace GitUI
         }
 
         private GitItemsWithParents _itemsDictionary = new Dictionary<string, IList<GitItemStatus>>();
-
+        private bool _itemsChanging = false;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitItemsWithParents GitItemStatusesWithParents
@@ -502,6 +513,7 @@ namespace GitUI
             }
             set
             {
+                _itemsChanging = true;
                 if (value == null || !value.Any())
                     NoFiles.Visible = true;
                 else
@@ -550,6 +562,8 @@ namespace GitUI
                     };
                 }
                 FileStatusListView.Items.AddRange(list.ToArray());
+                _itemsChanging = false;
+                FileStatusListView_SizeChanged(null, null);
                 foreach (ListViewItem item in FileStatusListView.Items)
                 {
                     string parentRev = item.Group != null ? item.Group.Tag as string : "";
@@ -596,11 +610,16 @@ namespace GitUI
 
         private void FileStatusListView_SizeChanged(object sender, EventArgs e)
         {
+            if (_itemsChanging)
+                return;
+
             NoFiles.Location = new Point(5, 5);
             NoFiles.Size = new Size(Size.Width - 10, Size.Height - 10);
             Refresh();
             FileStatusListView.BeginUpdate();
-            FileStatusListView.Columns[0].Width = FileStatusListView.ClientSize.Width;
+
+            FileStatusListView.AutoResizeColumn(0,
+                ColumnHeaderAutoResizeStyle.HeaderSize);
             FileStatusListView.EndUpdate();
         }
 

@@ -30,6 +30,7 @@
         {
             this.textBoxCommitHash = new System.Windows.Forms.TextBox();
             this.buttonPickCommit = new System.Windows.Forms.Button();
+            this.lbCommits = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBoxCommitHash
@@ -53,16 +54,29 @@
             this.buttonPickCommit.UseVisualStyleBackColor = true;
             this.buttonPickCommit.Click += new System.EventHandler(this.buttonPickCommit_Click);
             // 
+            // lbCommits
+            // 
+            this.lbCommits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbCommits.AutoEllipsis = true;
+            this.lbCommits.AutoSize = true;
+            this.lbCommits.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lbCommits.Location = new System.Drawing.Point(132, 3);
+            this.lbCommits.Name = "lbCommits";
+            this.lbCommits.Size = new System.Drawing.Size(15, 15);
+            this.lbCommits.TabIndex = 33;
+            this.lbCommits.Text = "=";
+            // 
             // CommitPickerSmallControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.lbCommits);
             this.Controls.Add(this.textBoxCommitHash);
             this.Controls.Add(this.buttonPickCommit);
             this.MinimumSize = new System.Drawing.Size(100, 26);
             this.Name = "CommitPickerSmallControl";
-            this.Size = new System.Drawing.Size(129, 26);
+            this.Size = new System.Drawing.Size(207, 26);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -72,5 +86,6 @@
 
         private System.Windows.Forms.TextBox textBoxCommitHash;
         private System.Windows.Forms.Button buttonPickCommit;
+        private System.Windows.Forms.Label lbCommits;
     }
 }

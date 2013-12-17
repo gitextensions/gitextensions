@@ -861,6 +861,61 @@ namespace GitCommands
             return hashes;
         }
 
+        public Dictionary<GitRef, GitItem> GetSubmoduleItemsForEachRef(string filename, Func<GitRef, bool> showRemoteRef)
+        {
+            string command = GetShowRefCommand();
+
+            if (command == null)
+                return new Dictionary<GitRef, GitItem>();
+
+            filename = FixPath(filename);
+
+            var tree = RunGitCmd(command, SystemEncoding);
+
+            var refs = GetTreeRefs(tree);
+
+            return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleGuid(filename, r.Name));
+        }
+
+        private string GetShowRefCommand()
+        {
+            if (AppSettings.ShowSuperprojectRemoteBranches)
+                return "show-ref --dereference";
+
+            if (AppSettings.ShowSuperprojectBranches || AppSettings.ShowSuperprojectTags)
+                return "show-ref --dereference"
+                    + (AppSettings.ShowSuperprojectBranches ? " --heads" : null)
+                    + (AppSettings.ShowSuperprojectTags ? " --tags" : null);
+
+            return null;
+        }
+
+        private GitItem GetSubmoduleGuid(string filename, string refName)
+        {
+            string str = RunGitCmd("ls-tree " + refName + " \"" + filename + "\"");
+
+            return GitItem.CreateGitItemFromString(this, str);
+        }
+
+		public int GetCommitCount(string parentHash, string childHash)
+        {
+            string result = this.RunGitCmd("rev-list " + parentHash + " ^" + childHash + " --count");
+            return int.Parse(result);
+        }
+
+        public string GetCommitCountString(string from, string to)
+        {
+            int removed = this.GetCommitCount(from, to);
+            int added = this.GetCommitCount(to, from);
+
+            if (removed == 0 && added == 0)
+                return "=";
+
+            return 
+                (removed > 0 ? ("-" + removed) : "") +
+                (added > 0 ? ("+" + added) : "");
+        }
+
         public string GetMergeMessage()
         {
             var file = GetGitDirectory() + "MERGE_MSG";
@@ -2303,7 +2358,7 @@ namespace GitCommands
                     {
                         Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding, true);
                         string text = patch != null ? patch.Text : "";
-                        var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text);
+                        var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text, this, item.Name);
                         if (submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
                             var submodule = submoduleStatus.GetSubmodule(this);

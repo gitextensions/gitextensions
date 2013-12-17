@@ -1100,6 +1100,9 @@ namespace GitUI.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconFileStatusUnknown {
             get {
                 object obj = ResourceManager.GetObject("IconFileStatusUnknown", resourceCulture);
@@ -1393,6 +1396,46 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconSubmoduleRevisionDownDirty {
             get {
                 object obj = ResourceManager.GetObject("IconSubmoduleRevisionDownDirty", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconSubmoduleRevisionSemiDown {
+            get {
+                object obj = ResourceManager.GetObject("IconSubmoduleRevisionSemiDown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconSubmoduleRevisionSemiDownDirty {
+            get {
+                object obj = ResourceManager.GetObject("IconSubmoduleRevisionSemiDownDirty", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconSubmoduleRevisionSemiUp {
+            get {
+                object obj = ResourceManager.GetObject("IconSubmoduleRevisionSemiUp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconSubmoduleRevisionSemiUpDirty {
+            get {
+                object obj = ResourceManager.GetObject("IconSubmoduleRevisionSemiUpDirty", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

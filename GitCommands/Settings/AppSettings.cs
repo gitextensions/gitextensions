@@ -114,14 +114,14 @@ namespace GitCommands
             }
             else
             {
-                return (string)VersionIndependentRegKey.GetValue("InstallDir", string.Empty);
+                return ReadStringRegValue("InstallDir", string.Empty);
             }
         }
 
         //for repair only
         public static void SetInstallDir(string dir)
         {
-            VersionIndependentRegKey.SetValue("InstallDir", dir);
+            WriteStringRegValue("InstallDir", dir);
         }
 
         private static bool ReadBoolRegKey(string key, bool defaultValue)
@@ -139,6 +139,16 @@ namespace GitCommands
             VersionIndependentRegKey.SetValue(key, value ? "true" : "false");
         }
 
+        private static string ReadStringRegValue(string key, string defaultValue)
+        {
+            return (string)VersionIndependentRegKey.GetValue(key, defaultValue);
+        }
+
+        private static void WriteStringRegValue(string key, string value)
+        {
+            VersionIndependentRegKey.SetValue(key, value);
+        }
+
         public static bool CheckSettings
         {
             get { return ReadBoolRegKey("CheckSettings", true); }
@@ -147,8 +157,14 @@ namespace GitCommands
 
         public static string CascadeShellMenuItems
         {
-            get { return (string)VersionIndependentRegKey.GetValue("CascadeShellMenuItems", "110111000111111111"); }
-            set { VersionIndependentRegKey.SetValue("CascadeShellMenuItems", value); }
+            get { return ReadStringRegValue("CascadeShellMenuItems", "110111000111111111"); }
+            set { WriteStringRegValue("CascadeShellMenuItems", value); }
+        }
+
+        public static string SshPath
+        {
+            get { return ReadStringRegValue("gitssh", null); }
+            set { WriteStringRegValue("gitssh", value); }
         }
 
         public static bool AlwaysShowAllCommands
@@ -172,14 +188,14 @@ namespace GitCommands
                 if (IsPortable())
                     return GetString("gitcommand", "");
                 else
-                    return (string)VersionIndependentRegKey.GetValue("gitcommand", "");
+                    return ReadStringRegValue("gitcommand", "");
             }
             set
             {
                 if (IsPortable())
                     SetString("gitcommand", value);
                 else
-                    VersionIndependentRegKey.SetValue("gitcommand", value);
+                    WriteStringRegValue("gitcommand", value);
             }
         }
 
@@ -295,7 +311,7 @@ namespace GitCommands
 
         public static bool CheckForUncommittedChangesInCheckoutBranch
         {
-            get { return GetBool("checkforuncommittedchangesincheckoutbranch", false); }
+            get { return GetBool("checkforuncommittedchangesincheckoutbranch", true); }
             set { SetBool("checkforuncommittedchangesincheckoutbranch", value); }
         }
 
@@ -587,6 +603,30 @@ namespace GitCommands
             set { SetBool("orderrevisionbydate", value); }
         }
 
+        public static bool ShowRemoteBranches
+        {
+            get { return GetBool("showRemoteBranches", true); }
+            set { SetBool("showRemoteBranches", value); }
+        }
+
+        public static bool ShowSuperprojectTags
+        {
+            get { return GetBool("showSuperprojectTags", false); }
+            set { SetBool("showSuperprojectTags", value); }
+        }
+
+        public static bool ShowSuperprojectBranches
+        {
+            get { return GetBool("showSuperprojectBranches", true); }
+            set { SetBool("showSuperprojectBranches", value); }
+        }
+
+        public static bool ShowSuperprojectRemoteBranches
+        {
+            get { return GetBool("showSuperprojectRemoteBranches", false); }
+            set { SetBool("showSuperprojectRemoteBranches", value); }
+        }
+
         public static string Dictionary
         {
             get { return GetString("dictionary", "en-US"); }
@@ -744,19 +784,19 @@ namespace GitCommands
 
         public static string Plink
         {
-            get { return GetString("plink", ""); }
+            get { return GetString("plink", ReadStringRegValue("plink", "")); }
             set { SetString("plink", value); }
         }
         public static string Puttygen
         {
-            get { return GetString("puttygen", ""); }
+            get { return GetString("puttygen", ReadStringRegValue("puttygen", "")); }
             set { SetString("puttygen", value); }
         }
 
         /// <summary>Gets the path to Pageant (SSH auth agent).</summary>
         public static string Pageant
         {
-            get { return GetString("pageant", ""); }
+            get { return GetString("pageant", ReadStringRegValue("pageant", "")); }
             set { SetString("pageant", value); }
         }
 
@@ -889,7 +929,7 @@ namespace GitCommands
             {
                 SettingsContainer.LockedAction(() =>
                 {
-                    SetString("gitssh", GitCommandHelpers.GetSsh());
+                    SshPath = GitCommandHelpers.GetSsh();
                     Repositories.SaveSettings();
 
                     SettingsContainer.Save();
@@ -910,7 +950,7 @@ namespace GitCommands
 
             try
             {
-                GitCommandHelpers.SetSsh(GetString("gitssh", null));
+                GitCommandHelpers.SetSsh(SshPath);
             }
             catch
             { }
