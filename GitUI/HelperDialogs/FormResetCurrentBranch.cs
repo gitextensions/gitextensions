@@ -31,6 +31,7 @@ namespace GitUI.HelperDialogs
 
             cbUpdateSubmodules.Visible = Module.HasSubmodules();
             cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
+            cbUpdateSubmodules.Enabled = Hard.Checked;
         }
 
         private void Ok_Click(object sender, EventArgs e)

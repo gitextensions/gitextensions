@@ -30,13 +30,13 @@
         {
             this._NO_TRANSLATE_BranchInfo = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbUpdateSubmodules = new System.Windows.Forms.CheckBox();
             this.Hard = new System.Windows.Forms.RadioButton();
             this.Mixed = new System.Windows.Forms.RadioButton();
             this.Soft = new System.Windows.Forms.RadioButton();
             this.Ok = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
             this.commitSummaryUserControl1 = new GitUI.UserControls.CommitSummaryUserControl();
-            this.cbUpdateSubmodules = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,16 +51,25 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.cbUpdateSubmodules);
             this.groupBox1.Controls.Add(this.Hard);
             this.groupBox1.Controls.Add(this.Mixed);
             this.groupBox1.Controls.Add(this.Soft);
             this.groupBox1.Location = new System.Drawing.Point(16, 217);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(380, 172);
+            this.groupBox1.Size = new System.Drawing.Size(380, 145);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Reset type";
+            // 
+            // cbUpdateSubmodules
+            // 
+            this.cbUpdateSubmodules.AutoSize = true;
+            this.cbUpdateSubmodules.Location = new System.Drawing.Point(29, 368);
+            this.cbUpdateSubmodules.Name = "cbUpdateSubmodules";
+            this.cbUpdateSubmodules.Size = new System.Drawing.Size(132, 19);
+            this.cbUpdateSubmodules.TabIndex = 3;
+            this.cbUpdateSubmodules.Text = "Update submodules";
+            this.cbUpdateSubmodules.UseVisualStyleBackColor = true;
             // 
             // Hard
             // 
@@ -103,7 +112,7 @@
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(302, 395);
+            this.Ok.Location = new System.Drawing.Point(302, 368);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(91, 25);
             this.Ok.TabIndex = 6;
@@ -114,7 +123,7 @@
             // Cancel
             // 
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Location = new System.Drawing.Point(399, 395);
+            this.Cancel.Location = new System.Drawing.Point(399, 368);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(91, 25);
             this.Cancel.TabIndex = 7;
@@ -131,23 +140,14 @@
             this.commitSummaryUserControl1.Size = new System.Drawing.Size(477, 160);
             this.commitSummaryUserControl1.TabIndex = 8;
             // 
-            // cbUpdateSubmodules
-            // 
-            this.cbUpdateSubmodules.AutoSize = true;
-            this.cbUpdateSubmodules.Location = new System.Drawing.Point(13, 142);
-            this.cbUpdateSubmodules.Name = "cbUpdateSubmodules";
-            this.cbUpdateSubmodules.Size = new System.Drawing.Size(132, 19);
-            this.cbUpdateSubmodules.TabIndex = 3;
-            this.cbUpdateSubmodules.Text = "Update submodules";
-            this.cbUpdateSubmodules.UseVisualStyleBackColor = true;
-            // 
             // FormResetCurrentBranch
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.Cancel;
-            this.ClientSize = new System.Drawing.Size(502, 432);
+            this.ClientSize = new System.Drawing.Size(502, 401);
+            this.Controls.Add(this.cbUpdateSubmodules);
             this.Controls.Add(this.commitSummaryUserControl1);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Ok);
