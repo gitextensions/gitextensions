@@ -1437,8 +1437,9 @@ namespace GitUI
                 StartUpdateSubmodulesDialog(win);
         }
 
-        private readonly TranslationString _updateSubmodules = new TranslationString("Update Submodules?");
-        private readonly TranslationString _updateSubmodulesToo = new TranslationString("This repository has Submodules. Update them too?");
+        private readonly TranslationString _updateSubmodules = new TranslationString("Update submodules?");
+        private readonly TranslationString _theRepositorySubmodules = new TranslationString("Update submodules on checkout?");
+        private readonly TranslationString _updateSubmodulesToo = new TranslationString("Because this repostory has submodules, its necessary to update them on every checkout.\r\n\r\nThis will just checkout on the submodule the commit determined by the superproject.");
         private readonly TranslationString _rememberChoice = new TranslationString("Remember choice");
 
         private bool ConfirmUpdateSubmodules(IWin32Window win)
@@ -1446,13 +1447,13 @@ namespace GitUI
             var  result = PSTaskDialog.cTaskDialog.ShowTaskDialogBox(
                 Owner: win,
                 Title: _updateSubmodules.Text,
-                MainInstruction: _updateSubmodulesToo.Text,
-                Content: null,
-                ExpandedInfo: null,
-                Footer: null,
+                MainInstruction: _theRepositorySubmodules.Text,
+                Content: _updateSubmodulesToo.Text,
+                ExpandedInfo: "",
+                Footer: "",
                 VerificationText: _rememberChoice.Text,
-                RadioButtons: null,
-                CommandButtons: null,
+                RadioButtons: "",
+                CommandButtons: "",
                 Buttons : PSTaskDialog.eTaskDialogButtons.YesNo,
                 MainIcon: PSTaskDialog.eSysIcons.Question,
                 FooterIcon: PSTaskDialog.eSysIcons.Information) == DialogResult.Yes;
