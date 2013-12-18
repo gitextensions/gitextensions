@@ -50,7 +50,6 @@ namespace GitUI.CommandsDialogs
             this.branchName = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.lbChanges = new System.Windows.Forms.Label();
-            this.cbUpdateSubmodules = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1.SuspendLayout();
             this.localChangesGB.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -77,10 +76,10 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1.Controls.Add(this.Ok);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.BottomUp;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(361, 176);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(361, 151);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(74, 66);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(74, 91);
             this.flowLayoutPanel1.TabIndex = 28;
             // 
             // Ok
@@ -89,7 +88,7 @@ namespace GitUI.CommandsDialogs
             this.Ok.AutoSize = true;
             this.Ok.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(0, 35);
+            this.Ok.Location = new System.Drawing.Point(0, 60);
             this.Ok.Margin = new System.Windows.Forms.Padding(0, 10, 6, 6);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(68, 25);
@@ -103,7 +102,7 @@ namespace GitUI.CommandsDialogs
             this.horLine.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.tableLayoutPanel1.SetColumnSpan(this.horLine, 3);
             this.horLine.Dock = System.Windows.Forms.DockStyle.Top;
-            this.horLine.Location = new System.Drawing.Point(10, 95);
+            this.horLine.Location = new System.Drawing.Point(10, 70);
             this.horLine.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
             this.horLine.Name = "horLine";
             this.horLine.Size = new System.Drawing.Size(422, 2);
@@ -154,7 +153,7 @@ namespace GitUI.CommandsDialogs
             this.localChangesGB.AutoSize = true;
             this.tableLayoutPanel1.SetColumnSpan(this.localChangesGB, 2);
             this.localChangesGB.Controls.Add(this.tableLayoutPanel2);
-            this.localChangesGB.Location = new System.Drawing.Point(9, 186);
+            this.localChangesGB.Location = new System.Drawing.Point(9, 161);
             this.localChangesGB.Margin = new System.Windows.Forms.Padding(2, 10, 2, 2);
             this.localChangesGB.Name = "localChangesGB";
             this.localChangesGB.Padding = new System.Windows.Forms.Padding(6);
@@ -247,7 +246,7 @@ namespace GitUI.CommandsDialogs
             this.remoteOptionsPanel.Controls.Add(this.rbCreateBranchWithCustomName, 0, 2);
             this.remoteOptionsPanel.Controls.Add(this.branchName, 1, 0);
             this.remoteOptionsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.remoteOptionsPanel.Location = new System.Drawing.Point(7, 99);
+            this.remoteOptionsPanel.Location = new System.Drawing.Point(7, 74);
             this.remoteOptionsPanel.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.remoteOptionsPanel.Name = "remoteOptionsPanel";
             this.remoteOptionsPanel.RowCount = 5;
@@ -324,27 +323,26 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.remoteOptionsPanel, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.localChangesGB, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.remoteOptionsPanel, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.localChangesGB, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.LocalBranch, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.Remotebranch, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.horLine, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 2, 5);
+            this.tableLayoutPanel1.Controls.Add(this.horLine, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 2, 4);
             this.tableLayoutPanel1.Controls.Add(this.Branches, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.lbChanges, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.cbUpdateSubmodules, 0, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(7);
-            this.tableLayoutPanel1.RowCount = 6;
+            this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(442, 249);
             this.tableLayoutPanel1.TabIndex = 0;
             this.tableLayoutPanel1.TabStop = true;
@@ -359,17 +357,6 @@ namespace GitUI.CommandsDialogs
             this.lbChanges.Size = new System.Drawing.Size(12, 15);
             this.lbChanges.TabIndex = 29;
             this.lbChanges.Text = "-";
-            // 
-            // cbUpdateSubmodules
-            // 
-            this.cbUpdateSubmodules.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.cbUpdateSubmodules, 2);
-            this.cbUpdateSubmodules.Location = new System.Drawing.Point(10, 68);
-            this.cbUpdateSubmodules.Name = "cbUpdateSubmodules";
-            this.cbUpdateSubmodules.Size = new System.Drawing.Size(132, 19);
-            this.cbUpdateSubmodules.TabIndex = 30;
-            this.cbUpdateSubmodules.Text = "Update submodules";
-            this.cbUpdateSubmodules.UseVisualStyleBackColor = true;
             // 
             // FormCheckoutBranch
             // 
@@ -424,7 +411,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.RadioButton Remotebranch;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lbChanges;
-        private System.Windows.Forms.CheckBox cbUpdateSubmodules;
 
     }
 }
