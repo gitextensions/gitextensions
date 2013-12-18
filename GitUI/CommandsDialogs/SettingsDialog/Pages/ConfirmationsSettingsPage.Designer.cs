@@ -103,6 +103,7 @@
             this.chkUpdateModules.TabIndex = 6;
             this.chkUpdateModules.Text = "Update submodules on checkout";
             this.chkUpdateModules.UseVisualStyleBackColor = true;
+            this.chkUpdateModules.ThreeState = true;
             // 
             // chkAmend
             // 
