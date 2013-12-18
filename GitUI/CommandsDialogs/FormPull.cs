@@ -115,9 +115,6 @@ namespace GitUI.CommandsDialogs
             Fetch.Checked = Settings.FormPullAction == Settings.PullAction.Fetch;
             localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = Settings.AutoStash;
-            cbUpdateSubmodules.Visible = Module.HasSubmodules();
-            cbUpdateSubmodules.Enabled = !Fetch.Checked;
-            cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
 
             ErrorOccurred = false;
 
@@ -302,20 +299,7 @@ namespace GitUI.CommandsDialogs
             {
                 ShowProcessDialogBox(owner, source, process);
 
-                var result = EvaluateProcessDialogResults(owner, process, stashed);
-
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    if (Module.HasSubmodules())
-                    {
-                        if (cbUpdateSubmodules.Checked)
-                            UICommands.StartUpdateSubmodulesDialog(this);
-
-                        AppSettings.UpdateSubmodulesOnCheckout = cbUpdateSubmodules.Checked;
-                    }
-                }
-
-                return result;
+                return EvaluateProcessDialogResults(owner, process, stashed);
             }
         }
 
@@ -826,7 +810,6 @@ namespace GitUI.CommandsDialogs
             AllTags.Enabled = false;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
-            cbUpdateSubmodules.Enabled = !Fetch.Checked;
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
@@ -838,7 +821,6 @@ namespace GitUI.CommandsDialogs
             AllTags.Enabled = false;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
-            cbUpdateSubmodules.Enabled = !Fetch.Checked;
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
@@ -847,7 +829,6 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
-            cbUpdateSubmodules.Enabled = !Fetch.Checked;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)
