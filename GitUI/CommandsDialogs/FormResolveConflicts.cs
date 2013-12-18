@@ -183,6 +183,7 @@ namespace GitUI.CommandsDialogs
 
             if (!Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts)
             {
+                UICommands.UpdateSubmodules(this);
                 Close();
             }
             Cursor.Current = Cursors.Default;
