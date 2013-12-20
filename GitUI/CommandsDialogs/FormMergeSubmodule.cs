@@ -12,7 +12,6 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormMergeSubmodule : GitModuleForm
     {
         string filename;
-        GitModule submodule; 
 
         public FormMergeSubmodule(GitUICommands aCommands, string filename)
             : base(aCommands)
@@ -21,8 +20,6 @@ namespace GitUI.CommandsDialogs
             Translate();
             lbSubmodule.Text = filename;
             this.filename = filename;
-
-            this.submodule = Module.GetSubmodule(filename);
         }
 
         private void FormMergeSubmodule_Load(object sender, EventArgs e)
@@ -31,12 +28,12 @@ namespace GitUI.CommandsDialogs
             this.tbBase.Text = hashes[0];
             this.tbLocal.Text = hashes[1];
             this.tbRemote.Text = hashes[2];
-            this.tbCurrent.Text = submodule.GetCurrentCheckout();
+            this.tbCurrent.Text = Module.GetSubmodule(filename).GetCurrentCheckout();
         }
 
         private void btRefresh_Click(object sender, EventArgs e)
         {
-            this.tbCurrent.Text = submodule.GetCurrentCheckout();
+            this.tbCurrent.Text = Module.GetSubmodule(filename).GetCurrentCheckout();
         }
 
         private void btStageCurrent_Click(object sender, EventArgs e)
