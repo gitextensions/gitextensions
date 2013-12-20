@@ -1437,9 +1437,9 @@ namespace GitUI
                 StartUpdateSubmodulesDialog(win);
         }
 
-        private readonly TranslationString _updateSubmodules = new TranslationString("Update submodules?");
+        private readonly TranslationString _updateSubmodules = new TranslationString("Update submodules");
         private readonly TranslationString _theRepositorySubmodules = new TranslationString("Update submodules on checkout?");
-        private readonly TranslationString _updateSubmodulesToo = new TranslationString("Because this repostory has submodules, its necessary to update them on every checkout.\r\n\r\nThis will just checkout on the submodule the commit determined by the superproject.");
+        private readonly TranslationString _updateSubmodulesToo = new TranslationString("Since this repostory has submodules, it's necessary to update them on every checkout.\r\n\r\nThis will just checkout on the submodule the commit determined by the superproject.");
         private readonly TranslationString _rememberChoice = new TranslationString("Remember choice");
 
         private bool ConfirmUpdateSubmodules(IWin32Window win)
