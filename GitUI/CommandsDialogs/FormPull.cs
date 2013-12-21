@@ -389,6 +389,7 @@ namespace GitUI.CommandsDialogs
                 (process != null && !process.ErrorOccurred()))
             {
                 InitModules();
+                UICommands.UpdateSubmodules(this);
                 return true;
             }
 
@@ -405,6 +406,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 MergeConflictHandler.HandleMergeConflicts(UICommands, this);
+
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase())
                 {
