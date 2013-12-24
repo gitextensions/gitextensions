@@ -61,7 +61,7 @@ namespace TeamCityIntegration
 
         private List<Task<IEnumerable<string>>> getBuildTypesTask = new List<Task<IEnumerable<string>>>();
 
-        private string[] ProjectName { get; set; }
+        private string[] ProjectNames { get; set; }
 
         private Regex BuildIdFilter { get; set; }
 
@@ -72,7 +72,7 @@ namespace TeamCityIntegration
 
             this.buildServerWatcher = buildServerWatcher;
 
-            ProjectName = config.GetString("ProjectName", null).Split('|');
+            ProjectNames = config.GetString("ProjectName", null).Split('|');
             BuildIdFilter = new Regex(config.GetString("BuildIdFilter", null), RegexOptions.Compiled);
             var hostName = config.GetString("BuildServerUrl", null);
             if (!string.IsNullOrEmpty(hostName))
@@ -90,10 +90,10 @@ namespace TeamCityIntegration
 
                 UpdateHttpClientOptions(buildServerCredentials);
 
-                if (ProjectName.Length > 0)
+                if (ProjectNames.Length > 0)
                 {
                     getBuildTypesTask.Clear();
-                    foreach (var name in ProjectName)
+                    foreach (var name in ProjectNames)
                     {
                         getBuildTypesTask.Add(
                             GetProjectFromNameXmlResponseAsync(name, CancellationToken.None)
@@ -127,7 +127,7 @@ namespace TeamCityIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (httpClient == null || httpClient.BaseAddress == null || ProjectName.Length == 0)
+            if (httpClient == null || httpClient.BaseAddress == null || ProjectNames.Length == 0)
             {
                 return Observable.Empty<BuildInfo>(scheduler);
             }
