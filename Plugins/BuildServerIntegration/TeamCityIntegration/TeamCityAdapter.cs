@@ -72,7 +72,7 @@ namespace TeamCityIntegration
 
             this.buildServerWatcher = buildServerWatcher;
 
-            ProjectName = config.GetString("ProjectName", null).Split('|').ToArray();
+            ProjectName = config.GetString("ProjectName", null).Split('|');
             BuildIdFilter = new Regex(config.GetString("BuildIdFilter", null), RegexOptions.Compiled);
             var hostName = config.GetString("BuildServerUrl", null);
             if (!string.IsNullOrEmpty(hostName))
