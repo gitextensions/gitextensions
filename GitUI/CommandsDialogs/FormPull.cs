@@ -388,8 +388,9 @@ namespace GitUI.CommandsDialogs
                 !Module.InTheMiddleOfRebase() &&
                 (process != null && !process.ErrorOccurred()))
             {
-                InitModules();
-                UICommands.UpdateSubmodules(owner);
+                if (!InitModules())
+                    UICommands.UpdateSubmodules(owner);
+
                 return true;
             }
 
@@ -453,12 +454,17 @@ namespace GitUI.CommandsDialogs
                    messageBoxResult;
         }
 
-        private void InitModules()
+        private bool InitModules()
         {
             if (Fetch.Checked || !File.Exists(Module.WorkingDir + ".gitmodules"))
-                return;
+                return false;
             if (!IsSubmodulesIntialized() && AskIfSubmodulesShouldBeInitialized())
+            {
                 UICommands.StartUpdateSubmodulesDialog(this);
+                return true;
+            }
+
+            return false;
         }
 
         private FormProcess CreateFormProcess(string source, string curLocalBranch, string curRemoteBranch)
