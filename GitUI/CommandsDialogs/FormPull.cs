@@ -345,7 +345,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                if (EvaluateResultsBasedOnSettings(stashed, process))
+                if (EvaluateResultsBasedOnSettings(owner, stashed, process))
                     return DialogResult.OK;
             }
             finally
@@ -370,7 +370,7 @@ namespace GitUI.CommandsDialogs
                         if (PSTaskDialog.cTaskDialog.VerificationChecked)
                             Settings.AutoPopStashAfterPull = messageBoxResult;
                     }
-                    if (ShouldStashPop(messageBoxResult ?? false, process, true))
+                    if (ShouldStashPop((bool)messageBoxResult, process, true))
                     {
                         UICommands.StashPop(this);
                     }
@@ -382,21 +382,21 @@ namespace GitUI.CommandsDialogs
             return DialogResult.No;
         }
 
-        private bool EvaluateResultsBasedOnSettings(bool stashed, FormProcess process)
+        private bool EvaluateResultsBasedOnSettings(IWin32Window owner, bool stashed, FormProcess process)
         {
             if (!Module.InTheMiddleOfConflictedMerge() &&
                 !Module.InTheMiddleOfRebase() &&
                 (process != null && !process.ErrorOccurred()))
             {
                 InitModules();
-                UICommands.UpdateSubmodules(this);
+                UICommands.UpdateSubmodules(owner);
                 return true;
             }
 
             // Rebase failed -> special 'rebase' merge conflict
             if (Rebase.Checked && Module.InTheMiddleOfRebase())
             {
-                UICommands.StartRebaseDialog(null);
+                UICommands.StartRebaseDialog(owner, null);
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase())
                 {
@@ -405,7 +405,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MergeConflictHandler.HandleMergeConflicts(UICommands, this);
+                MergeConflictHandler.HandleMergeConflicts(UICommands, owner);
 
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase())
