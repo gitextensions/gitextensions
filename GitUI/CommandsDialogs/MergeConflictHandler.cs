@@ -14,7 +14,11 @@ namespace GitUI.CommandsDialogs
                 }
                 return true;
             }
-            return false;
+            else
+            {
+                aCommands.UpdateSubmodules(owner);
+                return false;
+            }
         }
 
         public static bool HandleMergeConflicts(GitUICommands aCommands, IWin32Window owner)

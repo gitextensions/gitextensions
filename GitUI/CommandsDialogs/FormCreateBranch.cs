@@ -25,9 +25,6 @@ namespace GitUI.CommandsDialogs
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
                 commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
-
-            cbUpdateSubmodules.Visible = Module.HasSubmodules();
-            cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
         }
 
         private void FormCreateBranch_Load(object sender, EventArgs e)
@@ -77,12 +74,9 @@ namespace GitUI.CommandsDialogs
                     FormProcess.ShowDialog(this, cmd);
                 }
 
-                if (CheckoutAfterCreate.Checked && Module.HasSubmodules())
+                if (CheckoutAfterCreate.Checked)
                 {
-                    if (cbUpdateSubmodules.Checked)
-                        UICommands.StartUpdateSubmodulesDialog(this);
-
-                    AppSettings.UpdateSubmodulesOnCheckout = cbUpdateSubmodules.Checked;
+                    UICommands.UpdateSubmodules(this);
                 }
 
                 DialogResult = DialogResult.OK;
@@ -103,12 +97,6 @@ namespace GitUI.CommandsDialogs
             {
                 CheckoutAfterCreate.Checked = true;
             }
-        }
-
-        private void CheckoutAfterCreate_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbUpdateSubmodules.Visible)
-                cbUpdateSubmodules.Enabled = CheckoutAfterCreate.Checked;
         }
     }
 }

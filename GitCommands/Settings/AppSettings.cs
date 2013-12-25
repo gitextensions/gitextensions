@@ -627,9 +627,9 @@ namespace GitCommands
             set { SetBool("showSuperprojectRemoteBranches", value); }
         }
 
-        public static bool UpdateSubmodulesOnCheckout
+        public static bool? UpdateSubmodulesOnCheckout
         {
-            get { return GetBool("updateSubmodulesOnCheckout", true); }
+            get { return GetBool("updateSubmodulesOnCheckout"); }
             set { SetBool("updateSubmodulesOnCheckout", value); }
         }
 

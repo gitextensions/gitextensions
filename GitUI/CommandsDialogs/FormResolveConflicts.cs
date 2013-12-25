@@ -172,19 +172,21 @@ namespace GitUI.CommandsDialogs
                 ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
             }
 
-            if (!Module.InTheMiddleOfPatch() && !Module.InTheMiddleOfRebase() &&
-                !Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts && _offerCommit)
-            {
-                if (MessageBox.Show(this, allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    UICommands.StartCommitDialog(this);
-                }
-            }
-
             if (!Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts)
             {
+                UICommands.UpdateSubmodules(this);
+
+                if (!Module.InTheMiddleOfPatch() && !Module.InTheMiddleOfRebase() && _offerCommit)
+                {
+                    if (MessageBox.Show(this, allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        UICommands.StartCommitDialog(this);
+                    }
+                }
+
                 Close();
             }
+
             Cursor.Current = Cursors.Default;
         }
 
