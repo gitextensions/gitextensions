@@ -27,9 +27,6 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-
-            cbUpdateSubmodules.Visible = Module.HasSubmodules();
-            cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
         }
 
         private void FormCheckoutLoad(object sender, EventArgs e)
@@ -58,13 +55,7 @@ namespace GitUI.CommandsDialogs
 
                 FormProcess.ShowDialog(this, command);
 
-                if (Module.HasSubmodules())
-                {
-                    if (cbUpdateSubmodules.Checked)
-                        UICommands.StartUpdateSubmodulesDialog(this);
-
-                    AppSettings.UpdateSubmodulesOnCheckout = cbUpdateSubmodules.Checked;
-                }
+                UICommands.UpdateSubmodules(this);
 
                 DialogResult = System.Windows.Forms.DialogResult.OK;
 

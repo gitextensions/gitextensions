@@ -30,7 +30,6 @@
         {
             this._NO_TRANSLATE_BranchInfo = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cbUpdateSubmodules = new System.Windows.Forms.CheckBox();
             this.Hard = new System.Windows.Forms.RadioButton();
             this.Mixed = new System.Windows.Forms.RadioButton();
             this.Soft = new System.Windows.Forms.RadioButton();
@@ -61,16 +60,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Reset type";
             // 
-            // cbUpdateSubmodules
-            // 
-            this.cbUpdateSubmodules.AutoSize = true;
-            this.cbUpdateSubmodules.Location = new System.Drawing.Point(29, 368);
-            this.cbUpdateSubmodules.Name = "cbUpdateSubmodules";
-            this.cbUpdateSubmodules.Size = new System.Drawing.Size(132, 19);
-            this.cbUpdateSubmodules.TabIndex = 3;
-            this.cbUpdateSubmodules.Text = "Update submodules";
-            this.cbUpdateSubmodules.UseVisualStyleBackColor = true;
-            // 
             // Hard
             // 
             this.Hard.AutoSize = true;
@@ -82,7 +71,6 @@
             this.Hard.Text = "Hard: reset working dir and index\r\n(discard ALL local changes, even uncommitted c" +
     "hanges)";
             this.Hard.UseVisualStyleBackColor = false;
-            this.Hard.CheckedChanged += new System.EventHandler(this.Radio_CheckedChanged);
             // 
             // Mixed
             // 
@@ -96,7 +84,6 @@
             this.Mixed.TabStop = true;
             this.Mixed.Text = "Mixed: leave working dir untouched, reset index";
             this.Mixed.UseVisualStyleBackColor = false;
-            this.Mixed.CheckedChanged += new System.EventHandler(this.Radio_CheckedChanged);
             // 
             // Soft
             // 
@@ -108,7 +95,6 @@
             this.Soft.TabIndex = 0;
             this.Soft.Text = "Soft: leave working dir and index untouched";
             this.Soft.UseVisualStyleBackColor = false;
-            this.Soft.CheckedChanged += new System.EventHandler(this.Radio_CheckedChanged);
             // 
             // Ok
             // 
@@ -147,7 +133,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(502, 401);
-            this.Controls.Add(this.cbUpdateSubmodules);
             this.Controls.Add(this.commitSummaryUserControl1);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Ok);
@@ -177,6 +162,5 @@
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.Button Cancel;
         private UserControls.CommitSummaryUserControl commitSummaryUserControl1;
-        private System.Windows.Forms.CheckBox cbUpdateSubmodules;
     }
 }

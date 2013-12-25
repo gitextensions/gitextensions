@@ -44,7 +44,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbUpdateSubmodules = new System.Windows.Forms.CheckBox();
             this.CheckoutAfterCreate = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -223,7 +222,6 @@
             // 
             // flowLayoutPanel3
             // 
-            this.flowLayoutPanel3.Controls.Add(this.cbUpdateSubmodules);
             this.flowLayoutPanel3.Controls.Add(this.CheckoutAfterCreate);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
@@ -232,30 +230,17 @@
             this.flowLayoutPanel3.Size = new System.Drawing.Size(442, 24);
             this.flowLayoutPanel3.TabIndex = 2;
             // 
-            // cbUpdateSubmodules
-            // 
-            this.cbUpdateSubmodules.AutoSize = true;
-            this.cbUpdateSubmodules.Checked = true;
-            this.cbUpdateSubmodules.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbUpdateSubmodules.Location = new System.Drawing.Point(307, 3);
-            this.cbUpdateSubmodules.Name = "cbUpdateSubmodules";
-            this.cbUpdateSubmodules.Size = new System.Drawing.Size(132, 19);
-            this.cbUpdateSubmodules.TabIndex = 7;
-            this.cbUpdateSubmodules.Text = "Update submodules";
-            this.cbUpdateSubmodules.UseVisualStyleBackColor = true;
-            // 
             // CheckoutAfterCreate
             // 
             this.CheckoutAfterCreate.AutoSize = true;
             this.CheckoutAfterCreate.Checked = true;
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CheckoutAfterCreate.Location = new System.Drawing.Point(162, 3);
+            this.CheckoutAfterCreate.Location = new System.Drawing.Point(300, 3);
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
             this.CheckoutAfterCreate.Size = new System.Drawing.Size(139, 19);
             this.CheckoutAfterCreate.TabIndex = 6;
             this.CheckoutAfterCreate.Text = "Checkout after create";
             this.CheckoutAfterCreate.UseVisualStyleBackColor = true;
-            this.CheckoutAfterCreate.CheckedChanged += new System.EventHandler(this.CheckoutAfterCreate_CheckedChanged);
             // 
             // FormCreateBranch
             // 
@@ -304,7 +289,6 @@
         private UserControls.GotoUserManualControl gotoUserManualControl1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
-        private System.Windows.Forms.CheckBox cbUpdateSubmodules;
         private System.Windows.Forms.CheckBox CheckoutAfterCreate;
     }
 }
