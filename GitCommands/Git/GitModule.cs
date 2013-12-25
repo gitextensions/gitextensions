@@ -889,17 +889,22 @@ namespace GitCommands
             return GitItem.CreateGitItemFromString(this, str);
         }
 
-		public int GetCommitCount(string parentHash, string childHash)
+        public int? GetCommitCount(string parentHash, string childHash)
         {
-            string result = this.RunGitCmd("rev-list " + parentHash + " ^" + childHash + " --count");
-            return int.Parse(result);
+            string result = RunGitCmd("rev-list " + parentHash + " ^" + childHash + " --count");
+            int commitCount;
+            if (int.TryParse(result, out commitCount))
+                return commitCount;
+            return null;
         }
 
         public string GetCommitCountString(string from, string to)
         {
-            int removed = this.GetCommitCount(from, to);
-            int added = this.GetCommitCount(to, from);
+            int? removed = GetCommitCount(from, to);
+            int? added = GetCommitCount(to, from);
 
+            if (removed == null || added == null)
+                return "";
             if (removed == 0 && added == 0)
                 return "=";
 
