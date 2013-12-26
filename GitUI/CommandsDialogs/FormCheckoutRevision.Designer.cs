@@ -35,7 +35,6 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
             this.commitPickerSmallControl1 = new GitUI.UserControls.CommitPickerSmallControl();
-            this.cbUpdateSubmodules = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -53,7 +52,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(444, 104);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(444, 106);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // tableLayoutPanel2
@@ -101,7 +100,6 @@
             // 
             this.flowLayoutPanel1.Controls.Add(this.label2);
             this.flowLayoutPanel1.Controls.Add(this.commitPickerSmallControl1);
-            this.flowLayoutPanel1.Controls.Add(this.cbUpdateSubmodules);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -127,23 +125,11 @@
             this.commitPickerSmallControl1.Size = new System.Drawing.Size(207, 26);
             this.commitPickerSmallControl1.TabIndex = 3;
             // 
-            // cbUpdateSubmodules
-            // 
-            this.cbUpdateSubmodules.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cbUpdateSubmodules.AutoSize = true;
-            this.flowLayoutPanel1.SetFlowBreak(this.cbUpdateSubmodules, true);
-            this.cbUpdateSubmodules.Location = new System.Drawing.Point(3, 35);
-            this.cbUpdateSubmodules.Name = "cbUpdateSubmodules";
-            this.cbUpdateSubmodules.Size = new System.Drawing.Size(132, 19);
-            this.cbUpdateSubmodules.TabIndex = 6;
-            this.cbUpdateSubmodules.Text = "Update submodules";
-            this.cbUpdateSubmodules.UseVisualStyleBackColor = true;
-            // 
             // FormCheckoutRevision
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(444, 104);
+            this.ClientSize = new System.Drawing.Size(444, 106);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(460, 125);
             this.Name = "FormCheckoutRevision";
@@ -169,6 +155,5 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label label2;
         private UserControls.CommitPickerSmallControl commitPickerSmallControl1;
-        private System.Windows.Forms.CheckBox cbUpdateSubmodules;
     }
 }

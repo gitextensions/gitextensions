@@ -12,6 +12,7 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
+using ResourceManager.Translation;
 using Settings = GitCommands.AppSettings;
 
 namespace GitUI
@@ -1422,6 +1423,45 @@ namespace GitUI
         public bool StartSyncSubmodulesDialog()
         {
             return StartSyncSubmodulesDialog(null);
+        }
+
+
+        public void UpdateSubmodules(IWin32Window win)
+        {
+            if (!Module.HasSubmodules())
+                return;
+
+            var updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? ConfirmUpdateSubmodules(win);
+
+            if (updateSubmodules)
+                StartUpdateSubmodulesDialog(win);
+        }
+
+        private readonly TranslationString _updateSubmodules = new TranslationString("Update submodules");
+        private readonly TranslationString _theRepositorySubmodules = new TranslationString("Update submodules on checkout?");
+        private readonly TranslationString _updateSubmodulesToo = new TranslationString("Since this repository has submodules, it's necessary to update them on every checkout.\r\n\r\nThis will just checkout on the submodule the commit determined by the superproject.");
+        private readonly TranslationString _rememberChoice = new TranslationString("Remember choice");
+
+        private bool ConfirmUpdateSubmodules(IWin32Window win)
+        {
+            var  result = PSTaskDialog.cTaskDialog.ShowTaskDialogBox(
+                Owner: win,
+                Title: _updateSubmodules.Text,
+                MainInstruction: _theRepositorySubmodules.Text,
+                Content: _updateSubmodulesToo.Text,
+                ExpandedInfo: "",
+                Footer: "",
+                VerificationText: _rememberChoice.Text,
+                RadioButtons: "",
+                CommandButtons: "",
+                Buttons : PSTaskDialog.eTaskDialogButtons.YesNo,
+                MainIcon: PSTaskDialog.eSysIcons.Question,
+                FooterIcon: PSTaskDialog.eSysIcons.Information) == DialogResult.Yes;
+
+            if(PSTaskDialog.cTaskDialog.VerificationChecked)
+                AppSettings.UpdateSubmodulesOnCheckout = result;
+
+            return result;
         }
 
         public bool StartPluginSettingsDialog(IWin32Window owner)
