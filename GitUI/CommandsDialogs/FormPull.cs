@@ -115,9 +115,6 @@ namespace GitUI.CommandsDialogs
             Fetch.Checked = Settings.FormPullAction == Settings.PullAction.Fetch;
             localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = Settings.AutoStash;
-            cbUpdateSubmodules.Visible = Module.HasSubmodules();
-            cbUpdateSubmodules.Enabled = !Fetch.Checked;
-            cbUpdateSubmodules.Checked = AppSettings.UpdateSubmodulesOnCheckout;
 
             ErrorOccurred = false;
 
@@ -302,20 +299,7 @@ namespace GitUI.CommandsDialogs
             {
                 ShowProcessDialogBox(owner, source, process);
 
-                var result = EvaluateProcessDialogResults(owner, process, stashed);
-
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    if (Module.HasSubmodules())
-                    {
-                        if (cbUpdateSubmodules.Checked)
-                            UICommands.StartUpdateSubmodulesDialog(this);
-
-                        AppSettings.UpdateSubmodulesOnCheckout = cbUpdateSubmodules.Checked;
-                    }
-                }
-
-                return result;
+                return EvaluateProcessDialogResults(owner, process, stashed);
             }
         }
 
@@ -361,7 +345,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                if (EvaluateResultsBasedOnSettings(stashed, process))
+                if (EvaluateResultsBasedOnSettings(owner, stashed, process))
                     return DialogResult.OK;
             }
             finally
@@ -386,7 +370,7 @@ namespace GitUI.CommandsDialogs
                         if (PSTaskDialog.cTaskDialog.VerificationChecked)
                             Settings.AutoPopStashAfterPull = messageBoxResult;
                     }
-                    if (ShouldStashPop(messageBoxResult ?? false, process, true))
+                    if (ShouldStashPop((bool)messageBoxResult, process, true))
                     {
                         UICommands.StashPop(this);
                     }
@@ -398,20 +382,22 @@ namespace GitUI.CommandsDialogs
             return DialogResult.No;
         }
 
-        private bool EvaluateResultsBasedOnSettings(bool stashed, FormProcess process)
+        private bool EvaluateResultsBasedOnSettings(IWin32Window owner, bool stashed, FormProcess process)
         {
             if (!Module.InTheMiddleOfConflictedMerge() &&
                 !Module.InTheMiddleOfRebase() &&
                 (process != null && !process.ErrorOccurred()))
             {
-                InitModules();
+                if (!InitModules())
+                    UICommands.UpdateSubmodules(owner);
+
                 return true;
             }
 
             // Rebase failed -> special 'rebase' merge conflict
             if (Rebase.Checked && Module.InTheMiddleOfRebase())
             {
-                UICommands.StartRebaseDialog(null);
+                UICommands.StartRebaseDialog(owner, null);
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase())
                 {
@@ -420,7 +406,8 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MergeConflictHandler.HandleMergeConflicts(UICommands, this);
+                MergeConflictHandler.HandleMergeConflicts(UICommands, owner);
+
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase())
                 {
@@ -467,12 +454,17 @@ namespace GitUI.CommandsDialogs
                    messageBoxResult;
         }
 
-        private void InitModules()
+        private bool InitModules()
         {
             if (Fetch.Checked || !File.Exists(Module.WorkingDir + ".gitmodules"))
-                return;
+                return false;
             if (!IsSubmodulesIntialized() && AskIfSubmodulesShouldBeInitialized())
+            {
                 UICommands.StartUpdateSubmodulesDialog(this);
+                return true;
+            }
+
+            return false;
         }
 
         private FormProcess CreateFormProcess(string source, string curLocalBranch, string curRemoteBranch)
@@ -826,7 +818,6 @@ namespace GitUI.CommandsDialogs
             AllTags.Enabled = false;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
-            cbUpdateSubmodules.Enabled = !Fetch.Checked;
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
@@ -838,7 +829,6 @@ namespace GitUI.CommandsDialogs
             AllTags.Enabled = false;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
-            cbUpdateSubmodules.Enabled = !Fetch.Checked;
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
@@ -847,7 +837,6 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
-            cbUpdateSubmodules.Enabled = !Fetch.Checked;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)
