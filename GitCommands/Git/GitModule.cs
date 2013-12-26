@@ -1689,6 +1689,11 @@ namespace GitCommands
                    Directory.Exists(GetRebaseDir());
         }
 
+        public bool InTheMiddleOfAction()
+        {
+            return InTheMiddleOfConflictedMerge() || InTheMiddleOfRebase();
+        }
+
         public string GetNextRebasePatch()
         {
             var file = GetRebaseDir() + "next";
