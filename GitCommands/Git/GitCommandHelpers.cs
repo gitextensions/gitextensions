@@ -940,7 +940,6 @@ namespace GitCommands
                 status.RemovedCommits = submodule.GetCommitCount(status.OldCommit, status.Commit);
             }
 
-
             return status;
         }
 
