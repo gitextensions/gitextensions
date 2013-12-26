@@ -1425,7 +1425,6 @@ namespace GitUI
             return StartSyncSubmodulesDialog(null);
         }
 
-
         public void UpdateSubmodules(IWin32Window win)
         {
             if (!Module.HasSubmodules())

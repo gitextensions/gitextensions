@@ -158,11 +158,6 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.DataSource = remotes;
         }
 
-        public DialogResult PullAndShowDialogWhenFailed()
-        {
-            return PullAndShowDialogWhenFailed(null);
-        }
-
         public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
         {
             DialogResult result = PullChanges(owner);
@@ -250,6 +245,68 @@ namespace GitUI.CommandsDialogs
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
 
+        private bool InitModules()
+        {
+            if (Fetch.Checked || !File.Exists(Module.WorkingDir + ".gitmodules"))
+                return false;
+            if (!IsSubmodulesInitialized())
+            {
+                if (AskIfSubmodulesShouldBeInitialized())
+                {
+                    UICommands.StartUpdateSubmodulesDialog(this);
+                }
+                return true;
+            }
+
+            return false;
+        }
+
+        private void CheckMergeConflicts(IWin32Window owner)
+        {
+            // Rebase failed -> special 'rebase' merge conflict
+            if (Rebase.Checked && Module.InTheMiddleOfRebase())
+            {
+                UICommands.StartRebaseDialog(owner, null);
+            }
+            else if (!Module.InTheMiddleOfAction() && !ErrorOccurred && !InitModules())
+            {
+                UICommands.UpdateSubmodules(owner);
+            }
+            else
+            {
+                MergeConflictHandler.HandleMergeConflicts(UICommands, owner, true, !Fetch.Checked);
+            }
+        }
+
+        private void PopStash(IWin32Window owner)
+        {
+            if (!ErrorOccurred && !Module.InTheMiddleOfAction())
+            {
+                bool? messageBoxResult = Settings.AutoPopStashAfterPull;
+                if (messageBoxResult == null)
+                {
+                    DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                        owner,
+                        _applyShashedItemsAgainCaption.Text,
+                        "",
+                        _applyShashedItemsAgain.Text,
+                        "",
+                        "",
+                        _dontShowAgain.Text,
+                        PSTaskDialog.eTaskDialogButtons.YesNo,
+                        PSTaskDialog.eSysIcons.Question,
+                        PSTaskDialog.eSysIcons.Question);
+                    messageBoxResult = (res == DialogResult.Yes);
+                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                        Settings.AutoPopStashAfterPull = messageBoxResult;
+                }
+                if ((bool) messageBoxResult)
+                {
+                    UICommands.StashPop(this);
+                }
+            }
+        }
+
         public DialogResult PullChanges(IWin32Window owner)
         {
             if (!ShouldPullChanges())
@@ -299,7 +356,21 @@ namespace GitUI.CommandsDialogs
             {
                 ShowProcessDialogBox(owner, source, process);
 
-                return EvaluateProcessDialogResults(owner, process, stashed);
+                try
+                {
+                    bool aborted = process != null && process.DialogResult == DialogResult.Abort;
+                    if (!aborted)
+                        CheckMergeConflicts(owner);
+                }
+                finally
+                {
+                    if (stashed)
+                        PopStash(owner);
+
+                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
+                }
+
+                return DialogResult.OK;
             }
         }
 
@@ -341,88 +412,6 @@ namespace GitUI.CommandsDialogs
             return dialogResult;
         }
 
-        private DialogResult EvaluateProcessDialogResults(IWin32Window owner, FormProcess process, bool stashed)
-        {
-            try
-            {
-                if (EvaluateResultsBasedOnSettings(owner, stashed, process))
-                    return DialogResult.OK;
-            }
-            finally
-            {
-                if (stashed)
-                {
-                    bool? messageBoxResult = Settings.AutoPopStashAfterPull;
-                    if (messageBoxResult == null)
-                    {
-                        DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
-                            owner,
-                            _applyShashedItemsAgainCaption.Text,
-                            "",
-                            _applyShashedItemsAgain.Text,
-                            "",
-                            "",
-                            _dontShowAgain.Text,
-                            PSTaskDialog.eTaskDialogButtons.YesNo,
-                            PSTaskDialog.eSysIcons.Question,
-                            PSTaskDialog.eSysIcons.Question);
-                        messageBoxResult = (res == DialogResult.Yes);
-                        if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                            Settings.AutoPopStashAfterPull = messageBoxResult;
-                    }
-                    if (ShouldStashPop((bool)messageBoxResult, process, true))
-                    {
-                        UICommands.StashPop(this);
-                    }
-                }
-
-                ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
-            }
-
-            return DialogResult.No;
-        }
-
-        private bool EvaluateResultsBasedOnSettings(IWin32Window owner, bool stashed, FormProcess process)
-        {
-            if (!Module.InTheMiddleOfConflictedMerge() &&
-                !Module.InTheMiddleOfRebase() &&
-                (process != null && !process.ErrorOccurred()))
-            {
-                if (!InitModules())
-                    UICommands.UpdateSubmodules(owner);
-
-                return true;
-            }
-
-            // Rebase failed -> special 'rebase' merge conflict
-            if (Rebase.Checked && Module.InTheMiddleOfRebase())
-            {
-                UICommands.StartRebaseDialog(owner, null);
-                if (!Module.InTheMiddleOfConflictedMerge() &&
-                    !Module.InTheMiddleOfRebase())
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                MergeConflictHandler.HandleMergeConflicts(UICommands, owner);
-
-                if (!Module.InTheMiddleOfConflictedMerge() &&
-                    !Module.InTheMiddleOfRebase())
-                {
-                    return true;
-                }
-            }
-
-            if (!AutoStash.Checked || !stashed || Module.InTheMiddleOfConflictedMerge() ||
-                Module.InTheMiddleOfRebase())
-            {
-                return true;
-            }
-            return false;
-        }
-
         private void ShowProcessDialogBox(IWin32Window owner, string source, FormProcess process)
         {
             if (process == null)
@@ -444,27 +433,17 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private bool ShouldStashPop(bool messageBoxResult, FormProcess process, bool stashed)
+        private bool IsSubmodulesInitialized()
         {
-            return stashed &&
-                   process != null &&
-                   !process.ErrorOccurred() &&
-                   !Module.InTheMiddleOfConflictedMerge() &&
-                   !Module.InTheMiddleOfRebase() &&
-                   messageBoxResult;
-        }
-
-        private bool InitModules()
-        {
-            if (Fetch.Checked || !File.Exists(Module.WorkingDir + ".gitmodules"))
-                return false;
-            if (!IsSubmodulesIntialized() && AskIfSubmodulesShouldBeInitialized())
+            // Fast submodules check
+            var submodules = Module.GetSubmodulesLocalPathes();
+            foreach (var submoduleName in submodules)
             {
-                UICommands.StartUpdateSubmodulesDialog(this);
-                return true;
+                GitModule submodule = Module.GetSubmodule(submoduleName);
+                if (!submodule.IsValidGitWorkingDir())
+                    return false;
             }
-
-            return false;
+            return true;
         }
 
         private FormProcess CreateFormProcess(string source, string curLocalBranch, string curRemoteBranch)
@@ -654,19 +633,6 @@ namespace GitUI.CommandsDialogs
                 Settings.FormPullAction = Settings.PullAction.Fetch;
 
             Settings.AutoStash = AutoStash.Checked;
-        }
-
-        private bool IsSubmodulesIntialized()
-        {
-            // Fast submodules check
-            var submodules = Module.GetSubmodulesLocalPathes();
-            foreach (var submoduleName in submodules)
-            {
-                GitModule submodule = Module.GetSubmodule(submoduleName);
-                if (!submodule.IsValidGitWorkingDir())
-                    return false;
-            }
-            return true;
         }
 
         private IEnumerable<string> GetSelectedRemotes()
