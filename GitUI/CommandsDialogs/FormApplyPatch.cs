@@ -175,7 +175,7 @@ namespace GitUI.CommandsDialogs
 
             EnableButtons();
 
-            if (!Module.InTheMiddleOfConflictedMerge() && !Module.InTheMiddleOfRebase() && !Module.InTheMiddleOfPatch())
+            if (!Module.InTheMiddleOfAction() && !Module.InTheMiddleOfPatch())
                 Close();
             Cursor.Current = Cursors.Default;
         }
