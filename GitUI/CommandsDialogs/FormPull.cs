@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
@@ -329,7 +328,7 @@ namespace GitUI.CommandsDialogs
                 switch (idx)
                 {
                     case 0:
-                        if (!UICommands.StartCheckoutBranch(owner, ""))
+                        if (!UICommands.StartCheckoutBranch(owner, new[] {""}))
                             return DialogResult.Cancel;
                         break;
                     case -1:
@@ -750,7 +749,7 @@ namespace GitUI.CommandsDialogs
             FillPullSourceDropDown();
         }
 
-        private bool bInternalUpdate;
+        private bool _bInternalUpdate;
 
         private void AddRemoteClick(object sender, EventArgs e)
         {
@@ -764,14 +763,14 @@ namespace GitUI.CommandsDialogs
                 UICommands.StartRemotesDialog(this, selectedRemote);
             }
 
-            bInternalUpdate = true;
+            _bInternalUpdate = true;
             string origText = _NO_TRANSLATE_Remotes.Text;
             UpdateRemotesList();
             if (_NO_TRANSLATE_Remotes.Items.Contains(origText)) // else first item gets selected
             {
                 _NO_TRANSLATE_Remotes.Text = origText;
             }
-            bInternalUpdate = false;
+            _bInternalUpdate = false;
         }
 
         private void MergeCheckedChanged(object sender, EventArgs e)
@@ -812,7 +811,7 @@ namespace GitUI.CommandsDialogs
 
         private void Remotes_TextChanged(object sender, EventArgs e)
         {
-            if (!bInternalUpdate)
+            if (!_bInternalUpdate)
             {
                 RemotesValidating(null, null);
             }
