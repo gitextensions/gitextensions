@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,7 +11,6 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
-using ResourceManager.Translation;
 using Settings = GitCommands.AppSettings;
 
 namespace GitUI
@@ -473,11 +471,11 @@ namespace GitUI
 
         #region Checkout
 
-        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string containRevison)
+        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string[] containRevisons)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
             {
-                using (var form = new FormCheckoutBranch(this, branch, remote, containRevison))
+                using (var form = new FormCheckoutBranch(this, branch, remote, containRevisons))
                     return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
             }
             );
@@ -488,9 +486,9 @@ namespace GitUI
             return StartCheckoutBranch(owner, branch, remote, null);
         }
 
-        public bool StartCheckoutBranch(IWin32Window owner, string containRevison)
+        public bool StartCheckoutBranch(IWin32Window owner, string[] containRevisons)
         {
-            return StartCheckoutBranch(owner, "", false, containRevison);
+            return StartCheckoutBranch(owner, "", false, containRevisons);
         }
 
         public bool StartCheckoutBranch(IWin32Window owner)
@@ -1430,37 +1428,10 @@ namespace GitUI
             if (!Module.HasSubmodules())
                 return;
 
-            var updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? ConfirmUpdateSubmodules(win);
+            var updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? MessageBoxes.ConfirmUpdateSubmodules(win);
 
             if (updateSubmodules)
                 StartUpdateSubmodulesDialog(win);
-        }
-
-        private readonly TranslationString _updateSubmodules = new TranslationString("Update submodules");
-        private readonly TranslationString _theRepositorySubmodules = new TranslationString("Update submodules on checkout?");
-        private readonly TranslationString _updateSubmodulesToo = new TranslationString("Since this repository has submodules, it's necessary to update them on every checkout.\r\n\r\nThis will just checkout on the submodule the commit determined by the superproject.");
-        private readonly TranslationString _rememberChoice = new TranslationString("Remember choice");
-
-        private bool ConfirmUpdateSubmodules(IWin32Window win)
-        {
-            var  result = PSTaskDialog.cTaskDialog.ShowTaskDialogBox(
-                Owner: win,
-                Title: _updateSubmodules.Text,
-                MainInstruction: _theRepositorySubmodules.Text,
-                Content: _updateSubmodulesToo.Text,
-                ExpandedInfo: "",
-                Footer: "",
-                VerificationText: _rememberChoice.Text,
-                RadioButtons: "",
-                CommandButtons: "",
-                Buttons : PSTaskDialog.eTaskDialogButtons.YesNo,
-                MainIcon: PSTaskDialog.eSysIcons.Question,
-                FooterIcon: PSTaskDialog.eSysIcons.Information) == DialogResult.Yes;
-
-            if(PSTaskDialog.cTaskDialog.VerificationChecked)
-                AppSettings.UpdateSubmodulesOnCheckout = result;
-
-            return result;
         }
 
         public bool StartPluginSettingsDialog(IWin32Window owner)
