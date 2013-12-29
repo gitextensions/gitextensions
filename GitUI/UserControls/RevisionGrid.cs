@@ -642,7 +642,7 @@ namespace GitUI
 
         public List<string> GetRevisionChildren(string revision)
         {
-			return Revisions.GetRevisionChildren(revision);
+            return Revisions.GetRevisionChildren(revision);
         }
 
         public GitRevision GetRevision(int aRow)

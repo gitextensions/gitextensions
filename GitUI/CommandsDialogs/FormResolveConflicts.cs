@@ -282,7 +282,7 @@ namespace GitUI.CommandsDialogs
                 if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
                     MessageBox.Show(this, fileUnchangedAfterMerge.Text);
                 else
-                    stageFile(fileName);
+                    StageFile(fileName);
             }
 
             Initialize();
@@ -345,7 +345,7 @@ namespace GitUI.CommandsDialogs
                 {
                     var form = new FormMergeSubmodule(UICommands, filename);
                     if (form.ShowDialog() == DialogResult.OK)
-                        stageFile(filename);
+                        StageFile(filename);
                 }
                 else if (itemType == ItemType.File)
                 {
@@ -419,7 +419,7 @@ namespace GitUI.CommandsDialogs
                     //time timestamp is changed, we are pretty sure the merge was done.
                     if (exitCode == 0 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge)
                     {
-                        stageFile(filename);
+                        StageFile(filename);
                     }
 
                     //If the exitcode is 1, but the file is changed, ask if the merge conflict is solved.
@@ -429,7 +429,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (MessageBox.Show(this, askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
-                            stageFile(filename);
+                            StageFile(filename);
                         }
                     }
                 }
@@ -836,7 +836,7 @@ namespace GitUI.CommandsDialogs
         private void ContextMarkAsSolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            stageFile(GetFileName());
+            StageFile(GetFileName());
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -898,7 +898,7 @@ namespace GitUI.CommandsDialogs
             OsShellUtil.OpenAs(Path.Combine(Module.WorkingDir, fileName));
         }
 
-        private void stageFile(string filename)
+        private void StageFile(string filename)
         {
             var processStart = new FormStatus.ProcessStart
                 (
@@ -914,7 +914,6 @@ namespace GitUI.CommandsDialogs
                 process.ShowDialogOnError(this);
         }
 
-
         private void conflictDescription_Click(object sender, EventArgs e)
         {
 
@@ -924,7 +923,6 @@ namespace GitUI.CommandsDialogs
         {
             OpenMergetool_Click(sender, e);
         }
-
 
         private void ConflictedFiles_KeyDown(object sender, KeyEventArgs e)
         {
