@@ -77,7 +77,7 @@ namespace JenkinsIntegration
 
                 _getBuildUrls = new List<Task<IEnumerable<string>>>();
 
-                string[] projectUrls = projectName.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] projectUrls = projectName.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var projectUrl in projectUrls.Select(s => baseAdress + "job/" + s.Trim() + "/"))
                 {
                     AddGetBuildUrl(projectUrl);
