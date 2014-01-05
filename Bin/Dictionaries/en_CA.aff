@@ -1,0 +1,98 @@
+SET ISO8859-1
+TRY esianrtolcdugmphbyfvkw
+
+PFX A Y 1
+PFX A   0     re         .
+
+PFX I Y 1
+PFX I   0     in         .
+
+PFX U Y 1
+PFX U   0     un         .
+
+PFX C Y 1
+PFX C   0     de          .
+
+PFX E Y 1
+PFX E   0     dis         .
+
+PFX F Y 1
+PFX F   0     con         .
+
+PFX K Y 1
+PFX K   0     pro         .
+
+SFX V N 2
+SFX V   e     ive        e
+SFX V   0     ive        [^e]
+
+SFX N Y 3
+SFX N   e     ion        e
+SFX N   y     ication    y 
+SFX N   0     en         [^ey] 
+
+SFX X Y 3
+SFX X   e     ions       e
+SFX X   y     ications   y
+SFX X   0     ens        [^ey]
+
+SFX H N 2
+SFX H   y     ieth       y
+SFX H   0     th         [^y] 
+
+SFX Y Y 1
+SFX Y   0     ly         .
+
+SFX G Y 2
+SFX G   e     ing        e
+SFX G   0     ing        [^e] 
+
+SFX J Y 2
+SFX J   e     ings       e
+SFX J   0     ings       [^e]
+
+SFX D Y 4
+SFX D   0     d          e
+SFX D   y     ied        [^aeiou]y
+SFX D   0     ed         [^ey]
+SFX D   0     ed         [aeiou]y
+
+SFX T N 4
+SFX T   0     st         e
+SFX T   y     iest       [^aeiou]y
+SFX T   0     est        [aeiou]y
+SFX T   0     est        [^ey]
+
+SFX R Y 4
+SFX R   0     r          e
+SFX R   y     ier        [^aeiou]y
+SFX R   0     er         [aeiou]y
+SFX R   0     er         [^ey]
+
+SFX Z Y 4
+SFX Z   0     rs         e
+SFX Z   y     iers       [^aeiou]y
+SFX Z   0     ers        [aeiou]y
+SFX Z   0     ers        [^ey]
+
+SFX S Y 4
+SFX S   y     ies        [^aeiou]y
+SFX S   0     s          [aeiou]y
+SFX S   0     es         [sxzh]
+SFX S   0     s          [^sxzhy]
+
+SFX P Y 3
+SFX P   y     iness      [^aeiou]y
+SFX P   0     ness       [aeiou]y
+SFX P   0     ness       [^y]
+
+SFX M Y 1
+SFX M   0     's         .
+
+SFX B Y 3
+SFX B   0     able       [^aeiou]
+SFX B   0     able       ee
+SFX B   e     able       [^aeiou]e
+
+SFX L Y 1
+SFX L   0     ment       .

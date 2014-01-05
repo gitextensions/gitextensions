@@ -11,7 +11,7 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>NetSpell.SpellChecker</AssemblyName>
+    <AssemblyName>SpellChecker</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -19,7 +19,7 @@
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>NetSpell.SpellChecker</RootNamespace>
+    <RootNamespace>SpellChecker</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
     </StartupObject>
@@ -45,6 +45,8 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -97,37 +99,18 @@
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NHunspell">
+      <HintPath>..\packages\NHunspell.1.1.1\lib\net\NHunspell.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
-    <Reference Include="System.Drawing">
-      <Name>System.Drawing</Name>
-    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Affix\AffixEntry.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Affix\AffixRule.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Affix\AffixUtility.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Phonetic\PhoneticRule.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Phonetic\PhoneticUtility.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\Word.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Dictionary\WordDictionary.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ReplaceWordEventArgs.cs">
       <SubType>Code</SubType>
@@ -136,9 +119,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SpellingEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TraceWriter.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -159,11 +139,20 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
+      <Project>{d3440fd7-afc5-4351-8741-6cdbf15ce944}</Project>
+      <Name>ResourceManager</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy /s /y "$(SolutionDir)packages\NHunspell.1.1.1\native\*.*" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
