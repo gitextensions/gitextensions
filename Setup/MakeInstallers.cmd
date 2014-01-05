@@ -1,5 +1,7 @@
 @echo off
 
+call DownloadExternals.cmd
+
 rem
 rem Update this version number with every release
 rem
