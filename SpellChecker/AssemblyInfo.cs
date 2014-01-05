@@ -11,11 +11,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("NetSpell.SpellChecker")]
-[assembly: AssemblyDescription("NetSpell is a spell checking engine written entirely in managed C# .net code")]
+[assembly: AssemblyTitle("SpellChecker")]
+[assembly: AssemblyDescription("NHunspell is a spell checking engine written entirely in managed C# .net code")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("LoreSoft")]
-[assembly: AssemblyProduct("NetSpell")]
+[assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("Copyright © 2003 Paul Welter, modified by Henk Westhuis for Git Extensions.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
@@ -30,12 +30,12 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("2.1.7.35462")]
+[assembly: AssemblyVersion("2.1.8.35462")]
 
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
 
-namespace NetSpell.SpellChecker
+namespace SpellChecker
 {
 	/// <summary>
 	///     AssemblyInfo class
