@@ -2120,14 +2120,22 @@ namespace GitUI.CommandsDialogs
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var fileName = GetTreeSelectedFileName();
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                OsShellUtil.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            }
+        }
+
+        private string GetTreeSelectedFileName()
+        {
             var item = GitTree.SelectedNode.Tag;
 
             var gitItem = item as GitItem;
             if (gitItem == null || !(gitItem).IsBlob)
-                return;
+                return null;
 
-            var fileName = Path.Combine(Module.WorkingDir, (gitItem).FileName);
-            OsShellUtil.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            return Path.Combine(Module.WorkingDir, (gitItem).FileName);
         }
 
         private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -3148,6 +3156,31 @@ namespace GitUI.CommandsDialogs
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+        }
+
+        /// <summary>
+        /// Open the selected file, in file tree list, with its associated editor
+        /// </summary>
+        private void openWorkingFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var fileName = GetTreeSelectedFileName();
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                Process.Start(fileName);
+            }
+        }
+
+        /// <summary>
+        /// Open the (first) selected file, in diff list, with its associated editor
+        /// </summary>
+        private void openWorkingFileDiffToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = DiffFiles.SelectedItems.FirstOrDefault();
+            if (item != null)
+            {
+                var fileName = (Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+                Process.Start(fileName);
+            }
         }
     }
 }

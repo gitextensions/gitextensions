@@ -225,6 +225,8 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1 = new GitUI.MenuStripEx();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.openWorkingFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openWorkingFileDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 #if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
@@ -749,6 +751,7 @@ namespace GitUI.CommandsDialogs
             this.editCheckedOutFileToolStripMenuItem,
             this.openFileToolStripMenuItem,
             this.openFileWithToolStripMenuItem,
+            this.openWorkingFileToolStripMenuItem,
             this.openWithToolStripMenuItem,
             this.toolStripSeparator18,
             this.expandAllToolStripMenuItem,
@@ -957,6 +960,7 @@ namespace GitUI.CommandsDialogs
             this.resetFileToToolStripMenuItem,
             this.toolStripSeparator32,
             this.copyFilenameToClipboardToolStripMenuItem1,
+            this.openWorkingFileDiffToolStripMenuItem,
             this.openContainingFolderToolStripMenuItem,
             this.diffShowInFileTreeToolStripMenuItem,
             this.toolStripSeparator33,
@@ -1948,6 +1952,20 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1.Size = new System.Drawing.Size(1154, 28);
             this.menuStrip1.TabIndex = 3;
             // 
+            // openWorkingFileToolStripMenuItem
+            // 
+            this.openWorkingFileToolStripMenuItem.Name = "openWorkingFileToolStripMenuItem";
+            this.openWorkingFileToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
+            this.openWorkingFileToolStripMenuItem.Text = "Open working dir file";
+            this.openWorkingFileToolStripMenuItem.Click += new System.EventHandler(this.openWorkingFileToolStripMenuItem_Click);
+            // 
+            // openWorkingFileDiffToolStripMenuItem
+            // 
+            this.openWorkingFileDiffToolStripMenuItem.Name = "openWorkingFileDiffToolStripMenuItem";
+            this.openWorkingFileDiffToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.openWorkingFileDiffToolStripMenuItem.Text = "Open working dir file";
+            this.openWorkingFileDiffToolStripMenuItem.Click += new System.EventHandler(this.openWorkingFileDiffToolStripMenuItem_Click);
+            // 
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
@@ -2210,5 +2228,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator45;
         private ToolStripSeparator toolStripSeparator46;
         private ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+        private ToolStripMenuItem openWorkingFileToolStripMenuItem;
+        private ToolStripMenuItem openWorkingFileDiffToolStripMenuItem;
     }
 }
