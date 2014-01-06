@@ -2269,6 +2269,7 @@ namespace GitUI.CommandsDialogs
             QuickPull,
             QuickPush,
             RotateApplicationIcon,
+            CloseRepositry,
         }
 
         private void AddNotes()
@@ -2314,6 +2315,7 @@ namespace GitUI.CommandsDialogs
                     UICommands.StartPushDialog(this, true);                   
                     break;
                 case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
+                case Commands.CloseRepositry: CloseToolStripMenuItemClick(null, null); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
