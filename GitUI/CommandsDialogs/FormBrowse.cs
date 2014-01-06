@@ -1780,12 +1780,21 @@ namespace GitUI.CommandsDialogs
 
         public override void CancelButtonClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Module.WorkingDir))
+            // If a filter is applied, clear it
+            if (RevisionGrid.FilterIsApplied(false))
             {
-                Close();
-                return;
+                // Clear filter
+                _filterRevisionsHelper.SetFilter(string.Empty);
             }
-            CloseToolStripMenuItemClick(sender, e);
+            // If a branch filter is applied by text or using the menus "Show current branch only"
+            else if (RevisionGrid.FilterIsApplied(true) || AppSettings.BranchFilterEnabled)
+            {
+                // Clear branch filter
+                _filterBranchHelper.SetBranchFilter(string.Empty, true);
+
+                // Execute the "Show all branches" menu option
+                RevisionGrid.ShowAllBranches_ToolStripMenuItemClick(sender, e);
+            }
         }
 
         private void GitTreeMouseDown(object sender, MouseEventArgs e)
