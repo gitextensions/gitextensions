@@ -396,6 +396,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
         szCascadeShellMenuItems = "110111000111111111";
     bool cascadeContextMenu = szCascadeShellMenuItems.Find('1') != -1;
     bool alwaysShowAllCommands = GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"AlwaysShowAllCommands");
+	bool onlyShowWithShiftOutsideRepos = GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"OnlyShowWithShiftOutsideRepos");
 
     HMENU popupMenu = NULL;
     if (cascadeContextMenu)
@@ -403,9 +404,19 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
 
     bool isValidDir = true;
     bool isFolder = true;
-    if (!alwaysShowAllCommands)
+    if (!alwaysShowAllCommands || onlyShowWithShiftOutsideRepos)
     {
         isValidDir = IsValidGitDir(m_szFile);
+
+        // Don't show the context menu if we are not in a repo and shift isn't pressed (if the option for this is enabled)
+        if (((uFlags & CMF_EXTENDEDVERBS) == 0) && onlyShowWithShiftOutsideRepos && !isValidDir)
+        {
+            return S_OK;
+        }
+    }
+
+    if (!alwaysShowAllCommands)
+    {
         isFolder = !IsFileExists(m_szFile);
     }
 
