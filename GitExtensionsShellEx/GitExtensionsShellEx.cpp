@@ -396,7 +396,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
         szCascadeShellMenuItems = "110111000111111111";
     bool cascadeContextMenu = szCascadeShellMenuItems.Find('1') != -1;
     bool alwaysShowAllCommands = GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"AlwaysShowAllCommands");
-	bool onlyShowWithShiftOutsideRepos = GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"OnlyShowWithShiftOutsideRepos");
+    bool onlyShowWithShiftOutsideRepos = GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"OnlyShowWithShiftOutsideRepos");
 
     HMENU popupMenu = NULL;
     if (cascadeContextMenu)
