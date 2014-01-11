@@ -33,6 +33,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.labelPreview = new System.Windows.Forms.Label();
             this.cbAlwaysShowAllCommands = new System.Windows.Forms.CheckBox();
+            this.cbOnlyShowWithShiftOutsideRepos = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // lblMenuEntries
@@ -101,10 +102,21 @@
             this.cbAlwaysShowAllCommands.Text = "Always show all commands";
             this.cbAlwaysShowAllCommands.UseVisualStyleBackColor = true;
             // 
+            // cbOnlyShowWithShiftOutsideRepos
+            // 
+            this.cbOnlyShowWithShiftOutsideRepos.AutoSize = true;
+            this.cbOnlyShowWithShiftOutsideRepos.Location = new System.Drawing.Point(21, 486);
+            this.cbOnlyShowWithShiftOutsideRepos.Name = "cbOnlyShowWithShiftOutsideRepos";
+            this.cbOnlyShowWithShiftOutsideRepos.Size = new System.Drawing.Size(383, 19);
+            this.cbOnlyShowWithShiftOutsideRepos.TabIndex = 9;
+            this.cbOnlyShowWithShiftOutsideRepos.Text = "Hide context menus outside of repositories (Hold SHIFT to override)";
+            this.cbOnlyShowWithShiftOutsideRepos.UseVisualStyleBackColor = true;
+            // 
             // ShellExtensionSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.Controls.Add(this.cbOnlyShowWithShiftOutsideRepos);
             this.Controls.Add(this.cbAlwaysShowAllCommands);
             this.Controls.Add(this.labelPreview);
             this.Controls.Add(this.label1);
@@ -125,5 +137,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelPreview;
         private System.Windows.Forms.CheckBox cbAlwaysShowAllCommands;
+        private System.Windows.Forms.CheckBox cbOnlyShowWithShiftOutsideRepos;
     }
 }

@@ -173,6 +173,12 @@ namespace GitCommands
             set { WriteBoolRegKey("AlwaysShowAllCommands", value); }
         }
 
+        public static bool OnlyShowWithShiftOutsideRepos
+        {
+            get { return ReadBoolRegKey("OnlyShowWithShiftOutsideRepos", false); }
+            set { WriteBoolRegKey("OnlyShowWithShiftOutsideRepos", value); }
+        }
+
         public static bool ShowCurrentBranchInVisualStudio
         {
             //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
