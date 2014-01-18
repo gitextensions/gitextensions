@@ -4615,6 +4615,14 @@ ancestor tree. </Source>
           <Source>Submodule conflict</Source>
           <Value>子模块冲突</Value>
         </TranslationItem>
+        <TranslationItem Name="_stageFilename" Property="Text" type="unfinished">
+          <Source>Stage {0}</Source>
+          <Value>载入{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="btCheckoutBranch" Property="Text">
+          <Source>Checkout Branch</Source>
+          <Value>登出分支</Value>
+        </TranslationItem>
         <TranslationItem Name="btOpenSubmodule" Property="Text">
           <Source>Open submodule</Source>
           <Value>打开子模块</Value>
@@ -7229,6 +7237,10 @@ help</Source>
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>无法载入SSH密钥。 PuTTY配置的不正确。</Value>
         </TranslationItem>
+        <TranslationItem Name="_rememberChoice" Property="Text">
+          <Source>Remember choice</Source>
+          <Value>记住上次的选择</Value>
+        </TranslationItem>
         <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text">
           <Source>The server's host key is not cached in the registry.
 
@@ -7236,6 +7248,10 @@ Do you want to trust this host key and then try again?</Source>
           <Value>服务器的主机密钥没存储在注册表中。
 
 你要相信这个主机密钥，然后再试一次吗？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_theRepositorySubmodules" Property="Text">
+          <Source>Update submodules on checkout?</Source>
+          <Value>在登出时同时更新子模块？</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7248,6 +7264,18 @@ Do you want to trust this host key and then try again?</Source>
         <TranslationItem Name="_unresolvedMergeConflictsCaption" Property="Text">
           <Source>Merge conflicts</Source>
           <Value>合并冲突</Value>
+        </TranslationItem>
+        <TranslationItem Name="_updateSubmodules" Property="Text">
+          <Source>Update submodules</Source>
+          <Value>更新子模块</Value>
+        </TranslationItem>
+        <TranslationItem Name="_updateSubmodulesToo" Property="Text">
+          <Source>Since this repository has submodules, it's necessary to update them on every checkout.
+
+This will just checkout on the submodule the commit determined by the superproject.</Source>
+          <Value>次档案库含有子模块, 每次登出时必须更新这些子模块。
+
+这只意味着登出子模块，而是否提交则由父工程决定。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
