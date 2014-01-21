@@ -266,7 +266,16 @@
             </Component>
             <Component Id="JenkinsIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\Release\JenkinsIntegration.dll" />
-            </Component>		
+            </Component>
+            <Component Id="TfsIntegration.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsIntegration\bin\Release\TfsIntegration.dll" />
+            </Component>
+            <Component Id="TfsInterop.Vs2012.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop\bin\Release\TfsInterop.Vs2012.dll" />
+            </Component>
+            <Component Id="TfsInterop.Vs2013.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop\bin\Release\TfsInterop.Vs2013.dll" />
+            </Component>
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
             <Component Id="Blue.ico" Guid="*">
@@ -572,6 +581,13 @@
                     <ComponentRef Id="System.Runtime.dll" />
                     <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="JenkinsIntegration.dll" />
+                </Feature>
+                <Feature Id="TfsIntegration" Title="Tfs integration" Level="1">
+                    <ComponentRef Id="System.Runtime.dll" />
+                    <ComponentRef Id="System.Threading.Tasks.dll" />
+                    <ComponentRef Id="TfsIntegration.dll" />
+                    <ComponentRef Id="TfsInterop.Vs2012.dll" />
+                    <ComponentRef Id="TfsInterop.Vs2013.dll" />
                 </Feature>
             </Feature>
             <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
