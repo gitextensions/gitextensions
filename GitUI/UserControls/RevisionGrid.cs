@@ -970,7 +970,7 @@ namespace GitUI
             UpdateGraph(updatedEvent.Revision);
         }
 
-        private bool FilterIsApplied(bool inclBranchFilter)
+        internal bool FilterIsApplied(bool inclBranchFilter)
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
                    !(string.IsNullOrEmpty(Filter) &&
