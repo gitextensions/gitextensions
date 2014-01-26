@@ -1794,7 +1794,7 @@ namespace GitCommands
                 if (File.Exists(GetRebaseDir() + file))
                 {
                     string key = null;
-                    string value = null;
+                    string value = "";
                     foreach (var line in File.ReadLines(GetRebaseDir() + file))
                     {
                         var m = HeadersMatch.Match(line);
