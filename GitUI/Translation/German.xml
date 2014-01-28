@@ -778,6 +778,10 @@ Wert:  {2} = {3}</Value>
           <Source>Push a new branch for the remote</Source>
           <Value>Einen neuen Branch für die Remote pushen</Value>
         </TranslationItem>
+        <TranslationItem Name="chkUpdateModules" Property="Text">
+          <Source>Update submodules on checkout</Source>
+          <Value>Untermodul(e) beim Checkout updaten</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ControlHotkeys">
@@ -2590,7 +2594,7 @@ Gültigen Branch Namen eingeben oder vordefinierten Wert auswählen.</Value>
           <Source>Checkout this revision</Source>
           <Value>Diese Revision auschecken</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
+        <TranslationItem Name="label3" Property="Text" type="obsolete">
           <Source>or choose another one.</Source>
           <Value>oder eine andere auswählen.</Value>
         </TranslationItem>
@@ -2928,6 +2932,18 @@ Möchten Sie den Vorgang fortsetzen?</Value>
           <Source>Amend commit</Source>
           <Value>Commit anpassen</Value>
         </TranslationItem>
+        <TranslationItem Name="_commitAuthorInfo" Property="Text">
+          <Source>Author </Source>
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitCommitterInfo" Property="Text">
+          <Source>Committer </Source>
+          <Value>Comitter</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitCommitterToolTip" Property="Text">
+          <Source>Click to change committer information.</Source>
+          <Value>Klicken, um Comitter Info zu ändern</Value>
+        </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text">
           <Source>Commit Message is requested during commit</Source>
           <Value>Commit Nachricht wird während des Commits angefragt</Value>
@@ -3052,8 +3068,9 @@ Dieser Commit wird über keine Referenz verfügen, wenn Sie in einen Branch wech
 
 Möchten Sie trotzdem fortfahren?</Value>
         </TranslationItem>
-        <TranslationItem Name="_notOnBranchButtons" Property="Text">
-          <Source>Checkout branch|Continue</Source>
+        <TranslationItem Name="_notOnBranchButtons" Property="Text" type="unfinished">
+          <Source>Checkout branch|Create branch|Continue</Source>
+          <OldSource>Checkout branch|Continue</OldSource>
           <Value>Branch Auschecken|Weitermachen</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchCaption" Property="Text">
@@ -3142,6 +3159,10 @@ Möchten Sie trotzdem fortfahren?</Value>
         <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
           <Source>Close dialog after each commit</Source>
           <Value>Dialog nach jedem Commit schließen</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitAuthorStatus" Property="ToolTipText">
+          <Source>Click to change committer information.</Source>
+          <Value>Klicken, um Comitter Info zu ändern</Value>
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text">
           <Source>Col</Source>
@@ -3531,10 +3552,6 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
           <Source>Create branch at this revision</Source>
           <Value>Erzeuge Branch an dieser Revision</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Source>or choose another one.</Source>
-          <Value>oder wähle einen anderen.</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormCreateTag">
@@ -3582,10 +3599,6 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
         <TranslationItem Name="label3" Property="Text">
           <Source>Create tag at this revision</Source>
           <Value>Erzeuge Tag an dieser Revision</Value>
-        </TranslationItem>
-        <TranslationItem Name="label4" Property="Text">
-          <Source>or choose another one.</Source>
-          <Value>oder eine andere auswählen.</Value>
         </TranslationItem>
         <TranslationItem Name="pushTag" Property="Text">
           <Source>Push tag to '{0}'</Source>
@@ -4696,6 +4709,50 @@ auf den gemeinsamen Vorfahrenbaum angewendet.</Value>
         <TranslationItem Name="strategyHelp" Property="Text">
           <Source>Help</Source>
           <Value>Hilfe</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormMergeSubmodule">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Submodule conflict</Source>
+          <Value>Konflikt in Untermodul</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageFilename" Property="Text">
+          <Source>Stage {0}</Source>
+          <Value>Stage {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="btCheckoutBranch" Property="Text">
+          <Source>Checkout Branch</Source>
+          <Value>Branch auschecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="btOpenSubmodule" Property="Text">
+          <Source>Open submodule</Source>
+          <Value>Untermodul auswählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="btStageCurrent" Property="Text">
+          <Source>Stage Current</Source>
+          <Value>Aktuelles stagen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Source>Base:</Source>
+          <Value>Basis:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Source>There is a conflict on the submodule:</Source>
+          <Value>Konflikt in Untermodul:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Source>Local:</Source>
+          <Value>Lokal:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text" type="unfinished">
+          <Source>Remote:</Source>
+          <Value>Remote:</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Source>Current:</Source>
+          <Value>Aktuell:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6036,16 +6093,6 @@ Der Merge-Konflikt wird als nicht-gelöst markiert. Bitte versuchen Sie es noch 
           <Source>Merge</Source>
           <Value>Mergen</Value>
         </TranslationItem>
-        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
-          <Source>The selected mergeconflict is a submodule.
-Stage current submodule commit?</Source>
-          <Value>Der ausgewählte Merge-Konflikt ist ein Untermodul. 
-Aktuellen Untermodul Commit stagen?</Value>
-        </TranslationItem>
-        <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
-          <Source>Submodule</Source>
-          <Value>Untermodul</Value>
-        </TranslationItem>
         <TranslationItem Name="modeDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Mode</Source>
           <Value>Modus</Value>
@@ -6107,6 +6154,16 @@ Wollen Sie dieses Skript verwenden?</Value>
         <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text">
           <Source>Custom merge script</Source>
           <Value>Benutzerdefiniertes Merge-Skript</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text" type="obsolete">
+          <Source>The selected mergeconflict is a submodule.
+Stage current submodule commit?</Source>
+          <Value>Der ausgewählte Merge-Konflikt ist ein Untermodul. 
+Aktuellen Untermodul Commit stagen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text" type="obsolete">
+          <Source>Submodule</Source>
+          <Value>Untermodul</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7355,6 +7412,10 @@ Hilfe</Value>
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
         </TranslationItem>
+        <TranslationItem Name="_rememberChoice" Property="Text">
+          <Source>Remember choice</Source>
+          <Value>Auswahl merken</Value>
+        </TranslationItem>
         <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text">
           <Source>The server's host key is not cached in the registry.
 
@@ -7362,6 +7423,10 @@ Do you want to trust this host key and then try again?</Source>
           <Value>Der Host-Key des Servers ist nicht in der Registry vorhanden.
 
 Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
+        </TranslationItem>
+        <TranslationItem Name="_theRepositorySubmodules" Property="Text">
+          <Source>Update submodules on checkout?</Source>
+          <Value>Untermodul beim Checkout updaten ?</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7374,6 +7439,18 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
         <TranslationItem Name="_unresolvedMergeConflictsCaption" Property="Text">
           <Source>Merge conflicts</Source>
           <Value>Konflikte mergen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_updateSubmodules" Property="Text">
+          <Source>Update submodules</Source>
+          <Value>Untermodule updaten</Value>
+        </TranslationItem>
+        <TranslationItem Name="_updateSubmodulesToo" Property="Text">
+          <Source>Since this repository has submodules, it's necessary to update them on every checkout.
+
+This will just checkout on the submodule the commit determined by the superproject.</Source>
+          <Value>Da dieses Repository Untermodule hat ist es notwendig diese bei jedem Checkout upzudaten.
+
+Das wird nur das Untermodul auschecken das der Commit anhand des übergeordneten Projekts ausgewählt hat.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7546,6 +7623,18 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
         <TranslationItem Name="ShowRemoteBranches" Property="Text">
           <Source>Show remote branches</Source>
           <Value>Zeige Remote Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowSuperprojectBranches" Property="Text">
+          <Source>Show superproject branches</Source>
+          <Value>Zeige Branches des übergeordneten Projekts</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowSuperprojectRemoteBranches" Property="Text">
+          <Source>Show superproject remote branches</Source>
+          <Value>Zeige Remote Branches des übergeordneten Projekts</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowSuperprojectTags" Property="Text">
+          <Source>Show superproject tags</Source>
+          <Value>Zeige Tags des übergeordneten Projekts</Value>
         </TranslationItem>
         <TranslationItem Name="ToggleHighlightSelectedBranch" Property="Text">
           <Source>Highlight selected branch (until refresh)</Source>
