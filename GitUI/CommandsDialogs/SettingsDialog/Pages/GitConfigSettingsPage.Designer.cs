@@ -179,6 +179,7 @@
             "kompare",
             "meld",
             "opendiff",
+            "p4merge",
             "tkdiff",
             "tmerge",
             "vimdiff",
