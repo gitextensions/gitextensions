@@ -128,6 +128,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "kdiff3.exe";
                 case "meld":
                     return "meld.exe";
+                case "p4merge":
+                    return "p4merge.exe";
                 case "tmerge":
                     return "TortoiseMerge.exe";
                 case "winmerge":
@@ -195,6 +197,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "kdiff3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "meld":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "p4merge":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "tmerge":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
