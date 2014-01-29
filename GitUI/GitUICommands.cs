@@ -334,7 +334,7 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 FormProcess.ShowDialog(owner, Module, "stash pop");
-                MergeConflictHandler.HandleMergeConflicts(this, owner, false);
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
                 return true;
             };
 
@@ -371,7 +371,7 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 FormProcess.ShowDialog(owner, Module, "stash apply " + stashName.Quote());
-                MergeConflictHandler.HandleMergeConflicts(this, owner, false);
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
                 return true;
             };
 
