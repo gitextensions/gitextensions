@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs
         private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, " +
             "xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio, australiensun, " +
             "Airat Salikhov, Dave Brotherstone, diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh, " +
-            "Victor Shih, bygreencn, mrahn80, Michael Benz (Copro)";
+            "Victor Shih, bygreencn, mrahn80";
         private const string designers = "Andréj Telle, Oliver Friedrich";
         private const string other = "";
 
