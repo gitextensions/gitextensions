@@ -1050,7 +1050,7 @@ namespace GitUI.CommandsDialogs
 
             var revision = RevisionGrid.GetSelectedRevisions()[0];
             
-			var children = RevisionGrid.GetRevisionChildren(revision.Guid);
+            var children = RevisionGrid.GetRevisionChildren(revision.Guid);
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
@@ -2954,7 +2954,7 @@ namespace GitUI.CommandsDialogs
                 {
                     mi.Image = GetItemImage(task.Result);
                     if (task.Result != null)
-                        mi.Text += " " + task.Result.AddedAndRemovedString();
+                        mi.Text += task.Result.AddedAndRemovedString();
                 },
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnRanToCompletion,

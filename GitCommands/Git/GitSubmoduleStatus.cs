@@ -51,11 +51,13 @@ namespace GitCommands
 
         public string AddedAndRemovedString()
         {
-            return "(" +
-                ((RemovedCommits == null || RemovedCommits == 0) ? "" : ("-" + RemovedCommits)) +
-                ((AddedCommits == null || AddedCommits == 0) ? "" : ("+" + AddedCommits)) +
-                ")"; 
-               
+            if (RemovedCommits == null || AddedCommits == null ||
+                (RemovedCommits == 0 && AddedCommits == 0))
+                return "";
+            return " (" +
+                ((RemovedCommits == 0) ? "" : ("-" + RemovedCommits)) +
+                ((AddedCommits == 0) ? "" : ("+" + AddedCommits)) +
+                ")";
         }
     }
 
