@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Web;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Build.Client;
 using TfsInterop.Interface;
@@ -122,7 +121,7 @@ namespace TfsInterop
                             IsFinished = b.BuildFinished,
                             Description = GetStatus(b) + duration,
                             Revision = b.SourceGetVersion,
-                            Url = _isWebServer ? _hostname + "/" + _teamCollection + "/"+ _projectName + "/_build#buildUri=" + HttpUtility.UrlEncode(b.Uri.AbsoluteUri) + "&_a=summary"
+                            Url = _isWebServer ? _hostname + "/" + _teamCollection + "/" + _projectName + "/_build#buildUri=" + Uri.EscapeDataString(b.Uri.AbsoluteUri) + "&_a=summary"
                                 : "http://" + _hostname + ":8080/tfs/Build/Build.aspx?artifactMoniker=" + id,
                         };
                 }).Cast<IBuild>().ToList();
