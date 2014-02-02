@@ -31,8 +31,12 @@ echo.
 
 echo Building %normal%
 %build% /p:IncludeRequiredSoftware=0
+IF ERRORLEVEL 1 EXIT /B 1
 copy bin\Release\GitExtensions.msi %normal%
+IF ERRORLEVEL 1 EXIT /B 1
 
 echo Building %complete%
 %build% /p:IncludeRequiredSoftware=1
+IF ERRORLEVEL 1 EXIT /B 1
 copy bin\Release\GitExtensions.msi %complete%
+IF ERRORLEVEL 1 EXIT /B 1
