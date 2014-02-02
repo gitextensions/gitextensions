@@ -69,7 +69,7 @@ BEGIN
             VALUE "FileDescription", "Git Extensions"
             VALUE "FileVersion", "2.48"
             VALUE "InternalName", "Git Extensions"
-            VALUE "LegalCopyright", "Copyright 2013"
+            VALUE "LegalCopyright", "Copyright 2014"
             VALUE "OriginalFilename", "GitExtensionsShellEx.dll"
             VALUE "ProductName", "Git Extensions"
             VALUE "ProductVersion", "2.48"

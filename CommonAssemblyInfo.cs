@@ -8,7 +8,7 @@
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GitExtensions")]
 [assembly: AssemblyProduct("GitExtensions")]
-[assembly: AssemblyCopyright("Copyright © 2013 Henk Westhuis")]
+[assembly: AssemblyCopyright("Copyright © 2014 Henk Westhuis")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
