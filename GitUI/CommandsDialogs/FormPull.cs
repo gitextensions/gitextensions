@@ -246,7 +246,7 @@ namespace GitUI.CommandsDialogs
 
         private bool InitModules()
         {
-            if (Fetch.Checked || !File.Exists(Module.WorkingDir + ".gitmodules"))
+            if (!File.Exists(Module.WorkingDir + ".gitmodules"))
                 return false;
             if (!IsSubmodulesInitialized())
             {
@@ -267,42 +267,38 @@ namespace GitUI.CommandsDialogs
             {
                 UICommands.StartRebaseDialog(owner, null);
             }
-            else if (!Module.InTheMiddleOfAction() && !ErrorOccurred && !InitModules())
-            {
-                UICommands.UpdateSubmodules(owner);
-            }
             else
             {
-                MergeConflictHandler.HandleMergeConflicts(UICommands, owner, true, !Fetch.Checked);
+                MergeConflictHandler.HandleMergeConflicts(UICommands, owner);
             }
         }
 
         private void PopStash(IWin32Window owner)
         {
-            if (!ErrorOccurred && !Module.InTheMiddleOfAction())
+            if (ErrorOccurred || Module.InTheMiddleOfAction())
+                return;
+
+            bool? messageBoxResult = Settings.AutoPopStashAfterPull;
+            if (messageBoxResult == null)
             {
-                bool? messageBoxResult = Settings.AutoPopStashAfterPull;
-                if (messageBoxResult == null)
-                {
-                    DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
-                        owner,
-                        _applyShashedItemsAgainCaption.Text,
-                        "",
-                        _applyShashedItemsAgain.Text,
-                        "",
-                        "",
-                        _dontShowAgain.Text,
-                        PSTaskDialog.eTaskDialogButtons.YesNo,
-                        PSTaskDialog.eSysIcons.Question,
-                        PSTaskDialog.eSysIcons.Question);
-                    messageBoxResult = (res == DialogResult.Yes);
-                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                        Settings.AutoPopStashAfterPull = messageBoxResult;
-                }
-                if ((bool) messageBoxResult)
-                {
-                    UICommands.StashPop(this);
-                }
+                DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                    owner,
+                    _applyShashedItemsAgainCaption.Text,
+                    "",
+                    _applyShashedItemsAgain.Text,
+                    "",
+                    "",
+                    _dontShowAgain.Text,
+                    PSTaskDialog.eTaskDialogButtons.YesNo,
+                    PSTaskDialog.eSysIcons.Question,
+                    PSTaskDialog.eSysIcons.Question);
+                messageBoxResult = (res == DialogResult.Yes);
+                if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                    Settings.AutoPopStashAfterPull = messageBoxResult;
+            }
+            if ((bool) messageBoxResult)
+            {
+                UICommands.StashPop(this);
             }
         }
 
@@ -358,8 +354,16 @@ namespace GitUI.CommandsDialogs
                 try
                 {
                     bool aborted = process != null && process.DialogResult == DialogResult.Abort;
-                    if (!aborted)
-                        CheckMergeConflicts(owner);
+                    if (!aborted && !Fetch.Checked)
+                    {
+                        if (!ErrorOccurred && !Module.InTheMiddleOfAction())
+                        {
+                            if (!InitModules())
+                                UICommands.UpdateSubmodules(owner);
+                        }
+                        else
+                            CheckMergeConflicts(owner);
+                    }
                 }
                 finally
                 {
