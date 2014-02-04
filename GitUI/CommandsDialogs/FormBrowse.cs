@@ -1059,7 +1059,7 @@ namespace GitUI.CommandsDialogs
 
             var revision = RevisionGrid.GetSelectedRevisions()[0];
             
-			var children = RevisionGrid.GetRevisionChildren(revision.Guid);
+            var children = RevisionGrid.GetRevisionChildren(revision.Guid);
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
@@ -1789,12 +1789,21 @@ namespace GitUI.CommandsDialogs
 
         public override void CancelButtonClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Module.WorkingDir))
+            // If a filter is applied, clear it
+            if (RevisionGrid.FilterIsApplied(false))
             {
-                Close();
-                return;
+                // Clear filter
+                _filterRevisionsHelper.SetFilter(string.Empty);
             }
-            CloseToolStripMenuItemClick(sender, e);
+            // If a branch filter is applied by text or using the menus "Show current branch only"
+            else if (RevisionGrid.FilterIsApplied(true) || AppSettings.BranchFilterEnabled)
+            {
+                // Clear branch filter
+                _filterBranchHelper.SetBranchFilter(string.Empty, true);
+
+                // Execute the "Show all branches" menu option
+                RevisionGrid.ShowAllBranches_ToolStripMenuItemClick(sender, e);
+            }
         }
 
         private void GitTreeMouseDown(object sender, MouseEventArgs e)
@@ -2269,6 +2278,7 @@ namespace GitUI.CommandsDialogs
             QuickPull,
             QuickPush,
             RotateApplicationIcon,
+            CloseRepositry,
         }
 
         private void AddNotes()
@@ -2314,6 +2324,7 @@ namespace GitUI.CommandsDialogs
                     UICommands.StartPushDialog(this, true);                   
                     break;
                 case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
+                case Commands.CloseRepositry: CloseToolStripMenuItemClick(null, null); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -2964,7 +2975,7 @@ namespace GitUI.CommandsDialogs
                 {
                     mi.Image = GetItemImage(task.Result);
                     if (task.Result != null)
-                        mi.Text += " " + task.Result.AddedAndRemovedString();
+                        mi.Text += task.Result.AddedAndRemovedString();
                 },
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnRanToCompletion,

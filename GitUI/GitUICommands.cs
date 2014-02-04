@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -347,7 +346,7 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 FormProcess.ShowDialog(owner, Module, "stash pop");
-                MergeConflictHandler.HandleMergeConflicts(this, owner, false);
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
                 return true;
             };
 
@@ -384,7 +383,7 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 FormProcess.ShowDialog(owner, Module, "stash apply " + stashName.Quote());
-                MergeConflictHandler.HandleMergeConflicts(this, owner, false);
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
                 return true;
             };
 
@@ -484,11 +483,11 @@ namespace GitUI
 
         #region Checkout
 
-        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string containRevison)
+        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string[] containRevisons)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
             {
-                using (var form = new FormCheckoutBranch(this, branch, remote, containRevison))
+                using (var form = new FormCheckoutBranch(this, branch, remote, containRevisons))
                     return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
             }
             );
@@ -499,9 +498,9 @@ namespace GitUI
             return StartCheckoutBranch(owner, branch, remote, null);
         }
 
-        public bool StartCheckoutBranch(IWin32Window owner, string containRevison)
+        public bool StartCheckoutBranch(IWin32Window owner, string[] containRevisons)
         {
-            return StartCheckoutBranch(owner, "", false, containRevison);
+            return StartCheckoutBranch(owner, "", false, containRevisons);
         }
 
         public bool StartCheckoutBranch(IWin32Window owner)
@@ -1434,6 +1433,17 @@ namespace GitUI
         public bool StartSyncSubmodulesDialog()
         {
             return StartSyncSubmodulesDialog(null);
+        }
+
+        public void UpdateSubmodules(IWin32Window win)
+        {
+            if (!Module.HasSubmodules())
+                return;
+
+            var updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? MessageBoxes.ConfirmUpdateSubmodules(win);
+
+            if (updateSubmodules)
+                StartUpdateSubmodulesDialog(win);
         }
 
         public bool StartPluginSettingsDialog(IWin32Window owner)

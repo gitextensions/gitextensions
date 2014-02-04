@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
@@ -53,6 +54,8 @@ namespace GitUI.CommandsDialogs
                 string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
 
                 FormProcess.ShowDialog(this, command);
+
+                UICommands.UpdateSubmodules(this);
 
                 DialogResult = System.Windows.Forms.DialogResult.OK;
 

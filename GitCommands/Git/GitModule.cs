@@ -358,6 +358,11 @@ namespace GitCommands
             return Directory.Exists(candidatePath) ? candidatePath : repositoryPath;
         }
 
+        public bool HasSubmodules()
+        {
+            return GetSubmodulesLocalPathes(recursive: false).Any();
+        }
+
         /// <summary>
         /// This is a faster function to get the names of all submodules then the 
         /// GetSubmodules() function. The command @git submodule is very slow.
@@ -897,17 +902,22 @@ namespace GitCommands
             return GitItem.CreateGitItemFromString(this, str);
         }
 
-		public int GetCommitCount(string parentHash, string childHash)
+        public int? GetCommitCount(string parentHash, string childHash)
         {
-            string result = this.RunGitCmd("rev-list " + parentHash + " ^" + childHash + " --count");
-            return int.Parse(result);
+            string result = RunGitCmd("rev-list " + parentHash + " ^" + childHash + " --count");
+            int commitCount;
+            if (int.TryParse(result, out commitCount))
+                return commitCount;
+            return null;
         }
 
         public string GetCommitCountString(string from, string to)
         {
-            int removed = this.GetCommitCount(from, to);
-            int added = this.GetCommitCount(to, from);
+            int? removed = GetCommitCount(from, to);
+            int? added = GetCommitCount(to, from);
 
+            if (removed == null || added == null)
+                return "";
             if (removed == 0 && added == 0)
                 return "=";
 
@@ -1733,6 +1743,11 @@ namespace GitCommands
                    Directory.Exists(GetRebaseDir());
         }
 
+        public bool InTheMiddleOfAction()
+        {
+            return InTheMiddleOfConflictedMerge() || InTheMiddleOfRebase();
+        }
+
         public string GetNextRebasePatch()
         {
             var file = GetRebaseDir() + "next";
@@ -1833,7 +1848,7 @@ namespace GitCommands
                 if (File.Exists(GetRebaseDir() + file))
                 {
                     string key = null;
-                    string value = null;
+                    string value = "";
                     foreach (var line in File.ReadLines(GetRebaseDir() + file))
                     {
                         var m = HeadersMatch.Match(line);

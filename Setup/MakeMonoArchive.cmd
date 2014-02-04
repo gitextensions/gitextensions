@@ -1,5 +1,7 @@
 @echo off
 
+call DownloadExternals.cmd
+
 cd /d "%~p0"
 
 rem

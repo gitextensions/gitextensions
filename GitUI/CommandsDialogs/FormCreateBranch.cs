@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
@@ -72,6 +73,11 @@ namespace GitUI.CommandsDialogs
                 {// orphan AND orphan creation success AND clear
                     cmd = GitCommandHelpers.RemoveCmd();
                     FormProcess.ShowDialog(this, cmd);
+                }
+
+                if (CheckoutAfterCreate.Checked)
+                {
+                    UICommands.UpdateSubmodules(this);
                 }
 
                 DialogResult = DialogResult.OK;

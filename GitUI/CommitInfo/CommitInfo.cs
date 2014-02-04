@@ -140,7 +140,7 @@ namespace GitUI.CommitInfo
                 _revision.Body = data.Body;
             }
 
-			ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
+            ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
 
             data.ChildrenGuids = _children;
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);

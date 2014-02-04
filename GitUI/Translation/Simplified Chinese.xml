@@ -205,7 +205,15 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Show build status summary in revision log</Source>
           <Value>显示在修订日志中显示构建状态摘要</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="labelBuildServerSettingsInfo" Property="Text">
+          <Source>Git Extensions can integrate with build servers to supply per-commit Continuous Integration information.</Source>
+          <Value>Git Extensions 可以构建服务器集成来提供持续性的每次提交的集成信息。</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelBuildServerType" Property="Text" type="unfinished">
+          <Source>Build server type</Source>
+          <Value>构建服务器类型</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
           <Source>Build server type</Source>
           <Value>构建服务器类型</Value>
         </TranslationItem>
@@ -761,6 +769,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
           <Source>Push a new branch for the remote</Source>
           <Value>为远程推送一个新的分支</Value>
         </TranslationItem>
+        <TranslationItem Name="chkUpdateModules" Property="Text">
+          <Source>Update submodules on checkout</Source>
+          <Value>在登出时更新子模块</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ControlHotkeys">
@@ -808,10 +820,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <TranslationItem Name="_createBtn" Property="Text">
           <Source>Create</Source>
           <Value>创建</Value>
-        </TranslationItem>
-        <TranslationItem Name="_strCouldNotLocateARemoteThatBelongsToYourUser" Property="Text">
-          <Source>Could not locate a remote that belongs to your user!</Source>
-          <Value>不能定位属于您用户名的远程分支</Value>
         </TranslationItem>
         <TranslationItem Name="_strDone" Property="Text">
           <Source>Done</Source>
@@ -864,6 +872,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <TranslationItem Name="label5" Property="Text">
           <Source>Target branch:</Source>
           <Value>目标分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="_strCouldNotLocateARemoteThatBelongsToYourUser" Property="Text" type="obsolete">
+          <Source>Could not locate a remote that belongs to your user!</Source>
+          <Value>不能定位属于您用户名的远程分支</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1081,11 +1093,11 @@ Do you want to open it?</Source>
           <Source>Select all</Source>
           <Value>全选</Value>
         </TranslationItem>
-        <TranslationItem Name="translateCurrentWord" Property="Text">
+        <TranslationItem Name="translateCurrentWord" Property="Text" type="obsolete">
           <Source>Translate '{0}' to {1}</Source>
           <Value>翻译 '{0}' 为 {1}</Value>
         </TranslationItem>
-        <TranslationItem Name="translateEntireText" Property="Text">
+        <TranslationItem Name="translateEntireText" Property="Text" type="obsolete">
           <Source>Translate entire text to {0}</Source>
           <Value>整个文字翻译为 {0}</Value>
         </TranslationItem>
@@ -1775,10 +1787,6 @@ compare with first:</Source>
         <TranslationItem Name="TreeTabPage" Property="Text">
           <Source>File tree</Source>
           <Value>文件树</Value>
-        </TranslationItem>
-        <TranslationItem Name="_alwaysShowCheckoutDlgStr" Property="Text">
-          <Source>Always show checkout dialog</Source>
-          <Value>总是显示登出对话框</Value>
         </TranslationItem>
         <TranslationItem Name="_configureWorkingDirMenu" Property="Text">
           <Source>Configure this menu</Source>
@@ -2520,7 +2528,7 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Force (reset local changes)</Source>
           <Value>强制</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
+        <TranslationItem Name="OkCheckout" Property="Text" type="unfinished">
           <Source>Checkout</Source>
           <Value>登出</Value>
         </TranslationItem>
@@ -2536,7 +2544,7 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Checkout this revision</Source>
           <Value>登出这个修订</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
+        <TranslationItem Name="label3" Property="Text" type="obsolete">
           <Source>or choose another one.</Source>
           <Value>或者选择另一个。</Value>
         </TranslationItem>
@@ -2983,8 +2991,9 @@ Do you want to continue?</Source>
 
 您想继续吗？</Value>
         </TranslationItem>
-        <TranslationItem Name="_notOnBranchButtons" Property="Text">
-          <Source>Checkout branch|Continue</Source>
+        <TranslationItem Name="_notOnBranchButtons" Property="Text" type="unfinished">
+          <Source>Checkout branch|Create branch|Continue</Source>
+          <OldSource>Checkout branch|Continue</OldSource>
           <Value>登出分支并继续</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchCaption" Property="Text">
@@ -3460,10 +3469,6 @@ Choose 'No' to keep all new files.</Source>
           <Source>Create branch at this revision</Source>
           <Value>从这个修订创建分支</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Source>or choose another one.</Source>
-          <Value>或者选择另一个修订</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormCreateTag">
@@ -3512,10 +3517,6 @@ Choose 'No' to keep all new files.</Source>
           <Source>Create tag at this revision</Source>
           <Value>从这个修订创建标签</Value>
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text">
-          <Source>or choose another one.</Source>
-          <Value>或者选择另一个修订</Value>
-        </TranslationItem>
         <TranslationItem Name="pushTag" Property="Text">
           <Source>Push tag to '{0}'</Source>
           <Value>推送到{0}</Value>
@@ -3560,13 +3561,13 @@ Choose 'No' to keep all new files.</Source>
           <Source>Delete branch</Source>
           <Value>删除分支</Value>
         </TranslationItem>
+        <TranslationItem Name="Delete" Property="Text" type="unfinished">
+          <Source>Delete</Source>
+          <Value>删除</Value>
+        </TranslationItem>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Source>Force delete</Source>
           <Value>强制删除</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Source>Delete</Source>
-          <Value>删除</Value>
         </TranslationItem>
         <TranslationItem Name="_cannotDeleteCurrentBranchMessage" Property="Text">
           <Source>Cannot delete the branch “{0}” which you are currently on.</Source>
@@ -3586,11 +3587,20 @@ Deleting a branch can cause commits to be deleted too!</Source>
           <Source>You cannot delete unmerged branch until you set “force delete” mode.</Source>
           <Value>您不能删除未合并的分支，除非你设置了“强制删除”。</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="labelDeleteBranchWarning" Property="Text">
+          <Source>You can only delete branches when they are fully merged in HEAD. 
+When you delete a branch the commits can get lost because nothing points to them.
+When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
+</Source>
+          <Value>在HEAD进行的完全合并，您只能删除分支。
+当你删除一个分支后，提交的数据可能会丢失，因为这些提交已经没有指向。
+当您要删除一个不完全合并的分支，可以使用“强制删除”选项进行覆盖。</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelSelectBranches" Property="Text" type="unfinished">
           <Source>Select branches</Source>
           <Value>选择分支</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
+        <TranslationItem Name="label2" Property="Text" type="obsolete">
           <Source>You can only delete branches when they are fully merged in HEAD. 
 When you delete a branch the commits can get lost because nothing point to them.
 When you want to delete a not-fully merged branch, you can override
@@ -3834,9 +3844,12 @@ Do you want Git Extensions to help locate the correct folder?</Source>
           <Source>Environment</Source>
           <Value>环境</Value>
         </TranslationItem>
-        <TranslationItem Name="label51" Property="Text">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</Source>
+        <TranslationItem Name="label51" Property="Text" type="unfinished">
+          <Source>The global config file located in the location stored environment variable %HOME%. 
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+Change the default behaviour only if you experience problems.</Source>
+          <OldSource>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
+to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</OldSource>
           <Value>全局配置文件位于%HOME%的位置。默认设置下，如果%HOME%为空，%HOME%将被设置为%HOMEDRIVE%%HOMEPATH%。
 你应该只在遇到问题的时候才考虑改变默认设置。</Value>
         </TranslationItem>
@@ -4514,6 +4527,10 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
           <Source>&amp;Merge</Source>
           <Value>合并(&amp;M)</Value>
         </TranslationItem>
+        <TranslationItem Name="_formMergeBranchHoverShowImageLabelText" Property="Text">
+          <Source>Hover to see scenario when fast forward is possible.</Source>
+          <Value>在可以快进时鼠标悬停显示缩略图</Value>
+        </TranslationItem>
         <TranslationItem Name="_strategyTooltipText" Property="Text">
           <Source>resolve 
 This can only resolve two heads (i.e. the current branch and another branch you pulled from) using a 3-way merge algorithm.
@@ -4589,6 +4606,50 @@ ancestor tree. </Source>
         <TranslationItem Name="strategyHelp" Property="Text">
           <Source>Help</Source>
           <Value>帮助</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormMergeSubmodule">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Submodule conflict</Source>
+          <Value>子模块冲突</Value>
+        </TranslationItem>
+        <TranslationItem Name="_stageFilename" Property="Text" type="unfinished">
+          <Source>Stage {0}</Source>
+          <Value>载入{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="btCheckoutBranch" Property="Text">
+          <Source>Checkout Branch</Source>
+          <Value>登出分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="btOpenSubmodule" Property="Text">
+          <Source>Open submodule</Source>
+          <Value>打开子模块</Value>
+        </TranslationItem>
+        <TranslationItem Name="btStageCurrent" Property="Text">
+          <Source>Stage Current</Source>
+          <Value>暂存当前</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Source>Base:</Source>
+          <Value>源：</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Source>There is a conflict on the submodule:</Source>
+          <Value>子模块有冲突：</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Source>Local:</Source>
+          <Value>本地：</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text" type="unfinished">
+          <Source>Remote:</Source>
+          <Value>远程：</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Source>Current:</Source>
+          <Value>当前：</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5902,15 +5963,6 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>Merge</Source>
           <Value>合并</Value>
         </TranslationItem>
-        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
-          <Source>The selected mergeconflict is a submodule.
-Stage current submodule commit?</Source>
-          <Value>所选定的合并冲突是一个子模块。把当前子模块的提交标记为载入吗？</Value>
-        </TranslationItem>
-        <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
-          <Source>Submodule</Source>
-          <Value>子模块</Value>
-        </TranslationItem>
         <TranslationItem Name="modeDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Mode</Source>
           <Value>模式</Value>
@@ -5972,6 +6024,15 @@ Do you want to use this custom merge script?</Source>
         <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text">
           <Source>Custom merge script</Source>
           <Value>自定义合并脚本</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text" type="obsolete">
+          <Source>The selected mergeconflict is a submodule.
+Stage current submodule commit?</Source>
+          <Value>所选定的合并冲突是一个子模块。把当前子模块的提交标记为载入吗？</Value>
+        </TranslationItem>
+        <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text" type="obsolete">
+          <Source>Submodule</Source>
+          <Value>子模块</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6884,14 +6945,6 @@ Context menu for additional operations</Source>
           <Source>Default clone destination</Source>
           <Value>默认克隆存储路径</Value>
         </TranslationItem>
-        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text" type="obsolete">
-          <Source>Show errors when staging files</Source>
-          <Value>在暂存文件时显示错误</Value>
-        </TranslationItem>
-        <TranslationItem Name="label23" Property="Text" type="obsolete">
-          <Source>SMTP server name</Source>
-          <Value>发送补丁到电子邮件所用的SMTP服务器</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="GitSettingsPage">
@@ -6954,8 +7007,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
     </TranslationCategory>
     <TranslationCategory Name="GlobalSettingsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Global settings</Source>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Git Config</Source>
+          <OldSource>Global settings</OldSource>
           <Value>全局设置</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseCommitTemplate" Property="Text">
@@ -7058,6 +7112,10 @@ global settings.
     </TranslationCategory>
     <TranslationCategory Name="GotoUserManualControl">
       <translationItems>
+        <TranslationItem Name="_gotoUserManualControlTooltip" Property="Text">
+          <Source>Read more about this feature at {0}</Source>
+          <Value>看更多内容关于 {0}</Value>
+        </TranslationItem>
         <TranslationItem Name="linkLabelHelp" Property="Text">
           <Source>Help</Source>
           <Value>帮助</Value>
@@ -7179,6 +7237,10 @@ help</Source>
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>无法载入SSH密钥。 PuTTY配置的不正确。</Value>
         </TranslationItem>
+        <TranslationItem Name="_rememberChoice" Property="Text">
+          <Source>Remember choice</Source>
+          <Value>记住上次的选择</Value>
+        </TranslationItem>
         <TranslationItem Name="_serverHostkeyNotCachedText" Property="Text">
           <Source>The server's host key is not cached in the registry.
 
@@ -7186,6 +7248,10 @@ Do you want to trust this host key and then try again?</Source>
           <Value>服务器的主机密钥没存储在注册表中。
 
 你要相信这个主机密钥，然后再试一次吗？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_theRepositorySubmodules" Property="Text">
+          <Source>Update submodules on checkout?</Source>
+          <Value>在登出时同时更新子模块？</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7198,6 +7264,18 @@ Do you want to trust this host key and then try again?</Source>
         <TranslationItem Name="_unresolvedMergeConflictsCaption" Property="Text">
           <Source>Merge conflicts</Source>
           <Value>合并冲突</Value>
+        </TranslationItem>
+        <TranslationItem Name="_updateSubmodules" Property="Text">
+          <Source>Update submodules</Source>
+          <Value>更新子模块</Value>
+        </TranslationItem>
+        <TranslationItem Name="_updateSubmodulesToo" Property="Text">
+          <Source>Since this repository has submodules, it's necessary to update them on every checkout.
+
+This will just checkout on the submodule the commit determined by the superproject.</Source>
+          <Value>次档案库含有子模块, 每次登出时必须更新这些子模块。
+
+这只意味着登出子模块，而是否提交则由父工程决定。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7254,6 +7332,42 @@ Do you want to trust this host key and then try again?</Source>
         <TranslationItem Name="$this" Property="Title">
           <Source>Plugins</Source>
           <Value>插件</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ProxySwitcherForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Proxy Switcher</Source>
+          <Value>代理切换</Value>
+        </TranslationItem>
+        <TranslationItem Name="ApplyGlobally_CheckBox" Property="Text">
+          <Source>Apply globally</Source>
+          <Value>应用于全局</Value>
+        </TranslationItem>
+        <TranslationItem Name="GlobalHttpProxy_Label" Property="Text">
+          <Source>Global http.proxy:</Source>
+          <Value>全局HTTP代理http.proxy:</Value>
+        </TranslationItem>
+        <TranslationItem Name="LocalHttpProxy_Label" Property="Text">
+          <Source>Local http.proxy:</Source>
+          <Value>局部HTTP代理http.proxy:</Value>
+        </TranslationItem>
+        <TranslationItem Name="SetProxy_Button" Property="Text">
+          <Source>Set proxy</Source>
+          <Value>设置代理</Value>
+        </TranslationItem>
+        <TranslationItem Name="UnsetProxy_Button" Property="Text">
+          <Source>Unset proxy</Source>
+          <Value>取消代理</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pleaseSetProxy" Property="Text">
+          <Source>There is no proxy configured. Please set the proxy host in the plugin settings.</Source>
+          <Value>没有代理配置。请在插件设置中设置代理服务器。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pluginDescription" Property="Text">
+          <Source>Proxy Switcher</Source>
+          <Value>代理切换</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7334,6 +7448,18 @@ Do you want to trust this host key and then try again?</Source>
         <TranslationItem Name="ShowRemoteBranches" Property="Text">
           <Source>Show remote branches</Source>
           <Value>显示远程分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowSuperprojectBranches" Property="Text">
+          <Source>Show superproject branches</Source>
+          <Value>显示父工程的分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowSuperprojectRemoteBranches" Property="Text">
+          <Source>Show superproject remote branches</Source>
+          <Value>显示父工程的远程分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowSuperprojectTags" Property="Text">
+          <Source>Show superproject tags</Source>
+          <Value>显示父工程的标签</Value>
         </TranslationItem>
         <TranslationItem Name="ToggleHighlightSelectedBranch" Property="Text">
           <Source>Highlight selected branch (until refresh)</Source>
@@ -7635,6 +7761,76 @@ If this is a central repository (bare repository without a working dir):
         <TranslationItem Name="OnEvent" Property="HeaderText">
           <Source>OnEvent</Source>
           <Value>OnEvent</Value>
+        </TranslationItem>
+        <TranslationItem Name="_scriptSettingsPageHelpDisplayArgumentsHelp" Property="Text">
+          <Source>Arguments help</Source>
+          <Value>参数帮助</Value>
+        </TranslationItem>
+        <TranslationItem Name="_scriptSettingsPageHelpDisplayContent" Property="Text">
+          <Source>User Input:
+{UserInput}
+
+Selected Branch:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+Current Branch:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}</Source>
+          <Value>用户输入:
+{UserInput}
+
+所选择的分支:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+当前分支:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}</Value>
         </TranslationItem>
         <TranslationItem Name="addScriptButton" Property="Text">
           <Source>Add</Source>
@@ -7983,29 +8179,13 @@ Details: Is {1} expected {2}</Source>
           <Source>Created</Source>
           <Value>创建</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCreateTagAtRevision">
-      <translationItems>
-        <TranslationItem Name="_noRevisionSelected" Property="Text" type="obsolete">
-          <Source>Select 1 revision to create the tag on.</Source>
-          <Value>选择一个版本来标记</Value>
+        <TranslationItem Name="tabPage1" Property="Text">
+          <Source>Diffs</Source>
+          <Value>差别</Value>
         </TranslationItem>
-        <TranslationItem Name="_noTagMessage" Property="Text" type="obsolete">
-          <Source>Please enter a tag message</Source>
-          <Value>请输入标签的信息</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pushToCaption" Property="Text" type="obsolete">
-          <Source>Push tag to '{0}'</Source>
-          <Value>推送到{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="annotate" Property="Text" type="obsolete">
-          <Source>Create annotated tag</Source>
-          <Value>创建带注解的标记</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="obsolete">
-          <Source>Tag name</Source>
-          <Value>标签名称</Value>
+        <TranslationItem Name="tabPage2" Property="Text">
+          <Source>Comments</Source>
+          <Value>注释</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

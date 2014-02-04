@@ -47,7 +47,7 @@ namespace JenkinsIntegration
 
         private HttpClient _httpClient;
 
-        private Task<IEnumerable<string>> _getBuildUrls;
+        private IList<Task<IEnumerable<string>>> _getBuildUrls;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config)
         {
@@ -75,17 +75,26 @@ namespace JenkinsIntegration
 
                 UpdateHttpClientOptions(buildServerCredentials);
 
-                var projectUrl = baseAdress + "job/" + projectName + "/";
+                _getBuildUrls = new List<Task<IEnumerable<string>>>();
 
-                _getBuildUrls = GetResponseAsync(FormatToGetJson(projectUrl), CancellationToken.None)
-                    .ContinueWith(
-                        task =>
-                            {
-                                JObject jobDescription = JObject.Parse(task.Result);
-                                return jobDescription["builds"].Select(b => b["url"].ToObject<string>());
-                            },
-                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent);
+                string[] projectUrls = projectName.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var projectUrl in projectUrls.Select(s => baseAdress + "job/" + s.Trim() + "/"))
+                {
+                    AddGetBuildUrl(projectUrl);
+                }
             }
+        }
+
+        private void AddGetBuildUrl(string projectUrl)
+        {
+            _getBuildUrls.Add(GetResponseAsync(FormatToGetJson(projectUrl), CancellationToken.None)
+                .ContinueWith(
+                    task =>
+                    {
+                        JObject jobDescription = JObject.Parse(task.Result);
+                        return jobDescription["builds"].Select(b => b["url"].ToObject<string>());
+                    },
+                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
         }
 
         /// <summary>
@@ -108,7 +117,7 @@ namespace JenkinsIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (_getBuildUrls == null)
+            if (_getBuildUrls == null || _getBuildUrls.Count() == 0)
             {
                 return Observable.Empty<BuildInfo>(scheduler);
             }
@@ -122,31 +131,43 @@ namespace JenkinsIntegration
         {
             try
             {
-                if (PropagateTaskAnomalyToObserver(_getBuildUrls, observer))
+                if (_getBuildUrls.All(t => t.IsCanceled))
                 {
+                    observer.OnCompleted();
                     return;
                 }
 
-                var buildContents = _getBuildUrls.Result
-                    .Select(buildUrl => GetResponseAsync(FormatToGetJson(buildUrl), cancellationToken).Result)
-                    .Where(s => !string.IsNullOrEmpty(s)).ToArray();
-
-                foreach (var buildDetails in buildContents)
+                foreach (var currentGetBuildUrls in _getBuildUrls)
                 {
-                    JObject buildDescription = JObject.Parse(buildDetails);
-                    var startDate = TimestampToDateTime(buildDescription["timestamp"].ToObject<long>());
-                    var isRunning = buildDescription["building"].ToObject<bool>();
-
-                    if (sinceDate.HasValue && sinceDate.Value > startDate)
-                        continue;
-
-                    if (running.HasValue && running.Value != isRunning)
-                        continue;
-
-                    var buildInfo = CreateBuildInfo(buildDescription);
-                    if (buildInfo.CommitHashList.Any())
+                    if (currentGetBuildUrls.IsFaulted)
                     {
-                        observer.OnNext(buildInfo);
+                        Debug.Assert(currentGetBuildUrls.Exception != null);
+
+                        observer.OnError(currentGetBuildUrls.Exception);
+                        continue;
+                    }
+
+                    var buildContents = currentGetBuildUrls.Result
+                        .Select(buildUrl => GetResponseAsync(FormatToGetJson(buildUrl), cancellationToken).Result)
+                        .Where(s => !string.IsNullOrEmpty(s)).ToArray();
+
+                    foreach (var buildDetails in buildContents)
+                    {
+                        JObject buildDescription = JObject.Parse(buildDetails);
+                        var startDate = TimestampToDateTime(buildDescription["timestamp"].ToObject<long>());
+                        var isRunning = buildDescription["building"].ToObject<bool>();
+
+                        if (sinceDate.HasValue && sinceDate.Value > startDate)
+                            continue;
+
+                        if (running.HasValue && running.Value != isRunning)
+                            continue;
+
+                        var buildInfo = CreateBuildInfo(buildDescription);
+                        if (buildInfo.CommitHashList.Any())
+                        {
+                            observer.OnNext(buildInfo);
+                        }
                     }
                 }
             }
@@ -158,25 +179,6 @@ namespace JenkinsIntegration
             {
                 observer.OnError(ex);
             }
-        }
-
-        private static bool PropagateTaskAnomalyToObserver(Task task, IObserver<BuildInfo> observer)
-        {
-            if (task.IsCanceled)
-            {
-                observer.OnCompleted();
-                return true;
-            }
-
-            if (task.IsFaulted)
-            {
-                Debug.Assert(task.Exception != null);
-
-                observer.OnError(task.Exception);
-                return true;
-            }
-
-            return false;
         }
 
         private static BuildInfo CreateBuildInfo(JObject buildDescription)
@@ -330,16 +332,16 @@ namespace JenkinsIntegration
 
             return getStreamTask.ContinueWith(
                 task =>
+                {
+                    if (task.Status != TaskStatus.RanToCompletion)
+                        return string.Empty;
+                    using (var responseStream = task.Result)
                     {
-                        if (task.Status != TaskStatus.RanToCompletion)
-                            return string.Empty;
-                        using (var responseStream = task.Result)
-                        {
-                            return new StreamReader(responseStream).ReadToEnd();
-                        }
-                    },
-                cancellationToken, 
-                TaskContinuationOptions.AttachedToParent, 
+                        return new StreamReader(responseStream).ReadToEnd();
+                    }
+                },
+                cancellationToken,
+                TaskContinuationOptions.AttachedToParent,
                 TaskScheduler.Current);
         }
 

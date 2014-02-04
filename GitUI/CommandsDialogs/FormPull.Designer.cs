@@ -78,7 +78,7 @@
             this.PullFromUrl.AutoSize = true;
             this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(45, 23);
+            this.PullFromUrl.Size = new System.Drawing.Size(40, 19);
             this.PullFromUrl.TabIndex = 1;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
@@ -91,7 +91,7 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(74, 23);
+            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
             this.PullFromRemote.TabIndex = 0;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
@@ -104,7 +104,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(9, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 19);
+            this.label1.Size = new System.Drawing.Size(75, 15);
             this.label1.TabIndex = 8;
             this.label1.Text = "Local branch";
             this.Tooltip.SetToolTip(this.label1, "Remote branch to pull. Leave empty to pull all branches.");
@@ -114,7 +114,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 49);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(102, 19);
+            this.label2.Size = new System.Drawing.Size(88, 15);
             this.label2.TabIndex = 7;
             this.label2.Text = "Remote branch";
             this.Tooltip.SetToolTip(this.label2, "Remote branch to pull. Leave empty to pull all branches.");
@@ -146,7 +146,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(674, 471);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(674, 479);
             this.tableLayoutPanel1.TabIndex = 16;
             // 
             // helpImageDisplayUserControl1
@@ -162,9 +162,9 @@
             this.helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             this.helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";
             this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
-            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(40, 89);
+            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(40, 85);
             this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
-            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(40, 465);
+            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(40, 473);
             this.helpImageDisplayUserControl1.TabIndex = 10;
             this.helpImageDisplayUserControl1.UniqueIsExpandedSettingsId = "Pull";
             // 
@@ -174,7 +174,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(49, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(622, 465);
+            this.panel2.Size = new System.Drawing.Size(622, 473);
             this.panel2.TabIndex = 19;
             // 
             // tableLayoutPanel2
@@ -197,7 +197,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(622, 465);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(622, 473);
             this.tableLayoutPanel2.TabIndex = 42;
             // 
             // groupBox2
@@ -235,7 +235,7 @@
             this.comboBoxPullSource.FormattingEnabled = true;
             this.comboBoxPullSource.Location = new System.Drawing.Point(148, 46);
             this.comboBoxPullSource.Name = "comboBoxPullSource";
-            this.comboBoxPullSource.Size = new System.Drawing.Size(462, 27);
+            this.comboBoxPullSource.Size = new System.Drawing.Size(462, 23);
             this.comboBoxPullSource.TabIndex = 4;
             this.comboBoxPullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
@@ -261,7 +261,7 @@
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(148, 16);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
-            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(462, 27);
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(462, 23);
             this._NO_TRANSLATE_Remotes.TabIndex = 1;
             this._NO_TRANSLATE_Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
             this._NO_TRANSLATE_Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
@@ -273,7 +273,7 @@
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
             this.groupBox1.Location = new System.Drawing.Point(3, 169);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(616, 114);
+            this.groupBox1.Size = new System.Drawing.Size(616, 103);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge options";
@@ -286,9 +286,9 @@
             this.flowLayoutPanel1.Controls.Add(this.Fetch);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 22);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 19);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(610, 89);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(610, 81);
             this.flowLayoutPanel1.TabIndex = 11;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -301,7 +301,7 @@
             this.Merge.Location = new System.Drawing.Point(3, 3);
             this.Merge.Name = "Merge";
             this.Merge.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Merge.Size = new System.Drawing.Size(299, 25);
+            this.Merge.Size = new System.Drawing.Size(261, 21);
             this.Merge.TabIndex = 8;
             this.Merge.TabStop = true;
             this.Merge.Text = "&Merge remote branch into current branch";
@@ -313,10 +313,10 @@
             // 
             this.Rebase.AutoSize = true;
             this.Rebase.Image = global::GitUI.Properties.Resources.IconRebase;
-            this.Rebase.Location = new System.Drawing.Point(3, 34);
+            this.Rebase.Location = new System.Drawing.Point(3, 30);
             this.Rebase.Name = "Rebase";
             this.Rebase.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Rebase.Size = new System.Drawing.Size(580, 25);
+            this.Rebase.Size = new System.Drawing.Size(504, 21);
             this.Rebase.TabIndex = 9;
             this.Rebase.Text = "&Rebase current branch on top of remote branch, creates linear history (use with " +
     "caution)";
@@ -327,10 +327,10 @@
             // Fetch
             // 
             this.Fetch.AutoSize = true;
-            this.Fetch.Location = new System.Drawing.Point(3, 65);
+            this.Fetch.Location = new System.Drawing.Point(3, 57);
             this.Fetch.Name = "Fetch";
             this.Fetch.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Fetch.Size = new System.Drawing.Size(282, 25);
+            this.Fetch.Size = new System.Drawing.Size(245, 21);
             this.Fetch.TabIndex = 10;
             this.Fetch.Text = "Do not merge, only &fetch remote changes";
             this.Fetch.UseVisualStyleBackColor = true;
@@ -355,7 +355,7 @@
             // 
             this.localBranch.Location = new System.Drawing.Point(150, 14);
             this.localBranch.Name = "localBranch";
-            this.localBranch.Size = new System.Drawing.Size(293, 26);
+            this.localBranch.Size = new System.Drawing.Size(293, 23);
             this.localBranch.TabIndex = 9;
             this.localBranch.Leave += new System.EventHandler(this.localBranch_Leave);
             // 
@@ -364,7 +364,7 @@
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(150, 46);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(295, 27);
+            this.Branches.Size = new System.Drawing.Size(295, 23);
             this.Branches.TabIndex = 6;
             this.Branches.DropDown += new System.EventHandler(this.BranchesDropDown);
             // 
@@ -373,7 +373,7 @@
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.flowLayoutPanel2);
-            this.groupBox4.Location = new System.Drawing.Point(3, 289);
+            this.groupBox4.Location = new System.Drawing.Point(3, 278);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(616, 124);
             this.groupBox4.TabIndex = 15;
@@ -388,9 +388,9 @@
             this.flowLayoutPanel2.Controls.Add(this.AllTags);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 22);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 19);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(610, 99);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(610, 102);
             this.flowLayoutPanel2.TabIndex = 16;
             this.flowLayoutPanel2.WrapContents = false;
             // 
@@ -401,7 +401,7 @@
             this.ReachableTags.Location = new System.Drawing.Point(3, 3);
             this.ReachableTags.Name = "ReachableTags";
             this.ReachableTags.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.ReachableTags.Size = new System.Drawing.Size(456, 25);
+            this.ReachableTags.Size = new System.Drawing.Size(398, 21);
             this.ReachableTags.TabIndex = 17;
             this.ReachableTags.TabStop = true;
             this.ReachableTags.Text = "Follow tagopt, if not specified, fetch tags reachable from remote HEAD";
@@ -410,10 +410,10 @@
             // NoTags
             // 
             this.NoTags.AutoSize = true;
-            this.NoTags.Location = new System.Drawing.Point(3, 34);
+            this.NoTags.Location = new System.Drawing.Point(3, 30);
             this.NoTags.Name = "NoTags";
             this.NoTags.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.NoTags.Size = new System.Drawing.Size(104, 25);
+            this.NoTags.Size = new System.Drawing.Size(91, 21);
             this.NoTags.TabIndex = 18;
             this.NoTags.Text = "Fetch no tag";
             this.NoTags.UseVisualStyleBackColor = true;
@@ -421,10 +421,10 @@
             // AllTags
             // 
             this.AllTags.AutoSize = true;
-            this.AllTags.Location = new System.Drawing.Point(3, 65);
+            this.AllTags.Location = new System.Drawing.Point(3, 57);
             this.AllTags.Name = "AllTags";
             this.AllTags.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.AllTags.Size = new System.Drawing.Size(107, 25);
+            this.AllTags.Size = new System.Drawing.Size(94, 21);
             this.AllTags.TabIndex = 19;
             this.AllTags.Text = "Fetch all tags";
             this.AllTags.UseVisualStyleBackColor = true;
@@ -443,7 +443,7 @@
             this.tableLayoutPanel3.Controls.Add(this.Stash, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.AutoStash, 2, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 421);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 429);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.tableLayoutPanel3.RowCount = 1;
@@ -477,9 +477,9 @@
             // 
             this.AutoStash.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.AutoStash.AutoSize = true;
-            this.AutoStash.Location = new System.Drawing.Point(288, 9);
+            this.AutoStash.Location = new System.Drawing.Point(288, 11);
             this.AutoStash.Name = "AutoStash";
-            this.AutoStash.Size = new System.Drawing.Size(94, 23);
+            this.AutoStash.Size = new System.Drawing.Size(82, 19);
             this.AutoStash.TabIndex = 13;
             this.AutoStash.Text = "Auto stash";
             this.AutoStash.UseVisualStyleBackColor = true;
@@ -489,7 +489,7 @@
             this.AcceptButton = this.Pull;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(674, 471);
+            this.ClientSize = new System.Drawing.Size(674, 479);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

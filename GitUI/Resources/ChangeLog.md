@@ -1,6 +1,6 @@
 ﻿Changelog
 =========
-### Version 2.47.4 (22 November 2013)
+### Version 2.47.4 (not released)
 * Fixed issue #2142: Fetch in 2.47.3 creating remote ref from remote HEAD using current local branch's name
 * Fixed issue #2137: Strange push behaviour 
 * Fixed issue #2136: Git credential helper does not load 

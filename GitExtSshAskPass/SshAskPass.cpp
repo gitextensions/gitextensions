@@ -1,5 +1,5 @@
 // Copyright (C) 2008-2013 - TortoiseGit
-// Copyright (C) 2013 - GitExtensions
+// Copyright (C) 2013-2014 - GitExtensions
 
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -123,7 +123,7 @@ void MarkWindowAsUnpinnable(HWND hWnd)
 {
 	typedef HRESULT (WINAPI *SHGPSFW) (HWND hwnd,REFIID riid,void** ppv);
 
-	HMODULE hShell = AtlLoadSystemLibraryUsingFullPath(_T("Shell32.dll"));
+	HMODULE hShell = ::LoadLibrary(_T("Shell32.dll"));
 
 	if (hShell) {
 		SHGPSFW pfnSHGPSFW = (SHGPSFW)::GetProcAddress(hShell, "SHGetPropertyStoreForWindow");

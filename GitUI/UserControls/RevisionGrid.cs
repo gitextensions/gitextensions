@@ -644,7 +644,7 @@ namespace GitUI
 
         public List<string> GetRevisionChildren(string revision)
         {
-			return Revisions.GetRevisionChildren(revision);
+            return Revisions.GetRevisionChildren(revision);
         }
 
         public GitRevision GetRevision(int aRow)
@@ -972,7 +972,7 @@ namespace GitUI
             UpdateGraph(updatedEvent.Revision);
         }
 
-        private bool FilterIsApplied(bool inclBranchFilter)
+        internal bool FilterIsApplied(bool inclBranchFilter)
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
                    !(string.IsNullOrEmpty(Filter) &&

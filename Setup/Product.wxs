@@ -266,7 +266,16 @@
             </Component>
             <Component Id="JenkinsIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\Release\JenkinsIntegration.dll" />
-            </Component>		
+            </Component>
+            <Component Id="TfsIntegration.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsIntegration\bin\Release\TfsIntegration.dll" />
+            </Component>
+            <Component Id="TfsInterop.Vs2012.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop\bin\Release\TfsInterop.Vs2012.dll" />
+            </Component>
+            <!-- Component Id="TfsInterop.Vs2013.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop\bin\Release\TfsInterop.Vs2013.dll" />
+            </Component -->
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
             <Component Id="Blue.ico" Guid="*">
@@ -573,6 +582,13 @@
                     <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="JenkinsIntegration.dll" />
                 </Feature>
+                <Feature Id="TfsIntegration" Title="Tfs integration" Level="1">
+                    <ComponentRef Id="System.Runtime.dll" />
+                    <ComponentRef Id="System.Threading.Tasks.dll" />
+                    <ComponentRef Id="TfsIntegration.dll" />
+                    <ComponentRef Id="TfsInterop.Vs2012.dll" />
+                    <!-- ComponentRef Id="TfsInterop.Vs2013.dll" /-->
+                </Feature>
             </Feature>
             <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
                 <ComponentRef Id="GitExtensions.desktop" />
@@ -693,7 +709,7 @@
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
         <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe" />
         <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
-        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.4-preview20130916.exe" />
+        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.5.2-preview20131230.exe" />
         <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore" />
         <InstallExecuteSequence>
             <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>

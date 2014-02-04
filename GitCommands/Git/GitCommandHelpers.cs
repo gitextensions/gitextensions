@@ -941,7 +941,6 @@ namespace GitCommands
                 status.RemovedCommits = submodule.GetCommitCount(status.OldCommit, status.Commit);
             }
 
-
             return status;
         }
 
@@ -1198,21 +1197,23 @@ namespace GitCommands
                     break;
             }
 
-           
-
-            if (status.AddedCommits != null || status.RemovedCommits != null)
+            if (status.AddedCommits != null && status.RemovedCommits != null &&
+                (status.AddedCommits != 0 || status.RemovedCommits != 0))
             {
-                sb.Append("Commits: ");
+                sb.Append("\nCommits: ");
 
-                if (status.RemovedCommits != null && status.RemovedCommits > 0)
+                if (status.RemovedCommits > 0)
+                {
                     sb.Append(status.RemovedCommits + " removed");
 
-                if (status.RemovedCommits != null && status.RemovedCommits > 0 &&
-                    status.AddedCommits != null && status.AddedCommits > 0)
-                    sb.Append(", ");
+                    if (status.AddedCommits > 0)
+                        sb.Append(", ");
+                }
 
-                if (status.AddedCommits != null && status.AddedCommits > 0)
+                if (status.AddedCommits > 0)
                     sb.Append(status.AddedCommits + " added");
+
+                sb.AppendLine();
             }
 
             if (status.Commit != null && status.OldCommit != null)

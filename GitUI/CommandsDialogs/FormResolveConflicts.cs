@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
@@ -20,8 +19,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
         private readonly TranslationString allConflictsResolved = new TranslationString("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
         private readonly TranslationString allConflictsResolvedCaption = new TranslationString("Commit");
-        private readonly TranslationString mergeConflictIsSubmodule = new TranslationString("The selected mergeconflict is a submodule." + Environment.NewLine + "Stage current submodule commit?");
-        private readonly TranslationString mergeConflictIsSubmoduleCaption = new TranslationString("Submodule");
         private readonly TranslationString fileIsBinary = new TranslationString("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in {0}?");
         private readonly TranslationString askMergeConflictSolvedAfterCustomMergeScript = new TranslationString("The merge conflict need to be solved and the result must be saved as:" + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Is the mergeconflict solved?");
         private readonly TranslationString askMergeConflictSolved = new TranslationString("Is the mergeconflict solved?");
@@ -172,19 +169,21 @@ namespace GitUI.CommandsDialogs
                 ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
             }
 
-            if (!Module.InTheMiddleOfPatch() && !Module.InTheMiddleOfRebase() &&
-                !Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts && _offerCommit)
-            {
-                if (MessageBox.Show(this, allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    UICommands.StartCommitDialog(this);
-                }
-            }
-
             if (!Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts)
             {
+                UICommands.UpdateSubmodules(this);
+
+                if (!Module.InTheMiddleOfPatch() && !Module.InTheMiddleOfRebase() && _offerCommit)
+                {
+                    if (MessageBox.Show(this, allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        UICommands.StartCommitDialog(this);
+                    }
+                }
+
                 Close();
             }
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -283,7 +282,7 @@ namespace GitUI.CommandsDialogs
                 if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
                     MessageBox.Show(this, fileUnchangedAfterMerge.Text);
                 else
-                    stageFile(fileName);
+                    StageFile(fileName);
             }
 
             Initialize();
@@ -313,6 +312,25 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        enum ItemType
+        {
+            File,
+            Directory,
+            Submodule
+        }
+
+        private ItemType GetItemType(string filename)
+        {
+            string fullname = Path.Combine(Module.WorkingDir, filename);
+            if (Directory.Exists(fullname) && !File.Exists(fullname))
+            {
+                if (Module.GetSubmodulesLocalPathes().Contains(filename.Trim()))
+                    return ItemType.Submodule;
+                return ItemType.Directory;
+            }
+            return ItemType.File;
+        }
+
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -322,18 +340,14 @@ namespace GitUI.CommandsDialogs
             try
             {
                 string filename = GetFileName();
-                string fullname = Path.Combine(Module.WorkingDir, filename);
-                if (Directory.Exists(fullname) && !File.Exists(fullname))
+                var itemType = GetItemType(filename);
+                if (itemType == ItemType.Submodule)
                 {
-                    if (Module.GetSubmodulesLocalPathes().Contains(filename.Trim()))
-                    {
-                        var form = new FormMergeSubmodule(UICommands, filename);
-                        if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                            stageFile(filename);
-
-                    }
+                    var form = new FormMergeSubmodule(UICommands, filename);
+                    if (form.ShowDialog() == DialogResult.OK)
+                        StageFile(filename);
                 }
-                else
+                else if (itemType == ItemType.File)
                 {
                     ResolveFilesConflict(filename);
                 }
@@ -405,7 +419,7 @@ namespace GitUI.CommandsDialogs
                     //time timestamp is changed, we are pretty sure the merge was done.
                     if (exitCode == 0 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge)
                     {
-                        stageFile(filename);
+                        StageFile(filename);
                     }
 
                     //If the exitcode is 1, but the file is changed, ask if the merge conflict is solved.
@@ -415,7 +429,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (MessageBox.Show(this, askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
-                            stageFile(filename);
+                            StageFile(filename);
                         }
                     }
                 }
@@ -536,6 +550,15 @@ namespace GitUI.CommandsDialogs
             baseFileName.Text = (baseFileExists ? filenames[0] : noBase.Text);
             localFileName.Text = (localFileExists ? filenames[1] : deleted.Text);
             remoteFileName.Text = (remoteFileExists ? filenames[2] : deleted.Text);
+            
+            var itemType = GetItemType(filename);
+            if (itemType == ItemType.Submodule)
+            {
+                string[] hashes = Module.GetConflictedSubmoduleHashes(filename);
+                baseFileName.Text = baseFileName.Text + '@' + hashes[0].Substring(0, 8);
+                localFileName.Text = localFileName.Text + '@' + hashes[1].Substring(0, 8);
+                remoteFileName.Text = remoteFileName.Text + '@' + hashes[2].Substring(0, 8);
+            }
         }
 
         private void ContextChooseBase_Click(object sender, EventArgs e)
@@ -813,7 +836,7 @@ namespace GitUI.CommandsDialogs
         private void ContextMarkAsSolved_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            stageFile(GetFileName());
+            StageFile(GetFileName());
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -875,7 +898,7 @@ namespace GitUI.CommandsDialogs
             OsShellUtil.OpenAs(Path.Combine(Module.WorkingDir, fileName));
         }
 
-        private void stageFile(string filename)
+        private void StageFile(string filename)
         {
             var processStart = new FormStatus.ProcessStart
                 (
@@ -891,7 +914,6 @@ namespace GitUI.CommandsDialogs
                 process.ShowDialogOnError(this);
         }
 
-
         private void conflictDescription_Click(object sender, EventArgs e)
         {
 
@@ -901,7 +923,6 @@ namespace GitUI.CommandsDialogs
         {
             OpenMergetool_Click(sender, e);
         }
-
 
         private void ConflictedFiles_KeyDown(object sender, KeyEventArgs e)
         {

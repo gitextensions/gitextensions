@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -58,9 +59,11 @@ namespace TeamCityIntegration
 
         private string httpClientHostSuffix;
 
-        private Task<IEnumerable<string>> getBuildTypesTask;
+        private List<Task<IEnumerable<string>>> getBuildTypesTask = new List<Task<IEnumerable<string>>>();
 
-        private string ProjectName { get; set; }
+        private string[] ProjectNames { get; set; }
+
+        private Regex BuildIdFilter { get; set; }
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config)
         {
@@ -69,7 +72,8 @@ namespace TeamCityIntegration
 
             this.buildServerWatcher = buildServerWatcher;
 
-            ProjectName = config.GetString("ProjectName", null);
+            ProjectNames = config.GetString("ProjectName", "").Split(new char[]{'|'}, StringSplitOptions.RemoveEmptyEntries);
+            BuildIdFilter = new Regex(config.GetString("BuildIdFilter", ""), RegexOptions.Compiled);
             var hostName = config.GetString("BuildServerUrl", null);
             if (!string.IsNullOrEmpty(hostName))
             {
@@ -86,14 +90,19 @@ namespace TeamCityIntegration
 
                 UpdateHttpClientOptions(buildServerCredentials);
 
-                if (!string.IsNullOrEmpty(ProjectName))
+                if (ProjectNames.Length > 0)
                 {
-                    getBuildTypesTask =
-                        GetProjectFromNameXmlResponseAsync(ProjectName, CancellationToken.None)
+                    getBuildTypesTask.Clear();
+                    foreach (var name in ProjectNames)
+                    {
+                        getBuildTypesTask.Add(
+                            GetProjectFromNameXmlResponseAsync(name, CancellationToken.None)
                             .ContinueWith(
-                                task => from element in task.Result.XPathSelectElements("/project/buildTypes/buildType")
-                                        select element.Attribute("id").Value,
-                                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent);
+                            task => from element in task.Result.XPathSelectElements("/project/buildTypes/buildType")
+                                   select element.Attribute("id").Value,
+                           TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
+                    }
+
                 }
             }
         }
@@ -118,7 +127,7 @@ namespace TeamCityIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (httpClient == null || httpClient.BaseAddress == null || string.IsNullOrEmpty(ProjectName))
+            if (httpClient == null || httpClient.BaseAddress == null || ProjectNames.Length == 0)
             {
                 return Observable.Empty<BuildInfo>(scheduler);
             }
@@ -132,13 +141,13 @@ namespace TeamCityIntegration
         {
             try
             {
-                if (PropagateTaskAnomalyToObserver(getBuildTypesTask, observer))
+                if (getBuildTypesTask.Any(task => PropagateTaskAnomalyToObserver(task, observer)))
                 {
                     return;
                 }
 
                 var localObserver = observer;
-                var buildTypes = getBuildTypesTask.Result;
+                var buildTypes = getBuildTypesTask.SelectMany(t => t.Result).Where(id => BuildIdFilter.IsMatch(id));
                 var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, cancellationToken, sinceDate, running)).ToArray();
 
                 Task.Factory

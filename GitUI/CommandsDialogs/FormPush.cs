@@ -327,8 +327,7 @@ namespace GitUI.CommandsDialogs
                 form.ShowDialog(owner);
                 ErrorOccurred = form.ErrorOccurred();
 
-                if (!Module.InTheMiddleOfConflictedMerge() &&
-                    !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
+                if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                 {
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                     if (_createPullRequestCB.Checked)

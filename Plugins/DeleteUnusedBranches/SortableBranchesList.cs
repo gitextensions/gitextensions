@@ -39,6 +39,7 @@ namespace DeleteUnusedBranches
             {
                 AddSortableProperty(branch => branch.Date, (x, y) => DateTime.Compare(x.Date, y.Date));
                 AddSortableProperty(branch => branch.Name, (x, y) => string.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
+                AddSortableProperty(branch => branch.Author, (x, y) => string.Compare(x.Author, y.Author, StringComparison.CurrentCulture));
             }
 
             /// <summary>

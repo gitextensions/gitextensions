@@ -55,8 +55,7 @@ namespace GitUI.CommandsDialogs
             {
                 form.ShowDialog();
 
-                if (!Module.InTheMiddleOfConflictedMerge() &&
-                    !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
+                if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                 {
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                 }
