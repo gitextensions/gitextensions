@@ -642,11 +642,6 @@ namespace GitCommands
             return cmd;
         }
 
-        public static bool PathIsUrl(string path)
-        {
-            return path.Contains(Path.DirectorySeparatorChar) || path.Contains(AppSettings.PosixPathSeparator);
-        }
-
         public static string ContinueRebaseCmd()
         {
             return "rebase --continue";

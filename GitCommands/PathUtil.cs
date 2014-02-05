@@ -37,6 +37,28 @@ namespace GitCommands
             return dirPath;
         }
 
+        public static string GetFileName(string fileName)
+        {
+            var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
+            var pos = fileName.LastIndexOfAny(pathSeparators);
+            if (pos != -1)
+                fileName = fileName.Substring(pos + 1);
+            return fileName;
+        }
+
+        public static string GetDirectoryName(string fileName)
+        {
+            var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
+            var pos = fileName.LastIndexOfAny(pathSeparators);
+            if (pos != -1)
+            {
+                fileName = fileName.Substring(0, pos);
+                if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
+                    return "";
+            }
+            return fileName;
+        }
+
         public static bool Equal(string path1, string path2)
         {
             path1 = Path.GetFullPath(path1).TrimEnd('\\');

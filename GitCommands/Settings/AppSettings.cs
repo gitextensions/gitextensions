@@ -745,8 +745,6 @@ namespace GitCommands
             set
             {
                 var temp = value.EnsureTrailingPathSeparator();
-                if (temp.Length > 0 && temp[temp.Length - 1] != Path.DirectorySeparatorChar)
-                    temp += Path.DirectorySeparatorChar;
                 SetString("gitbindir", temp);
 
                 //if (string.IsNullOrEmpty(_gitBinDir))
