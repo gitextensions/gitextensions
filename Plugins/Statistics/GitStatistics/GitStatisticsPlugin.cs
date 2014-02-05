@@ -26,7 +26,7 @@ namespace GitStatistics
 
         public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
-            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.GitWorkingDir))
+            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
                 return false;
 
             using (var formGitStatistics =
@@ -43,12 +43,12 @@ namespace GitStatistics
                     foreach (var submodule in gitUIEventArgs.GitModule.GetSubmodulesInfo())
                     {
                         formGitStatistics.DirectoriesToIgnore += ";";
-                        formGitStatistics.DirectoriesToIgnore += Path.Combine(gitUIEventArgs.GitModule.GitWorkingDir, submodule.LocalPath);
+                        formGitStatistics.DirectoriesToIgnore += Path.Combine(gitUIEventArgs.GitModule.WorkingDir, submodule.LocalPath);
                     }
                 }
 
                 formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
-                formGitStatistics.WorkingDir = new DirectoryInfo(gitUIEventArgs.GitModule.GitWorkingDir);
+                formGitStatistics.WorkingDir = new DirectoryInfo(gitUIEventArgs.GitModule.WorkingDir);
 
                 formGitStatistics.ShowDialog(gitUIEventArgs.OwnerForm as IWin32Window);
             }

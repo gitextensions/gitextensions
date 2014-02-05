@@ -68,10 +68,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 },
                 TaskScheduler.FromCurrentSynchronizationContext());
         }
-        private bool IsRepositoryValid
-        {
-            get { return !string.IsNullOrEmpty(Module.GitWorkingDir); }
-        }        
 
         protected override void PageToSettings()
         {
@@ -109,9 +105,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private IBuildServerSettingsUserControl CreateBuildServerSettingsUserControl()
         {
-            if (!Equals(BuildServerType.SelectedItem, NoneItem) && !string.IsNullOrEmpty(Module.GitWorkingDir))
+            if (!Equals(BuildServerType.SelectedItem, NoneItem) && !string.IsNullOrEmpty(Module.WorkingDir))
             {
-                var defaultProjectName = Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
+                var defaultProjectName = Module.WorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
 
                 var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
                 var selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());

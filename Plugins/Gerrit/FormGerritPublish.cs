@@ -161,7 +161,7 @@ namespace Gerrit
 
             _NO_TRANSLATE_Branch.Select();
 
-            Text = string.Concat(_publishGerritChangeCaption.Text, " (", Module.GitWorkingDir, ")");
+            Text = string.Concat(_publishGerritChangeCaption.Text, " (", Module.WorkingDir, ")");
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
