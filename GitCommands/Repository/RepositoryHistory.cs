@@ -43,9 +43,7 @@ namespace GitCommands.Repository
 
             if (!Repository.PathIsUrl(repo))
             {
-                repo = repo.ToNativePath();
-                if (!repo.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                repo += Path.DirectorySeparatorChar;
+                repo = repo.ToNativePath().EnsureTrailingPathSeparator();
             }
 
             Repository.RepositoryAnchor anchor = Repository.RepositoryAnchor.None;

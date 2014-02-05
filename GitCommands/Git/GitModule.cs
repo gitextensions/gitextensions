@@ -50,6 +50,7 @@ namespace GitCommands
 
         [NotNull] private readonly string _workingDir;
 
+        [NotNull]
         public string WorkingDir
         {
             get
@@ -290,7 +291,7 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            string dirPath = dir + Path.DirectorySeparatorChar;
+            string dirPath = dir.EnsureTrailingPathSeparator();
             string path = dirPath + ".git";
 
             if (Directory.Exists(path) || File.Exists(path))
@@ -319,15 +320,15 @@ namespace GitCommands
                     {
                         string path = line.Substring(7).Trim().Replace('/', '\\');
                         if (Path.IsPathRooted(path))
-                            return path + Path.DirectorySeparatorChar;
+                            return path.EnsureTrailingPathSeparator();
                         else
                             return
                                 Path.GetFullPath(Path.Combine(repositoryPath,
-                                    path + Path.DirectorySeparatorChar));
+                                    path.EnsureTrailingPathSeparator()));
                     }
                 }
             }
-            gitpath = gitpath + Path.DirectorySeparatorChar;
+            gitpath = gitpath.EnsureTrailingPathSeparator();
             if (!Directory.Exists(gitpath))
                 return repositoryPath;
             return gitpath;
@@ -385,7 +386,7 @@ namespace GitCommands
             while (len > 0 && pathSeparators.Any(s => s == startDir[len - 1]))
                 len--;
 
-            startDir = startDir.Substring(0, len) + Path.DirectorySeparatorChar;
+            startDir = startDir.Substring(0, len).EnsureTrailingPathSeparator();
 
             var dir = startDir;
 
@@ -394,7 +395,7 @@ namespace GitCommands
                 dir = dir.Substring(0, dir.LastIndexOfAny(pathSeparators));
 
                 if (IsValidGitWorkingDir(dir))
-                    return dir + Path.DirectorySeparatorChar;
+                    return dir.EnsureTrailingPathSeparator();
             }
             return startDir;
         }
@@ -1152,7 +1153,7 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string localPath)
         {
-            string dir = Path.Combine(_workingDir, localPath + Path.DirectorySeparatorChar);
+            string dir = Path.Combine(_workingDir, localPath.EnsureTrailingPathSeparator());
             return Path.GetFullPath(dir); // fix slashes
         }
 
@@ -1225,9 +1226,9 @@ namespace GitCommands
                     if (string.IsNullOrEmpty(path))
                         break;
                     if (File.Exists(Path.Combine(path, ".gitmodules")) &&
-                        IsValidGitWorkingDir(path + Path.DirectorySeparatorChar))
+                        IsValidGitWorkingDir(path))
                     {
-                        superprojectPath = path + Path.DirectorySeparatorChar;
+                        superprojectPath = path.EnsureTrailingPathSeparator();
                         break;
                     }
                     // Check upper directory
