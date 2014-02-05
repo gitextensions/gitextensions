@@ -1172,7 +1172,7 @@ namespace GitUI.CommandsDialogs
             if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
                 fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
-            fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+            fileName = (Path.GetTempPath() + fileName).ToNativePath();
             Module.SaveBlobAs(fileName, gitItem.Guid);
             return fileName;
         }
@@ -1315,7 +1315,7 @@ namespace GitUI.CommandsDialogs
                 Process process = new Process();
                 process.StartInfo.FileName = Application.ExecutablePath;
                 process.StartInfo.Arguments = "browse";
-                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName + Settings.PathSeparator.ToString());
+                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName.EnsureTrailingPathSeparator());
                 process.Start();
             }
         }
@@ -2069,14 +2069,14 @@ namespace GitUI.CommandsDialogs
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                fileNames.Append(Path.Combine(Module.WorkingDir, item.Name).ToNativePath());
             }
             Clipboard.SetText(fileNames.ToString());
         }
 
         private void deleteIndexlockToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string fileName = Path.Combine(Module.WorkingDirGitDir(), "index.lock");
+            string fileName = Path.Combine(Module.GetGitDirectory(), "index.lock");
 
             if (File.Exists(fileName))
             {
@@ -2136,7 +2136,7 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var fileName = Path.Combine(Module.WorkingDir, (gitItem).FileName);
-            OsShellUtil.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            OsShellUtil.OpenAs(fileName.ToNativePath());
         }
 
         private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -3010,8 +3010,7 @@ namespace GitUI.CommandsDialogs
                     {
                         parentModule = supersuperproject;
                         localpath = Module.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                        localpath = localpath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
-                                Settings.PathSeparatorWrong);
+                        localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
                         name = name + localpath;
                     }
                     else
@@ -3028,8 +3027,7 @@ namespace GitUI.CommandsDialogs
                 if (submodules.Any())
                 {
                     string localpath = Module.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                    localpath = localpath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
-                            Settings.PathSeparatorWrong);
+                    localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
 
                     foreach (var submodule in submodules)
                     {

@@ -161,7 +161,7 @@ namespace GitCommands.Repository
             if (shortenPath && repoInfo.DirInfo != null)
             {
                 string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
-                s = s.Trim(Path.DirectorySeparatorChar);
+                s = Path.GetDirectoryName(s);
                 //candidate for short name
                 repoInfo.Caption = repoInfo.ShortName;
                 if (!s.IsNullOrEmpty())
@@ -204,12 +204,7 @@ namespace GitCommands.Repository
         {
             if (l == null)
                 return r;
-            else
-                if (l.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                    return string.Join("", l, r);
-                else
-                    return string.Join(Path.DirectorySeparatorChar.ToString(), l, r);
-
+            return Path.Combine(l, r);
         }
 
         private void AddToOrderedMiddleDots(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo)

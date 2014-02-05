@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using Microsoft.Win32;
 
 namespace GitCommands
@@ -27,8 +24,7 @@ namespace GitCommands
     {
         //semi-constants
         public static readonly string GitExtensionsVersionString;
-        public static readonly char PathSeparator = '\\';
-        public static readonly char PathSeparatorWrong = '/';
+        public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
         public const string SettingsFileName = "GitExtensions.settings";
 
@@ -60,11 +56,6 @@ namespace GitCommands
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
             if (version.Build > 0)
                 GitExtensionsVersionString += '.' + version.Build.ToString();
-            if (!EnvUtils.RunningOnWindows())
-            {
-                PathSeparator = '/';
-                PathSeparatorWrong = '\\';
-            }
 
             GitLog = new CommandLogger();
 
@@ -753,9 +744,7 @@ namespace GitCommands
             get { return GetString("gitbindir", ""); }
             set
             {
-                var temp = value;
-                if (temp.Length > 0 && temp[temp.Length - 1] != PathSeparator)
-                    temp += PathSeparator;
+                var temp = value.EnsureTrailingPathSeparator();
                 SetString("gitbindir", temp);
 
                 //if (string.IsNullOrEmpty(_gitBinDir))

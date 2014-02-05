@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace GitCommands.Repository
 {
@@ -42,9 +43,7 @@ namespace GitCommands.Repository
 
             if (!Repository.PathIsUrl(repo))
             {
-                repo = repo.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator);
-                if (!repo.EndsWith(AppSettings.PathSeparator.ToString()))
-                repo += AppSettings.PathSeparator.ToString();
+                repo = repo.ToNativePath().EnsureTrailingPathSeparator();
             }
 
             Repository.RepositoryAnchor anchor = Repository.RepositoryAnchor.None;
