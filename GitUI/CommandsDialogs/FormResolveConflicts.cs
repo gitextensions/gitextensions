@@ -207,7 +207,7 @@ namespace GitUI.CommandsDialogs
 
         private string FixPath(string path)
         {
-            return (path ?? "").Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator);
+            return (path ?? "").ToNativePath();
         }
 
         private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
@@ -759,8 +759,8 @@ namespace GitUI.CommandsDialogs
         {
             if (fileName.Contains(AppSettings.PathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparator.ToString()) < fileName.Length)
                 fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PathSeparator) + 1);
-            if (fileName.Contains(AppSettings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PathSeparatorWrong) + 1);
+            if (fileName.Contains(AppSettings.PosixPathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PosixPathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PosixPathSeparator) + 1);
             return fileName;
         }
 
@@ -768,8 +768,8 @@ namespace GitUI.CommandsDialogs
         {
             if (fileName.Contains(AppSettings.PathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparator.ToString()) < fileName.Length)
                 fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PathSeparator));
-            if (fileName.Contains(AppSettings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PathSeparatorWrong));
+            if (fileName.Contains(AppSettings.PosixPathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PosixPathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PosixPathSeparator));
             return fileName;
         }
 

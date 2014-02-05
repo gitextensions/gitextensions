@@ -18,7 +18,7 @@ namespace GitCommands
             string authorsFile, int fromRevision, 
             string trunk, string tags, string branches)
         {
-            toPath = GitCommandHelpers.FixPath(toPath);
+            toPath = toPath.ToPosixPath();
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("{0} clone \"{1}\" \"{2}\"", SvnPrefix, fromSvn, toPath);
             if (!string.IsNullOrEmpty(username))

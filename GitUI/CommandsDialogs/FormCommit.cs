@@ -1681,7 +1681,7 @@ namespace GitUI.CommandsDialogs
             var item = list.SelectedItem;
             var fileName = item.Name;
 
-            Process.Start((Path.Combine(Module.WorkingDir, fileName)).Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+            Process.Start((Path.Combine(Module.WorkingDir, fileName)).ToNativePath());
         }
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
@@ -1696,7 +1696,7 @@ namespace GitUI.CommandsDialogs
             var item = list.SelectedItem;
             var fileName = item.Name;
 
-            OsShellUtil.OpenAs(Module.WorkingDir + fileName.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+            OsShellUtil.OpenAs(Module.WorkingDir + fileName.ToNativePath());
         }
 
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
@@ -1716,7 +1716,7 @@ namespace GitUI.CommandsDialogs
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).ToNativePath());
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -2327,7 +2327,7 @@ namespace GitUI.CommandsDialogs
             foreach (var item in list.SelectedItems)
             {
                 var fileNames = new StringBuilder();
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).ToNativePath());
 
                 string filePath = fileNames.ToString();
                 if (File.Exists(filePath))

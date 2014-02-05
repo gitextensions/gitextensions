@@ -28,7 +28,7 @@ namespace GitCommands
         //semi-constants
         public static readonly string GitExtensionsVersionString;
         public static readonly char PathSeparator = '\\';
-        public static readonly char PathSeparatorWrong = '/';
+        public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
         public const string SettingsFileName = "GitExtensions.settings";
 
@@ -63,7 +63,7 @@ namespace GitCommands
             if (!EnvUtils.RunningOnWindows())
             {
                 PathSeparator = '/';
-                PathSeparatorWrong = '\\';
+                PosixPathSeparator = '\\';
             }
 
             GitLog = new CommandLogger();
