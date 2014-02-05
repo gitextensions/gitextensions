@@ -19,7 +19,6 @@ using GitUI.Script;
 using PatchApply;
 using ResourceManager.Translation;
 using Timer = System.Windows.Forms.Timer;
-using GitCommands.Config;
 
 namespace GitUI.CommandsDialogs
 {
@@ -1515,7 +1514,7 @@ namespace GitUI.CommandsDialogs
             //Save last commit message in settings. This way it can be used in multiple repositories.
             AppSettings.LastCommitMessage = commitMessageText;
 
-            var path = Module.WorkingDirGitDir() + AppSettings.PathSeparator.ToString() + "COMMITMESSAGE";
+            var path = Module.GetGitDirectory() + AppSettings.PathSeparator.ToString() + "COMMITMESSAGE";
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
