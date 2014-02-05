@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using Microsoft.Win32;
 
 namespace GitCommands
@@ -747,7 +744,7 @@ namespace GitCommands
             get { return GetString("gitbindir", ""); }
             set
             {
-                var temp = value;
+                var temp = value.EnsureTrailingPathSeparator();
                 if (temp.Length > 0 && temp[temp.Length - 1] != Path.DirectorySeparatorChar)
                     temp += Path.DirectorySeparatorChar;
                 SetString("gitbindir", temp);

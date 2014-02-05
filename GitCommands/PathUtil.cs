@@ -29,7 +29,7 @@ namespace GitCommands
         /// <returns></returns>
         public static string EnsureTrailingPathSeparator(this string dirPath)
         {
-            if (!dirPath.IsNullOrEmpty() && !dirPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!dirPath.IsNullOrEmpty() && dirPath[dirPath.Length - 1] != Path.DirectorySeparatorChar)
             {
                 dirPath += Path.DirectorySeparatorChar;
             }
