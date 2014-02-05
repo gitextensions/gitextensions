@@ -43,7 +43,7 @@ namespace GitCommands
         public GitModule(string workingdir)
         {
             _superprojectInit = false;
-            _workingDir = PathUtil.EnsureTrailingPathSeparator(workingdir ?? "");
+            _workingDir = (workingdir ?? "").EnsureTrailingPathSeparator();
         }
 
         #region IGitCommands
@@ -278,12 +278,6 @@ namespace GitCommands
                 AppSettings.FormPullAction = LastPullAction;
         }
 
-        /// <summary>Trims whitespace and replaces '\' with '/'.</summary>
-        static string FixPath(string path)
-        {
-            return GitCommandHelpers.FixPath(path);
-        }
-
         /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
         public bool IsValidGitWorkingDir()
         {
@@ -385,7 +379,7 @@ namespace GitCommands
 
             startDir = startDir.Trim();
 
-            var pathSeparators = new[] { AppSettings.PathSeparator, AppSettings.PathSeparatorWrong };
+            var pathSeparators = new[] { AppSettings.PathSeparator, AppSettings.PosixPathSeparator };
             var len = startDir.Length;
 
             while (len > 0 && pathSeparators.Any(s => s == startDir[len - 1]))
@@ -635,7 +629,7 @@ namespace GitCommands
         public bool HandleConflictSelectSide(string fileName, string side)
         {
             Directory.SetCurrentDirectory(_workingDir);
-            fileName = FixPath(fileName);
+            fileName = fileName.ToPosixPath();
 
             side = GetSide(side);
 
@@ -652,7 +646,7 @@ namespace GitCommands
         public bool HandleConflictsSaveSide(string fileName, string saveAsFileName, string side)
         {
             Directory.SetCurrentDirectory(_workingDir);
-            fileName = FixPath(fileName);
+            fileName = fileName.ToPosixPath();
 
             side = GetSide(side);
 
@@ -740,7 +734,7 @@ namespace GitCommands
         {
             Directory.SetCurrentDirectory(_workingDir);
 
-            filename = FixPath(filename);
+            filename = filename.ToPosixPath();
 
             string[] fileNames =
                 {
@@ -796,7 +790,7 @@ namespace GitCommands
 
         public string[] GetConflictedFileNames(string filename)
         {
-            filename = FixPath(filename);
+            filename = filename.ToPosixPath();
 
             var fileNames = new string[3];
 
@@ -823,7 +817,7 @@ namespace GitCommands
 
         public string[] GetConflictedSubmoduleHashes(string filename)
         {
-            filename = FixPath(filename);
+            filename = filename.ToPosixPath();
 
             var hashes = new string[3];
 
@@ -856,7 +850,7 @@ namespace GitCommands
             if (command == null)
                 return new Dictionary<GitRef, GitItem>();
 
-            filename = FixPath(filename);
+            filename = filename.ToPosixPath();
 
             var tree = RunGitCmd(command, SystemEncoding);
 
@@ -1136,8 +1130,8 @@ namespace GitCommands
             if (SuperprojectModule == null)
                 return null;
             string submodulePath = WorkingDir.Substring(SuperprojectModule.WorkingDir.Length);
-            submodulePath = submodulePath.Replace(AppSettings.PathSeparator, AppSettings.PathSeparatorWrong).TrimEnd(
-                    AppSettings.PathSeparatorWrong);
+            submodulePath = submodulePath.ToPosixPath().TrimEnd(
+                    AppSettings.PosixPathSeparator);
             return submodulePath;
         }
 
@@ -1264,11 +1258,11 @@ namespace GitCommands
 
             if (!string.IsNullOrEmpty(superprojectPath))
             {
-                submodulePath = FixPath(currentPath.Substring(superprojectPath.Length));
+                submodulePath = currentPath.Substring(superprojectPath.Length).ToPosixPath();
                 var configFile = new ConfigFile(superprojectPath + ".gitmodules", true);
                 foreach (ConfigSection configSection in configFile.ConfigSections)
                 {
-                    if (configSection.GetPathValue("path") == FixPath(submodulePath))
+                    if (configSection.GetPathValue("path") == submodulePath.ToPosixPath())
                     {
                         submoduleName = configSection.SubSection;
                         return superprojectPath;
@@ -1341,14 +1335,14 @@ namespace GitCommands
 
         public string ResetFile(string file)
         {
-            file = FixPath(file);
+            file = file.ToPosixPath();
             return RunGitCmd("checkout-index --index --force -- \"" + file + "\"");
         }
 
 
         public string FormatPatch(string from, string to, string output, int start)
         {
-            output = FixPath(output);
+            output = output.ToPosixPath();
 
             var result = RunGitCmd("format-patch -M -C -B --start-number " + start + " \"" + from + "\"..\"" + to +
                                 "\" -o \"" + output + "\"");
@@ -1358,7 +1352,7 @@ namespace GitCommands
 
         public string FormatPatch(string from, string to, string output)
         {
-            output = FixPath(output);
+            output = output.ToPosixPath();
 
             var result = RunGitCmd("format-patch -M -C -B \"" + from + "\"..\"" + to + "\" -o \"" + output + "\"");
 
@@ -1408,7 +1402,7 @@ namespace GitCommands
 
         public static bool PathIsUrl(string path)
         {
-            return path.Contains(AppSettings.PathSeparator.ToString()) || path.Contains(AppSettings.PathSeparatorWrong.ToString());
+            return path.Contains(AppSettings.PathSeparator.ToString()) || path.Contains(AppSettings.PosixPathSeparator.ToString());
         }
 
         public string FetchCmd(string remote, string remoteBranch, string localBranch, bool? fetchTags = false)
@@ -1437,7 +1431,7 @@ namespace GitCommands
 
         private string GetFetchArgs(string remote, string remoteBranch, string localBranch, bool? fetchTags)
         {
-            remote = FixPath(remote);
+            remote = remote.ToPosixPath();
 
             //Remove spaces... 
             if (remoteBranch != null)
@@ -1559,7 +1553,7 @@ namespace GitCommands
             var process = new Lazy<Process>(() => Process.Start(startInfo));
             foreach (var file in files.Where(file => !file.IsNew))
             {
-                process.Value.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + FixPath(file.Name) + "\"");
+                process.Value.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + file.Name.ToPosixPath() + "\"");
             }
             if (process.IsValueCreated)
             {
@@ -1589,9 +1583,9 @@ namespace GitCommands
 
         private static void UpdateIndex(Lazy<Process> process, string filename)
         {
-            //process.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
+            //process.StandardInput.WriteLine("\"" + ToPosixPath(file.Name) + "\"");
             byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
-                                                      "\"" + FixPath(filename) + "\"" + process.Value.StandardInput.NewLine);
+                                                      "\"" + filename.ToPosixPath() + "\"" + process.Value.StandardInput.NewLine);
             process.Value.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
         }
 
@@ -1808,7 +1802,7 @@ namespace GitCommands
 
         public string AddRemote(string name, string path)
         {
-            var location = FixPath(path);
+            var location = path.ToPosixPath();
 
             if (string.IsNullOrEmpty(name))
                 return "Please enter a name.";
@@ -1890,13 +1884,13 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(fileName))
             {
                 fileB = fileName;
-                fileName = string.Concat("\"", FixPath(fileName), "\"");
+                fileName = string.Concat("\"", fileName.ToPosixPath(), "\"");
             }
 
             if (!string.IsNullOrEmpty(oldFileName))
             {
                 fileA = oldFileName;
-                oldFileName = string.Concat("\"", FixPath(oldFileName), "\"");
+                oldFileName = string.Concat("\"", oldFileName.ToPosixPath(), "\"");
             }
 
             if (fileA.IsNullOrEmpty())
@@ -1904,8 +1898,8 @@ namespace GitCommands
             else if (fileB.IsNullOrEmpty())
                 fileB = fileA;
 
-            from = FixPath(from);
-            to = FixPath(to);
+            from = from.ToPosixPath();
+            to = to.ToPosixPath();
             string commitRange = string.Empty;
             if (!to.IsNullOrEmpty())
                 commitRange = "\"" + to + "\"";
@@ -2110,9 +2104,9 @@ namespace GitCommands
 
         public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
-            fileName = string.Concat("\"", FixPath(fileName), "\"");
+            fileName = string.Concat("\"", fileName.ToPosixPath(), "\"");
             if (!string.IsNullOrEmpty(oldFileName))
-                oldFileName = string.Concat("\"", FixPath(oldFileName), "\"");
+                oldFileName = string.Concat("\"", oldFileName.ToPosixPath(), "\"");
 
             if (AppSettings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
@@ -2130,22 +2124,22 @@ namespace GitCommands
 
         public string StageFile(string file)
         {
-            return RunGitCmd("update-index --add" + " \"" + FixPath(file) + "\"");
+            return RunGitCmd("update-index --add" + " \"" + file.ToPosixPath() + "\"");
         }
 
         public string StageFileToRemove(string file)
         {
-            return RunGitCmd("update-index --remove" + " \"" + FixPath(file) + "\"");
+            return RunGitCmd("update-index --remove" + " \"" + file.ToPosixPath() + "\"");
         }
 
         public string UnstageFile(string file)
         {
-            return RunGitCmd("rm --cached \"" + FixPath(file) + "\"");
+            return RunGitCmd("rm --cached \"" + file.ToPosixPath() + "\"");
         }
 
         public string UnstageFileToRemove(string file)
         {
-            return RunGitCmd("reset HEAD -- \"" + FixPath(file) + "\"");
+            return RunGitCmd("reset HEAD -- \"" + file.ToPosixPath() + "\"");
         }
 
         /// <summary>Dirty but fast. This sometimes fails.</summary>
@@ -2234,7 +2228,7 @@ namespace GitCommands
                 Result = null
             };
 
-            remote = FixPath(remote);
+            remote = remote.ToPosixPath();
 
             var tree = GetTreeFromRemoteRefs(remote, tags, branches);
 
@@ -2481,8 +2475,8 @@ namespace GitCommands
 
         public GitBlame Blame(string filename, string from, string lines, Encoding encoding)
         {
-            from = FixPath(from);
-            filename = FixPath(filename);
+            from = from.ToPosixPath();
+            filename = filename.ToPosixPath();
             string blameCommand = string.Format("blame --porcelain -M -w -l{0} \"{1}\" -- \"{2}\"", lines != null ? " -L " + lines : "", from, filename);
             var itemsStrings =
                 RunCacheableCmd(
