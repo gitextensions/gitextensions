@@ -27,7 +27,6 @@ namespace GitCommands
     {
         //semi-constants
         public static readonly string GitExtensionsVersionString;
-        public static readonly char PathSeparator = '\\';
         public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
         public const string SettingsFileName = "GitExtensions.settings";
@@ -60,11 +59,6 @@ namespace GitCommands
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
             if (version.Build > 0)
                 GitExtensionsVersionString += '.' + version.Build.ToString();
-            if (!EnvUtils.RunningOnWindows())
-            {
-                PathSeparator = '/';
-                PosixPathSeparator = '\\';
-            }
 
             GitLog = new CommandLogger();
 
@@ -754,8 +748,8 @@ namespace GitCommands
             set
             {
                 var temp = value;
-                if (temp.Length > 0 && temp[temp.Length - 1] != PathSeparator)
-                    temp += PathSeparator;
+                if (temp.Length > 0 && temp[temp.Length - 1] != Path.DirectorySeparatorChar)
+                    temp += Path.DirectorySeparatorChar;
                 SetString("gitbindir", temp);
 
                 //if (string.IsNullOrEmpty(_gitBinDir))

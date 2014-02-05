@@ -231,7 +231,7 @@ namespace GitUI.CommandsDialogs
                 if (extension.Length <= 1)
                     return false;
 
-                string dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts") + AppSettings.PathSeparator;
+                string dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts") + Path.DirectorySeparatorChar;
                 if (Directory.Exists(dir))
                 {
                     string mergeScript = "";
@@ -757,8 +757,8 @@ namespace GitUI.CommandsDialogs
         
         private static string GetShortFileName(string fileName)
         {
-            if (fileName.Contains(AppSettings.PathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PathSeparator) + 1);
+            if (fileName.Contains(Path.DirectorySeparatorChar.ToString()) && fileName.LastIndexOf(Path.DirectorySeparatorChar) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
             if (fileName.Contains(AppSettings.PosixPathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PosixPathSeparator.ToString()) < fileName.Length)
                 fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PosixPathSeparator) + 1);
             return fileName;
@@ -766,8 +766,8 @@ namespace GitUI.CommandsDialogs
 
         private static string GetDirectoryFromFileName(string fileName)
         {
-            if (fileName.Contains(AppSettings.PathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PathSeparator));
+            if (fileName.Contains(Path.DirectorySeparatorChar.ToString()) && fileName.LastIndexOf(Path.DirectorySeparatorChar) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(Path.DirectorySeparatorChar));
             if (fileName.Contains(AppSettings.PosixPathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PosixPathSeparator.ToString()) < fileName.Length)
                 fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PosixPathSeparator));
             return fileName;

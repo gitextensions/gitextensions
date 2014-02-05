@@ -290,7 +290,7 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            string dirPath = dir + AppSettings.PathSeparator;
+            string dirPath = dir + Path.DirectorySeparatorChar;
             string path = dirPath + ".git";
 
             if (Directory.Exists(path) || File.Exists(path))
@@ -319,15 +319,15 @@ namespace GitCommands
                     {
                         string path = line.Substring(7).Trim().Replace('/', '\\');
                         if (Path.IsPathRooted(path))
-                            return path + AppSettings.PathSeparator.ToString();
+                            return path + Path.DirectorySeparatorChar;
                         else
                             return
                                 Path.GetFullPath(Path.Combine(repositoryPath,
-                                    path + AppSettings.PathSeparator.ToString()));
+                                    path + Path.DirectorySeparatorChar));
                     }
                 }
             }
-            gitpath = gitpath + AppSettings.PathSeparator.ToString();
+            gitpath = gitpath + Path.DirectorySeparatorChar;
             if (!Directory.Exists(gitpath))
                 return repositoryPath;
             return gitpath;
@@ -379,13 +379,13 @@ namespace GitCommands
 
             startDir = startDir.Trim();
 
-            var pathSeparators = new[] { AppSettings.PathSeparator, AppSettings.PosixPathSeparator };
+            var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
             var len = startDir.Length;
 
             while (len > 0 && pathSeparators.Any(s => s == startDir[len - 1]))
                 len--;
 
-            startDir = startDir.Substring(0, len) + AppSettings.PathSeparator;
+            startDir = startDir.Substring(0, len) + Path.DirectorySeparatorChar;
 
             var dir = startDir;
 
@@ -394,7 +394,7 @@ namespace GitCommands
                 dir = dir.Substring(0, dir.LastIndexOfAny(pathSeparators));
 
                 if (IsValidGitWorkingDir(dir))
-                    return dir + AppSettings.PathSeparator;
+                    return dir + Path.DirectorySeparatorChar;
             }
             return startDir;
         }
@@ -1152,7 +1152,7 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string localPath)
         {
-            string dir = Path.Combine(_workingDir, localPath + AppSettings.PathSeparator);
+            string dir = Path.Combine(_workingDir, localPath + Path.DirectorySeparatorChar);
             return Path.GetFullPath(dir); // fix slashes
         }
 
@@ -1225,9 +1225,9 @@ namespace GitCommands
                     if (string.IsNullOrEmpty(path))
                         break;
                     if (File.Exists(Path.Combine(path, ".gitmodules")) &&
-                        IsValidGitWorkingDir(path + AppSettings.PathSeparator))
+                        IsValidGitWorkingDir(path + Path.DirectorySeparatorChar))
                     {
-                        superprojectPath = path + AppSettings.PathSeparator;
+                        superprojectPath = path + Path.DirectorySeparatorChar;
                         break;
                     }
                     // Check upper directory
@@ -1402,7 +1402,7 @@ namespace GitCommands
 
         public static bool PathIsUrl(string path)
         {
-            return path.Contains(AppSettings.PathSeparator.ToString()) || path.Contains(AppSettings.PosixPathSeparator.ToString());
+            return path.Contains(Path.DirectorySeparatorChar) || path.Contains(AppSettings.PosixPathSeparator.ToString());
         }
 
         public string FetchCmd(string remote, string remoteBranch, string localBranch, bool? fetchTags = false)
@@ -1468,12 +1468,12 @@ namespace GitCommands
         public string GetRebaseDir()
         {
             string gitDirectory = GetGitDirectory();
-            if (Directory.Exists(gitDirectory + "rebase-merge" + AppSettings.PathSeparator.ToString()))
-                return gitDirectory + "rebase-merge" + AppSettings.PathSeparator.ToString();
-            if (Directory.Exists(gitDirectory + "rebase-apply" + AppSettings.PathSeparator.ToString()))
-                return gitDirectory + "rebase-apply" + AppSettings.PathSeparator.ToString();
-            if (Directory.Exists(gitDirectory + "rebase" + AppSettings.PathSeparator.ToString()))
-                return gitDirectory + "rebase" + AppSettings.PathSeparator.ToString();
+            if (Directory.Exists(gitDirectory + "rebase-merge" + Path.DirectorySeparatorChar))
+                return gitDirectory + "rebase-merge" + Path.DirectorySeparatorChar;
+            if (Directory.Exists(gitDirectory + "rebase-apply" + Path.DirectorySeparatorChar))
+                return gitDirectory + "rebase-apply" + Path.DirectorySeparatorChar;
+            if (Directory.Exists(gitDirectory + "rebase" + Path.DirectorySeparatorChar))
+                return gitDirectory + "rebase" + Path.DirectorySeparatorChar;
 
             return "";
         }
@@ -1695,7 +1695,7 @@ namespace GitCommands
             foreach (var fullFileName in files)
             {
                 int n;
-                var file = fullFileName.Substring(fullFileName.LastIndexOf(AppSettings.PathSeparator.ToString()) + 1);
+                var file = fullFileName.Substring(fullFileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
                 if (!int.TryParse(file, out n))
                     continue;
 
