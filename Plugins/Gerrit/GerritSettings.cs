@@ -61,7 +61,7 @@ namespace Gerrit
             if (aModule == null)
                 throw new ArgumentNullException("aModule");
 
-            string path = aModule.GitWorkingDir + ".gitreview";
+            string path = aModule.WorkingDir + ".gitreview";
 
             var result = new GerritSettings(aModule);
 

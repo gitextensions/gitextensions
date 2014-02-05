@@ -212,7 +212,7 @@ namespace Gerrit
 
             _NO_TRANSLATE_Change.Select();
 
-            Text = string.Concat(_downloadGerritChangeCaption.Text, " (", Module.GitWorkingDir, ")");
+            Text = string.Concat(_downloadGerritChangeCaption.Text, " (", Module.WorkingDir, ")");
         }
 
         private void AddRemoteClick(object sender, EventArgs e)

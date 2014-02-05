@@ -68,8 +68,8 @@ namespace Gerrit
         {
             try
             {
-                if (File.Exists(Module.GitWorkingDir + ".gitreview"))
-                    _NO_TRANSLATE_GitReviewEdit.ViewFile(Module.GitWorkingDir + ".gitreview");
+                if (File.Exists(Module.WorkingDir + ".gitreview"))
+                    _NO_TRANSLATE_GitReviewEdit.ViewFile(Module.WorkingDir + ".gitreview");
             }
             catch (Exception ex)
             {
@@ -91,7 +91,7 @@ namespace Gerrit
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        Module.GitWorkingDir + ".gitreview",
+                        Module.WorkingDir + ".gitreview",
                         x =>
                         {
                             var fileContent = _NO_TRANSLATE_GitReviewEdit.GetText();

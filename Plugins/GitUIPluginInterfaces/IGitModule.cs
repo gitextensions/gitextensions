@@ -36,7 +36,7 @@ namespace GitUIPluginInterfaces
         string RunBatchFile(string batchFile);
 
         /// <summary>Gets the directory which contains the git repository.</summary>
-        string GitWorkingDir { get; }
+        string WorkingDir { get; }
 
         /// <summary>Gets the ".git" directory path.</summary>
         string GetGitDirectory();
