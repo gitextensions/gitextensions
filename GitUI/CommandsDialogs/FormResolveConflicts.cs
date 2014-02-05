@@ -231,8 +231,7 @@ namespace GitUI.CommandsDialogs
                 if (extension.Length <= 1)
                     return false;
 
-                string dir = Path.GetDirectoryName(Application.ExecutablePath) +
-                    AppSettings.PathSeparator + "Diff-Scripts" + AppSettings.PathSeparator;
+                string dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts") + AppSettings.PathSeparator;
                 if (Directory.Exists(dir))
                 {
                     string mergeScript = "";
