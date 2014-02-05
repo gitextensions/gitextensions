@@ -303,7 +303,7 @@ namespace GitUI.CommandsDialogs
                 if (string.IsNullOrEmpty(orgFileName))
                     orgFileName = FileName;
 
-                string fullName = Module.WorkingDir + orgFileName.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator);
+                string fullName = Module.WorkingDir + orgFileName.ToNativePath();
 
                 using (var fileDialog = new SaveFileDialog
                 {

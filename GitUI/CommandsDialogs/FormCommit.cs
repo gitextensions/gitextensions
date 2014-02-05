@@ -19,7 +19,6 @@ using GitUI.Script;
 using PatchApply;
 using ResourceManager.Translation;
 using Timer = System.Windows.Forms.Timer;
-using GitCommands.Config;
 
 namespace GitUI.CommandsDialogs
 {
@@ -1515,7 +1514,7 @@ namespace GitUI.CommandsDialogs
             //Save last commit message in settings. This way it can be used in multiple repositories.
             AppSettings.LastCommitMessage = commitMessageText;
 
-            var path = Module.WorkingDirGitDir() + AppSettings.PathSeparator.ToString() + "COMMITMESSAGE";
+            var path = Path.Combine(Module.GetGitDirectory(), "COMMITMESSAGE");
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
@@ -1636,7 +1635,7 @@ namespace GitUI.CommandsDialogs
                 if (!String.IsNullOrEmpty(from) && !String.IsNullOrEmpty(to))
                 {
                     sb.AppendLine("Submodule " + item.Key + ":");
-                    GitModule module = new GitModule(Module.WorkingDir + item.Value + AppSettings.PathSeparator);
+                    GitModule module = new GitModule(Module.WorkingDir + item.Value.EnsureTrailingPathSeparator());
                     string log = module.RunGitCmd(
                          string.Format("log --pretty=format:\"    %m %h - %s\" --no-merges {0}...{1}", from, to));
                     if (log.Length != 0)
@@ -1682,7 +1681,7 @@ namespace GitUI.CommandsDialogs
             var item = list.SelectedItem;
             var fileName = item.Name;
 
-            Process.Start((Path.Combine(Module.WorkingDir, fileName)).Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+            Process.Start((Path.Combine(Module.WorkingDir, fileName)).ToNativePath());
         }
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
@@ -1697,7 +1696,7 @@ namespace GitUI.CommandsDialogs
             var item = list.SelectedItem;
             var fileName = item.Name;
 
-            OsShellUtil.OpenAs(Module.WorkingDir + fileName.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+            OsShellUtil.OpenAs(Module.WorkingDir + fileName.ToNativePath());
         }
 
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
@@ -1717,7 +1716,7 @@ namespace GitUI.CommandsDialogs
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).ToNativePath());
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -2140,7 +2139,7 @@ namespace GitUI.CommandsDialogs
 
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            GitUICommands submodulCommands = new GitUICommands(Module.WorkingDir + _currentItem.Name + AppSettings.PathSeparator.ToString());
+            GitUICommands submodulCommands = new GitUICommands(Module.WorkingDir + _currentItem.Name.EnsureTrailingPathSeparator());
             submodulCommands.StartCommitDialog(this, false);
             Initialize();
         }
@@ -2150,7 +2149,7 @@ namespace GitUI.CommandsDialogs
             Process process = new Process();
             process.StartInfo.FileName = Application.ExecutablePath;
             process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name + AppSettings.PathSeparator.ToString();//
+            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name.EnsureTrailingPathSeparator();
             process.Start();
         }
 
@@ -2328,7 +2327,7 @@ namespace GitUI.CommandsDialogs
             foreach (var item in list.SelectedItems)
             {
                 var fileNames = new StringBuilder();
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).ToNativePath());
 
                 string filePath = fileNames.ToString();
                 if (File.Exists(filePath))

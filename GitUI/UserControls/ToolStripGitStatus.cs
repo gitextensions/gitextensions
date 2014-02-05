@@ -177,7 +177,7 @@ namespace GitUI
 
         private void WorkTreeChanged(object sender, FileSystemEventArgs e)
         {
-            var fileName = GitCommandHelpers.FixPath(e.FullPath.Substring(_workTreeWatcher.Path.Length));
+            var fileName = e.FullPath.Substring(_workTreeWatcher.Path.Length).ToPosixPath();
             if (_ignoredFiles.Contains(fileName))
                 return;
 

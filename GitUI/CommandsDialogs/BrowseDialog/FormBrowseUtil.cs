@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public static string GetFullPathFromFilename(GitModule gitModule, string filename)
         {
-            var filePath = Path.Combine(gitModule.WorkingDir, filename.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+            var filePath = Path.Combine(gitModule.WorkingDir, filename.ToNativePath());
 
             return filePath;
         }

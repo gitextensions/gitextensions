@@ -18,7 +18,7 @@ namespace GitCommands
             string authorsFile, int fromRevision, 
             string trunk, string tags, string branches)
         {
-            toPath = GitCommandHelpers.FixPath(toPath);
+            toPath = toPath.ToPosixPath();
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("{0} clone \"{1}\" \"{2}\"", SvnPrefix, fromSvn, toPath);
             if (!string.IsNullOrEmpty(username))
@@ -84,12 +84,12 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            string path = dir + AppSettings.PathSeparator.ToString() + ".git" + AppSettings.PathSeparator.ToString() + "svn";
+            string path = Path.Combine(GitModule.GetGitDirectory(dir), "svn");
             if (Directory.Exists(path) || File.Exists(path))
                 return true;
 
             return !dir.Contains(".git") &&
-                   Directory.Exists(dir + AppSettings.PathSeparator.ToString() + "svn");
+                   Directory.Exists(Path.Combine(dir, "svn"));
         }
     }
 }
