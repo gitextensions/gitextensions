@@ -23,8 +23,11 @@ namespace GitUI
                                    ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
                                    : new FileInfo[] { };
 
-                var pluginFiles = plugins.Where(pluginFile => !pluginFile.Name.StartsWith("System.") &&
-                    !pluginFile.Name.StartsWith("ICSharpCode."));
+                var pluginFiles = plugins.Where(pluginFile => 
+                    !pluginFile.Name.StartsWith("System.") &&
+                    !pluginFile.Name.StartsWith("ICSharpCode.") &&
+                    !pluginFile.Name.StartsWith("Microsoft."));
+
                 foreach (var pluginFile in pluginFiles)
                 {
                     try
