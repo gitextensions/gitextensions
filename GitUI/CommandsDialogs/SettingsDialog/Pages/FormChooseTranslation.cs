@@ -46,8 +46,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                                Width = imageWidth,
                                                BackgroundImageLayout = ImageLayout.Stretch
                                            };
-                if (File.Exists(Translator.GetTranslationDir() + AppSettings.PathSeparator + translation + ".gif"))
-                    translationImage.BackgroundImage = Image.FromFile(Translator.GetTranslationDir() + AppSettings.PathSeparator + translation + ".gif");
+                if (File.Exists(Path.Combine(Translator.GetTranslationDir(), translation + ".gif")))
+                    translationImage.BackgroundImage = Image.FromFile(Path.Combine(Translator.GetTranslationDir(), translation + ".gif"));
                 else
                     translationImage.BackColor = Color.Black;
 

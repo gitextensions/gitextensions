@@ -84,12 +84,12 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            string path = dir + AppSettings.PathSeparator.ToString() + ".git" + AppSettings.PathSeparator.ToString() + "svn";
+            string path = Path.Combine(GitModule.GetGitDirectory(dir), "svn");
             if (Directory.Exists(path) || File.Exists(path))
                 return true;
 
             return !dir.Contains(".git") &&
-                   Directory.Exists(dir + AppSettings.PathSeparator.ToString() + "svn");
+                   Directory.Exists(Path.Combine(dir, "svn"));
         }
     }
 }

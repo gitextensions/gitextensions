@@ -1226,19 +1226,18 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(currentPath))
             {
                 string path = Path.GetDirectoryName(currentPath);
-                if (!string.IsNullOrEmpty(path))
+                for (int i = 0; i < 5; i++)
                 {
-                    for (int i = 0; i < 3; i++)
+                    if (string.IsNullOrEmpty(path))
+                        break;
+                    if (File.Exists(Path.Combine(path, ".gitmodules")) &&
+                        IsValidGitWorkingDir(path + AppSettings.PathSeparator))
                     {
-                        if (File.Exists(path + AppSettings.PathSeparator.ToString() + ".gitmodules") &&
-                            IsValidGitWorkingDir(path + AppSettings.PathSeparator.ToString()))
-                        {
-                            superprojectPath = path + AppSettings.PathSeparator.ToString();
-                            break;
-                        }
-                        // Check upper directory
-                        path = Path.GetDirectoryName(path);
+                        superprojectPath = path + AppSettings.PathSeparator;
+                        break;
                     }
+                    // Check upper directory
+                    path = Path.GetDirectoryName(path);
                 }
             }
 
@@ -1598,7 +1597,7 @@ namespace GitCommands
 
         public bool InTheMiddleOfBisect()
         {
-            return File.Exists(GetGitDirectory() + AppSettings.PathSeparator.ToString() + "BISECT_START");
+            return File.Exists(Path.Combine(GetGitDirectory(), "BISECT_START"));
         }
 
         public bool InTheMiddleOfRebase()
@@ -1785,8 +1784,8 @@ namespace GitCommands
 
             if (useExplicitCommitMessage)
             {
-                var path = GetGitDirectory() + AppSettings.PathSeparator.ToString() + "COMMITMESSAGE\"";
-                command += " -F \"" + path;
+                var path = Path.Combine(GetGitDirectory(), "COMMITMESSAGE");
+                command += " -F \"" + path + "\"";
             }
 
             return command;
