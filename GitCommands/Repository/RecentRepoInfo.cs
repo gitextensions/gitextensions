@@ -204,12 +204,7 @@ namespace GitCommands.Repository
         {
             if (l == null)
                 return r;
-            else
-                if (l.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                    return string.Join("", l, r);
-                else
-                    return string.Join(Path.DirectorySeparatorChar.ToString(), l, r);
-
+            return Path.Combine(l, r);
         }
 
         private void AddToOrderedMiddleDots(SortedList<string, List<RecentRepoInfo>> orderedRepos, RecentRepoInfo repoInfo)
