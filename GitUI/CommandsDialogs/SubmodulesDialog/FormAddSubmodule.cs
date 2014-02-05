@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -74,13 +75,13 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         private void DirectoryTextUpdate(object sender, EventArgs e)
         {
             var path = Directory.Text;
-            path = path.TrimEnd(new[] { AppSettings.PathSeparator, AppSettings.PosixPathSeparator });
+            path = path.TrimEnd(new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator });
 
             if (path.EndsWith(".git"))
                 path = path.Replace(".git", "");
 
-            if (path.Contains(AppSettings.PathSeparator.ToString()) || path.Contains(AppSettings.PosixPathSeparator.ToString()))
-                LocalPath.Text = path.Substring(path.LastIndexOfAny(new[] { AppSettings.PathSeparator, AppSettings.PosixPathSeparator }) + 1);
+            if (path.Contains(Path.DirectorySeparatorChar.ToString()) || path.Contains(AppSettings.PosixPathSeparator.ToString()))
+                LocalPath.Text = path.Substring(path.LastIndexOfAny(new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator }) + 1);
         }
     }
 }

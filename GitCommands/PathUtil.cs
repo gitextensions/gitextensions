@@ -10,13 +10,13 @@ namespace GitCommands
         /// <summary>Replaces native path separator with posix path separator.</summary>
         public static string ToPosixPath(this string path)
         {
-            return path.Replace(AppSettings.PathSeparator, AppSettings.PosixPathSeparator);
+            return path.Replace(Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator);
         }
 
         /// <summary>Replaces '\' with '/'.</summary>
         public static string ToNativePath(this string path)
         {
-            return path.Replace(AppSettings.PosixPathSeparator, AppSettings.PathSeparator);
+            return path.Replace(AppSettings.PosixPathSeparator, Path.DirectorySeparatorChar);
         }
 
         /// <summary>
