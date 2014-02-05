@@ -7,6 +7,18 @@ namespace GitCommands
 {
     public static class PathUtil
     {
+        /// <summary>Replaces native path separator with posix path separator.</summary>
+        public static string ToPosixPath(this string path)
+        {
+            return path.Replace(AppSettings.PathSeparator, AppSettings.PosixPathSeparator);
+        }
+
+        /// <summary>Replaces '\' with '/'.</summary>
+        public static string ToNativePath(this string path)
+        {
+            return path.Replace(AppSettings.PosixPathSeparator, AppSettings.PathSeparator);
+        }
+
         /// <summary>
         /// Code guideline: "A directory path should always end with / or \.
         /// Better use Path.Combine instead of Setting.PathSeparator"
@@ -15,7 +27,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="dirPath"></param>
         /// <returns></returns>
-        public static string EnsureTrailingPathSeparator(string dirPath)
+        public static string EnsureTrailingPathSeparator(this string dirPath)
         {
             if (!dirPath.IsNullOrEmpty() && !dirPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
             {

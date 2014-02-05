@@ -1172,7 +1172,7 @@ namespace GitUI.CommandsDialogs
             if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
                 fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
 
-            fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+            fileName = (Path.GetTempPath() + fileName).ToNativePath();
             Module.SaveBlobAs(fileName, gitItem.Guid);
             return fileName;
         }
@@ -2069,7 +2069,7 @@ namespace GitUI.CommandsDialogs
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append(Path.Combine(Module.WorkingDir, item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                fileNames.Append(Path.Combine(Module.WorkingDir, item.Name).ToNativePath());
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -2136,7 +2136,7 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var fileName = Path.Combine(Module.WorkingDir, (gitItem).FileName);
-            OsShellUtil.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            OsShellUtil.OpenAs(fileName.ToNativePath());
         }
 
         private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -3010,8 +3010,8 @@ namespace GitUI.CommandsDialogs
                     {
                         parentModule = supersuperproject;
                         localpath = Module.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                        localpath = localpath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
-                                Settings.PathSeparatorWrong);
+                        localpath = localpath.ToPosixPath().TrimEnd(
+                                Settings.PosixPathSeparator);
                         name = name + localpath;
                     }
                     else
@@ -3028,8 +3028,8 @@ namespace GitUI.CommandsDialogs
                 if (submodules.Any())
                 {
                     string localpath = Module.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                    localpath = localpath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
-                            Settings.PathSeparatorWrong);
+                    localpath = localpath.ToPosixPath().TrimEnd(
+                            Settings.PosixPathSeparator);
 
                     foreach (var submodule in submodules)
                     {

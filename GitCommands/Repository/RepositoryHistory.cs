@@ -42,7 +42,7 @@ namespace GitCommands.Repository
 
             if (!Repository.PathIsUrl(repo))
             {
-                repo = repo.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator);
+                repo = repo.ToNativePath();
                 if (!repo.EndsWith(AppSettings.PathSeparator.ToString()))
                 repo += AppSettings.PathSeparator.ToString();
             }
