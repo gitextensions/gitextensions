@@ -743,7 +743,7 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
             string fileName = GetFileName();
-            fileName = GetShortFileName(fileName);
+            fileName = PathUtil.GetFileName(fileName);
 
             fileName = Path.GetTempPath() + fileName;
 
@@ -752,25 +752,6 @@ namespace GitUI.CommandsDialogs
 
             OsShellUtil.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
-        }
-
-        
-        private static string GetShortFileName(string fileName)
-        {
-            if (fileName.Contains(Path.DirectorySeparatorChar.ToString()) && fileName.LastIndexOf(Path.DirectorySeparatorChar) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-            if (fileName.Contains(AppSettings.PosixPathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PosixPathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PosixPathSeparator) + 1);
-            return fileName;
-        }
-
-        private static string GetDirectoryFromFileName(string fileName)
-        {
-            if (fileName.Contains(Path.DirectorySeparatorChar.ToString()) && fileName.LastIndexOf(Path.DirectorySeparatorChar) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(Path.DirectorySeparatorChar));
-            if (fileName.Contains(AppSettings.PosixPathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PosixPathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PosixPathSeparator));
-            return fileName;
         }
 
         private void ContextOpenRemoteWith_Click(object sender, EventArgs e)
@@ -795,12 +776,12 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
             string fileName = GetFileName();
-            fileName = GetShortFileName(fileName);
+            fileName = PathUtil.GetFileName(fileName);
 
             using (var fileDialog = new SaveFileDialog
                                  {
                                      FileName = fileName,
-                                     InitialDirectory = Module.WorkingDir + GetDirectoryFromFileName(GetFileName()),
+                                     InitialDirectory = Module.WorkingDir + PathUtil.GetDirectoryName(GetFileName()),
                                      AddExtension = true
                                  })
             {

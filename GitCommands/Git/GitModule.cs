@@ -378,25 +378,16 @@ namespace GitCommands
             if (string.IsNullOrEmpty(startDir))
                 return "";
 
-            startDir = startDir.Trim();
+            var dir = startDir.Trim();
 
-            var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
-            var len = startDir.Length;
-
-            while (len > 0 && pathSeparators.Any(s => s == startDir[len - 1]))
-                len--;
-
-            startDir = startDir.Substring(0, len).EnsureTrailingPathSeparator();
-
-            var dir = startDir;
-
-            while (dir.LastIndexOfAny(pathSeparators) > 0)
+            do
             {
-                dir = dir.Substring(0, dir.LastIndexOfAny(pathSeparators));
-
-                if (IsValidGitWorkingDir(dir))
+               if (IsValidGitWorkingDir(dir))
                     return dir.EnsureTrailingPathSeparator();
+
+                dir = PathUtil.GetDirectoryName(dir);
             }
+            while (!string.IsNullOrEmpty(dir));
             return startDir;
         }
 
@@ -1131,8 +1122,7 @@ namespace GitCommands
             if (SuperprojectModule == null)
                 return null;
             string submodulePath = WorkingDir.Substring(SuperprojectModule.WorkingDir.Length);
-            submodulePath = submodulePath.ToPosixPath().TrimEnd(
-                    AppSettings.PosixPathSeparator);
+            submodulePath = PathUtil.GetDirectoryName(submodulePath.ToPosixPath());
             return submodulePath;
         }
 
@@ -1696,7 +1686,7 @@ namespace GitCommands
             foreach (var fullFileName in files)
             {
                 int n;
-                var file = fullFileName.Substring(fullFileName.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                var file = PathUtil.GetFileName(fullFileName);
                 if (!int.TryParse(file, out n))
                     continue;
 
