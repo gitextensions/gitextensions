@@ -1635,7 +1635,7 @@ namespace GitUI.CommandsDialogs
                 if (!String.IsNullOrEmpty(from) && !String.IsNullOrEmpty(to))
                 {
                     sb.AppendLine("Submodule " + item.Key + ":");
-                    GitModule module = new GitModule(Module.WorkingDir + item.Value + AppSettings.PathSeparator);
+                    GitModule module = new GitModule(Module.WorkingDir + item.Value + Path.DirectorySeparatorChar);
                     string log = module.RunGitCmd(
                          string.Format("log --pretty=format:\"    %m %h - %s\" --no-merges {0}...{1}", from, to));
                     if (log.Length != 0)
@@ -2139,7 +2139,7 @@ namespace GitUI.CommandsDialogs
 
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            GitUICommands submodulCommands = new GitUICommands(Module.WorkingDir + _currentItem.Name + AppSettings.PathSeparator.ToString());
+            GitUICommands submodulCommands = new GitUICommands(Module.WorkingDir + _currentItem.Name + Path.DirectorySeparatorChar);
             submodulCommands.StartCommitDialog(this, false);
             Initialize();
         }
@@ -2149,7 +2149,7 @@ namespace GitUI.CommandsDialogs
             Process process = new Process();
             process.StartInfo.FileName = Application.ExecutablePath;
             process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name + AppSettings.PathSeparator.ToString();//
+            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name + Path.DirectorySeparatorChar;//
             process.Start();
         }
 

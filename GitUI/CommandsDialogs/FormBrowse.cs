@@ -1315,7 +1315,7 @@ namespace GitUI.CommandsDialogs
                 Process process = new Process();
                 process.StartInfo.FileName = Application.ExecutablePath;
                 process.StartInfo.Arguments = "browse";
-                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName + Settings.PathSeparator.ToString());
+                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName + Path.DirectorySeparatorChar);
                 process.Start();
             }
         }
