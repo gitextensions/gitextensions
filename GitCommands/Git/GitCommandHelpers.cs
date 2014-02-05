@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Utils;
 using JetBrains.Annotations;

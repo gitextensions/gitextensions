@@ -14,7 +14,7 @@ namespace Gource
             InitializeComponent();
             PathToGource = pathToGource;
             GitUIArgs = gitUIArgs;
-            GitWorkingDir = gitUIArgs.GitModule.GitWorkingDir;
+            GitWorkingDir = gitUIArgs.GitModule.WorkingDir;
             AvatarsDir = gitUIArgs.GitModule.GravatarCacheDir;
             GourceArguments = gourceArguments;
 

@@ -90,7 +90,7 @@ namespace Gerrit
 
             _gitReviewMenuItem.Enabled = validWorkingDir;
 
-            bool showGerritItems = validWorkingDir && File.Exists(e.GitModule.GitWorkingDir + ".gitreview");
+            bool showGerritItems = validWorkingDir && File.Exists(e.GitModule.WorkingDir + ".gitreview");
 
             foreach (var item in _gerritMenuItems)
             {

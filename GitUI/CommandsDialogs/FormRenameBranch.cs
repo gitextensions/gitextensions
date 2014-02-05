@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                var renameBranchResult = Module.Rename(oldName, newName);
+                var renameBranchResult = Module.RenameBranch(oldName, newName);
 
                 if (!string.IsNullOrEmpty(renameBranchResult))
                     MessageBox.Show(this, _branchRenameFailed.Text + Environment.NewLine + renameBranchResult, Text,
