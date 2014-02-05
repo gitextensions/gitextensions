@@ -27,14 +27,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Bitmap icon = GetRepositoryIcon(repository);
 
 
-            if (GitCommands.AppSettings.DashboardShowCurrentBranch)
+            if (AppSettings.DashboardShowCurrentBranch)
             {
                 _branchNameLoader = new AsyncLoader();
                 _branchNameLoader.Load(() =>
                 {
                     if (!GitCommands.GitModule.IsBareRepository(repository.Path))
                     {
-                        return GitCommands.GitModule.GetSelectedBranchFast(repository.Path);
+                        return GitModule.GetSelectedBranchFast(repository.Path);
                     }
                     return string.Empty;
                 },
@@ -159,10 +159,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
         }
 
-		private void OnKeyDown(object sender, PreviewKeyDownEventArgs e)
-		{
-			if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
-				OnClick(e);
-		}
+        private void OnKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
+                OnClick(e);
+        }
     }
 }
