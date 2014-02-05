@@ -3010,8 +3010,7 @@ namespace GitUI.CommandsDialogs
                     {
                         parentModule = supersuperproject;
                         localpath = Module.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                        localpath = localpath.ToPosixPath().TrimEnd(
-                                Settings.PosixPathSeparator);
+                        localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
                         name = name + localpath;
                     }
                     else
@@ -3028,8 +3027,7 @@ namespace GitUI.CommandsDialogs
                 if (submodules.Any())
                 {
                     string localpath = Module.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                    localpath = localpath.ToPosixPath().TrimEnd(
-                            Settings.PosixPathSeparator);
+                    localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
 
                     foreach (var submodule in submodules)
                     {
