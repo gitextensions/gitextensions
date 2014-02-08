@@ -34,7 +34,7 @@ namespace GitUI.UserControls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.treeMain = new System.Windows.Forms.TreeView();
+            this.treeMain = new ChbxTreeView();
             this.menuMain = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnExpandAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,6 +96,7 @@ namespace GitUI.UserControls
             // 
             // treeMain
             // 
+            this.treeMain.CheckBoxes = true;
             this.treeMain.ContextMenuStrip = this.menuMain;
             this.treeMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeMain.FullRowSelect = true;
@@ -104,6 +105,7 @@ namespace GitUI.UserControls
             this.treeMain.ShowNodeToolTips = true;
             this.treeMain.Size = new System.Drawing.Size(200, 350);
             this.treeMain.TabIndex = 3;
+            this.treeMain.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeMain_AfterCheck);
             this.treeMain.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnNodeSelected);
             // 
             // menuMain
@@ -485,7 +487,7 @@ namespace GitUI.UserControls
 
         #endregion
 
-        private TreeView treeMain;
+        private ChbxTreeView treeMain;
         private ContextMenuStrip menuBranch;
         private ToolStripMenuItem mnubtnBranchCheckout;
         private ToolStripMenuItem mnubtnBranchDelete;

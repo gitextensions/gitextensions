@@ -217,6 +217,9 @@
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </Compile>
     <Compile Include="CommitInfo\CommandEventArgs.cs" />
+    <Compile Include="UserControls\ChbxTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UserControls\CommitPickerSmallControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

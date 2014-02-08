@@ -149,6 +149,7 @@ namespace GitUI.CommandsDialogs
                 RevisionGrid.UICommandsSource = this;
                 repoObjectsTree.UICommandsSource = this;
             }
+            repoObjectsTree.RevisionGrid = RevisionGrid;
             Repositories.LoadRepositoryHistoryAsync();
             Task.Factory.StartNew(PluginLoader.Load)
                 .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());

@@ -16,6 +16,7 @@ namespace GitUI.UserControls
         List<Tree> rootNodes = new List<Tree>();
         /// <summary>Image key for a head branch.</summary>
         static readonly string headBranchKey = Guid.NewGuid().ToString();
+        public RevisionGrid RevisionGrid { private get; set; }
 
         public RepoObjectsTree()
         {
@@ -99,6 +100,29 @@ namespace GitUI.UserControls
                     previousTask.ContinueWith((t) => task.Start(Task.Factory.Scheduler));
                 }
             }
+        }
+
+        private void treeMain_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            if (e.Action != TreeViewAction.Unknown)
+            {
+                if (e.Node.Nodes.Count > 0)
+                {
+                    e.Node.CheckAllChildNodes(e.Node.Checked);
+                }
+                e.Node.CheckParentNodes();
+                List<TreeNode> nodes = new List<TreeNode>();
+                treeMain.listNodes(nodes,rootNodes[0].TreeViewNode);
+                ApplyTreeBranchFilter(nodes.ConvertAll<string>(n => (n.Tag as BranchNode).FullPath), true);
+            }
+        }
+
+
+        public void ApplyTreeBranchFilter(List<string> checkedNodes, bool refresh)
+        {
+            bool success = RevisionGrid.SetAndApplyBranchFilter(checkedNodes.Join(' '));
+            if (success && refresh)
+                RevisionGrid.ForceRefreshRevisions();
         }
     }
 }

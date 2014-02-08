@@ -118,6 +118,7 @@ namespace GitUI.UserControls
                 Nodes = new Nodes(this, null);
                 UICommandsSource = uiCommands;
                 TreeViewNode = aTreeNode;
+                TreeViewNode.Checked = true;
             }
 
             public Task ReloadTask(CancellationToken token)
@@ -186,6 +187,7 @@ namespace GitUI.UserControls
                     _TreeViewNode = value;
                     _TreeViewNode.Tag = this;
                     _TreeViewNode.Text = DisplayText();
+                    _TreeViewNode.Checked = true;
                     _TreeViewNode.ContextMenuStrip = GetContextMenuStrip();
                     ApplyStyle();
                 }
