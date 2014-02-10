@@ -23,9 +23,14 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
 
-            if (aCommands != null && Module.Settings.NoFastForwardMerge)
+            if (aCommands != null && Module.Settings.MergeMode == MergeMode.NoFastForward)
             {
                 noFastForward.Checked = true;
+            }
+
+            if (aCommands != null && Module.Settings.MergeMode == MergeMode.FastForwardOnly)
+            {
+                fastForwardOnly.Checked = true;
             }
 
             advanced.Checked = AppSettings.AlwaysShowAdvOpt;
@@ -53,11 +58,20 @@ namespace GitUI.CommandsDialogs
 
         private void OkClick(object sender, EventArgs e)
         {
-            Module.Settings.NoFastForwardMerge = noFastForward.Checked;
+            MergeMode mergeMode = MergeMode.AllowFastForward;
+
+            if (noFastForward.Checked)
+                mergeMode = MergeMode.NoFastForward;
+
+            if (fastForwardOnly.Checked)
+                mergeMode = MergeMode.FastForwardOnly;
+
+            Module.Settings.MergeMode = mergeMode;
+           
             AppSettings.DontCommitMerge = noCommit.Checked;
 
             var successfullyMerged = FormProcess.ShowDialog(this, 
-                GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
+                GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), mergeMode, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
 
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this);
 
@@ -97,11 +111,19 @@ namespace GitUI.CommandsDialogs
 
         private void fastForward_CheckedChanged(object sender, EventArgs e)
         {
+            helpImageDisplayUserControl1.Image1 = GitUI.Properties.Resources.HelpCommandMerge;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
         }
 
         private void noFastForward_CheckedChanged(object sender, EventArgs e)
         {
+            helpImageDisplayUserControl1.Image1 = GitUI.Properties.Resources.HelpCommandMerge;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+        }
+
+        private void fastForwardOnly_CheckedChanged(object sender, EventArgs e)
+        {
+            helpImageDisplayUserControl1.Image1 = GitUI.Properties.Resources.HelpCommandMergeFastForward;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
     }
