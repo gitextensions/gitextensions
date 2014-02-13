@@ -25,6 +25,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public Version CurrentVersion;
         public bool UpdateFound;
         public string UpdateUrl;
+        public string NewVersion;
         private readonly SynchronizationContext _syncContext;
 
         public FormUpdates(Version currentVersion)
@@ -37,6 +38,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             progressBar1.Visible = true;
             CurrentVersion = currentVersion;
             UpdateUrl = "";
+            NewVersion = "";
             progressBar1.Style = ProgressBarStyle.Marquee;
         }
 
@@ -57,7 +59,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             try
             {
-                Process.Start(_NO_TRANSLATE_link.Text);
+                Process.Start(UpdateUrl);
             }
             catch (System.ComponentModel.Win32Exception)
             {
@@ -109,6 +111,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 UpdateFound = true;
                 UpdateUrl = update.DownloadPage;
+                NewVersion = update.Version.ToString();
                 Done();
                 return;
             }
@@ -123,7 +126,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _syncContext.Send(o =>
             {
                 progressBar1.Visible = false;
-                _NO_TRANSLATE_link.Text = UpdateUrl;
+                _NO_TRANSLATE_link.Text = NewVersion;
 
                 if (UpdateFound)
                 {
