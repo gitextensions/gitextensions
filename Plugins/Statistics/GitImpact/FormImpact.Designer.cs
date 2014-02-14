@@ -33,18 +33,20 @@
             this.pnlAuthorColor = new System.Windows.Forms.Panel();
             this.lblAuthor = new System.Windows.Forms.Label();
             this.cbIncludingSubmodules = new System.Windows.Forms.CheckBox();
+            this.btStop = new System.Windows.Forms.Button();
             this.Impact = new GitImpact.ImpactControl();
             this.pnlTop.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTop
             // 
+            this.pnlTop.Controls.Add(this.btStop);
             this.pnlTop.Controls.Add(this.pnlAuthorColor);
             this.pnlTop.Controls.Add(this.lblAuthor);
             this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTop.Location = new System.Drawing.Point(0, 0);
             this.pnlTop.Name = "pnlTop";
-            this.pnlTop.Size = new System.Drawing.Size(863, 32);
+            this.pnlTop.Size = new System.Drawing.Size(835, 32);
             this.pnlTop.TabIndex = 1;
             // 
             // pnlAuthorColor
@@ -74,6 +76,16 @@
             this.cbIncludingSubmodules.Text = "Including submodules";
             this.cbIncludingSubmodules.UseVisualStyleBackColor = true;
             this.cbIncludingSubmodules.CheckedChanged += new System.EventHandler(this.cbShowSubmodules_CheckedChanged);
+            // 
+            // btStop
+            // 
+            this.btStop.Location = new System.Drawing.Point(599, 5);
+            this.btStop.Name = "btStop";
+            this.btStop.Size = new System.Drawing.Size(75, 23);
+            this.btStop.TabIndex = 2;
+            this.btStop.Text = "Stop";
+            this.btStop.UseVisualStyleBackColor = true;
+            this.btStop.Click += new System.EventHandler(this.btStop_Click);
             // 
             // Impact
             // 
@@ -112,5 +124,6 @@
         private System.Windows.Forms.Panel pnlAuthorColor;
         private System.Windows.Forms.Label lblAuthor;
         private System.Windows.Forms.CheckBox cbIncludingSubmodules;
+        private System.Windows.Forms.Button btStop;
     }
 }
