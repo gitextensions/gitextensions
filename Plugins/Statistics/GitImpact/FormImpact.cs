@@ -65,6 +65,13 @@ namespace GitImpact
         {
             UpdateAuthorInfo("");
             Impact.ShowSubmodules = cbIncludingSubmodules.Checked;
+            btStop.Enabled = true;
+        }
+
+        private void btStop_Click(object sender, EventArgs e)
+        {
+            btStop.Enabled = false;
+            Impact.Stop();
         }
     }
 }
