@@ -87,19 +87,26 @@ namespace GitUI.UserControls
             Cancel();
             _cancelledTokenSource = new CancellationTokenSource();
             Task previousTask = null;
-
-            foreach (Tree rootNode in rootNodes)
+            Task[] reloadTasks = new Task[rootNodes.Count];
+            for (int i = 0; i < rootNodes.Count; i++)
             {
-                Task task = rootNode.ReloadTask(_cancelledTokenSource.Token);
+                Task[] retTasks = rootNodes[i].ReloadTask(_cancelledTokenSource.Token, RevisionGrid.BranchFilter);
+                reloadTasks[i] = retTasks[1];
                 if (previousTask == null)
                 {
-                    task.Start(TaskScheduler.Default);
+                    retTasks[0].Start(TaskScheduler.Default);
                 }
                 else
                 {
-                    previousTask.ContinueWith((t) => task.Start(Task.Factory.Scheduler));
+                    previousTask.ContinueWith((t) => reloadTasks[i].Start(Task.Factory.Scheduler));
                 }
             }
+            Task.Factory.ContinueWhenAll(reloadTasks, (t) =>
+            {
+                List<TreeNode> nodes = new List<TreeNode>();
+                treeMain.listNodes(nodes, rootNodes[0].TreeViewNode);
+                ApplyTreeBranchFilter(nodes.ConvertAll<string>(n => (n.Tag as BranchNode).FullPath), true);
+            }, _cancelledTokenSource.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void treeMain_AfterCheck(object sender, TreeViewEventArgs e)

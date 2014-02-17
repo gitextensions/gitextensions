@@ -118,10 +118,9 @@ namespace GitUI.UserControls
                 Nodes = new Nodes(this, null);
                 UICommandsSource = uiCommands;
                 TreeViewNode = aTreeNode;
-                TreeViewNode.Checked = true;
             }
 
-            public Task ReloadTask(CancellationToken token)
+            public Task[] ReloadTask(CancellationToken token, string currentFilter)
             {
                 ClearNodes();
                 Task task = new Task(() => LoadNodes(token), token);
@@ -131,6 +130,8 @@ namespace GitUI.UserControls
                         try
                         {
                             FillTreeViewNode();
+                            List<string> filteredNodes = currentFilter.Split(' ').ToList<string>();
+                            CheckListedNodes(TreeViewNode, filteredNodes);
                         }
                         finally
                         {
@@ -138,8 +139,29 @@ namespace GitUI.UserControls
                         }
                     };
 
-                task.ContinueWith(continuationAction, token, TaskContinuationOptions.NotOnCanceled, TaskScheduler.FromCurrentSynchronizationContext());
-                return task;
+                Task continuationTask = task.ContinueWith(continuationAction, token, TaskContinuationOptions.NotOnCanceled, TaskScheduler.FromCurrentSynchronizationContext());
+                return new Task[] { task, continuationTask};
+            }
+
+            public void CheckListedNodes(TreeNode node, List<string> nodesList)
+            {
+                if ((node.Tag is BranchNode) && nodesList.Contains((node.Tag as BranchNode).FullPath))
+                {
+                    node.Checked = true;
+                }
+                else
+                {
+                    if (node.Nodes.Count > 0)
+                    {
+                        foreach (TreeNode childNode in node.Nodes)
+                        {
+                            CheckListedNodes(childNode, nodesList);
+                        }
+                        node.Checked = node.Nodes.OfType<TreeNode>().All(tn => tn.Checked);
+                    }
+                    else
+                        node.Checked = false;
+                }
             }
 
             protected abstract void LoadNodes(CancellationToken token);
@@ -187,7 +209,6 @@ namespace GitUI.UserControls
                     _TreeViewNode = value;
                     _TreeViewNode.Tag = this;
                     _TreeViewNode.Text = DisplayText();
-                    _TreeViewNode.Checked = true;
                     _TreeViewNode.ContextMenuStrip = GetContextMenuStrip();
                     ApplyStyle();
                 }

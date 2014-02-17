@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace GitUI
 {
@@ -87,18 +89,11 @@ namespace GitUI
             TreeNode parent = node.Parent;
             while (parent != null)
             {
-                bool hasUnchecked = false;
-                foreach (TreeNode child in parent.Nodes)
-                {
-                    if (!child.Checked)
-                    {
-                        hasUnchecked = true;
-                        break;
-                    }
-                }
-                parent.Checked = !hasUnchecked;
+                parent.Checked = parent.Nodes.OfType<TreeNode>().All(tn => tn.Checked);
                 parent = parent.Parent;
             }
         }
+
+
     }
 }
