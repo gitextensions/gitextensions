@@ -42,6 +42,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LoadClick(object sender, EventArgs e)
         {
+            _NO_TRANSLATE_Directory.Text = _NO_TRANSLATE_Directory.Text.Trim();
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
                 choosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
