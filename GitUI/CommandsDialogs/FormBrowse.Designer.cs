@@ -1941,6 +1941,7 @@ namespace GitUI.CommandsDialogs
             this.commitcountPerUserToolStripMenuItem.Name = "commitcountPerUserToolStripMenuItem";
             this.commitcountPerUserToolStripMenuItem.Size = new System.Drawing.Size(194, 24);
             this.commitcountPerUserToolStripMenuItem.Text = "Commits per user";
+            this.commitcountPerUserToolStripMenuItem.Click += new System.EventHandler(this.CommitcountPerUserToolStripMenuItemClick);
             // 
             // gitcommandLogToolStripMenuItem
             // 
@@ -1948,6 +1949,7 @@ namespace GitUI.CommandsDialogs
             this.gitcommandLogToolStripMenuItem.Name = "gitcommandLogToolStripMenuItem";
             this.gitcommandLogToolStripMenuItem.Size = new System.Drawing.Size(194, 24);
             this.gitcommandLogToolStripMenuItem.Text = "Gitcommand log";
+            this.gitcommandLogToolStripMenuItem.Click += new System.EventHandler(this.GitcommandLogToolStripMenuItemClick);
             // 
             // toolStripSeparator7
             // 
