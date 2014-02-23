@@ -80,24 +80,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private IEnumerable<string> GetPuttyLocations()
         {
+            yield return Path.Combine(AppSettings.GetInstallDir(), @"PuTTY\");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
             if (8 == IntPtr.Size
                 || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
                 programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
-            yield return programFiles + @"\PuTTY\";
-            if (programFilesX86 != null)
-                yield return programFilesX86 + @"\PuTTY\";
             yield return programFiles + @"\TortoiseGit\bin\";
             if (programFilesX86 != null)
                 yield return programFilesX86 + @"\TortoiseGit\bin\";
             yield return programFiles + @"\TortoiseSvn\bin\";
             if (programFilesX86 != null)
                 yield return programFilesX86 + @"\TortoiseSvn\bin\";
+            yield return programFiles + @"\PuTTY\";
+            if (programFilesX86 != null)
+                yield return programFilesX86 + @"\PuTTY\";
             yield return CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                                         "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
                                                         "InstallLocation");
-            yield return Path.Combine(AppSettings.GetInstallDir(), @"PuTTY\");
         }
 
         public bool AutoFindPuttyPaths()
