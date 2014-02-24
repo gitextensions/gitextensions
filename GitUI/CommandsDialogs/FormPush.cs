@@ -774,6 +774,7 @@ namespace GitUI.CommandsDialogs
                             }
                         }
                     }
+                    BranchGrid.Enabled = true;
                 });
         }
 
