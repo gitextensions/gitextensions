@@ -2,21 +2,29 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation
+namespace ResourceManager.Translation.Xliff
 {
     /// <summary>Provides a translation for a specific language.</summary>
-    public class Translation
+    [XmlRoot("xliff")]
+    public class Translation : ITranslation
     {
-        public Translation()
+        public Translation(string gitExVersion, string languageCode)
         {
+            GitExVersion = gitExVersion;
+            _languageCode = languageCode;
+            Version = "1.0";
             translationCategories = new List<TranslationCategory>();
         }
+
+        private string _languageCode;
+
+        [XmlAttribute("version")]
+        public string Version { get; set; }
 
         [XmlAttribute("GitExVersion")]
         public string GitExVersion { get; set; }
 
-        public string LanguageCode { get; set; }
-
+        [XmlElement(ElementName = "file")]
         public List<TranslationCategory> translationCategories;
 
         public TranslationCategory FindOrAddTranslationCategory(string translationCategory)
@@ -24,7 +32,7 @@ namespace ResourceManager.Translation
             TranslationCategory tc = GetTranslationCategory(translationCategory);
             if (tc == null)
             {
-                tc = new TranslationCategory(translationCategory);
+                tc = new TranslationCategory(translationCategory, "en", _languageCode);
                 AddTranslationCategory(tc);
             }
             return tc;
@@ -57,12 +65,12 @@ namespace ResourceManager.Translation
         {
             translationCategories.Sort();
             foreach(TranslationCategory tc in translationCategories)
-                tc.GetTranslationItems().Sort();
+                tc.Body.GetTranslationItems().Sort();
         }
 
         public void AddTranslationItem(string category, string item, string property, string neutralValue)
         {
-            FindOrAddTranslationCategory(category).AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
+            FindOrAddTranslationCategory(category).Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
         }
 
         public string TranslateItem(string category, string item, string property, string defaultValue)
@@ -70,7 +78,7 @@ namespace ResourceManager.Translation
             TranslationCategory tc = GetTranslationCategory(category);
             if (tc == null)
                 return defaultValue;
-            TranslationItem ti = tc.GetTranslationItem(item, property);
+            TranslationItem ti = tc.Body.GetTranslationItem(item, property);
             return ti == null || string.IsNullOrEmpty(ti.Value) ? defaultValue : ti.Value;
         }
     }

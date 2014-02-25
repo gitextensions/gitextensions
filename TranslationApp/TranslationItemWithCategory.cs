@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using ResourceManager.Translation;
+using ResourceManager.Translation.Xml;
 
 namespace TranslationApp
 {

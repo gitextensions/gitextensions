@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Utils;
 using ResourceManager.Translation;
+using ResourceManager.Translation.Xml;
 
 namespace TranslationApp
 {
@@ -56,7 +57,7 @@ namespace TranslationApp
             var translationsNames = Translator.GetAllTranslations();
             foreach (var name in translationsNames)
             {
-                Translation translation = Translator.GetTranslation(name);
+                var translation = (Translation)Translator.GetTranslation(name);
                 List<TranslationItemWithCategory> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
                 string filename = Path.Combine(Translator.GetTranslationDir(), name + ".xml");
                 TranslationHelpers.SaveTranslation(translation.LanguageCode, translateItems, filename);
@@ -73,7 +74,7 @@ namespace TranslationApp
             var list = new List<KeyValuePair<string, int>>();
             foreach (var name in translationsNames)
             {
-                Translation translation = Translator.GetTranslation(name);
+                var translation = (Translation)Translator.GetTranslation(name);
                 List<TranslationItemWithCategory> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
                 int translatedCount = translateItems.Count(translateItem => translateItem.Status != TranslationType.Obsolete &&
                     !string.IsNullOrEmpty(translateItem.TranslatedValue));

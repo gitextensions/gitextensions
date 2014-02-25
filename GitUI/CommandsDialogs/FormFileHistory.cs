@@ -366,14 +366,14 @@ namespace GitUI.CommandsDialogs
 
         private const string FormBrowseName = "FormBrowse";
 
-        public override void AddTranslationItems(Translation translation)
+        public override void AddTranslationItems(ITranslation translation)
         {
             base.AddTranslationItems(translation);
             TranslationUtl.AddTranslationItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
             TranslationUtl.AddTranslationItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
         }
 
-        public override void TranslateItems(Translation translation)
+        public override void TranslateItems(ITranslation translation)
         {
             base.TranslateItems(translation);
             TranslationUtl.TranslateItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
