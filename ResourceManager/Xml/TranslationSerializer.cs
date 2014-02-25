@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation
+namespace ResourceManager.Translation.Xml
 {
     /// <summary>Serializes and deserialize a <see cref="Translation"/>.</summary>
     public static class TranslationSerializer

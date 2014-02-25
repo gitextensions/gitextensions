@@ -3,20 +3,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation
+namespace ResourceManager.Translation.Xml
 {
-    public enum TranslationType
-    {
-        [XmlEnum(Name = "translated")]
-        Translated,
-        [XmlEnum(Name = "unfinished")]
-        Unfinished,
-        [XmlEnum(Name = "obsolete")]
-        Obsolete,
-        [XmlEnum(Name = "new")]
-        New
-    }
-
     [DebuggerDisplay("{name}.{property}={value}")]
     public class TranslationItem : IComparable<TranslationItem>, ICloneable
     {

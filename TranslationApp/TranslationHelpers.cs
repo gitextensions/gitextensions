@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ResourceManager.Translation;
+using ResourceManager.Translation.Xml;
+using TranslationUtl = ResourceManager.Translation.Xml.TranslationUtl;
 
 namespace TranslationApp
 {
@@ -125,16 +127,19 @@ namespace TranslationApp
 
         public static void SaveTranslation(string languageCode, IEnumerable<TranslationItemWithCategory> items, string filename)
         {
-            Translation foreignTranslation = new Translation {
+            Translation foreignTranslation = new Translation
+            {
                 GitExVersion = GitCommands.AppSettings.GitExtensionsVersionString,
-                LanguageCode = languageCode };
+                LanguageCode = languageCode
+            };
             foreach (TranslationItemWithCategory translateItem in items)
             {
                 if (translateItem.Status == TranslationType.Obsolete &&
                     (String.IsNullOrEmpty(translateItem.TranslatedValue) || String.IsNullOrEmpty(translateItem.NeutralValue)))
                     continue;
 
-                TranslationItem ti = translateItem.GetTranslationItem().Clone();
+                var item = translateItem.GetTranslationItem();
+                var ti = new TranslationItem(item.Name, item.Property, item.Source, item.OldSource, item.Value, item.Status);
                 if (ti.Status == TranslationType.New)
                     ti.Status = TranslationType.Unfinished;
                 Debug.Assert(!string.IsNullOrEmpty(ti.Value) || ti.Status != TranslationType.Translated);
