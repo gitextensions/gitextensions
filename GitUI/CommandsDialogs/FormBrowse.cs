@@ -2661,14 +2661,14 @@ namespace GitUI.CommandsDialogs
                 DiffText.ViewPatch(String.Empty);
         }
 
-        public override void AddTranslationItems(Translation translation)
+        public override void AddTranslationItems(ITranslation translation)
         {
             base.AddTranslationItems(translation);
             TranslationUtl.AddTranslationItemsFromFields(Name, _filterRevisionsHelper, translation);
             TranslationUtl.AddTranslationItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
-        public override void TranslateItems(Translation translation)
+        public override void TranslateItems(ITranslation translation)
         {
             base.TranslateItems(translation);
             TranslationUtl.TranslateItemsFromFields(Name, _filterRevisionsHelper, translation);

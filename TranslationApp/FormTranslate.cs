@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows.Forms;
 using GitUI;
 using ResourceManager.Translation;
+using ResourceManager.Translation.Xml;
+using TranslationUtl = ResourceManager.Translation.Xml.TranslationUtl;
 
 namespace TranslationApp
 {
@@ -330,7 +332,7 @@ namespace TranslationApp
             AskForSave();
             changesMade = false;
 
-            translation = Translator.GetTranslation(translations.Text);
+            translation = (Translation)Translator.GetTranslation(translations.Text);
             LoadTranslation();
             UpdateCategoriesList();
             FillTranslateGrid(translateCategories.SelectedItem as TranslationCategory);

@@ -3,36 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation
+namespace ResourceManager.Translation.Xliff
 {
     [DebuggerDisplay("{name}")]
-    public class TranslationCategory : IComparable<TranslationCategory>
+    public class TranslationBody
     {
-        public TranslationCategory()
+        public TranslationBody()
         {
             translationItems = new List<TranslationItem>();
         }
 
-        public TranslationCategory(string name)
-        {
-            this.name = name;
-            translationItems = new List<TranslationItem>();
-        }
-
-        private string name;
-        [XmlAttribute]
-        public string Name 
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
-        }
-
+        [XmlElement(ElementName = "trans-unit")]
         public List<TranslationItem> translationItems;
 
         public void AddTranslationItem(TranslationItem translationItem)
@@ -77,11 +58,6 @@ namespace ResourceManager.Translation
         public List<TranslationItem> GetTranslationItems()
         {
             return translationItems;
-        }
-
-        public int CompareTo(TranslationCategory other)
-        {
-            return Name.CompareTo(other.Name);
         }
     }
 }

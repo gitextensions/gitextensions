@@ -59,12 +59,12 @@ namespace Gerrit
             _gitUiCommands = null;
         }
 
-        public virtual void AddTranslationItems(Translation translation)
+        public virtual void AddTranslationItems(ITranslation translation)
         {
             TranslationUtl.AddTranslationItemsFromFields(GetType().Name, this, translation);
         }
 
-        public virtual void TranslateItems(Translation translation)
+        public virtual void TranslateItems(ITranslation translation)
         {
             TranslationUtl.TranslateItemsFromFields(GetType().Name, this, translation);
         }

@@ -1,14 +1,14 @@
-﻿
-namespace ResourceManager.Translation
+﻿namespace ResourceManager.Translation
 {
-    public class Translate: ITranslate
+    /// <summary>Provides translation capabilities.</summary>
+    public class Translate : ITranslate
     {
-        public virtual void AddTranslationItems(Translation translation)
+        public virtual void AddTranslationItems(ITranslation translation)
         {
             TranslationUtl.AddTranslationItemsFromFields(GetType().Name, this, translation);
         }
 
-        public virtual void TranslateItems(Translation translation)
+        public virtual void TranslateItems(ITranslation translation)
         {
             TranslationUtl.TranslateItemsFromFields(GetType().Name, this, translation);
         }
