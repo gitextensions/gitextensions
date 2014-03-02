@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.SpellChecker
 {

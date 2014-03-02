@@ -1,5 +1,5 @@
 ﻿using GitCommands;
-using ResourceManager.Translation;
+using ResourceManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;

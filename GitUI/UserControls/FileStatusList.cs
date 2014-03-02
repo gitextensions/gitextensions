@@ -12,7 +12,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
 using GitUI.UserControls;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI
 {

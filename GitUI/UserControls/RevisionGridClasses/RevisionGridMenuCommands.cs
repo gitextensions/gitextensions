@@ -7,7 +7,7 @@ using GitUI.Hotkey;
 using System.Windows.Forms;
 using System.ComponentModel;
 using GitUI.CommandsDialogs.BrowseDialog;
-using ResourceManager.Translation;
+using ResourceManager;
 using System.Diagnostics;
 using GitCommands;
 

@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace ResourceManager.Translation
+namespace ResourceManager.Xml
 {
     public enum TranslationType
     {

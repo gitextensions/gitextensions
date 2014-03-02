@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace ResourceManager.Translation.Xml
+namespace ResourceManager.Xml
 {
     public static class TranslationUtl
     {
@@ -188,7 +188,7 @@ namespace ResourceManager.Translation.Xml
                     foreach (Type type in assembly.GetTypes())
                     {
                         //TODO: Check if class contain TranslationString but doesn't implement ITranslate
-                        if (type.IsClass && typeof(Translate).IsAssignableFrom(type) && !type.IsAbstract)
+                        if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                         {
                             translatableTypes.Add(type);
                         }

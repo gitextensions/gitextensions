@@ -9,7 +9,7 @@ using GitUI.Properties;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
-using ResourceManager.Translation;
+using ResourceManager;
 using Settings = GitCommands.AppSettings;
 using System.Collections.Generic;
 

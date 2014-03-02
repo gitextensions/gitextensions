@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 
-namespace ResourceManager.Translation
+namespace ResourceManager
 {
     /// <summary>Provides translated text.</summary>
     [DebuggerDisplay("{Text}")]

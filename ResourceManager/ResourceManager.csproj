@@ -77,7 +77,7 @@
     <Compile Include="TranslationString.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TranslationType.cs" />
+    <Compile Include="Xml\TranslationType.cs" />
     <Compile Include="Xml\TranslationUtl.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="Xliff\Translation.cs" />
