@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Utils;
 using ResourceManager;
-using ResourceManager.Xml;
+using ResourceManager.Xliff;
 
 namespace TranslationApp
 {
@@ -59,7 +59,7 @@ namespace TranslationApp
             {
                 var translation = (Translation)Translator.GetTranslation(name);
                 List<TranslationItemWithCategory> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
-                string filename = Path.Combine(Translator.GetTranslationDir(), name + ".xml");
+                string filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
                 TranslationHelpers.SaveTranslation(translation.LanguageCode, translateItems, filename);
             }
             Cursor.Current = Cursors.Default;
@@ -76,16 +76,17 @@ namespace TranslationApp
             {
                 var translation = (Translation)Translator.GetTranslation(name);
                 List<TranslationItemWithCategory> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
-                int translatedCount = translateItems.Count(translateItem => translateItem.Status != TranslationType.Obsolete &&
-                    !string.IsNullOrEmpty(translateItem.TranslatedValue));
+                int translatedCount = translateItems.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue));
                 list.Add(new KeyValuePair<string, int>(name, translatedCount));
             }
             using (var stream = File.CreateText("statistic.csv"))
             {
-                stream.WriteLine(string.Format("{0};{1};{2};{3}", "Language", "Percent", "TranslatedItems", "TotalItems"));
+                stream.WriteLine("{0};{1};{2};{3}", "Language", "Percent", "TranslatedItems", "TotalItems");
                 foreach (var item in list.OrderByDescending(item => item.Value))
-                    stream.WriteLine(string.Format("{0};{1:F}%;{2};{3}", item.Key, 
-                        100.0f * item.Value / neutralItems.Count, item.Value, neutralItems.Count));
+                {
+                    stream.WriteLine("{0};{1:F}%;{2};{3}", item.Key, 100.0f*item.Value/neutralItems.Count, item.Value,
+                        neutralItems.Count);
+                }
             }
             Cursor.Current = Cursors.Default;
         }

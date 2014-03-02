@@ -11,6 +11,7 @@ namespace ResourceManager.Xliff
         public Translation()
         {
             Version = "1.0";
+            TranslationCategories = new List<TranslationCategory>();
         }
 
         public Translation(string gitExVersion, string languageCode)
@@ -21,6 +22,8 @@ namespace ResourceManager.Xliff
         }
 
         private string _languageCode;
+        [XmlIgnore]
+        public string LanguageCode { get { return _languageCode; } }
 
         [XmlAttribute("version")]
         public string Version { get; set; }
@@ -29,7 +32,7 @@ namespace ResourceManager.Xliff
         public string GitExVersion { get; set; }
 
         [XmlElement(ElementName = "file")]
-        public List<TranslationCategory> translationCategories = new List<TranslationCategory>();
+        public List<TranslationCategory> TranslationCategories { get; set; }
 
         public TranslationCategory FindOrAddTranslationCategory(string translationCategory)
         {
@@ -47,29 +50,19 @@ namespace ResourceManager.Xliff
             if (string.IsNullOrEmpty(translationCategory.Name))
                 new InvalidOperationException("Cannot add translationCategory without name");
 
-            translationCategories.Add(translationCategory);
-        }
-
-        public bool HasTranslationCategory(string name)
-        {
-            return translationCategories.Exists(t => t.Name.TrimStart('_') == name.TrimStart('_'));
+            TranslationCategories.Add(translationCategory);
         }
 
         public TranslationCategory GetTranslationCategory(string name)
         {
-            return translationCategories.Find(t => t.Name.TrimStart('_') == name.TrimStart('_'));
-        }
-
-        public List<TranslationCategory> GetTranslationCategories()
-        {
-            return translationCategories;
+            return TranslationCategories.Find(t => t.Name.TrimStart('_') == name.TrimStart('_'));
         }
 
         public void Sort()
         {
-            translationCategories.Sort();
-            foreach(TranslationCategory tc in translationCategories)
-                tc.Body.GetTranslationItems().Sort();
+            TranslationCategories.Sort();
+            foreach(TranslationCategory tc in TranslationCategories)
+                tc.Body.TranslationItems.Sort();
         }
 
         public void AddTranslationItem(string category, string item, string property, string neutralValue)

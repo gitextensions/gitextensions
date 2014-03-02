@@ -64,7 +64,7 @@ namespace ResourceManager.Xliff
             }
             set
             {
-                var vals = value.Split(new[] {'.'}, 1);
+                var vals = value.Split(new[] {'.'}, 2);
                 _name = vals[0];
                 _property = vals.Length > 1 ? vals[1] : "";
             }
