@@ -5,10 +5,10 @@ using GitUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ResourceManager.Translation;
+using ResourceManager;
+using ResourceManager.Xliff;
 
-
-namespace GitExtensionsTest.Translation
+namespace GitExtensionsTest.TranslationTest
 {
     [TestClass]
     public class TranslationTest
@@ -23,7 +23,7 @@ namespace GitExtensionsTest.Translation
 
             List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
 
-            ResourceManager.Translation.Translation testTranslation = new ResourceManager.Translation.Translation();
+            var testTranslation = new Translation();
 
             foreach (Type type in translatableTypes)
             {
