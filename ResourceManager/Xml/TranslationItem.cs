@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation.Xml
+namespace ResourceManager.Xml
 {
     [DebuggerDisplay("{name}.{property}={value}")]
     public class TranslationItem : IComparable<TranslationItem>, ICloneable

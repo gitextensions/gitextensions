@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {

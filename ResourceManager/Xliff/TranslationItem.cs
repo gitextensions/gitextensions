@@ -1,9 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation.Xliff
+namespace ResourceManager.Xliff
 {
     [DebuggerDisplay("{name}.{property}={value}")]
     public class TranslationItem : IComparable<TranslationItem>, ICloneable
@@ -18,21 +17,18 @@ namespace ResourceManager.Translation.Xliff
             _name = name;
             _property = property;
             _source = source;
-            _status = TranslationType.New;
         }
 
-        public TranslationItem(string name, string property, string source, string oldSource, string value, TranslationType status)
+        public TranslationItem(string name, string property, string source, string value)
         {
             _name = name;
             _property = property;
             _source = source;
-            _oldSource = oldSource;
             _value = value;
-            _status = status;
         }
 
         private string _name;
-        [XmlAttribute("id")]
+        [XmlIgnore]
         public string Name 
         {
             get
@@ -46,7 +42,7 @@ namespace ResourceManager.Translation.Xliff
         }
 
         private string _property;
-        [XmlAttribute]
+        [XmlIgnore]
         public string Property
         {
             get
@@ -59,17 +55,18 @@ namespace ResourceManager.Translation.Xliff
             }
         }
 
-        private TranslationType _status;
-        [XmlAttribute("type"), DefaultValue(0)]
-        public TranslationType Status
+        [XmlAttribute("id")]
+        public string Id
         {
             get
             {
-                return _status;
+                return _name + "." + _property;
             }
             set
             {
-                _status = value;
+                var vals = value.Split(new[] {'.'}, 1);
+                _name = vals[0];
+                _property = vals.Length > 1 ? vals[1] : "";
             }
         }
 
@@ -84,20 +81,6 @@ namespace ResourceManager.Translation.Xliff
             set
             {
                 _source = value;
-            }
-        }
-
-        private string _oldSource;
-        [XmlElement("oldSource")]
-        public string OldSource
-        {
-            get
-            {
-                return _oldSource;
-            }
-            set
-            {
-                _oldSource = value;
             }
         }
 
@@ -129,7 +112,7 @@ namespace ResourceManager.Translation.Xliff
 
         public TranslationItem Clone()
         {
-            return new TranslationItem(_name, _property, _source, _oldSource, _value, _status);
+            return new TranslationItem(_name, _property, _source, _value);
         }
     }
 }

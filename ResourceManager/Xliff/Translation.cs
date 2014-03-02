@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation.Xliff
+namespace ResourceManager.Xliff
 {
     /// <summary>Provides a translation for a specific language.</summary>
     [XmlRoot("xliff")]
     public class Translation : ITranslation
     {
+        public Translation()
+        {
+            Version = "1.0";
+        }
+
         public Translation(string gitExVersion, string languageCode)
+            : this()
         {
             GitExVersion = gitExVersion;
             _languageCode = languageCode;
-            Version = "1.0";
-            translationCategories = new List<TranslationCategory>();
         }
 
         private string _languageCode;
@@ -25,7 +29,7 @@ namespace ResourceManager.Translation.Xliff
         public string GitExVersion { get; set; }
 
         [XmlElement(ElementName = "file")]
-        public List<TranslationCategory> translationCategories;
+        public List<TranslationCategory> translationCategories = new List<TranslationCategory>();
 
         public TranslationCategory FindOrAddTranslationCategory(string translationCategory)
         {

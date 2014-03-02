@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation.Xml
+namespace ResourceManager.Xml
 {
     /// <summary>Provides a translation for a specific language.</summary>
     public class Translation : ITranslation

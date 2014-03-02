@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace ResourceManager.Translation
+namespace ResourceManager
 {
     public static class Translator
     {

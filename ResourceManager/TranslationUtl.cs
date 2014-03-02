@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ResourceManager.Translation
+namespace ResourceManager
 {
     public static class TranslationUtl
     {

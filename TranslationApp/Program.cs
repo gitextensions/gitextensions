@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Utils;
-using ResourceManager.Translation;
-using ResourceManager.Translation.Xml;
+using ResourceManager;
+using ResourceManager.Xml;
 
 namespace TranslationApp
 {

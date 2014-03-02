@@ -6,7 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI
 {

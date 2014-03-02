@@ -9,7 +9,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Script;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {

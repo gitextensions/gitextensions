@@ -1,4 +1,4 @@
-﻿namespace ResourceManager.Translation
+﻿namespace ResourceManager
 {
     /// <summary>Provides translation capabilities.</summary>
     public class Translate : ITranslate
