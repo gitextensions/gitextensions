@@ -5,12 +5,12 @@
     {
         public virtual void AddTranslationItems(ITranslation translation)
         {
-            TranslationUtl.AddTranslationItemsFromFields(GetType().Name, this, translation);
+            TranslationUtils.AddTranslationItemsFromFields(GetType().Name, this, translation);
         }
 
         public virtual void TranslateItems(ITranslation translation)
         {
-            TranslationUtl.TranslateItemsFromFields(GetType().Name, this, translation);
+            TranslationUtils.TranslateItemsFromFields(GetType().Name, this, translation);
         }
     }
 }

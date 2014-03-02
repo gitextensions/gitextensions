@@ -73,12 +73,12 @@ namespace GitUI
 
         public virtual void AddTranslationItems(ITranslation translation)
         {
-            TranslationUtl.AddTranslationItemsFromFields(Name, this, translation);
+            TranslationUtils.AddTranslationItemsFromFields(Name, this, translation);
         }
 
         public virtual void TranslateItems(ITranslation translation)
         {
-            TranslationUtl.TranslateItemsFromFields(Name, this, translation);
+            TranslationUtils.TranslateItemsFromFields(Name, this, translation);
         }
 
         #region Hotkeys

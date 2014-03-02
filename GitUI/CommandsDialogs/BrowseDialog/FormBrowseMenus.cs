@@ -45,12 +45,12 @@ namespace GitUI.CommandsDialogs
 
         public virtual void AddTranslationItems(ITranslation translation)
         {
-            TranslationUtl.AddTranslationItemsFromList("FormBrowse", translation, GetAdditionalMainMenuItemsForTranslation());
+            TranslationUtils.AddTranslationItemsFromList("FormBrowse", translation, GetAdditionalMainMenuItemsForTranslation());
         }
 
         public virtual void TranslateItems(ITranslation translation)
         {
-            TranslationUtl.TranslateItemsFromList("FormBrowse", translation, GetAdditionalMainMenuItemsForTranslation());
+            TranslationUtils.TranslateItemsFromList("FormBrowse", translation, GetAdditionalMainMenuItemsForTranslation());
         }
 
         public void ResetMenuCommandSets()

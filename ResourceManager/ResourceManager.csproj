@@ -68,17 +68,11 @@
     <Compile Include="Translate.cs" />
     <Compile Include="ITranslation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TranslationUtl.cs" />
+    <Compile Include="TranslationUtils.cs" />
     <Compile Include="Xliff\TranslationUtl.cs" />
-    <Compile Include="Xml\Translation.cs" />
-    <Compile Include="Xml\TranslationCategory.cs" />
-    <Compile Include="Xml\TranslationItem.cs" />
-    <Compile Include="Xml\TranslationSerializer.cs" />
     <Compile Include="TranslationString.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Xml\TranslationType.cs" />
-    <Compile Include="Xml\TranslationUtl.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="Xliff\Translation.cs" />
     <Compile Include="Xliff\TranslationBody.cs" />

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using ResourceManager;
-using ResourceManager.Xml;
+using ResourceManager.Xliff;
 
 namespace TranslationApp
 {
@@ -31,7 +30,6 @@ namespace TranslationApp
         public string Name { get { return _item.Name; } set { _item.Name = value; } }
         public string Property { get { return _item.Property; } set { _item.Property = value; } }
         public string NeutralValue { get { return _item.Source; } set { _item.Source = value; } }
-        public string OldNeutralValue { get { return _item.OldSource; } set { _item.OldSource = value; } }
         public string TranslatedValue
         {
             get { return _item.Value; }
@@ -45,18 +43,9 @@ namespace TranslationApp
                 if (value != _item.Value)
                 {
                     _item.Value = value;
-                    _item.OldSource = null;
-                    if (Status != TranslationType.Obsolete)
-                    {
-                        if (!string.IsNullOrEmpty(value))
-                            Status = TranslationType.Translated;
-                        else
-                            Status = TranslationType.Unfinished;
-                    }
                 }
             }
         }
-        public TranslationType Status { get { return _item.Status; } set { _item.Status = value; } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -74,8 +63,7 @@ namespace TranslationApp
         {
             get
             {
-                return string.Format("\"{0}\" - \"{1}\"{2}", Category, NeutralValue,
-                    Status == TranslationType.Translated ? "" : " " + Status);
+                return string.Format("\"{0}\" - \"{1}\"", Category, NeutralValue);
             }
         }
 

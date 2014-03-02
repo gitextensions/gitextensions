@@ -476,30 +476,6 @@ namespace GitUI.SpellChecker
             }
         }
 
-        void translateText_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(AppSettings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.ToString());
-            }
-        }
-
-        void translate_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(AppSettings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.ToString());
-            }
-        }
-
         private void RemoveWordClick(object sender, EventArgs e)
         {
             _spelling.DeleteWord();
