@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ResourceManager.Xliff;
 
 namespace ResourceManager
 {
@@ -9,7 +10,6 @@ namespace ResourceManager
         //Try to cache the translation as long as possible
         private static ITranslation _translation;
         private static string _name;
-        private const bool UseXliff = false;
 
         public static ITranslation GetTranslation(string translationName)
         {
@@ -19,11 +19,7 @@ namespace ResourceManager
             }
             else if (!translationName.Equals(_name))
             {
-                if (UseXliff)
-                    _translation = Xliff.TranslationSerializer.Deserialize(Path.Combine(Translator.GetTranslationDir(), translationName + ".xliff"));
-                else
-                    _translation = Xml.TranslationSerializer.Deserialize(Path.Combine(GetTranslationDir(), translationName + ".xml"));
-                
+                 _translation = TranslationSerializer.Deserialize(Path.Combine(GetTranslationDir(), translationName + ".xlf"));               
             }
             _name = translationName;
             return _translation;
@@ -45,7 +41,7 @@ namespace ResourceManager
                     return new string[0];
                 }
 
-                foreach (string fileName in Directory.GetFiles(translationDir, UseXliff ? "*.xliff" : "*.xml"))
+                foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))
                 {
                     FileInfo fileInfo = new FileInfo(fileName);
                     translations.Add(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length));

@@ -19,14 +19,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public virtual void AddTranslationItems(ITranslation translation)
         {
-            TranslationUtl.AddTranslationItemsFromFields(TranslationCategoryName, this, translation);
-            TranslationUtl.AddTranslationItemsFromList(TranslationCategoryName, translation, GetMenuCommandsForTranslationImpl());
+            TranslationUtils.AddTranslationItemsFromFields(TranslationCategoryName, this, translation);
+            TranslationUtils.AddTranslationItemsFromList(TranslationCategoryName, translation, GetMenuCommandsForTranslationImpl());
         }
 
         public virtual void TranslateItems(ITranslation translation)
         {
-            TranslationUtl.TranslateItemsFromFields(TranslationCategoryName, this, translation);
-            TranslationUtl.TranslateItemsFromList(TranslationCategoryName, translation, GetMenuCommandsForTranslationImpl());
+            TranslationUtils.TranslateItemsFromFields(TranslationCategoryName, this, translation);
+            TranslationUtils.TranslateItemsFromList(TranslationCategoryName, translation, GetMenuCommandsForTranslationImpl());
         }
 
         //override and return all commands created by extending class

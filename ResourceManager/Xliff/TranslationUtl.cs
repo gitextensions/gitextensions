@@ -179,7 +179,7 @@ namespace ResourceManager.Xliff
                     continue;
                 foreach (var type in assembly.GetTypes())
                 {
-                    if (type.IsClass && typeof(Translate).IsAssignableFrom(type) && !type.IsAbstract)
+                    if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                         list.Add(type);
                 }
             }

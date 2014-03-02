@@ -369,15 +369,15 @@ namespace GitUI.CommandsDialogs
         public override void AddTranslationItems(ITranslation translation)
         {
             base.AddTranslationItems(translation);
-            TranslationUtl.AddTranslationItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
-            TranslationUtl.AddTranslationItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
         }
 
         public override void TranslateItems(ITranslation translation)
         {
             base.TranslateItems(translation);
-            TranslationUtl.TranslateItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
-            TranslationUtl.TranslateItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
         }
 
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
