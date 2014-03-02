@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using GitUI;
-using ResourceManager.Translation;
-using ResourceManager.Translation.Xml;
-using TranslationUtl = ResourceManager.Translation.Xml.TranslationUtl;
+using ResourceManager;
+using ResourceManager.Xml;
+using TranslationUtl = ResourceManager.Xml.TranslationUtl;
 
 namespace TranslationApp
 {
@@ -18,7 +18,7 @@ namespace TranslationApp
         readonly TranslationString saveCurrentChangesText = new TranslationString("Do you want to save the current changes?");
         readonly TranslationString saveCurrentChangesCaption = new TranslationString("Save changes");
         readonly TranslationString saveAsText = new TranslationString("Save as");
-        readonly TranslationString saveAsTextFilter = new TranslationString("Translation file (*.xml)");
+        readonly TranslationString saveAsTextFilter = new TranslationString("Translation file (*.xlf)");
         readonly TranslationString selectLanguageCode = new TranslationString("Select a language code first.");
         readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no language code selected." + 
             Environment.NewLine + "Do you want to select a language code first?");
@@ -313,9 +313,9 @@ namespace TranslationApp
                 new SaveFileDialog
                     {
                         Title = saveAsText.Text,
-                        FileName = translations.Text + ".xml",
-                        Filter = saveAsTextFilter.Text + "|*.xml",
-                        DefaultExt = ".xml",
+                        FileName = translations.Text + ".xlf",
+                        Filter = saveAsTextFilter.Text + "|*.xlf",
+                        DefaultExt = ".xlf",
                         AddExtension = true
                     })
             {

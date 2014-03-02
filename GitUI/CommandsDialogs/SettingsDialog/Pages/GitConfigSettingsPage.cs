@@ -5,7 +5,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Settings;
 using GitCommands.Utils;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

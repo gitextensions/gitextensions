@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace ResourceManager.Translation.Xliff
+namespace ResourceManager.Xliff
 {
     public static class TranslationUtl
     {
@@ -13,10 +13,7 @@ namespace ResourceManager.Translation.Xliff
         {
             if (text == null)
                 return false;
-            foreach (char c in text)
-                if (Char.IsLetter(c))
-                    return true;
-            return false;
+            return text.Any(Char.IsLetter);
         }
 
         public static IEnumerable<Tuple<string, object>> GetObjProperties(object obj, string objName)
@@ -68,30 +65,21 @@ namespace ResourceManager.Translation.Xliff
                 if (itemName.StartsWith("_NO_TRANSLATE_"))
                     continue;
 
-                Func<PropertyInfo, bool> IsTranslatableItem;
+                Func<PropertyInfo, bool> isTranslatableItem;
                 if (itemObj is DataGridViewColumn)
                 {
-                    DataGridViewColumn c = itemObj as DataGridViewColumn;
+                    var c = itemObj as DataGridViewColumn;
 
-                    IsTranslatableItem = delegate(PropertyInfo propertyInfo)
-                    {
-                        return IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
-                    };
+                    isTranslatableItem = propertyInfo => IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
                 }
                 else
                 {
-                    IsTranslatableItem = IsTranslatableItemInComponent;
+                    isTranslatableItem = IsTranslatableItemInComponent;
                 }
 
-                if (IsTranslatableItem != null)
-                {
-                    Action<PropertyInfo> paction = delegate(PropertyInfo propertyInfo)
-                    {
-                        action(itemName, itemObj, propertyInfo);
-                    };
+                Action<PropertyInfo> paction = propertyInfo => action(itemName, itemObj, propertyInfo);
 
-                    ForEachProperty(itemObj, paction, IsTranslatableItem);
-                }
+                ForEachProperty(itemObj, paction, isTranslatableItem);
             }
         }
 
@@ -131,9 +119,13 @@ namespace ResourceManager.Translation.Xliff
             if (obj == null)
                 return;
 
-            foreach (PropertyInfo propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.SetProperty))
-                if (IsTranslatableItem(propertyInfo))
-                    action(propertyInfo);
+            foreach (var propertyInfo in obj.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
+                               BindingFlags.NonPublic | BindingFlags.SetProperty)
+                .Where(IsTranslatableItem))
+            {
+                action(propertyInfo);
+            }
         }
 
         public static bool IsTranslatableItemInComponent(PropertyInfo propertyInfo)
@@ -156,7 +148,7 @@ namespace ResourceManager.Translation.Xliff
             return propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCulture) && viewCol.Visible;
         }
 
-        static string[] UnTranslatableDLLs = new string[]
+        static readonly string[] UnTranslatableDLLs =
         {
             "mscorlib",
             "Microsoft",
@@ -180,22 +172,18 @@ namespace ResourceManager.Translation.Xliff
 
         public static List<Type> GetTranslatableTypes()
         {
-            List<Type> translatableTypes = new List<Type>();
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            var list = new List<Type>();
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (assembly.IsTranslatable())
+                if (!assembly.IsTranslatable())
+                    continue;
+                foreach (var type in assembly.GetTypes())
                 {
-                    foreach (Type type in assembly.GetTypes())
-                    {
-                        //TODO: Check if class contain TranslationString but doesn't implement ITranslate
-                        if (type.IsClass && typeof(Translate).IsAssignableFrom(type) && !type.IsAbstract)
-                        {
-                            translatableTypes.Add(type);
-                        }
-                    }
+                    if (type.IsClass && typeof(Translate).IsAssignableFrom(type) && !type.IsAbstract)
+                        list.Add(type);
                 }
             }
-            return translatableTypes;
+            return list;
         }
 
         public static object CreateInstanceOfClass(Type type)

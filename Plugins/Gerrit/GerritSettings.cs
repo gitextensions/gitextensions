@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace Gerrit
 {

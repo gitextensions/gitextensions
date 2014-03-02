@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation.Xml
+namespace ResourceManager.Xml
 {
     [DebuggerDisplay("{name}")]
     public class TranslationCategory : IComparable<TranslationCategory>

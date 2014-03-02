@@ -19,7 +19,7 @@ using GitUI.Hotkey;
 using GitUI.RevisionGridClasses;
 using GitUI.Script;
 using Gravatar;
-using ResourceManager.Translation;
+using ResourceManager;
 using GitUI.UserControls.RevisionGridClasses;
 using GitUI.CommandsDialogs.BrowseDialog;
 

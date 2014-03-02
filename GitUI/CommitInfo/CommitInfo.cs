@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.GitExtLinks;
 using GitUI.Editor.RichTextBoxExtension;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommitInfo
 {

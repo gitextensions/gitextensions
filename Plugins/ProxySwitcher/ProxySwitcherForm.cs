@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using ResourceManager;
 using Settings = GitCommands.AppSettings;
 
 namespace ProxySwitcher

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation.Xliff
+namespace ResourceManager.Xliff
 {
     [DebuggerDisplay("{name}")]
     public class TranslationCategory : IComparable<TranslationCategory>

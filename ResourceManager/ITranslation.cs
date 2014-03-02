@@ -1,4 +1,4 @@
-﻿namespace ResourceManager.Translation
+﻿namespace ResourceManager
 {
     public interface ITranslation
     {

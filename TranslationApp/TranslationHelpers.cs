@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ResourceManager.Translation;
-using ResourceManager.Translation.Xml;
-using TranslationUtl = ResourceManager.Translation.Xml.TranslationUtl;
+using ResourceManager;
+using ResourceManager.Xml;
+using TranslationUtl = ResourceManager.Xml.TranslationUtl;
+using Xliff = ResourceManager.Xliff;
 
 namespace TranslationApp
 {
@@ -127,27 +128,22 @@ namespace TranslationApp
 
         public static void SaveTranslation(string languageCode, IEnumerable<TranslationItemWithCategory> items, string filename)
         {
-            Translation foreignTranslation = new Translation
-            {
-                GitExVersion = GitCommands.AppSettings.GitExtensionsVersionString,
-                LanguageCode = languageCode
-            };
+            var foreignTranslation = new Xliff.Translation(GitCommands.AppSettings.GitExtensionsVersionString, languageCode);
             foreach (TranslationItemWithCategory translateItem in items)
             {
-                if (translateItem.Status == TranslationType.Obsolete &&
-                    (String.IsNullOrEmpty(translateItem.TranslatedValue) || String.IsNullOrEmpty(translateItem.NeutralValue)))
+                if (translateItem.Status == TranslationType.Obsolete)
                     continue;
 
                 var item = translateItem.GetTranslationItem();
-                var ti = new TranslationItem(item.Name, item.Property, item.Source, item.OldSource, item.Value, item.Status);
-                if (ti.Status == TranslationType.New)
-                    ti.Status = TranslationType.Unfinished;
-                Debug.Assert(!string.IsNullOrEmpty(ti.Value) || ti.Status != TranslationType.Translated);
+                string value = item.Value;
+                if (item.Status != TranslationType.Translated)
+                    value = "";
+
+                var ti = new Xliff.TranslationItem(item.Name, item.Property, item.Source, value);
                 ti.Value = ti.Value ?? String.Empty;
-                Debug.Assert(ti.Status != TranslationType.Translated || translateItem.IsSourceEqual(ti.Source));
-                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
+                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).Body.AddTranslationItem(ti);
             }
-            TranslationSerializer.Serialize(foreignTranslation, filename);
+            Xliff.TranslationSerializer.Serialize(foreignTranslation, filename);
         }
     }
 }
