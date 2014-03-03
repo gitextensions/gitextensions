@@ -43,8 +43,10 @@ namespace ResourceManager
 
                 foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))
                 {
-                    FileInfo fileInfo = new FileInfo(fileName);
-                    translations.Add(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length));
+                    var name = Path.GetFileNameWithoutExtension(fileName);
+                    if (String.Compare("English", name, StringComparison.CurrentCultureIgnoreCase) == 0)
+                        continue;
+                    translations.Add(name);
                 }
             } catch
             {

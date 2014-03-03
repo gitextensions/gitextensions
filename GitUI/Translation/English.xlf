@@ -6189,14 +6189,6 @@ Do you want to open the new repository "{0}" now?</source>
         <source>[EDITING]</source>
         <target />
       </trans-unit>
-      <trans-unit id="googleAll.Text">
-        <source>Google all empty</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="googleTranslate.Text">
-        <source>Google translate</source>
-        <target />
-      </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
         <target />
@@ -6235,7 +6227,7 @@ Do you want to select a language code first?</source>
         <target />
       </trans-unit>
       <trans-unit id="saveAsTextFilter.Text">
-        <source>Translation file (*.xml)</source>
+        <source>Translation file (*.xlf)</source>
         <target />
       </trans-unit>
       <trans-unit id="saveCurrentChangesCaption.Text">
@@ -6244,10 +6236,6 @@ Do you want to select a language code first?</source>
       </trans-unit>
       <trans-unit id="saveCurrentChangesText.Text">
         <source>Do you want to save the current changes?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="selectLanguageCode.Text">
-        <source>Select a language code first.</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripButtonNew.Text">
