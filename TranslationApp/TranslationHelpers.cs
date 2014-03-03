@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using ResourceManager.Translation;
+using ResourceManager;
+using ResourceManager.Xliff;
+using TranslationUtl = ResourceManager.Xliff.TranslationUtl;
+using Xliff = ResourceManager.Xliff;
 
 namespace TranslationApp
 {
@@ -33,8 +35,8 @@ namespace TranslationApp
             }
 
             IList<TranslationItemWithCategory> neutralItems =
-                (from translationCategory in neutralTranslation.GetTranslationCategories()
-                 from translationItem in translationCategory.GetTranslationItems()
+                (from translationCategory in neutralTranslation.TranslationCategories
+                 from translationItem in translationCategory.Body.TranslationItems
                  select new TranslationItemWithCategory(translationCategory.Name, translationItem)).ToList();
             return neutralItems;
         }
@@ -44,19 +46,18 @@ namespace TranslationApp
             List<TranslationItemWithCategory> translateItems = new List<TranslationItemWithCategory>();
 
             var oldTranslationItems =
-                (from translationCategory in translation.GetTranslationCategories()
-                 from translationItem in translationCategory.GetTranslationItems()
+                (from translationCategory in translation.TranslationCategories
+                 from translationItem in translationCategory.Body.TranslationItems
                  select new TranslationItemWithCategory(translationCategory.Name, translationItem)).ToList();
 
-            Dictionary<string, string> dict = new Dictionary<string, string>();
+            var dict = new Dictionary<string, string>();
             foreach (var item in neutralItems)
             {
-                var curItem =
-                    (from trItem in oldTranslationItems
-                     where trItem.Category.TrimStart('_') == item.Category.TrimStart('_') &&
-                     trItem.Name.TrimStart('_') == item.Name.TrimStart('_') &&
-                     trItem.Property == item.Property
-                     select trItem).FirstOrDefault();
+                var curItems = oldTranslationItems.Where(
+                        trItem => trItem.Category.TrimStart('_') == item.Category.TrimStart('_') &&
+                                  trItem.Name.TrimStart('_') == item.Name.TrimStart('_') &&
+                                  trItem.Property == item.Property);
+                var curItem = curItems.FirstOrDefault();
 
                 if (curItem == null)
                 {
@@ -68,79 +69,54 @@ namespace TranslationApp
                 oldTranslationItems.Remove(curItem);
                 curItem.Category = item.Category;
                 curItem.Name = item.Name;
-                if (curItem.Status == TranslationType.Translated || curItem.Status == TranslationType.Obsolete)
+
+                string source = curItem.NeutralValue ?? item.NeutralValue;
+                if (!String.IsNullOrEmpty(curItem.TranslatedValue) && !dict.ContainsKey(source))
+                    dict.Add(source, curItem.TranslatedValue);
+
+                // Source text changed
+                if (!curItem.IsSourceEqual(item.NeutralValue) &&
+                    (!String.IsNullOrEmpty(curItem.TranslatedValue) && !curItem.IsSourceEqual(item.NeutralValue)))
                 {
-                    string source = curItem.NeutralValue ?? item.NeutralValue;
-                    if (!String.IsNullOrEmpty(curItem.TranslatedValue) && !dict.ContainsKey(source))
-                        dict.Add(source, curItem.TranslatedValue);
+                    curItem.TranslatedValue = "";
                 }
-                if ((curItem.Status == TranslationType.Translated || curItem.Status == TranslationType.Obsolete) && 
-                    !curItem.IsSourceEqual(item.NeutralValue))
-                    curItem.Status = TranslationType.Unfinished;
-                else if (curItem.Status == TranslationType.Obsolete && curItem.IsSourceEqual(item.NeutralValue))
-                    curItem.Status = TranslationType.Translated;
-                if (curItem.Status == TranslationType.Unfinished)
-                {
-                    if (!String.IsNullOrEmpty(curItem.TranslatedValue) &&
-                        curItem.OldNeutralValue == null && !curItem.IsSourceEqual(item.NeutralValue))
-                        curItem.OldNeutralValue = curItem.NeutralValue;
-                }
-                else
-                    curItem.OldNeutralValue = null;
                 curItem.NeutralValue = item.NeutralValue;
                 translateItems.Add(curItem);
             }
 
             foreach (var item in oldTranslationItems)
             {
-                if ((item.Status == TranslationType.Translated || item.Status == TranslationType.Obsolete) &&
-                    !String.IsNullOrEmpty(item.TranslatedValue) && 
+                // Obsolete should be added only to dictionary
+                if (!String.IsNullOrEmpty(item.TranslatedValue) && 
                     item.NeutralValue != null && !dict.ContainsKey(item.NeutralValue))
                 {
                     dict.Add(item.NeutralValue, item.TranslatedValue);
-
-                    item.Status = TranslationType.Obsolete;
-                    item.OldNeutralValue = null;
-                    translateItems.Add(item);
                 }
             }
 
             // update untranslated items
             var untranlatedItems = 
                 from trItem in translateItems
-                where (trItem.Status == TranslationType.New || trItem.Status == TranslationType.Unfinished &&
-                String.IsNullOrEmpty(trItem.TranslatedValue)) && dict.ContainsKey(trItem.NeutralValue)
+                where (String.IsNullOrEmpty(trItem.TranslatedValue)) && dict.ContainsKey(trItem.NeutralValue)
                 select trItem;
 
             foreach (var untranlatedItem in untranlatedItems)
             {
                 untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
-                if (untranlatedItem.TranslatedValue.IndexOfAny(new[] { ' ', '\t', '\n' }) != -1)
-                    untranlatedItem.Status = TranslationType.Translated;
-                else
-                    untranlatedItem.Status = TranslationType.Unfinished;
             }
             return translateItems;
         }
 
         public static void SaveTranslation(string languageCode, IEnumerable<TranslationItemWithCategory> items, string filename)
         {
-            Translation foreignTranslation = new Translation {
-                GitExVersion = GitCommands.AppSettings.GitExtensionsVersionString,
-                LanguageCode = languageCode };
+            var foreignTranslation = new Translation(GitCommands.AppSettings.GitExtensionsVersionString, languageCode);
             foreach (TranslationItemWithCategory translateItem in items)
             {
-                if (translateItem.Status == TranslationType.Obsolete &&
-                    (String.IsNullOrEmpty(translateItem.TranslatedValue) || String.IsNullOrEmpty(translateItem.NeutralValue)))
-                    continue;
+                var item = translateItem.GetTranslationItem();
 
-                TranslationItem ti = translateItem.GetTranslationItem().Clone();
-                if (ti.Status == TranslationType.New)
-                    ti.Status = TranslationType.Unfinished;
-                Debug.Assert(!string.IsNullOrEmpty(ti.Value) || ti.Status != TranslationType.Translated);
+                var ti = new TranslationItem(item.Name, item.Property, item.Source, item.Value);
                 ti.Value = ti.Value ?? String.Empty;
-                Debug.Assert(ti.Status != TranslationType.Translated || translateItem.IsSourceEqual(ti.Source));
-                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
+                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).Body.AddTranslationItem(ti);
             }
             TranslationSerializer.Serialize(foreignTranslation, filename);
         }

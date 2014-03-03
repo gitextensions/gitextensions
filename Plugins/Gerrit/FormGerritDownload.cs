@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
 using Newtonsoft.Json.Linq;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace Gerrit
 {

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace ReleaseNotesGenerator
 {

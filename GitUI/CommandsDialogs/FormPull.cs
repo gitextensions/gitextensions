@@ -10,7 +10,7 @@ using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.Script;
-using ResourceManager.Translation;
+using ResourceManager;
 using Settings = GitCommands.AppSettings;
 
 namespace GitUI.CommandsDialogs

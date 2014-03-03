@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using ResourceManager;
 using Settings = GitCommands.AppSettings;
 
 namespace ProxySwitcher
@@ -122,16 +122,14 @@ namespace ProxySwitcher
             Translator.Translate(this, Settings.CurrentTranslation);
         }
 
-        private const string ProxySwitcherFormName = "ProxySwitcherForm";
-
-        public virtual void AddTranslationItems(Translation translation)
+        public virtual void AddTranslationItems(ITranslation translation)
         {
-            TranslationUtl.AddTranslationItemsFromFields(ProxySwitcherFormName, this, translation);
+            TranslationUtils.AddTranslationItemsFromFields(GetType().Name, this, translation);
         }
 
-        public virtual void TranslateItems(Translation translation)
+        public virtual void TranslateItems(ITranslation translation)
         {
-            TranslationUtl.TranslateItemsFromFields(ProxySwitcherFormName, this, translation);
+            TranslationUtils.TranslateItemsFromFields(GetType().Name, this, translation);
         }
     }
 }

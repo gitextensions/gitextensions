@@ -8,7 +8,7 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
 using GitUI.Plugin;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
