@@ -180,7 +180,7 @@ namespace GitUI.Hotkey
                 // FormCommit
                 new HotkeySettings(FormCommit.HotkeySettingsName, 
                     hk(FormCommit.Commands.AddToGitIgnore, Keys.None),
-                    hk(FormCommit.Commands.DeleteSelectedFiles, Keys.None),
+                    hk(FormCommit.Commands.DeleteSelectedFiles, Keys.Delete),
                     hk(FormCommit.Commands.FocusUnstagedFiles, Keys.Control | Keys.D1),
                     hk(FormCommit.Commands.FocusSelectedDiff, Keys.Control | Keys.D2),
                     hk(FormCommit.Commands.FocusStagedFiles, Keys.Control | Keys.D3),
