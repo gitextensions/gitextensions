@@ -46,20 +46,24 @@ namespace TranslationApp
                 UpdateAllTranslations();
             }
             else if (args.Length == 2 && args[1] == "status")
+            {
                 ShowStatus();
+            }
         }
 
         private static void UpdateAllTranslations()
         {
             Cursor.Current = Cursors.WaitCursor;
             var neutralItems = TranslationHelpers.LoadNeutralItems();
+            string filename = Path.Combine(Translator.GetTranslationDir(), "English.xlf");
+            TranslationHelpers.SaveTranslation(null, neutralItems, filename);
 
             var translationsNames = Translator.GetAllTranslations();
             foreach (var name in translationsNames)
             {
                 var translation = (Translation)Translator.GetTranslation(name);
                 List<TranslationItemWithCategory> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
-                string filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
+                filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
                 TranslationHelpers.SaveTranslation(translation.LanguageCode, translateItems, filename);
             }
             Cursor.Current = Cursors.Default;
