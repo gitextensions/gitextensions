@@ -5,7 +5,7 @@ using System.Net.Mail;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.FormatPatchDialog;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {

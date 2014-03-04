@@ -1,5 +1,5 @@
 ﻿using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace ProxySwitcher
 {

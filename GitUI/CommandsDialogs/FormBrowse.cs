@@ -21,7 +21,7 @@ using GitUI.Plugin;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using ResourceManager;
 using Settings = GitCommands.AppSettings;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -2661,18 +2661,18 @@ namespace GitUI.CommandsDialogs
                 DiffText.ViewPatch(String.Empty);
         }
 
-        public override void AddTranslationItems(Translation translation)
+        public override void AddTranslationItems(ITranslation translation)
         {
             base.AddTranslationItems(translation);
-            TranslationUtl.AddTranslationItemsFromFields(Name, _filterRevisionsHelper, translation);
-            TranslationUtl.AddTranslationItemsFromFields(Name, _filterBranchHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(Name, _filterRevisionsHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
-        public override void TranslateItems(Translation translation)
+        public override void TranslateItems(ITranslation translation)
         {
             base.TranslateItems(translation);
-            TranslationUtl.TranslateItemsFromFields(Name, _filterRevisionsHelper, translation);
-            TranslationUtl.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(Name, _filterRevisionsHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)

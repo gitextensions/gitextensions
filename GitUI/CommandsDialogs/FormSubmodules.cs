@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {

@@ -1,7 +1,7 @@
 ﻿
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
-using ResourceManager.Translation;
+using ResourceManager;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -43,14 +43,14 @@ namespace GitUI.CommandsDialogs
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        public virtual void AddTranslationItems(Translation translation)
+        public virtual void AddTranslationItems(ITranslation translation)
         {
-            TranslationUtl.AddTranslationItemsFromList("FormBrowse", translation, GetAdditionalMainMenuItemsForTranslation());
+            TranslationUtils.AddTranslationItemsFromList("FormBrowse", translation, GetAdditionalMainMenuItemsForTranslation());
         }
 
-        public virtual void TranslateItems(Translation translation)
+        public virtual void TranslateItems(ITranslation translation)
         {
-            TranslationUtl.TranslateItemsFromList("FormBrowse", translation, GetAdditionalMainMenuItemsForTranslation());
+            TranslationUtils.TranslateItemsFromList("FormBrowse", translation, GetAdditionalMainMenuItemsForTranslation());
         }
 
         public void ResetMenuCommandSets()

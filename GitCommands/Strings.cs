@@ -1,5 +1,5 @@
 ﻿using System;
-using ResourceManager.Translation;
+using ResourceManager;
 using SmartFormat;
 
 namespace GitCommands

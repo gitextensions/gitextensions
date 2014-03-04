@@ -17,7 +17,7 @@ using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Script;
 using PatchApply;
-using ResourceManager.Translation;
+using ResourceManager;
 using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI.CommandsDialogs
