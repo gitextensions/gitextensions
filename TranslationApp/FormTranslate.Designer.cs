@@ -421,32 +421,6 @@ namespace TranslationApp
             this.tableLayoutPanel3.Size = new System.Drawing.Size(204, 227);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
-            // googleTranslate
-            // 
-            this.googleTranslate.AutoSize = true;
-            this.googleTranslate.Location = new System.Drawing.Point(4, 118);
-            this.googleTranslate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.googleTranslate.Name = "googleTranslate";
-            this.googleTranslate.Size = new System.Drawing.Size(196, 34);
-            this.googleTranslate.TabIndex = 2;
-            this.googleTranslate.Text = "Google translate";
-            this.googleTranslate.UseVisualStyleBackColor = true;
-            this.googleTranslate.Visible = false;
-            this.googleTranslate.Click += new System.EventHandler(this.googleTranslate_Click);
-            // 
-            // googleAll
-            // 
-            this.googleAll.AutoSize = true;
-            this.googleAll.Location = new System.Drawing.Point(4, 160);
-            this.googleAll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.googleAll.Name = "googleAll";
-            this.googleAll.Size = new System.Drawing.Size(196, 34);
-            this.googleAll.TabIndex = 3;
-            this.googleAll.Text = "Google all empty";
-            this.googleAll.UseVisualStyleBackColor = true;
-            this.googleAll.Visible = false;
-            this.googleAll.Click += new System.EventHandler(this.googleAll_Click);
-            // 
             // nextButton
             // 
             this.nextButton.AutoSize = true;

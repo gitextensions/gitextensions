@@ -1,22 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation
+namespace ResourceManager.Xliff
 {
-    public enum TranslationType
-    {
-        [XmlEnum(Name = "translated")]
-        Translated,
-        [XmlEnum(Name = "unfinished")]
-        Unfinished,
-        [XmlEnum(Name = "obsolete")]
-        Obsolete,
-        [XmlEnum(Name = "new")]
-        New
-    }
-
     [DebuggerDisplay("{name}.{property}={value}")]
     public class TranslationItem : IComparable<TranslationItem>, ICloneable
     {
@@ -30,21 +17,18 @@ namespace ResourceManager.Translation
             _name = name;
             _property = property;
             _source = source;
-            _status = TranslationType.New;
         }
 
-        public TranslationItem(string name, string property, string source, string oldSource, string value, TranslationType status)
+        public TranslationItem(string name, string property, string source, string value)
         {
             _name = name;
             _property = property;
             _source = source;
-            _oldSource = oldSource;
             _value = value;
-            _status = status;
         }
 
         private string _name;
-        [XmlAttribute]
+        [XmlIgnore]
         public string Name 
         {
             get
@@ -58,7 +42,7 @@ namespace ResourceManager.Translation
         }
 
         private string _property;
-        [XmlAttribute]
+        [XmlIgnore]
         public string Property
         {
             get
@@ -71,21 +55,23 @@ namespace ResourceManager.Translation
             }
         }
 
-        private TranslationType _status;
-        [XmlAttribute("type"), DefaultValue(0)]
-        public TranslationType Status
+        [XmlAttribute("id")]
+        public string Id
         {
             get
             {
-                return _status;
+                return _name + "." + _property;
             }
             set
             {
-                _status = value;
+                var vals = value.Split(new[] {'.'}, 2);
+                _name = vals[0];
+                _property = vals.Length > 1 ? vals[1] : "";
             }
         }
 
         private string _source;
+        [XmlElement("source")]
         public string Source
         {
             get
@@ -98,20 +84,8 @@ namespace ResourceManager.Translation
             }
         }
 
-        private string _oldSource;
-        public string OldSource
-        {
-            get
-            {
-                return _oldSource;
-            }
-            set
-            {
-                _oldSource = value;
-            }
-        }
-
         private string _value;
+        [XmlElement("target")]
         public string Value 
         {
             get
@@ -138,7 +112,7 @@ namespace ResourceManager.Translation
 
         public TranslationItem Clone()
         {
-            return new TranslationItem(_name, _property, _source, _oldSource, _value, _status);
+            return new TranslationItem(_name, _property, _source, _value);
         }
     }
 }

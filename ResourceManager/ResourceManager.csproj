@@ -65,17 +65,22 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ITranslate.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Translate.cs" />
-    <Compile Include="Translation.cs" />
-    <Compile Include="TranslationCategory.cs" />
-    <Compile Include="TranslationItem.cs" />
-    <Compile Include="TranslationSerializer.cs" />
+    <Compile Include="ITranslation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TranslationUtils.cs" />
+    <Compile Include="Xliff\TranslationUtl.cs" />
     <Compile Include="TranslationString.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TranslationUtl.cs" />
     <Compile Include="Translator.cs" />
+    <Compile Include="Xliff\Translation.cs" />
+    <Compile Include="Xliff\TranslationBody.cs" />
+    <Compile Include="Xliff\TranslationCategory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Xliff\TranslationItem.cs" />
+    <Compile Include="Xliff\TranslationSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
