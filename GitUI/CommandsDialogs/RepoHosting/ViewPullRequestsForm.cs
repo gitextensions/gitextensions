@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
 {

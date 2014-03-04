@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using GitUI.Script;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

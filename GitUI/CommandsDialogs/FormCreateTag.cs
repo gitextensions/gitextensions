@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Script;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {

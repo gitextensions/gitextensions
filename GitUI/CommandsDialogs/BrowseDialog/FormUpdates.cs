@@ -6,7 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
