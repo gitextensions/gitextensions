@@ -119,6 +119,11 @@ namespace GitUI.Editor
             return TextEditor.Text;
         }
 
+        public string GetRtf()
+        {
+            return RtfWriter.GenerateRtf(TextEditor.ActiveTextAreaControl.TextArea);
+        }
+
         public bool ShowLineNumbers
         {
             get { return TextEditor.ShowLineNumbers; }
@@ -154,7 +159,7 @@ namespace GitUI.Editor
 
         public string GetSelectedRtf()
         {
-            return RtfWriter.GenerateRtf(TextEditor.ActiveTextAreaControl.TextArea);
+            return RtfWriter.GenerateSelectedRtf(TextEditor.ActiveTextAreaControl.TextArea);
         }
 
         public int GetSelectionPosition()

@@ -21,6 +21,7 @@ namespace GitUI.Editor
         void Find();
 
         string GetText();
+        string GetRtf();
         void SetText(string text);
         void SetHighlighting(string syntax);
         void SetHighlightingForFile(string filename);

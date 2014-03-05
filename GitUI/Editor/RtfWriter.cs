@@ -50,12 +50,17 @@ namespace GitUI.Editor
             }
         }
 
-        public static string GenerateRtf(TextArea textArea)
+        public static string GenerateSelectedRtf(TextArea textArea)
         {
-            return new RtfWriter().GenerateRtfInternal(textArea);
+            return new RtfWriter().GenerateRtfInternal(textArea, true);
         }
 
-        private string GenerateRtfInternal(TextArea textArea)
+        public static string GenerateRtf(TextArea textArea)
+        {
+            return new RtfWriter().GenerateRtfInternal(textArea, false);
+        }
+
+        private string GenerateRtfInternal(TextArea textArea, bool onlySelected)
         {
             _textArea = textArea;
             _colors = new Dictionary<string, int>();
@@ -64,10 +69,20 @@ namespace GitUI.Editor
             var docRtf = new StringBuilder();
 
             docRtf.Append(@"{\rtf1\ansi\ansicpg1252\deff0\deflang1031");
+ 
             BuildFontTable(docRtf);
+                
+ 
             docRtf.Append('\n');
+            if (onlySelected)
+            {
+                BuildFileContentSelected();
+            }
+            else
+            {
+                BuildFileContentAll();
+            }
 
-            BuildFileContent();
             BuildColorTable(docRtf);
             docRtf.Append('\n');
             docRtf.Append(@"\viewkind4\uc1\pard");
@@ -90,7 +105,68 @@ namespace GitUI.Editor
             outRtf.Append("}");
         }
 
-        private void BuildFileContent()
+        private void BuildFileContentSelected()
+        {
+            InitializeContent();
+
+            foreach (ISelection selection in _textArea.SelectionManager.SelectionCollection)
+            {
+                int selectionOffset = Document.PositionToOffset(selection.StartPosition);
+                int selectionEndOffset = Document.PositionToOffset(selection.EndPosition);
+
+                BuildMarkers(selectionOffset, selectionEndOffset);
+                for (int i = selection.StartPosition.Y; i <= selection.EndPosition.Y; ++i)
+                {
+                    LineSegment line = Document.GetLineSegment(i);
+                    ProcessLineSegment(line, selectionOffset, selectionEndOffset);
+                }
+            }
+        }
+
+        private void BuildFileContentAll()
+        {
+            InitializeContent();
+            int selectionOffset = 0;
+            int selectionEndOffset = Document.TextLength;
+            BuildMarkers(selectionOffset, selectionEndOffset);
+            foreach (var line in Document.LineSegmentCollection)
+            {
+                ProcessLineSegment(line, selectionOffset, selectionEndOffset);
+            }
+        }
+
+        private void ProcessLineSegment(LineSegment line, int selectionOffset, int selectionEndOffset)
+        {
+            int offset = line.Offset;
+            if (line.Words == null)
+            {
+                return;
+            }
+
+            foreach (TextWord word in line.Words)
+            {
+                offset = ProcessWord(word, offset, selectionOffset, selectionEndOffset);
+            }
+
+            if (offset < selectionEndOffset)
+            {
+                _contentRtf.Append(@"\par");
+            }
+
+            _contentRtf.Append('\n');
+        }
+
+        private void BuildMarkers(int selectionOffset, int selectionEndOffset)
+        {
+            _markers =
+                Document.MarkerStrategy.GetMarkers(selectionOffset, selectionEndOffset - selectionOffset)
+                        .Where(m => m.TextMarkerType == TextMarkerType.SolidBlock)
+                        .ToList();
+
+            _offsetHiChange = new HashSet<int>(_markers.Select(m => m.Offset).Concat(_markers.Select(m => m.EndOffset + 1)));
+        }
+
+        private void InitializeContent()
         {
             _contentRtf = new StringBuilder();
             _state = new RtfWriterState
@@ -101,44 +177,11 @@ namespace GitUI.Editor
                     OldItalic = false,
                     OldBold = false
                 };
-
-            foreach (ISelection selection in _textArea.SelectionManager.SelectionCollection)
-            {
-                int selectionOffset = Document.PositionToOffset(selection.StartPosition);
-                int selectionEndOffset = Document.PositionToOffset(selection.EndPosition);
-
-                _markers = Document.MarkerStrategy.GetMarkers(selectionOffset, selectionEndOffset - selectionOffset)
-                                   .Where(m => m.TextMarkerType == TextMarkerType.SolidBlock).ToList();
-
-                _offsetHiChange = new HashSet<int>(_markers.Select(m => m.Offset).Concat(_markers.Select(m => m.EndOffset + 1)));
-                for (int i = selection.StartPosition.Y; i <= selection.EndPosition.Y; ++i)
-                {
-                    LineSegment line = Document.GetLineSegment(i);
-                    int offset = line.Offset;
-                    if (line.Words == null)
-                    {
-                        continue;
-                    }
-
-                    foreach (TextWord word in line.Words)
-                    {
-                        offset = ProcessWord(word, offset, selection, selectionOffset, selectionEndOffset);
-                    }
-
-                    if (offset < selectionEndOffset)
-                    {
-                        _contentRtf.Append(@"\par");
-                    }
-
-                    _contentRtf.Append('\n');
-                }
-            }
         }
 
         private int ProcessWord(
             TextWord word,
             int offset,
-            ISelection selection,
             int selectionOffset,
             int selectionEndOffset)
         {
@@ -146,7 +189,7 @@ namespace GitUI.Editor
             {
                 case TextWordType.Space:
                     BuildHighLight(offset, ref _state.EscapeSequence);
-                    if (selection.ContainsOffset(offset))
+                    if (offset < selectionEndOffset)
                     {
                         _contentRtf.Append(' ');
                     }
@@ -155,7 +198,7 @@ namespace GitUI.Editor
 
                 case TextWordType.Tab:
                     BuildHighLight(offset, ref _state.EscapeSequence);
-                    if (selection.ContainsOffset(offset))
+                    if (offset < selectionEndOffset)
                     {
                         _contentRtf.Append(@"\tab");
                     }

@@ -102,6 +102,11 @@ namespace GitUI.Editor
             return TextEditor.Text;
         }
 
+        public string GetRtf()
+        {
+            return TextEditor.Rtf;
+        }
+
         public void SetText(string text)
         {
             TextEditor.Clear();
