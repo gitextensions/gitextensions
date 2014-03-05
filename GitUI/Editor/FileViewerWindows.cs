@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
+using ICSharpCode.TextEditor.Util;
 
 namespace GitUI.Editor
 {
@@ -149,6 +150,11 @@ namespace GitUI.Editor
         public string GetSelectedText()
         {
             return TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;
+        }
+
+        public string GetSelectedRtf()
+        {
+            return RtfWriter.GenerateRtf(TextEditor.ActiveTextAreaControl.TextArea);
         }
 
         public int GetSelectionPosition()

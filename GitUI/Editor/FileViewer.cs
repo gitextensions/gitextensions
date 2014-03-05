@@ -714,7 +714,12 @@ namespace GitUI.Editor
             var selectedText = _internalFileViewer.GetSelectedText();
             if (!string.IsNullOrEmpty(selectedText))
             {
-                Clipboard.SetText(selectedText);
+                var selectedRtf = _internalFileViewer.GetSelectedRtf();
+
+                var dataObject = new DataObject();
+                dataObject.SetText(selectedText, TextDataFormat.Text);
+                dataObject.SetText(selectedRtf, TextDataFormat.Rtf);
+                Clipboard.SetDataObject(dataObject);
                 return;
             }
             

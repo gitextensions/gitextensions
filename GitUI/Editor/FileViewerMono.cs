@@ -124,6 +124,11 @@ namespace GitUI.Editor
             return TextEditor.SelectedText;
         }
 
+        public string GetSelectedRtf()
+        {
+            return TextEditor.SelectedRtf;
+        }
+
         public int ScrollPos
         {
             get
