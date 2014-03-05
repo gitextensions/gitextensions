@@ -28,6 +28,7 @@ namespace GitUI
         /// </summary>
         private const int MaxUpdatePeriod = 5 * 60 * 1000;
 
+        private bool _commandIsRunning = false;
         private bool _statusIsUpToDate = true;
         private readonly FileSystemWatcher _workTreeWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher _gitDirWatcher = new FileSystemWatcher();
@@ -249,12 +250,13 @@ namespace GitUI
             {
                 // If the previous status call hasn't exited yet, we'll wait until it is
                 // so we don't queue up a bunch of commands
-                if (UICommands.RepoChangedNotifier.IsLocked || Module.IsRunningGitProcess())
+                if (_commandIsRunning || UICommands.RepoChangedNotifier.IsLocked || Module.IsRunningGitProcess())
                 {
                     _statusIsUpToDate = false;//tell that computed status isn't up to date
                     return;
                 }
 
+                _commandIsRunning = true;
                 _statusIsUpToDate = true;
                 AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, (e) => { CurrentStatus = WorkingStatus.Stopped; });
                 // Always update every 5 min, even if we don't know anything changed
@@ -270,6 +272,8 @@ namespace GitUI
 
         private void UpdatedStatusReceived(string updatedStatus)
         {
+            _commandIsRunning = false;
+
             if (CurrentStatus != WorkingStatus.Started)
                 return;
 
