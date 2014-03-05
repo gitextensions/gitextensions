@@ -21,15 +21,15 @@ namespace ResourceManager.Xliff
             _languageCode = languageCode;
         }
 
-        private string _languageCode;
-        [XmlIgnore]
-        public string LanguageCode { get { return _languageCode; } }
-
         [XmlAttribute("version")]
         public string Version { get; set; }
 
         [XmlAttribute("GitExVersion")]
         public string GitExVersion { get; set; }
+
+        private string _languageCode;
+        [XmlAttribute("LanguageCode")]
+        public string LanguageCode { get { return _languageCode; } }
 
         [XmlElement(ElementName = "file")]
         public List<TranslationCategory> TranslationCategories { get; set; }
@@ -39,7 +39,7 @@ namespace ResourceManager.Xliff
             TranslationCategory tc = GetTranslationCategory(translationCategory);
             if (tc == null)
             {
-                tc = new TranslationCategory(translationCategory, "en", _languageCode);
+                tc = new TranslationCategory(translationCategory, "en");
                 AddTranslationCategory(tc);
             }
             return tc;
