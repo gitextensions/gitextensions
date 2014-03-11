@@ -171,6 +171,7 @@
             this.GlobalDiffTool.Items.AddRange(new object[] {
             "araxis",
             "beyondcompare3",
+            "beyondcompare4",
             "diffuse",
             "ecmerge",
             "emerge",
@@ -283,6 +284,7 @@
             this.GlobalMergeTool.Items.AddRange(new object[] {
             "Araxis",
             "BeyondCompare3",
+            "BeyondCompare4",
             "DiffMerge",
             "kdiff3",
             "p4merge",
