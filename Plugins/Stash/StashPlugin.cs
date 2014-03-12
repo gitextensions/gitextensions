@@ -5,10 +5,10 @@ namespace Stash
 {
     public class StashPlugin : GitPluginBase
     {
-        public const string StashUsername = "Stash Username";
-        public const string StashPassword = "Stash Password";
-        public const string StashBaseURL = "Specify the base URL to Stash";
-        public const string StashDisableSSL = "Disable SSL verification (\"yes\" or \"no\")";
+        public static StringSetting StashUsername = new StringSetting("Stash Username", string.Empty);
+        public static StringSetting StashPassword = new StringSetting("Stash Password", string.Empty);
+        public static StringSetting StashBaseURL = new StringSetting("Specify the base URL to Stash", "https://example.stash.com");
+        public static BoolSetting StashDisableSSL = new BoolSetting("Disable SSL verification", false);
 
         public override string Description
         {
@@ -18,18 +18,16 @@ namespace Stash
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             using (var frm = new StashPullRequestForm(gitUiCommands, base.Settings))
-                frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+                frm.ShowDialog(gitUiCommands.OwnerForm);
             return true;
         }
 
-        protected override void RegisterSettings()
+        public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
         {
-            base.RegisterSettings();
-
-            Settings.AddSetting(StashUsername, string.Empty);
-            Settings.AddSetting(StashPassword, string.Empty);
-            Settings.AddSetting(StashBaseURL, "https://example.stash.com");
-            Settings.AddSetting(StashDisableSSL, "no");
+            yield return StashUsername;
+            yield return StashPassword;
+            yield return StashBaseURL;
+            yield return StashDisableSSL;
         }
     }
 }

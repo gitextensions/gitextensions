@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -11,6 +12,8 @@ namespace Gource
 {
     public class Gource : GitPluginBase, IGitPluginForRepository
     {
+        private StringSetting GourcePath = new StringSetting("Path to \"gource\"", "");
+        private StringSetting GourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
         #region IGitPlugin Members
 
         public override string Description
@@ -18,11 +21,11 @@ namespace Gource
             get { return "gource"; }
         }
 
-        protected override void RegisterSettings()
+        public override IEnumerable<ISetting> GetSettings()
         {
-            base.RegisterSettings();
-            Settings.AddSetting("Path to \"gource\"", "");
-            Settings.AddSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
+            //return all settings or introduce implementation based on reflection on GitPluginBase level
+            yield return GourcePath;
+            yield return GourceArguments;
         }
 
         public override bool Execute(GitUIBaseEventArgs eventArgs)
@@ -37,7 +40,7 @@ namespace Gource
                 return false;
             }
 
-            var pathToGource = Settings.GetSetting("Path to \"gource\"");
+            var pathToGource = GourcePath[Settings];
 
             if (!string.IsNullOrEmpty(pathToGource))
             {
@@ -48,8 +51,9 @@ namespace Gource
                             ".\n\n.Do you want to reset the configured path?", "Gource", MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
                     {
-                        Settings.SetSetting("Path to \"gource\"", "");
-                        pathToGource = Settings.GetSetting("Path to \"gource\"");
+                        //GourcePath.Value = GourcePath.DefaultValue;
+                        //Settings.SetSetting("Path to \"gource\"", "");
+                        //pathToGource = Settings.GetSetting("Path to \"gource\"");
                     }
                 }
             }
@@ -80,7 +84,7 @@ namespace Gource
                         var newGourcePath = downloadDir + "\\gource\\gource.exe";
                         if (File.Exists(newGourcePath))
                         {
-                            Settings.SetSetting("Path to \"gource\"", newGourcePath);
+                            //Settings.SetSetting("Path to \"gource\"", newGourcePath);
                             MessageBox.Show(ownerForm, "\"gource\" has been downloaded and unzipped.");
                             pathToGource = newGourcePath;
                         }
@@ -93,14 +97,14 @@ namespace Gource
                 }
             }
             
-            using (var gourceStart = new GourceStart(pathToGource, eventArgs,
-                                              Settings.GetSetting("Arguments")))
-            {
-                gourceStart.ShowDialog(ownerForm);
+            //using (var gourceStart = new GourceStart(pathToGource, eventArgs,
+            //                                  Settings.GetSetting("Arguments")))
+            //{
+            //    gourceStart.ShowDialog(ownerForm);
 
-                Settings.SetSetting("Arguments", gourceStart.GourceArguments);
-                Settings.SetSetting("Path to \"gource\"", gourceStart.PathToGource);
-            }
+            //    Settings.SetSetting("Arguments", gourceStart.GourceArguments);
+            //    Settings.SetSetting("Path to \"gource\"", gourceStart.PathToGource);
+            //}
             return false;
         }
 
