@@ -50,13 +50,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             if (_gitPlugin == null)
                 throw new ApplicationException();
 
-            foreach (Control control in panelAutoGenControls.Controls)
+            foreach (var setting in _gitPlugin.GetSettings())
             {
-                var textBox = control as TextBox;
-
-                if (textBox != null)
-                    if (_gitPlugin.Settings.GetAvailableSettings().Contains(textBox.Name))
-                        textBox.Text = _gitPlugin.Settings.GetSetting(textBox.Name);
+                setting.ControlBinding.GetControl();
+                setting.ControlBinding.LoadSetting(_gitPlugin.Settings);
             }
         }
 
@@ -106,8 +103,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
                     };
                 panelAutoGenControls.Controls.Add(label);
 
-                var controlBinding = setting.CreateControlBinding();
-                var control = controlBinding.GetControl();
+                var controlBinding = setting.ControlBinding;
+                var control = controlBinding.UserControl;
                 control.Location = new Point(xEditStart, yStart);
                 control.Size = new Size(panelAutoGenControls.Width - xEditStart - 20, 20);
                 //TODO associate control with controlBinding
@@ -126,13 +123,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             if (_gitPlugin == null)
                 throw new ApplicationException();
 
-            foreach (Control control in panelAutoGenControls.Controls)
+            foreach (var setting in _gitPlugin.GetSettings())
             {
-                var textBox = control as TextBox;
-
-                if (textBox != null)
-                    if (_gitPlugin.Settings.GetAvailableSettings().Contains(textBox.Name))
-                        _gitPlugin.Settings.SetSetting(textBox.Name, textBox.Text);
+                setting.ControlBinding.SaveSetting(_gitPlugin.Settings);
             }
         }
     }
