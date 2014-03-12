@@ -15,14 +15,9 @@ namespace ReleaseNotesGenerator
             get { return _pluginDescription.Text; }
         }
 
-        ////protected override void RegisterSettings()
-        ////{
-        ////    base.RegisterSettings();
-        ////}
-
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            using (var form = new ReleaseNotesGeneratorForm(Settings, gitUiCommands))
+            using (var form = new ReleaseNotesGeneratorForm(gitUiCommands))
             {
                 if (form.ShowDialog(gitUiCommands.OwnerForm) == DialogResult.OK)
                 {
