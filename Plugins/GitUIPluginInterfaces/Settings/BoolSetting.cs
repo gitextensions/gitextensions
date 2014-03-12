@@ -18,20 +18,20 @@ namespace GitUIPluginInterfaces
             Name = aName;
             Caption = aCaption;
             DefaultValue = aDefaultValue;
+            _controlBinding = new CheckBoxBinding(this);
         }
 
         public string Name { get; private set; }
         public string Caption { get; private set; }
         public bool? DefaultValue { get; set; }
-
-        public ISettingControlBinding CreateControlBinding()
+        private ISettingControlBinding _controlBinding;
+        public ISettingControlBinding ControlBinding
         {
-            return new CheckBoxBinding(this);
+            get { return _controlBinding; }
         }
 
         private class CheckBoxBinding : SettingControlBinding<CheckBox>
         {
-
             BoolSetting Setting;
 
             public CheckBoxBinding(BoolSetting aSetting)
@@ -47,13 +47,13 @@ namespace GitUIPluginInterfaces
             public override void LoadSetting(ISettingsSource settings, CheckBox control)
             {
                 //TODO handle three states
-                Setting[settings] = control.Checked;
+                control.Checked = Setting[settings].Value;
             }
 
-            public void SaveSetting(ISettingsSource settings, CheckBox control)
+            public override void SaveSetting(ISettingsSource settings, CheckBox control)
             {
                 //TODO handle three states
-                control.Checked = Setting[settings].Value;
+                Setting[settings] = control.Checked;
             }
         }
 
@@ -61,12 +61,22 @@ namespace GitUIPluginInterfaces
         {
             get 
             {
-                return settings.GetBool(Name, DefaultValue);
+                return settings.GetValue(Name, DefaultValue, s =>
+                    {
+                        if (string.IsNullOrWhiteSpace(s))
+                            return DefaultValue;
+                        return string.Compare(s, true.ToString(), StringComparison.InvariantCultureIgnoreCase) == 0;
+                    });
             }
 
             set 
             {
-                settings.SetBool(Name, value);
+                settings.SetValue(Name, value, b =>
+                    {
+                        if (!b.HasValue)
+                            return string.Empty;
+                        return b.Value.ToString();
+                    });
             }
         }
     }
