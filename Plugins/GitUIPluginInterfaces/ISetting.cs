@@ -18,7 +18,7 @@ namespace GitUIPluginInterfaces
         /// </summary>
         string Caption { get; }
 
-        ISettingControlBinding CreateControlBinding();
+        ISettingControlBinding ControlBinding { get; }
     }
 
     public interface ISettingControlBinding
@@ -29,6 +29,8 @@ namespace GitUIPluginInterfaces
         /// </summary>
         /// <returns></returns>
         Control GetControl();
+
+        Control UserControl { get; }
 
         /// <summary>
         /// Loads setting value from settings to Control
@@ -59,11 +61,10 @@ namespace GitUIPluginInterfaces
 
         public Control GetControl()
         {
-            if (_control == null)
-                _control = CreateControl();
-
-            return _control;
+            return _control = CreateControl();
         }
+
+        public Control UserControl { get { return Control; } }
 
         public void LoadSetting(ISettingsSource settings)
         {
@@ -74,7 +75,7 @@ namespace GitUIPluginInterfaces
         /// Saves value from Control to settings
         /// </summary>
         /// <param name="settings"></param>
-        void SaveSetting(ISettingsSource settings)
+        public void SaveSetting(ISettingsSource settings)
         {
             SaveSetting(settings, Control);
         }
@@ -85,19 +86,19 @@ namespace GitUIPluginInterfaces
         /// Control should take care of scalability and resizability of its subcontrols
         /// </summary>
         /// <returns></returns>
-        abstract T CreateControl();
+        public abstract T CreateControl();
 
         /// <summary>
         /// Loads setting value from settings to Control
         /// </summary>
         /// <param name="settings"></param>
-        abstract void LoadSetting(ISettingsSource settings, T control);
+        public abstract void LoadSetting(ISettingsSource settings, T control);
 
         /// <summary>
         /// Saves value from Control to settings
         /// </summary>
         /// <param name="settings"></param>
-        abstract void SaveSetting(ISettingsSource settings, T control);
+        public abstract void SaveSetting(ISettingsSource settings, T control);
 
 
     }

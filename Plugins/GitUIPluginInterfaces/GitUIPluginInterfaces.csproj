@@ -100,6 +100,8 @@
     <Compile Include="RepositoryHosts\IPasswordHelper.cs" />
     <Compile Include="RepositoryHosts\IHostedRemote.cs" />
     <Compile Include="RepositoryHosts\IPullRequestInformation.cs" />
+    <Compile Include="Settings\NumberSetting.cs" />
+    <Compile Include="Settings\StringSetting.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
