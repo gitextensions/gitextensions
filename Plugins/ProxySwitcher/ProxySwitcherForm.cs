@@ -10,7 +10,7 @@ namespace ProxySwitcher
 {
     public partial class ProxySwitcherForm : Form, ITranslate
     {
-        private readonly IGitPluginSettingsContainer settings;
+        private readonly ISettingsSource settings;
         private readonly IGitModule gitCommands;
 
         #region Translation
@@ -28,7 +28,7 @@ namespace ProxySwitcher
             InitializeComponent();
         }
 
-        public ProxySwitcherForm(IGitPluginSettingsContainer settings, GitUIBaseEventArgs gitUiCommands)
+        public ProxySwitcherForm(ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();
@@ -40,7 +40,7 @@ namespace ProxySwitcher
 
         private void ProxySwitcherForm_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(settings.GetSetting(SettingsKey.HttpProxy)))
+            if (string.IsNullOrEmpty(SettingsKey.HttpProxy[settings]))
             {
                 MessageBox.Show(this, _pleaseSetProxy.Text, this.Text, MessageBoxButtons.OK);
                 this.Close();
@@ -67,10 +67,10 @@ namespace ProxySwitcher
         {
             var sb = new StringBuilder();
             sb.Append("\"");
-            var username = settings.GetSetting(SettingsKey.Username);
+            var username = SettingsKey.Username[settings];
             if (!string.IsNullOrEmpty(username))
             {
-                var password = settings.GetSetting(SettingsKey.Password);
+                var password = SettingsKey.Password[settings];
                 sb.Append(username);
                 if(!string.IsNullOrEmpty(password))
                 {
@@ -79,8 +79,8 @@ namespace ProxySwitcher
                 }
                 sb.Append("@");
             }
-            sb.Append(settings.GetSetting(SettingsKey.HttpProxy));
-            var port = settings.GetSetting(SettingsKey.HttpProxyPort);
+            sb.Append(SettingsKey.HttpProxy[settings]);
+            var port = SettingsKey.HttpProxyPort[settings];
             if (!string.IsNullOrEmpty(port))
             {
                 sb.Append(":");
