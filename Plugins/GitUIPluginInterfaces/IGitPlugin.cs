@@ -6,6 +6,8 @@ namespace GitUIPluginInterfaces
     {
         string Description { get; }
 
+        ISettingsSource Settings { get; set; }
+
         IEnumerable<ISetting> GetSettings();
 
         void Register(IGitUICommands gitUiCommands);
