@@ -424,7 +424,7 @@ namespace GitUI
         /// <param name="preEvent">Event invoked before performing action</param>
         /// <param name="postEvent">Event invoked after performing action</param>
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
-        /// <returns>true if action was sccessfully done, false otherwise</returns>
+        /// <returns>true if action was successfully done, false otherwise</returns>
         public bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo, 
             GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<bool> action)
         {

@@ -115,7 +115,7 @@
             this.Init.Name = "Init";
             this.Init.Size = new System.Drawing.Size(126, 31);
             this.Init.TabIndex = 4;
-            this.Init.Text = "Initialize";
+            this.Init.Text = "Create";
             this.Init.UseVisualStyleBackColor = true;
             this.Init.Click += new System.EventHandler(this.InitClick);
             // 
@@ -136,7 +136,7 @@
             this.MinimizeBox = false;
             this.Name = "FormInit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Initialize new repository";
+            this.Text = "Create new repository";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
