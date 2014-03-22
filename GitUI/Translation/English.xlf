@@ -1542,7 +1542,7 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="PatchDirMode.Text">
-        <source>Patch dir</source>
+        <source>Patch directory</source>
         <target />
       </trans-unit>
       <trans-unit id="PatchFileMode.Text">
