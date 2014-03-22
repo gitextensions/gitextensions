@@ -176,7 +176,7 @@
             this.PatchDirMode.Name = "PatchDirMode";
             this.PatchDirMode.Size = new System.Drawing.Size(72, 19);
             this.PatchDirMode.TabIndex = 1;
-            this.PatchDirMode.Text = "Patch dir";
+            this.PatchDirMode.Text = "Patch directory";
             this.PatchDirMode.UseVisualStyleBackColor = true;
             this.PatchDirMode.CheckedChanged += new System.EventHandler(this.PatchDirMode_CheckedChanged);
             // 
