@@ -94,7 +94,7 @@
             this.groupBox1.Size = new System.Drawing.Size(410, 100);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Remove untracked files from working tree";
+            this.groupBox1.Text = "Remove untracked files from working directory";
             // 
             // RemoveIngnored
             // 
@@ -214,7 +214,7 @@
             this.MinimumSize = new System.Drawing.Size(450, 480);
             this.Name = "FormCleanupRepository";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Clean working tree";
+            this.Text = "Clean working directory";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

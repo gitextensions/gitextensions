@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Conflicts solved");
 
         private readonly TranslationString _applyShashedItemsAgain =
-            new TranslationString("Apply stashed items to working dir again?");
+            new TranslationString("Apply stashed items to working directory again?");
 
         private readonly TranslationString _applyShashedItemsAgainCaption =
             new TranslationString("Auto stash");

@@ -92,7 +92,7 @@
             this.Central.Name = "Central";
             this.Central.Size = new System.Drawing.Size(453, 27);
             this.Central.TabIndex = 1;
-            this.Central.Text = "Central repository, no working dir  (--bare --shared=all)";
+            this.Central.Text = "Central repository, no working directory  (--bare --shared=all)";
             this.Central.UseVisualStyleBackColor = true;
             // 
             // Personal

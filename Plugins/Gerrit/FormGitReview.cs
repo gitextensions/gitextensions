@@ -12,9 +12,9 @@ namespace Gerrit
     public sealed partial class FormGitReview : GitExtensionsForm, IGitUICommandsSource
     {
         private readonly TranslationString _gitreviewOnlyInWorkingDirSupported =
-            new TranslationString(".gitreview is only supported when there is a working dir.");
+            new TranslationString(".gitreview is only supported when there is a working directory.");
         private readonly TranslationString _gitreviewOnlyInWorkingDirSupportedCaption =
-            new TranslationString("No working dir");
+            new TranslationString("No working directory");
 
         private readonly TranslationString _cannotAccessGitreview =
             new TranslationString("Failed to save .gitreview." + Environment.NewLine + "Check if file is accessible.");

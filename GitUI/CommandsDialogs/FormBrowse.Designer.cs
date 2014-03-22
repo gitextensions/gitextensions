@@ -808,7 +808,7 @@ namespace GitUI.CommandsDialogs
             this.fileTreeCleanWorkingTreeToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCleanupRepo;
             this.fileTreeCleanWorkingTreeToolStripMenuItem.Name = "fileTreeCleanWorkingTreeToolStripMenuItem";
             this.fileTreeCleanWorkingTreeToolStripMenuItem.Size = new System.Drawing.Size(341, 24);
-            this.fileTreeCleanWorkingTreeToolStripMenuItem.Text = "Clean working tree...";
+            this.fileTreeCleanWorkingTreeToolStripMenuItem.Text = "Clean working directory...";
             this.fileTreeCleanWorkingTreeToolStripMenuItem.Click += new System.EventHandler(this.fileTreeCleanWorkingTreeToolStripMenuItem_Click);
             // 
             // toolStripSeparator31
@@ -851,7 +851,7 @@ namespace GitUI.CommandsDialogs
             this.editCheckedOutFileToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconEditFile;
             this.editCheckedOutFileToolStripMenuItem.Name = "editCheckedOutFileToolStripMenuItem";
             this.editCheckedOutFileToolStripMenuItem.Size = new System.Drawing.Size(341, 24);
-            this.editCheckedOutFileToolStripMenuItem.Text = "Edit working dir file";
+            this.editCheckedOutFileToolStripMenuItem.Text = "Edit working directory file";
             this.editCheckedOutFileToolStripMenuItem.Click += new System.EventHandler(this.editCheckedOutFileToolStripMenuItem_Click);
             // 
             // openFileToolStripMenuItem
@@ -873,7 +873,7 @@ namespace GitUI.CommandsDialogs
             this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
             this.openWithToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openWithToolStripMenuItem.Size = new System.Drawing.Size(341, 24);
-            this.openWithToolStripMenuItem.Text = "Open working dir file with...";
+            this.openWithToolStripMenuItem.Text = "Open working directory file with...";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
             // 
             // toolStripSeparator18
@@ -993,28 +993,28 @@ namespace GitUI.CommandsDialogs
             // 
             this.aLocalToolStripMenuItem.Name = "aLocalToolStripMenuItem";
             this.aLocalToolStripMenuItem.Size = new System.Drawing.Size(262, 24);
-            this.aLocalToolStripMenuItem.Text = "A <--> Working dir";
+            this.aLocalToolStripMenuItem.Text = "A <--> Working directory";
             this.aLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // bLocalToolStripMenuItem
             // 
             this.bLocalToolStripMenuItem.Name = "bLocalToolStripMenuItem";
             this.bLocalToolStripMenuItem.Size = new System.Drawing.Size(262, 24);
-            this.bLocalToolStripMenuItem.Text = "B <--> Working dir";
+            this.bLocalToolStripMenuItem.Text = "B <--> Working directory";
             this.bLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // parentOfALocalToolStripMenuItem
             // 
             this.parentOfALocalToolStripMenuItem.Name = "parentOfALocalToolStripMenuItem";
             this.parentOfALocalToolStripMenuItem.Size = new System.Drawing.Size(262, 24);
-            this.parentOfALocalToolStripMenuItem.Text = "A\'s parent <--> Working dir";
+            this.parentOfALocalToolStripMenuItem.Text = "A\'s parent <--> Working directory";
             this.parentOfALocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // parentOfBLocalToolStripMenuItem
             // 
             this.parentOfBLocalToolStripMenuItem.Name = "parentOfBLocalToolStripMenuItem";
             this.parentOfBLocalToolStripMenuItem.Size = new System.Drawing.Size(262, 24);
-            this.parentOfBLocalToolStripMenuItem.Text = "B\'s parent <--> Working dir";
+            this.parentOfBLocalToolStripMenuItem.Text = "B\'s parent <--> Working directory";
             this.parentOfBLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem1
@@ -1541,7 +1541,7 @@ namespace GitUI.CommandsDialogs
             this.cleanupToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCleanupRepo;
             this.cleanupToolStripMenuItem.Name = "cleanupToolStripMenuItem";
             this.cleanupToolStripMenuItem.Size = new System.Drawing.Size(248, 24);
-            this.cleanupToolStripMenuItem.Text = "Clean working tree...";
+            this.cleanupToolStripMenuItem.Text = "Clean working directory...";
             this.cleanupToolStripMenuItem.Click += new System.EventHandler(this.CleanupToolStripMenuItemClick);
             // 
             // toolStripSeparator25
