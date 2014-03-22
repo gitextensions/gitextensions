@@ -729,7 +729,7 @@ namespace GitUI
                 GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
             else
             {
-                if (revision.Guid == GitRevision.UnstagedGuid) //working dir changes
+                if (revision.Guid == GitRevision.UnstagedGuid) //working directory changes
                     GitItemStatuses = Module.GetUnstagedFilesWithSubmodulesStatus();
                 else if (revision.Guid == GitRevision.IndexGuid) //index
                     GitItemStatuses = Module.GetStagedFilesWithSubmodulesStatus();

@@ -432,7 +432,7 @@ namespace GitUI.Editor
 
         public void ViewGitItemRevision(string fileName, string guid)
         {
-            if (guid == GitRevision.UnstagedGuid) //working dir changes
+            if (guid == GitRevision.UnstagedGuid) //working directory changes
             {
                 ViewFile(fileName);
             }

@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _applyShashedItemsAgainCaption =
             new TranslationString("Auto stash");
         private readonly TranslationString _applyShashedItemsAgain =
-            new TranslationString("Apply stashed items to working dir again?");
+            new TranslationString("Apply stashed items to working directory again?");
 
         private readonly TranslationString _dontShowAgain =
             new TranslationString("Don't show me this message again.");

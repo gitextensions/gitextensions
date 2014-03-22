@@ -10,9 +10,9 @@ namespace GitUI.CommandsDialogs
     public partial class FormGitAttributes : GitModuleForm
     {
         private readonly TranslationString noWorkingDir = 
-            new TranslationString(".gitattributes is only supported when there is a working dir.");
+            new TranslationString(".gitattributes is only supported when there is a working directory.");
         private readonly TranslationString _noWorkingDirCaption =
-            new TranslationString("No working dir");
+            new TranslationString("No working directory");
 
         private readonly TranslationString _cannotAccessGitattributes =
             new TranslationString("Failed to save .gitattributes." + Environment.NewLine + "Check if file is accessible.");

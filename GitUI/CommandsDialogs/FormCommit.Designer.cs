@@ -707,7 +707,7 @@ namespace GitUI.CommandsDialogs
             this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources.WorkingDirChanges;
             this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
             this.workingToolStripMenuItem.Size = new System.Drawing.Size(145, 20);
-            this.workingToolStripMenuItem.Text = "Working dir changes";
+            this.workingToolStripMenuItem.Text = "Working directory changes";
             // 
             // showIgnoredFilesToolStripMenuItem
             // 

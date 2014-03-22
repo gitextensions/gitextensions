@@ -133,7 +133,7 @@ namespace GitUI.CommandsDialogs
                 var longPath = new StringBuilder(4096);
                 NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
-                // remove the working dir and now we have a properly cased file name.
+                // remove the working directory and now we have a properly cased file name.
                 fileName = longPath.ToString().Substring(Module.WorkingDir.Length);
             }
 

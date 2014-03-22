@@ -2551,7 +2551,7 @@ namespace GitCommands
 
         public string GetFileBlobHash(string fileName, string revision)
         {
-            if (revision == GitRevision.UnstagedGuid) //working dir changes
+            if (revision == GitRevision.UnstagedGuid) //working directory changes
             {
                 return null;
             }

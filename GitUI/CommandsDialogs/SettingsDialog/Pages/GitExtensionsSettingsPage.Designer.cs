@@ -244,7 +244,7 @@
             this.chkStartWithRecentWorkingDir.Name = "chkStartWithRecentWorkingDir";
             this.chkStartWithRecentWorkingDir.Size = new System.Drawing.Size(211, 20);
             this.chkStartWithRecentWorkingDir.TabIndex = 15;
-            this.chkStartWithRecentWorkingDir.Text = "Open last working dir on startup";
+            this.chkStartWithRecentWorkingDir.Text = "Open last working directory on startup";
             this.chkStartWithRecentWorkingDir.UseVisualStyleBackColor = true;
             // 
             // chkFollowRenamesInFileHistory
@@ -376,7 +376,7 @@
             this.chkShowCurrentChangesInRevisionGraph.Name = "chkShowCurrentChangesInRevisionGraph";
             this.chkShowCurrentChangesInRevisionGraph.Size = new System.Drawing.Size(366, 20);
             this.chkShowCurrentChangesInRevisionGraph.TabIndex = 2;
-            this.chkShowCurrentChangesInRevisionGraph.Text = "Show current working dir changes in revision graph (slow!)";
+            this.chkShowCurrentChangesInRevisionGraph.Text = "Show current working directory changes in revision graph (slow!)";
             this.chkShowCurrentChangesInRevisionGraph.UseVisualStyleBackColor = true;
             // 
             // groupBoxEmailSettings

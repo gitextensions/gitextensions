@@ -68,7 +68,7 @@
             this.Hard.Name = "Hard";
             this.Hard.Size = new System.Drawing.Size(323, 34);
             this.Hard.TabIndex = 2;
-            this.Hard.Text = "Hard: reset working dir and index\r\n(discard ALL local changes, even uncommitted c" +
+            this.Hard.Text = "Hard: reset working directory and index\r\n(discard ALL local changes, even uncommitted c" +
     "hanges)";
             this.Hard.UseVisualStyleBackColor = false;
             // 
@@ -82,7 +82,7 @@
             this.Mixed.Size = new System.Drawing.Size(276, 19);
             this.Mixed.TabIndex = 1;
             this.Mixed.TabStop = true;
-            this.Mixed.Text = "Mixed: leave working dir untouched, reset index";
+            this.Mixed.Text = "Mixed: leave working directory untouched, reset index";
             this.Mixed.UseVisualStyleBackColor = false;
             // 
             // Soft
@@ -93,7 +93,7 @@
             this.Soft.Name = "Soft";
             this.Soft.Size = new System.Drawing.Size(257, 19);
             this.Soft.TabIndex = 0;
-            this.Soft.Text = "Soft: leave working dir and index untouched";
+            this.Soft.Text = "Soft: leave working directory and index untouched";
             this.Soft.UseVisualStyleBackColor = false;
             // 
             // Ok
