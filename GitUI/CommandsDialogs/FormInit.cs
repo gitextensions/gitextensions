@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Error");
 
         private readonly TranslationString _initMsgBoxCaption =
-            new TranslationString("Initialize new repository");
+            new TranslationString("Create new repository");
 
         private readonly GitModuleChangedEventHandler GitModuleChanged;
 

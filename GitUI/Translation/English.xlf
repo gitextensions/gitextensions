@@ -4227,7 +4227,7 @@ defaultrebase=0</source>
   <file datatype="plaintext" original="FormInit" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Initialize new repository</source>
+        <source>Create new repository</source>
         <target />
       </trans-unit>
       <trans-unit id="Browse.Text">
@@ -4239,7 +4239,7 @@ defaultrebase=0</source>
         <target />
       </trans-unit>
       <trans-unit id="Init.Text">
-        <source>Initialize</source>
+        <source>Create</source>
         <target />
       </trans-unit>
       <trans-unit id="Personal.Text">
@@ -4264,7 +4264,7 @@ Please choose a directory.</source>
         <target />
       </trans-unit>
       <trans-unit id="_initMsgBoxCaption.Text">
-        <source>Initialize new repository</source>
+        <source>Create new repository</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox1.Text">
