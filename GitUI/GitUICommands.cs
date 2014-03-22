@@ -342,7 +342,7 @@ namespace GitUI
         }
 
         /// <summary>Creates and checks out a new branch starting from the commit at which the stash was originally created.
-        /// Applies the changes recorded in the stash to the new working tree and index.</summary>
+        /// Applies the changes recorded in the stash to the new working directory and index.</summary>
         public bool StashBranch(IWin32Window owner, string branchName, string stash = null)
         {
             Func<bool> action = () =>
@@ -2013,7 +2013,7 @@ namespace GitUI
 
         private void RunFileHistoryCommand(string[] args)
         {
-            //Remove working dir from filename. This is to prevent filenames that are too
+            //Remove working directory from filename. This is to prevent filenames that are too
             //long while there is room left when the workingdir was not in the path.
             string fileHistoryFileName = String.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
                 args[2].Replace(Module.WorkingDir, "").Replace('\\', '/');
@@ -2039,7 +2039,7 @@ namespace GitUI
 
         private void RunBlameCommand(string[] args)
         {
-            // Remove working dir from filename. This is to prevent filenames that are too
+            // Remove working directory from filename. This is to prevent filenames that are too
             // long while there is room left when the workingdir was not in the path.
             string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").Replace('\\', '/');
             StartBlameDialog(filenameFromBlame);

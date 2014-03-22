@@ -2286,7 +2286,7 @@ namespace GitUI
             // FiltredCurrentCheckout doesn't works here because only calculated after loading all revisions in SelectInitialRevision()
             if (unstagedChanges)
             {
-                //Add working dir as virtual commit
+                //Add working directory as virtual commit
                 var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
                                      {
                                          Message = Strings.GetCurrentUnstagedChanges(),

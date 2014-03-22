@@ -11,9 +11,9 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormGitIgnore : GitModuleForm
     {
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
-            new TranslationString(".gitignore is only supported when there is a working dir.");
+            new TranslationString(".gitignore is only supported when there is a working directory.");
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupportedCaption =
-            new TranslationString("No working dir");
+            new TranslationString("No working directory");
 
         private readonly TranslationString _cannotAccessGitignore =
             new TranslationString("Failed to save .gitignore." + Environment.NewLine + "Check if file is accessible.");
