@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,11 +26,22 @@ namespace GitUI
         private readonly TranslationString _DiffWithParent =
             new TranslationString("Diff with parent");
 
+        private readonly IDisposable selectedIndexChangeSubscription;
+        private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
+
         private const int ImageSize = 16;
 
         public FileStatusList()
         {
             InitializeComponent(); Translate();
+
+            selectedIndexChangeSubscription = Observable.FromEventPattern(
+                h => FileStatusListView.SelectedIndexChanged += h,
+                h => FileStatusListView.SelectedIndexChanged -= h)
+                .Throttle(SelectedIndexChangeThrottleDuration)
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
+
             SelectFirstItemOnSetItems = true;
             _noDiffFilesChangesDefaultText = NoFiles.Text;
 #if !__MonoCS__ // TODO Drag'n'Drop doesn't work on Mono/Linux
@@ -60,6 +72,11 @@ namespace GitUI
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
+        }
+
+        protected override void DisposeCustomResources()
+        {
+            selectedIndexChangeSubscription.Dispose();
         }
 
         private static ImageList _images;
@@ -414,10 +431,10 @@ namespace GitUI
                 DoubleClick(sender, e);
         }
 
-        void FileStatusListView_SelectedIndexChanged(object sender, EventArgs e)
+        void FileStatusListView_SelectedIndexChanged()
         {
             if (SelectedIndexChanged != null)
-                SelectedIndexChanged(this, e);
+                SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private static int GetItemImageIndex(GitItemStatus gitItemStatus)
@@ -529,7 +546,7 @@ namespace GitUI
                     if (!empty)
                     {
                         //bug in the ListView control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
-                        FileStatusListView_SelectedIndexChanged(this, EventArgs.Empty);
+                        FileStatusListView_SelectedIndexChanged();
                     }
                     return;
                 }
