@@ -17,7 +17,7 @@ namespace GitUI
         public event GitUICommandsSourceSetEventHandler GitUICommandsSourceSet;
         private IGitUICommandsSource _uiCommandsSource;
 
-        
+
         /// <summary>Gets the <see cref="IGitUICommandsSource"/>.</summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -45,9 +45,9 @@ namespace GitUI
 
         /// <summary>Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.</summary>
         [Browsable(false)]
-        public GitUICommands UICommands 
-        { 
-            get 
+        public GitUICommands UICommands
+        {
+            get
             {
                 return UICommandsSource.UICommands;
             }
@@ -73,8 +73,12 @@ namespace GitUI
             if (_uiCommandsSource != null)
                 DisposeUICommandsSource();
 
+            DisposeCustomResources();
+
             base.Dispose(disposing);
         }
+
+        protected virtual void DisposeCustomResources() { }
 
         /// <summary>Occurs when the <see cref="UICommandsSource"/> is disposed.</summary>
         protected virtual void DisposeUICommandsSource()
