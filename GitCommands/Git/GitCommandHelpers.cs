@@ -329,10 +329,25 @@ namespace GitCommands
             return cherryPickCmd + " " + arguments + " \"" + cherry + "\"";
         }
 
+        /// <summary>
+        /// Check if a string represents a commit hash
+        /// </summary>
+        private static bool IsCommitHash(string value)
+        {
+            return GitRevision.Sha1HashRegex.IsMatch(value);
+        }
+
         public static string GetFullBranchName(string branch)
         {
             if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
                 return branch;
+
+            // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
+            if (IsCommitHash(branch))
+            {
+                return branch;
+            }
+
             return "refs/heads/" + branch;
         }
 
