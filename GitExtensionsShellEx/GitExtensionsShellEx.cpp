@@ -350,14 +350,15 @@ bool CGitExtensionsShellEx::IsValidGitDir(TCHAR m_szFile[])
 
     std::wstring dir(m_szFile);
 
+    size_t pos;
     do
     {
         if (ValidWorkingDir(dir))
             return true;
-        size_t pos = dir.rfind('\\');
-        if (dir.rfind('\\') != std::wstring::npos)
+        pos = dir.rfind('\\');
+        if (pos != std::wstring::npos)
             dir.resize(pos);
-    } while (dir.rfind('\\') != std::wstring::npos);
+    } while (pos != std::wstring::npos);
     return false;
 }
 
