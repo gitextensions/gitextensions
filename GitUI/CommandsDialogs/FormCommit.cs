@@ -314,7 +314,7 @@ namespace GitUI.CommandsDialogs
 
         private bool ResetSelectedFiles()
         {
-            if (Unstaged.Focused)
+            if (Unstaged.Focused || Staged.Focused)
             {
                 ResetSoftClick(this, null);
                 return true;
@@ -1345,8 +1345,14 @@ namespace GitUI.CommandsDialogs
             try
             {
                 FileStatusList list;
-                if (!SenderToFileStatusList(sender, out list))
-                    return;
+                if (Unstaged.SelectedItem != null)
+                {
+                    list = Unstaged;
+                }
+                else
+                {
+                    list = Staged;
+                }
 
                 if (list.SelectedItems.Count() == 0)
                 {
