@@ -1344,23 +1344,13 @@ namespace GitUI.CommandsDialogs
             _shouldRescanChanges = false;
             try
             {
-                FileStatusList list;
-                if (Unstaged.SelectedItem != null)
-                {
-                    list = Unstaged;
-                }
-                else
-                {
-                    list = Staged;
-                }
-
-                if (list.SelectedItems.Count() == 0)
+                if (_currentFilesList == null || _currentFilesList.SelectedItems.Count() == 0)
                 {
                     return;
                 }
 
                 // Show a form asking the user if they want to reset the changes.
-                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, list.SelectedItems.Any(item => !item.IsNew), list.SelectedItems.Any(item => item.IsNew));
+                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, _currentFilesList.SelectedItems.Any(item => !item.IsNew), _currentFilesList.SelectedItems.Any(item => item.IsNew));
                 if (resetType == FormResetChanges.ActionEnum.Cancel)
                     return;
 
@@ -1387,12 +1377,12 @@ namespace GitUI.CommandsDialogs
                 Module.UnstageFiles(files);
 
                 //remember max selected index
-                list.StoreNextIndexToSelect();
+                _currentFilesList.StoreNextIndexToSelect();
 
-                var deleteNewFiles = list.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
+                var deleteNewFiles = _currentFilesList.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
                 var filesInUse = new List<string>();
                 var output = new StringBuilder();
-                foreach (var item in list.SelectedItems)
+                foreach (var item in _currentFilesList.SelectedItems)
                 {
                     if (item.IsNew)
                     {
