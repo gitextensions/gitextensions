@@ -16,7 +16,7 @@ namespace ReleaseNotesGenerator
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private IEnumerable<LogLine> _lastGeneratedLogLines;
 
-        public ReleaseNotesGeneratorForm(IGitPluginSettingsContainer settings, GitUIBaseEventArgs gitUiCommands)
+        public ReleaseNotesGeneratorForm(GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
 
