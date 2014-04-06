@@ -27,10 +27,8 @@ namespace Stash
 
         public StashResponse<T> Send()
         {
-            if (Settings.DisableSSL == "yes") { System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; }
-            var client = new RestClient();
-            client.BaseUrl = Settings.StashUrl;
-            client.Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password);
+            if (Settings.DisableSSL) { System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; }
+            var client = new RestClient {BaseUrl = Settings.StashUrl, Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password)};
 
             var request = new RestRequest(ApiUrl, RequestMethod);
             if (RequestBody != null)
