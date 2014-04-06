@@ -19,8 +19,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             Translate();
         }
 
-
-
         public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost aPageHost, IGitPlugin gitPlugin)
         {
             var result = SettingsPageBase.Create<PluginSettingsPage>(aPageHost);
@@ -52,13 +50,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             if (_gitPlugin == null)
                 throw new ApplicationException();
 
-            foreach (Control control in panelAutoGenControls.Controls)
+            foreach (var setting in _gitPlugin.GetSettings())
             {
-                var textBox = control as TextBox;
-
-                if (textBox != null)
-                    if (_gitPlugin.Settings.GetAvailableSettings().Contains(textBox.Name))
-                        textBox.Text = _gitPlugin.Settings.GetSetting(textBox.Name);
+                setting.ControlBinding.GetControl();
+                setting.ControlBinding.LoadSetting(_gitPlugin.Settings);
             }
         }
 
@@ -87,7 +82,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             if (_gitPlugin == null)
                 throw new ApplicationException();
 
-            var settings = _gitPlugin.Settings.GetAvailableSettings();
+            var settings = _gitPlugin.GetSettings();
 
             bool hasSettings = settings.Any();
 
@@ -96,31 +91,25 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             _autoGenKeywords.Clear();
 
             foreach (var setting in settings)
-            {
-                _autoGenKeywords.Add(setting.ToLowerInvariant());
+            {                
+                _autoGenKeywords.Add(setting.Caption);
 
                 var label =
                     new Label
                     {
-                        Text = setting,
+                        Text = setting.Caption,
                         Location = new Point(xLabelStart, yStart),
                         Size = new Size(xEditStart - 30, 20)
                     };
                 panelAutoGenControls.Controls.Add(label);
 
-                var textBox =
-                    new TextBox
-                    {
-                        Name = setting,
-                        Text = _gitPlugin.Settings.GetSetting(setting),
-                        Location = new Point(xEditStart, yStart),
-                        Size = new Size(panelAutoGenControls.Width - xEditStart - 20, 20)
-                    };
+                var controlBinding = setting.ControlBinding;
+                var control = controlBinding.UserControl;
+                control.Location = new Point(xEditStart, yStart);
+                control.Size = new Size(panelAutoGenControls.Width - xEditStart - 20, 20);
+                //TODO associate control with controlBinding
 
-                if (setting.ToLower().Contains("password"))
-                    textBox.PasswordChar = '*';
-
-                panelAutoGenControls.Controls.Add(textBox);
+                panelAutoGenControls.Controls.Add(control);
 
                 yStart += 25;
             }
@@ -134,13 +123,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             if (_gitPlugin == null)
                 throw new ApplicationException();
 
-            foreach (Control control in panelAutoGenControls.Controls)
+            foreach (var setting in _gitPlugin.GetSettings())
             {
-                var textBox = control as TextBox;
-
-                if (textBox != null)
-                    if (_gitPlugin.Settings.GetAvailableSettings().Contains(textBox.Name))
-                        _gitPlugin.Settings.SetSetting(textBox.Name, textBox.Text);
+                setting.ControlBinding.SaveSetting(_gitPlugin.Settings);
             }
         }
     }

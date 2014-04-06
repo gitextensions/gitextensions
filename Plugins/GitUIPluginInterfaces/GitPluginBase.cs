@@ -1,28 +1,18 @@
-﻿namespace GitUIPluginInterfaces
+﻿using System.Collections.Generic;
+
+namespace GitUIPluginInterfaces
 {
     public abstract class GitPluginBase : IGitPlugin
     {
 
         public abstract string Description { get; }
 
-        private IGitPluginSettingsContainer _Settings;
         //Store settings to use later
-        public IGitPluginSettingsContainer Settings
+        public ISettingsSource Settings { get; set; }
+
+        public virtual IEnumerable<ISetting> GetSettings()
         {
-            get
-            {
-                return _Settings;
-            }
-
-            set
-            {
-                _Settings = value;
-                RegisterSettings();
-            }
-        }
-
-        protected virtual void RegisterSettings()
-        { 
+            return new List<ISetting>();
         }
 
         public virtual void Register(IGitUICommands gitUiCommands)

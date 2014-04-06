@@ -1,10 +1,14 @@
-﻿namespace GitUIPluginInterfaces
+﻿using System.Collections.Generic;
+
+namespace GitUIPluginInterfaces
 {
     public interface IGitPlugin
     {
         string Description { get; }
 
-        IGitPluginSettingsContainer Settings { get; set; }
+        ISettingsSource Settings { get; set; }
+
+        IEnumerable<ISetting> GetSettings();
 
         void Register(IGitUICommands gitUiCommands);
 
