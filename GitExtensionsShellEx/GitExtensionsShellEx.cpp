@@ -350,15 +350,22 @@ bool CGitExtensionsShellEx::IsValidGitDir(TCHAR m_szFile[])
 
     std::wstring dir(m_szFile);
 
-    size_t pos;
+    bool continueToParentDirectory;
     do
     {
         if (ValidWorkingDir(dir))
             return true;
-        pos = dir.rfind('\\');
-        if (pos != std::wstring::npos)
-            dir.resize(pos);
-    } while (pos != std::wstring::npos);
+
+        size_t lastBackslashPos = dir.rfind('\\');
+
+        // PathIsRoot returns true for "C:\" and "\\server\share" but false for "C:" and "\\server\share\"
+        // => The right part of the conjunction won't stop the loop for "C:", but the left part will
+        // because "C:".rfind('\\') == wstring::npos
+        continueToParentDirectory = (lastBackslashPos != std::wstring::npos) && !PathIsRoot(dir.c_str());
+
+        if (continueToParentDirectory)
+            dir.resize(lastBackslashPos);
+    } while (continueToParentDirectory);
     return false;
 }
 
