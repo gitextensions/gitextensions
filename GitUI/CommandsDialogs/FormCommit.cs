@@ -203,6 +203,7 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
+            stagedResetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
         }
@@ -313,7 +314,7 @@ namespace GitUI.CommandsDialogs
 
         private bool ResetSelectedFiles()
         {
-            if (Unstaged.Focused)
+            if (Unstaged.Focused || Staged.Focused)
             {
                 ResetSoftClick(this, null);
                 return true;
@@ -1343,21 +1344,45 @@ namespace GitUI.CommandsDialogs
             _shouldRescanChanges = false;
             try
             {
-                if (Unstaged.SelectedItem == null)
+                if (_currentFilesList == null || _currentFilesList.SelectedItems.Count() == 0)
+                {
                     return;
+                }
 
                 // Show a form asking the user if they want to reset the changes.
-                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, Unstaged.SelectedItems.Any(item => !item.IsNew), Unstaged.SelectedItems.Any(item => item.IsNew));
+                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, _currentFilesList.SelectedItems.Any(item => !item.IsNew), _currentFilesList.SelectedItems.Any(item => item.IsNew));
                 if (resetType == FormResetChanges.ActionEnum.Cancel)
                     return;
 
-                //remember max selected index
-                Unstaged.StoreNextIndexToSelect();
+                // Unstage file first, then reset
+                var files = new List<GitItemStatus>();
 
-                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
+                foreach (var item in Staged.SelectedItems)
+                {
+                    toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                    if (!item.IsNew)
+                    {
+                        toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                        Module.UnstageFileToRemove(item.Name);
+
+                        if (item.IsRenamed)
+                            Module.UnstageFileToRemove(item.OldName);
+                    }
+                    else
+                    {
+                        files.Add(item);
+                    }
+                }
+
+                Module.UnstageFiles(files);
+
+                //remember max selected index
+                _currentFilesList.StoreNextIndexToSelect();
+
+                var deleteNewFiles = _currentFilesList.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
                 var filesInUse = new List<string>();
                 var output = new StringBuilder();
-                foreach (var item in Unstaged.SelectedItems)
+                foreach (var item in _currentFilesList.SelectedItems)
                 {
                     if (item.IsNew)
                     {
