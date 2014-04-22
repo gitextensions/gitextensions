@@ -1664,7 +1664,7 @@ namespace GitCommands
             else
                 localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch + "";
 
-            string arguments = fetchTags == true ? "--tags" : fetchTags == false ? " --no-tags" : "";
+            string arguments = fetchTags == true ? " --tags" : fetchTags == false ? " --no-tags" : "";
 
             return "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments + arguments;
         }
