@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/gitextensions/gitextensions.png?label=ready&title=Ready)](https://waffle.io/gitextensions/gitextensions)
 # Git Extensions
 
 ## Introduction
