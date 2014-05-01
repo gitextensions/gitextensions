@@ -2855,6 +2855,14 @@ namespace GitUI.CommandsDialogs
                 if (commit != null)
                     RevisionGrid.SetSelectedRevision(new GitRevision(Module, commit.Guid));
             }
+            else if (e.Command == "navigatebackward")
+            {
+                RevisionGrid.NavigateBackward();
+            }
+            else if (e.Command == "navigateforward")
+            {
+                RevisionGrid.NavigateForward();
+            }
         }
 
         private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
