@@ -1,11 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using GitCommands;
+using GitUI.CommandsDialogs.CommitDialog;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
 using ResourceManager;
@@ -32,6 +38,8 @@ namespace GitUI.SpellChecker
         private static WordDictionary _wordDictionary;
 
         public Font TextBoxFont { get; set; }
+        public GitModule Module { get; set; }
+
         public EventHandler TextAssigned;
 
         public EditNetSpell()
@@ -526,6 +534,9 @@ namespace GitUI.SpellChecker
 
         private void TextBoxTextChanged(object sender, EventArgs e)
         {
+            if (!disableTextUpdate)
+                UpdateOrShowAutoComplete(false);
+
             _customUnderlines.Lines.Clear();
             _customUnderlines.IllFormedLines.Clear();
 
@@ -550,6 +561,8 @@ namespace GitUI.SpellChecker
         private void TextBoxLeave(object sender, EventArgs e)
         {
             ShowWatermark();
+            if (ActiveControl != AutoComplete)
+                CloseAutoComplete();
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
@@ -588,6 +601,14 @@ namespace GitUI.SpellChecker
             {
                 UndoHighlighting();
             }
+            else if (e.Control && !e.Alt && e.KeyCode == Keys.Space)
+            {
+                UpdateOrShowAutoComplete(true);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                return;
+            }
+
             OnKeyDown(e);
         }
 
@@ -705,6 +726,165 @@ namespace GitUI.SpellChecker
                 TextBox.SelectionLength = 0;
                 TextBox.SelectionStart = newCursorPos;
             }
+        }
+
+        private IEnumerable<string> GetAutoCompleteList ()
+        {
+            foreach (var file in Module.GetAllChangedFiles())
+            {
+                var path = Path.Combine(Module.WorkingDir, file.Name);
+
+                var regex = AutoCompleteRegexProvider.GetRegexForExtension(Path.GetExtension(file.Name));
+
+                if (regex != null)
+                {
+                    var matches = regex.Matches(File.ReadAllText(path));
+                    foreach (Match match in matches)
+                            // Skip first group since it always contains the entire matched string (regardless of capture groups)
+                        foreach (Group group in match.Groups.OfType<Group>().Skip(1))
+                            foreach (Capture capture in @group.Captures)
+                                yield return capture.Value;
+                }
+
+                yield return Path.GetFileNameWithoutExtension(file.Name);
+            }
+        }
+
+        protected override bool ProcessCmdKey (ref Message msg, Keys keyData)
+        {
+            if (AutoComplete.Visible)
+            {
+                if (keyData == Keys.Tab || keyData == Keys.Enter)
+                {
+                    AcceptAutoComplete();
+                    return true;
+                }
+
+                if (keyData == Keys.Escape)
+                {
+                    CloseAutoComplete();
+                    return true;
+                }
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void AutoComplete_KeyPress (object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char) Keys.PageUp || e.KeyChar == (char) Keys.PageDown)
+                return;
+
+            TextBox.Focus();
+            SendKeys.SendWait(e.KeyChar.ToString());
+            AutoComplete.Focus();
+        }
+
+        private void AutoComplete_Leave (object sender, EventArgs e)
+        {
+            if (ActiveControl != TextBox)
+                AutoComplete.Hide();
+        }
+
+        private string GetWordAtCursor ()
+        {
+            var sb = new StringBuilder();
+
+            int i = TextBox.SelectionStart - 1;
+
+            while (i >= 0 && TextBox.Text[i] != ' ')
+                sb.Insert(0, TextBox.Text[i--]);
+
+            return sb.ToString();
+        }
+
+        private void CloseAutoComplete ()
+        {
+            AutoComplete.Hide();
+            TextBox.Focus();
+            userActivated = false;
+        }
+
+        private void AcceptAutoComplete (string completionWord = null)
+        {
+            completionWord = completionWord ?? (string) AutoComplete.SelectedItem;
+
+            var word = GetWordAtCursor();
+
+            var pos = TextBox.SelectionStart;
+
+            disableTextUpdate = true;
+            Text = Text.Remove(pos - word.Length, word.Length);
+            Text = Text.Insert(pos - word.Length, completionWord);
+            disableTextUpdate = false;
+            TextBox.SelectionStart = pos + completionWord.Length - word.Length;
+            CloseAutoComplete();
+        }
+
+        private bool userActivated = false;
+        private bool disableTextUpdate = false;
+
+        private void UpdateOrShowAutoComplete (bool calledByUser)
+        {
+            var word = GetWordAtCursor();
+
+            if (word.Length <= 1 && !calledByUser && !userActivated)
+            {
+                if (AutoComplete.Visible)
+                    CloseAutoComplete();
+
+                return;
+            }
+
+            var list = GetAutoCompleteList().Where(x => x.StartsWith(word, StringComparison.OrdinalIgnoreCase)).Distinct().ToList();
+
+            if (list.Count == 0)
+            {
+                if (AutoComplete.Visible)
+                    CloseAutoComplete();
+
+                return;
+            }
+
+            if (list.Count == 1 && calledByUser)
+            {
+                AcceptAutoComplete(list[0]);
+                return;
+            }
+
+            if (calledByUser)
+                userActivated = true;
+
+            var sizes = list.Select(x => TextRenderer.MeasureText(x, TextBox.Font)).ToList();
+
+            var cursorPos = TextBox.GetPositionFromCharIndex(TextBox.SelectionStart);
+            cursorPos.Y += (int) Math.Ceiling(TextBox.Font.GetHeight());
+            cursorPos.X += 2;
+
+            var height = (sizes.Count + 1) * AutoComplete.ItemHeight;
+            var width = sizes.Max(x => x.Width);
+            if (cursorPos.Y + height > TextBox.Height)
+            {
+                height = TextBox.Height - cursorPos.Y;
+                width += SystemInformation.VerticalScrollBarWidth;
+            }
+
+            AutoComplete.SetBounds(cursorPos.X, cursorPos.Y, width, height);
+
+            AutoComplete.DataSource = list.ToList();
+            AutoComplete.Show();
+            AutoComplete.Focus();
+        }
+
+        private void AutoComplete_Click (object sender, EventArgs e)
+        {
+            AcceptAutoComplete();
+        }
+
+        private void TextBox_Click (object sender, EventArgs e)
+        {
+            if (AutoComplete.Visible)
+                CloseAutoComplete();
         }
     }
 }

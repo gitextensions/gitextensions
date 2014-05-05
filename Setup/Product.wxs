@@ -73,6 +73,9 @@
                     </Extension>
                 </ProgId>
             </Component>
+            <Component Id="AutoCompleteRegexes.txt" Guid="*">
+              <File Source="..\GitExtensions\bin\Release\AutoCompleteRegexes.txt" />
+            </Component>
             <Component Id="GitExtensions.exe.config" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\GitExtensions.exe.config" />
             </Component>
@@ -483,6 +486,7 @@
             <ComponentRef Id="gitextensions.ico" />
             <ComponentRef Id="gitex.cmd" />
             <ComponentRef Id="GitExtensionsUserManual.pdf" />
+            <ComponentRef Id="AutoCompleteRegexes.txt" />
             <ComponentRef Id="GitExtensions.exe" />
             <ComponentRef Id="GitExtensions.exe.config" />
             <ComponentRef Id="TranslationApp.exe" />
