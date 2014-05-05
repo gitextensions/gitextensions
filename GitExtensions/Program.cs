@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using GitUI;
+using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 
@@ -18,6 +19,8 @@ namespace GitExtensions
         [STAThread]
         private static void Main()
         {
+            AutoCompleteRegexProvider.Initialize();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
