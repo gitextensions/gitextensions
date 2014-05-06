@@ -36,9 +36,9 @@ namespace GitUI.SpellChecker
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
+        private List<string> _autoCompleteList; 
 
         public Font TextBoxFont { get; set; }
-        public GitModule Module { get; set; }
 
         public EventHandler TextAssigned;
 
@@ -244,7 +244,7 @@ namespace GitUI.SpellChecker
                             DictionaryFile = dictionaryFile
                         };
 
-                _wordDictionary.AddCommitWords(GetAutoCompleteList());
+                _wordDictionary.AddCommitWords(_autoCompleteList);
             }
 
             _spelling.Dictionary = _wordDictionary;
@@ -730,13 +730,18 @@ namespace GitUI.SpellChecker
             }
         }
 
-        private IEnumerable<string> GetAutoCompleteList ()
+        public void EnableAutoCompletion (GitModule module)
+        {
+            _autoCompleteList = GetAutoCompleteList(module);
+        }
+
+        private List<string> GetAutoCompleteList (GitModule module)
         {
             var autoCompleteWords = new HashSet<string>();
 
-            foreach (var file in Module.GetAllChangedFiles())
+            foreach (var file in module.GetAllChangedFiles())
             {
-                var path = Path.Combine(Module.WorkingDir, file.Name);
+                var path = Path.Combine(module.WorkingDir, file.Name);
 
                 var regex = AutoCompleteRegexProvider.GetRegexForExtension(Path.GetExtension(file.Name));
 
@@ -753,7 +758,7 @@ namespace GitUI.SpellChecker
                 autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
             }
 
-            return autoCompleteWords;
+            return autoCompleteWords.ToList();
         }
 
         protected override bool ProcessCmdKey (ref Message msg, Keys keyData)
@@ -829,6 +834,7 @@ namespace GitUI.SpellChecker
 
         private bool userActivated = false;
         private bool disableTextUpdate = false;
+        private GitModule _module;
 
         private void UpdateOrShowAutoComplete (bool calledByUser)
         {
@@ -842,7 +848,7 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            var list = GetAutoCompleteList().Where(x => x.StartsWith(word, StringComparison.OrdinalIgnoreCase)).Distinct().ToList();
+            var list = _autoCompleteList.Where(x => x.StartsWith(word, StringComparison.OrdinalIgnoreCase)).Distinct().ToList();
 
             if (list.Count == 0)
             {
