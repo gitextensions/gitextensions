@@ -537,7 +537,13 @@ namespace GitUI.SpellChecker
         private void TextBoxTextChanged(object sender, EventArgs e)
         {
             if (!disableTextUpdate)
-                UpdateOrShowAutoComplete(false);
+            {
+                // Reset when timer is already running
+                if (AutoCompleteTimer.Enabled)
+                    AutoCompleteTimer.Stop();
+
+                AutoCompleteTimer.Start();
+            }
 
             _customUnderlines.Lines.Clear();
             _customUnderlines.IllFormedLines.Clear();
@@ -896,6 +902,12 @@ namespace GitUI.SpellChecker
         {
             if (AutoComplete.Visible)
                 CloseAutoComplete();
+        }
+
+        private void AutoCompleteTimer_Tick (object sender, EventArgs e)
+        {
+            UpdateOrShowAutoComplete(false);
+            AutoCompleteTimer.Stop();
         }
     }
 }
