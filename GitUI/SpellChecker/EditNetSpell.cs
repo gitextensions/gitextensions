@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -741,19 +742,23 @@ namespace GitUI.SpellChecker
             _autoCompleteList = GetAutoCompleteList(module);
         }
 
+        private string GetChangedFileText (GitModule module, GitItemStatus file)
+        {
+            return module.GetCurrentChanges(file.Name, file.OldName, file.IsStaged, "", module.FilesEncoding).Text;
+        }
+
         private List<string> GetAutoCompleteList (GitModule module)
         {
             var autoCompleteWords = new HashSet<string>();
 
-            foreach (var file in module.GetAllChangedFiles().Where(f => f.IsDeleted))
+            foreach (var file in module.GetAllChangedFiles())
             {
-                var path = Path.Combine(module.WorkingDir, file.Name);
-
                 var regex = AutoCompleteRegexProvider.GetRegexForExtension(Path.GetExtension(file.Name));
 
                 if (regex != null)
                 {
-                    var matches = regex.Matches(File.ReadAllText(path));
+                    var text = GetChangedFileText(module, file);
+                    var matches = regex.Matches(text);
                     foreach (Match match in matches)
                             // Skip first group since it always contains the entire matched string (regardless of capture groups)
                         foreach (Group group in match.Groups.OfType<Group>().Skip(1))
