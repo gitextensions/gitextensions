@@ -243,6 +243,8 @@ namespace GitUI.SpellChecker
                         {
                             DictionaryFile = dictionaryFile
                         };
+
+                _wordDictionary.AddCommitWords(GetAutoCompleteList());
             }
 
             _spelling.Dictionary = _wordDictionary;
@@ -730,6 +732,8 @@ namespace GitUI.SpellChecker
 
         private IEnumerable<string> GetAutoCompleteList ()
         {
+            var autoCompleteWords = new HashSet<string>();
+
             foreach (var file in Module.GetAllChangedFiles())
             {
                 var path = Path.Combine(Module.WorkingDir, file.Name);
@@ -743,11 +747,13 @@ namespace GitUI.SpellChecker
                             // Skip first group since it always contains the entire matched string (regardless of capture groups)
                         foreach (Group group in match.Groups.OfType<Group>().Skip(1))
                             foreach (Capture capture in @group.Captures)
-                                yield return capture.Value;
+                                autoCompleteWords.Add(capture.Value);
                 }
 
-                yield return Path.GetFileNameWithoutExtension(file.Name);
+                autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
             }
+
+            return autoCompleteWords;
         }
 
         protected override bool ProcessCmdKey (ref Message msg, Keys keyData)
