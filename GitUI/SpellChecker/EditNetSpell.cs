@@ -794,7 +794,7 @@ namespace GitUI.SpellChecker
         private void AutoComplete_Leave (object sender, EventArgs e)
         {
             if (ActiveControl != TextBox)
-                AutoComplete.Hide();
+                CloseAutoComplete();
         }
 
         private string GetWordAtCursor ()
@@ -812,7 +812,6 @@ namespace GitUI.SpellChecker
         private void CloseAutoComplete ()
         {
             AutoComplete.Hide();
-            TextBox.Focus();
             userActivated = false;
         }
 
