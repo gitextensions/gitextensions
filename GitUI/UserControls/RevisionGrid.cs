@@ -81,6 +81,9 @@ namespace GitUI
         bool showAllBranchesToolStripMenuItemChecked; // refactoring
         bool showFilteredBranchesToolStripMenuItemChecked; // refactoring
 
+        private readonly Stack<string> _navigationToParentOrChildStack = new Stack<string>();
+        private bool _selectionChangedByGoToParentOrChild;
+
         public RevisionGrid()
         {
             InitLayout();
@@ -595,6 +598,11 @@ namespace GitUI
 
         private void RevisionsSelectionChanged(object sender, EventArgs e)
         {
+            if (!_selectionChangedByGoToParentOrChild)
+            {
+                _navigationToParentOrChildStack.Clear();
+            }
+
             if (Revisions.SelectedRows.Count > 0)
                 LastRow = Revisions.SelectedRows[0].Index;
 
@@ -2793,15 +2801,33 @@ namespace GitUI
         {
             var r = GetRevision(LastRow);
             if (r.HasParent())
+            {
+                _selectionChangedByGoToParentOrChild = true;
                 SetSelectedRevision(r.ParentGuids[0]);
+                _selectionChangedByGoToParentOrChild = false;
+                _navigationToParentOrChildStack.Push(r.Guid);
+            }
         }
 
         private void goToChildToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (_navigationToParentOrChildStack.Count > 0)
+            {
+                _selectionChangedByGoToParentOrChild = true;
+                SetSelectedRevision(_navigationToParentOrChildStack.Pop());
+                _selectionChangedByGoToParentOrChild = false;
+                return;
+            }
+
             var r = GetRevision(LastRow);
             var children = GetRevisionChildren(r.Guid);
+
             if (children.Any())
+            {
+                _selectionChangedByGoToParentOrChild = true;
                 SetSelectedRevision(children[0]);
+                _selectionChangedByGoToParentOrChild = false;
+            }
         }
 
         private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
