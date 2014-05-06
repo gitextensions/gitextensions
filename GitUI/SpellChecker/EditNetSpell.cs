@@ -745,7 +745,7 @@ namespace GitUI.SpellChecker
         {
             var autoCompleteWords = new HashSet<string>();
 
-            foreach (var file in module.GetAllChangedFiles())
+            foreach (var file in module.GetAllChangedFiles().Where(f => f.IsDeleted))
             {
                 var path = Path.Combine(module.WorkingDir, file.Name);
 
