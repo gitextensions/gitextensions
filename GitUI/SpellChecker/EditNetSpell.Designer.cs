@@ -34,6 +34,7 @@
             this.SpellCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.TextBox = new System.Windows.Forms.RichTextBox();
             this.AutoComplete = new System.Windows.Forms.ListBox();
+            this.AutoCompleteTimer = new System.Windows.Forms.Timer(this.components);
             this.SpellCheckContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -91,6 +92,11 @@
             this.AutoComplete.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AutoComplete_KeyPress);
             this.AutoComplete.Leave += new System.EventHandler(this.AutoComplete_Leave);
             // 
+            // AutoCompleteTimer
+            // 
+            this.AutoCompleteTimer.Interval = 200;
+            this.AutoCompleteTimer.Tick += new System.EventHandler(this.AutoCompleteTimer_Tick);
+            // 
             // EditNetSpell
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -112,5 +118,6 @@
         private System.Windows.Forms.Timer SpellCheckTimer;
         private System.Windows.Forms.RichTextBox TextBox;
         private System.Windows.Forms.ListBox AutoComplete;
+        private System.Windows.Forms.Timer AutoCompleteTimer;
     }
 }
