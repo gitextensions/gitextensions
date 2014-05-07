@@ -917,5 +917,10 @@ namespace GitUI.SpellChecker
             UpdateOrShowAutoComplete(false);
             AutoCompleteTimer.Stop();
         }
+
+        public void CancelAutoComplete ()
+        {
+            AutoCompleteTimer.Stop();
+        }
     }
 }
