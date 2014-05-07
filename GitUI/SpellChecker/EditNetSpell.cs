@@ -744,7 +744,10 @@ namespace GitUI.SpellChecker
 
         private string GetChangedFileText (GitModule module, GitItemStatus file)
         {
-            return module.GetCurrentChanges(file.Name, file.OldName, file.IsStaged, "", module.FilesEncoding).Text;
+            if (file.IsNew)
+                return File.ReadAllText(Path.Combine(module.WorkingDir, file.Name));
+
+            return module.GetCurrentChanges(file.Name, file.OldName, file.IsStaged, "-U1000000", module.FilesEncoding).Text;
         }
 
         private List<string> GetAutoCompleteList (GitModule module)
