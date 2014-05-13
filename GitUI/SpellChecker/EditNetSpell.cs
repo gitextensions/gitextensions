@@ -6,11 +6,9 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using GitCommands;
 using GitUI.CommandsDialogs.CommitDialog;
 using NetSpell.SpellChecker;
@@ -37,7 +35,7 @@ namespace GitUI.SpellChecker
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
-        private List<string> _autoCompleteList; 
+        private List<AutoCompleteWord> _autoCompleteList; 
 
         public Font TextBoxFont { get; set; }
 
@@ -245,7 +243,7 @@ namespace GitUI.SpellChecker
                             DictionaryFile = dictionaryFile
                         };
 
-                _wordDictionary.AddCommitWords(_autoCompleteList);
+                _wordDictionary.AddCommitWords(_autoCompleteList.Select(w => w.Word));
             }
 
             _spelling.Dictionary = _wordDictionary;
@@ -750,7 +748,7 @@ namespace GitUI.SpellChecker
             return module.GetCurrentChanges(file.Name, file.OldName, file.IsStaged, "-U1000000", module.FilesEncoding).Text;
         }
 
-        private List<string> GetAutoCompleteList (GitModule module)
+        private List<AutoCompleteWord> GetAutoCompleteList (GitModule module)
         {
             var autoCompleteWords = new HashSet<string>();
 
@@ -770,9 +768,12 @@ namespace GitUI.SpellChecker
                 }
 
                 autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
+                autoCompleteWords.Add(Path.GetFileName(file.Name));
+                if (!string.IsNullOrWhiteSpace(file.OldName))
+                    autoCompleteWords.Add(Path.GetFileName(file.OldName));
             }
 
-            return autoCompleteWords.ToList();
+            return autoCompleteWords.Select(w => new AutoCompleteWord(w)).ToList();
         }
 
         protected override bool ProcessCmdKey (ref Message msg, Keys keyData)
@@ -829,9 +830,9 @@ namespace GitUI.SpellChecker
             userActivated = false;
         }
 
-        private void AcceptAutoComplete (string completionWord = null)
+        private void AcceptAutoComplete (AutoCompleteWord completionWord = null)
         {
-            completionWord = completionWord ?? (string) AutoComplete.SelectedItem;
+            completionWord = completionWord ?? (AutoCompleteWord) AutoComplete.SelectedItem;
 
             var word = GetWordAtCursor();
 
@@ -839,9 +840,9 @@ namespace GitUI.SpellChecker
 
             disableTextUpdate = true;
             Text = Text.Remove(pos - word.Length, word.Length);
-            Text = Text.Insert(pos - word.Length, completionWord);
+            Text = Text.Insert(pos - word.Length, completionWord.Word);
             disableTextUpdate = false;
-            TextBox.SelectionStart = pos + completionWord.Length - word.Length;
+            TextBox.SelectionStart = pos + completionWord.Word.Length - word.Length;
             CloseAutoComplete();
         }
 
@@ -861,7 +862,7 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            var list = _autoCompleteList.Where(x => x.StartsWith(word, StringComparison.OrdinalIgnoreCase)).Distinct().ToList();
+            var list = _autoCompleteList.Where(x => x.Matches(word)).Distinct().ToList();
 
             if (list.Count == 0)
             {
@@ -880,7 +881,7 @@ namespace GitUI.SpellChecker
             if (calledByUser)
                 userActivated = true;
 
-            var sizes = list.Select(x => TextRenderer.MeasureText(x, TextBox.Font)).ToList();
+            var sizes = list.Select(x => TextRenderer.MeasureText(x.Word, TextBox.Font)).ToList();
 
             var cursorPos = TextBox.GetPositionFromCharIndex(TextBox.SelectionStart);
             cursorPos.Y += (int) Math.Ceiling(TextBox.Font.GetHeight());
