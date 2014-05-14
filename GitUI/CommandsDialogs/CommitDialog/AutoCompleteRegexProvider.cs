@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace GitUI.CommandsDialogs.CommitDialog
@@ -12,7 +13,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
         public static void Initialize ()
         {
-            foreach (var line in File.ReadLines ("AutoCompleteRegexes.txt"))
+            foreach (var line in File.ReadLines (Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "AutoCompleteRegexes.txt")))
             {
                 var i = line.IndexOf('=');
                 var extensionStr = line.Substring(0, i);
