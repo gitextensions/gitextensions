@@ -68,7 +68,6 @@
             this.TextBox.TabIndex = 1;
             this.TextBox.Text = "";
             this.TextBox.SelectionChanged += new System.EventHandler(this.TextBox_SelectionChanged);
-            this.TextBox.Click += new System.EventHandler(this.TextBox_Click);
             this.TextBox.SizeChanged += new System.EventHandler(this.TextBoxSizeChanged);
             this.TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             this.TextBox.Enter += new System.EventHandler(this.TextBox_Enter);
@@ -90,8 +89,6 @@
             this.AutoComplete.TabIndex = 2;
             this.AutoComplete.Visible = false;
             this.AutoComplete.Click += new System.EventHandler(this.AutoComplete_Click);
-            this.AutoComplete.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AutoComplete_KeyPress);
-            this.AutoComplete.Leave += new System.EventHandler(this.AutoComplete_Leave);
             // 
             // AutoCompleteTimer
             // 

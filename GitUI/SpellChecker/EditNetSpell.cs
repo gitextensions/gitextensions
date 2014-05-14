@@ -35,7 +35,19 @@ namespace GitUI.SpellChecker
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
+
         private List<AutoCompleteWord> _autoCompleteList; 
+        private bool _autoCompleteWasUserActivated;
+        private bool _disableAutoCompleteTriggerOnTextUpdate;
+        private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new Dictionary<Keys, string>
+                                                                     {
+                                                                             { Keys.Down, "{DOWN}" },
+                                                                             { Keys.Up, "{UP}" },
+                                                                             { Keys.PageUp, "{PGUP}" },
+                                                                             { Keys.PageDown, "{PGDN}" },
+                                                                             { Keys.End, "{END}" },
+                                                                             { Keys.Home, "{HOME}" }
+                                                                     };
 
         public Font TextBoxFont { get; set; }
 
@@ -535,7 +547,7 @@ namespace GitUI.SpellChecker
 
         private void TextBoxTextChanged(object sender, EventArgs e)
         {
-            if (!disableTextUpdate)
+            if (!_disableAutoCompleteTriggerOnTextUpdate)
             {
                 // Reset when timer is already running
                 if (AutoCompleteTimer.Enabled)
@@ -591,8 +603,29 @@ namespace GitUI.SpellChecker
             skipSelectionUndo = false;
         }
 
+        
+
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
+            if (!e.Alt && !e.Control && !e.Shift && _keysToSendToAutoComplete.ContainsKey (e.KeyCode) && AutoComplete.Visible)
+            {
+
+                if (e.KeyCode == Keys.Up && AutoComplete.SelectedIndex == 0)
+                    AutoComplete.SelectedIndex = AutoComplete.Items.Count - 1;
+                else if (e.KeyCode == Keys.Down && AutoComplete.SelectedIndex == AutoComplete.Items.Count - 1)
+                    AutoComplete.SelectedIndex = 0;
+                else
+                {
+                    AutoComplete.Focus();
+                    SendKeys.SendWait(_keysToSendToAutoComplete[e.KeyCode]);
+                    TextBox.Focus();
+                }
+
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                return;
+            }
+
             if (e.Control && e.KeyCode == Keys.V)
             {
                 if (!Clipboard.ContainsText())
@@ -626,6 +659,8 @@ namespace GitUI.SpellChecker
 
         private void TextBox_SelectionChanged(object sender, EventArgs e)
         {
+            UpdateOrShowAutoComplete(false);
+
             if (SelectionChanged != null)
                 SelectionChanged(sender, e);
         }
@@ -798,29 +833,16 @@ namespace GitUI.SpellChecker
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void AutoComplete_KeyPress (object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char) Keys.PageUp || e.KeyChar == (char) Keys.PageDown)
-                return;
-
-            TextBox.Focus();
-            SendKeys.SendWait(e.KeyChar.ToString());
-            AutoComplete.Focus();
-        }
-
-        private void AutoComplete_Leave (object sender, EventArgs e)
-        {
-            if (ActiveControl != TextBox)
-                CloseAutoComplete();
-        }
-
         private string GetWordAtCursor ()
         {
+            if (TextBox.Text.Length > TextBox.SelectionStart && !char.IsWhiteSpace(TextBox.Text[TextBox.SelectionStart]))
+                return null;
+
             var sb = new StringBuilder();
 
             int i = TextBox.SelectionStart - 1;
 
-            while (i >= 0 && TextBox.Text[i] != ' ')
+            while (i >= 0 && !char.IsWhiteSpace(TextBox.Text[i]))
                 sb.Insert(0, TextBox.Text[i--]);
 
             return sb.ToString();
@@ -829,7 +851,7 @@ namespace GitUI.SpellChecker
         private void CloseAutoComplete ()
         {
             AutoComplete.Hide();
-            userActivated = false;
+            _autoCompleteWasUserActivated = false;
         }
 
         private void AcceptAutoComplete (AutoCompleteWord completionWord = null)
@@ -840,23 +862,19 @@ namespace GitUI.SpellChecker
 
             var pos = TextBox.SelectionStart;
 
-            disableTextUpdate = true;
+            _disableAutoCompleteTriggerOnTextUpdate = true;
             Text = Text.Remove(pos - word.Length, word.Length);
             Text = Text.Insert(pos - word.Length, completionWord.Word);
-            disableTextUpdate = false;
+            _disableAutoCompleteTriggerOnTextUpdate = false;
             TextBox.SelectionStart = pos + completionWord.Word.Length - word.Length;
             CloseAutoComplete();
         }
-
-        private bool userActivated = false;
-        private bool disableTextUpdate = false;
-        private GitModule _module;
 
         private void UpdateOrShowAutoComplete (bool calledByUser)
         {
             var word = GetWordAtCursor();
 
-            if (word.Length <= 1 && !calledByUser && !userActivated)
+            if (word == null || (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated))
             {
                 if (AutoComplete.Visible)
                     CloseAutoComplete();
@@ -881,7 +899,7 @@ namespace GitUI.SpellChecker
             }
 
             if (calledByUser)
-                userActivated = true;
+                _autoCompleteWasUserActivated = true;
 
             var sizes = list.Select(x => TextRenderer.MeasureText(x.Word, TextBox.Font)).ToList();
 
@@ -901,18 +919,12 @@ namespace GitUI.SpellChecker
 
             AutoComplete.DataSource = list.ToList();
             AutoComplete.Show();
-            AutoComplete.Focus();
+            TextBox.Focus();
         }
 
         private void AutoComplete_Click (object sender, EventArgs e)
         {
             AcceptAutoComplete();
-        }
-
-        private void TextBox_Click (object sender, EventArgs e)
-        {
-            if (AutoComplete.Visible)
-                CloseAutoComplete();
         }
 
         private void AutoCompleteTimer_Tick (object sender, EventArgs e)
