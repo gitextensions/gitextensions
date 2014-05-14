@@ -19,8 +19,6 @@ namespace GitExtensions
         [STAThread]
         private static void Main()
         {
-            AutoCompleteRegexProvider.Initialize();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -101,6 +99,8 @@ namespace GitExtensions
                 MouseWheelRedirector.Active = true;
 
             GitUICommands uCommands = new GitUICommands(GetWorkingDir(args));
+
+            AutoCompleteRegexProvider.Initialize();
 
             if (args.Length <= 1)
             {
