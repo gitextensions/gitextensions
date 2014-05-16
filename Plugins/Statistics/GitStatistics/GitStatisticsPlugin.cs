@@ -7,50 +7,50 @@ namespace GitStatistics
 {
     public class GitStatisticsPlugin : GitPluginBase, IGitPluginForRepository
     {
-        #region IGitPlugin Members
+        StringSetting CodeFiles = new StringSetting("Code files",
+                                "*.c;*.cpp;*.cc;*.h;*.hpp;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" + 
+                                "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb");
+        StringSetting IgnoreDirectories = new StringSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
+        BoolSetting IgnoreSubmodules = new BoolSetting("Ignore submodules", true);
 
+        #region IGitPlugin Members
         public override string Description
         {
             get { return "Statistics"; }
         }
 
-        protected override void RegisterSettings()
+        public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
         {
-            base.RegisterSettings();
-            Settings.AddSetting("Code files",
-                                "*.c;*.cpp;*.cc;*.h;*.hpp;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" + 
-                                "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb");
-            Settings.AddSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
-            Settings.AddSetting("Ignore submodules (true/false)", "true");
+            yield return CodeFiles;
+            yield return IgnoreDirectories;
+            yield return IgnoreSubmodules;
         }
 
         public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
-            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.GitWorkingDir))
+            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
                 return false;
 
             using (var formGitStatistics =
-                new FormGitStatistics(gitUIEventArgs.GitModule, Settings.GetSetting("Code files"))
+                new FormGitStatistics(gitUIEventArgs.GitModule, CodeFiles[Settings])
                     {
-                        DirectoriesToIgnore =
-                            Settings.GetSetting("Directories to ignore (EndsWith)")
+                        DirectoriesToIgnore = IgnoreDirectories[Settings]
                     })
             {
 
-                if (Settings.GetSetting("Ignore submodules (true/false)")
-                    .Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                if (IgnoreSubmodules[Settings].Value)
                 {
                     foreach (var submodule in gitUIEventArgs.GitModule.GetSubmodulesInfo())
                     {
                         formGitStatistics.DirectoriesToIgnore += ";";
-                        formGitStatistics.DirectoriesToIgnore += Path.Combine(gitUIEventArgs.GitModule.GitWorkingDir, submodule.LocalPath);
+                        formGitStatistics.DirectoriesToIgnore += Path.Combine(gitUIEventArgs.GitModule.WorkingDir, submodule.LocalPath);
                     }
                 }
 
                 formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
-                formGitStatistics.WorkingDir = new DirectoryInfo(gitUIEventArgs.GitModule.GitWorkingDir);
+                formGitStatistics.WorkingDir = new DirectoryInfo(gitUIEventArgs.GitModule.WorkingDir);
 
-                formGitStatistics.ShowDialog(gitUIEventArgs.OwnerForm as IWin32Window);
+                formGitStatistics.ShowDialog(gitUIEventArgs.OwnerForm);
             }
             return false;
         }

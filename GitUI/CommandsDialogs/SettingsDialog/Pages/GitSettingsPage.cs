@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void downloadMsysgit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"http://msysgit.github.com/");
+            Process.Start(@"http://msysgit.github.io/");
         }
 
         private void ChangeHomeButton_Click(object sender, EventArgs e)

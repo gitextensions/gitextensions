@@ -88,6 +88,8 @@
     <Compile Include="Notifications\INotifications.cs" />
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="ILockableNotifier.cs" />
+    <Compile Include="Settings\BoolSetting.cs" />
+    <Compile Include="ISetting.cs" />
     <Compile Include="ISettingsSource.cs" />
     <Compile Include="ManagedExtensibility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,6 +104,9 @@
     <Compile Include="RepositoryHosts\IHostedRemote.cs" />
     <Compile Include="RepositoryHosts\IPullRequestInformation.cs" />
     <Compile Include="Notifications\StatusSeverity.cs" />
+    <Compile Include="Settings\NumberSetting.cs" />
+    <Compile Include="Settings\ChoiceSetting.cs" />
+    <Compile Include="Settings\StringSetting.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

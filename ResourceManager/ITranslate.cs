@@ -1,11 +1,10 @@
-﻿
-namespace ResourceManager.Translation
+﻿namespace ResourceManager
 {
     /// <summary>Provides translation capabilities.</summary>
     public interface ITranslate
     {
-        void AddTranslationItems(Translation translation);
+        void AddTranslationItems(ITranslation translation);
         /// <summary>Translates all (translatable) items.</summary>
-        void TranslateItems(Translation translation);
+        void TranslateItems(ITranslation translation);
     }
 }

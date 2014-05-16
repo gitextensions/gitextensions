@@ -344,62 +344,62 @@
             <Component Id="English.gif" Guid="*">
                 <File Source="..\GitUI\Translation\English.gif" />
             </Component>
-            <Component Id="Dutch.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Dutch.xml" />
+            <Component Id="Dutch.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Dutch.xlf" />
             </Component>
             <Component Id="Dutch.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Dutch.gif" />
             </Component>
-            <Component Id="Francais.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Francais.xml" />
+            <Component Id="French.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\French.xlf" />
             </Component>
-            <Component Id="Francais.gif" Guid="*">
-                <File Source="..\GitUI\Translation\Francais.gif" />
+            <Component Id="French.gif" Guid="*">
+                <File Source="..\GitUI\Translation\French.gif" />
             </Component>
-            <Component Id="German.xml" Guid="*">
-                <File Source="..\GitUI\Translation\German.xml" />
+            <Component Id="German.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\German.xlf" />
             </Component>
             <Component Id="German.gif" Guid="*">
                 <File Source="..\GitUI\Translation\German.gif" />
             </Component>
-            <!--Component Id="Italiano.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Italiano.xml" />
+            <!--Component Id="Italian.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Italian.xlf" />
             </Component>
-            <Component Id="Italiano.gif" Guid="*">
-                <File Source="..\GitUI\Translation\Italiano.gif" />
+            <Component Id="Italian.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Italian.gif" />
             </Component-->
-            <Component Id="Japanese.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Japanese.xml" />
+            <Component Id="Japanese.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Japanese.xlf" />
             </Component>
             <Component Id="Japanese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.gif" />
             </Component>
-            <Component Id="Korean.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Korean.xml" />
+            <Component Id="Korean.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Korean.xlf" />
             </Component>
             <Component Id="Korean.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.gif" />
             </Component>
-            <Component Id="Russian.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Russian.xml" />
+            <Component Id="Russian.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Russian.xlf" />
             </Component>
             <Component Id="Russian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.gif" />
             </Component>
-            <Component Id="SimplifiedChinese.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Simplified Chinese.xml" />
+            <Component Id="SimplifiedChinese.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Simplified Chinese.xlf" />
             </Component>
             <Component Id="SimplifiedChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
             </Component>
-            <Component Id="Spanish.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Spanish.xml" />
+            <Component Id="Spanish.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Spanish.xlf" />
             </Component>
             <Component Id="Spanish.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Spanish.gif" />
             </Component>
-            <!--Component Id="TraditionalChinese.xml" Guid="*">
-                <File Source="..\GitUI\Translation\Traditional Chinese.xml" />
+            <!--Component Id="TraditionalChinese.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Traditional Chinese.xlf" />
             </Component>
             <Component Id="TraditionalChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Traditional Chinese.gif" />
@@ -642,43 +642,43 @@
             </Feature>
             <Feature Id="Translation" Title="Translations" Level="1">
                 <Feature Id="Dutch" Title="Dutch" Level="1">
-                    <ComponentRef Id="Dutch.xml" />
+                    <ComponentRef Id="Dutch.xlf" />
                     <ComponentRef Id="Dutch.gif" />
                 </Feature>
-                <Feature Id="Francais" Title="Francais" Level="1">
-                    <ComponentRef Id="Francais.xml" />
-                    <ComponentRef Id="Francais.gif" />
+                <Feature Id="French" Title="French" Level="1">
+                    <ComponentRef Id="French.xlf" />
+                    <ComponentRef Id="French.gif" />
                 </Feature>
                 <Feature Id="German" Title="German" Level="1">
-                    <ComponentRef Id="German.xml" />
+                    <ComponentRef Id="German.xlf" />
                     <ComponentRef Id="German.gif" />
                 </Feature>
-                <!--Feature Id="Italiano" Title="Italiano" Level="1">
-                    <ComponentRef Id="Italiano.xml" />
-                    <ComponentRef Id="Italiano.gif" />
+                <!--Feature Id="Italian" Title="Italian" Level="1">
+                    <ComponentRef Id="Italian.xlf" />
+                    <ComponentRef Id="Italian.gif" />
                 </Feature-->
                 <Feature Id="Japanese" Title="Japanese" Level="1">
-                    <ComponentRef Id="Japanese.xml" />
+                    <ComponentRef Id="Japanese.xlf" />
                     <ComponentRef Id="Japanese.gif" />
                 </Feature>
                 <Feature Id="Korean" Title="Korean" Level="1">
-                    <ComponentRef Id="Korean.xml" />
+                    <ComponentRef Id="Korean.xlf" />
                     <ComponentRef Id="Korean.gif" />
                 </Feature>
                 <Feature Id="Russian" Title="Russian" Level="1">
-                    <ComponentRef Id="Russian.xml" />
+                    <ComponentRef Id="Russian.xlf" />
                     <ComponentRef Id="Russian.gif" />
                 </Feature>
                 <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
-                    <ComponentRef Id="SimplifiedChinese.xml" />
+                    <ComponentRef Id="SimplifiedChinese.xlf" />
                     <ComponentRef Id="SimplifiedChinese.gif" />
                 </Feature>
                 <Feature Id="Spanish" Title="Spanish" Level="1">
-                    <ComponentRef Id="Spanish.xml" />
+                    <ComponentRef Id="Spanish.xlf" />
                     <ComponentRef Id="Spanish.gif" />
                 </Feature>
                 <!--Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
-                    <ComponentRef Id="TraditionalChinese.xml" />
+                    <ComponentRef Id="TraditionalChinese.xlf" />
                     <ComponentRef Id="TraditionalChinese.gif" />
                 </Feature-->
             </Feature>
@@ -709,7 +709,7 @@
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
         <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe" />
         <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
-        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.5.2-preview20131230.exe" />
+        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.9.0-preview20140217.exe" />
         <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore" />
         <InstallExecuteSequence>
             <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>

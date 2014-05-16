@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -81,11 +81,7 @@ namespace GitUI.CommandsDialogs
                 Cursor = Cursors.Default;
                 _branchListLoader.Cancel();
 
-                var dirTo = _NO_TRANSLATE_To.Text;
-                if (!dirTo.EndsWith(AppSettings.PathSeparator.ToString()) && !dirTo.EndsWith(AppSettings.PathSeparatorWrong.ToString()))
-                    dirTo += AppSettings.PathSeparator.ToString();
-
-                dirTo += _NO_TRANSLATE_NewDirectory.Text;
+                var dirTo = Path.Combine(_NO_TRANSLATE_To.Text, _NO_TRANSLATE_NewDirectory.Text);
 
                 Repositories.AddMostRecentRepository(_NO_TRANSLATE_From.Text);
                 Repositories.AddMostRecentRepository(dirTo);

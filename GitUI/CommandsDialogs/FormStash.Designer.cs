@@ -187,7 +187,7 @@ namespace GitUI.CommandsDialogs
             this.Apply.Size = new System.Drawing.Size(264, 31);
             this.Apply.TabIndex = 17;
             this.Apply.Text = "Apply Selected";
-            this.toolTip.SetToolTip(this.Apply, "Apply selected stash on top of current working tree state");
+            this.toolTip.SetToolTip(this.Apply, "Apply selected stash on top of current working directory state");
             this.Apply.UseVisualStyleBackColor = true;
             this.Apply.Click += new System.EventHandler(this.ApplyClick);
             // 

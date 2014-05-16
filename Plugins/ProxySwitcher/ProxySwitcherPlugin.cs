@@ -1,5 +1,5 @@
 ﻿using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace ProxySwitcher
 {
@@ -14,13 +14,12 @@ namespace ProxySwitcher
             get { return _pluginDescription.Text; }
         }
 
-        protected override void RegisterSettings()
+        public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
         {
-            base.RegisterSettings();
-            Settings.AddSetting(SettingsKey.Username, string.Empty);
-            Settings.AddSetting(SettingsKey.Password, string.Empty);
-            Settings.AddSetting(SettingsKey.HttpProxy, string.Empty);
-            Settings.AddSetting(SettingsKey.HttpProxyPort, "8080");
+            yield return SettingsKey.Username;
+            yield return SettingsKey.Password;
+            yield return SettingsKey.HttpProxy;
+            yield return SettingsKey.HttpProxyPort;
         }
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)

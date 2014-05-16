@@ -30,7 +30,7 @@ namespace GitCommands.Settings
         private static ConfigFileSettings CreateLocal(GitModule aModule, ConfigFileSettings aLowerPriority, bool allowCache = true)
         {
             return new ConfigFileSettings(aLowerPriority,
-                ConfigFileSettingsCache.Create(Path.Combine(aModule.WorkingDirGitDir(), "config"), true, allowCache));
+                ConfigFileSettingsCache.Create(Path.Combine(aModule.GetGitDirectory(), "config"), true, allowCache));
         }
 
         public static ConfigFileSettings CreateGlobal(bool allowCache = true)

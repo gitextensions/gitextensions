@@ -1,41 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ResourceManager.Xliff;
 
-namespace ResourceManager.Translation
+namespace ResourceManager
 {
     public static class Translator
     {
         //Try to cache the translation as long as possible
-        private static Translation _translation;
+        private static ITranslation _translation;
         private static string _name;
 
-        public static Translation GetTranslation(string translationName)
+        public static ITranslation GetTranslation(string translationName)
         {
             if (string.IsNullOrEmpty(translationName))
             {
-                Translator._translation = null;
+                _translation = null;
             }
-            else if (!translationName.Equals(Translator._name))
-            {                
-                Translator._translation = TranslationSerializer.Deserialize(Path.Combine(Translator.GetTranslationDir(), translationName + ".xml"));
-            }
-            Translator._name = translationName;
-            return Translator._translation;
-        }
-
-        public static bool RunningOnWindows()
-        {
-            switch (Environment.OSVersion.Platform)
+            else if (!translationName.Equals(_name))
             {
-                case PlatformID.Win32NT:
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                    return true;
-                default:
-                    return false;
+                 _translation = TranslationSerializer.Deserialize(Path.Combine(GetTranslationDir(), translationName + ".xlf"));               
             }
+            _name = translationName;
+            return _translation;
         }
 
         public static string GetTranslationDir()
@@ -48,16 +35,18 @@ namespace ResourceManager.Translation
             List<string> translations = new List<string>();
             try
             {
-                string translationDir = Translator.GetTranslationDir();
+                string translationDir = GetTranslationDir();
                 if (!Directory.Exists(translationDir))
                 {
                     return new string[0];
                 }
 
-                foreach (string fileName in Directory.GetFiles(translationDir, "*.xml"))
+                foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))
                 {
-                    FileInfo fileInfo = new FileInfo(fileName);
-                    translations.Add(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length));
+                    var name = Path.GetFileNameWithoutExtension(fileName);
+                    if (String.Compare("English", name, StringComparison.CurrentCultureIgnoreCase) == 0)
+                        continue;
+                    translations.Add(name);
                 }
             } catch
             {
@@ -68,7 +57,7 @@ namespace ResourceManager.Translation
 
         public static void Translate(ITranslate obj, string translationName)
         {
-            Translation translation = GetTranslation(translationName);
+            ITranslation translation = GetTranslation(translationName);
             if (translation == null)
                 return;
             obj.TranslateItems(translation);

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces.Notifications;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.Notifications
 {

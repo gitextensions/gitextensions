@@ -11,7 +11,7 @@ using GitCommands;
 using GitCommands.Repository;
 using GitUI.Properties;
 using GitUIPluginInterfaces.RepositoryHosts;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {

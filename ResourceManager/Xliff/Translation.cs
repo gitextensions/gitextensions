@@ -2,29 +2,44 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace ResourceManager.Translation
+namespace ResourceManager.Xliff
 {
     /// <summary>Provides a translation for a specific language.</summary>
-    public class Translation
+    [XmlRoot("xliff")]
+    public class Translation : ITranslation
     {
         public Translation()
         {
-            translationCategories = new List<TranslationCategory>();
+            Version = "1.0";
+            TranslationCategories = new List<TranslationCategory>();
         }
+
+        public Translation(string gitExVersion, string languageCode)
+            : this()
+        {
+            GitExVersion = gitExVersion;
+            _languageCode = languageCode;
+        }
+
+        [XmlAttribute("version")]
+        public string Version { get; set; }
 
         [XmlAttribute("GitExVersion")]
         public string GitExVersion { get; set; }
 
-        public string LanguageCode { get; set; }
+        private string _languageCode;
+        [XmlAttribute("LanguageCode")]
+        public string LanguageCode { get { return _languageCode; } }
 
-        public List<TranslationCategory> translationCategories;
+        [XmlElement(ElementName = "file")]
+        public List<TranslationCategory> TranslationCategories { get; set; }
 
         public TranslationCategory FindOrAddTranslationCategory(string translationCategory)
         {
             TranslationCategory tc = GetTranslationCategory(translationCategory);
             if (tc == null)
             {
-                tc = new TranslationCategory(translationCategory);
+                tc = new TranslationCategory(translationCategory, "en");
                 AddTranslationCategory(tc);
             }
             return tc;
@@ -35,34 +50,24 @@ namespace ResourceManager.Translation
             if (string.IsNullOrEmpty(translationCategory.Name))
                 new InvalidOperationException("Cannot add translationCategory without name");
 
-            translationCategories.Add(translationCategory);
-        }
-
-        public bool HasTranslationCategory(string name)
-        {
-            return translationCategories.Exists(t => t.Name.TrimStart('_') == name.TrimStart('_'));
+            TranslationCategories.Add(translationCategory);
         }
 
         public TranslationCategory GetTranslationCategory(string name)
         {
-            return translationCategories.Find(t => t.Name.TrimStart('_') == name.TrimStart('_'));
-        }
-
-        public List<TranslationCategory> GetTranslationCategories()
-        {
-            return translationCategories;
+            return TranslationCategories.Find(t => t.Name.TrimStart('_') == name.TrimStart('_'));
         }
 
         public void Sort()
         {
-            translationCategories.Sort();
-            foreach(TranslationCategory tc in translationCategories)
-                tc.GetTranslationItems().Sort();
+            TranslationCategories.Sort();
+            foreach(TranslationCategory tc in TranslationCategories)
+                tc.Body.TranslationItems.Sort();
         }
 
         public void AddTranslationItem(string category, string item, string property, string neutralValue)
         {
-            FindOrAddTranslationCategory(category).AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
+            FindOrAddTranslationCategory(category).Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
         }
 
         public string TranslateItem(string category, string item, string property, string defaultValue)
@@ -70,7 +75,7 @@ namespace ResourceManager.Translation
             TranslationCategory tc = GetTranslationCategory(category);
             if (tc == null)
                 return defaultValue;
-            TranslationItem ti = tc.GetTranslationItem(item, property);
+            TranslationItem ti = tc.Body.GetTranslationItem(item, property);
             return ti == null || string.IsNullOrEmpty(ti.Value) ? defaultValue : ti.Value;
         }
     }

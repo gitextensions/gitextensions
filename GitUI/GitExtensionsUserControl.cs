@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI
 {
@@ -71,14 +71,14 @@ namespace GitUI
             translated = true;
         }
 
-        public virtual void AddTranslationItems(Translation translation)
+        public virtual void AddTranslationItems(ITranslation translation)
         {
-            TranslationUtl.AddTranslationItemsFromFields(Name, this, translation);
+            TranslationUtils.AddTranslationItemsFromFields(Name, this, translation);
         }
 
-        public virtual void TranslateItems(Translation translation)
+        public virtual void TranslateItems(ITranslation translation)
         {
-            TranslationUtl.TranslateItemsFromFields(Name, this, translation);
+            TranslationUtils.TranslateItemsFromFields(Name, this, translation);
         }
 
         #region Hotkeys

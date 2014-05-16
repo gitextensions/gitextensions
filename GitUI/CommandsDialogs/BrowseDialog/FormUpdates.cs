@@ -2,13 +2,11 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -16,7 +14,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     {
         #region Translation
         private readonly TranslationString _newVersionAvailable =
-            new TranslationString("There is a new version available");
+            new TranslationString("There is a new version {0} of Git Extensions available");
         private readonly TranslationString _noUpdatesFound =
             new TranslationString("No updates found");
         #endregion
@@ -25,6 +23,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public Version CurrentVersion;
         public bool UpdateFound;
         public string UpdateUrl;
+        public string NewVersion;
         private readonly SynchronizationContext _syncContext;
 
         public FormUpdates(Version currentVersion)
@@ -33,10 +32,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             InitializeComponent();
             Translate();
             UpdateFound = false;
-            _NO_TRANSLATE_link.Visible = false;
             progressBar1.Visible = true;
             CurrentVersion = currentVersion;
             UpdateUrl = "";
+            NewVersion = "";
             progressBar1.Style = ProgressBarStyle.Marquee;
         }
 
@@ -51,17 +50,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             new Thread(SearchForUpdates).Start();
             if (alwaysShow)
                 ShowDialog(aOwnerWindow);
-        }
-
-        private void LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                Process.Start(_NO_TRANSLATE_link.Text);
-            }
-            catch (System.ComponentModel.Win32Exception)
-            {
-            }
         }
 
         private void SearchForUpdates()
@@ -106,9 +94,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             var update = updates.OrderBy(version => version.Version).LastOrDefault();
             if (update != null)
             {
-
                 UpdateFound = true;
                 UpdateUrl = update.DownloadPage;
+                NewVersion = update.Version.ToString();
                 Done();
                 return;
             }
@@ -117,20 +105,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Done();
         }
 
-
         private void Done()
         {
             _syncContext.Send(o =>
             {
                 progressBar1.Visible = false;
-                _NO_TRANSLATE_link.Text = UpdateUrl;
 
                 if (UpdateFound)
                 {
-                    _NO_TRANSLATE_link.Visible = true;
+                    btnDownloadNow.Enabled = true;
+                    UpdateLabel.Text = string.Format(_newVersionAvailable.Text, NewVersion);
                     linkChangeLog.Visible = true;
 
-                    UpdateLabel.Text = _newVersionAvailable.Text;
                     if (!Visible)
                         ShowDialog(OwnerWindow);
                 }
@@ -144,6 +130,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
+        }
+
+        private void btnDownloadNow_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(UpdateUrl);
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+            }
         }
     }
 

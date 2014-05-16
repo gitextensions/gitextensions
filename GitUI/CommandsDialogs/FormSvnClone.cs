@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -43,11 +43,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                var dirTo = this._NO_TRANSLATE_destinationComboBox.Text;
-                if (!dirTo.EndsWith(AppSettings.PathSeparator.ToString()) && !dirTo.EndsWith(AppSettings.PathSeparatorWrong.ToString()))
-                    dirTo += AppSettings.PathSeparator.ToString();
-
-                dirTo += this._NO_TRANSLATE_subdirectoryTextBox.Text;
+                var dirTo = Path.Combine(_NO_TRANSLATE_destinationComboBox.Text, _NO_TRANSLATE_subdirectoryTextBox.Text);
 
                 //Repositories.RepositoryHistory.AddMostRecentRepository(_NO_TRANSLATE_From.Text);
                 //Repositories.RepositoryHistory.AddMostRecentRepository(dirTo);

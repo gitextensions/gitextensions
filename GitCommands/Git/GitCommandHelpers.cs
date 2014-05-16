@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Utils;
 using JetBrains.Annotations;
@@ -121,13 +120,6 @@ namespace GitCommands
                 }
                 return Environment.GetEnvironmentVariable("USERPROFILE");
             }
-        }
-
-        /// <summary>Trims whitespace and replaces '\' with '/'.</summary>
-        public static string FixPath([NotNull] string path)
-        {
-            path = path.Trim();
-            return path.Replace('\\', '/');
         }
 
         internal static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
@@ -337,10 +329,25 @@ namespace GitCommands
             return cherryPickCmd + " " + arguments + " \"" + cherry + "\"";
         }
 
+        /// <summary>
+        /// Check if a string represents a commit hash
+        /// </summary>
+        private static bool IsCommitHash(string value)
+        {
+            return GitRevision.Sha1HashRegex.IsMatch(value);
+        }
+
         public static string GetFullBranchName(string branch)
         {
             if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
                 return branch;
+
+            // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
+            if (IsCommitHash(branch))
+            {
+                return branch;
+            }
+
             return "refs/heads/" + branch;
         }
 
@@ -382,8 +389,8 @@ namespace GitCommands
 
         public static string AddSubmoduleCmd(string remotePath, string localPath, string branch, bool force)
         {
-            remotePath = FixPath(remotePath);
-            localPath = FixPath(localPath);
+            remotePath = remotePath.ToPosixPath();
+            localPath = localPath.ToPosixPath();
 
             if (!string.IsNullOrEmpty(branch))
                 branch = " -b \"" + branch.Trim() + "\"";
@@ -433,8 +440,8 @@ namespace GitCommands
 
         public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, string branch, int? depth)
         {
-            var from = FixPath(fromPath);
-            var to = FixPath(toPath);
+            var from = fromPath.ToPosixPath();
+            var to = toPath.ToPosixPath();
             var options = new List<string> { "-v" };
             if (central)
                 options.Add("--bare");
@@ -565,7 +572,7 @@ namespace GitCommands
         public static string PushCmd(string remote, string fromBranch, string toBranch,
             bool all, bool force, bool track, int recursiveSubmodules)
         {
-            remote = FixPath(remote);
+            remote = remote.ToPosixPath();
 
             // This method is for pushing to remote branches, so fully qualify the
             // remote branch name with refs/heads/.
@@ -608,7 +615,7 @@ namespace GitCommands
         /// <summary>Pushes multiple sets of local branches to remote branches.</summary>
         public static string PushMultipleCmd(string remote, IEnumerable<GitPushAction> pushActions)
         {
-            remote = FixPath(remote);
+            remote = remote.ToPosixPath();
             return new GitPush(remote, pushActions)
             {
                 ReportProgress = VersionInUse.PushCanAskForProgress
@@ -617,7 +624,7 @@ namespace GitCommands
 
         public static string PushTagCmd(string path, string tag, bool all, bool force = false)
         {
-            path = FixPath(path);
+            path = path.ToPosixPath();
 
             tag = tag.Replace(" ", "");
 
@@ -649,11 +656,6 @@ namespace GitCommands
             cmd = cmd.Combine(" ", message.QuoteNE());
 
             return cmd;
-        }
-
-        public static bool PathIsUrl(string path)
-        {
-            return path.Contains(AppSettings.PathSeparator.ToString()) || path.Contains(AppSettings.PathSeparatorWrong.ToString());
         }
 
         public static string ContinueRebaseCmd()
@@ -779,17 +781,17 @@ namespace GitCommands
         public static string PatchCmd(string patchFile)
         {
             if (IsDiffFile(patchFile))
-                return "apply \"" + FixPath(patchFile) + "\"";
+                return "apply \"" + patchFile.ToPosixPath() + "\"";
             else
-                return "am --3way --signoff \"" + FixPath(patchFile) + "\"";
+                return "am --3way --signoff \"" + patchFile.ToPosixPath() + "\"";
         }
 
         public static string PatchCmdIgnoreWhitespace(string patchFile)
         {
             if (IsDiffFile(patchFile))
-                return "apply --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+                return "apply --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
             else
-                return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+                return "am --3way --signoff --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
         }
 
         public static string PatchDirCmd()

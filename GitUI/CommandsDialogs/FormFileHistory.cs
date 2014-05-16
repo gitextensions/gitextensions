@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -133,7 +133,7 @@ namespace GitUI.CommandsDialogs
                 var longPath = new StringBuilder(4096);
                 NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
-                // remove the working dir and now we have a properly cased file name.
+                // remove the working directory and now we have a properly cased file name.
                 fileName = longPath.ToString().Substring(Module.WorkingDir.Length);
             }
 
@@ -303,7 +303,7 @@ namespace GitUI.CommandsDialogs
                 if (string.IsNullOrEmpty(orgFileName))
                     orgFileName = FileName;
 
-                string fullName = Module.WorkingDir + orgFileName.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator);
+                string fullName = Module.WorkingDir + orgFileName.ToNativePath();
 
                 using (var fileDialog = new SaveFileDialog
                 {
@@ -366,18 +366,18 @@ namespace GitUI.CommandsDialogs
 
         private const string FormBrowseName = "FormBrowse";
 
-        public override void AddTranslationItems(Translation translation)
+        public override void AddTranslationItems(ITranslation translation)
         {
             base.AddTranslationItems(translation);
-            TranslationUtl.AddTranslationItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
-            TranslationUtl.AddTranslationItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
         }
 
-        public override void TranslateItems(Translation translation)
+        public override void TranslateItems(ITranslation translation)
         {
             base.TranslateItems(translation);
-            TranslationUtl.TranslateItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
-            TranslationUtl.TranslateItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
         }
 
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)

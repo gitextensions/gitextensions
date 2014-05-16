@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.SpellChecker
 {
@@ -473,30 +473,6 @@ namespace GitUI.SpellChecker
             catch
             {
                 return cultureCode;
-            }
-        }
-
-        void translateText_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(AppSettings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.ToString());
-            }
-        }
-
-        void translate_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(AppSettings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.ToString());
             }
         }
 

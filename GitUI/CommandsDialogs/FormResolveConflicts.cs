@@ -7,7 +7,7 @@ using GitCommands;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.ResolveConflictsDialog;
 using GitUI.Hotkey;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -207,7 +207,7 @@ namespace GitUI.CommandsDialogs
 
         private string FixPath(string path)
         {
-            return (path ?? "").Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator);
+            return (path ?? "").ToNativePath();
         }
 
         private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
@@ -231,8 +231,7 @@ namespace GitUI.CommandsDialogs
                 if (extension.Length <= 1)
                     return false;
 
-                string dir = Path.GetDirectoryName(Application.ExecutablePath) +
-                    AppSettings.PathSeparator + "Diff-Scripts" + AppSettings.PathSeparator;
+                string dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts").EnsureTrailingPathSeparator();
                 if (Directory.Exists(dir))
                 {
                     string mergeScript = "";
@@ -744,7 +743,7 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
             string fileName = GetFileName();
-            fileName = GetShortFileName(fileName);
+            fileName = PathUtil.GetFileName(fileName);
 
             fileName = Path.GetTempPath() + fileName;
 
@@ -753,25 +752,6 @@ namespace GitUI.CommandsDialogs
 
             OsShellUtil.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
-        }
-
-        
-        private static string GetShortFileName(string fileName)
-        {
-            if (fileName.Contains(AppSettings.PathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PathSeparator) + 1);
-            if (fileName.Contains(AppSettings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PathSeparatorWrong) + 1);
-            return fileName;
-        }
-
-        private static string GetDirectoryFromFileName(string fileName)
-        {
-            if (fileName.Contains(AppSettings.PathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PathSeparator));
-            if (fileName.Contains(AppSettings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PathSeparatorWrong));
-            return fileName;
         }
 
         private void ContextOpenRemoteWith_Click(object sender, EventArgs e)
@@ -796,12 +776,12 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
             string fileName = GetFileName();
-            fileName = GetShortFileName(fileName);
+            fileName = PathUtil.GetFileName(fileName);
 
             using (var fileDialog = new SaveFileDialog
                                  {
                                      FileName = fileName,
-                                     InitialDirectory = Module.WorkingDir + GetDirectoryFromFileName(GetFileName()),
+                                     InitialDirectory = Module.WorkingDir + PathUtil.GetDirectoryName(GetFileName()),
                                      AddExtension = true
                                  })
             {

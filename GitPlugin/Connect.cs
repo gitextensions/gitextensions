@@ -126,7 +126,7 @@ namespace GitPlugin
                 {
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsBrowse", "&Browse", "Browse repository", 12, n++, true);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsClone", "Clone &repository", "Clone existing Git", 14, n++);
-                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsInitRepository", "Initialize new repositor&y", "Initialize new Git repository", 13, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsInitRepository", "Create new repositor&y", "Create new Git repository", 13, n++);
                 }
 
                 {

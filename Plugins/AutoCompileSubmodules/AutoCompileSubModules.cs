@@ -9,7 +9,15 @@ namespace AutoCompileSubmodules
 {
     public class AutoCompileSubModules : GitPluginBase, IGitPluginForRepository
     {
-        private const string MsBuildPath = @"C:\Windows\Microsoft.NET\Framework\v3.5\msbuild.exe";
+        private BoolSetting MsBuildEnabled = new BoolSetting("Enabled", false);
+        private StringSetting MsBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
+        private StringSetting MsBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
+        
+        private const string DefaultMsBuildPath = @"C:\Windows\Microsoft.NET\Framework\v3.5\msbuild.exe";
+        private static string FindMsBuild()
+        {
+            return File.Exists(DefaultMsBuildPath) ? DefaultMsBuildPath : "";
+        }
 
         #region IGitPlugin Members
 
@@ -22,12 +30,11 @@ namespace AutoCompileSubmodules
             get { return "Auto compile SubModules"; }
         }
 
-        protected override void RegisterSettings()
+        public override IEnumerable<ISetting> GetSettings()
         {
-            base.RegisterSettings();
-            Settings.AddSetting("Enabled (true / false)", "false");
-            Settings.AddSetting("Path to msbuild.exe", FindMsBuild());
-            Settings.AddSetting("msbuild.exe arguments", "/p:Configuration=Debug");
+            yield return MsBuildEnabled;
+            yield return MsBuildPath;
+            yield return MsBuildArguments;
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -45,13 +52,12 @@ namespace AutoCompileSubmodules
         public override bool Execute(GitUIBaseEventArgs e)
         {
             // Only build when plugin is enabled
-            if (string.IsNullOrEmpty(e.GitModule.GitWorkingDir))
+            if (string.IsNullOrEmpty(e.GitModule.WorkingDir))
                 return false;
 
-            var arguments = Settings.GetSetting("msbuild.exe arguments");
-            var msbuildpath = Settings.GetSetting("Path to msbuild.exe");
+            var msbuildpath = MsBuildPath[Settings];
 
-            var workingDir = new DirectoryInfo(e.GitModule.GitWorkingDir);
+            var workingDir = new DirectoryInfo(e.GitModule.WorkingDir);
             var solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
 
             for (var n = solutionFiles.Length - 1; n > 0; n--)
@@ -59,7 +65,7 @@ namespace AutoCompileSubmodules
                 var solutionFile = solutionFiles[n];
 
                 var result =
-                    MessageBox.Show(e.OwnerForm as IWin32Window,
+                    MessageBox.Show(e.OwnerForm,
                         string.Format("Do you want to build {0}?\n\n{1}",
                                       solutionFile.Name, 
                                       SolutionFilesToString(solutionFiles)),
@@ -73,27 +79,21 @@ namespace AutoCompileSubmodules
                     continue;
 
                 if (string.IsNullOrEmpty(msbuildpath) || !File.Exists(msbuildpath))
-                    MessageBox.Show(e.OwnerForm as IWin32Window, "Please enter correct MSBuild path in the plugin settings dialog and try again.");
+                    MessageBox.Show(e.OwnerForm, "Please enter correct MSBuild path in the plugin settings dialog and try again.");
                 else
-                    e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm as IWin32Window, msbuildpath, solutionFile.FullName + " " + arguments);
+                    e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + MsBuildArguments[Settings]);
             }
             return false;
         }
 
         #endregion
 
-        private static string FindMsBuild()
-        {
-            return File.Exists(MsBuildPath) ? MsBuildPath : "";
-        }
-
         /// <summary>
         ///   Automaticly compile all solution files found in any submodule
         /// </summary>
         private void GitUiCommandsPostUpdateSubmodules(object sender, GitUIPostActionEventArgs e)
         {
-            if (e.ActionDone && Settings.GetSetting("Enabled (true / false)")
-                .Equals("true", StringComparison.InvariantCultureIgnoreCase))
+            if (e.ActionDone && MsBuildEnabled[Settings].Value)
                 Execute(e);
         }
 

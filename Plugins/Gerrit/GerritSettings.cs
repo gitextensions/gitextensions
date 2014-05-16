@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace Gerrit
 {
@@ -61,7 +61,7 @@ namespace Gerrit
             if (aModule == null)
                 throw new ArgumentNullException("aModule");
 
-            string path = aModule.GitWorkingDir + ".gitreview";
+            string path = aModule.WorkingDir + ".gitreview";
 
             var result = new GerritSettings(aModule);
 

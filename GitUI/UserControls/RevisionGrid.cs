@@ -19,7 +19,7 @@ using GitUI.Hotkey;
 using GitUI.RevisionGridClasses;
 using GitUI.Script;
 using Gravatar;
-using ResourceManager.Translation;
+using ResourceManager;
 using GitUI.UserControls.RevisionGridClasses;
 using GitUI.CommandsDialogs.BrowseDialog;
 
@@ -1153,6 +1153,14 @@ namespace GitUI
             SelectionTimer.Start();
         }
 
+        public struct DrawRefArgs
+        {
+            public Graphics Graphics;
+            public Rectangle CellBounds;
+            public bool IsRowSelected;
+            public Font RefsFont;
+        }
+
         private void RevisionsCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             // If our loading state has changed since the last paint, update it.
@@ -1188,11 +1196,23 @@ namespace GitUI
             if (revision == null)
                 return;
 
+            var spi = SuperprojectCurrentCheckout.IsCompleted ? SuperprojectCurrentCheckout.Result : null;
+            var superprojectRefs = new List<GitRef>();
+            if (spi != null && spi.Refs != null && spi.Refs.ContainsKey(revision.Guid))
+            {
+                superprojectRefs.AddRange(spi.Refs[revision.Guid].Where(ShowRemoteRef));
+            }
+
             e.Handled = true;
 
-            bool isRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
+            var drawRefArgs = new DrawRefArgs();
 
-            if (isRowSelected /*&& !showRevisionCards*/)
+            drawRefArgs.Graphics = e.Graphics;
+            drawRefArgs.CellBounds = e.CellBounds;
+
+            drawRefArgs.IsRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
+
+            if (drawRefArgs.IsRowSelected /*&& !showRevisionCards*/)
                 e.Graphics.FillRectangle(_selectedItemBrush, e.CellBounds);
             else
                 e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
@@ -1201,19 +1221,17 @@ namespace GitUI
 
             if (!AppSettings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
             {
-                foreColor = isRowSelected && IsFilledBranchesLayout()
+                foreColor = drawRefArgs.IsRowSelected && IsFilledBranchesLayout()
                     ? SystemColors.HighlightText
                     : e.CellStyle.ForeColor;
             }
             else
             {
-                foreColor = isRowSelected ? SystemColors.HighlightText : Color.Gray;
+                foreColor = drawRefArgs.IsRowSelected ? SystemColors.HighlightText : Color.Gray;
             }
 
             using (Brush foreBrush = new SolidBrush(foreColor))
             {
-                var spi = SuperprojectCurrentCheckout.IsCompleted ? SuperprojectCurrentCheckout.Result : null;
-
                 var rowFont = NormalFont;
                 if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
                     rowFont = HeadFont;
@@ -1258,20 +1276,18 @@ namespace GitUI
                     float offset = baseOffset;
                     var gitRefs = revision.Refs;
 
-
-                    Font refsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
+                    drawRefArgs.RefsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
 
                     if (spi != null)
                     {
                         if (spi.Conflict_Base == revision.Guid)
-                            offset = DrawRef(e, isRowSelected, offset, "Base", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
+                            offset = DrawRef(drawRefArgs, offset, "Base", Color.OrangeRed, ArrowType.NotFilled);
 
                         if (spi.Conflict_Local == revision.Guid)
-                            offset = DrawRef(e, isRowSelected, offset, "Local", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
+                            offset = DrawRef(drawRefArgs, offset, "Local", Color.OrangeRed, ArrowType.NotFilled);
 
                         if (spi.Conflict_Remote == revision.Guid)
-                            offset = DrawRef(e, isRowSelected, offset, "Remote", refsFont, Color.OrangeRed, ArrowType.NotFilled, false);
-
+                            offset = DrawRef(drawRefArgs, offset, "Remote", Color.OrangeRed, ArrowType.NotFilled);
                     }
 
                     if (gitRefs.Any())
@@ -1295,30 +1311,28 @@ namespace GitUI
                                 }
                             }
 
-
                             Color headColor = GetHeadColor(gitRef);
 
                             ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
                                                   gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
 
-                            offset = DrawRef(e, isRowSelected, offset, gitRef.Name, refsFont, headColor, arrowType, true);
+                            var superprojectRef = superprojectRefs.FirstOrDefault(spGitRef => gitRef.CompleteName == spGitRef.CompleteName);
+                            if (superprojectRef != null)
+                                superprojectRefs.Remove(superprojectRef);
+
+                            offset = DrawRef(drawRefArgs, offset, gitRef.Name, headColor, arrowType, superprojectRef != null, true);
                         }
                     }
 
-
-                    if (spi != null && spi.Refs != null && spi.Refs.ContainsKey(revision.Guid))
+                    foreach (var gitRef in superprojectRefs)
                     {
-                        foreach (var gitRef in spi.Refs[revision.Guid].Where(ShowRemoteRef))
-                        {
-                            Color headColor = GetHeadColor(gitRef);
+                        Color headColor = GetHeadColor(gitRef);
 
-                            ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
-                                                  gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
+                        ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
+                                              gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
 
-                            offset = DrawRef(e, isRowSelected, offset, gitRef.Name, refsFont, headColor, arrowType, false);
-                        }
+                        offset = DrawRef(drawRefArgs, offset, gitRef.Name, headColor, arrowType, true, false);
                     }
-
 
                     if (IsCardLayout())
                         offset = baseOffset;
@@ -1400,7 +1414,7 @@ namespace GitUI
             }
         }
 
-        private float DrawRef(DataGridViewCellPaintingEventArgs e, bool isRowSelected, float offset, string name, Font refsFont, Color headColor, ArrowType arrowType, bool fill)
+        private float DrawRef(DrawRefArgs drawRefArgs, float offset, string name, Color headColor, ArrowType arrowType, bool dashedLine = false, bool fill = false)
         {
             var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
 
@@ -1408,19 +1422,18 @@ namespace GitUI
             {
                 using (Brush textBrush = new SolidBrush(textColor))
                 {
-
                     string headName = name;
-                    offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
-                    PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
-                    var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
-                                     e.Graphics.MeasureString(headName, RefsFont).Height);
+                    offset += drawRefArgs.Graphics.MeasureString(headName, drawRefArgs.RefsFont).Width + 6;
+                    var location = new PointF(drawRefArgs.CellBounds.Right - offset, drawRefArgs.CellBounds.Top + 4);
+                    var size = new SizeF(drawRefArgs.Graphics.MeasureString(headName, drawRefArgs.RefsFont).Width,
+                                     drawRefArgs.Graphics.MeasureString(headName, drawRefArgs.RefsFont).Height);
                     if (fill)
-                        e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
+                        drawRefArgs.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
                                              location.Y - 1, size.Width + 3, size.Height + 2);
 
-                    e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
+                    drawRefArgs.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
                                          location.Y - 1, size.Width + 3, size.Height + 2);
-                    e.Graphics.DrawString(headName, refsFont, textBrush, location);
+                    drawRefArgs.Graphics.DrawString(headName, drawRefArgs.RefsFont, textBrush, location);
                 }
             }
             else
@@ -1429,8 +1442,8 @@ namespace GitUI
                                ? name
                                : string.Concat("[", name, "] ");
 
-                var headBounds = AdjustCellBounds(e.CellBounds, offset);
-                SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
+                var headBounds = AdjustCellBounds(drawRefArgs.CellBounds, offset);
+                SizeF textSize = drawRefArgs.Graphics.MeasureString(headName, drawRefArgs.RefsFont);
 
                 offset += textSize.Width;
 
@@ -1438,20 +1451,18 @@ namespace GitUI
                 {
                     offset += 9;
 
-                    float extraOffset = DrawHeadBackground(isRowSelected, e.Graphics,
+                    float extraOffset = DrawHeadBackground(drawRefArgs.IsRowSelected, drawRefArgs.Graphics,
                                                            headColor, headBounds.X,
                                                            headBounds.Y,
                                                            RoundToEven(textSize.Width + 3),
                                                            RoundToEven(textSize.Height), 3,
-                                                           arrowType, fill);
+                                                           arrowType, dashedLine, fill);
 
                     offset += extraOffset;
                     headBounds.Offset((int)(extraOffset + 1), 0);
                 }
 
-
-
-                DrawColumnText(e.Graphics, headName, refsFont, textColor, headBounds);
+                DrawColumnText(drawRefArgs.Graphics, headName, drawRefArgs.RefsFont, textColor, headBounds);
             }
 
             return offset;
@@ -1595,7 +1606,7 @@ namespace GitUI
         static readonly float[] dashPattern = new float[] { 4, 4 };
 
         private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
-            float x, float y, float width, float height, float radius, ArrowType arrowType, bool fill)
+            float x, float y, float width, float height, float radius, ArrowType arrowType, bool dashedLine, bool fill)
         {
             float additionalOffset = arrowType != ArrowType.None ? GetArrowSize(height) : 0;
             width += additionalOffset;
@@ -1626,7 +1637,7 @@ namespace GitUI
                     // frame
                     using (var pen = new Pen(Lerp(color, Color.White, 0.83F)))
                     {
-                        if (!fill)
+                        if (dashedLine)
                             pen.DashPattern = dashPattern;
 
                         graphics.DrawPath(pen, forePath);
@@ -2277,7 +2288,7 @@ namespace GitUI
             // FiltredCurrentCheckout doesn't works here because only calculated after loading all revisions in SelectInitialRevision()
             if (unstagedChanges)
             {
-                //Add working dir as virtual commit
+                //Add working directory as virtual commit
                 var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
                                      {
                                          Message = Strings.GetCurrentUnstagedChanges(),

@@ -9,7 +9,7 @@ using GitUI.Properties;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
-using ResourceManager.Translation;
+using ResourceManager;
 using Settings = GitCommands.AppSettings;
 using System.Collections.Generic;
 
@@ -435,14 +435,14 @@ namespace GitUI
             return null;
         }
 
-        public virtual void AddTranslationItems(Translation translation)
+        public virtual void AddTranslationItems(ITranslation translation)
         {
-            TranslationUtl.AddTranslationItemsFromFields(Name, this, translation);
+            TranslationUtils.AddTranslationItemsFromFields(Name, this, translation);
         }
 
-        public virtual void TranslateItems(Translation translation)
+        public virtual void TranslateItems(ITranslation translation)
         {
-            TranslationUtl.TranslateItemsFromFields(Name, this, translation);
+            TranslationUtils.TranslateItemsFromFields(Name, this, translation);
         }
     }
 }

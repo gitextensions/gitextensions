@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace ResourceManager.Translation
+namespace ResourceManager.Xliff
 {
     public static class TranslationUtl
     {
@@ -13,10 +13,7 @@ namespace ResourceManager.Translation
         {
             if (text == null)
                 return false;
-            foreach (char c in text)
-                if (Char.IsLetter(c))
-                    return true;
-            return false;
+            return text.Any(Char.IsLetter);
         }
 
         public static IEnumerable<Tuple<string, object>> GetObjProperties(object obj, string objName)
@@ -35,7 +32,7 @@ namespace ResourceManager.Translation
             }
         }
 
-        public static void AddTranslationItemsFromFields(string category, object obj, Translation translation)
+        public static void AddTranslationItemsFromFields(string category, object obj, ITranslation translation)
         {
             if (obj == null)
                 return;
@@ -43,7 +40,7 @@ namespace ResourceManager.Translation
             AddTranslationItemsFromList(category, translation, GetObjProperties(obj, "$this"));
         }
 
-        public static void AddTranslationItemsFromList(string category, Translation translation, IEnumerable<Tuple<string, object>> items)
+        public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items)
         {
             Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
             {
@@ -68,57 +65,48 @@ namespace ResourceManager.Translation
                 if (itemName.StartsWith("_NO_TRANSLATE_"))
                     continue;
 
-                Func<PropertyInfo, bool> IsTranslatableItem;
+                Func<PropertyInfo, bool> isTranslatableItem;
                 if (itemObj is DataGridViewColumn)
                 {
-                    DataGridViewColumn c = itemObj as DataGridViewColumn;
+                    var c = itemObj as DataGridViewColumn;
 
-                    IsTranslatableItem = delegate(PropertyInfo propertyInfo)
-                    {
-                        return IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
-                    };
+                    isTranslatableItem = propertyInfo => IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
                 }
                 else
                 {
-                    IsTranslatableItem = IsTranslatableItemInComponent;
+                    isTranslatableItem = IsTranslatableItemInComponent;
                 }
 
-                if (IsTranslatableItem != null)
-                {
-                    Action<PropertyInfo> paction = delegate(PropertyInfo propertyInfo)
-                    {
-                        action(itemName, itemObj, propertyInfo);
-                    };
+                Action<PropertyInfo> paction = propertyInfo => action(itemName, itemObj, propertyInfo);
 
-                    ForEachProperty(itemObj, paction, IsTranslatableItem);
-                }
+                ForEachProperty(itemObj, paction, isTranslatableItem);
             }
         }
 
-        public static void TranslateItemsFromList(string category, Translation translation, IEnumerable<Tuple<string, object>> items)
+        public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items) 
         {
             Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
             {
                 string value = translation.TranslateItem(category, item, propertyInfo.Name, null);
-				if (!String.IsNullOrEmpty(value))
-				{
-					if (propertyInfo.CanWrite)
-						propertyInfo.SetValue(itemObj, value, null);
-				}
-				else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
-				{
-					value = translation.TranslateItem(category, item, "Text", null);
-					if (!String.IsNullOrEmpty(value))
-					{
-						if (propertyInfo.CanWrite)
-							propertyInfo.SetValue(itemObj, value, null);
-					}
-				}
+                if (!String.IsNullOrEmpty(value))
+                {
+                    if (propertyInfo.CanWrite)
+                        propertyInfo.SetValue(itemObj, value, null);
+                }
+                else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
+                {
+                    value = translation.TranslateItem(category, item, "Text", null);
+                    if (!String.IsNullOrEmpty(value))
+                    {
+                        if (propertyInfo.CanWrite)
+                            propertyInfo.SetValue(itemObj, value, null);
+                    }
+                }
             };
             ForEachItem(items, action);
         }
 
-        public static void TranslateItemsFromFields(string category, object obj, Translation translation)
+        public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
         {
             if (obj == null)
                 return;
@@ -131,9 +119,13 @@ namespace ResourceManager.Translation
             if (obj == null)
                 return;
 
-            foreach (PropertyInfo propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.SetProperty))
-                if (IsTranslatableItem(propertyInfo))
-                    action(propertyInfo);
+            foreach (var propertyInfo in obj.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
+                               BindingFlags.NonPublic | BindingFlags.SetProperty)
+                .Where(IsTranslatableItem))
+            {
+                action(propertyInfo);
+            }
         }
 
         public static bool IsTranslatableItemInComponent(PropertyInfo propertyInfo)
@@ -156,7 +148,7 @@ namespace ResourceManager.Translation
             return propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCulture) && viewCol.Visible;
         }
 
-        static string[] UnTranslatableDLLs = new string[]
+        static readonly string[] UnTranslatableDLLs =
         {
             "mscorlib",
             "Microsoft",
@@ -180,22 +172,18 @@ namespace ResourceManager.Translation
 
         public static List<Type> GetTranslatableTypes()
         {
-            List<Type> translatableTypes = new List<Type>();
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            var list = new List<Type>();
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (assembly.IsTranslatable())
+                if (!assembly.IsTranslatable())
+                    continue;
+                foreach (var type in assembly.GetTypes())
                 {
-                    foreach (Type type in assembly.GetTypes())
-                    {
-                        //TODO: Check if class contain TranslationString but doesn't implement ITranslate
-                        if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
-                        {
-                            translatableTypes.Add(type);
-                        }
-                    }
+                    if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
+                        list.Add(type);
                 }
             }
-            return translatableTypes;
+            return list;
         }
 
         public static object CreateInstanceOfClass(Type type)

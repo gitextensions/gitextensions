@@ -9,7 +9,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Script;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -699,7 +699,6 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var localHeads = Module.GetRefs(false, true);
-            BranchGrid.Enabled = false;
             LoadMultiBranchViewData(remote, localHeads);
             
         }
@@ -774,6 +773,7 @@ namespace GitUI.CommandsDialogs
                             }
                         }
                     }
+                    BranchGrid.Enabled = true;
                 });
         }
 

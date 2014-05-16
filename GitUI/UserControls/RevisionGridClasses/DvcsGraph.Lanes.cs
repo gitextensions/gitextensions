@@ -312,7 +312,7 @@ namespace GitUI.RevisionGridClasses
                 }
                 else if (lane.Count == 0)
                 {
-                    Node node = lane.Junction.Parent;
+                    Node node = lane.Junction.Oldest;
                     foreach (Junction parent in node.Ancestors)
                     {
                         if (parent.CurrentState != Junction.State.Unprocessed)

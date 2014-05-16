@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -46,8 +46,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                                Width = imageWidth,
                                                BackgroundImageLayout = ImageLayout.Stretch
                                            };
-                if (File.Exists(Translator.GetTranslationDir() + AppSettings.PathSeparator + translation + ".gif"))
-                    translationImage.BackgroundImage = Image.FromFile(Translator.GetTranslationDir() + AppSettings.PathSeparator + translation + ".gif");
+                if (File.Exists(Path.Combine(Translator.GetTranslationDir(), translation + ".gif")))
+                    translationImage.BackgroundImage = Image.FromFile(Path.Combine(Translator.GetTranslationDir(), translation + ".gif"));
                 else
                     translationImage.BackColor = Color.Black;
 

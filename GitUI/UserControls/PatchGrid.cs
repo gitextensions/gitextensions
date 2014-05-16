@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using PatchApply;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI
 {

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormStash : GitModuleForm
     {
-        readonly TranslationString currentWorkingDirChanges = new TranslationString("Current working dir changes");
+        readonly TranslationString currentWorkingDirChanges = new TranslationString("Current working directory changes");
         readonly TranslationString noStashes = new TranslationString("There are no stashes.");
         readonly TranslationString stashUntrackedFilesNotSupportedCaption = new TranslationString("Stash untracked files");
         readonly TranslationString stashUntrackedFilesNotSupported = new TranslationString("Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.");
@@ -73,9 +73,9 @@ namespace GitUI.CommandsDialogs
             Stashes.Items.Clear();
             foreach (GitStash stashedItem in stashedItems)
                 Stashes.Items.Add(stashedItem);
-            if (Stashes.Items.Count > 1)// more than just the default ("Current working dir changes")
+            if (Stashes.Items.Count > 1)// more than just the default ("Current working directory changes")
                 Stashes.SelectedIndex = 1;// -> auto-select first non-default
-            else if (Stashes.Items.Count > 0)// (no stashes) -> select default ("Current working dir changes")
+            else if (Stashes.Items.Count > 0)// (no stashes) -> select default ("Current working directory changes")
                 Stashes.SelectedIndex = 0;
         }
 
@@ -99,8 +99,8 @@ namespace GitUI.CommandsDialogs
                 Task.Factory.StartNew(() => Module.GetAllChangedFiles())
                     .ContinueWith((task) => LoadGitItemStatuses(task.Result),
                         TaskScheduler.FromCurrentSynchronizationContext());
-                Clear.Enabled = false; // disallow Drop  (of current working dir)
-                Apply.Enabled = false; // disallow Apply (of current working dir)
+                Clear.Enabled = false; // disallow Drop  (of current working directory)
+                Apply.Enabled = false; // disallow Apply (of current working directory)
             }
             else
             {
@@ -127,7 +127,7 @@ namespace GitUI.CommandsDialogs
             Cursor.Current = Cursors.WaitCursor;
 
             if (stashedItem != null &&
-                gitStash == currentWorkingDirStashItem) //current working dir
+                gitStash == currentWorkingDirStashItem) //current working directory
             {
                 View.ViewCurrentChanges(stashedItem);
             }

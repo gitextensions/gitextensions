@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             try
             {
                 string userHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
-                if (!string.IsNullOrEmpty(userHomeDir) && File.Exists(userHomeDir + AppSettings.PathSeparator.ToString() + ".gitconfig"))
+                if (!string.IsNullOrEmpty(userHomeDir) && File.Exists(Path.Combine(userHomeDir, ".gitconfig")))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundHome.Text, userHomeDir));
                     defaultHome.Checked = true;
@@ -140,9 +140,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + AppSettings.PathSeparator.ToString() + ".gitconfig"))
+                var path = Environment.GetEnvironmentVariable("HOMEDRIVE") +
+                           Environment.GetEnvironmentVariable("HOMEPATH");
+                if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
                 {
-                    MessageBox.Show(this, string.Format(_gitconfigFoundHomedrive.Text, Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundHomedrive.Text, path));
                     defaultHome.Checked = true;
                     return;
                 }
@@ -155,9 +157,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + AppSettings.PathSeparator.ToString() + ".gitconfig"))
+                var path = Environment.GetEnvironmentVariable("USERPROFILE");
+                if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
                 {
-                    MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, Environment.GetEnvironmentVariable("USERPROFILE")));
+                    MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, path));
                     userprofileHome.Checked = true;
                     return;
                 }
@@ -170,7 +173,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetFolderPath(Environment.SpecialFolder.Personal)) && File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + AppSettings.PathSeparator.ToString() + ".gitconfig"))
+                var path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
                     otherHome.Checked = true;
@@ -205,9 +209,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.UserProfileHomeDir = userprofileHome.Checked;
 
             GitCommandHelpers.SetEnvironmentVariable(true);
-            if (!Directory.Exists(Environment.GetEnvironmentVariable("HOME")) || string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))
+            string path = Environment.GetEnvironmentVariable("HOME");
+            if (!Directory.Exists(path) || string.IsNullOrEmpty(path))
             {
-                MessageBox.Show(this, string.Format(_homeNotAccessible.Text, Environment.GetEnvironmentVariable("HOME")));
+                MessageBox.Show(this, string.Format(_homeNotAccessible.Text, path));
 
                 return;
             }

@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
+using System.Collections.Generic;
 
 namespace BackgroundFetch
 {
@@ -10,24 +11,24 @@ namespace BackgroundFetch
     {
         private IDisposable cancellationToken;
         private IGitUICommands currentGitUiCommands;
-        private const string GitCommandSetting = "Arguments of git command to run";
-        private const string FetchIntervalSetting = "Fetch every (seconds) - set to 0 to disable";
-        private const string AutoRefreshSetting = "Refresh view after fetch (true / false)";
-        private const string FetchSubmodules = "Fetch all submodules (true/false)";
+
+        private StringSetting GitCommand = new StringSetting("Arguments of git command to run", "fetch --all");
+        private NumberSetting<int> FetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", 0);
+        private BoolSetting AutoRefresh = new BoolSetting("Refresh view after fetch", false);
+        private BoolSetting FetchAllSubmodules = new BoolSetting("Fetch all submodules", false);
+
+        public override IEnumerable<ISetting> GetSettings()
+        {
+            //return all settings or introduce implementation based on reflection on GitPluginBase level
+            yield return GitCommand;
+            yield return FetchInterval;
+            yield return AutoRefresh;
+            yield return FetchAllSubmodules;
+        }
 
         public override string Description
         {
             get { return "Periodic background fetch"; }
-        }
-
-        protected override void RegisterSettings()
-        {
-            base.RegisterSettings();
-
-            Settings.AddSetting(FetchIntervalSetting, "0");
-            Settings.AddSetting(AutoRefreshSetting, "false");
-            Settings.AddSetting(GitCommandSetting, "fetch --all");
-            Settings.AddSetting(FetchSubmodules, "false");
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -49,21 +50,10 @@ namespace BackgroundFetch
         {
             CancelBackgroundOperation();
 
-            int fetchInterval;
-            if (!int.TryParse(Settings.GetSetting(FetchIntervalSetting), out fetchInterval))
-                fetchInterval = 0;
-
-            bool autoRefresh;
-            if (!bool.TryParse(Settings.GetSetting(AutoRefreshSetting), out autoRefresh))
-                autoRefresh = false;
-
-            bool fetchSubMods;
-            if (!bool.TryParse(Settings.GetSetting(FetchSubmodules), out fetchSubMods))
-                fetchSubMods = false;
-
+            int fetchInterval = FetchInterval[Settings];
 
             var gitModule = currentGitUiCommands.GitModule;
-            if (fetchInterval > 0 && GitModule.IsValidGitWorkingDir(gitModule.GitWorkingDir))
+            if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir())
             {
                 cancellationToken =
                     Observable.Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
@@ -72,12 +62,12 @@ namespace BackgroundFetch
                               .ObserveOn(ThreadPoolScheduler.Instance)
                               .Subscribe(i =>
                                   {
-                                      if (fetchSubMods)
+                                      if (FetchAllSubmodules[Settings].HasValue && FetchAllSubmodules[Settings].Value)
                                           currentGitUiCommands.GitCommand("submodule foreach --recursive git fetch --all");
 
-                                      var gitCmd = Settings.GetSetting(GitCommandSetting).Trim();
+                                      var gitCmd = GitCommand[Settings].Trim();
                                       var msg = currentGitUiCommands.GitCommand(gitCmd);
-                                      if (autoRefresh)
+                                      if (AutoRefresh[Settings].HasValue && AutoRefresh[Settings].Value)
                                       {
                                           if (gitCmd.StartsWith("fetch", StringComparison.InvariantCultureIgnoreCase))
                                           {

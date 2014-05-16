@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Script;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs
                     return string.Empty;
                 }
 
-                File.WriteAllText(Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
+                File.WriteAllText(Module.GetGitDirectory() + "\\TAGMESSAGE", tagMessage.Text);
             }
 
             var s = Module.Tag(textBoxTagName.Text, revision, annotate.Checked, ForceTag.Checked);

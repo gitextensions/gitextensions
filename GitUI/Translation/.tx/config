@@ -1,0 +1,20 @@
+[main]
+host = https://www.transifex.com
+
+[git-extensions.ui-master]
+file_filter = <lang>.xlf
+source_file = English.xlf
+source_lang = en
+trans.nl = Dutch.xlf
+trans.fr = French.xlf
+trans.de = German.xlf
+trans.id = Indonesian.xlf
+trans.it = Italian.xlf
+trans.ja = Japanese.xlf
+trans.ko = Korean.xlf
+trans.ru = Russian.xlf
+trans.zh_CN = Simplified Chinese.xlf
+trans.es = Spanish.xlf
+trans.zh_TW = Traditional Chinese.xlf
+type = XLIFF
+

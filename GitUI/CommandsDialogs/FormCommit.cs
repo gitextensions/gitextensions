@@ -17,9 +17,8 @@ using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Script;
 using PatchApply;
-using ResourceManager.Translation;
+using ResourceManager;
 using Timer = System.Windows.Forms.Timer;
-using GitCommands.Config;
 
 namespace GitUI.CommandsDialogs
 {
@@ -204,6 +203,7 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
+            stagedResetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
         }
@@ -314,7 +314,7 @@ namespace GitUI.CommandsDialogs
 
         private bool ResetSelectedFiles()
         {
-            if (Unstaged.Focused)
+            if (Unstaged.Focused || Staged.Focused)
             {
                 ResetSoftClick(this, null);
                 return true;
@@ -1344,21 +1344,45 @@ namespace GitUI.CommandsDialogs
             _shouldRescanChanges = false;
             try
             {
-                if (Unstaged.SelectedItem == null)
+                if (_currentFilesList == null || _currentFilesList.SelectedItems.Count() == 0)
+                {
                     return;
+                }
 
                 // Show a form asking the user if they want to reset the changes.
-                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, Unstaged.SelectedItems.Any(item => !item.IsNew), Unstaged.SelectedItems.Any(item => item.IsNew));
+                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, _currentFilesList.SelectedItems.Any(item => !item.IsNew), _currentFilesList.SelectedItems.Any(item => item.IsNew));
                 if (resetType == FormResetChanges.ActionEnum.Cancel)
                     return;
 
-                //remember max selected index
-                Unstaged.StoreNextIndexToSelect();
+                // Unstage file first, then reset
+                var files = new List<GitItemStatus>();
 
-                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
+                foreach (var item in Staged.SelectedItems)
+                {
+                    toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                    if (!item.IsNew)
+                    {
+                        toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                        Module.UnstageFileToRemove(item.Name);
+
+                        if (item.IsRenamed)
+                            Module.UnstageFileToRemove(item.OldName);
+                    }
+                    else
+                    {
+                        files.Add(item);
+                    }
+                }
+
+                Module.UnstageFiles(files);
+
+                //remember max selected index
+                _currentFilesList.StoreNextIndexToSelect();
+
+                var deleteNewFiles = _currentFilesList.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
                 var filesInUse = new List<string>();
                 var output = new StringBuilder();
-                foreach (var item in Unstaged.SelectedItems)
+                foreach (var item in _currentFilesList.SelectedItems)
                 {
                     if (item.IsNew)
                     {
@@ -1515,7 +1539,7 @@ namespace GitUI.CommandsDialogs
             //Save last commit message in settings. This way it can be used in multiple repositories.
             AppSettings.LastCommitMessage = commitMessageText;
 
-            var path = Module.WorkingDirGitDir() + AppSettings.PathSeparator.ToString() + "COMMITMESSAGE";
+            var path = Path.Combine(Module.GetGitDirectory(), "COMMITMESSAGE");
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
@@ -1636,7 +1660,7 @@ namespace GitUI.CommandsDialogs
                 if (!String.IsNullOrEmpty(from) && !String.IsNullOrEmpty(to))
                 {
                     sb.AppendLine("Submodule " + item.Key + ":");
-                    GitModule module = new GitModule(Module.WorkingDir + item.Value + AppSettings.PathSeparator);
+                    GitModule module = new GitModule(Module.WorkingDir + item.Value.EnsureTrailingPathSeparator());
                     string log = module.RunGitCmd(
                          string.Format("log --pretty=format:\"    %m %h - %s\" --no-merges {0}...{1}", from, to));
                     if (log.Length != 0)
@@ -1682,7 +1706,7 @@ namespace GitUI.CommandsDialogs
             var item = list.SelectedItem;
             var fileName = item.Name;
 
-            Process.Start((Path.Combine(Module.WorkingDir, fileName)).Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+            Process.Start((Path.Combine(Module.WorkingDir, fileName)).ToNativePath());
         }
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
@@ -1697,7 +1721,7 @@ namespace GitUI.CommandsDialogs
             var item = list.SelectedItem;
             var fileName = item.Name;
 
-            OsShellUtil.OpenAs(Module.WorkingDir + fileName.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+            OsShellUtil.OpenAs(Module.WorkingDir + fileName.ToNativePath());
         }
 
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
@@ -1717,7 +1741,7 @@ namespace GitUI.CommandsDialogs
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).ToNativePath());
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -2140,7 +2164,7 @@ namespace GitUI.CommandsDialogs
 
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            GitUICommands submodulCommands = new GitUICommands(Module.WorkingDir + _currentItem.Name + AppSettings.PathSeparator.ToString());
+            GitUICommands submodulCommands = new GitUICommands(Module.WorkingDir + _currentItem.Name.EnsureTrailingPathSeparator());
             submodulCommands.StartCommitDialog(this, false);
             Initialize();
         }
@@ -2150,7 +2174,7 @@ namespace GitUI.CommandsDialogs
             Process process = new Process();
             process.StartInfo.FileName = Application.ExecutablePath;
             process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name + AppSettings.PathSeparator.ToString();//
+            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name.EnsureTrailingPathSeparator();
             process.Start();
         }
 
@@ -2328,7 +2352,7 @@ namespace GitUI.CommandsDialogs
             foreach (var item in list.SelectedItems)
             {
                 var fileNames = new StringBuilder();
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).ToNativePath());
 
                 string filePath = fileNames.ToString();
                 if (File.Exists(filePath))

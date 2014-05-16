@@ -5,7 +5,7 @@ using System.Net.Mail;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.FormatPatchDialog;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
 
             if (!SaveToDir.Checked)
             {
-                savePatchesToDir = Module.WorkingDirGitDir() + "\\PatchesToMail";
+                savePatchesToDir = Module.GetGitDirectory() + "\\PatchesToMail";
                 if (Directory.Exists(savePatchesToDir))
                 {
                     foreach (string file in Directory.GetFiles(savePatchesToDir, "*.patch"))

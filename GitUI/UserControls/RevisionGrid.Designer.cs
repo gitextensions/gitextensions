@@ -625,7 +625,7 @@ namespace GitUI
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(359, 23);
             this.label2.TabIndex = 1;
-            this.label2.Text = "The current working dir is not a git repository.";
+            this.label2.Text = "The current working directory is not a git repository.";
             // 
             // GitIgnore
             // 

@@ -5,7 +5,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI
 {
-    public class GitPluginSettingsContainer : IGitPluginSettingsContainer
+    public class GitPluginSettingsContainer : ISettingsSource
     {
         private readonly string pluginName;
         public GitPluginSettingsContainer(string pluginName)
@@ -13,55 +13,19 @@ namespace GitUI
             this.pluginName = pluginName;
         }
 
-        readonly Dictionary<string, string> settings = new Dictionary<string, string>();
-
-        public void AddSetting(string name, string defaultValue)
+        public T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
             var value = AppSettings.GetString(pluginName + name, null);
 
             if (value == null)
-            {
-                settings.Add(name, defaultValue);
-                AppSettings.SetString(pluginName + name, defaultValue);
-            }
-            else
-            {
-                settings.Add(name, value);
-            }
+                return defaultValue;
+
+            return decode(value);
         }
 
-        public void SetSetting(string name, string value)
+        public void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            if (!settings.ContainsKey(name))
-                throw new ArgumentOutOfRangeException("name", "Cannot find setting. Did you add the setting in the Register() function of the plugin?");
-
-            settings[name] = value;
-
-            AppSettings.SetString(pluginName + name, value);
-        }
-
-        public string GetSetting(string name) 
-        {
-            if (!settings.ContainsKey(name))
-                throw new ArgumentOutOfRangeException("name", "Cannot find setting. Dit you add the setting in the Register() function of the plugin?");
-
-            var value = AppSettings.GetString(pluginName + name, null);
-            
-            if (value == null)
-                return settings[name];
-
-            return value;
-        }
-
-        public IList<string> GetAvailableSettings()
-        {
-            IList<string> keys = new List<string>(settings.Keys.Count);
-            foreach (string key in settings.Keys)
-            {
-                keys.Add(key);
-            }
-
-            return keys;
+            AppSettings.SetString(pluginName + name, encode(value));
         }
     }
 }
