@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GitUI.RevisionGridClasses
 {
@@ -50,14 +51,28 @@ namespace GitUI.RevisionGridClasses
                 AddNode(aNode);
             }
 
-            public Node Child
+            public Node Youngest
             {
                 get { return this[0]; }
             }
 
-            public Node Parent
+            public Node Oldest
             {
                 get { return this[NodesCount - 1]; }
+            }
+
+            public Node ChildOf(Node aParent)
+            {
+                int childIndex;
+                if (nodeIndices.TryGetValue(aParent, out childIndex))
+                {
+                    if (childIndex > 0)
+                        return nodes[childIndex - 1];
+                    else
+                        throw new ArgumentException("Parent has no children:\n" + aParent.ToString());
+                }
+
+                throw new ArgumentException("Junction:\n"+ ToString() +"\ndoesn't contain this parent:\n" + aParent.ToString());
             }
 
             public int NodesCount
@@ -73,14 +88,14 @@ namespace GitUI.RevisionGridClasses
             public void Add(Node aParent)
             {
                 aParent.Descendants.Add(this);
-                Parent.Ancestors.Add(this);
+                Oldest.Ancestors.Add(this);
                 AddNode(aParent);
             }
 
             public void Remove(Node node)
             {
                 RemoveNode(node);
-                Parent.Ancestors.Remove(this);
+                Oldest.Ancestors.Remove(this);
             }
 
             public Junction Split(Node aNode)
@@ -126,7 +141,7 @@ namespace GitUI.RevisionGridClasses
 
             public override string ToString()
             {
-                return string.Format("{3}: {0}--({2})--{1}", Child, Parent, NodesCount, debugId);
+                return string.Format("{3}: {0}--({2})--{1}", Youngest, Oldest, NodesCount, debugId);
             }
         }
     }
