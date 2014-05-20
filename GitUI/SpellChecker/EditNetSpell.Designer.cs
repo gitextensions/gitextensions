@@ -35,6 +35,8 @@
             this.TextBox = new System.Windows.Forms.RichTextBox();
             this.AutoComplete = new System.Windows.Forms.ListBox();
             this.AutoCompleteTimer = new System.Windows.Forms.Timer(this.components);
+            this.AutoCompleteToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.AutoCompleteToolTipTimer = new System.Windows.Forms.Timer(this.components);
             this.SpellCheckContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -95,6 +97,11 @@
             this.AutoCompleteTimer.Interval = 200;
             this.AutoCompleteTimer.Tick += new System.EventHandler(this.AutoCompleteTimer_Tick);
             // 
+            // AutoCompleteToolTipTimer
+            // 
+            this.AutoCompleteToolTipTimer.Interval = 2000;
+            this.AutoCompleteToolTipTimer.Tick += new System.EventHandler(this.AutoCompleteToolTipTimer_Tick);
+            // 
             // EditNetSpell
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -117,5 +124,7 @@
         private System.Windows.Forms.RichTextBox TextBox;
         private System.Windows.Forms.ListBox AutoComplete;
         private System.Windows.Forms.Timer AutoCompleteTimer;
+        private System.Windows.Forms.ToolTip AutoCompleteToolTip;
+        private System.Windows.Forms.Timer AutoCompleteToolTipTimer;
     }
 }
