@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.CommitDialog;
@@ -36,7 +38,8 @@ namespace GitUI.SpellChecker
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
 
-        private List<AutoCompleteWord> _autoCompleteList; 
+        private CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource(); 
+        private Task<List<AutoCompleteWord>> _autoCompleteList; 
         private bool _autoCompleteWasUserActivated;
         private bool _disableAutoCompleteTriggerOnTextUpdate;
         private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new Dictionary<Keys, string>
@@ -255,7 +258,7 @@ namespace GitUI.SpellChecker
                             DictionaryFile = dictionaryFile
                         };
 
-                _wordDictionary.AddCommitWords(_autoCompleteList.Select(w => w.Word));
+                //_wordDictionary.AddCommitWords(_autoCompleteList.Select(w => w.Word));
             }
 
             _spelling.Dictionary = _wordDictionary;
@@ -773,6 +776,11 @@ namespace GitUI.SpellChecker
         public void EnableAutoCompletion (GitModule module)
         {
             _autoCompleteList = GetAutoCompleteList(module);
+            _autoCompleteList.ContinueWith(r =>
+            {
+                if (r.IsCompleted && !r.IsCanceled)
+                    _wordDictionary.AddCommitWords(r.Result.Select(x => x.Word));
+            });
         }
 
         private string GetChangedFileText (GitModule module, GitItemStatus file)
@@ -785,32 +793,42 @@ namespace GitUI.SpellChecker
             return File.ReadAllText(Path.Combine(module.WorkingDir, file.Name));
         }
 
-        private List<AutoCompleteWord> GetAutoCompleteList (GitModule module)
+        private Task<List<AutoCompleteWord>> GetAutoCompleteList (GitModule module)
         {
-            var autoCompleteWords = new HashSet<string>();
+            var cancellationToken = _autoCompleteCancellationTokenSource.Token;
 
-            foreach (var file in module.GetAllChangedFiles())
-            {
-                var regex = AutoCompleteRegexProvider.GetRegexForExtension(Path.GetExtension(file.Name));
+            return Task.Factory.StartNew(
+                    () =>
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
 
-                if (regex != null)
-                {
-                    var text = GetChangedFileText(module, file);
-                    var matches = regex.Matches(text);
-                    foreach (Match match in matches)
-                            // Skip first group since it always contains the entire matched string (regardless of capture groups)
-                        foreach (Group group in match.Groups.OfType<Group>().Skip(1))
-                            foreach (Capture capture in @group.Captures)
-                                autoCompleteWords.Add(capture.Value);
-                }
+                        var autoCompleteWords = new HashSet<string>();
 
-                autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
-                autoCompleteWords.Add(Path.GetFileName(file.Name));
-                if (!string.IsNullOrWhiteSpace(file.OldName))
-                    autoCompleteWords.Add(Path.GetFileName(file.OldName));
-            }
+                        foreach (var file in module.GetAllChangedFiles())
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
 
-            return autoCompleteWords.Select(w => new AutoCompleteWord(w)).ToList();
+                            var regex = AutoCompleteRegexProvider.GetRegexForExtension(Path.GetExtension(file.Name));
+
+                            if (regex != null)
+                            {
+                                var text = GetChangedFileText(module, file);
+                                var matches = regex.Matches(text);
+                                foreach (Match match in matches)
+                                        // Skip first group since it always contains the entire matched string (regardless of capture groups)
+                                    foreach (Group group in match.Groups.OfType<Group>().Skip(1))
+                                        foreach (Capture capture in @group.Captures)
+                                            autoCompleteWords.Add(capture.Value);
+                            }
+
+                            autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
+                            autoCompleteWords.Add(Path.GetFileName(file.Name));
+                            if (!string.IsNullOrWhiteSpace(file.OldName))
+                                autoCompleteWords.Add(Path.GetFileName(file.OldName));
+                        }
+
+                        return autoCompleteWords.Select(w => new AutoCompleteWord(w)).ToList();
+                    }, cancellationToken);
         }
 
         protected override bool ProcessCmdKey (ref Message msg, Keys keyData)
@@ -872,6 +890,23 @@ namespace GitUI.SpellChecker
 
         private void UpdateOrShowAutoComplete (bool calledByUser)
         {
+            if (!_autoCompleteList.IsCompleted)
+            {
+                if (calledByUser)
+                {
+                    AutoCompleteToolTip.Show(
+                            "AutoComplete is not available yet (it is still parsing the changed files).",
+                            TextBox,
+                            GetCursorPosition());
+                    AutoCompleteToolTipTimer.Start();
+                }
+
+                return;
+            }
+            
+            AutoCompleteToolTipTimer.Stop();
+            AutoCompleteToolTip.Hide(TextBox);
+
             var word = GetWordAtCursor();
 
             if (word == null || (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated))
@@ -882,7 +917,7 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            var list = _autoCompleteList.Where(x => x.Matches(word)).Distinct().ToList();
+            var list = _autoCompleteList.Result.Where(x => x.Matches(word)).Distinct().ToList();
 
             if (list.Count == 0)
             {
@@ -903,9 +938,7 @@ namespace GitUI.SpellChecker
 
             var sizes = list.Select(x => TextRenderer.MeasureText(x.Word, TextBox.Font)).ToList();
 
-            var cursorPos = TextBox.GetPositionFromCharIndex(TextBox.SelectionStart);
-            cursorPos.Y += (int) Math.Ceiling(TextBox.Font.GetHeight());
-            cursorPos.X += 2;
+            var cursorPos = GetCursorPosition();
 
             var height = (sizes.Count + 1) * AutoComplete.ItemHeight;
             var width = sizes.Max(x => x.Width);
@@ -922,6 +955,14 @@ namespace GitUI.SpellChecker
             TextBox.Focus();
         }
 
+        private Point GetCursorPosition ()
+        {
+            var cursorPos = TextBox.GetPositionFromCharIndex(TextBox.SelectionStart);
+            cursorPos.Y += (int) Math.Ceiling(TextBox.Font.GetHeight());
+            cursorPos.X += 2;
+            return cursorPos;
+        }
+
         private void AutoComplete_Click (object sender, EventArgs e)
         {
             AcceptAutoComplete();
@@ -935,7 +976,14 @@ namespace GitUI.SpellChecker
 
         public void CancelAutoComplete ()
         {
+            _autoCompleteCancellationTokenSource.Cancel();
+            AutoCompleteToolTipTimer.Stop();
             AutoCompleteTimer.Stop();
+        }
+
+        private void AutoCompleteToolTipTimer_Tick (object sender, EventArgs e)
+        {
+            AutoCompleteToolTip.Hide(TextBox);
         }
     }
 }
