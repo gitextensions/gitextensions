@@ -790,6 +790,11 @@ namespace GitUI.SpellChecker
             if (changes != null)
                 return changes.Text;
 
+            var content = module.GetFileContents(file);
+
+            if (content != null)
+                return content;
+
             return File.ReadAllText(Path.Combine(module.WorkingDir, file.Name));
         }
 
