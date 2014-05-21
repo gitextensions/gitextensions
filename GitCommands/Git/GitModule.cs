@@ -2113,6 +2113,35 @@ namespace GitCommands
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
         }
 
+        private string GetFileContents (string path)
+        {
+            int exitCode;
+
+            string contents = RunGitCmd(string.Format("show HEAD:\"{0}\"", path.Replace('\\', '/')), out exitCode);
+            if (exitCode == 0)
+                return contents;
+
+            return null;
+        }
+
+        public string GetFileContents (GitItemStatus file)
+        {
+            var contents = new StringBuilder();
+
+            string currentContents = GetFileContents(file.Name);
+            if (currentContents != null)
+                contents.Append(currentContents);
+
+            if (file.OldName != null)
+            {
+                string oldContents = GetFileContents(file.OldName);
+                if (oldContents != null)
+                    contents.Append(oldContents);
+            }
+
+            return contents.Length > 0 ? contents.ToString() : null;
+        }
+
         public string StageFile(string file)
         {
             return RunGitCmd("update-index --add" + " \"" + file.ToPosixPath() + "\"");
