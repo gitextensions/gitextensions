@@ -33,6 +33,7 @@
             this.Ok = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.fastForwardOnly = new System.Windows.Forms.RadioButton();
             this.Branches = new GitUI.BranchComboBox();
             this.noCommit = new System.Windows.Forms.CheckBox();
             this.advanced = new System.Windows.Forms.CheckBox();
@@ -67,7 +68,7 @@
             this.Ok.Location = new System.Drawing.Point(345, 317);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 25);
-            this.Ok.TabIndex = 9;
+            this.Ok.TabIndex = 10;
             this.Ok.Text = "&Merge";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
@@ -89,6 +90,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.fastForwardOnly);
             this.groupBox1.Controls.Add(this.Branches);
             this.groupBox1.Controls.Add(this.noCommit);
             this.groupBox1.Controls.Add(this.advanced);
@@ -104,12 +106,23 @@
             this.groupBox1.Controls.Add(this.Currentbranch);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(240, 3);
+            this.groupBox1.Location = new System.Drawing.Point(298, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(461, 351);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
+            // 
+            // fastForwardOnly
+            // 
+            this.fastForwardOnly.AutoSize = true;
+            this.fastForwardOnly.Location = new System.Drawing.Point(13, 105);
+            this.fastForwardOnly.Name = "fastForwardOnly";
+            this.fastForwardOnly.Size = new System.Drawing.Size(377, 19);
+            this.fastForwardOnly.TabIndex = 1;
+            this.fastForwardOnly.Text = "Only allow a straight line (fast forward) merge, abort if not possible";
+            this.fastForwardOnly.UseVisualStyleBackColor = true;
+            this.fastForwardOnly.CheckedChanged += new System.EventHandler(this.fastForwardOnly_CheckedChanged);
             // 
             // Branches
             // 
@@ -125,20 +138,20 @@
             // noCommit
             // 
             this.noCommit.AutoSize = true;
-            this.noCommit.Location = new System.Drawing.Point(13, 163);
+            this.noCommit.Location = new System.Drawing.Point(13, 193);
             this.noCommit.Name = "noCommit";
             this.noCommit.Size = new System.Drawing.Size(121, 23);
-            this.noCommit.TabIndex = 8;
+            this.noCommit.TabIndex = 4;
             this.noCommit.Text = "Do not commit";
             this.noCommit.UseVisualStyleBackColor = true;
             // 
             // advanced
             // 
             this.advanced.AutoSize = true;
-            this.advanced.Location = new System.Drawing.Point(13, 200);
+            this.advanced.Location = new System.Drawing.Point(13, 230);
             this.advanced.Name = "advanced";
             this.advanced.Size = new System.Drawing.Size(173, 23);
-            this.advanced.TabIndex = 3;
+            this.advanced.TabIndex = 5;
             this.advanced.Text = "Show advanced options";
             this.advanced.UseVisualStyleBackColor = true;
             this.advanced.CheckedChanged += new System.EventHandler(this.advanced_CheckedChanged);
@@ -146,10 +159,10 @@
             // NonDefaultMergeStrategy
             // 
             this.NonDefaultMergeStrategy.AutoSize = true;
-            this.NonDefaultMergeStrategy.Location = new System.Drawing.Point(27, 228);
+            this.NonDefaultMergeStrategy.Location = new System.Drawing.Point(27, 258);
             this.NonDefaultMergeStrategy.Name = "NonDefaultMergeStrategy";
             this.NonDefaultMergeStrategy.Size = new System.Drawing.Size(224, 23);
-            this.NonDefaultMergeStrategy.TabIndex = 4;
+            this.NonDefaultMergeStrategy.TabIndex = 6;
             this.NonDefaultMergeStrategy.Text = "Use non-default merge strategy";
             this.NonDefaultMergeStrategy.UseVisualStyleBackColor = true;
             this.NonDefaultMergeStrategy.Visible = false;
@@ -158,10 +171,10 @@
             // squash
             // 
             this.squash.AutoSize = true;
-            this.squash.Location = new System.Drawing.Point(27, 256);
+            this.squash.Location = new System.Drawing.Point(27, 286);
             this.squash.Name = "squash";
             this.squash.Size = new System.Drawing.Size(128, 23);
-            this.squash.TabIndex = 7;
+            this.squash.TabIndex = 9;
             this.squash.Text = "Squash commits";
             this.squash.UseVisualStyleBackColor = true;
             this.squash.Visible = false;
@@ -169,10 +182,10 @@
             // strategyHelp
             // 
             this.strategyHelp.AutoSize = true;
-            this.strategyHelp.Location = new System.Drawing.Point(418, 229);
+            this.strategyHelp.Location = new System.Drawing.Point(418, 259);
             this.strategyHelp.Name = "strategyHelp";
             this.strategyHelp.Size = new System.Drawing.Size(37, 19);
-            this.strategyHelp.TabIndex = 6;
+            this.strategyHelp.TabIndex = 8;
             this.strategyHelp.TabStop = true;
             this.strategyHelp.Text = "Help";
             this.strategyHelp.Visible = false;
@@ -189,10 +202,10 @@
             "octopus",
             "ours",
             "subtree"});
-            this._NO_TRANSLATE_mergeStrategy.Location = new System.Drawing.Point(254, 226);
+            this._NO_TRANSLATE_mergeStrategy.Location = new System.Drawing.Point(254, 256);
             this._NO_TRANSLATE_mergeStrategy.Name = "_NO_TRANSLATE_mergeStrategy";
             this._NO_TRANSLATE_mergeStrategy.Size = new System.Drawing.Size(158, 27);
-            this._NO_TRANSLATE_mergeStrategy.TabIndex = 5;
+            this._NO_TRANSLATE_mergeStrategy.TabIndex = 7;
             this._NO_TRANSLATE_mergeStrategy.Visible = false;
             // 
             // currentBranchLabel
@@ -207,10 +220,10 @@
             // noFastForward
             // 
             this.noFastForward.AutoSize = true;
-            this.noFastForward.Location = new System.Drawing.Point(13, 135);
+            this.noFastForward.Location = new System.Drawing.Point(13, 155);
             this.noFastForward.Name = "noFastForward";
             this.noFastForward.Size = new System.Drawing.Size(243, 23);
-            this.noFastForward.TabIndex = 0;
+            this.noFastForward.TabIndex = 3;
             this.noFastForward.Text = "Always create a new merge commit";
             this.noFastForward.UseVisualStyleBackColor = true;
             this.noFastForward.CheckedChanged += new System.EventHandler(this.noFastForward_CheckedChanged);
@@ -219,10 +232,10 @@
             // 
             this.fastForward.AutoSize = true;
             this.fastForward.Checked = true;
-            this.fastForward.Location = new System.Drawing.Point(13, 110);
+            this.fastForward.Location = new System.Drawing.Point(13, 130);
             this.fastForward.Name = "fastForward";
             this.fastForward.Size = new System.Drawing.Size(327, 23);
-            this.fastForward.TabIndex = 1;
+            this.fastForward.TabIndex = 2;
             this.fastForward.TabStop = true;
             this.fastForward.Text = "Keep a single branch line if possible (fast forward)";
             this.fastForward.UseVisualStyleBackColor = true;
@@ -316,5 +329,6 @@
         private BranchComboBox Branches;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;
+        private System.Windows.Forms.RadioButton fastForwardOnly;
     }
 }

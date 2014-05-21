@@ -46,6 +46,18 @@ namespace GitCommands
         All = 5
     }
 
+    public enum MergeMode
+    {
+        /// <summary>Allows a fast forward or a merge commit</summary>
+        AllowFastForward,
+
+        /// <summary>Disallows fast forward, forces a merge commit</summary>
+        NoFastForward,
+
+        /// <summary>Only allows fast forward, and aborts if not possible</summary>
+        FastForwardOnly
+    }
+
     public static class GitCommandHelpers
     {
         public static void SetEnvironmentVariable(bool reload = false)
@@ -1252,13 +1264,29 @@ namespace GitCommands
 
             return string.Empty;
         }
+        
+        
 
-        public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy)
+        public static string MergeBranchCmd(string branch, MergeMode mergeMode, bool squash, bool noCommit, string strategy)
         {
             StringBuilder command = new StringBuilder("merge");
 
-            if (!allowFastForward)
-                command.Append(" --no-ff");
+            switch (mergeMode)
+            {
+                case MergeMode.NoFastForward:
+                    command.Append(" --no-ff");
+                    break;
+
+                case MergeMode.FastForwardOnly:
+                    command.Append(" --ff-only");
+                    break;
+
+                case MergeMode.AllowFastForward:
+                    // Default, no options needed
+                    break;
+            }
+
+            
             if (!string.IsNullOrEmpty(strategy))
             {
                 command.Append(" --strategy=");

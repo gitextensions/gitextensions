@@ -73,11 +73,12 @@ namespace GitCommands.Settings
 
         public readonly BuildServer BuildServer;
         
-        public bool NoFastForwardMerge
+        public MergeMode MergeMode
         {
-            get { return this.GetBool("NoFastForwardMerge", false); }
-            set { this.SetBool("NoFastForwardMerge", value); }
+            get { return this.GetEnum("MergeMode", MergeMode.AllowFastForward); }
+            set { this.SetEnum("MergeMode", value); }
         }
+
     }
 
 
