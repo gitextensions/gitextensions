@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Config;
 using GitCommands.Settings;
 using GitCommands.Utils;
@@ -26,14 +25,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             CommonLogic.FillEncodings(Global_FilesEncoding);
 
-            string npp = MergeToolsHelper.FindFileInFolders("notepad++.exe", "Notepad++");
-            if (string.IsNullOrEmpty(npp))
-                npp = "notepad++";
-            else
-                npp = "\"" + npp + "\"";
-
-            GlobalEditor.Items.AddRange(new Object[] { "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
+            GlobalEditor.Items.AddRange(EditorHelper.GetEditors());
         }
+
 
         protected override string GetCommaSeparatedKeywordList()
         {
