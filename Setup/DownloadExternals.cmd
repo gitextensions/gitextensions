@@ -1,7 +1,7 @@
 @echo off
 
-IF NOT EXIST "%~p0\..\bin\Git-1.9.0-preview20140217.exe" (
-    "%~p0\tools\curl.exe" -o ..\bin\Git-1.9.0-preview20140217.exe http://msysgit.googlecode.com/files/Git-1.9.0-preview20140217.exe
+IF NOT EXIST "%~p0\..\bin\Git-1.9.2-preview20140411.exe" (
+    "%~p0\tools\curl.exe" -o ..\bin\Git-1.9.2-preview20140411.exe https://github.com/msysgit/msysgit/releases/download/Git-1.9.2-preview20140411/Git-1.9.2-preview20140411.exe
 )
 
 IF NOT EXIST "%~p0\..\bin\KDiff3-32bit-Setup_0.9.97.exe" (
