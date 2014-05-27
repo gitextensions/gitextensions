@@ -1,6 +1,6 @@
 using System;
 
-namespace NetSpell.SpellChecker
+namespace SpellChecker
 {
 	/// <summary>
 	///     Class sent to the event handler when the DoubleWord or 
@@ -8,18 +8,18 @@ namespace NetSpell.SpellChecker
 	/// </summary>
 	public class SpellingEventArgs : EventArgs 
 	{
-		private int _TextIndex;
-		private string _Word;
-		private int _WordIndex;
+		private readonly int _textIndex;
+		private readonly string _word;
+		private readonly int _wordIndex;
 
 		/// <summary>
 		///     Constructor used to pass in properties
 		/// </summary>
 		public SpellingEventArgs(string word, int wordIndex, int textIndex)
 		{
-			_Word = word;
-			_WordIndex = wordIndex;
-			_TextIndex = textIndex;
+			_word = word;
+			_wordIndex = wordIndex;
+			_textIndex = textIndex;
 		}
 
 		/// <summary>
@@ -27,7 +27,7 @@ namespace NetSpell.SpellChecker
 		/// </summary>
 		public int TextIndex
 		{
-			get {return _TextIndex;}
+			get {return _textIndex;}
 		}
 
 		/// <summary>
@@ -35,7 +35,7 @@ namespace NetSpell.SpellChecker
 		/// </summary>
 		public string Word
 		{
-			get {return _Word;}
+			get {return _word;}
 		}
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace NetSpell.SpellChecker
 		/// </summary>
 		public int WordIndex
 		{
-			get {return _WordIndex;}
+			get {return _wordIndex;}
 		}
 
 	} // Class SpellingEventArgs

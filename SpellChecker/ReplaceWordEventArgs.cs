@@ -1,19 +1,19 @@
 
-namespace NetSpell.SpellChecker
+namespace SpellChecker
 {
 	/// <summary>
 	/// Summary description for ReplaceWordEventArgs.
 	/// </summary>
 	public class ReplaceWordEventArgs : SpellingEventArgs
 	{
-		private string _ReplacementWord;
+		private readonly string _replacementWord;
 
 		/// <summary>
 		///     Class sent to the event handler when the ReplacedWord Event is fired
 		/// </summary>
 		public ReplaceWordEventArgs(string replacementWord, string word, int wordIndex, int textIndex) : base (word, wordIndex, textIndex)
 		{
-			_ReplacementWord = replacementWord;
+			_replacementWord = replacementWord;
 		}
 
 		/// <summary>
@@ -21,7 +21,7 @@ namespace NetSpell.SpellChecker
 		/// </summary>
 		public string ReplacementWord
 		{
-			get {return _ReplacementWord;}
+			get {return _replacementWord;}
 		}
 	}
 }

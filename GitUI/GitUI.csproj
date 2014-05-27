@@ -59,6 +59,9 @@
     <CodeAnalysisRuleSet>..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NHunspell">
+      <HintPath>..\packages\NHunspell.1.1.1\lib\net\NHunspell.dll</HintPath>
+    </Reference>
     <Reference Include="PSTaskDialog">
       <HintPath>..\Bin\PSTaskDialog.dll</HintPath>
     </Reference>
@@ -1455,7 +1458,7 @@
       <Project>{4041B976-50D0-4C6E-ABAF-7E67458A1264}</Project>
       <Name>Gravatar</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NetSpell.SpellChecker\SpellChecker.csproj">
+    <ProjectReference Include="..\SpellChecker\SpellChecker.csproj">
       <Project>{A426EE0B-E52E-4D74-AF24-06797142D7B2}</Project>
       <Name>SpellChecker</Name>
     </ProjectReference>
@@ -1798,4 +1801,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /s /y /d "$(SolutionDir)packages\NHunspell.1.1.1\native\*.*" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
