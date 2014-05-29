@@ -216,7 +216,6 @@ namespace GitFlow
 
         private bool RunCommand(string commandText)
         {
-            int exitCode;
             pbResultCommand.Image = Resource.StatusHourglass;
             ShowToolTip(pbResultCommand, "running command : git " + commandText);
             ForceRefresh(pbResultCommand);
@@ -225,27 +224,27 @@ namespace GitFlow
             txtResult.Text = "running...";
             ForceRefresh(txtResult);
 
-            var result = m_gitUiCommands.GitModule.RunGitCmd(commandText, out exitCode).Trim().Replace("\n", Environment.NewLine);
+            var result = m_gitUiCommands.GitModule.RunGitCmdResult(commandText);
 
             IsRefreshNeeded = true;
 
             ttDebug.RemoveAll();
-            ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + exitCode);
+            ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + result.ExitCode);
 
-            if (exitCode == 0)
+            if (result.ExitCode == 0)
             {
                 pbResultCommand.Image = Resource.success;
-                ShowToolTip(pbResultCommand, result);
+                ShowToolTip(pbResultCommand, result.GetString());
                 DisplayHead();
-                txtResult.Text = result;
+                txtResult.Text = result.GetString();
             }
             else
             {
                 pbResultCommand.Image = Resource.error;
-                ShowToolTip(pbResultCommand, "error: " + result);
-                txtResult.Text = result;
+                ShowToolTip(pbResultCommand, "error: " + result.GetString());
+                txtResult.Text = result.GetString();
             }
-            return exitCode == 0;
+            return result.ExitCode == 0;
         }
         #endregion
 
