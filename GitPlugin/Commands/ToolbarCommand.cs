@@ -8,9 +8,16 @@ namespace GitPlugin.Commands
     class ToolbarCommand<ItemCommandT> : CommandBase
         where ItemCommandT : ItemCommandBase, new()
     {
-        public override void OnCommand(DTE2 application, OutputWindowPane pane)
+        readonly bool _runInDocumentContext;
+
+        public ToolbarCommand(bool runInDocumentContext = false)
         {
-            new ItemCommandT().OnCommand(application, pane);
+            _runInDocumentContext = runInDocumentContext;
+        }
+
+        public override void OnCommand(DTE2 application, OutputWindowPane pane, bool runInDocumentContext)
+        {
+            new ItemCommandT().OnCommand(application, pane, _runInDocumentContext);
         }
 
         static public string ResolveFileNameWithCase(string fullpath)
@@ -39,6 +46,11 @@ namespace GitPlugin.Commands
         public override bool IsEnabled(DTE2 application)
         {
             return new ItemCommandT().IsEnabled(application);
+        }
+
+        public override CommandBase CreateCopyWithDocumentContext()
+        {
+            return new ToolbarCommand<ItemCommandT>(runInDocumentContext: true);
         }
     }
 
