@@ -210,10 +210,10 @@ namespace GitPlugin
             {
                 AddContextMenuItemsToContextMenu("Web Item");
                 AddContextMenuItemsToContextMenu("Item");
-                AddContextMenuItemsToContextMenu("Easy MDI Document Window");
-                AddContextMenuItemsToContextMenu("Code Window");
-                AddContextMenuItemsToContextMenu("Script Context");
-                AddContextMenuItemsToContextMenu("ASPX Context");
+                AddContextMenuItemsToContextMenu("Easy MDI Document Window", runInDocumentContext: true);
+                AddContextMenuItemsToContextMenu("Code Window", runInDocumentContext: true);
+                AddContextMenuItemsToContextMenu("Script Context", runInDocumentContext: true);
+                AddContextMenuItemsToContextMenu("ASPX Context", runInDocumentContext: true);
             }
             catch (Exception ex)
             {
@@ -292,15 +292,16 @@ namespace GitPlugin
             }
         }
 
-        private void AddContextMenuItemsToContextMenu(string toolbarName)
+        private void AddContextMenuItemsToContextMenu(string toolbarName, bool runInDocumentContext = false)
         {
+            var suffix = runInDocumentContext ? "_DocumentContext" : "";
             try
             {
-                _gitPlugin.AddMenuCommand(toolbarName, "Difftool", "GitExt: Diff",
+                _gitPlugin.AddMenuCommand(toolbarName, "Difftool" + suffix, "GitExt: Diff",
                                          "Open with difftool", 24, 4);
-                _gitPlugin.AddMenuCommand(toolbarName, "ShowFileHistory", "GitExt: File history",
+                _gitPlugin.AddMenuCommand(toolbarName, "ShowFileHistory" + suffix, "GitExt: File history",
                                          "Show file history", 6, 5);
-                _gitPlugin.AddMenuCommand(toolbarName, "ResetChanges", "GitExt: Reset file changes",
+                _gitPlugin.AddMenuCommand(toolbarName, "ResetChanges" + suffix, "GitExt: Reset file changes",
                                          "Undo changes made to this file", 4, 6);
             }
             catch (Exception)
