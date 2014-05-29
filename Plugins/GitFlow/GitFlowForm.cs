@@ -115,12 +115,10 @@ namespace GitFlow
 
         private List<string> GetBranches(string typeBranch)
         {
-            string[] references = m_gitUiCommands.GitModule.RunGitCmd("flow " + typeBranch)
-                                                 .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
-
-            if (references.Length == 0 || references.Any(l=>l.StartsWith("No " + typeBranch + " branches exist.")))
+            var result = m_gitUiCommands.GitModule.RunGitCmdResult("flow " + typeBranch);
+            if (result.ExitCode != 0)
                 return new List<string>();
-
+            string[] references = result.StdOutput.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }
 
