@@ -511,7 +511,12 @@ namespace GitCommands
             int exitCode = GitCommandHelpers.RunCmdByte(cmd, arguments, _workingDir, stdInput, out output, out error);
             if (encoding == null)
                 encoding = SystemEncoding;
-            return new CmdResult { StdOutput = output == null ? null : encoding.GetString(output), StdError = error == null ? null : encoding.GetString(error), ExitCode = exitCode };
+            return new CmdResult 
+            {
+                StdOutput = output == null ? string.Empty : encoding.GetString(output),
+                StdError = error == null ? string.Empty : encoding.GetString(error),
+                ExitCode = exitCode 
+            };
         }
 
         /// <summary>
