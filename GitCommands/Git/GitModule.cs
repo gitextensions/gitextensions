@@ -2734,15 +2734,14 @@ namespace GitCommands
                 return true;
             }
 
+            if (EnvUtils.RunningOnWindows())
+            {
+                return Process.GetProcessesByName("git").Length > 0;
+            }
+
             // Get processes by "ps" command.
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
             var arguments = "x";
-            if (EnvUtils.RunningOnWindows())
-            {
-                // "x" option is unimplemented by msysgit and cygwin.
-                arguments = "";
-            }
-
             var output = RunCmd(cmd, arguments);
             var lines = output.Split('\n');
             if (lines.Count() >= 2)
