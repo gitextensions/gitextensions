@@ -9,10 +9,12 @@ namespace GitUI.CommandsDialogs.CommitDialog
 {
     public static class AutoCompleteRegexProvider
     {
-        private static readonly Dictionary<string, Regex> _regexes = new Dictionary<string, Regex>(); 
+        private static readonly Lazy<Dictionary<string, Regex>> _regexes = new Lazy<Dictionary<string, Regex>>(ParseRegexes);
 
-        public static void Initialize ()
+        private static Dictionary<string, Regex> ParseRegexes ()
         {
+            var regexes = new Dictionary<string, Regex>();
+
             foreach (var line in File.ReadLines (Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "AutoCompleteRegexes.txt")))
             {
                 var i = line.IndexOf('=');
@@ -23,13 +25,15 @@ namespace GitUI.CommandsDialogs.CommitDialog
                 var regex = new Regex(regexStr, RegexOptions.Compiled);
 
                 foreach (var extension in extensions)
-                    _regexes.Add(extension, regex);
+                    regexes.Add(extension, regex);
             }
+
+            return regexes;
         }
 
         public static Regex GetRegexForExtension (string extension)
         {
-            return _regexes.ContainsKey(extension) ? _regexes[extension] : null;
+            return _regexes.Value.ContainsKey(extension) ? _regexes.Value[extension] : null;
         }
     }
 }

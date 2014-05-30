@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -99,8 +100,6 @@ namespace GitExtensions
                 MouseWheelRedirector.Active = true;
 
             GitUICommands uCommands = new GitUICommands(GetWorkingDir(args));
-
-            AutoCompleteRegexProvider.Initialize();
 
             if (args.Length <= 1)
             {
