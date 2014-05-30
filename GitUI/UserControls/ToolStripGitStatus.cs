@@ -258,7 +258,7 @@ namespace GitUI
 
                 _commandIsRunning = true;
                 _statusIsUpToDate = true;
-                AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, (e) => { CurrentStatus = WorkingStatus.Stopped; });
+                AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
                 // Always update every 5 min, even if we don't know anything changed
                 ScheduleNextJustInCaseUpdate();
             }
@@ -268,6 +268,12 @@ namespace GitUI
         {
             string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
             return Module.RunGitCmd(command);
+        }
+
+        private void OnUpdateStatusError(AsyncErrorEventArgs e)
+        {
+            _commandIsRunning = false;
+            CurrentStatus = WorkingStatus.Stopped;
         }
 
         private void UpdatedStatusReceived(string updatedStatus)
