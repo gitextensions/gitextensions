@@ -3297,9 +3297,9 @@ namespace GitCommands
                 return true;
             }
 
-            if (EnvUtils.RunningOnWindows() && Process.GetProcessesByName("git").Length > 0)
+            if (EnvUtils.RunningOnWindows())
             {
-                return true;
+                return Process.GetProcessesByName("git").Length > 0;
             }
 
             // Get processes by "ps" command.
