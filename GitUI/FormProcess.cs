@@ -225,8 +225,12 @@ namespace GitUI
             DataReceived(sender, e);
         }
 
-        public void AppendOutputLine(string line)
+        public void AppendOutputLine(string rawLine)
         {
+            const string ansiSuffix = "\u001B[K";
+
+            var line = rawLine.Replace(ansiSuffix, "");
+
             AppendToOutputString(line + Environment.NewLine);
 
             AddMessageLine(line);
