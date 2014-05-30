@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using GitCommands;
-using GitCommands.Config;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using ResourceManager;
@@ -11,8 +9,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GitConfigSettingsPage : ConfigFileSettingsPage
     {
-        private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
-        
+        private readonly TranslationString _toolSuggestPathText =
+            new TranslationString("Please enter the path to {0} and press suggest.");
+
+        private readonly TranslationString _diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
+        private readonly TranslationString _mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
+
         public GitConfigSettingsPage()
         {
             InitializeComponent();
@@ -26,14 +28,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             CommonLogic.FillEncodings(Global_FilesEncoding);
 
-            string npp = MergeToolsHelper.FindFileInFolders("notepad++.exe", "Notepad++");
-            if (string.IsNullOrEmpty(npp))
-                npp = "notepad++";
-            else
-                npp = "\"" + npp + "\"";
-
-            GlobalEditor.Items.AddRange(new Object[] { "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
+            GlobalEditor.Items.AddRange(EditorHelper.GetEditors());
         }
+
 
         protected override string GetCommaSeparatedKeywordList()
         {
@@ -169,8 +166,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 MergeToolCmd.SelectAll();
                 MergeToolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(CheckSettingsLogic.ToolSuggestPathText.Text, exeName),
-                        CheckSettingsLogic.MergeToolSuggestCaption.Text);
+                    MessageBox.Show(this, String.Format(_toolSuggestPathText.Text, exeName),
+                        _mergeToolSuggestCaption.Text);
                 return;
             }
             MergetoolPath.SelectAll(); // allow Undo action
@@ -181,15 +178,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ResolveDiffToolPath()
         {
-            string kdiff3path = MergeToolsHelper.FindPathForKDiff(CurrentSettings.GetValue("difftool.kdiff3.path"));
-            if (string.IsNullOrEmpty(kdiff3path))
+            string kdiff3Path = MergeToolsHelper.FindPathForKDiff(CurrentSettings.GetValue("difftool.kdiff3.path"));
+            if (string.IsNullOrEmpty(kdiff3Path))
                 return;
 
-            kdiff3path = MergeToolsHelper.FindFileInFolders("kdiff3.exe", MergetoolPath.Text);
-            if (string.IsNullOrEmpty(kdiff3path))
+            kdiff3Path = MergeToolsHelper.FindFileInFolders("kdiff3.exe", MergetoolPath.Text);
+            if (string.IsNullOrEmpty(kdiff3Path))
                 return;
 
-            DifftoolPath.Text = kdiff3path;
+            DifftoolPath.Text = kdiff3Path;
         }
 
         private void DiffToolCmdSuggest_Click(object sender, EventArgs e)
@@ -214,8 +211,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 DifftoolCmd.SelectAll();
                 DifftoolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(CheckSettingsLogic.ToolSuggestPathText.Text, exeName),
-                        __diffToolSuggestCaption.Text);
+                    MessageBox.Show(this, String.Format(_toolSuggestPathText.Text, exeName),
+                        _diffToolSuggestCaption.Text);
                 return;
             }
             DifftoolPath.SelectAll(); // allow Undo action

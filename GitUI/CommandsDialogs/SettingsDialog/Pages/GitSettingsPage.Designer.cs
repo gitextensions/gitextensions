@@ -186,6 +186,7 @@
             this.GitBinPath.Name = "GitBinPath";
             this.GitBinPath.Size = new System.Drawing.Size(486, 23);
             this.GitBinPath.TabIndex = 7;
+            this.GitBinPath.TextChanged += new System.EventHandler(this.GitBinPath_TextChanged);
             // 
             // GitSettingsPage
             // 

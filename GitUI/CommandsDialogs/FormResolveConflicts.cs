@@ -263,10 +263,9 @@ namespace GitUI.CommandsDialogs
             if (File.Exists(Path.Combine(Module.WorkingDir, fileName)))
                 lastWriteTimeBeforeMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, fileName));
 
-            int exitCode;
             Module.RunCmd("wscript", "\"" + mergeScript + "\" \"" +
                 FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
-                FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"", out exitCode);
+                FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"");
 
             if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text,
                 FixPath(Path.Combine(Module.WorkingDir, fileName))), askMergeConflictSolvedCaption.Text,
@@ -407,8 +406,7 @@ namespace GitUI.CommandsDialogs
                     if (File.Exists(Path.Combine(Module.WorkingDir, filename)))
                         lastWriteTimeBeforeMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, filename));
 
-                    int exitCode;
-                    Module.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
+                    var res = Module.RunCmdResult(mergetoolPath, "" + arguments + "");
 
                     DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
                     if (File.Exists(Path.Combine(Module.WorkingDir, filename)))
@@ -416,15 +414,15 @@ namespace GitUI.CommandsDialogs
 
                     //Check exitcode AND timestamp of the file. If exitcode is success and
                     //time timestamp is changed, we are pretty sure the merge was done.
-                    if (exitCode == 0 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge)
+                    if (res.ExitCode == 0 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge)
                     {
                         StageFile(filename);
                     }
 
                     //If the exitcode is 1, but the file is changed, ask if the merge conflict is solved.
                     //If the exitcode is 0, but the file is not changed, ask if the merge conflict is solved.
-                    if ((exitCode == 1 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge) ||
-                        (exitCode == 0 && lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge))
+                    if ((res.ExitCode == 1 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge) ||
+                        (res.ExitCode == 0 && lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge))
                     {
                         if (MessageBox.Show(this, askMergeConflictSolved.Text, askMergeConflictSolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {

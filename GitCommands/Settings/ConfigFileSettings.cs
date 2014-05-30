@@ -19,7 +19,7 @@ namespace GitCommands.Settings
 
         public static ConfigFileSettings CreateEffective(GitModule aModule)
         {
-            return CreateLocal(aModule, CreateGlobal());
+            return CreateLocal(aModule, CreateGlobal(CreateSystemWide()));
         }
 
         public static ConfigFileSettings CreateLocal(GitModule aModule, bool allowCache = true)
@@ -35,9 +35,24 @@ namespace GitCommands.Settings
 
         public static ConfigFileSettings CreateGlobal(bool allowCache = true)
         {
+            return CreateGlobal(null, allowCache);
+        }
+
+        public static ConfigFileSettings CreateGlobal(ConfigFileSettings aLowerPriority, bool allowCache = true)
+        {
             string configPath = Path.Combine(GitCommandHelpers.GetHomeDir(), ".config", "git", "config");
             if (!File.Exists(configPath))
                 configPath = Path.Combine(GitCommandHelpers.GetHomeDir(), ".gitconfig");
+
+            return new ConfigFileSettings(aLowerPriority,
+                ConfigFileSettingsCache.Create(configPath, false, allowCache));
+        }
+
+        public static ConfigFileSettings CreateSystemWide(bool allowCache = true)
+        {
+            string configPath = Path.Combine(AppSettings.GitBinDir, "..", "etc", "gitconfig");
+            if (!File.Exists(configPath))
+                return null;
 
             return new ConfigFileSettings(null,
                 ConfigFileSettingsCache.Create(configPath, false, allowCache));
@@ -53,7 +68,7 @@ namespace GitCommands.Settings
         }
 
         public IList<string> GetValues(string setting)
-        { 
+        {
             return SettingsCache.GetValues(setting);
         }
 

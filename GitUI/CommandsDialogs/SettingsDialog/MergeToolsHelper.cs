@@ -124,10 +124,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "Compare.exe";
                 case "beyondcompare3":
                     return "bcomp.exe";
+                case "beyondcompare4":
+                    return "bcomp.exe";
                 case "kdiff3":
                     return "kdiff3.exe";
                 case "meld":
                     return "meld.exe";
+                case "p4merge":
+                    return "p4merge.exe";
                 case "tmerge":
                     return "TortoiseMerge.exe";
                 case "winmerge":
@@ -149,6 +153,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return FindFileInFolders(exeName, bcomppath,
                                                           @"Beyond Compare 3 (x86)\",
                                                           @"Beyond Compare 3\");
+                case "beyondcompare4":
+                    string bcomppath4 = UnquoteString(GetGlobalSetting(settings, "difftool.beyondcompare4.path"));
+
+                    exeName = "bcomp.exe";
+
+                    return FindFileInFolders(exeName, bcomppath4,
+                                                          @"Beyond Compare 4 (x86)\",
+                                                          @"Beyond Compare 4\");
                 case "kdiff3":
                     string kdiff3path = UnquoteString(GetGlobalSetting(settings, "difftool.kdiff3.path"));
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
@@ -192,9 +204,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 case "beyondcompare3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "beyondcompare4":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "kdiff3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "meld":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "p4merge":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "tmerge":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
@@ -213,6 +229,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "araxis":
                     return "Compare.exe";
                 case "beyondcompare3":
+                    return "bcomp.exe";
+                case "beyondcompare4":
                     return "bcomp.exe";
                 case "diffmerge":
                     return "DiffMerge.exe";
@@ -245,6 +263,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     exeName = "bcomp.exe";
                     return FindFileInFolders(exeName, bcomppath, @"Beyond Compare 3 (x86)\",
                                                                  @"Beyond Compare 3\");
+                case "beyondcompare4":
+                    string bcomppath4 = UnquoteString(GetGlobalSetting(settings, "mergetool.beyondcompare4.path"));
+
+                    exeName = "bcomp.exe";
+                    return FindFileInFolders(exeName, bcomppath4, @"Beyond Compare 4 (x86)\",
+                                                                  @"Beyond Compare 4\");
                 case "diffmerge":
                     exeName = "DiffMerge.exe";
                     return FindFileInFolders(exeName, @"SourceGear\DiffMerge\");
@@ -300,6 +324,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             switch (mergeTool)
             {
                 case "beyondcompare3":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
+                case "beyondcompare4":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
                 case "diffmerge":
                     return "\"" + exeFile + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";

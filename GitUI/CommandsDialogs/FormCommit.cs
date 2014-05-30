@@ -24,8 +24,8 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm //, IHotkeyable
     {
-        const string USER_NAME_KEY = "user.name";
-        const string USER_EMAIL_KEY = "user.email";
+        const string UserNameKey = "user.name";
+        const string UserEmailKey = "user.email";
 
         #region Translation
         private readonly TranslationString _amendCommit =
@@ -114,8 +114,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
 
-        private readonly TranslationString _commitAuthorInfo = new TranslationString("Author ");
-        private readonly TranslationString _commitCommitterInfo = new TranslationString("Committer ");
+        private readonly TranslationString _commitAuthorInfo = new TranslationString("Author");
+        private readonly TranslationString _commitCommitterInfo = new TranslationString("Committer");
         private readonly TranslationString _commitCommitterToolTip = new TranslationString("Click to change committer information.");
         #endregion
 
@@ -1846,8 +1846,8 @@ namespace GitUI.CommandsDialogs
 
         private void GetUserSettings()
         {
-            _userName = Module.GetEffectiveSetting(USER_NAME_KEY);
-            _userEmail = Module.GetEffectiveSetting(USER_EMAIL_KEY);
+            _userName = Module.GetEffectiveSetting(UserNameKey);
+            _userEmail = Module.GetEffectiveSetting(UserEmailKey);
 
 
 

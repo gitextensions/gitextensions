@@ -713,6 +713,8 @@ namespace GitUI
 
         public bool StartSvnDcommitDialog(IWin32Window owner)
         {
+            if (!RequiredValidGitSvnWorikingDir(owner))
+                return false;
             Func<bool> action = () =>
             {
                 return FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
@@ -728,6 +730,8 @@ namespace GitUI
 
         public bool StartSvnRebaseDialog(IWin32Window owner)
         {
+            if (!RequiredValidGitSvnWorikingDir(owner))
+                return false;
             Func<bool> action = () =>
             {
                 FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
@@ -744,6 +748,8 @@ namespace GitUI
 
         public bool StartSvnFetchDialog(IWin32Window owner)
         {
+            if (!RequiredValidGitSvnWorikingDir(owner))
+                return false;
             Func<bool> action = () =>
             {
                 return FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.FetchCmd());

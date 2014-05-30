@@ -41,7 +41,7 @@ namespace DeleteUnusedBranches
             olderThanDays.Value = days;
 
             BranchesGrid.DataSource = branches;
-            clearResults();
+            ClearResults();
         }
 
         private static IEnumerable<Branch> GetObsoleteBranches(RefreshContext context)
@@ -77,23 +77,59 @@ namespace DeleteUnusedBranches
 
         private void Delete_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "Are you sure to delete the selected branches?", "Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            var selectedBranches = branches.Where(branch => branch.Delete).ToList();
+            if (selectedBranches.Count == 0)
             {
-                if (IncludeRemoteBranches.Checked)
+                MessageBox.Show(string.Format("Select branches to delete using checkboxes in '{0}' column.", deleteDataGridViewCheckBoxColumn.HeaderText), "Delete");
+                return;
+            }
+
+            if (MessageBox.Show(this, string.Format("Are you sure to delete {0} selected branches?", selectedBranches.Count), "Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+
+            var remoteName = remote.Text;
+            var remoteBranchPrefix = remoteName + "/";
+            var remoteBranchesSource = IncludeRemoteBranches.Checked
+                ? selectedBranches.Where(branch => branch.Name.StartsWith(remoteBranchPrefix))
+                : Enumerable.Empty<Branch>();
+            var remoteBranches = remoteBranchesSource.ToList();
+
+            if (remoteBranches.Count > 0)
+            {
+                var message = string.Format("DANGEROUS ACTION!{0}Branches will be deleted on the remote '{1}'. This can not be undone.{0}Are you sure you want to continue?", Environment.NewLine, remoteName);
+                if (MessageBox.Show(this, message, "Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+            }
+
+            var localBranches = selectedBranches.Except(remoteBranches).ToList();
+            tableLayoutPanel2.Enabled = tableLayoutPanel3.Enabled = false;
+            imgLoading.Visible = true;
+            lblStatus.Text = "Deleting branches...";
+
+            Task.Factory.StartNew(() =>
+            {
+                if (remoteBranches.Count > 0)
                 {
-                    if (MessageBox.Show(this, "DANGEROUS ACTION!" + Environment.NewLine + "Branches will be delete on the remote '" + remote.Text + "'. This can not be undone." + Environment.NewLine + "Are you sure you want to continue?", "Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
-                        return;
+                    // TODO: use GitCommandHelpers.PushMultipleCmd after moving this window to GE (see FormPush as example)
+                    var remoteBranchNameOffset = remoteBranchPrefix.Length;
+                    var remoteBranchNames = string.Join(" ", remoteBranches.Select(branch => ":" + branch.Name.Substring(remoteBranchNameOffset)));
+                    gitCommands.RunGitCmd(string.Format("push {0} {1}", remoteName, remoteBranchNames));
                 }
 
-                foreach (var branch in branches.Where(branch => branch.Delete))
+                if (localBranches.Count > 0)
                 {
-                    var command = IncludeRemoteBranches.Checked && branch.Name.StartsWith(remote.Text + "/")
-                        ? "push " + remote.Text + " :" + branch.Name.Substring((remote.Text + "/").Length)
-                        : "branch -d " + branch.Name;
-                    gitCommands.RunGitCmd(command);
+                    var localBranchNames = string.Join(" ", localBranches.Select(branch => branch.Name));
+                    gitCommands.RunGitCmd("branch -d " + localBranchNames);
                 }
+            })
+            .ContinueWith(_ =>
+            {
+                if (IsDisposed)
+                    return;
+
+                tableLayoutPanel2.Enabled = tableLayoutPanel3.Enabled = true;
                 RefreshObsoleteBranches();
-            }
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void buttonSettings_Click(object sender, EventArgs e)
@@ -105,33 +141,33 @@ namespace DeleteUnusedBranches
 
         private void IncludeRemoteBranches_CheckedChanged(object sender, EventArgs e)
         {
-            clearResults();
+            ClearResults();
         }
 
         private void useRegexFilter_CheckedChanged(object sender, EventArgs e)
         {
-            clearResults();
+            ClearResults();
         }
 
         private void remote_TextChanged(object sender, EventArgs e)
         {
-            clearResults();
+            ClearResults();
         }
 
         private void regexFilter_TextChanged(object sender, EventArgs e)
         {
-            clearResults();
+            ClearResults();
         }
 
         private void mergedIntoBranch_TextChanged(object sender, EventArgs e)
         {
             referenceBranch = mergedIntoBranch.Text;
-            clearResults();
+            ClearResults();
         }
 
         private void includeUnmergedBranches_CheckedChanged(object sender, EventArgs e)
         {
-            clearResults();
+            ClearResults();
 
             if (includeUnmergedBranches.Checked)
                 MessageBox.Show(this, "Deleting unmerged branches will result in dangling commits. Use with caution!", "Delete", MessageBoxButtons.OK);
@@ -140,10 +176,10 @@ namespace DeleteUnusedBranches
         private void olderThanDays_ValueChanged(object sender, EventArgs e)
         {
             days = (int)olderThanDays.Value;
-            clearResults();
+            ClearResults();
         }
 
-        private void clearResults()
+        private void ClearResults()
         {
             instructionLabel.Text = "Choose branches to delete. Only branches that are fully merged in '" + referenceBranch + "' will be deleted.";
             lblStatus.Text = "Press '" + Refresh.Text + "' to search for branches to delete.";
@@ -179,7 +215,7 @@ namespace DeleteUnusedBranches
 
             var context = new RefreshContext(gitCommands, IncludeRemoteBranches.Checked, includeUnmergedBranches.Checked, referenceBranch, remote.Text,
                 useRegexFilter.Checked ? regexFilter.Text : null, TimeSpan.FromDays(days), refreshCancellation.Token);
-            Task.Factory.StartNew(() => GetObsoleteBranches(context).ToList())
+            Task.Factory.StartNew(() => GetObsoleteBranches(context).ToList(), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default)
                 .ContinueWith(task =>
                 {
                     if (IsDisposed || context.CancellationToken.IsCancellationRequested)

@@ -251,7 +251,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
                 else
                 {
-                    PageHost.GotoPage(SshSettingsPage.GetPageReference());   
+                    PageHost.GotoPage(SshSettingsPage.GetPageReference());
                 }
             }
 
@@ -389,7 +389,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             else if (CommonLogic.IsMergeTool("p4merge") || CommonLogic.IsMergeTool("TortoiseMerge"))
             {
-                CheckSettingsLogic.AutoConfigMergeToolCmd(true);
+                CheckSettingsLogic.AutoConfigMergeToolCmd();
 
                 SetGlobalPathSetting(
                     string.Format("mergetool.{0}.cmd", CommonLogic.GetGlobalMergeTool()), CheckSettingsLogic.GetMergeToolCmdText());

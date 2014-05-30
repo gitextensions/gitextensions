@@ -709,7 +709,7 @@
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
         <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe" />
         <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
-        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.9.0-preview20140217.exe" />
+        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.9.2-preview20140411.exe" />
         <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore" />
         <InstallExecuteSequence>
             <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
