@@ -32,10 +32,6 @@ namespace GitPlugin.Commands
             return fullpath;
         }
 
-
-
-
-
         public override bool IsEnabled(DTE2 application)
         {
             return new ItemCommandT().IsEnabled(application);
