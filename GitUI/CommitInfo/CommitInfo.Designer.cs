@@ -175,6 +175,7 @@
             this._RevisionHeader.TabIndex = 0;
             this._RevisionHeader.Text = "";
             this._RevisionHeader.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
+            this._RevisionHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
             // 
             // CommitInfo
             // 
