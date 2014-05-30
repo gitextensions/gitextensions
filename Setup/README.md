@@ -6,9 +6,9 @@ Building installers for Git Extensions
     * Latest stable version at the time of writing was 3.8
 
 2. Run set_version_to.py (Python 2) to change current version.
-```
-set_version_to.py --version 2.48
-``` 
+
+    set_version_to.py --version 2.48
+ 
 
 3. Run BuildInstallers.VS2012.cmd or BuildInstallers.VS2013.cmd. This will generate two msi installers:   
     * GitExtensions248.msi - the standard install with only Git Extensions
