@@ -269,7 +269,7 @@ namespace GitPlugin
 
         private void AddContextMenuItemsToContextMenu(string toolbarName, bool runInDocumentContext = false)
         {
-            var suffix = runInDocumentContext ? "#DocumentContext" : "";
+            var suffix = runInDocumentContext ? "_DocumentContext" : "";
             try
             {
                 _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsDifftool" + suffix, "Git: Diff",
