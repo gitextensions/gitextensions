@@ -6,13 +6,18 @@ namespace GitPlugin.Commands
 {
     public abstract class CommandBase
     {
-        abstract public void OnCommand(DTE2 application, OutputWindowPane pane);
+        abstract public void OnCommand(DTE2 application, OutputWindowPane pane, bool runInDocumentContext = false);
 
         abstract public bool IsEnabled(DTE2 application);
 
         protected static void RunGitEx(string command, string filename)
         {
             GitCommands.RunGitEx(command, filename);
+        }
+
+        public virtual CommandBase CreateCopyWithDocumentContext()
+        {
+            return this;
         }
     }
 }

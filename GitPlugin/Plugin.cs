@@ -73,6 +73,8 @@ namespace GitPlugin.Commands
                 throw new ArgumentException("Command name cannot contain dot symbol.", "commandName");
             if (!m_commands.ContainsKey(commandName))
                 m_commands.Add(commandName, command);
+            if (!m_commands.ContainsKey(commandName + "_DocumentContext"))
+                m_commands.Add(commandName + "_DocumentContext", command.CreateCopyWithDocumentContext());
         }
 
         public bool CanHandleCommand(string commandName)
