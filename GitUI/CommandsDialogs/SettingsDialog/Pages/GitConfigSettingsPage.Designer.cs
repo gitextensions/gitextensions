@@ -181,6 +181,7 @@
             "meld",
             "opendiff",
             "p4merge",
+            "semanticdiff",
             "tkdiff",
             "tmerge",
             "vimdiff",
@@ -289,6 +290,7 @@
             "DiffMerge",
             "kdiff3",
             "p4merge",
+            "semanticmerge",
             "TortoiseMerge"});
             this.GlobalMergeTool.Location = new System.Drawing.Point(157, 90);
             this.GlobalMergeTool.Name = "GlobalMergeTool";
