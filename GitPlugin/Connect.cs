@@ -139,14 +139,17 @@ namespace GitPlugin
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "CreateNewRepository", "Create new repositor&y", "Create new Git repository", 13, n++);
                 }
 
+                // Working with changes
                 {
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "Commit", "&Commit", "Commit changes", 7, n++, true);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "Pull", "P&ull", "Pull changes from remote repository", 9, n++);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "Push", "Pu&sh", "Push changes to remote repository", 8, n++);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "Stash", "Stas&h", "Stash changes", 3, n++);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "Remotes", "Manage rem&otes", "Manage remote repositories", 17, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitIgnore", "Edit &.gitignore", "Edit .gitignore file", 22, n++);
                 }
 
+                // Patch
                 {
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "ApplyPatch", "&Apply patch", "Apply patch", 0, n++, true);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "FormatPatch", "&Format patch", "Format patch", 0, n++);
@@ -157,6 +160,7 @@ namespace GitPlugin
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "FindFile", "Find fi&le", "Search for a file in the repository", 23, n++);
                 }
 
+                // Branch manipulations
                 {
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "SwitchBranch", "Chec&kout branch", "Switch to branch", 16, n++, true);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "CreateBranch", "Create bra&nch", "Create new branch", 10, n++);
@@ -168,7 +172,6 @@ namespace GitPlugin
 
                 {
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "Bash", "&Git bash", "Start git bash", 21, n++, true);
-                    _gitPlugin.AddPopupCommand(mainMenuPopup, "GitIgnore", "Edit &.gitignore", "Edit .gitignore file", 22, n++);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "Settings", "Se&ttings", "Settings", 2, n++);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "About", "About Git E&xtensions", "About Git Extensions", 20, n);
                 }
