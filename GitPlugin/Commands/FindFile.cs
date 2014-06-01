@@ -7,7 +7,7 @@ namespace GitPlugin.Commands
 {
     public sealed class FindFile : ItemCommandBase
     {
-        public override void OnCommand(DTE2 application, OutputWindowPane pane, bool runInDocumentContext)
+        public override void OnCommand(DTE2 application, OutputWindowPane pane)
         {
             ThreadPool.QueueUserWorkItem(
                         o =>

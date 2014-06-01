@@ -82,8 +82,6 @@ namespace GitPlugin.Commands
                 throw new ArgumentException("Command name cannot contain dot symbol.", "commandName");
             if (!_commands.ContainsKey(commandName))
                 _commands.Add(commandName, command);
-            if (!m_commands.ContainsKey(commandName + "_DocumentContext"))
-                m_commands.Add(commandName + "_DocumentContext", command.CreateCopyWithDocumentContext());
         }
 
         public bool CanHandleCommand(string commandName)
@@ -243,7 +241,7 @@ namespace GitPlugin.Commands
             try
             {
                 mainMenuBar = (CommandBar)_application.Commands
-                    .AddCommandBar(GitMainMenuName, vsCommandBarType.vsCommandBarTypeMenu, GetMenuBar(), 4);
+                    .AddCommandBar("GitExt", vsCommandBarType.vsCommandBarTypeMenu, GetMenuBar(), 4);
 
                 ((CommandBarPopup)mainMenuBar.Parent).Caption = GitMainMenuName;
             }

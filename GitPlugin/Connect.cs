@@ -208,12 +208,12 @@ namespace GitPlugin
         {
             try
             {
-                AddContextMenuItemsToContextMenu("Web Item");
-                AddContextMenuItemsToContextMenu("Item");
-                AddContextMenuItemsToContextMenu("Easy MDI Document Window", runInDocumentContext: true);
-                AddContextMenuItemsToContextMenu("Code Window", runInDocumentContext: true);
-                AddContextMenuItemsToContextMenu("Script Context", runInDocumentContext: true);
-                AddContextMenuItemsToContextMenu("ASPX Context", runInDocumentContext: true);
+                AddContextMenuItemsToContextMenu("Web Item", runForSelection: true);
+                AddContextMenuItemsToContextMenu("Item", runForSelection: true);
+                AddContextMenuItemsToContextMenu("Easy MDI Document Window");
+                AddContextMenuItemsToContextMenu("Code Window");
+                AddContextMenuItemsToContextMenu("Script Context");
+                AddContextMenuItemsToContextMenu("ASPX Context");
             }
             catch (Exception ex)
             {
@@ -260,8 +260,11 @@ namespace GitPlugin
             //GitPlugin.DeleteCommandBar("GitExtensions");
             try
             {
+                this._gitPlugin.RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
                 this._gitPlugin.RegisterCommand("Difftool", new ToolbarCommand<OpenWithDiftool>());
+                this._gitPlugin.RegisterCommand("ShowFileHistory_Selection", new ToolbarCommand<FileHistory>(runForSelection: true));
                 this._gitPlugin.RegisterCommand("ShowFileHistory", new ToolbarCommand<FileHistory>());
+                this._gitPlugin.RegisterCommand("ResetChanges_Selection", new ToolbarCommand<Revert>(runForSelection: true));
                 this._gitPlugin.RegisterCommand("ResetChanges", new ToolbarCommand<Revert>());
                 this._gitPlugin.RegisterCommand("Commit", new ToolbarCommand<Commit>());
                 this._gitPlugin.RegisterCommand("Browse", new ToolbarCommand<Browse>());
@@ -292,9 +295,9 @@ namespace GitPlugin
             }
         }
 
-        private void AddContextMenuItemsToContextMenu(string toolbarName, bool runInDocumentContext = false)
+        private void AddContextMenuItemsToContextMenu(string toolbarName, bool runForSelection = false)
         {
-            var suffix = runInDocumentContext ? "_DocumentContext" : "";
+            var suffix = runForSelection ? "_Selection" : "";
             try
             {
                 _gitPlugin.AddMenuCommand(toolbarName, "Difftool" + suffix, "GitExt: Diff",
