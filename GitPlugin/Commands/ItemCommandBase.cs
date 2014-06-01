@@ -11,9 +11,9 @@ namespace GitPlugin.Commands
     /// </summary>
     public abstract class ItemCommandBase : CommandBase
     {
-        public override void OnCommand(DTE2 application, OutputWindowPane pane, bool runInDocumentContext)
+        public override void OnCommand(DTE2 application, OutputWindowPane pane)
         {
-            if (runInDocumentContext)
+            if (!RunForSelection)
             {
                 var activeDocument = application.ActiveDocument;
 

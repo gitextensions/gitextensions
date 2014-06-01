@@ -8,45 +8,20 @@ namespace GitPlugin.Commands
     class ToolbarCommand<ItemCommandT> : CommandBase
         where ItemCommandT : ItemCommandBase, new()
     {
-        readonly bool _runInDocumentContext;
-
-        public ToolbarCommand(bool runInDocumentContext = false)
+        public ToolbarCommand(bool runForSelection = false)
         {
-            _runInDocumentContext = runInDocumentContext;
+            RunForSelection = runForSelection;
         }
 
-        public override void OnCommand(DTE2 application, OutputWindowPane pane, bool runInDocumentContext)
+        public override void OnCommand(DTE2 application, OutputWindowPane pane)
         {
-            new ItemCommandT().OnCommand(application, pane, _runInDocumentContext);
-        }
-
-        static public string ResolveFileNameWithCase(string fullpath)
-        {
-            string dirname = Path.GetDirectoryName(fullpath);
-            string basename = Path.GetFileName(fullpath).ToLower();
-            DirectoryInfo info = new DirectoryInfo(dirname);
-            FileInfo[] files = info.GetFiles();
-
-            foreach (FileInfo file in files)
-            {
-                if (file.Name.ToLower() == basename)
-                {
-                    return file.FullName;
-                }
-            }
-
-            // Should never happen...
-            return fullpath;
+            var command = new ItemCommandT {RunForSelection = RunForSelection};
+            command.OnCommand(application, pane);
         }
 
         public override bool IsEnabled(DTE2 application)
         {
             return new ItemCommandT().IsEnabled(application);
-        }
-
-        public override CommandBase CreateCopyWithDocumentContext()
-        {
-            return new ToolbarCommand<ItemCommandT>(runInDocumentContext: true);
         }
     }
 
