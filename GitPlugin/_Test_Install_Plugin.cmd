@@ -1,5 +1,6 @@
 set targetdir="%userprofile%\Documents\Visual Studio 2010\Addins"
-copy bin\GitPlugin.AddIn %targetdir%
-copy bin\GitPlugin.dll %targetdir%
+set config=Debug
+copy bin\%config%\GitPlugin.AddIn %targetdir%
+copy bin\%config%\GitPlugin.dll %targetdir%
 mkdir %targetdir%\en-US
-copy bin\en-US\GitPlugin.resources.dll %targetdir%\en-US
+copy bin\%config%\en-US\GitPlugin.resources.dll %targetdir%\en-US

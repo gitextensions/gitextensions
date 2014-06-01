@@ -39,7 +39,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>4</WarningLevel>
@@ -52,7 +52,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>4</WarningLevel>
@@ -237,7 +237,7 @@
     </PreBuildEvent>
     <PostBuildEvent>cd "$(TargetDir)"
 mkdir "$(TargetDir)en-US"
-"$(ProjectDir)Resgen\Resgen" "$(ProjectDir)Properties\Resources.resx"
+"$(ProjectDir)Resgen\Resgen" "$(ProjectDir)Properties\Resources.resx" /useSourcePath
 "$(ProjectDir)Resgen\Al" /embed:"$(ProjectDir)Properties\Resources.resources" /culture:en-US /out:"$(TargetDir)en-US\GitPlugin.resources.dll"</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
