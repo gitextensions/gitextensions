@@ -56,9 +56,12 @@ namespace GitPlugin.Commands
 
         protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {
-            const string saveAllCommandName = "File.SaveAll";
+            if (item != null)
+            {
+                const string saveAllCommandName = "File.SaveAll";
+                item.DTE.ExecuteCommand(saveAllCommandName, string.Empty);
+            }
 
-            item.DTE.ExecuteCommand(saveAllCommandName, string.Empty);
             RunGitEx("commit", fileName);
         }
 
