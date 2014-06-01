@@ -45,7 +45,8 @@ namespace GitUI.CommandsDialogs
 
             ParentsList.Items.Clear();
 
-            IsMerge = Module.IsMerge(Revision.Guid);
+            if (Revision != null)
+                IsMerge = Module.IsMerge(Revision.Guid);
             panelParentsList.Visible = IsMerge;
 
             if (IsMerge)
@@ -108,7 +109,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnChooseRevision_Click(object sender, EventArgs e)
         {
-            using (var chooseForm = new FormChooseCommit(UICommands, Revision.Guid))
+            using (var chooseForm = new FormChooseCommit(UICommands, Revision != null ? Revision.Guid : null))
             {
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {
