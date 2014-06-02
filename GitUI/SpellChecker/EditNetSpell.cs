@@ -829,7 +829,10 @@ namespace GitUI.SpellChecker
                             autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
                             autoCompleteWords.Add(Path.GetFileName(file.Name));
                             if (!string.IsNullOrWhiteSpace(file.OldName))
+                            {
+                                autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.OldName));
                                 autoCompleteWords.Add(Path.GetFileName(file.OldName));
+                            }
                         }
 
                         return autoCompleteWords.Select(w => new AutoCompleteWord(w)).ToList();
