@@ -495,9 +495,7 @@ namespace GitUI.CommandsDialogs
             DiffText.Font = Settings.DiffFont;
             UpdateJumplist(validWorkingDir);
 
-            CheckForMergeConflicts();
-            UpdateStashCount();
-            UpdateSubmodulesList();
+            OnActivate();
             // load custom user menu
             LoadUserMenu();
 
@@ -516,6 +514,13 @@ namespace GitUI.CommandsDialogs
             UICommands.RaisePostBrowseInitialize(this);
 
             Cursor.Current = Cursors.Default;
+        }
+
+        private void OnActivate()
+        {
+            CheckForMergeConflicts();
+            UpdateStashCount();
+            UpdateSubmodulesList();
         }
 
         internal Keys GetShortcutKeys(Commands cmd)
@@ -2876,6 +2881,14 @@ namespace GitUI.CommandsDialogs
                 if (commit != null)
                     RevisionGrid.SetSelectedRevision(new GitRevision(Module, commit.Guid));
             }
+            else if (e.Command == "navigatebackward")
+            {
+                RevisionGrid.NavigateBackward();
+            }
+            else if (e.Command == "navigateforward")
+            {
+                RevisionGrid.NavigateForward();
+            }
         }
 
         private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
@@ -3177,6 +3190,11 @@ namespace GitUI.CommandsDialogs
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+        }
+
+        private void FormBrowse_Activated(object sender, EventArgs e)
+        {
+            OnActivate();
         }
     }
 }

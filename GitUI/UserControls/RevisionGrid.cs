@@ -81,6 +81,8 @@ namespace GitUI
         bool showAllBranchesToolStripMenuItemChecked; // refactoring
         bool showFilteredBranchesToolStripMenuItemChecked; // refactoring
 
+        private readonly NavigationHistory navigationHistory = new NavigationHistory();
+
         public RevisionGrid()
         {
             InitLayout();
@@ -106,6 +108,8 @@ namespace GitUI
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.CellFormatting += RevisionsCellFormatting;
             Revisions.KeyPress += RevisionsKeyPress;
+            Revisions.KeyDown += RevisionsKeyDown;
+            Revisions.MouseDown += RevisionsMouseDown;
 
             showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
             BranchFilter = String.Empty;
@@ -379,6 +383,60 @@ namespace GitUI
             }
         }
 
+        private void RevisionsKeyDown(object sender, KeyEventArgs e)
+        {
+            // BrowserBack/BrowserForward keys and additional handling for Alt+Right/Left sent by some keyboards
+            if ((e.KeyCode == Keys.BrowserBack) || ((e.KeyCode == Keys.Left) && (e.Modifiers.HasFlag(Keys.Alt))))
+            {
+                NavigateBackward();
+            }
+            else if ((e.KeyCode == Keys.BrowserForward) || ((e.KeyCode == Keys.Right) && (e.Modifiers.HasFlag(Keys.Alt))))
+            {
+                NavigateForward();
+            }
+        }
+
+        private void RevisionsMouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.XButton1)
+            {
+                NavigateBackward();
+            }
+            else if (e.Button == MouseButtons.XButton2)
+            {
+                NavigateForward();
+            }
+        }
+
+        public void ResetNavigationHistory()
+        {
+            var selectedRevisions = GetSelectedRevisions();
+            if (selectedRevisions.Count == 1)
+            {
+                navigationHistory.Push(selectedRevisions[0].Guid);
+            }
+            else
+            {
+                navigationHistory.Clear();
+            }
+        }
+
+        public void NavigateBackward()
+        {
+            if (navigationHistory.CanNavigateBackward)
+            {
+                SetSelectedRevision(navigationHistory.NavigateBackward());
+            }
+        }
+
+        public void NavigateForward()
+        {
+            if (navigationHistory.CanNavigateForward)
+            {
+                SetSelectedRevision(navigationHistory.NavigateForward());
+            }
+        }
+
         private void FindNextMatch(int startIndex, string searchString, bool reverse)
         {
             if (Revisions.RowCount == 0)
@@ -560,23 +618,37 @@ namespace GitUI
             Revisions.Select();
         }
 
+        // Selects row cotaining revision given its revisionId
+        // Returns whether the required revision was found and selected
         public bool SetSelectedRevision(string revision)
         {
+            bool revisionSelected = false;
+
             if (revision != null)
             {
-                for (var i = 0; i < Revisions.RowCount; i++)
+                var i = 0;
+                while(i < Revisions.RowCount && !revisionSelected)
                 {
                     if (GetRevision(i).Guid == revision)
                     {
                         SetSelectedIndex(i);
-                        return true;
+                        revisionSelected = true;
                     }
+                    i++;
                 }
             }
 
-            Revisions.ClearSelection();
-            Revisions.Select();
-            return false;
+            if (revisionSelected)
+            {
+                navigationHistory.Push(revision);
+            }
+            else
+            {
+                Revisions.ClearSelection();
+                Revisions.Select();
+            }
+
+            return revisionSelected;
         }
 
         public GitRevision GetRevision(string guid)
@@ -604,6 +676,11 @@ namespace GitUI
             SelectionTimer.Stop();
             SelectionTimer.Enabled = true;
             SelectionTimer.Start();
+
+            var selectedRevisions = GetSelectedRevisions();
+            if (selectedRevisions.Count == 1)  {
+                navigationHistory.Push(selectedRevisions[0].Guid);
+            }
         }
 
         public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
@@ -888,6 +965,7 @@ namespace GitUI
                 _revisionGraphCommand.Execute();
                 LoadRevisions();
                 SetRevisionsLayout();
+                ResetNavigationHistory();
             }
             catch (Exception)
             {
@@ -2699,7 +2777,9 @@ namespace GitUI
             NextQuickSearch,
             PrevQuickSearch,
             SelectCurrentRevision,
-            GoToCommit
+            GoToCommit,
+            NavigateBackward,
+            NavigateForward
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2725,6 +2805,8 @@ namespace GitUI
                 case Commands.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
                 case Commands.NextQuickSearch: NextQuickSearch(true); break;
                 case Commands.PrevQuickSearch: NextQuickSearch(false); break;
+                case Commands.NavigateBackward: NavigateBackward(); break;
+                case Commands.NavigateForward: NavigateForward(); break;
                 default:
                     {
                         bool result = base.ExecuteCommand(cmd);

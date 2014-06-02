@@ -525,7 +525,12 @@ namespace GitCommands
             int exitCode = GitCommandHelpers.RunCmdByte(cmd, arguments, _workingDir, stdInput, out output, out error);
             if (encoding == null)
                 encoding = SystemEncoding;
-            return new CmdResult { StdOutput = output == null ? null : encoding.GetString(output), StdError = error == null ? null : encoding.GetString(error), ExitCode = exitCode };
+            return new CmdResult 
+            {
+                StdOutput = output == null ? string.Empty : encoding.GetString(output),
+                StdError = error == null ? string.Empty : encoding.GetString(error),
+                ExitCode = exitCode 
+            };
         }
 
         /// <summary>
@@ -2909,15 +2914,14 @@ namespace GitCommands
                 return true;
             }
 
+            if (EnvUtils.RunningOnWindows())
+            {
+                return Process.GetProcessesByName("git").Length > 0;
+            }
+
             // Get processes by "ps" command.
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
             var arguments = "x";
-            if (EnvUtils.RunningOnWindows())
-            {
-                // "x" option is unimplemented by msysgit and cygwin.
-                arguments = "";
-            }
-
             var output = RunCmd(cmd, arguments);
             var lines = output.Split('\n');
             if (lines.Count() >= 2)

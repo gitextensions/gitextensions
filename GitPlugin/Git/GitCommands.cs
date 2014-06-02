@@ -68,8 +68,8 @@ namespace GitPlugin.Git
                 command += " \"" + filename + "\"";
 
             string path = GetGitExRegValue("InstallDir");
-
-            ProcessStartInfo startInfo = CreateStartInfo(path + "\\GitExtensions.exe", command, new FileInfo(filename).DirectoryName, Encoding.UTF8);
+            string workDir = Path.GetDirectoryName(filename);
+            ProcessStartInfo startInfo = CreateStartInfo(path + "\\GitExtensions.exe", command, workDir, Encoding.UTF8);
 
             try
             {

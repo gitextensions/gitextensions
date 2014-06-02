@@ -133,6 +133,28 @@ namespace GitUI.UserControls.RevisionGridClasses
 
             {
                 var menuCommand = new MenuCommand();
+                menuCommand.Name = "NavigateBackward";
+                menuCommand.Text = "Navigate backward";
+                menuCommand.ShortcutKeyDisplayString = (Keys.Alt | Keys.Left).ToShortcutKeyDisplayString();
+                menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.NavigateBackward);
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "NavigateForward";
+                menuCommand.Text = "Navigate forward";
+                menuCommand.ShortcutKeyDisplayString = (Keys.Alt | Keys.Right).ToShortcutKeyDisplayString();
+                menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.NavigateForward);
+
+                resultList.Add(menuCommand);
+            }
+
+            resultList.Add(MenuCommand.CreateSeparator());
+
+            {
+                var menuCommand = new MenuCommand();
                 menuCommand.Name = "QuickSearch";
                 menuCommand.Text = "Quick search";
                 menuCommand.ExecuteAction = () => MessageBox.Show(_quickSearchQuickHelp.Text);

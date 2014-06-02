@@ -2010,6 +2010,7 @@ namespace GitUI.CommandsDialogs
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormBrowse";
             this.Text = "Git Extensions";
+            this.Activated += new System.EventHandler(this.FormBrowse_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormBrowseFormClosing);
             this.Load += new System.EventHandler(this.BrowseLoad);
             this.toolPanel.Panel1.ResumeLayout(false);
