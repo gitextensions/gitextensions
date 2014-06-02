@@ -2104,7 +2104,7 @@ namespace GitCommands
 
             var args = string.Concat("diff ", extraDiffArguments, " -- ", fileName);
             if (staged)
-                args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
+                args = string.Concat("diff -M -C --cached ", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
             String result = RunGitCmd(args, LosslessEncoding);
             var patchManager = new PatchManager();
