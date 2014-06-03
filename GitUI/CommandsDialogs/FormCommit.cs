@@ -162,7 +162,9 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
-            Message.EnableAutoCompletion(Module);
+
+            if (Module != null)
+                Message.EnableAutoCompletion(Module);
 
             Loading.Image = Properties.Resources.loadingpanel;
 
