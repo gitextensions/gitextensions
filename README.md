@@ -2,7 +2,10 @@
 
 ## Introduction
 
-GitExtensions is a shell extension, a Visual Studio 2005 / 2008 / 2010 / 2012 plugin and a standalone Git repository tool.
+GitExtensions is a shell extension, a Visual Studio 2008 / 2010 / 2012 / 2013 plugin and a standalone Git repository tool.
+
+## Current status
+[![Status](http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:GitExtensions_Master\)/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=GitExtensions_Master)
 
 ## Links
 
