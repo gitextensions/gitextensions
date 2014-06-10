@@ -70,7 +70,7 @@ namespace GitUI
                 {
                     int index = text.IndexOf('%');
                     int progressValue;
-                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue))
+                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue) && progressValue >= 0)
                     {
                         if (ProgressBar.Style != ProgressBarStyle.Blocks)
                             ProgressBar.Style = ProgressBarStyle.Blocks;
