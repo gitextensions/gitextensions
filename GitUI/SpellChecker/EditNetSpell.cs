@@ -898,6 +898,9 @@ namespace GitUI.SpellChecker
 
         private void UpdateOrShowAutoComplete (bool calledByUser)
         {
+            if (_autoCompleteList == null)
+                return;
+
             if (!_autoCompleteList.IsCompleted)
             {
                 if (calledByUser)
