@@ -124,10 +124,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "Compare.exe";
                 case "beyondcompare3":
                     return "bcomp.exe";
+                case "beyondcompare4":
+                    return "bcomp.exe";
                 case "kdiff3":
                     return "kdiff3.exe";
                 case "meld":
                     return "meld.exe";
+                case "p4merge":
+                    return "p4merge.exe";
+                case "semanticdiff":
+                    return "semanticmergetool.exe";
                 case "tmerge":
                     return "TortoiseMerge.exe";
                 case "winmerge":
@@ -149,6 +155,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return FindFileInFolders(exeName, bcomppath,
                                                           @"Beyond Compare 3 (x86)\",
                                                           @"Beyond Compare 3\");
+                case "beyondcompare4":
+                    string bcomppath4 = UnquoteString(GetGlobalSetting(settings, "difftool.beyondcompare4.path"));
+
+                    exeName = "bcomp.exe";
+
+                    return FindFileInFolders(exeName, bcomppath4,
+                                                          @"Beyond Compare 4 (x86)\",
+                                                          @"Beyond Compare 4\");
                 case "kdiff3":
                     string kdiff3path = UnquoteString(GetGlobalSetting(settings, "difftool.kdiff3.path"));
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
@@ -162,7 +176,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     string programFilesMeldPath = @"Meld\meld\";
                     exeName = "meld.exe";
                     return FindFileInFolders(exeName, difftoolMeldPath, programFilesMeldPath);
-
+                case "semanticdiff":
+                    exeName = "semanticmergetool.exe";
+                    string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                    folder = Path.Combine(folder, @"PlasticSCM4\semanticmerge\");
+                    return FindFileInFolders(exeName, folder);
                 case "tmerge":
                     exeName = "TortoiseGitMerge.exe"; // TortoiseGit 1.8 use new names
                     string difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\");
@@ -192,10 +210,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 case "beyondcompare3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "beyondcompare4":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "kdiff3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "meld":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "p4merge":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "semanticdiff":
+                    return "\"" + exeFile + "\" -s \"$LOCAL\" -d \"$REMOTE\"";
                 case "tmerge":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "winmerge":
@@ -214,12 +238,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "Compare.exe";
                 case "beyondcompare3":
                     return "bcomp.exe";
+                case "beyondcompare4":
+                    return "bcomp.exe";
                 case "diffmerge":
                     return "DiffMerge.exe";
                 case "kdiff3":
                     return "kdiff3.exe";
                 case "p4merge":
                     return "p4merge.exe";
+                case "semanticmerge":
+                    return "semanticmergetool.exe";
                 case "tortoisemerge":
                     return "TortoiseMerge.exe";
                 case "winmerge":
@@ -245,6 +273,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     exeName = "bcomp.exe";
                     return FindFileInFolders(exeName, bcomppath, @"Beyond Compare 3 (x86)\",
                                                                  @"Beyond Compare 3\");
+                case "beyondcompare4":
+                    string bcomppath4 = UnquoteString(GetGlobalSetting(settings, "mergetool.beyondcompare4.path"));
+
+                    exeName = "bcomp.exe";
+                    return FindFileInFolders(exeName, bcomppath4, @"Beyond Compare 4 (x86)\",
+                                                                  @"Beyond Compare 4\");
                 case "diffmerge":
                     exeName = "DiffMerge.exe";
                     return FindFileInFolders(exeName, @"SourceGear\DiffMerge\");
@@ -260,6 +294,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     string p4mergepath = UnquoteString(GetGlobalSetting(settings, "mergetool.p4merge.path"));
                     exeName = "p4merge.exe";
                     return FindFileInFolders(exeName, p4mergepath, @"Perforce\");
+                case "semanticmerge":
+                    exeName = "semanticmergetool.exe";
+                    string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                    folder = Path.Combine(folder, @"PlasticSCM4\semanticmerge\");
+                    return FindFileInFolders(exeName, folder);
                 case "tortoisemerge":
                     exeName = "TortoiseGitMerge.exe"; // TortoiseGit 1.8 use new names
                     string path = FindFileInFolders(exeName, @"TortoiseGit\bin\");
@@ -301,10 +340,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 case "beyondcompare3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
+                case "beyondcompare4":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
                 case "diffmerge":
                     return "\"" + exeFile + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
                 case "p4merge":
                     return "\"" + exeFile + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
+                case "semanticmerge":
+                    return "\"" + exeFile + "\" -s \"$REMOTE\" -d \"$LOCAL\" -b \"$BASE\" -r \"$MERGED\"";
                 case "tortoisemerge":
                     string command = "\"{0}\" /base:\"$BASE\" /mine:\"$LOCAL\" /theirs:\"$REMOTE\" /merged:\"$MERGED\"";
                     if (exeFile.ToLower().Contains("tortoisegit"))

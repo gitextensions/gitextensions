@@ -66,6 +66,7 @@ namespace GitUI.CommandsDialogs
             this.fileTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.StageInSuperproject = new System.Windows.Forms.CheckBox();
             this.StagedFileContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.stagedResetChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
@@ -359,6 +360,7 @@ namespace GitUI.CommandsDialogs
             // StagedFileContext
             // 
             this.StagedFileContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stagedResetChanges,
             this.toolStripMenuItem6,
             this.toolStripSeparator14,
             this.toolStripMenuItem7,
@@ -371,6 +373,14 @@ namespace GitUI.CommandsDialogs
             this.toolStripMenuItem11});
             this.StagedFileContext.Name = "UnstagedFileContext";
             this.StagedFileContext.Size = new System.Drawing.Size(198, 176);
+            // 
+            // resetChanges
+            // 
+            this.stagedResetChanges.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
+            this.stagedResetChanges.Name = "resetChanges";
+            this.stagedResetChanges.Size = new System.Drawing.Size(232, 22);
+            this.stagedResetChanges.Text = "Reset file or directory changes";
+            this.stagedResetChanges.Click += new System.EventHandler(this.ResetSoftClick);
             // 
             // toolStripMenuItem6
             // 
@@ -707,7 +717,7 @@ namespace GitUI.CommandsDialogs
             this.workingToolStripMenuItem.Image = global::GitUI.Properties.Resources.WorkingDirChanges;
             this.workingToolStripMenuItem.Name = "workingToolStripMenuItem";
             this.workingToolStripMenuItem.Size = new System.Drawing.Size(145, 20);
-            this.workingToolStripMenuItem.Text = "Working dir changes";
+            this.workingToolStripMenuItem.Text = "Working directory changes";
             // 
             // showIgnoredFilesToolStripMenuItem
             // 
@@ -1460,6 +1470,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
         private ToolStripMenuItem signOffToolStripMenuItem;
         private ContextMenuStrip StagedFileContext;
+        private ToolStripMenuItem stagedResetChanges;
         private ToolStripMenuItem toolStripMenuItem6;
         private ToolStripSeparator toolStripSeparator14;
         private ToolStripMenuItem toolStripMenuItem7;

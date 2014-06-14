@@ -578,13 +578,13 @@ namespace GitCommands
 
         public static bool IncludeUntrackedFilesInAutoStash
         {
-            get { return GetBool("includeUntrackedFilesInAutoStash", true); }
+            get { return GetBool("includeUntrackedFilesInAutoStash", false); }
             set { SetBool("includeUntrackedFilesInAutoStash", value); }
         }
 
         public static bool IncludeUntrackedFilesInManualStash
         {
-            get { return GetBool("includeUntrackedFilesInManualStash", true); }
+            get { return GetBool("includeUntrackedFilesInManualStash", false); }
             set { SetBool("includeUntrackedFilesInManualStash", value); }
         }
 

@@ -13,14 +13,14 @@ namespace Stash
         private const string StashSshRegex =
             @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?\w+)\/(?<repo>\w+).git";
 
-        public static Settings Parse(IGitModule gitModule, IGitPluginSettingsContainer setting)
+        public static Settings Parse(IGitModule gitModule, ISettingsSource setting)
         {
             var result = new Settings
                              {
-                                 Username = setting.GetSetting(StashPlugin.StashUsername),
-                                 Password = setting.GetSetting(StashPlugin.StashPassword),
-                                 StashUrl = setting.GetSetting(StashPlugin.StashBaseURL),
-                                 DisableSSL = setting.GetSetting(StashPlugin.StashDisableSSL)
+                                 Username = StashPlugin.StashUsername[setting],
+                                 Password = StashPlugin.StashPassword[setting],
+                                 StashUrl = StashPlugin.StashBaseURL[setting],
+                                 DisableSSL = StashPlugin.StashDisableSSL[setting].Value
                              };
 
             var module = ((GitModule)gitModule);
@@ -46,7 +46,7 @@ namespace Stash
 
         public string Username { get; private set; }
         public string Password { get; private set; }
-        public string DisableSSL { get; private set; }
+        public bool DisableSSL { get; private set; }
         public string ProjectKey { get; private set; }
         public string RepoSlug { get; private set; }
         public string StashUrl { get; private set; }

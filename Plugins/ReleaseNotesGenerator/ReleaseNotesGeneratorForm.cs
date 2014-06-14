@@ -16,7 +16,7 @@ namespace ReleaseNotesGenerator
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private IEnumerable<LogLine> _lastGeneratedLogLines;
 
-        public ReleaseNotesGeneratorForm(IGitPluginSettingsContainer settings, GitUIBaseEventArgs gitUiCommands)
+        public ReleaseNotesGeneratorForm(GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
 
@@ -31,9 +31,8 @@ namespace ReleaseNotesGenerator
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
-            int exitCode;
             string logArgs = string.Format(textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text);
-            string result = _gitUiCommands.GitModule.RunGitCmd("log " + logArgs, out exitCode);
+            string result = _gitUiCommands.GitModule.RunGitCmd("log " + logArgs);
 
             if (!result.Contains("\r\n"))
             {

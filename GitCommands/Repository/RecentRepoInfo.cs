@@ -161,7 +161,8 @@ namespace GitCommands.Repository
             if (shortenPath && repoInfo.DirInfo != null)
             {
                 string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
-                s = Path.GetDirectoryName(s);
+                if (!s.IsNullOrEmpty())
+                    s = Path.GetDirectoryName(s);
                 //candidate for short name
                 repoInfo.Caption = repoInfo.ShortName;
                 if (!s.IsNullOrEmpty())

@@ -13,8 +13,8 @@ trans.it = Italian.xlf
 trans.ja = Japanese.xlf
 trans.ko = Korean.xlf
 trans.ru = Russian.xlf
-trans.zn_CW = Simplified Chinese.xlf
+trans.zh_CN = Simplified Chinese.xlf
 trans.es = Spanish.xlf
-trans.zn_TW = Traditional Chinese.xlf
+trans.zh_TW = Traditional Chinese.xlf
 type = XLIFF
 

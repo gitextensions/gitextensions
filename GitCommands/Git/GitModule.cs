@@ -198,9 +198,7 @@ namespace GitCommands
                     const string controlStr = "ą"; // "a caudata"
                     string arguments = string.Format("config --get {0}", controlStr);
 
-                    int exitCode;
-
-                    String s = new GitModule("").RunGitCmd(arguments, out exitCode, Encoding.UTF8);
+                    String s = new GitModule("").RunGitCmd(arguments, Encoding.UTF8);
                     if (s != null && s.IndexOf(controlStr) != -1)
                         _systemEncoding = new UTF8Encoding(false);
                     else
@@ -507,31 +505,27 @@ namespace GitCommands
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
+        public CmdResult RunCmdResult(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
-            int exitCode;
-            return RunCmd(cmd, arguments, out exitCode, encoding, stdInput);
+            byte[] output, error;
+            int exitCode = GitCommandHelpers.RunCmdByte(cmd, arguments, _workingDir, stdInput, out output, out error);
+            if (encoding == null)
+                encoding = SystemEncoding;
+            return new CmdResult 
+            {
+                StdOutput = output == null ? string.Empty : encoding.GetString(output),
+                StdError = error == null ? string.Empty : encoding.GetString(error),
+                ExitCode = exitCode 
+            };
         }
 
         /// <summary>
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCmd(string cmd, string arguments, out int exitCode, Encoding encoding = null, byte[] stdInput = null)
+        public string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
-            byte[] output, error;
-            exitCode = GitCommandHelpers.RunCmdByte(cmd, arguments, _workingDir, stdInput, out output, out error);
-            if (encoding == null)
-                encoding = SystemEncoding;
-            return EncodingHelper.GetString(output, error, encoding);
-        }
-
-        /// <summary>
-        /// Run git command, console window is hidden, wait for exit, redirect output
-        /// </summary>
-        public string RunGitCmd(string arguments, out int exitCode, Encoding encoding = null, byte[] stdInput = null)
-        {
-            return RunCmd(AppSettings.GitCommand, arguments, out exitCode, encoding, stdInput);
+            return RunCmdResult(cmd, arguments, encoding, stdInput).GetString();
         }
 
         /// <summary>
@@ -539,8 +533,15 @@ namespace GitCommands
         /// </summary>
         public string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
-            int exitCode;
-            return RunCmd(AppSettings.GitCommand, arguments, out exitCode, encoding, stdInput);
+            return RunCmd(AppSettings.GitCommand, arguments, encoding, stdInput);
+        }
+
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        public CmdResult RunGitCmdResult(string arguments, Encoding encoding = null, byte[] stdInput = null)
+        {
+            return RunCmdResult(AppSettings.GitCommand, arguments, encoding, stdInput);
         }
 
         /// <summary>
@@ -1451,7 +1452,7 @@ namespace GitCommands
             else
                 localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch + "";
 
-            string arguments = fetchTags == true ? "--tags" : fetchTags == false ? " --no-tags" : "";
+            string arguments = fetchTags == true ? " --tags" : fetchTags == false ? " --no-tags" : "";
 
             return "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments + arguments;
         }
@@ -2167,10 +2168,10 @@ namespace GitCommands
 
             if (string.IsNullOrEmpty(head))
             {
-                int exitcode;
-                head = RunGitCmd("symbolic-ref HEAD", out exitcode);
-                if (exitcode == 1)
+                var result = RunGitCmdResult("symbolic-ref HEAD");
+                if (result.ExitCode == 1)
                     return DetachedBranch;
+                return result.StdOutput;
             }
 
             return head;
@@ -2551,7 +2552,7 @@ namespace GitCommands
 
         public string GetFileBlobHash(string fileName, string revision)
         {
-            if (revision == GitRevision.UnstagedGuid) //working dir changes
+            if (revision == GitRevision.UnstagedGuid) //working directory changes
             {
                 return null;
             }
@@ -2648,9 +2649,8 @@ namespace GitCommands
         public string RevParse(string revisionExpression)
         {
             string revparseCommand = string.Format("rev-parse \"{0}~0\"", revisionExpression);
-            int exitCode;
-            string[] resultStrings = RunGitCmd(revparseCommand, out exitCode).Split('\n');
-            return exitCode == 0 ? resultStrings[0] : "";
+            var result = RunGitCmdResult(revparseCommand);
+            return result.ExitCode == 0? result.StdOutput.Split('\n')[0] : "";
         }
 
         public string GetMergeBase(string a, string b)
@@ -2710,9 +2710,8 @@ namespace GitCommands
 
             branchName = branchName.Replace("\"", "\\\"");
 
-            int exitCode;
-            RunGitCmd(string.Format("check-ref-format --branch \"{0}\"", branchName), out exitCode);
-            return exitCode == 0;
+            var result = RunGitCmdResult(string.Format("check-ref-format --branch \"{0}\"", branchName));
+            return result.ExitCode == 0;
         }
 
         public bool IsLockedIndex()
@@ -2735,15 +2734,14 @@ namespace GitCommands
                 return true;
             }
 
+            if (EnvUtils.RunningOnWindows())
+            {
+                return Process.GetProcessesByName("git").Length > 0;
+            }
+
             // Get processes by "ps" command.
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
             var arguments = "x";
-            if (EnvUtils.RunningOnWindows())
-            {
-                // "x" option is unimplemented by msysgit and cygwin.
-                arguments = "";
-            }
-
             var output = RunCmd(cmd, arguments);
             var lines = output.Split('\n');
             if (lines.Count() >= 2)

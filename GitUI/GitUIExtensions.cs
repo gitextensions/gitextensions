@@ -113,7 +113,7 @@ namespace GitUI
         public static bool IsItemUntracked(GitItemStatus file,
             string firstRevision, string secondRevision)
         {
-            if (firstRevision == GitRevision.UnstagedGuid) //working dir changes
+            if (firstRevision == GitRevision.UnstagedGuid) //working directory changes
             {
                 if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
                     return !file.IsTracked;
@@ -190,11 +190,12 @@ namespace GitUI
 
         public static void ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
-            string revision = revisions.Count > 0 ? revisions[0].Guid : null;
-            string parentRevision = revisions.Count == 2 ? revisions[1].Guid : null;
-            if (parentRevision == null && revisions[0].ParentGuids != null && revisions[0].ParentGuids.Length > 0)
-                parentRevision = revisions[0].ParentGuids[0];
-            ViewChanges(diffViewer, revision, parentRevision, file, defaultText);
+            var firstRevision = revisions.Count > 0 ? revisions[0] : null;
+            string firstRevisionGuid = firstRevision == null ? null : firstRevision.Guid;
+            string parentRevisionGuid = revisions.Count == 2 ? revisions[1].Guid : null;
+            if (parentRevisionGuid == null && firstRevision != null && firstRevision.ParentGuids != null && firstRevision.ParentGuids.Length > 0)
+                parentRevisionGuid = firstRevision.ParentGuids[0];
+            ViewChanges(diffViewer, firstRevisionGuid, parentRevisionGuid, file, defaultText);
         }
 
         public static void ViewChanges(this FileViewer diffViewer, string revision, string parentRevision, GitItemStatus file, string defaultText)

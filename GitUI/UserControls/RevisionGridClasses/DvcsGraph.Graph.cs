@@ -141,7 +141,7 @@ namespace GitUI.RevisionGridClasses
 
                         junction.HighLight = true;
 
-                        HighlightBranchRecursive(junction.Parent.Id);
+                        HighlightBranchRecursive(junction.Oldest.Id);
                     }
                 }
             }
@@ -176,7 +176,7 @@ namespace GitUI.RevisionGridClasses
                     }
 
                     if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
-                        && node.Descendants[0].Parent == node
+                        && node.Descendants[0].Oldest == node
                         && parent.Ancestors.Count == 0
                         //If this is true, the current revision is in the middle of a branch 
                         //and is about to start a new branch. This will also mean that the last
@@ -189,7 +189,7 @@ namespace GitUI.RevisionGridClasses
                         // (only) ancestor junction.
                         node.Descendants[0].Add(parent);
                     }
-                    else if (node.Ancestors.Count == 1 && node.Ancestors[0].Child != node)
+                    else if (node.Ancestors.Count == 1 && node.Ancestors[0].Youngest != node)
                     {
                         // The node is in the middle of a junction. We need to split it.                   
                         Junction splitNode = node.Ancestors[0].Split(node);
@@ -199,7 +199,7 @@ namespace GitUI.RevisionGridClasses
                         var junction = new Junction(node, parent);
                         junctions.Add(junction);
                     }
-                    else if (parent.Descendants.Count == 1 && parent.Descendants[0].Parent != parent)
+                    else if (parent.Descendants.Count == 1 && parent.Descendants[0].Oldest != parent)
                     {
                         // The parent is in the middle of a junction. We need to split it.     
                         Junction splitNode = parent.Descendants[0].Split(parent);
@@ -232,7 +232,7 @@ namespace GitUI.RevisionGridClasses
                     var parent = d.TryGetParent(node);
                     if (parent != null && parent.InLane != int.MaxValue)
                     {
-                        int resetTo = d.Parent.Descendants.Aggregate(d.Parent.InLane, (current, dd) => Math.Min(current, dd.Child.InLane));
+                        int resetTo = d.Oldest.Descendants.Aggregate(d.Oldest.InLane, (current, dd) => Math.Min(current, dd.Youngest.InLane));
                         Debug.WriteLine("We have to start over at lane {0} because of {1}", resetTo, node);
                         isRebuild = true;
                         break;
@@ -328,9 +328,9 @@ namespace GitUI.RevisionGridClasses
                 var nodes = new List<Node>();
                 foreach (Junction j in junctions)
                 {
-                    if (j.Child.Descendants.Count == 0 && !nodes.Contains(j.Child))
+                    if (j.Youngest.Descendants.Count == 0 && !nodes.Contains(j.Youngest))
                     {
-                        nodes.Add(j.Child);
+                        nodes.Add(j.Youngest);
                     }
                 }
                 return nodes;
@@ -366,8 +366,8 @@ namespace GitUI.RevisionGridClasses
                 {
                     foreach (Junction j in h.Ancestors)
                     {
-                        if (!S.Contains(j.Parent)) S.Enqueue(j.Parent);
-                        if (!S.Contains(j.Child)) S.Enqueue(j.Child);
+                        if (!S.Contains(j.Oldest)) S.Enqueue(j.Oldest);
+                        if (!S.Contains(j.Youngest)) S.Enqueue(j.Youngest);
                     }
                 }
 
@@ -380,7 +380,7 @@ namespace GitUI.RevisionGridClasses
                         P.Enqueue(n);
                         foreach (Junction e in n.Ancestors)
                         {
-                            if (localVisit != null) localVisit(e.Parent);
+                            if (localVisit != null) localVisit(e.Oldest);
                         }
                         L.Enqueue(n);
                         return true;
@@ -399,7 +399,7 @@ namespace GitUI.RevisionGridClasses
                 {
                     foreach (Junction e in n.Descendants)
                     {
-                        if (X.Contains(e.Child))
+                        if (X.Contains(e.Youngest))
                         {
                             Debugger.Break();
                         }
@@ -417,7 +417,7 @@ namespace GitUI.RevisionGridClasses
                     {
                         if (!J.Contains(junction))
                         {
-                            if (junction.Parent != junction.Child)
+                            if (junction.Oldest != junction.Youngest)
                             {
                                 Debug.WriteLine("*** {0} *** {1} {2}", junction, Nodes.Count, junctions.Count);
                             }

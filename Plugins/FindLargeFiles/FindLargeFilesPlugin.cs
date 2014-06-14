@@ -1,28 +1,27 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace FindLargeFiles
 {
     public class FindLargeFilesPlugin : GitPluginBase, IGitPluginForRepository
     {
+        private NumberSetting<float> SizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
         public override string Description
         {
             get { return "Find large files"; }
         }
 
-        protected override void RegisterSettings()
+        public override IEnumerable<ISetting> GetSettings()
         {
-            base.RegisterSettings();
-            Settings.AddSetting("Find large files bigger than (Mb)", "1");
+            //return all settings or introduce implementation based on reflection on GitPluginBase level
+            yield return SizeLargeFile;
         }
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            float threshold;
-            if (!float.TryParse(Settings.GetSetting("Find large files bigger than (Mb)"), out threshold))
-                threshold = 1;
-
-            using (var frm = new FindLargeFilesForm(threshold, gitUiCommands)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            using (var frm = new FindLargeFilesForm(SizeLargeFile[Settings], gitUiCommands))
+                frm.ShowDialog(gitUiCommands.OwnerForm);
             return true;
         }
     }

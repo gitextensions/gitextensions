@@ -14,13 +14,13 @@ namespace Stash
     {
         private Settings _settings;
         private readonly GitUIBaseEventArgs _gitUiCommands;
-        private readonly IGitPluginSettingsContainer _settingsContainer;
+        private readonly ISettingsSource _settingsContainer;
         private readonly BindingList<StashUser> _reviewers = new BindingList<StashUser>();
         private readonly List<string> _stashUsers = new List<string>();
 
 
         public StashPullRequestForm(GitUIBaseEventArgs gitUiCommands,
-            IGitPluginSettingsContainer settings)
+            ISettingsSource settings)
         {
             InitializeComponent();
 

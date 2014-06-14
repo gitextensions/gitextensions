@@ -24,8 +24,8 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm //, IHotkeyable
     {
-        const string USER_NAME_KEY = "user.name";
-        const string USER_EMAIL_KEY = "user.email";
+        const string UserNameKey = "user.name";
+        const string UserEmailKey = "user.email";
 
         #region Translation
         private readonly TranslationString _amendCommit =
@@ -114,8 +114,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
 
-        private readonly TranslationString _commitAuthorInfo = new TranslationString("Author ");
-        private readonly TranslationString _commitCommitterInfo = new TranslationString("Committer ");
+        private readonly TranslationString _commitAuthorInfo = new TranslationString("Author");
+        private readonly TranslationString _commitCommitterInfo = new TranslationString("Committer");
         private readonly TranslationString _commitCommitterToolTip = new TranslationString("Click to change committer information.");
         #endregion
 
@@ -203,6 +203,8 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
+            stagedResetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
+            deleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
         }
@@ -313,7 +315,7 @@ namespace GitUI.CommandsDialogs
 
         private bool ResetSelectedFiles()
         {
-            if (Unstaged.Focused)
+            if (Unstaged.Focused || Staged.Focused)
             {
                 ResetSoftClick(this, null);
                 return true;
@@ -1343,21 +1345,45 @@ namespace GitUI.CommandsDialogs
             _shouldRescanChanges = false;
             try
             {
-                if (Unstaged.SelectedItem == null)
+                if (_currentFilesList == null || _currentFilesList.SelectedItems.Count() == 0)
+                {
                     return;
+                }
 
                 // Show a form asking the user if they want to reset the changes.
-                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, Unstaged.SelectedItems.Any(item => !item.IsNew), Unstaged.SelectedItems.Any(item => item.IsNew));
+                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, _currentFilesList.SelectedItems.Any(item => !item.IsNew), _currentFilesList.SelectedItems.Any(item => item.IsNew));
                 if (resetType == FormResetChanges.ActionEnum.Cancel)
                     return;
 
-                //remember max selected index
-                Unstaged.StoreNextIndexToSelect();
+                // Unstage file first, then reset
+                var files = new List<GitItemStatus>();
 
-                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
+                foreach (var item in Staged.SelectedItems)
+                {
+                    toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                    if (!item.IsNew)
+                    {
+                        toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                        Module.UnstageFileToRemove(item.Name);
+
+                        if (item.IsRenamed)
+                            Module.UnstageFileToRemove(item.OldName);
+                    }
+                    else
+                    {
+                        files.Add(item);
+                    }
+                }
+
+                Module.UnstageFiles(files);
+
+                //remember max selected index
+                _currentFilesList.StoreNextIndexToSelect();
+
+                var deleteNewFiles = _currentFilesList.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
                 var filesInUse = new List<string>();
                 var output = new StringBuilder();
-                foreach (var item in Unstaged.SelectedItems)
+                foreach (var item in _currentFilesList.SelectedItems)
                 {
                     if (item.IsNew)
                     {
@@ -1821,8 +1847,8 @@ namespace GitUI.CommandsDialogs
 
         private void GetUserSettings()
         {
-            _userName = Module.GetEffectiveSetting(USER_NAME_KEY);
-            _userEmail = Module.GetEffectiveSetting(USER_EMAIL_KEY);
+            _userName = Module.GetEffectiveSetting(UserNameKey);
+            _userEmail = Module.GetEffectiveSetting(UserEmailKey);
 
 
 

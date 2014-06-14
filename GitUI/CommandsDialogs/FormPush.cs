@@ -699,7 +699,6 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var localHeads = Module.GetRefs(false, true);
-            BranchGrid.Enabled = false;
             LoadMultiBranchViewData(remote, localHeads);
             
         }
@@ -774,6 +773,7 @@ namespace GitUI.CommandsDialogs
                             }
                         }
                     }
+                    BranchGrid.Enabled = true;
                 });
         }
 

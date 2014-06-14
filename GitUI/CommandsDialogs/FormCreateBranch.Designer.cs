@@ -75,8 +75,8 @@
             this.ClearOrphan.Name = "ClearOrphan";
             this.ClearOrphan.Size = new System.Drawing.Size(170, 19);
             this.ClearOrphan.TabIndex = 8;
-            this.ClearOrphan.Text = "Clear working dir and index";
-            this.toolTip.SetToolTip(this.ClearOrphan, "Remove files from the working tree and from the index");
+            this.ClearOrphan.Text = "Clear working directory and index";
+            this.toolTip.SetToolTip(this.ClearOrphan, "Remove files from the working directory and from the index");
             this.ClearOrphan.UseVisualStyleBackColor = true;
             // 
             // Ok

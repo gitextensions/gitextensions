@@ -133,7 +133,7 @@ namespace GitUI.CommandsDialogs
                 var longPath = new StringBuilder(4096);
                 NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
 
-                // remove the working dir and now we have a properly cased file name.
+                // remove the working directory and now we have a properly cased file name.
                 fileName = longPath.ToString().Substring(Module.WorkingDir.Length);
             }
 
@@ -414,6 +414,14 @@ namespace GitUI.CommandsDialogs
                 CommitData commit = CommitData.GetCommitData(Module, e.Data, ref error);
                 if (commit != null)
                     FileChanges.SetSelectedRevision(new GitRevision(Module, commit.Guid));
+            }
+            else if (e.Command == "navigatebackward")
+            {
+                FileChanges.NavigateBackward();
+            }
+            else if (e.Command == "navigateforward")
+            {
+                FileChanges.NavigateForward();
             }
         }
     }

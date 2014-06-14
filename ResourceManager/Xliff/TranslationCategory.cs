@@ -11,11 +11,24 @@ namespace ResourceManager.Xliff
         {
         }
 
-        public TranslationCategory(string name, string source, string target)
+        public TranslationCategory(string name, string source)
         {
             this._name = name;
             this._source = source;
-            this._target = target;
+        }
+
+        private string _datatype = "plaintext";
+        [XmlAttribute("datatype")]
+        public string Datatype
+        {
+            get
+            {
+                return _datatype;
+            }
+            set
+            {
+                _datatype = value;
+            }
         }
 
         private string _name;
@@ -43,34 +56,6 @@ namespace ResourceManager.Xliff
             set
             {
                 _source = value;
-            }
-        }
-
-        private string _target;
-        [XmlAttribute("target-language")]
-        public string Target
-        {
-            get
-            {
-                return _target;
-            }
-            set
-            {
-                _target = value;
-            }
-        }
-
-        private string _datatype = "plaintext";
-        [XmlAttribute("datatype")]
-        public string Datatype
-        {
-            get
-            {
-                return _datatype;
-            }
-            set
-            {
-                _datatype = value;
             }
         }
 

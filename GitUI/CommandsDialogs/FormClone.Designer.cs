@@ -67,7 +67,7 @@
             this.Central.Name = "Central";
             this.Central.Size = new System.Drawing.Size(274, 17);
             this.Central.TabIndex = 1;
-            this.Central.Text = "Central repository, no working dir  (--bare --shared=all)";
+            this.Central.Text = "Central repository, no working directory  (--bare --shared=all)";
             this.Central.UseVisualStyleBackColor = true;
             // 
             // Personal
@@ -279,7 +279,7 @@
             this.CentralRepository.Name = "CentralRepository";
             this.CentralRepository.Size = new System.Drawing.Size(244, 19);
             this.CentralRepository.TabIndex = 1;
-            this.CentralRepository.Text = "P&ublic repository, no working dir  (--bare)";
+            this.CentralRepository.Text = "P&ublic repository, no working directory  (--bare)";
             this.CentralRepository.UseVisualStyleBackColor = true;
             // 
             // PersonalRepository

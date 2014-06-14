@@ -53,12 +53,12 @@ namespace Github3
         {
             get
             {
-                return Github3.instance.Settings.GetSetting("OAuth Token");
+                return Github3.instance.OAuthToken[Github3.instance.Settings];
             }
             set
             {
                 _username = null;
-                Github3.instance.Settings.SetSetting("OAuth Token", value);
+                Github3.instance.OAuthToken[Github3.instance.Settings] = value;
                 Github3.github.setOAuth2Token(value);
             }
         }
@@ -66,6 +66,8 @@ namespace Github3
 
     public class Github3 : GitPluginBase, IRepositoryHostPlugin
     {
+        public StringSetting OAuthToken = new StringSetting("OAuth Token", "");
+        
         internal static Github3 instance;
         internal static Client github;
         public Github3()
@@ -83,16 +85,14 @@ namespace Github3
             get { return "Github"; }
         }
 
-        protected override void RegisterSettings()
+        public override IEnumerable<ISetting> GetSettings()
         {
-            base.RegisterSettings();
-            Settings.AddSetting("OAuth Token", "");
+            yield return OAuthToken;
         }
 
         public override void Register(IGitUICommands gitUiCommands)
         {
-
-            if (GithubLoginInfo.OAuthToken.Length > 0)
+            if (!string.IsNullOrEmpty(GithubLoginInfo.OAuthToken))
             {
                 github.setOAuth2Token(GithubLoginInfo.OAuthToken);
             }
@@ -100,14 +100,14 @@ namespace Github3
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            if (GithubLoginInfo.OAuthToken.Length == 0)
+            if (string.IsNullOrEmpty(GithubLoginInfo.OAuthToken))
             {
                 using (var frm = new OAuth())
                     frm.ShowDialog(gitUiCommands.OwnerForm);
             }
             else
             {
-                MessageBox.Show(gitUiCommands.OwnerForm as IWin32Window, "You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
+                MessageBox.Show(gitUiCommands.OwnerForm, "You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
             }
             return false;
         }
