@@ -37,6 +37,11 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _applyShashedItemsAgainCaption =
             new TranslationString("Auto stash");
 
+        private readonly TranslationString _beforePullScriptFailed =
+            new TranslationString("The last before-pull script failed." +
+                                  Environment.NewLine + "" + Environment.NewLine + "Do you want to abort the pull?");
+        private readonly TranslationString _beforePullScriptFailedCaption = new TranslationString("Before-pull script failed");
+
         private readonly TranslationString _fetchAllBranchesCanOnlyWithFetch =
             new TranslationString("You can only fetch all remote branches (*) without merge or rebase." +
                                   Environment.NewLine + "If you want to fetch all remote branches, choose fetch." +
@@ -343,7 +348,8 @@ namespace GitUI.CommandsDialogs
             if (!CalculateLocalBranch(source, out curLocalBranch, out curRemoteBranch))
                 return DialogResult.No;
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
+            if (!ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull, _beforePullScriptFailed.Text, _beforePullScriptFailedCaption.Text))
+                return DialogResult.No;
 
             var stashed = CalculateStashedValue(owner);
 

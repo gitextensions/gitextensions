@@ -34,15 +34,28 @@ namespace GitUI.Script
 
         public static void RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent)
         {
+            RunEventScripts(form, scriptEvent, null, null);
+        }
+        public static bool RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent,
+            string scriptFailedMessage, string scriptFailedCaption)
+        {
             foreach (ScriptInfo scriptInfo in GetScripts())
+            {
                 if (scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent)
                 {
                     if (scriptInfo.AskConfirmation)
                         if (MessageBox.Show(form, String.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                             continue;
 
-                    ScriptRunner.RunScript(form, form.Module, scriptInfo.Name, null);
+                    bool scriptSucceeded;
+                    ScriptRunner.RunScript(form, form.Module, scriptInfo.Name, null, out scriptSucceeded);
+                    if (!scriptSucceeded && scriptFailedMessage != null && scriptFailedCaption != null
+                    && DialogResult.Yes == MessageBox.Show(form, scriptFailedMessage, scriptFailedCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk))
+                        return false;
                 }
+            }
+
+            return true;
         }
 
         public static string SerializeIntoXml()

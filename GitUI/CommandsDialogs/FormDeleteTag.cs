@@ -2,11 +2,21 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitUI.Script;
+using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs
 {
     public partial class FormDeleteTag : GitModuleForm
-    { 
+    {
+        #region Translation
+
+        private readonly TranslationString _beforePushTagScriptFailed =
+            new TranslationString("The last before-push-delete-tag script failed." +
+                                  Environment.NewLine + "" + Environment.NewLine + "Do you want to abort pushing the delete-tag?");
+        private readonly TranslationString _beforePushTagScriptFailedCaption = new TranslationString("Before-push-delete-tag script failed");
+
+        #endregion
+
         public FormDeleteTag(GitUICommands aCommands, string tag)
             : base(aCommands)
         {
@@ -45,7 +55,8 @@ namespace GitUI.CommandsDialogs
         {
             var pushCmd = string.Format("push \"{0}\" :refs/tags/{1}", remotesComboboxControl1.SelectedRemote, tagName);
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            if (!ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush, _beforePushTagScriptFailed.Text, _beforePushTagScriptFailedCaption.Text))
+                return;
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
                                     {
