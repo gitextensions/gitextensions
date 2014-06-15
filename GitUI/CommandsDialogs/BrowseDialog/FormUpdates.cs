@@ -25,11 +25,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public Version CurrentVersion;
         public bool UpdateFound;
         public string UpdateUrl;
-        private readonly SynchronizationContext _syncContext;
 
         public FormUpdates(Version currentVersion)
         {
-            _syncContext = SynchronizationContext.Current;
             InitializeComponent();
             Translate();
             UpdateFound = false;
@@ -89,7 +87,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             catch (Exception ex)
             {
-                _syncContext.Send((state) =>
+                this.InvokeSync((state) =>
                     {
                         GitCommands.ExceptionUtils.ShowException(this, ex, string.Empty, true);
                     }, null);
@@ -120,7 +118,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void Done()
         {
-            _syncContext.Send(o =>
+            this.InvokeSync(o =>
             {
                 progressBar1.Visible = false;
                 _NO_TRANSLATE_link.Text = UpdateUrl;
