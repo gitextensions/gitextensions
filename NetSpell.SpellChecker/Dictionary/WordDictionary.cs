@@ -189,7 +189,7 @@ namespace NetSpell.SpellChecker.Dictionary
         public void AddCommitWords (IEnumerable<string> commitWords)
         {
             foreach (var word in commitWords)
-                _commitWords.Add(word, word);
+                _commitWords[word] = word;
         }
 
         /// <summary>

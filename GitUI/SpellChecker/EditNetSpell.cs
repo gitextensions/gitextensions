@@ -257,8 +257,6 @@ namespace GitUI.SpellChecker
                         {
                             DictionaryFile = dictionaryFile
                         };
-
-                //_wordDictionary.AddCommitWords(_autoCompleteList.Select(w => w.Word));
             }
 
             _spelling.Dictionary = _wordDictionary;
