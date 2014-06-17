@@ -415,6 +415,14 @@ namespace GitUI.CommandsDialogs
                 if (commit != null)
                     FileChanges.SetSelectedRevision(new GitRevision(Module, commit.Guid));
             }
+            else if (e.Command == "navigatebackward")
+            {
+                FileChanges.NavigateBackward();
+            }
+            else if (e.Command == "navigateforward")
+            {
+                FileChanges.NavigateForward();
+            }
         }
     }
 }

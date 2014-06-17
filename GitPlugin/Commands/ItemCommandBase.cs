@@ -13,6 +13,24 @@ namespace GitPlugin.Commands
     {
         public override void OnCommand(DTE2 application, OutputWindowPane pane)
         {
+            if (!RunForSelection)
+            {
+                var activeDocument = application.ActiveDocument;
+
+                if ((activeDocument == null || activeDocument.ProjectItem == null) && IsTargetSupported(CommandTarget.Empty))
+                {
+                    OnExecute(null, null, pane);
+                    return;
+                }
+
+                var fileName = activeDocument.ProjectItem.get_FileNames(1);
+
+                SelectedItem selectedItem = application.SelectedItems.Cast<SelectedItem>().FirstOrDefault(solutionItem => solutionItem.ProjectItem.get_FileNames(1) == fileName);
+
+                OnExecute(selectedItem, fileName, pane);
+                return;
+            }
+
             if (application.SelectedItems.Count == 0)
             {
                 // nothing is selected, so if we have current solution and command supports that target, execute command on whole solution

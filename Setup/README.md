@@ -1,28 +1,17 @@
 Building installers for Git Extensions
 ======================================
 
-1. Download the Windows Installer XML (WiX) 3.7 toolset from
+1. Download the Windows Installer XML (WiX) 3.8 toolset from
    [here](http://wix.codeplex.com/releases/) and install it.
-    * Latest stable version at the time of writing was 3.7
+    * Latest stable version at the time of writing was 3.8
 
-2. Edit CommonAssemblyInfo.cs and MakeInstallers.bat so that the line which 
-   specifies the version is correct for the current release.
-   * CommonAssemblyInfo.cs
+2. Run set_version_to.py (Python 2) to change current version.
 
-      [assembly: AssemblyVersion("2.33")]  
-      [assembly: AssemblyFileVersion("2.33")]
-   * GitExtensionsShellEx\GitExtensionsShellEx.rc
+    set_version_to.py --version 2.48
+ 
 
-      FILEVERSION 2,33  
-      PRODUCTVERSION 2,33  
-      VALUE "FileVersion", "2, 33\0"  
-      VALUE "ProductVersion", "2, 33\0"
-   * MakeInstallers.bat
+3. Run BuildInstallers.VS2012.cmd or BuildInstallers.VS2013.cmd. This will generate two msi installers:   
+    * GitExtensions248.msi - the standard install with only Git Extensions
+    * GitExtensions248Complete.msi - also includes msysgit and KDiff3
 
-      set version=2.33
-
-3. Run BuildInstallers.bat. This will generate two msi installers:   
-    * GitExtensions233.msi - the standard install with only Git Extensions
-    * GitExtensions233Complete.msi - also includes msysgit and KDiff3
-
-4. Build the zip file by hand :(
+4. Run BuildInstallers.Mono.cmd. This will generate zip archive

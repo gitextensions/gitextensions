@@ -335,5 +335,25 @@ namespace GitUI.CommitInfo
             Module.EditNotes(_revision.Guid);
             ReloadCommitInfo();
         }
+
+        private void DoCommandClick(string command, string data)
+        {
+            if (CommandClick != null)
+            {
+                CommandClick(this, new CommandEventArgs(command, data));
+            }
+        }
+
+        private void _RevisionHeader_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.XButton1)
+            {
+                DoCommandClick("navigatebackward", null);
+            }
+            else if (e.Button == MouseButtons.XButton2)
+            {
+                DoCommandClick("navigateforward", null);
+            }
+        }
     }
 }
