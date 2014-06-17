@@ -223,9 +223,7 @@
     <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed-256.ico">
       <Link>Resources\git-extensions-logo-final_mixed-256.ico</Link>
     </Content>
-    <Content Include="AutoCompleteRegexes.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="AutoCompleteRegexes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
