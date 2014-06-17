@@ -115,12 +115,10 @@ namespace GitFlow
 
         private List<string> GetBranches(string typeBranch)
         {
-            string[] references = m_gitUiCommands.GitModule.RunGitCmd("flow " + typeBranch)
-                                                 .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
-
-            if (references.Length == 0 || references.Any(l=>l.StartsWith("No " + typeBranch + " branches exist.")))
+            var result = m_gitUiCommands.GitModule.RunGitCmdResult("flow " + typeBranch);
+            if (result.ExitCode != 0)
                 return new List<string>();
-
+            string[] references = result.StdOutput.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }
 
@@ -156,7 +154,7 @@ namespace GitFlow
         private void LoadBaseBranches()
         {
             var branchType = cbType.SelectedValue.ToString();
-            var manageBaseBranch = (branchType == Branch.feature.ToString("G") || branchType == Branch.hotfix.ToString("G"));
+            var manageBaseBranch = (branchType == Branch.feature.ToString("G") || branchType == Branch.hotfix.ToString("G") || branchType == Branch.support.ToString("G"));
             pnlBasedOn.Visible = manageBaseBranch;
 
             if (manageBaseBranch)
@@ -216,7 +214,6 @@ namespace GitFlow
 
         private bool RunCommand(string commandText)
         {
-            int exitCode;
             pbResultCommand.Image = Resource.StatusHourglass;
             ShowToolTip(pbResultCommand, "running command : git " + commandText);
             ForceRefresh(pbResultCommand);
@@ -225,27 +222,27 @@ namespace GitFlow
             txtResult.Text = "running...";
             ForceRefresh(txtResult);
 
-            var result = m_gitUiCommands.GitModule.RunGitCmd(commandText, out exitCode).Trim().Replace("\n", Environment.NewLine);
+            var result = m_gitUiCommands.GitModule.RunGitCmdResult(commandText);
 
             IsRefreshNeeded = true;
 
             ttDebug.RemoveAll();
-            ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + exitCode);
+            ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + result.ExitCode);
 
-            if (exitCode == 0)
+            if (result.ExitCode == 0)
             {
                 pbResultCommand.Image = Resource.success;
-                ShowToolTip(pbResultCommand, result);
+                ShowToolTip(pbResultCommand, result.GetString());
                 DisplayHead();
-                txtResult.Text = result;
+                txtResult.Text = result.GetString();
             }
             else
             {
                 pbResultCommand.Image = Resource.error;
-                ShowToolTip(pbResultCommand, "error: " + result);
-                txtResult.Text = result;
+                ShowToolTip(pbResultCommand, "error: " + result.GetString());
+                txtResult.Text = result.GetString();
             }
-            return exitCode == 0;
+            return result.ExitCode == 0;
         }
         #endregion
 

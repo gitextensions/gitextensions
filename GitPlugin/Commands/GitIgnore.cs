@@ -11,7 +11,7 @@ namespace GitPlugin.Commands
 
         protected override CommandTarget SupportedTargets
         {
-            get { return CommandTarget.Any; }
+            get { return CommandTarget.SolutionExplorerFileItem; }
         }
     }
 }

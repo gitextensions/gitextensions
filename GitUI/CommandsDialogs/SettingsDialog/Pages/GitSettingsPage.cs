@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void BrowseGitPath_Click(object sender, EventArgs e)
         {
-            CheckSettingsLogic.SolveGitCommand();
+            CheckSettingsLogic.SolveGitCommand(GitPath.Text.Trim());
 
             using (var browseDialog = new OpenFileDialog
             {
@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void BrowseGitBinPath_Click(object sender, EventArgs e)
         {
-            CheckSettingsLogic.SolveLinuxToolsDir();
+            CheckSettingsLogic.SolveLinuxToolsDir(GitBinPath.Text.Trim());
 
             using (var browseDialog = new FolderBrowserDialog { SelectedPath = AppSettings.GitBinDir })
             {
@@ -80,14 +80,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        // TODO: needed anymore?
         private void GitPath_TextChanged(object sender, EventArgs e)
         {
-            ////    if (loadingSettings)
-            ////        return;
+            // If user pastes text or types in the box be sure to validate and save in the settings.
+            CheckSettingsLogic.SolveGitCommand(GitPath.Text.Trim());
+        }
 
-            ////    Settings.GitCommandValue = GitPath.Text;
-            ////    OnLoadSettings();
+        private void GitBinPath_TextChanged(object sender, EventArgs e)
+        {
+            // If user pastes text or types in the box be sure to validate and save in the settings.
+            CheckSettingsLogic.SolveLinuxToolsDir(GitBinPath.Text.Trim());
         }
 
         private void downloadMsysgit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

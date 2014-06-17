@@ -9,8 +9,8 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _saveChanges = new TranslationString("Do you want to save changes?");
         private readonly TranslationString _saveChangesCaption = new TranslationString("Save changes");
-        private readonly TranslationString _cannotOpenFile = new TranslationString("Cannot open file: ");
-        private readonly TranslationString _cannotSaveFile = new TranslationString("Cannot save file: ");
+        private readonly TranslationString _cannotOpenFile = new TranslationString("Cannot open file:");
+        private readonly TranslationString _cannotSaveFile = new TranslationString("Cannot save file:");
         private readonly TranslationString _error = new TranslationString("Error");
         private bool _hasChanges;
         private string _fileName;
