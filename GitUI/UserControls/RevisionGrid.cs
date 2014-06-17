@@ -81,14 +81,16 @@ namespace GitUI
         bool showAllBranchesToolStripMenuItemChecked; // refactoring
         bool showFilteredBranchesToolStripMenuItemChecked; // refactoring
 
-        private readonly Stack<string> _navigationToParentOrChildStack = new Stack<string>();
+        private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
         private readonly NavigationHistory navigationHistory = new NavigationHistory();
-        private bool _selectionChangedByGoToParentOrChild;
 
         public RevisionGrid()
         {
             InitLayout();
             InitializeComponent();
+
+            _parentChildNavigationHistory = new ParentChildNavigationHistory(SetSelectedRevision);
+
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
 
             Translate();
@@ -666,10 +668,7 @@ namespace GitUI
 
         private void RevisionsSelectionChanged(object sender, EventArgs e)
         {
-            if (!_selectionChangedByGoToParentOrChild)
-            {
-                _navigationToParentOrChildStack.Clear();
-            }
+            _parentChildNavigationHistory.RevisionsSelectionChanged();
 
             if (Revisions.SelectedRows.Count > 0)
                 LastRow = Revisions.SelectedRows[0].Index;
@@ -2878,34 +2877,22 @@ namespace GitUI
         private void goToParentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var r = GetRevision(LastRow);
-            if (r.HasParent())
-            {
-                _selectionChangedByGoToParentOrChild = true;
-                SetSelectedRevision(r.ParentGuids[0]);
-                _selectionChangedByGoToParentOrChild = false;
-                _navigationToParentOrChildStack.Push(r.Guid);
-            }
+
+            if (_parentChildNavigationHistory.HasPreviousParent)
+                _parentChildNavigationHistory.NavigateToPreviousParent(r.Guid);
+            else if (r.HasParent())
+                _parentChildNavigationHistory.NavigateToParent(r.Guid, r.ParentGuids[0]);
         }
 
         private void goToChildToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_navigationToParentOrChildStack.Count > 0)
-            {
-                _selectionChangedByGoToParentOrChild = true;
-                SetSelectedRevision(_navigationToParentOrChildStack.Pop());
-                _selectionChangedByGoToParentOrChild = false;
-                return;
-            }
-
             var r = GetRevision(LastRow);
             var children = GetRevisionChildren(r.Guid);
 
-            if (children.Any())
-            {
-                _selectionChangedByGoToParentOrChild = true;
-                SetSelectedRevision(children[0]);
-                _selectionChangedByGoToParentOrChild = false;
-            }
+            if (_parentChildNavigationHistory.HasPreviousChild)
+                _parentChildNavigationHistory.NavigateToPreviousChild(r.Guid);
+            else if (children.Any())
+                _parentChildNavigationHistory.NavigateToChild(r.Guid, children[0]);
         }
 
         private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
