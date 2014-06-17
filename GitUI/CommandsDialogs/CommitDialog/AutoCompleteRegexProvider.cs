@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.CommitDialog
 {
@@ -11,11 +12,24 @@ namespace GitUI.CommandsDialogs.CommitDialog
     {
         private static readonly Lazy<Dictionary<string, Regex>> _regexes = new Lazy<Dictionary<string, Regex>>(ParseRegexes);
 
+        private static IEnumerable<string> ReadOrInitializeAutoCompleteRegexes ()
+        {
+            var path = Path.Combine(AppSettings.ApplicationDataPath.Value, "AutoCompleteRegexes.txt");
+
+            if (!File.Exists(path))
+                using (var sr = new StreamReader(Assembly.GetEntryAssembly().GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt")))
+                    File.WriteAllText(path, sr.ReadToEnd());
+
+            return File.ReadLines(path);
+        }
+
         private static Dictionary<string, Regex> ParseRegexes ()
         {
+            var autoCompleteRegexes = ReadOrInitializeAutoCompleteRegexes();
+            
             var regexes = new Dictionary<string, Regex>();
 
-            foreach (var line in File.ReadLines (Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "AutoCompleteRegexes.txt")))
+            foreach (var line in autoCompleteRegexes)
             {
                 var i = line.IndexOf('=');
                 var extensionStr = line.Substring(0, i);
