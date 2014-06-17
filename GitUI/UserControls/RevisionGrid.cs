@@ -81,12 +81,16 @@ namespace GitUI
         bool showAllBranchesToolStripMenuItemChecked; // refactoring
         bool showFilteredBranchesToolStripMenuItemChecked; // refactoring
 
+        private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
         private readonly NavigationHistory navigationHistory = new NavigationHistory();
 
         public RevisionGrid()
         {
             InitLayout();
             InitializeComponent();
+
+            _parentChildNavigationHistory = new ParentChildNavigationHistory(SetSelectedRevision);
+
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
 
             Translate();
@@ -664,6 +668,8 @@ namespace GitUI
 
         private void RevisionsSelectionChanged(object sender, EventArgs e)
         {
+            _parentChildNavigationHistory.RevisionsSelectionChanged();
+
             if (Revisions.SelectedRows.Count > 0)
                 LastRow = Revisions.SelectedRows[0].Index;
 
@@ -2871,16 +2877,22 @@ namespace GitUI
         private void goToParentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var r = GetRevision(LastRow);
-            if (r.HasParent())
-                SetSelectedRevision(r.ParentGuids[0]);
+
+            if (_parentChildNavigationHistory.HasPreviousParent)
+                _parentChildNavigationHistory.NavigateToPreviousParent(r.Guid);
+            else if (r.HasParent())
+                _parentChildNavigationHistory.NavigateToParent(r.Guid, r.ParentGuids[0]);
         }
 
         private void goToChildToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var r = GetRevision(LastRow);
             var children = GetRevisionChildren(r.Guid);
-            if (children.Any())
-                SetSelectedRevision(children[0]);
+
+            if (_parentChildNavigationHistory.HasPreviousChild)
+                _parentChildNavigationHistory.NavigateToPreviousChild(r.Guid);
+            else if (children.Any())
+                _parentChildNavigationHistory.NavigateToChild(r.Guid, children[0]);
         }
 
         private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
