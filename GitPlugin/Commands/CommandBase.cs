@@ -14,5 +14,7 @@ namespace GitPlugin.Commands
         {
             GitCommands.RunGitEx(command, filename);
         }
+
+        public bool RunForSelection { get; set; }
     }
 }

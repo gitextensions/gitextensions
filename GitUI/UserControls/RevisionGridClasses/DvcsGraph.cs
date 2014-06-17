@@ -803,10 +803,10 @@ namespace GitUI.RevisionGridClasses
             // Get adjacent junctions
             var adjacentJunctions = new List<Junction>();
             var adjacentColors = new List<int>();
-            adjacentJunctions.AddRange(aJunction.Child.Ancestors);
-            adjacentJunctions.AddRange(aJunction.Child.Descendants);
-            adjacentJunctions.AddRange(aJunction.Parent.Ancestors);
-            adjacentJunctions.AddRange(aJunction.Parent.Descendants);
+            adjacentJunctions.AddRange(aJunction.Youngest.Ancestors);
+            adjacentJunctions.AddRange(aJunction.Youngest.Descendants);
+            adjacentJunctions.AddRange(aJunction.Oldest.Ancestors);
+            adjacentJunctions.AddRange(aJunction.Oldest.Descendants);
             foreach (Junction peer in adjacentJunctions)
             {
                 if (_junctionColors.TryGetValue(peer, out colorIndex))
@@ -1260,7 +1260,7 @@ namespace GitUI.RevisionGridClasses
             {
                 foreach (var descendant in node.Descendants)
                 {
-                    childrenIds.Add(descendant.Child.Id);
+                    childrenIds.Add(descendant.ChildOf(node).Id);
                 }
             }
 

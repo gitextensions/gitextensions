@@ -8,8 +8,8 @@ namespace GitPlugin.Commands
     {
         protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {
-            if (string.IsNullOrEmpty(fileName) || Path.GetInvalidPathChars().Any(fileName.Contains))
-                return;
+            if (!string.IsNullOrEmpty(fileName) && Path.GetInvalidPathChars().Any(fileName.Contains))
+                fileName = "";
             var directoryName = Path.GetDirectoryName(fileName);
             RunGitEx("init", directoryName);
         }

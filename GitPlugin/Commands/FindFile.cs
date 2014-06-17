@@ -1,12 +1,13 @@
 ﻿using System.Threading;
 using EnvDTE;
+using EnvDTE80;
 using GitPlugin.Git;
 
 namespace GitPlugin.Commands
 {
     public sealed class FindFile : ItemCommandBase
     {
-        public override void OnCommand(EnvDTE80.DTE2 application, OutputWindowPane pane)
+        public override void OnCommand(DTE2 application, OutputWindowPane pane)
         {
             ThreadPool.QueueUserWorkItem(
                         o =>
