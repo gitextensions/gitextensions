@@ -98,6 +98,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private IEnumerable<string> GetGitLocations()
         {
+            string envVariable = Environment.GetEnvironmentVariable("GITEXT_GIT");
+            if (!String.IsNullOrEmpty(envVariable)) yield return envVariable;
             yield return
                 CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
