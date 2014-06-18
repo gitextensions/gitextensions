@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,15 +7,20 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
-using GitUI.SpellChecker;
 
-namespace GitUI.CommandsDialogs.CommitDialog
+namespace GitUI.AutoCompletion
 {
-    public static class AutoCompleteProvider
+    public class CommitAutoCompleteProvider : IAutoCompleteProvider
     {
-        private static readonly Lazy<Dictionary<string, Regex>> _regexes = new Lazy<Dictionary<string, Regex>>(ParseRegexes);
+        private readonly Lazy<Dictionary<string, Regex>> _regexes = new Lazy<Dictionary<string, Regex>>(ParseRegexes);
+        private readonly GitModule _module;
 
-        public static Task<List<AutoCompleteWord>> GetAutoCompleteList (GitModule module, CancellationTokenSource cts, Action<IEnumerable<string>> addAutoCompleteWordsToDictionary)
+        public CommitAutoCompleteProvider (GitModule module)
+        {
+            _module = module;
+        }
+
+        public Task<List<AutoCompleteWord>> GetAutoCompleteWords (CancellationTokenSource cts)
         {
             var cancellationToken = cts.Token;
 
@@ -26,7 +31,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
                         var autoCompleteWords = new HashSet<string>();
 
-                        foreach (var file in module.GetAllChangedFiles())
+                        foreach (var file in _module.GetAllChangedFiles())
                         {
                             cancellationToken.ThrowIfCancellationRequested();
 
@@ -34,7 +39,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
                             if (regex != null)
                             {
-                                var text = GetChangedFileText(module, file);
+                                var text = GetChangedFileText(_module, file);
                                 var matches = regex.Matches(text);
                                 foreach (Match match in matches)
                                         // Skip first group since it always contains the entire matched string (regardless of capture groups)
@@ -52,13 +57,11 @@ namespace GitUI.CommandsDialogs.CommitDialog
                             }
                         }
 
-                        var autoCompleteList = autoCompleteWords.Select(w => new AutoCompleteWord(w)).ToList();
-                        addAutoCompleteWordsToDictionary(autoCompleteList.Select(w => w.Word));
-                        return autoCompleteList;
+                        return autoCompleteWords.Select(w => new AutoCompleteWord(w)).ToList();
                     }, cancellationToken);
         }
 
-        private static Regex GetRegexForExtension (string extension)
+        private Regex GetRegexForExtension (string extension)
         {
             return _regexes.Value.ContainsKey(extension) ? _regexes.Value[extension] : null;
         }

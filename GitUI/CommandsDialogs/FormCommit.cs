@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
@@ -164,7 +165,7 @@ namespace GitUI.CommandsDialogs
             Message.TextAssigned += Message_TextAssigned;
 
             if (Module != null)
-                Message.EnableAutoCompletion(Module);
+                Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(Module));
 
             Loading.Image = Properties.Resources.loadingpanel;
 
