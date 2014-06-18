@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
@@ -37,7 +38,8 @@ namespace GitUI.SpellChecker
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
 
-        private CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource(); 
+        private readonly CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource();
+        private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new List<IAutoCompleteProvider>(); 
         private Task<List<AutoCompleteWord>> _autoCompleteListTask; 
         private bool _autoCompleteWasUserActivated;
         private bool _disableAutoCompleteTriggerOnTextUpdate;
@@ -65,6 +67,8 @@ namespace GitUI.SpellChecker
             SpellCheckTimer.Enabled = false;
 
             EnabledChanged += EditNetSpellEnabledChanged;
+
+            InitializeAutoCompleteWordsTask();
         }
 
         public override string Text
@@ -770,9 +774,41 @@ namespace GitUI.SpellChecker
             }
         }
 
-        public void EnableAutoCompletion (GitModule module)
+        private void InitializeAutoCompleteWordsTask ()
         {
-            _autoCompleteListTask = AutoCompleteProvider.GetAutoCompleteList(module, _autoCompleteCancellationTokenSource, words => _wordDictionary.AddCommitWords(words));
+            _autoCompleteListTask = new Task<List<AutoCompleteWord>>(
+                    () =>
+                    {
+                        var subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWords(_autoCompleteCancellationTokenSource)).ToArray();
+                        try
+                        {
+                            Task.WaitAll(subTasks, _autoCompleteCancellationTokenSource.Token);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            // WaitAll was cancelled
+                            return null;
+                        }
+                        catch (AggregateException ex)
+                        {
+                            if (ex.InnerExceptions.OfType<OperationCanceledException>().Any())
+                            {
+                                // At least one task was cancelled
+                                return null;
+                            }
+
+                            throw;
+                        }
+
+                        var words = subTasks.SelectMany(t => t.Result).Distinct().ToList();
+                        _wordDictionary.AddAutoCompleteWords(words.Select(w => w.Word));
+                        return words;
+                    });
+        }
+
+        public void AddAutoCompleteProvider (IAutoCompleteProvider autoCompleteProvider)
+        {
+            _autoCompleteProviders.Add(autoCompleteProvider);
         }
 
         protected override bool ProcessCmdKey (ref Message msg, Keys keyData)
@@ -844,6 +880,9 @@ namespace GitUI.SpellChecker
 
             if (!_autoCompleteListTask.IsCompleted)
             {
+                if (_autoCompleteListTask.Status != TaskStatus.Running)
+                    _autoCompleteListTask.Start();
+
                 if (calledByUser)
                 {
                     AutoCompleteToolTip.Show(

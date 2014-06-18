@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace GitUI.SpellChecker
+namespace GitUI.AutoCompletion
 {
     public class AutoCompleteWord : IEquatable<AutoCompleteWord>
     {
