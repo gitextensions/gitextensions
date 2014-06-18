@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -39,7 +38,7 @@ namespace GitUI.SpellChecker
         private static WordDictionary _wordDictionary;
 
         private CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource(); 
-        private Task<List<AutoCompleteWord>> _autoCompleteList; 
+        private Task<List<AutoCompleteWord>> _autoCompleteListTask; 
         private bool _autoCompleteWasUserActivated;
         private bool _disableAutoCompleteTriggerOnTextUpdate;
         private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new Dictionary<Keys, string>
@@ -773,68 +772,7 @@ namespace GitUI.SpellChecker
 
         public void EnableAutoCompletion (GitModule module)
         {
-            _autoCompleteList = GetAutoCompleteList(module);
-            _autoCompleteList.ContinueWith(r =>
-            {
-                if (r.IsCompleted && !r.IsCanceled)
-                    _wordDictionary.AddCommitWords(r.Result.Select(x => x.Word));
-            });
-        }
-
-        private string GetChangedFileText (GitModule module, GitItemStatus file)
-        {
-            var changes = module.GetCurrentChanges(file.Name, file.OldName, file.IsStaged, "-U1000000", module.FilesEncoding);
-
-            if (changes != null)
-                return changes.Text;
-
-            var content = module.GetFileContents(file);
-
-            if (content != null)
-                return content;
-
-            return File.ReadAllText(Path.Combine(module.WorkingDir, file.Name));
-        }
-
-        private Task<List<AutoCompleteWord>> GetAutoCompleteList (GitModule module)
-        {
-            var cancellationToken = _autoCompleteCancellationTokenSource.Token;
-
-            return Task.Factory.StartNew(
-                    () =>
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        var autoCompleteWords = new HashSet<string>();
-
-                        foreach (var file in module.GetAllChangedFiles())
-                        {
-                            cancellationToken.ThrowIfCancellationRequested();
-
-                            var regex = AutoCompleteRegexProvider.GetRegexForExtension(Path.GetExtension(file.Name));
-
-                            if (regex != null)
-                            {
-                                var text = GetChangedFileText(module, file);
-                                var matches = regex.Matches(text);
-                                foreach (Match match in matches)
-                                        // Skip first group since it always contains the entire matched string (regardless of capture groups)
-                                    foreach (Group group in match.Groups.OfType<Group>().Skip(1))
-                                        foreach (Capture capture in @group.Captures)
-                                            autoCompleteWords.Add(capture.Value);
-                            }
-
-                            autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.Name));
-                            autoCompleteWords.Add(Path.GetFileName(file.Name));
-                            if (!string.IsNullOrWhiteSpace(file.OldName))
-                            {
-                                autoCompleteWords.Add(Path.GetFileNameWithoutExtension(file.OldName));
-                                autoCompleteWords.Add(Path.GetFileName(file.OldName));
-                            }
-                        }
-
-                        return autoCompleteWords.Select(w => new AutoCompleteWord(w)).ToList();
-                    }, cancellationToken);
+            _autoCompleteListTask = AutoCompleteProvider.GetAutoCompleteList(module, _autoCompleteCancellationTokenSource, words => _wordDictionary.AddCommitWords(words));
         }
 
         protected override bool ProcessCmdKey (ref Message msg, Keys keyData)
@@ -901,10 +839,10 @@ namespace GitUI.SpellChecker
 
         private void UpdateOrShowAutoComplete (bool calledByUser)
         {
-            if (_autoCompleteList == null)
+            if (_autoCompleteListTask == null)
                 return;
 
-            if (!_autoCompleteList.IsCompleted)
+            if (!_autoCompleteListTask.IsCompleted)
             {
                 if (calledByUser)
                 {
@@ -931,7 +869,7 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            var list = _autoCompleteList.Result.Where(x => x.Matches(word)).Distinct().ToList();
+            var list = _autoCompleteListTask.Result.Where(x => x.Matches(word)).Distinct().ToList();
 
             if (list.Count == 0)
             {
