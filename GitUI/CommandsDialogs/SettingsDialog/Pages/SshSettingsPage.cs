@@ -84,6 +84,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private IEnumerable<string> GetPuttyLocations()
         {
+            string envVariable = Environment.GetEnvironmentVariable("GITEXT_PUTTY");
+            if (!String.IsNullOrEmpty(envVariable)) yield return envVariable;
             yield return Path.Combine(AppSettings.GetInstallDir(), @"PuTTY\");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
