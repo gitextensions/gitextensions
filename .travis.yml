@@ -1,5 +1,7 @@
 language: c
 
+os: linux
+
 before_install:
   - sudo bash -c "echo deb http://badgerports.org precise main >> /etc/apt/sources.list"
   - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E1FAD0C
