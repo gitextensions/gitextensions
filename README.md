@@ -8,6 +8,9 @@ GitExtensions is a shell extension, a Visual Studio 2008 / 2010 / 2012 / 2013 pl
 
 Build status: master [![Status](http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:GitExtensions_Master\)/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=GitExtensions_Master)
 
+Mono Build status: master
+[![Build Status](https://travis-ci.org/fraga/gitextensions.svg?branch=TravisCI)](https://travis-ci.org/fraga/gitextensions)
+
 Translation: [Transifex](https://www.transifex.com/organization/git-extensions/dashboard/git-extensions)
 
 The [build](http://teamcity.codebetter.com/project.html?projectId=GitExtensions&branch_GitExtensions=__all_branches__) is generously hosted and run on the [CodeBetter TeamCity](http://codebetter.com/codebetter-ci/) infrastructure.
