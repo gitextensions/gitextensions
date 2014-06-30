@@ -12,7 +12,7 @@ namespace GitUI.AutoCompletion
 {
     public class CommitAutoCompleteProvider : IAutoCompleteProvider
     {
-        private readonly Lazy<Dictionary<string, Regex>> _regexes = new Lazy<Dictionary<string, Regex>>(ParseRegexes);
+        private static readonly Lazy<Dictionary<string, Regex>> s_regexes = new Lazy<Dictionary<string, Regex>>(ParseRegexes);
         private readonly GitModule _module;
 
         public CommitAutoCompleteProvider (GitModule module)
@@ -61,9 +61,9 @@ namespace GitUI.AutoCompletion
                     }, cancellationToken);
         }
 
-        private Regex GetRegexForExtension (string extension)
+        private static Regex GetRegexForExtension (string extension)
         {
-            return _regexes.Value.ContainsKey(extension) ? _regexes.Value[extension] : null;
+            return s_regexes.Value.ContainsKey(extension) ? s_regexes.Value[extension] : null;
         }
 
         private static IEnumerable<string> ReadOrInitializeAutoCompleteRegexes ()
