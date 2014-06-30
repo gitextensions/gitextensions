@@ -801,7 +801,7 @@ namespace GitUI.SpellChecker
                         }
 
                         var words = subTasks.SelectMany(t => t.Result).Distinct().ToList();
-                        _wordDictionary.AddAutoCompleteWords(words.Select(w => w.Word));
+                        _spelling.AddAutoCompleteWords(words.Select(w => w.Word));
                         return words;
                     });
         }
