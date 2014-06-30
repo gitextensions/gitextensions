@@ -20,7 +20,7 @@ namespace GitUI.AutoCompletion
             _module = module;
         }
 
-        public Task<List<AutoCompleteWord>> GetAutoCompleteWords (CancellationTokenSource cts)
+        public Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWords (CancellationTokenSource cts)
         {
             var cancellationToken = cts.Token;
 
@@ -57,7 +57,7 @@ namespace GitUI.AutoCompletion
                             }
                         }
 
-                        return autoCompleteWords.Select(w => new AutoCompleteWord(w)).ToList();
+                        return autoCompleteWords.Select(w => new AutoCompleteWord(w));
                     }, cancellationToken);
         }
 
