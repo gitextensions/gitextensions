@@ -40,7 +40,7 @@ namespace GitUI.SpellChecker
 
         private readonly CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource();
         private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new List<IAutoCompleteProvider>(); 
-        private Task<List<AutoCompleteWord>> _autoCompleteListTask; 
+        private Task<IEnumerable<AutoCompleteWord>> _autoCompleteListTask; 
         private bool _autoCompleteWasUserActivated;
         private bool _disableAutoCompleteTriggerOnTextUpdate;
         private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new Dictionary<Keys, string>
@@ -776,7 +776,7 @@ namespace GitUI.SpellChecker
 
         private void InitializeAutoCompleteWordsTask ()
         {
-            _autoCompleteListTask = new Task<List<AutoCompleteWord>>(
+            _autoCompleteListTask = new Task<IEnumerable<AutoCompleteWord>>(
                     () =>
                     {
                         var subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWords(_autoCompleteCancellationTokenSource)).ToArray();
