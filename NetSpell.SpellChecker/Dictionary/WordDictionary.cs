@@ -37,7 +37,6 @@ namespace NetSpell.SpellChecker.Dictionary
         private string _tryCharacters = "";
         private string _userFile = "user.dic";
         private Dictionary<string, string> _userWords = new Dictionary<string, string>();
-        private Dictionary<string, string> _autoCompleteWords = new Dictionary<string, string>(); 
         private System.ComponentModel.Container components;
 
         /// <summary>
@@ -186,12 +185,6 @@ namespace NetSpell.SpellChecker.Dictionary
             SaveUserFile();
         }
 
-        public void AddAutoCompleteWords (IEnumerable<string> autoCompleteWords)
-        {
-            foreach (var word in autoCompleteWords)
-                _autoCompleteWords[word] = word;
-        }
-
         /// <summary>
         ///     Clears the user list of words
         /// </summary>
@@ -227,21 +220,14 @@ namespace NetSpell.SpellChecker.Dictionary
                 return true;  // word found
             }
 
-            // Step 2 Search AutoCompleteWords
-            if (_autoCompleteWords.ContainsKey (word))
-            {
-                TraceWriter.TraceVerbose("Word Found in Commit Dictionary: {0}", word);
-                return true;  // word found
-            }
-
-            // Step 3 Search BaseWords
+            // Step 2 Search BaseWords
             if (_baseWords.ContainsKey(word))
             {
                 TraceWriter.TraceVerbose("Word Found in Base Words: {0}", word);
                 return true; // word found
             }
 
-            // Step 4 Remove suffix, Search BaseWords
+            // Step 3 Remove suffix, Search BaseWords
 
             // save suffixed words for use when removing prefix
             List<string> suffixWords = new List<string>();
