@@ -236,6 +236,11 @@ namespace GitUI.SpellChecker
                         IgnoreWordsWithDigits = true
                     };
 
+            if (!_autoCompleteListTask.IsCompleted)
+                _autoCompleteListTask.ContinueWith(w => _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word)));
+            else
+                _spelling.AddAutoCompleteWords(_autoCompleteListTask.Result.Select(w => w.Word));
+
             // 
             // spelling
             //             
@@ -800,9 +805,7 @@ namespace GitUI.SpellChecker
                             throw;
                         }
 
-                        var words = subTasks.SelectMany(t => t.Result).Distinct().ToList();
-                        _spelling.AddAutoCompleteWords(words.Select(w => w.Word));
-                        return words;
+                        return subTasks.SelectMany(t => t.Result).Distinct().ToList();
                     });
         }
 
