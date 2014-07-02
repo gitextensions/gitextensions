@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -36,7 +37,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void RefreshLogItems()
         {
             if (TabControl.SelectedTab == tabPageCommandLog)
-                RefreshListBox(LogItems, AppSettings.GitLog.GetCommands());
+                RefreshListBox(LogItems, AppSettings.GitLog.GetCommands().Select(cle => cle.ToString()).ToArray());
         }
 
         private void RefreshCommandCacheItems()

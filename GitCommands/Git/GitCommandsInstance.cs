@@ -32,7 +32,8 @@ namespace GitCommands
                 string quotedCmd = cmd;
                 if (quotedCmd.IndexOf(' ') != -1)
                     quotedCmd = quotedCmd.Quote();
-                AppSettings.GitLog.Log(quotedCmd + " " + arguments);
+
+                var executionStartTimestamp = DateTime.Now;
 
                 //process used to execute external commands
                 var process = new Process();
@@ -44,6 +45,12 @@ namespace GitCommands
                 process.OutputDataReceived += ProcessOutputDataReceived;
                 process.ErrorDataReceived += ProcessErrorDataReceived;
                 process.Exited += ProcessExited;
+
+                process.Exited += (sender, args) =>
+                {
+                  var executionEndTimestamp = DateTime.Now;
+                  AppSettings.GitLog.Log (quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+                };
 
                 process.Start();
                 lock (_processLock)

@@ -147,10 +147,19 @@ namespace GitCommands
             string quotedCmd = fileName;
             if (quotedCmd.IndexOf(' ') != -1)
                 quotedCmd = quotedCmd.Quote();
-            AppSettings.GitLog.Log(quotedCmd + " " + arguments);
+
+            var executionStartTimestamp = DateTime.Now;
 
             var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
-            return Process.Start(startInfo);
+            var startProcess = Process.Start(startInfo);
+            
+            startProcess.Exited += (sender, args) =>
+            {
+              var executionEndTimestamp = DateTime.Now;
+              AppSettings.GitLog.Log (quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+            };
+
+            return startProcess;
         }
 
         internal static bool UseSsh(string arguments)
