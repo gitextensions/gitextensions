@@ -7,7 +7,7 @@ namespace GitCommands.Logging
     public sealed class CommandLogger
     {
         public delegate void CommandsChangedHandler();
-        private const int LogLimit = 100;
+        private const int LogLimit = 500;
         private readonly Queue<CommandLogEntry> _logQueue = new Queue<CommandLogEntry>(LogLimit);
 
         public event CommandsChangedHandler CommandsChanged = delegate { };
