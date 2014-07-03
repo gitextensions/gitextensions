@@ -236,11 +236,12 @@ namespace GitUI.SpellChecker
                         IgnoreWordsWithDigits = true
                     };
 
-            if (!_autoCompleteListTask.IsCompleted)
-                _autoCompleteListTask.ContinueWith(w => _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word)));
-            else
-                _spelling.AddAutoCompleteWords(_autoCompleteListTask.Result.Select(w => w.Word));
-
+            _autoCompleteListTask.ContinueWith(
+                w => _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word)),
+                _autoCompleteCancellationTokenSource.Token,
+                TaskContinuationOptions.NotOnCanceled,
+                TaskScheduler.FromCurrentSynchronizationContext()
+            );
             // 
             // spelling
             //             
