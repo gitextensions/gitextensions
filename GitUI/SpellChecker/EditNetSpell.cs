@@ -1,11 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.AutoCompletion;
+using GitUI.CommandsDialogs.CommitDialog;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
 using ResourceManager;
@@ -31,7 +38,23 @@ namespace GitUI.SpellChecker
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
 
+        private readonly CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource();
+        private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new List<IAutoCompleteProvider>(); 
+        private Task<IEnumerable<AutoCompleteWord>> _autoCompleteListTask; 
+        private bool _autoCompleteWasUserActivated;
+        private bool _disableAutoCompleteTriggerOnTextUpdate;
+        private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new Dictionary<Keys, string>
+                                                                     {
+                                                                             { Keys.Down, "{DOWN}" },
+                                                                             { Keys.Up, "{UP}" },
+                                                                             { Keys.PageUp, "{PGUP}" },
+                                                                             { Keys.PageDown, "{PGDN}" },
+                                                                             { Keys.End, "{END}" },
+                                                                             { Keys.Home, "{HOME}" }
+                                                                     };
+
         public Font TextBoxFont { get; set; }
+
         public EventHandler TextAssigned;
 
         public EditNetSpell()
@@ -44,6 +67,8 @@ namespace GitUI.SpellChecker
             SpellCheckTimer.Enabled = false;
 
             EnabledChanged += EditNetSpellEnabledChanged;
+
+            InitializeAutoCompleteWordsTask();
         }
 
         public override string Text
@@ -211,6 +236,12 @@ namespace GitUI.SpellChecker
                         IgnoreWordsWithDigits = true
                     };
 
+            _autoCompleteListTask.ContinueWith(
+                w => _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word)),
+                _autoCompleteCancellationTokenSource.Token,
+                TaskContinuationOptions.NotOnCanceled,
+                TaskScheduler.FromCurrentSynchronizationContext()
+            );
             // 
             // spelling
             //             
@@ -526,6 +557,15 @@ namespace GitUI.SpellChecker
 
         private void TextBoxTextChanged(object sender, EventArgs e)
         {
+            if (!_disableAutoCompleteTriggerOnTextUpdate)
+            {
+                // Reset when timer is already running
+                if (AutoCompleteTimer.Enabled)
+                    AutoCompleteTimer.Stop();
+
+                AutoCompleteTimer.Start();
+            }
+
             _customUnderlines.Lines.Clear();
             _customUnderlines.IllFormedLines.Clear();
 
@@ -550,6 +590,8 @@ namespace GitUI.SpellChecker
         private void TextBoxLeave(object sender, EventArgs e)
         {
             ShowWatermark();
+            if (ActiveControl != AutoComplete)
+                CloseAutoComplete();
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
@@ -571,8 +613,29 @@ namespace GitUI.SpellChecker
             skipSelectionUndo = false;
         }
 
+        
+
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
+            if (!e.Alt && !e.Control && !e.Shift && _keysToSendToAutoComplete.ContainsKey (e.KeyCode) && AutoComplete.Visible)
+            {
+
+                if (e.KeyCode == Keys.Up && AutoComplete.SelectedIndex == 0)
+                    AutoComplete.SelectedIndex = AutoComplete.Items.Count - 1;
+                else if (e.KeyCode == Keys.Down && AutoComplete.SelectedIndex == AutoComplete.Items.Count - 1)
+                    AutoComplete.SelectedIndex = 0;
+                else
+                {
+                    AutoComplete.Focus();
+                    SendKeys.SendWait(_keysToSendToAutoComplete[e.KeyCode]);
+                    TextBox.Focus();
+                }
+
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                return;
+            }
+
             if (e.Control && e.KeyCode == Keys.V)
             {
                 if (!Clipboard.ContainsText())
@@ -588,6 +651,14 @@ namespace GitUI.SpellChecker
             {
                 UndoHighlighting();
             }
+            else if (e.Control && !e.Alt && e.KeyCode == Keys.Space)
+            {
+                UpdateOrShowAutoComplete(true);
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                return;
+            }
+
             OnKeyDown(e);
         }
 
@@ -598,6 +669,8 @@ namespace GitUI.SpellChecker
 
         private void TextBox_SelectionChanged(object sender, EventArgs e)
         {
+            UpdateOrShowAutoComplete(false);
+
             if (SelectionChanged != null)
                 SelectionChanged(sender, e);
         }
@@ -705,6 +778,207 @@ namespace GitUI.SpellChecker
                 TextBox.SelectionLength = 0;
                 TextBox.SelectionStart = newCursorPos;
             }
+        }
+
+        private void InitializeAutoCompleteWordsTask ()
+        {
+            _autoCompleteListTask = new Task<IEnumerable<AutoCompleteWord>>(
+                    () =>
+                    {
+                        var subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWords(_autoCompleteCancellationTokenSource)).ToArray();
+                        try
+                        {
+                            Task.WaitAll(subTasks, _autoCompleteCancellationTokenSource.Token);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            // WaitAll was cancelled
+                            return null;
+                        }
+                        catch (AggregateException ex)
+                        {
+                            if (ex.InnerExceptions.OfType<OperationCanceledException>().Any())
+                            {
+                                // At least one task was cancelled
+                                return null;
+                            }
+
+                            throw;
+                        }
+
+                        return subTasks.SelectMany(t => t.Result).Distinct().ToList();
+                    });
+        }
+
+        public void AddAutoCompleteProvider (IAutoCompleteProvider autoCompleteProvider)
+        {
+            _autoCompleteProviders.Add(autoCompleteProvider);
+        }
+
+        protected override bool ProcessCmdKey (ref Message msg, Keys keyData)
+        {
+            if (AutoComplete.Visible)
+            {
+                if (keyData == Keys.Tab || keyData == Keys.Enter)
+                {
+                    AcceptAutoComplete();
+                    return true;
+                }
+
+                if (keyData == Keys.Escape)
+                {
+                    CloseAutoComplete();
+                    return true;
+                }
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private string GetWordAtCursor ()
+        {
+            if (TextBox.Text.Length > TextBox.SelectionStart && IsSeparatorChar(TextBox.Text[TextBox.SelectionStart]))
+                return null;
+
+            var sb = new StringBuilder();
+
+            int i = TextBox.SelectionStart - 1;
+
+            while (i >= 0 && !IsSeparatorChar(TextBox.Text[i]))
+                sb.Insert(0, TextBox.Text[i--]);
+
+            return sb.ToString();
+        }
+
+        private bool IsSeparatorChar (char c)
+        {
+            return char.IsWhiteSpace(c) || c == '.';
+        }
+
+        private void CloseAutoComplete ()
+        {
+            AutoComplete.Hide();
+            _autoCompleteWasUserActivated = false;
+        }
+
+        private void AcceptAutoComplete (AutoCompleteWord completionWord = null)
+        {
+            completionWord = completionWord ?? (AutoCompleteWord) AutoComplete.SelectedItem;
+
+            var word = GetWordAtCursor();
+
+            var pos = TextBox.SelectionStart;
+
+            _disableAutoCompleteTriggerOnTextUpdate = true;
+            Text = Text.Remove(pos - word.Length, word.Length);
+            Text = Text.Insert(pos - word.Length, completionWord.Word);
+            _disableAutoCompleteTriggerOnTextUpdate = false;
+            TextBox.SelectionStart = pos + completionWord.Word.Length - word.Length;
+            CloseAutoComplete();
+        }
+
+        private void UpdateOrShowAutoComplete (bool calledByUser)
+        {
+            if (_autoCompleteListTask == null)
+                return;
+
+            if (!_autoCompleteListTask.IsCompleted)
+            {
+                if (_autoCompleteListTask.Status != TaskStatus.Running)
+                    _autoCompleteListTask.Start();
+
+                if (calledByUser)
+                {
+                    AutoCompleteToolTip.Show(
+                            "AutoComplete is not available yet (it is still parsing the changed files).",
+                            TextBox,
+                            GetCursorPosition());
+                    AutoCompleteToolTipTimer.Start();
+                }
+
+                return;
+            }
+            
+            AutoCompleteToolTipTimer.Stop();
+            AutoCompleteToolTip.Hide(TextBox);
+
+            var word = GetWordAtCursor();
+
+            if (word == null || (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated))
+            {
+                if (AutoComplete.Visible)
+                    CloseAutoComplete();
+
+                return;
+            }
+
+            var list = _autoCompleteListTask.Result.Where(x => x.Matches(word)).Distinct().ToList();
+
+            if (list.Count == 0)
+            {
+                if (AutoComplete.Visible)
+                    CloseAutoComplete();
+
+                return;
+            }
+
+            if (list.Count == 1 && calledByUser)
+            {
+                AcceptAutoComplete(list[0]);
+                return;
+            }
+
+            if (calledByUser)
+                _autoCompleteWasUserActivated = true;
+
+            var sizes = list.Select(x => TextRenderer.MeasureText(x.Word, TextBox.Font)).ToList();
+
+            var cursorPos = GetCursorPosition();
+
+            var height = (sizes.Count + 1) * AutoComplete.ItemHeight;
+            var width = sizes.Max(x => x.Width);
+            if (cursorPos.Y + height > TextBox.Height)
+            {
+                height = TextBox.Height - cursorPos.Y;
+                width += SystemInformation.VerticalScrollBarWidth;
+            }
+
+            AutoComplete.SetBounds(cursorPos.X, cursorPos.Y, width, height);
+
+            AutoComplete.DataSource = list.ToList();
+            AutoComplete.Show();
+            TextBox.Focus();
+        }
+
+        private Point GetCursorPosition ()
+        {
+            var cursorPos = TextBox.GetPositionFromCharIndex(TextBox.SelectionStart);
+            cursorPos.Y += (int) Math.Ceiling(TextBox.Font.GetHeight());
+            cursorPos.X += 2;
+            return cursorPos;
+        }
+
+        private void AutoComplete_Click (object sender, EventArgs e)
+        {
+            AcceptAutoComplete();
+        }
+
+        private void AutoCompleteTimer_Tick (object sender, EventArgs e)
+        {
+            UpdateOrShowAutoComplete(false);
+            AutoCompleteTimer.Stop();
+        }
+
+        public void CancelAutoComplete ()
+        {
+            _autoCompleteCancellationTokenSource.Cancel();
+            AutoCompleteToolTipTimer.Stop();
+            AutoCompleteTimer.Stop();
+        }
+
+        private void AutoCompleteToolTipTimer_Tick (object sender, EventArgs e)
+        {
+            AutoCompleteToolTip.Hide(TextBox);
         }
     }
 }

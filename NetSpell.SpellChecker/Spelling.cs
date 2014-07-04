@@ -250,6 +250,10 @@ namespace NetSpell.SpellChecker
         /// </returns>
         private bool CheckString(string characters)
         {
+            if (_autoCompleteWords.Contains(characters))
+            {
+                return false;
+            }
             if(_ignoreAllCapsWords && !_upperRegex.IsMatch(characters))
             {
                 return false;
@@ -1146,6 +1150,7 @@ namespace NetSpell.SpellChecker
 
         private bool _alertComplete = true;
         private WordDictionary _dictionary;
+        private HashSet<string> _autoCompleteWords = new HashSet<string>(); 
         private bool _ignoreAllCapsWords = true;
         private bool _ignoreHtml = true;
         private List<string> _ignoreList = new List<string>();
@@ -1450,5 +1455,10 @@ namespace NetSpell.SpellChecker
 
         #endregion
 
+        public void AddAutoCompleteWords (IEnumerable<string> words)
+        {
+            foreach (var word in words)
+                _autoCompleteWords.Add(word);
+        }
     } 
 }

@@ -2105,13 +2105,40 @@ namespace GitCommands
 
             var args = string.Concat("diff ", extraDiffArguments, " -- ", fileName);
             if (staged)
-                args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
+                args = string.Concat("diff -M -C --cached ", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
             String result = RunGitCmd(args, LosslessEncoding);
             var patchManager = new PatchManager();
             patchManager.LoadPatch(result, false, encoding);
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
+        }
+
+        private string GetFileContents(string path)
+        {
+            var contents = RunGitCmdResult(string.Format("show HEAD:\"{0}\"", path.ToPosixPath()));
+            if (contents.ExitCode == 0)
+                return contents.StdOutput;
+
+            return null;
+        }
+
+        public string GetFileContents (GitItemStatus file)
+        {
+            var contents = new StringBuilder();
+
+            string currentContents = GetFileContents(file.Name);
+            if (currentContents != null)
+                contents.Append(currentContents);
+
+            if (file.OldName != null)
+            {
+                string oldContents = GetFileContents(file.OldName);
+                if (oldContents != null)
+                    contents.Append(oldContents);
+            }
+
+            return contents.Length > 0 ? contents.ToString() : null;
         }
 
         public string StageFile(string file)
