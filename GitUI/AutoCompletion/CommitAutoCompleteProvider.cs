@@ -66,15 +66,15 @@ namespace GitUI.AutoCompletion
             return s_regexes.Value.ContainsKey(extension) ? s_regexes.Value[extension] : null;
         }
 
-        private static IEnumerable<string> ReadOrInitializeAutoCompleteRegexes ()
+        private static IEnumerable<string> ReadOrInitializeAutoCompleteRegexes()
         {
             var path = Path.Combine(AppSettings.ApplicationDataPath.Value, "AutoCompleteRegexes.txt");
 
-            if (!File.Exists(path))
-                using (var sr = new StreamReader(Assembly.GetEntryAssembly().GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt")))
-                    File.WriteAllText(path, sr.ReadToEnd());
+            if (File.Exists(path))
+                return File.ReadLines(path);
 
-            return File.ReadLines(path);
+            using (var sr = new StreamReader(Assembly.GetEntryAssembly().GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt")))
+                return sr.ReadToEnd().Split(new char[] { '\n', '\r' });
         }
 
         private static Dictionary<string, Regex> ParseRegexes ()
