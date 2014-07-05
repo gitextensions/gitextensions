@@ -396,7 +396,8 @@ namespace GitCommands
             string quotedCmd = fileName;
             if (quotedCmd.IndexOf(' ') != -1)
                 quotedCmd = quotedCmd.Quote();
-            AppSettings.GitLog.Log(quotedCmd + " " + arguments);
+
+            var executionStartTimestamp = DateTime.Now;
 
             var startInfo = new ProcessStartInfo
                                 {
@@ -409,7 +410,16 @@ namespace GitCommands
                 startInfo.UseShellExecute = false;
                 startInfo.CreateNoWindow = true;
             }
-            return Process.Start(startInfo);
+            
+            var startProcess = Process.Start(startInfo);
+
+            startProcess.Exited += (sender, args) =>
+            {
+              var executionEndTimestamp = DateTime.Now;
+              AppSettings.GitLog.Log (quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+            };
+
+            return startProcess;
         }
 
         /// <summary>
@@ -2565,7 +2575,7 @@ namespace GitCommands
                 {
                     //Catch all parser errors, and ignore them all!
                     //We should never get here...
-                    AppSettings.GitLog.Log("Error parsing output from command: " + blameCommand + "\n\nPlease report a bug!");
+                    AppSettings.GitLog.Log("Error parsing output from command: " + blameCommand + "\n\nPlease report a bug!", DateTime.Now, DateTime.Now);
                 }
             }
 
