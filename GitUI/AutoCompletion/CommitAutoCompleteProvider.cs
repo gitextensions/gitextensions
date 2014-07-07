@@ -74,7 +74,7 @@ namespace GitUI.AutoCompletion
                 return File.ReadLines(path);
 
             using (var sr = new StreamReader(Assembly.GetEntryAssembly().GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt")))
-                return sr.ReadToEnd().Split(new char[] { '\n', '\r' });
+                return sr.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static Dictionary<string, Regex> ParseRegexes ()
