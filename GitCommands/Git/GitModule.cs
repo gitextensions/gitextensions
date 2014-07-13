@@ -2985,5 +2985,22 @@ namespace GitCommands
         {
             return WorkingDir;
         }
+
+        public string GetLocalTrackingBranchName(string remoteName, string branch)
+        {
+            var branchName = remoteName.Length > 0 ? branch.Substring(remoteName.Length + 1) : branch;
+            foreach (var section in LocalConfigFile.GetConfigSections())
+            {
+                if (section.SectionName == "branch" && section.GetValue("remote") == remoteName)
+                {
+                    var remoteBranch = section.GetValue("merge").Replace("refs/heads/", string.Empty);
+                    if (remoteBranch == branchName)
+                    {
+                        return section.SubSection;
+                    }
+                }
+            }
+            return branchName;
+        }
     }
 }
