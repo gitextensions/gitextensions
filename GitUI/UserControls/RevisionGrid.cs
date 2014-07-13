@@ -680,7 +680,8 @@ namespace GitUI
             SelectionTimer.Start();
 
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Count == 1)  {
+            if (selectedRevisions.Count == 1 && selectedRevisions[0] != null)
+            {
                 navigationHistory.Push(selectedRevisions[0].Guid);
             }
         }

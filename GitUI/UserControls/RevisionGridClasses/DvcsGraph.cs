@@ -454,8 +454,8 @@ namespace GitUI.RevisionGridClasses
             {
                 _graphData.Prune();
                 count = _graphData.Count;
+                SetRowCount(count);
             }
-            SetRowCount(count);
         }
 
         private void RebuildGraph()
@@ -666,7 +666,10 @@ namespace GitUI.RevisionGridClasses
         {
             if (RowCount < _graphData.Count)
             {
-                SetRowCount(_graphData.Count);
+                lock (_graphData)
+                {
+                    SetRowCount(_graphData.Count);
+                }
             }
 
             // Check to see if the newly added item should be selected
@@ -698,7 +701,8 @@ namespace GitUI.RevisionGridClasses
 
             //We only need to invalidate if the row is visible
             if (_visibleBottom >= row &&
-                _visibleTop <= row)
+                _visibleTop <= row && 
+                row < RowCount)
             {
                 try
                 {
