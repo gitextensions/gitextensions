@@ -1,6 +1,6 @@
 ﻿Changelog
 =========
-### Version 2.48RC (not released)
+### Version 2.48RC (13 July 2014)
 * Updated msysgit to 1.9.4
 * Implemented auto completion for commit message window.
 * Support intergration with TeamCity and Jenkins build server
