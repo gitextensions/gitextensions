@@ -623,7 +623,7 @@ namespace GitUI
         }
 
         // Selects row cotaining revision given its revisionId
-		// Returns whether the required revision was found and selected
+        // Returns whether the required revision was found and selected
         private bool InternalSetSelectedRevision(string revision)
         {
             if (revision != null)
@@ -1619,7 +1619,7 @@ namespace GitUI
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="revision"></param>
         /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
@@ -1722,7 +1722,7 @@ namespace GitUI
                         graphics.DrawPath(pen, forePath);
                     }
 
-                    // arrow if the head is the current branch 
+                    // arrow if the head is the current branch
                     if (arrowType != ArrowType.None)
                         DrawArrow(graphics, x, y, height, color, arrowType == ArrowType.Filled);
                 }
@@ -1811,8 +1811,10 @@ namespace GitUI
             this.InvokeAsync(Revisions.Refresh);
         }
 
-        private void RevisionsDoubleClick(object sender, EventArgs e)
+        private void RevisionsDoubleClick(object sender, MouseEventArgs e)
         {
+            if (e.Button != MouseButtons.Left)
+                return;
             if (DoubleClickRevision != null)
             {
                 var selectedRevisions = GetSelectedRevisions();
@@ -1828,14 +1830,16 @@ namespace GitUI
         public void ViewSelectedRevisions()
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Any())
+            if (selectedRevisions.Any(rev => !GitRevision.IsArtificial(rev.Guid)))
             {
                 var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
 
                 form.ShowDialog(this);
             }
-            else
+            else if (!selectedRevisions.Any())
+            {
                 UICommands.StartCompareRevisionsDialog(this);
+            }
         }
 
         private void SelectionTimerTick(object sender, EventArgs e)
@@ -2061,7 +2065,7 @@ namespace GitUI
                 }
             }
 
-            //if there is no branch to rebase on, then allow user to rebase on selected commit 
+            //if there is no branch to rebase on, then allow user to rebase on selected commit
             if (rebaseDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
@@ -2069,7 +2073,7 @@ namespace GitUI
                 rebaseDropDown.Items.Add(toolStripItem);
             }
 
-            //if there is no branch to merge, then let user to merge selected commit into current branch 
+            //if there is no branch to merge, then let user to merge selected commit into current branch
             if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
