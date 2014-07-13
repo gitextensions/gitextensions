@@ -279,13 +279,15 @@ namespace GitUI.CommandsDialogs
                 }
             }
         }
-
+ 
         private void StashMessage_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (this.toolStripButton_customMessage.Enabled)
+            if (e.Button != MouseButtons.Left)
+                return;
+            if (toolStripButton_customMessage.Enabled)
             {
-                if (!this.toolStripButton_customMessage.Checked)
-                    this.toolStripButton_customMessage.PerformClick();
+                if (!toolStripButton_customMessage.Checked)
+                    toolStripButton_customMessage.PerformClick();
             }
         }
 
