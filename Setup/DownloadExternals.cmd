@@ -1,7 +1,9 @@
 @echo off
 
-IF NOT EXIST "%~p0\..\bin\Git-1.9.2-preview20140411.exe" (
-    "%~p0\tools\curl.exe" -k -o ..\bin\Git-1.9.2-preview20140411.exe https://github.com/msysgit/msysgit/releases/download/Git-1.9.2-preview20140411/Git-1.9.2-preview20140411.exe
+REM Also update in Product.wxs and UI\RequiredSoftwareDlg.wxs
+
+IF NOT EXIST "%~p0\..\bin\Git-1.9.4-preview20140611.exe" (
+    "%~p0\tools\curl.exe" -k -o ..\bin\Git-1.9.4-preview20140611.exe https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140611/Git-1.9.4-preview20140611.exe
     IF ERRORLEVEL 1 EXIT /B 1
 )
 
