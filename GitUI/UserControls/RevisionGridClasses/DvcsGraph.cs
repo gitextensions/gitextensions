@@ -718,27 +718,27 @@ namespace GitUI.RevisionGridClasses
 
         private void UpdateColumnWidth()
         {
-            //lock (_graphData)
+            // Auto scale width on scroll
+            if (GraphColumn.Visible)
             {
-                // Auto scale width on scroll
-                if (GraphColumn.Visible)
+                int laneCount = 2;
+                if (_graphData != null)
                 {
-                    int laneCount = 2;
-                    if (_graphData != null)
+                    int width = 1;
+                    int start = VerticalScrollBar.Value/_rowHeight;
+                    int stop = start + DisplayedRowCount(true);
+                    lock (_graphData)
                     {
-                        int width = 1;
-                        int start = VerticalScrollBar.Value / _rowHeight;
-                        int stop = start + DisplayedRowCount(true);
                         for (int i = start; i < stop && _graphData[i] != null; i++)
                         {
                             width = Math.Max(_graphData[i].Count, width);
                         }
-
-                        laneCount = Math.Min(Math.Max(laneCount, width), MaxLanes);
                     }
-                    if (GraphColumn.Width != _laneWidth * laneCount && _laneWidth * laneCount > GraphColumn.MinimumWidth)
-                        GraphColumn.Width = _laneWidth * laneCount;
+
+                    laneCount = Math.Min(Math.Max(laneCount, width), MaxLanes);
                 }
+                if (GraphColumn.Width != _laneWidth*laneCount && _laneWidth*laneCount > GraphColumn.MinimumWidth)
+                    GraphColumn.Width = _laneWidth*laneCount;
             }
         }
 
