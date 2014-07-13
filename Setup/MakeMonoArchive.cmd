@@ -8,9 +8,8 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=2.48
-set zipversion=%version:.=%
-set normal=GitExtensions%zipversion%Mono.zip
+set version=2.48RC1
+set normal=GitExtensions-%version%-Mono.zip
 set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
 
 rd /q /s GitExtensions\
