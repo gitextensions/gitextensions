@@ -3,12 +3,17 @@ import argparse, sys
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--version',
-                       help='product version')
+                       help='numeric product version')
+    parser.add_argument('-t', '--text', default=None,
+                       help='text product version')
     args = parser.parse_args()
     
-    if not args.version:    
+    if not args.version:
         parser.print_help()
         exit(1)
+
+    if not args.text:
+      args.text = args.version
     
     filename = "..\CommonAssemblyInfo.cs"
     commonAssemblyInfo = open(filename, "r").readlines()
@@ -74,31 +79,33 @@ if __name__ == '__main__':
            gitExtSshAskPass[i] = ', '.join(data)
     outfile = open(filename, "w")
     outfile.writelines(gitExtSshAskPass)
-    
-    filename = "MakeInstallers.cmd"
-    makeInstallers = open(filename, "r").readlines()
+
     for i in range(1, len(verSplitted)):
         if len(verSplitted[i]) == 1:
             verSplitted[i] = "0" + verSplitted[i]
+    
+    filename = "MakeInstallers.cmd"
+    makeInstallers = open(filename, "r").readlines()
     for i in range(len(makeInstallers)):
         line = makeInstallers[i]
-        if line.find("set version=") != -1:
+        if line.find("set numericVersion=") != -1:
            data = line.split('=')
            data[1] = '.'.join(verSplitted) + '\n'
+           makeInstallers[i] = '='.join(data)
+        if line.find("set version=") != -1:
+           data = line.split('=')
+           data[1] = args.text + '\n'
            makeInstallers[i] = '='.join(data)
     outfile = open(filename, "w")
     outfile.writelines(makeInstallers)
     
     filename = "MakeMonoArchive.cmd"
     makeInstallers = open(filename, "r").readlines()
-    for i in range(1, len(verSplitted)):
-        if len(verSplitted[i]) == 1:
-            verSplitted[i] = "0" + verSplitted[i]
     for i in range(len(makeInstallers)):
         line = makeInstallers[i]
         if line.find("set version=") != -1:
            data = line.split('=')
-           data[1] = '.'.join(verSplitted) + '\n'
+           data[1] = args.text + '\n'
            makeInstallers[i] = '='.join(data)
     outfile = open(filename, "w")
     outfile.writelines(makeInstallers)
@@ -113,7 +120,7 @@ if __name__ == '__main__':
            docoConf[i] = " = '".join(data) + "'\n"
         if line.find("version = ") != -1:
            data = line.split(' = ')
-           data[1] = '.'.join([verSplitted[0], verSplitted[1]])
+           data[1] = args.text
            docoConf[i] = " = '".join(data) + "'\n"
     outfile = open(filename, "w")
     outfile.writelines(docoConf)
