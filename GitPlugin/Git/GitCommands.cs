@@ -69,7 +69,7 @@ namespace GitPlugin.Git
 
             string path = GetGitExRegValue("InstallDir");
             string workDir = Path.GetDirectoryName(filename);
-            ProcessStartInfo startInfo = CreateStartInfo(path + "\\GitExtensions.exe", command, workDir, Encoding.UTF8);
+            ProcessStartInfo startInfo = CreateStartInfo(Path.Combine(path, "GitExtensions.exe"), command, workDir, Encoding.UTF8);
 
             try
             {
@@ -168,13 +168,13 @@ namespace GitPlugin.Git
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(dir + "\\" + ".git") || File.Exists(dir + "\\" + ".git"))
+            if (Directory.Exists(Path.Combine(dir, ".git")) || File.Exists(Path.Combine(dir , ".git")))
                 return true;
 
             return !dir.Contains(".git") &&
-                   Directory.Exists(dir + "\\" + "info") &&
-                   Directory.Exists(dir + "\\" + "objects") &&
-                   Directory.Exists(dir + "\\" + "refs");
+                   Directory.Exists(Path.Combine(dir, "info")) &&
+                   Directory.Exists(Path.Combine(dir, "objects")) &&
+                   Directory.Exists(Path.Combine(dir, "refs"));
         }
 
         public static bool GetShowCurrentBranchSetting()

@@ -73,15 +73,15 @@ namespace Gource
                         return false;
                     }
                     var downloadDir = Path.GetTempPath();
-                    var fileName = downloadDir + "\\gource.zip";
+                    var fileName = Path.Combine(downloadDir, "gource.zip");
                     var downloadSize = DownloadFile(gourceUrl, fileName);
                     if (downloadSize > 0)
                     {
                         MessageBox.Show(downloadSize + " bytes downloaded.");
-                        Directory.CreateDirectory(downloadDir + "\\gource");
-                        UnZipFiles(fileName, downloadDir + "\\gource", true);
+                        Directory.CreateDirectory(Path.Combine(downloadDir, "gource"));
+                        UnZipFiles(fileName, Path.Combine(downloadDir, "gource"), true);
 
-                        var newGourcePath = downloadDir + "\\gource\\gource.exe";
+                        var newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
                         if (File.Exists(newGourcePath))
                         {
                             //Settings.SetSetting("Path to \"gource\"", newGourcePath);
@@ -129,7 +129,7 @@ namespace Gource
                     if (fileName == String.Empty || theEntry.Name.IndexOf(".ini") >= 0)
                         continue;
 
-                    var fullPath = directoryName + "\\" + theEntry.Name;
+                    var fullPath = Path.Combine(directoryName, theEntry.Name);
                     fullPath = fullPath.Replace("\\ ", "\\");
                     var fullDirPath = Path.GetDirectoryName(fullPath);
                     if (fullDirPath != null && !Directory.Exists(fullDirPath))
