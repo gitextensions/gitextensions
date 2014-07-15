@@ -118,6 +118,16 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="Handler.cs" />
     <Compile Include="Helpers\EmailDestinationBuilder.cs" />
+    <Compile Include="Properties\Localization.de.Designer.cs">
+      <DependentUpon>Localization.de.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\Localization.fi-FI.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.fi-FI.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Localization.hr.Designer.cs">
       <DependentUpon>Localization.hr.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -242,6 +252,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core\UI\WinForms\Panels\ExceptionDetails.resx">
       <DependentUpon>ExceptionDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.fi-FI.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.fi-FI.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Localization.hr.resx">
       <Generator>ResXFileCodeGenerator</Generator>
