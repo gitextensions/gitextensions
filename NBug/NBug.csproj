@@ -257,7 +257,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName)==Release (
+    <PostBuildEvent Condition="$(OS) == 'WINDOWS_NT'">if $(ConfigurationName)==Release (
 xcopy "$(TargetPath)" "$(SolutionDir)packages\NBug\lib\net40-client\" /Y
 xcopy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)packages\NBug\lib\net40-client\" /Y
 xcopy "$(TargetDir)$(TargetName).xml" "$(SolutionDir)packages\NBug\lib\net40-client\" /Y
