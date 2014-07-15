@@ -123,6 +123,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Properties\Localization.fi-FI.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.fi-FI.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Localization.hr.Designer.cs">
       <DependentUpon>Localization.hr.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -251,6 +256,10 @@
     <EmbeddedResource Include="Properties\Localization.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Localization.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.fi-FI.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.fi-FI.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Localization.hr.resx">
       <Generator>ResXFileCodeGenerator</Generator>
