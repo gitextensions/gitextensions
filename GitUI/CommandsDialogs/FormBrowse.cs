@@ -3149,7 +3149,7 @@ namespace GitUI.CommandsDialogs
             string issueData = "--- GitExtensions";
             try
             {
-                issueData += Settings.GitExtensionsVersionString;
+                issueData += Settings.ProductVersion;
                 issueData += ", Git " + GitCommandHelpers.VersionInUse.Full;
                 issueData += ", " + Environment.OSVersion;
                 var monoVersion = GetMonoVersion();

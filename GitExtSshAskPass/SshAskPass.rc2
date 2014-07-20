@@ -35,7 +35,7 @@ BEGIN
             VALUE "LegalCopyright", "Copyright 2014"
             VALUE "OriginalFilename", "GitExtSshAskPass.exe"
             VALUE "ProductName", "Git Extensions"
-            VALUE "ProductVersion", "2.48"
+            VALUE "ProductVersion", "2.48RC1"
         END
     END
     BLOCK "VarFileInfo"
