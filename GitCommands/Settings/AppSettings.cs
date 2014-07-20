@@ -23,9 +23,9 @@ namespace GitCommands
     public static class AppSettings
     {
         //semi-constants
-        public static readonly string GitExtensionsVersionString;
         public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
+        public static string ProductVersion { get { return Application.ProductVersion; } }
         public const string SettingsFileName = "GitExtensions.settings";
 
         public static Lazy<string> ApplicationDataPath;
@@ -51,11 +51,6 @@ namespace GitCommands
             );
 
             _SettingsContainer = new SettingsContainer<RepoDistSettings, GitExtSettingsCache>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
-            Version version = AppVersion;
-
-            GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
-            if (version.Build > 0)
-                GitExtensionsVersionString += '.' + version.Build.ToString();
 
             GitLog = new CommandLogger();
 
