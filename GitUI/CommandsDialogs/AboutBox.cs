@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs
             base.OnLoad(e);
 
             _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1}", _NO_TRANSLATE_labelVersionInfo.Text,
-                GitCommands.AppSettings.GitExtensionsVersionString);
+                GitCommands.AppSettings.ProductVersion);
         }
 
         private readonly string[] _contributersList;

@@ -87,7 +87,7 @@ namespace TranslationApp
             foreach (var item in oldTranslationItems)
             {
                 // Obsolete should be added only to dictionary
-                if (!String.IsNullOrEmpty(item.TranslatedValue) && 
+                if (!String.IsNullOrEmpty(item.TranslatedValue) &&
                     item.NeutralValue != null && !dict.ContainsKey(item.NeutralValue))
                 {
                     dict.Add(item.NeutralValue, item.TranslatedValue);
@@ -95,7 +95,7 @@ namespace TranslationApp
             }
 
             // update untranslated items
-            var untranlatedItems = 
+            var untranlatedItems =
                 from trItem in translateItems
                 where (String.IsNullOrEmpty(trItem.TranslatedValue)) && dict.ContainsKey(trItem.NeutralValue)
                 select trItem;
@@ -109,7 +109,7 @@ namespace TranslationApp
 
         public static void SaveTranslation(string languageCode, IEnumerable<TranslationItemWithCategory> items, string filename)
         {
-            var foreignTranslation = new Translation(GitCommands.AppSettings.GitExtensionsVersionString, languageCode);
+            var foreignTranslation = new Translation(GitCommands.AppSettings.ProductVersion, languageCode);
             foreach (TranslationItemWithCategory translateItem in items)
             {
                 var item = translateItem.GetTranslationItem();
