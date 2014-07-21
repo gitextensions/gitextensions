@@ -848,7 +848,7 @@ namespace GitCommands
 
         public Dictionary<GitRef, GitItem> GetSubmoduleItemsForEachRef(string filename, Func<GitRef, bool> showRemoteRef)
         {
-            string command = GetShowRefCommand();
+            string command = GetSortedRefsCommand();
 
             if (command == null)
                 return new Dictionary<GitRef, GitItem>();
@@ -859,7 +859,20 @@ namespace GitCommands
 
             var refs = GetTreeRefs(tree);
 
-            return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleGuid(filename, r.Name));
+            return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleCommitHash(filename, r.Name));
+        }
+
+        private string GetSortedRefsCommand()
+        {
+            if (AppSettings.ShowSuperprojectRemoteBranches)
+                return "for-each-ref --sort=-committerdate --format=\"%(objectname) %(refname)\" refs/";
+
+            if (AppSettings.ShowSuperprojectBranches || AppSettings.ShowSuperprojectTags)
+                return "for-each-ref --sort=-committerdate --format=\"%(objectname) %(refname)\""
+                    + (AppSettings.ShowSuperprojectBranches ? " refs/heads/" : null)
+                    + (AppSettings.ShowSuperprojectTags ? " refs/tags/" : null);
+
+            return null;
         }
 
         private string GetShowRefCommand()
@@ -875,7 +888,7 @@ namespace GitCommands
             return null;
         }
 
-        private GitItem GetSubmoduleGuid(string filename, string refName)
+        private GitItem GetSubmoduleCommitHash(string filename, string refName)
         {
             string str = RunGitCmd("ls-tree " + refName + " \"" + filename + "\"");
 
