@@ -846,6 +846,15 @@ namespace GitCommands
             return hashes;
         }
 
+        public IList<string> GetSortedRefs()
+        {
+            string command = "for-each-ref --sort=-committerdate --sort=-taggerdate --format=\"%(refname)\" refs/";
+
+            var tree = RunGitCmd(command, SystemEncoding);
+
+            return tree.Split();
+       }
+
         public Dictionary<GitRef, GitItem> GetSubmoduleItemsForEachRef(string filename, Func<GitRef, bool> showRemoteRef)
         {
             string command = GetSortedRefsCommand();
@@ -871,19 +880,6 @@ namespace GitCommands
                 return "for-each-ref --sort=-committerdate --format=\"%(objectname) %(refname)\""
                     + (AppSettings.ShowSuperprojectBranches ? " refs/heads/" : null)
                     + (AppSettings.ShowSuperprojectTags ? " refs/tags/" : null);
-
-            return null;
-        }
-
-        private string GetShowRefCommand()
-        {
-            if (AppSettings.ShowSuperprojectRemoteBranches)
-                return "show-ref --dereference";
-
-            if (AppSettings.ShowSuperprojectBranches || AppSettings.ShowSuperprojectTags)
-                return "show-ref --dereference"
-                    + (AppSettings.ShowSuperprojectBranches ? " --heads" : null)
-                    + (AppSettings.ShowSuperprojectTags ? " --tags" : null);
 
             return null;
         }
@@ -2459,7 +2455,6 @@ namespace GitCommands
         public IEnumerable<string> GetAllTagsWhichContainGivenCommit(string sha1)
         {
             string info = RunGitCmd("tag --contains " + sha1, SystemEncoding);
-
 
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return new List<string>();
