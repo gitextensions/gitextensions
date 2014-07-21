@@ -54,6 +54,7 @@ namespace GitUI
         private const int NodeDimension = 8;
         private const int LaneWidth = 13;
         private const int LaneLineWidth = 2;
+        private const int MaxSuperprojectRefs = 4;
         private Brush _selectedItemBrush;
         private Brush _filledItemBrush; // disposable brush
 
@@ -1403,14 +1404,16 @@ namespace GitUI
                         }
                     }
 
-                    foreach (var gitRef in superprojectRefs)
+                    for (int i = 0; i < Math.Min(MaxSuperprojectRefs, superprojectRefs.Count); i++)
                     {
+                        var gitRef = superprojectRefs[i];
                         Color headColor = GetHeadColor(gitRef);
+                        var gitRefName = i < (MaxSuperprojectRefs - 1) ? gitRef.Name : "…";
 
                         ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
                                               gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
 
-                        offset = DrawRef(drawRefArgs, offset, gitRef.Name, headColor, arrowType, true, false);
+                        offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true, false);
                     }
 
                     if (IsCardLayout())
