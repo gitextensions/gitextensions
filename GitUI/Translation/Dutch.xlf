@@ -22,7 +22,7 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
       </trans-unit>
       <trans-unit id="thanksTo.Text">
         <source>Thanks to:</source>
-        <target>Bedankt:</target>
+        <target>Met dank aan:</target>
         
       </trans-unit>
     </body>
@@ -31,12 +31,12 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
     <body>
       <trans-unit id="$this.Text">
         <source>Advanced</source>
-        <target>Manipuleer commit</target>
+        <target>Geavanceerd</target>
         
       </trans-unit>
       <trans-unit id="CheckoutGB.Text">
         <source>Checkout</source>
-        <target>Checkout</target>
+        <target>Uitchecken</target>
         
       </trans-unit>
       <trans-unit id="GeneralGB.Text">
@@ -46,11 +46,12 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
       </trans-unit>
       <trans-unit id="chkAlwaysShowAdvOpt.Text">
         <source>Always show advanced options</source>
+        <target>Altijd geavanceerde opties tonen</target>
         
       </trans-unit>
       <trans-unit id="chkAlwaysShowCheckoutDlg.Text">
         <source>Always show checkout dialog</source>
-        <target>Altijd het dialoog voor vertakking uitchecken weergeven</target>
+        <target>Altijd het uit-check scherm weergeven</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -61,7 +62,7 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen &quot;local changes&quot; action as default action.
 This action will be performed without warning while checking out branch.</source>
-        <target>Gebruik de laatst gekozen &quot;Locale wijzigingen&quot; actie als de standaard actie. Deze actie zal worden uitgevoerd bij het uitchecken van een vertakking, zonder waarschuwing.</target>
+        <target>Gebruik de laatst gekozen &quot;Locale wijzigingen&quot; actie als de standaard actie. Deze actie zal zonder waarschuwing worden uitgevoerd bij het uitchecken van een branch.</target>
         
       </trans-unit>
     </body>
@@ -75,12 +76,12 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
-        <target>Leeg plaatjes cache</target>
+        <target>Leeg foto cache</target>
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
         <source>Get author image from gravatar.com</source>
-        <target>Haal plaatje van auteur op bij gravatar.com</target>
+        <target>Haal foto van auteur op bij gravatar.com</target>
         
       </trans-unit>
       <trans-unit id="_noDictFilesFound.Text">
@@ -90,32 +91,32 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="applicationFontChangeButton.Text">
         <source>font name</source>
-        <target>lettertype naam</target>
+        <target>lettertype</target>
         
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
         <source>Auto scale user interface when high DPI is used</source>
-        <target>Gebruikers interface automatisch schalen wanneer niet standaard DPI wordt gebruikt</target>
+        <target>Gebruikers interface automatisch schalen wanneer hoge DPI wordt gebruikt</target>
         
       </trans-unit>
       <trans-unit id="chkShowCurrentBranchInVisualStudio.Text">
         <source>Show current branch in Visual Studio</source>
-        <target>Toon huidige vertakking  in Visual Studio</target>
+        <target>Toon huidige branch in Visual Studio</target>
         
       </trans-unit>
       <trans-unit id="chkShowRelativeDate.Text">
         <source>Show relative date instead of full date</source>
-        <target>Toon relatieve datum in plaats van volledige datum</target>
+        <target>Toon relatieve datum i.p.v. volledige datum</target>
         
       </trans-unit>
       <trans-unit id="commitFontChangeButton.Text">
         <source>font name</source>
-        <target>lettertype naam</target>
+        <target>lettertype</target>
         
       </trans-unit>
       <trans-unit id="diffFontChangeButton.Text">
         <source>font name</source>
-        <target>lettertype naam</target>
+        <target>lettertype</target>
         
       </trans-unit>
       <trans-unit id="downloadDictionary.Text">
@@ -140,7 +141,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="groupBox6.Text">
         <source>Author images</source>
-        <target>Auteur plaatjes</target>
+        <target>Foto's auteur</target>
         
       </trans-unit>
       <trans-unit id="helpTranslate.Text">
@@ -150,32 +151,32 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="label22.Text">
         <source>Dictionary for spelling checker</source>
-        <target>Woordenboek gebruikt voor spellingscontroler</target>
+        <target>Woordenboek voor spellingscontrole</target>
         
       </trans-unit>
       <trans-unit id="label26.Text">
         <source>Application font</source>
-        <target>Applicatie lettertype</target>
+        <target>Lettertype voor applicatie</target>
         
       </trans-unit>
       <trans-unit id="label34.Text">
         <source>Commit font</source>
-        <target>Commit lettertype</target>
+        <target>Lettertype voor commits</target>
         
       </trans-unit>
       <trans-unit id="label44.Text">
         <source>Image size</source>
-        <target>Formaat plaatje</target>
+        <target>Formaat foto</target>
         
       </trans-unit>
       <trans-unit id="label46.Text">
         <source>Cache images</source>
-        <target>Cache plaatjes</target>
+        <target>Cache fotos</target>
         
       </trans-unit>
       <trans-unit id="label47.Text">
         <source>days</source>
-        <target>Dagen</target>
+        <target>dagen</target>
         
       </trans-unit>
       <trans-unit id="label49.Text">
@@ -185,17 +186,17 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="label53.Text">
         <source>No image service</source>
-        <target>Geen afbeelding</target>
+        <target>Generator bij geen foto</target>
         
       </trans-unit>
       <trans-unit id="label56.Text">
         <source>Code font</source>
-        <target>Lettertype</target>
+        <target>Lettertype voor code</target>
         
       </trans-unit>
       <trans-unit id="truncatePathMethod.Text">
         <source>Truncate long filenames</source>
-        <target>Truncate lange bestandsnamen</target>
+        <target>Lange bestandsnamen inkorten</target>
         
       </trans-unit>
     </body>
@@ -204,7 +205,7 @@ This action will be performed without warning while checking out branch.</source
     <body>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
         <source>Blame previous revision</source>
-        <target>Beschuldig vorige revisie</target>
+        <target>Blame de vorige revisie</target>
         
       </trans-unit>
       <trans-unit id="copyLogMessageToolStripMenuItem.Text">
@@ -223,7 +224,7 @@ This action will be performed without warning while checking out branch.</source
     <body>
       <trans-unit id="_branchCheckoutError.Text">
         <source>Branch '{0}' is not selectable, this branch has been removed from the selection.</source>
-        <target>Vertakking '{0}' is niet te selecteren, deze vertakking is verwijderd van de selectie</target>
+        <target>Branch '{0}' is niet te selecteren en is verwijderd van de selectie.</target>
         
       </trans-unit>
     </body>
@@ -232,22 +233,27 @@ This action will be performed without warning while checking out branch.</source
     <body>
       <trans-unit id="$this.Text">
         <source>Build server integration</source>
+        <target>Build server integratie</target>
         
       </trans-unit>
       <trans-unit id="checkBoxEnableBuildServerIntegration.Text">
         <source>Enable build server integration</source>
+        <target>Activeer build server integratie</target>
         
       </trans-unit>
       <trans-unit id="checkBoxShowBuildSummary.Text">
         <source>Show build status summary in revision log</source>
+        <target>Toon samenvatting build-status in de revisie log</target>
         
       </trans-unit>
       <trans-unit id="labelBuildServerSettingsInfo.Text">
         <source>Git Extensions can integrate with build servers to supply per-commit Continuous Integration information.</source>
+        <target>Git Extensions kan geïntegreerd worden met build-servers om per commit Continuous Integration informatie te verkrijgen.</target>
         
       </trans-unit>
       <trans-unit id="labelBuildServerType.Text">
         <source>Build server type</source>
+        <target>Build server type</target>
         
       </trans-unit>
     </body>
@@ -256,12 +262,12 @@ This action will be performed without warning while checking out branch.</source
     <body>
       <trans-unit id="$this.Text">
         <source>Checklist</source>
-        <target>Check lijst</target>
+        <target>Controlelijst</target>
         
       </trans-unit>
       <trans-unit id="CheckAtStartup.Text">
         <source>Check settings at startup (disables automatically if all settings are correct)</source>
-        <target>Controleer instellingen bij het opstarten</target>
+        <target>Controleer instellingen bij het opstarten (gaat automatisch uit als alle instellingen correct zijn)</target>
         
       </trans-unit>
       <trans-unit id="DiffTool_Fix.Text">
@@ -291,7 +297,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="Rescan.Text">
         <source>Save and rescan</source>
-        <target>Opslaan en opnieuw scannen</target>
+        <target>Opslaan en hercontroleren</target>
         
       </trans-unit>
       <trans-unit id="ShellExtensionsRegistered_Fix.Text">
@@ -311,7 +317,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="_adviceDiffToolConfiguration.Text">
         <source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</source>
-        <target>Er is geen externe vergelijkingstool ingesteld voor het tonen van bestandsverschillen. (bijvoorbeeld kdiff3)</target>
+        <target>Stel een externe vergelijkingstool in voor het tonen van bestandsverschillen (bijvoorbeeld kdiff3).</target>
         
       </trans-unit>
       <trans-unit id="_cantRegisterShellExtension.Text">
@@ -321,17 +327,17 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
         <source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</source>
-        <target>U moet een samenvoegtool kiezen om samenvoeg conflicten op te kunnen lossen (bijvoorbeeld KDiff3).</target>
+        <target>Stel een merge tool in om merge conflicten op te lossen (bijvoorbeeld kidff3).</target>
         
       </trans-unit>
       <trans-unit id="_credentialHelperInstalled.Text">
         <source>Git credential helper is installed.</source>
-        <target>Git credential helper is geinstalleerd</target>
+        <target>Git credential helper is geïnstalleerd.</target>
         
       </trans-unit>
       <trans-unit id="_customMergeToolXConfigured.Text">
         <source>There is a custom mergetool configured: {0}</source>
-        <target>Er is een maatwerk vergelijkingstool ingesteld: {0}</target>
+        <target>Er is handmatig een merge tool ingesteld: {0}</target>
         
       </trans-unit>
       <trans-unit id="_diffToolXConfigured.Text">
@@ -341,12 +347,12 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="_emailSet.Text">
         <source>A username and an email address are configured.</source>
-        <target>Er is een gebruikersnaam en wachtwoord ingesteld.</target>
+        <target>Er is een gebruikersnaam en e-mail adres ingesteld.</target>
         
       </trans-unit>
       <trans-unit id="_gitCanBeRun.Text">
         <source>Git can be run using: {0}</source>
-        <target>Git kan worden uitgevoerd als: {0}</target>
+        <target>Git kan worden uitgevoerd met: {0}</target>
         
       </trans-unit>
       <trans-unit id="_gitCanBeRunCaption.Text">
@@ -361,12 +367,12 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="_gitNotFound.Text">
         <source>Git not found. To solve this problem you can set the correct path in settings.</source>
-        <target>Git kan niet gevonden worden op deze computer. Om dit probleem op te lossen dient u zelf het juiste pad te configureren.</target>
+        <target>Git is niet gevonden. Om dit probleem op te lossen dient u zelf het juiste pad in te voeren.</target>
         
       </trans-unit>
       <trans-unit id="_gitVersionFound.Text">
         <source>Git {0} is found on your computer.</source>
-        <target>Git {0}, is gevonden op de computer.</target>
+        <target>Git {0} is gevonden op de computer.</target>
         
       </trans-unit>
       <trans-unit id="_kdiff3NotFoundAuto.Text">
@@ -575,18 +581,6 @@ Controleer of git (msysgit of cygwin) is geïnstalleerd of zet het juiste comman
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CheckSettingsLogic" source-language="en">
-    <body>
-      <trans-unit id="MergeToolSuggestCaption.Text">
-        <source>Suggest mergetool cmd</source>
-        
-      </trans-unit>
-      <trans-unit id="ToolSuggestPathText.Text">
-        <source>Please enter the path to {0} and press suggest.</source>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -735,6 +729,7 @@ Controleer of git (msysgit of cygwin) is geïnstalleerd of zet het juiste comman
     <body>
       <trans-unit id="$this.Text">
         <source>Commit dialog</source>
+        <target>Commit venster</target>
         
       </trans-unit>
       <trans-unit id="chkShowCommitAndPush.Text">
@@ -748,10 +743,12 @@ Controleer of git (msysgit of cygwin) is geïnstalleerd of zet het juiste comman
       </trans-unit>
       <trans-unit id="chkShowResetAllChanges.Text">
         <source>Reset All Changes</source>
+        <target>Reset alle wijzigingen</target>
         
       </trans-unit>
       <trans-unit id="chkShowResetUnstagedChanges.Text">
         <source>Reset Unstaged Changes</source>
+        <target>Klaargezette veranderingen terugzetten</target>
         
       </trans-unit>
       <trans-unit id="chkWriteCommitMessageInCommitWindow.Text">
@@ -971,7 +968,7 @@ Controleer of git (msysgit of cygwin) is geïnstalleerd of zet het juiste comman
     <body>
       <trans-unit id="$this.Text">
         <source>Create Pull Request</source>
-        <target>Maak binnenhaal verzoek</target>
+        <target>Maak download verzoek</target>
         
       </trans-unit>
       <trans-unit id="_createBtn.Text">
@@ -1001,6 +998,7 @@ Controleer of git (msysgit of cygwin) is geïnstalleerd of zet het juiste comman
       </trans-unit>
       <trans-unit id="_strPleaseCloneGitHubRep.Text">
         <source>Please clone GitHub repository before pull request.</source>
+        <target>Maak a.u.b. een kloon van de GitHub repository alvorens een download request te maken.</target>
         
       </trans-unit>
       <trans-unit id="_strPullRequest.Text">
@@ -2263,6 +2261,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="aLocalToolStripMenuItem.Text">
         <source>A &lt;--&gt; Working directory</source>
+        <target>A &lt;--&gt; Werk directory</target>
         
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
@@ -2287,6 +2286,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="bLocalToolStripMenuItem.Text">
         <source>B &lt;--&gt; Working directory</source>
+        <target>B &lt;--&gt; Werk directory</target>
         
       </trans-unit>
       <trans-unit id="bisectToolStripMenuItem.Text">
@@ -2655,10 +2655,12 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
       </trans-unit>
       <trans-unit id="parentOfALocalToolStripMenuItem.Text">
         <source>A's parent &lt;--&gt; Working directory</source>
+        <target>A's ouder &lt;--&gt; Werk directory</target>
         
       </trans-unit>
       <trans-unit id="parentOfBLocalToolStripMenuItem.Text">
         <source>B's parent &lt;--&gt; Working directory</source>
+        <target>B's ouder &lt;--&gt; Werk directory</target>
         
       </trans-unit>
       <trans-unit id="patchToolStripMenuItem.Text">
@@ -2936,6 +2938,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgain.Text">
         <source>Apply stashed items to working directory again?</source>
+        <target>Weggezette items weer terugzetten naar werk directorie?</target>
         
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgainCaption.Text">
@@ -3222,6 +3225,7 @@ revision:</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Log:</source>
+        <target>Log:</target>
         
       </trans-unit>
       <trans-unit id="labelPathHint.Text">
@@ -3390,6 +3394,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
         <source>Reset unstaged changes</source>
+        <target>Klaargezette veranderingen terugzetten</target>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
@@ -3420,11 +3425,13 @@ Weet u zeker dat u door wilt gaan?</target>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
-        <source>Author </source>
+        <source>Author</source>
+        <target>Auteur</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterInfo.Text">
-        <source>Committer </source>
+        <source>Committer</source>
+        <target>Committer</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterToolTip.Text">
@@ -3827,6 +3834,7 @@ Weet u zeker dat u wilt doorgaan?</target>
       </trans-unit>
       <trans-unit id="resetUnstagedChangesToolStripMenuItem.Text">
         <source>Reset unstaged changes</source>
+        <target>Klaargezette veranderingen terugzetten</target>
         
       </trans-unit>
       <trans-unit id="selectionFilterToolStripMenuItem.Text">
@@ -3847,6 +3855,11 @@ Weet u zeker dat u wilt doorgaan?</target>
       <trans-unit id="signOffToolStripMenuItem.Text">
         <source>Sign-off commit</source>
         <target>Sign-off commit</target>
+        
+      </trans-unit>
+      <trans-unit id="stagedResetChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>Wijzigingen ongedaan maken</target>
         
       </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
@@ -4179,7 +4192,7 @@ Weet u zeker dat u wilt doorgaan?</target>
       </trans-unit>
       <trans-unit id="_pushToCaption.Text">
         <source>Push tag to '{0}'</source>
-        <target>Verzenden label naar {0}</target>
+        <target>Label verzenden naar '{0}'</target>
         
       </trans-unit>
       <trans-unit id="annotate.Text">
@@ -4204,7 +4217,7 @@ Weet u zeker dat u wilt doorgaan?</target>
       </trans-unit>
       <trans-unit id="pushTag.Text">
         <source>Push tag to '{0}'</source>
-        <target>Verzenden label naar {0}</target>
+        <target>Label verzenden naar '{0}'</target>
         
       </trans-unit>
     </body>
@@ -4327,6 +4340,7 @@ When you want to delete a not-fully merged branch, you can override this using t
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>(includes information about deleting tags which are already pushed)</source>
+        <target>(bevat ook informatie over het verwijderen van labels die al verzonden zijn)</target>
         
       </trans-unit>
     </body>
@@ -4379,13 +4393,11 @@ Klik op de knop voor meer informatie over het maken van donaties.</target>
         
       </trans-unit>
       <trans-unit id="_cannotOpenFile.Text">
-        <source>Cannot open file: </source>
-        <target>Het bestand kan niet worden geopend:</target>
+        <source>Cannot open file:</source>
         
       </trans-unit>
       <trans-unit id="_cannotSaveFile.Text">
-        <source>Cannot save file: </source>
-        <target>Het bestand kan niet worden opgeslagen:</target>
+        <source>Cannot save file:</source>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -5373,32 +5385,7 @@ ignoring all changes from all other branches. It is meant to be used to supersed
 subtree 
 This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
 match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
-ancestor tree. </source>
-        <target>Oplossen (resolve)
-Dit kan alleen toegepast worden op 2 vertakkingen (bv. de huide vertakking en de vertakking welke wordt opgehaald) en maakt
-gebruik van het '3-way' samenvoegins alogaritme. Er wordt voorzichtig geprobeert om samenvoegings onduidelijkheden op te
-sporen. Deze methode wordt over het algemeen als veilig en snel beschouwd.
- 
-Recursief (recursive)
-Dit kan alleen toegepast worden op 2 vertakkingen en maakt gebruik van het '3-way' samenvoegins alogaritme.
-Wanneer er meer dan 1 gemeenschappelijke oorsprong is die gebruikt kan worden voor het alogaritme wordt er 
-samengevoegde vertakking aangemaakt bestaande uit de oorsprongen. Deze nieuwe vertakking wordt vervolgens als basis
-referentie gebruikt bij het samenvoegen. Hierdoor kunnen hernoemde bestanden ook herkend worden. 
-Dit is de standaard strategie die gebruikt wordt bij het ophalen en verzenden van vertakkingen.
-
-Octopus (octopus)
-Deze strategie wordt toegepast wanneer er meer dan 2 vertakkingen worden samengevoegd maar is niet zelf in staat ingewikkelde
-samenvoegingen uit te voeren. Je gebruikt dit voornamelijk bij het samenvoegen verschillende lokale vertakkingen.
-Dit is de standaard strategie wanneer er meer dan 2 vertakingen worden samengevoegd.
-
-'Onze eigen' (ours)
-Deze strategie kan een oneindig aantal vertakkingen samenvoegen waarbij alle wijzigingen, behalve die van de huidige vertakking,
-genegeerd worden. Het is bedoeld om oude ontwikkelingsgeschiedenis van te vervangen.
- 
-Subtak (subtree)
-Dit is een aangepaste 'recursief'-strategie. Wanneer vertakkingen A en B worden samengevoegd, en B deels overeenkomt met een subtak
-van A, dan zal B eerst aangepast worden om met de structuur van A overeen te komen (in plaats van het samenvoegen per niveau).
-De aanpassingen worden ook in gemeenschappelijke oorspronkelijke vertakking uitgevoerd.</target>
+ancestor tree.</source>
         
       </trans-unit>
       <trans-unit id="advanced.Text">
@@ -5640,6 +5627,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgain.Text">
         <source>Apply stashed items to working directory again?</source>
+        <target>Weggezette items weer terugzetten naar werk directorie?</target>
         
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgainCaption.Text">
@@ -5673,14 +5661,17 @@ Als u een vertakking wilt ophalen en samenvoegen, kies een vertakking.</target>
       </trans-unit>
       <trans-unit id="_noRemoteBranch.Text">
         <source>You didn't specify a remote branch</source>
+        <target>Je hebt geen externe vertakking gespecificeerd</target>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranchButtons.Text">
         <source>Pull from {0}|Cancel</source>
+        <target>Ophalen van {0}|Annuleren</target>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranchCaption.Text">
         <source>Remote branch not specified</source>
+        <target>Externe vertakking niet gespecificeerd</target>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranchForFetchButtons.Text">
@@ -8231,8 +8222,16 @@ Verander het standaard gedrag alleen wanneer problemen optreden.</target>
         <target>Pad naar mergetool</target>
         
       </trans-unit>
-      <trans-unit id="__diffToolSuggestCaption.Text">
+      <trans-unit id="_diffToolSuggestCaption.Text">
         <source>Suggest difftool cmd</source>
+        
+      </trans-unit>
+      <trans-unit id="_mergeToolSuggestCaption.Text">
+        <source>Suggest mergetool cmd</source>
+        
+      </trans-unit>
+      <trans-unit id="_toolSuggestPathText.Text">
+        <source>Please enter the path to {0} and press suggest.</source>
         
       </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">
@@ -8667,6 +8666,14 @@ This will just checkout on the submodule the commit determined by the superproje
       <trans-unit id="MessageDataGridViewColumn.HeaderText">
         <source>Message</source>
         <target>Bericht</target>
+        
+      </trans-unit>
+      <trans-unit id="NavigateBackward.Text">
+        <source>Navigate backward</source>
+        
+      </trans-unit>
+      <trans-unit id="NavigateForward.Text">
+        <source>Navigate forward</source>
         
       </trans-unit>
       <trans-unit id="NextQuickSearch.Text">

@@ -75,7 +75,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox2.Size = new System.Drawing.Size(1207, 192);
+            this.groupBox2.Size = new System.Drawing.Size(971, 192);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Configure PuTTY";
@@ -102,13 +102,13 @@
             this.PageantPath.Location = new System.Drawing.Point(179, 95);
             this.PageantPath.Margin = new System.Windows.Forms.Padding(4);
             this.PageantPath.Name = "PageantPath";
-            this.PageantPath.Size = new System.Drawing.Size(915, 27);
+            this.PageantPath.Size = new System.Drawing.Size(679, 27);
             this.PageantPath.TabIndex = 9;
             //
             // PageantBrowse
             //
             this.PageantBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PageantBrowse.Location = new System.Drawing.Point(1102, 92);
+            this.PageantBrowse.Location = new System.Drawing.Point(866, 92);
             this.PageantBrowse.Margin = new System.Windows.Forms.Padding(4);
             this.PageantBrowse.Name = "PageantBrowse";
             this.PageantBrowse.Size = new System.Drawing.Size(94, 31);
@@ -134,13 +134,13 @@
             this.PuttygenPath.Location = new System.Drawing.Point(179, 58);
             this.PuttygenPath.Margin = new System.Windows.Forms.Padding(4);
             this.PuttygenPath.Name = "PuttygenPath";
-            this.PuttygenPath.Size = new System.Drawing.Size(915, 27);
+            this.PuttygenPath.Size = new System.Drawing.Size(679, 27);
             this.PuttygenPath.TabIndex = 6;
             //
             // PuttygenBrowse
             //
             this.PuttygenBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PuttygenBrowse.Location = new System.Drawing.Point(1102, 55);
+            this.PuttygenBrowse.Location = new System.Drawing.Point(866, 55);
             this.PuttygenBrowse.Margin = new System.Windows.Forms.Padding(4);
             this.PuttygenBrowse.Name = "PuttygenBrowse";
             this.PuttygenBrowse.Size = new System.Drawing.Size(94, 31);
@@ -176,13 +176,13 @@
             this.PlinkPath.Location = new System.Drawing.Point(179, 21);
             this.PlinkPath.Margin = new System.Windows.Forms.Padding(4);
             this.PlinkPath.Name = "PlinkPath";
-            this.PlinkPath.Size = new System.Drawing.Size(915, 27);
+            this.PlinkPath.Size = new System.Drawing.Size(679, 27);
             this.PlinkPath.TabIndex = 2;
             //
             // PlinkBrowse
             //
             this.PlinkBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PlinkBrowse.Location = new System.Drawing.Point(1102, 18);
+            this.PlinkBrowse.Location = new System.Drawing.Point(866, 18);
             this.PlinkBrowse.Margin = new System.Windows.Forms.Padding(4);
             this.PlinkBrowse.Name = "PlinkBrowse";
             this.PlinkBrowse.Size = new System.Drawing.Size(94, 31);
@@ -205,7 +205,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(1207, 151);
+            this.groupBox1.Size = new System.Drawing.Size(971, 151);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Specify which ssh client to use";
@@ -217,13 +217,13 @@
             this.OtherSsh.Location = new System.Drawing.Point(179, 100);
             this.OtherSsh.Margin = new System.Windows.Forms.Padding(4);
             this.OtherSsh.Name = "OtherSsh";
-            this.OtherSsh.Size = new System.Drawing.Size(915, 27);
+            this.OtherSsh.Size = new System.Drawing.Size(679, 27);
             this.OtherSsh.TabIndex = 4;
             //
             // OtherSshBrowse
             //
             this.OtherSshBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.OtherSshBrowse.Location = new System.Drawing.Point(1102, 96);
+            this.OtherSshBrowse.Location = new System.Drawing.Point(866, 96);
             this.OtherSshBrowse.Margin = new System.Windows.Forms.Padding(4);
             this.OtherSshBrowse.Name = "OtherSshBrowse";
             this.OtherSshBrowse.Size = new System.Drawing.Size(94, 31);
@@ -294,7 +294,7 @@
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox3.Size = new System.Drawing.Size(1207, 74);
+            this.groupBox3.Size = new System.Drawing.Size(971, 74);
             this.groupBox3.TabIndex = 82;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Configure Git credential helper";
@@ -302,12 +302,12 @@
             // SuggestGitCred
             //
             this.SuggestGitCred.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.SuggestGitCred.Location = new System.Drawing.Point(1102, 27);
+            this.SuggestGitCred.Location = new System.Drawing.Point(837, 27);
             this.SuggestGitCred.Margin = new System.Windows.Forms.Padding(4);
             this.SuggestGitCred.Name = "SuggestGitCred";
-            this.SuggestGitCred.Size = new System.Drawing.Size(94, 31);
+            this.SuggestGitCred.Size = new System.Drawing.Size(123, 31);
             this.SuggestGitCred.TabIndex = 86;
-            this.SuggestGitCred.Text = "Suggest command";
+            this.SuggestGitCred.Text = "Suggest";
             this.SuggestGitCred.UseVisualStyleBackColor = true;
             this.SuggestGitCred.Click += new System.EventHandler(this.SuggestGitCred_Click);
             //
@@ -324,7 +324,7 @@
             // BrowseGitCred
             //
             this.BrowseGitCred.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseGitCred.Location = new System.Drawing.Point(1004, 27);
+            this.BrowseGitCred.Location = new System.Drawing.Point(735, 27);
             this.BrowseGitCred.Margin = new System.Windows.Forms.Padding(4);
             this.BrowseGitCred.Name = "BrowseGitCred";
             this.BrowseGitCred.Size = new System.Drawing.Size(94, 31);
@@ -340,7 +340,7 @@
             this.GitCredPath.Location = new System.Drawing.Point(135, 29);
             this.GitCredPath.Margin = new System.Windows.Forms.Padding(4);
             this.GitCredPath.Name = "GitCredPath";
-            this.GitCredPath.Size = new System.Drawing.Size(861, 27);
+            this.GitCredPath.Size = new System.Drawing.Size(592, 27);
             this.GitCredPath.TabIndex = 81;
             //
             // SshSettingsPage
@@ -352,7 +352,7 @@
             this.Controls.Add(this.groupBox1);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SshSettingsPage";
-            this.Size = new System.Drawing.Size(1207, 712);
+            this.Size = new System.Drawing.Size(971, 699);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);

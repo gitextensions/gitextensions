@@ -31,7 +31,7 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
     <body>
       <trans-unit id="$this.Text">
         <source>Advanced</source>
-        <target>Manipular commit</target>
+        <target>Avanzadas</target>
         
       </trans-unit>
       <trans-unit id="CheckoutGB.Text">
@@ -51,7 +51,7 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
       </trans-unit>
       <trans-unit id="chkAlwaysShowCheckoutDlg.Text">
         <source>Always show checkout dialog</source>
-        <target>Siempre mostrar diálogo checkout</target>
+        <target>Siempre mostrar diálogo de checkout</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -77,7 +77,7 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
       </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
-        <target>Borrar caché</target>
+        <target>Borrar caché de imágenes</target>
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
@@ -583,20 +583,6 @@ Por favor asegúrese que git (msysgit o cygwin) está instalado o configure el c
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CheckSettingsLogic" source-language="en">
-    <body>
-      <trans-unit id="MergeToolSuggestCaption.Text">
-        <source>Suggest mergetool cmd</source>
-        <target>Sugerir comando mergetool</target>
-        
-      </trans-unit>
-      <trans-unit id="ToolSuggestPathText.Text">
-        <source>Please enter the path to {0} and press suggest.</source>
-        <target>Por favor ingrese la ruta a {0} y presione sugerir.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -760,7 +746,7 @@ Por favor asegúrese que git (msysgit o cygwin) está instalado o configure el c
       </trans-unit>
       <trans-unit id="chkShowResetAllChanges.Text">
         <source>Reset All Changes</source>
-        <target>Restablecer los cambios</target>
+        <target>Restablecer todos los cambios</target>
         
       </trans-unit>
       <trans-unit id="chkShowResetUnstagedChanges.Text">
@@ -1910,6 +1896,7 @@ Tendrá acceso para hacer Push. {2}</target>
       </trans-unit>
       <trans-unit id="PatchDirMode.Text">
         <source>Patch directory</source>
+        <target>Directorio de parche</target>
         
       </trans-unit>
       <trans-unit id="PatchFileMode.Text">
@@ -2289,6 +2276,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="aLocalToolStripMenuItem.Text">
         <source>A &lt;--&gt; Working directory</source>
+        <target>A &lt;--&gt; Directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
@@ -2313,6 +2301,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="bLocalToolStripMenuItem.Text">
         <source>B &lt;--&gt; Working directory</source>
+        <target>B &lt;--&gt; Directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="bisectToolStripMenuItem.Text">
@@ -2367,6 +2356,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="cleanupToolStripMenuItem.Text">
         <source>Clean working directory...</source>
+        <target>Limpiar directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="cloneSVNToolStripMenuItem.Text">
@@ -2484,6 +2474,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
         <source>Edit working directory file</source>
+        <target>Editar archivo del directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="editLocalGitConfigToolStripMenuItem.Text">
@@ -2553,6 +2544,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
         <source>Clean working directory...</source>
+        <target>Limpiar directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
@@ -2677,14 +2669,17 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
         <source>Open working directory file with...</source>
+        <target>Abrir archivo del directorio de trabajo con...</target>
         
       </trans-unit>
       <trans-unit id="parentOfALocalToolStripMenuItem.Text">
         <source>A's parent &lt;--&gt; Working directory</source>
+        <target>Padre de A &lt;--&gt; Directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="parentOfBLocalToolStripMenuItem.Text">
         <source>B's parent &lt;--&gt; Working directory</source>
+        <target>Padre de B &lt;--&gt; Directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="patchToolStripMenuItem.Text">
@@ -2962,6 +2957,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgain.Text">
         <source>Apply stashed items to working directory again?</source>
+        <target>¿Volver a aplicar los objetos apilados al directorio de trabajo?</target>
         
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgainCaption.Text">
@@ -3192,6 +3188,7 @@ revisión:</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Clean working directory</source>
+        <target>Limpiar directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -3246,6 +3243,7 @@ revisión:</target>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Remove untracked files from working directory</source>
+        <target>Eliminar archivos sin seguimiento del directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -3269,10 +3267,12 @@ revisión:</target>
       </trans-unit>
       <trans-unit id="Central.Text">
         <source>Central repository, no working directory  (--bare --shared=all)</source>
+        <target>Repositorio central, sin directorio de trabajo (--bare --shared=all)</target>
         
       </trans-unit>
       <trans-unit id="CentralRepository.Text">
         <source>P&amp;ublic repository, no working directory  (--bare)</source>
+        <target>Repositorio central, sin directorio de trabajo (--bare)</target>
         
       </trans-unit>
       <trans-unit id="FromBrowse.Text">
@@ -3450,13 +3450,13 @@ Utilice sólo modificar si el commit no está publicado todavía!
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
-        <source>Author </source>
+        <source>Author</source>
         <target>Autor</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterInfo.Text">
-        <source>Committer </source>
-        <target>Committer </target>
+        <source>Committer</source>
+        <target>Commiter</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterToolTip.Text">
@@ -3607,7 +3607,7 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
       </trans-unit>
       <trans-unit id="_notOnBranchButtons.Text">
         <source>Checkout branch|Create branch|Continue</source>
-        <target>Checkout rama|Continuar</target>
+        <target>Checkout rama|Crear rama|Continuar</target>
         
       </trans-unit>
       <trans-unit id="_notOnBranchCaption.Text">
@@ -3885,6 +3885,11 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
         <target>Aprobar commit</target>
         
       </trans-unit>
+      <trans-unit id="stagedResetChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>Restablecer los cambios de archivos</target>
+        
+      </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
         <source>Stash submodule changes</source>
         <target>Stash cambios de submódulos</target>
@@ -3987,6 +3992,7 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
       </trans-unit>
       <trans-unit id="workingToolStripMenuItem.Text">
         <source>Working directory changes</source>
+        <target>Cambios en el directorio de trabajo</target>
         
       </trans-unit>
     </body>
@@ -4141,6 +4147,7 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
         <source>Clear working directory and index</source>
+        <target>Limpiar directorio de trabajo e índice</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -4331,7 +4338,7 @@ Deleting a branch can cause commits to be deleted too!</source>
 When you delete a branch the commits can get lost because nothing points to them.
 When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
 </source>
-        <target>Sólo puede eliminar ramas cuando están completamente mezcladas en HEAD.
+        <target>Sólo puede eliminar ramas cuando están completamente fusionadas en HEAD.
 Cuando elimina una rama los commits pueden perderse porque nada apunta a ellos.
 Cuando desee eliminar una rama no mezclada por completo, puede saltear esto usando la opción 'Forzar eliminación'.
 </target>
@@ -4427,12 +4434,12 @@ Haga clic en el botón &quot;Support this project&quot; para obtener más inform
         
       </trans-unit>
       <trans-unit id="_cannotOpenFile.Text">
-        <source>Cannot open file: </source>
+        <source>Cannot open file:</source>
         <target>No se puede abrir el archivo:</target>
         
       </trans-unit>
       <trans-unit id="_cannotSaveFile.Text">
-        <source>Cannot save file: </source>
+        <source>Cannot save file:</source>
         <target>No se puede guardar el archivo:</target>
         
       </trans-unit>
@@ -4930,6 +4937,7 @@ Compruebe que el archivo esté accesible.</target>
       </trans-unit>
       <trans-unit id="_noWorkingDirCaption.Text">
         <source>No working directory</source>
+        <target>Sin directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -4978,6 +4986,7 @@ consulte la ayuda de Git</target>
       </trans-unit>
       <trans-unit id="noWorkingDir.Text">
         <source>.gitattributes is only supported when there is a working directory.</source>
+        <target>.gitattributes sólo está soportado cuando hay un directorio de trabajo.</target>
         
       </trans-unit>
     </body>
@@ -5019,10 +5028,12 @@ Compruebe que el archivo esté accesible.
       </trans-unit>
       <trans-unit id="_gitignoreOnlyInWorkingDirSupported.Text">
         <source>.gitignore is only supported when there is a working directory.</source>
+        <target>.gitignore sólo está soportado cuando hay un directorio de trabajo.</target>
         
       </trans-unit>
       <trans-unit id="_gitignoreOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
+        <target>Sin directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -5150,10 +5161,12 @@ Compruebe que el archivo sea accesible.</target>
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
         <source>.gitreview is only supported when there is a working directory.</source>
+        <target>.gitreview sólo está soportado cuando hay un directorio de trabajo.</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
+        <target>Sin directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -5290,6 +5303,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="Central.Text">
         <source>Central repository, no working directory  (--bare --shared=all)</source>
+        <target>Repositorio central, sin directorio de trabajo (--bare --shared=all)</target>
         
       </trans-unit>
       <trans-unit id="Init.Text">
@@ -5367,10 +5381,12 @@ Compruebe que el archivo esté accesible.</target>
       </trans-unit>
       <trans-unit id="_mailmapOnlyInWorkingDirSupported.Text">
         <source>.mailmap is only supported when there is a working directory.</source>
+        <target>.mailmap sólo soportado cuando hay un directorio de trabajo.</target>
         
       </trans-unit>
       <trans-unit id="_mailmapOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
+        <target>Sin directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -5454,33 +5470,31 @@ ignoring all changes from all other branches. It is meant to be used to supersed
 subtree 
 This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
 match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
-ancestor tree. </source>
+ancestor tree.</source>
         <target>resolver
-Este sólo puede manejar dos cabezas (ej: la rama actual y otra rama de la que se hizo un Pull) usando algoritmos de fusión
-de 3-vías.
-Trata de detectar cuidadosamente fusiones ambigüas y es considerado generalmente rápido y seguro.
+Sólo puede resolver dos cabezas (ej: la rama actual y otra rama de la que se hizo un Pull) usando un algoritmo de fusión de 3 vías.
+Trata cuidadosamente de detectar ambigüedades cruzadas en la fusión y es considerado generalmente rápido y seguro.
 
 recursivo
-Este sólo puede resolver dos cabezas usando un algoritmo de fusión de 3-vías. Cuando hay más de un ancestro común que
-puede ser usado para una fusión de 3-vías, crea un árbol fusionado de los ancestros comunes y usa este como el árbol de
-referencia para la fusión de 3-vías. Adicionalmente éste puede detectar y manejar fusiones que involucran renombramientos.
-Ésta es la fusión por defecto cuando se realiza un Pull o cuando se fusiona una rama.
+Sólo puede resolver dos cabezas usando un algoritmo de fusión de 3 vías. Cuando hay más de un ancestro común que puede
+ser usado para una fusión de 3-vías, crea un árbol fusionado de los ancestros comunes y lo usa como el árbol de
+referencia para la fusión de 3-vías. Adicionalmente puede detectar y manejar fusiones que involucren cambios de nombre.
+Ésta es la estrategia de fusión por defecto al hacer Pull o fusión de una rama.
 
 octopus 
-Éste resuelve casos con más de dos cabezas, pero se niega a hacer fusiones complejas que necesitan una resolución
-manual. Es principalmente usado para juntar cabezas de ramas similares juntas. Esta es la estrategia de fusión por
-defecto al hacer un Pull o una fusión con más de una rama.
+Resuelve casos con más de dos cabezas, pero se niega a hacer fusiones complejas que necesitan una resolución
+manual. Es principalmente usado para juntar cabezas de ramas similares. Esta es la estrategia de fusión por
+defecto al hacer Pull o fusión de más de una rama.
 
 nuestro 
-Éste resuelve cualquier número de cabezas, pero el árbol resultado de la fusión es siempre el de la cabeza de la rama actual,
+Resuelve cualquier número de cabezas, pero el árbol resultado de la fusión es siempre el de la cabeza de la rama actual,
 efectivamente ignorando todos los cambios de todas las otras ramas. Está pensado para ser usado para reemplazar
-el historial de desarrollo viejo de ramas laterales.
+el historial de desarrollo viejo de ramas paralelas.
 
 subárbol 
-Ésta es una estrategia recursiva modificada. Al fusionar los árboles A y B, si B corresponde a un subárbol de A, B es primero
+Es una estrategia recursiva modificada. Al fusionar los árboles A y B, si B corresponde a un subárbol de A, B es primero
 ajustado para coincidir la estructura del árbol A, en vez de leer los árboles en el mismo nivel. Este ajuste es también realizado
-al árbol ancestro común.
-</target>
+al árbol ancestro común.</target>
         
       </trans-unit>
       <trans-unit id="advanced.Text">
@@ -5645,7 +5659,7 @@ al árbol ancestro común.
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
         <target>El plug-in de Gerrit para GitExtensions proporciona integración con Gerrit. Este plugin se ha basado en la herramienta git-review.
 
-Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo. gitreview. Esto se puede hacer a través de la opción del menú Configuración | Editar .gitreview. Vea el enlace de abajo para obtener más información sobre el archivo .gitreview y la herramienta git-review.</target>
+Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo. gitreview. Esto se puede hacer a través de la opción del menú Repositorio | Editar .gitreview. Vea el enlace de abajo para obtener más información sobre el archivo .gitreview y la herramienta git-review.</target>
         
       </trans-unit>
     </body>
@@ -5734,6 +5748,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgain.Text">
         <source>Apply stashed items to working directory again?</source>
+        <target>¿Volver a aplicar los objetos apilados al directorio de trabajo?</target>
         
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgainCaption.Text">
@@ -6704,10 +6719,13 @@ El valor se ha restablecido a un valor vacío.</target>
       <trans-unit id="Hard.Text">
         <source>Hard: reset working directory and index
 (discard ALL local changes, even uncommitted changes)</source>
+        <target>Duro: restablecer directorio de trabajo y el índice
+(descartar TODOS los cambios locales, incluso los no commiteados)</target>
         
       </trans-unit>
       <trans-unit id="Mixed.Text">
         <source>Mixed: leave working directory untouched, reset index</source>
+        <target>Mixta: dejar directorio de trabajo intacto, restablecer el índice</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -6717,6 +6735,7 @@ El valor se ha restablecido a un valor vacío.</target>
       </trans-unit>
       <trans-unit id="Soft.Text">
         <source>Soft: leave working directory and index untouched</source>
+        <target>Suave: dejar el directorio de trabajo y el índice intactos</target>
         
       </trans-unit>
       <trans-unit id="branchInfo.Text">
@@ -7473,6 +7492,7 @@ Por ello el botón Cancelar NO revierte ninguno de los cambios realizados.</targ
       </trans-unit>
       <trans-unit id="currentWorkingDirChanges.Text">
         <source>Current working directory changes</source>
+        <target>Cambios actuales del directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="dontShowAgain.Text">
@@ -7868,7 +7888,7 @@ Do you want to select a language code first?</source>
       </trans-unit>
       <trans-unit id="_newVersionAvailable.Text">
         <source>There is a new version {0} of Git Extensions available</source>
-        <target>Hay una nueva versión disponible</target>
+        <target>Está disponible la nueva versión {0} de Git Extensions.</target>
         
       </trans-unit>
       <trans-unit id="_noUpdatesFound.Text">
@@ -8209,6 +8229,7 @@ objetos colgados&quot;.</target>
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
         <source>Show current working directory changes in revision graph (slow!)</source>
+        <target>Mostrar cambios del directorio de trabajo actual en el gráfico de revisiones (lento)</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
@@ -8228,6 +8249,7 @@ objetos colgados&quot;.</target>
       </trans-unit>
       <trans-unit id="chkStartWithRecentWorkingDir.Text">
         <source>Open last working directory on startup</source>
+        <target>Abrir último directorio de trabajo al inicio</target>
         
       </trans-unit>
       <trans-unit id="chkStashUntrackedFiles.Text">
@@ -8359,7 +8381,7 @@ Dejar en blanco cuando están en el PATH.</target>
         <source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</source>
         <target>El archivo de configuración global se almacena en la ubicación dada por la variable de entorno %HOME%. 
-Por defecto %HOME% se establecerá como %HOMEDRIVE%%HOMEPATH% si está vacía. 
+Por defecto %HOME% se establecerá como %HOMEDRIVE%%HOMEPATH% si está vacía.
 Cambie el comportamiento por defecto sólo si experimenta problemas.</target>
         
       </trans-unit>
@@ -8402,9 +8424,19 @@ Cambie el comportamiento por defecto sólo si experimenta problemas.</target>
         <target>Ruta de mergetool</target>
         
       </trans-unit>
-      <trans-unit id="__diffToolSuggestCaption.Text">
+      <trans-unit id="_diffToolSuggestCaption.Text">
         <source>Suggest difftool cmd</source>
         <target>Sugerir comando difftool</target>
+        
+      </trans-unit>
+      <trans-unit id="_mergeToolSuggestCaption.Text">
+        <source>Suggest mergetool cmd</source>
+        <target>Sugerir comando mergetool</target>
+        
+      </trans-unit>
+      <trans-unit id="_toolSuggestPathText.Text">
+        <source>Please enter the path to {0} and press suggest.</source>
+        <target>Por favor ingrese la ruta a {0} y presione sugerir.</target>
         
       </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">
@@ -8871,6 +8903,16 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
         <target>Mensaje</target>
         
       </trans-unit>
+      <trans-unit id="NavigateBackward.Text">
+        <source>Navigate backward</source>
+        <target>Navegar hacia atrás</target>
+        
+      </trans-unit>
+      <trans-unit id="NavigateForward.Text">
+        <source>Navigate forward</source>
+        <target>Navegar hacia adelante</target>
+        
+      </trans-unit>
       <trans-unit id="NextQuickSearch.Text">
         <source>Quick search next</source>
         <target>Ir al resultado siguiente</target>
@@ -9045,10 +9087,19 @@ If this is a normal repository, these steps are recommended:
 
 If this is a central repository (bare repository without a working directory):
 - Push changes from another repository</source>
+        <target>Aún no se han realizado commits en este repositorio. 
+
+Si se trata de un repositorio normal, estos pasos son recomendados: 
+- Asegúrese de tener un archivo .gitignore adecuado en su repositorio
+- Haga un commit de los archivos
+
+Si se trata de un repositorio central (repositorio sin un directorio de trabajo): 
+- Haga Push de los cambios desde otro repositorio</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>The current working directory is not a git repository.</source>
+        <target>El directorio de trabajo actual no es un repositorio git.</target>
         
       </trans-unit>
       <trans-unit id="manipulateCommitToolStripMenuItem.Text">

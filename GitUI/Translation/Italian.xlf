@@ -506,18 +506,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CheckSettingsLogic" source-language="en">
-    <body>
-      <trans-unit id="MergeToolSuggestCaption.Text">
-        <source>Suggest mergetool cmd</source>
-        
-      </trans-unit>
-      <trans-unit id="ToolSuggestPathText.Text">
-        <source>Please enter the path to {0} and press suggest.</source>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -2684,6 +2672,7 @@ Vuoi rimuoverlo dalla lista dei repository recenti?</target>
       </trans-unit>
       <trans-unit id="toolsToolStripMenuItem.Text">
         <source>Tools</source>
+        <target>Strumenti</target>
         
       </trans-unit>
       <trans-unit id="translateToolStripMenuItem.Text">
@@ -3207,11 +3196,13 @@ Vuoi continuare?</target>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
-        <source>Author </source>
+        <source>Author</source>
+        <target>Autore</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterInfo.Text">
-        <source>Committer </source>
+        <source>Committer</source>
+        <target>Autore commit</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterToolTip.Text">
@@ -3599,6 +3590,11 @@ Vuoi continuare?</target>
       </trans-unit>
       <trans-unit id="signOffToolStripMenuItem.Text">
         <source>Sign-off commit</source>
+        
+      </trans-unit>
+      <trans-unit id="stagedResetChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>Ripristina modifiche</target>
         
       </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
@@ -4105,11 +4101,11 @@ Puoi aiutare il progetto con un contributo finanziario. Le donazioni saranno usa
         
       </trans-unit>
       <trans-unit id="_cannotOpenFile.Text">
-        <source>Cannot open file: </source>
+        <source>Cannot open file:</source>
         
       </trans-unit>
       <trans-unit id="_cannotSaveFile.Text">
-        <source>Cannot save file: </source>
+        <source>Cannot save file:</source>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -5023,31 +5019,7 @@ ignoring all changes from all other branches. It is meant to be used to supersed
 subtree 
 This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
 match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
-ancestor tree. </source>
-        <target>resolve
-Questo può solo risolvere due HEAD (ad esempio il branch corrente e un altro da cui si è effettuato il pull)
-usando un algoritmo di merge 3-way. Cerca di risolvere attentamente le ambiguità ed è considerato
-generalmente sicuro e veloce.
-
-recursive
-Può solo risolvere due HEAD usando un algoritmo di merge 3-way. Quendo c'è più di un antenato comune che può
-essere usato per merge 3-way, crea un albero di antenati comuni e usa quello come riferimento per il merge 3-way.
-In aggiunta può riconoscere e gestire merge che coinvolgono rinomine. Questa è la strategia di merge di default
-quando si effettua il pull o un merge di un branch.
-
-octopus
-Questo risolve casi con più di due HEAD, ma non effettua merge complicati che richiedono risoluzione manuale.
-Dovrebbe essere usato per unificare più branch secondari insieme. E' la strategia di default usata quando si
-effettua un pull o un merge di più branch.
-
-ours
-Risolve un qualunque numero di HEAD, ma l'albero risultante dal merge è sempre quello del branch corrente, ignorando
-tutte le modifiche degli altri branch. E' usato per sostituire una vecchia storia di sviluppo di branch secondari.
-
-subtree
-Questa è una strategia ricorsiva modificata. Quando si effettua il merge di A e B, se B è un sotto-albero di A,
-prima si modifica B in modo che corrisponda alla struttura ad albero di A, invece che leggere gli alberi allo
-stesso livello. Queste modifiche sono apportate anche all'albero antenato comune.</target>
+ancestor tree.</source>
         
       </trans-unit>
       <trans-unit id="advanced.Text">
@@ -7724,8 +7696,16 @@ Cambiare il comportamento default solo se si hanno problemi.</target>
         <target>Percorso</target>
         
       </trans-unit>
-      <trans-unit id="__diffToolSuggestCaption.Text">
+      <trans-unit id="_diffToolSuggestCaption.Text">
         <source>Suggest difftool cmd</source>
+        
+      </trans-unit>
+      <trans-unit id="_mergeToolSuggestCaption.Text">
+        <source>Suggest mergetool cmd</source>
+        
+      </trans-unit>
+      <trans-unit id="_toolSuggestPathText.Text">
+        <source>Please enter the path to {0} and press suggest.</source>
         
       </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">
@@ -8146,6 +8126,14 @@ This will just checkout on the submodule the commit determined by the superproje
       <trans-unit id="MessageDataGridViewColumn.HeaderText">
         <source>Message</source>
         <target>Messaggio</target>
+        
+      </trans-unit>
+      <trans-unit id="NavigateBackward.Text">
+        <source>Navigate backward</source>
+        
+      </trans-unit>
+      <trans-unit id="NavigateForward.Text">
+        <source>Navigate forward</source>
         
       </trans-unit>
       <trans-unit id="NextQuickSearch.Text">

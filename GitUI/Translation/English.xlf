@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.48">
+<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.48RC1">
   <file datatype="plaintext" original="AboutBox" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -269,10 +269,6 @@ This action will be performed without warning while checking out branch.</source
         <source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</source>
         <target />
       </trans-unit>
-      <trans-unit id="_credentialHelperInstalled.Text">
-        <source>Git credential helper is installed.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_customMergeToolXConfigured.Text">
         <source>There is a custom mergetool configured: {0}</source>
         <target />
@@ -291,10 +287,6 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="_gitCanBeRunCaption.Text">
         <source>Locate git</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_gitCredentialWinStoreHelperInstalled.Text">
-        <source>Git Credential Win Store is installed as credential helper.</source>
         <target />
       </trans-unit>
       <trans-unit id="_gitNotFound.Text">
@@ -353,14 +345,6 @@ Please make sure there are linux tools installed (through msysgit or cygwin) or 
       </trans-unit>
       <trans-unit id="_mergeToolXConfiguredNeedsCmd.Text">
         <source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noCredentialsHelperInstalled.Text">
-        <source>No credential helper installed.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noCredentialsHelperInstalledTryGCS.Text">
-        <source>No credential helper could be installed. Try to install git-credential-winstore.exe.</source>
         <target />
       </trans-unit>
       <trans-unit id="_noDiffToolConfigured.Text">
@@ -452,10 +436,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
       <trans-unit id="_wrongGitVersion.Text">
         <source>Git found but version {0} is not supported. Upgrade to version {1} or later</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="gitCredentialWinStore_Fix.Text">
-        <source>Repair</source>
         <target />
       </trans-unit>
       <trans-unit id="label11.Text">
@@ -7568,6 +7548,10 @@ when all items are shown:</source>
         <source>Automatically start authentication client when a private key is configured for a remote</source>
         <target />
       </trans-unit>
+      <trans-unit id="BrowseGitCred.Text">
+        <source>Browse</source>
+        <target />
+      </trans-unit>
       <trans-unit id="OpenSSH.Text">
         <source>OpenSSH</source>
         <target />
@@ -7596,6 +7580,10 @@ when all items are shown:</source>
         <source>Browse</source>
         <target />
       </trans-unit>
+      <trans-unit id="SuggestGitCred.Text">
+        <source>Suggest</source>
+        <target />
+      </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Specify which ssh client to use</source>
         <target />
@@ -7604,8 +7592,12 @@ when all items are shown:</source>
         <source>Configure PuTTY</source>
         <target />
       </trans-unit>
+      <trans-unit id="groupBox3.Text">
+        <source>Configure Git credential helper</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label15.Text">
-        <source>Path to plink.exe</source>
+        <source>Path to plink</source>
         <target />
       </trans-unit>
       <trans-unit id="label16.Text">
@@ -7621,6 +7613,10 @@ when all items are shown:</source>
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label48.Text">
+        <source>Command</source>
         <target />
       </trans-unit>
     </body>
