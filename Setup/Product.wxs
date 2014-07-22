@@ -23,7 +23,6 @@
             <Directory Id="ProgramFilesFolder">
                 <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
                     <Directory Id="PuttyDir" Name="PuTTY" />
-                    <Directory Id="GitCredentialWinStoreDir" Name="GitCredentialWinStore" />
                     <Directory Id="PluginsDir" Name="Plugins" />
                     <Directory Id="InstallerDir" Name="Installer" />
                     <Directory Id="DictionariesDir" Name="Dictionaries" />
@@ -405,11 +404,6 @@
                 <File Source="..\GitUI\Translation\Traditional Chinese.gif" />
             </Component-->
         </DirectoryRef>
-        <DirectoryRef Id="GitCredentialWinStoreDir">
-            <Component Id="gitcredentialwinstore.exe" Guid="*">
-                <File Source="..\Bin\git-credential-winstore.exe" />
-            </Component>
-        </DirectoryRef>
         <DirectoryRef Id="PuttyDir">
             <Component Id="plink.exe" Guid="*">
                 <File Source="..\Bin\plink.exe" />
@@ -509,7 +503,6 @@
             <ComponentRef Id="pageant.reg" />
             <ComponentRef Id="puttygen.exe" />
             <ComponentRef Id="puttygen.reg" />
-            <ComponentRef Id="gitcredentialwinstore.exe" />
             <ComponentRef Id="GitExtSshAskPass.exe" />
             <ComponentRef Id="GitExtensions.newstartmenu" />
             <ComponentRef Id="GitExtensions.startmenu" />
@@ -707,13 +700,16 @@
             </Feature>
         </Feature>
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
-        <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe" />
+        <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.98-3.exe" />
         <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
         <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.9.4-preview20140611.exe" />
         <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
-        <InstallExecuteSequence>
+        <Binary Id="GitCredentialWinStore" SourceFile="..\Bin\git-credential-winstore.exe" />
+        <CustomAction Id="GitCredentialWinStore" Impersonate="no" BinaryKey="GitCredentialWinStore" Execute="deferred" ExeCommand="" Return="ignore" />
+         <InstallExecuteSequence>
             <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
             <Custom Action="MsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
+            <Custom Action="GitCredentialWinStore" After="InstallFiles"><![CDATA[INSTALLGITCREDENTIALWINSTORE=1]]></Custom>
         </InstallExecuteSequence>
         <?endif ?>
         <UI />
