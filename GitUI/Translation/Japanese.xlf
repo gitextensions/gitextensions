@@ -582,19 +582,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CheckSettingsLogic" source-language="en">
-    <body>
-      <trans-unit id="MergeToolSuggestCaption.Text">
-        <source>Suggest mergetool cmd</source>
-        <target>mergetoolコマンドを推測する</target>
-        
-      </trans-unit>
-      <trans-unit id="ToolSuggestPathText.Text">
-        <source>Please enter the path to {0} and press suggest.</source>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -1903,6 +1890,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="PatchDirMode.Text">
         <source>Patch directory</source>
+        <target>パッチ ディレクトリ</target>
         
       </trans-unit>
       <trans-unit id="PatchFileMode.Text">
@@ -3440,12 +3428,12 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
-        <source>Author </source>
+        <source>Author</source>
         <target>作者</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterInfo.Text">
-        <source>Committer </source>
+        <source>Committer</source>
         <target>コミッタ</target>
         
       </trans-unit>
@@ -3869,6 +3857,11 @@ Do you want to continue?</source>
       <trans-unit id="signOffToolStripMenuItem.Text">
         <source>Sign-off commit</source>
         <target>コミットに署名する</target>
+        
+      </trans-unit>
+      <trans-unit id="stagedResetChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>ファイルの変更を元に戻す</target>
         
       </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
@@ -4408,13 +4401,13 @@ Click on the &quot;Support this project&quot; button to get more information abo
         
       </trans-unit>
       <trans-unit id="_cannotOpenFile.Text">
-        <source>Cannot open file: </source>
+        <source>Cannot open file:</source>
         <target>ファイルを開けません: </target>
         
       </trans-unit>
       <trans-unit id="_cannotSaveFile.Text">
-        <source>Cannot save file: </source>
-        <target>ファイルを保存できません: </target>
+        <source>Cannot save file:</source>
+        <target>ファイルを開けません: </target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -5428,30 +5421,7 @@ ignoring all changes from all other branches. It is meant to be used to supersed
 subtree 
 This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
 match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
-ancestor tree. </source>
-        <target>resolve
-3-wayマージアルゴリズムを用いて、2つのブランチ (例えば、現在のブランチとPullしてきたブランチ) のみをマージできます。
-この戦略はcriss-crossマージの曖昧さを検出します。このアルゴリズムは、高速かつ安全と考えられています。
-訳注：criss-crossマージに遭遇したことがないのでわかりませんが、おそらくcriss-crossマージに遭遇すると、
-この戦略ではマージが中断されるということだと思います。
-
-recursive 
-3-wayマージアルゴリズムを用いて、2つのブランチのみをマージできます。3-wayマージに使用できる1つ以上の共通の分岐点がある場合、
-この戦略は共通の分岐点のマージされた木を作り、3-wayマージの参照木として使用します。
-さらに、この戦略は名前の変更を含むマージを検出し、扱うこともできます。この戦略は対象が1つのPullやmergeのデフォルトのマージ戦略です。
-
-octopus 
-この戦略は2つ以上のブランチのマージを行いますが、手動による解決が必要な複雑なマージを拒否します。
-この戦略はトピックブランチと一緒に使用します。この戦略は対象が2つ以上のPullやmergeのデフォルトのマージ戦略です。
-
-ours 
-この戦略は複数のブランチのマージを行いますが、マージ結果は常に現在のブランチのみ反映され、ほかのブランチの変更はすべて無視されます。
-この戦略はサイドブランチでの古い開発の歴史を破棄するために使用されます。
-訳注：それ以外にも、すでに現在のブランチにマージ対象のブランチで行った変更が反映されていることが明らかな場合にも使用できます。
-
-subtree 
-この戦略はrecursive戦略のバリエーションです。AとBをマージするとき、もしBがAの部分階層と一致するなら、
-同階層で階層を読み込む代わりに、BをAの階層構造と合うように調整されます。この調整は共通の先祖にも行われます。</target>
+ancestor tree.</source>
         
       </trans-unit>
       <trans-unit id="advanced.Text">
@@ -5549,6 +5519,7 @@ subtree
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Current:</source>
+        <target>現在:</target>
         
       </trans-unit>
     </body>
@@ -5738,6 +5709,7 @@ If you want to fetch and merge a branch, choose a specific branch.</source>
       </trans-unit>
       <trans-unit id="_noRemoteBranch.Text">
         <source>You didn't specify a remote branch</source>
+        <target>リモートブランチを指定しませんでした。</target>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranchButtons.Text">
@@ -5746,6 +5718,7 @@ If you want to fetch and merge a branch, choose a specific branch.</source>
       </trans-unit>
       <trans-unit id="_noRemoteBranchCaption.Text">
         <source>Remote branch not specified</source>
+        <target>リモートブランチが指定されていません。</target>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranchForFetchButtons.Text">
@@ -7430,6 +7403,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="currentWorkingDirChanges.Text">
         <source>Current working directory changes</source>
+        <target>現在の作業ディレクトリの変更点</target>
         
       </trans-unit>
       <trans-unit id="dontShowAgain.Text">
@@ -8184,6 +8158,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="chkStartWithRecentWorkingDir.Text">
         <source>Open last working directory on startup</source>
+        <target>起動時、前回 開いていた作業ディレクトリを開く</target>
         
       </trans-unit>
       <trans-unit id="chkStashUntrackedFiles.Text">
@@ -8356,9 +8331,18 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         <target>マージツールのパス</target>
         
       </trans-unit>
-      <trans-unit id="__diffToolSuggestCaption.Text">
+      <trans-unit id="_diffToolSuggestCaption.Text">
         <source>Suggest difftool cmd</source>
         <target>difftoolコマンドを推測する</target>
+        
+      </trans-unit>
+      <trans-unit id="_mergeToolSuggestCaption.Text">
+        <source>Suggest mergetool cmd</source>
+        <target>mergetoolコマンドを推測する</target>
+        
+      </trans-unit>
+      <trans-unit id="_toolSuggestPathText.Text">
+        <source>Please enter the path to {0} and press suggest.</source>
         
       </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">
@@ -8609,6 +8593,8 @@ help</source>
         <source>The server's host key is not cached in the registry.
 
 Do you want to trust this host key and then try again?</source>
+        <target>サーバのホスト キーはレジストリにキャッシュされていません。
+このホスト キーを信頼し、もう一度 行ないますか？</target>
         
       </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
@@ -8806,6 +8792,14 @@ This will just checkout on the submodule the commit determined by the superproje
         <target>メッセージ</target>
         
       </trans-unit>
+      <trans-unit id="NavigateBackward.Text">
+        <source>Navigate backward</source>
+        
+      </trans-unit>
+      <trans-unit id="NavigateForward.Text">
+        <source>Navigate forward</source>
+        
+      </trans-unit>
       <trans-unit id="NextQuickSearch.Text">
         <source>Quick search next</source>
         <target>クイック検索: 次へ</target>
@@ -8977,10 +8971,19 @@ If this is a normal repository, these steps are recommended:
 
 If this is a central repository (bare repository without a working directory):
 - Push changes from another repository</source>
+        <target>リポジトリに行われた変更がありません。
+
+通常のリポジトリの場合、以下の手順を推奨します。
+・リポジトリに.gitignoreファイルを作る
+・コミットする
+
+中央リポジトリ（作業ディレクトリを持たないベアリポジトリ）の場合は以下の手順を推奨します。
+・他のリポジトリから変更をPushする</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>The current working directory is not a git repository.</source>
+        <target>現在のディレクトリは正しい Git リポジトリではありません。</target>
         
       </trans-unit>
       <trans-unit id="manipulateCommitToolStripMenuItem.Text">
@@ -9178,6 +9181,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="nestedPatternLab.Text">
         <source>Nested pattern</source>
+        <target>入れ子パターン</target>
         
       </trans-unit>
     </body>
@@ -9206,6 +9210,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayArgumentsHelp.Text">
         <source>Arguments help</source>
+        <target>パラメータのヘルプ</target>
         
       </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
@@ -9241,6 +9246,38 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
+        <target>ユーザーの入力:
+{UserInput}
+
+選択されているブランチ:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+現在のブランチ:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="addScriptButton.Text">

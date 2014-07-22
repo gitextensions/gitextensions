@@ -506,18 +506,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CheckSettingsLogic" source-language="en">
-    <body>
-      <trans-unit id="MergeToolSuggestCaption.Text">
-        <source>Suggest mergetool cmd</source>
-        
-      </trans-unit>
-      <trans-unit id="ToolSuggestPathText.Text">
-        <source>Please enter the path to {0} and press suggest.</source>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -2683,6 +2671,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="toolsToolStripMenuItem.Text">
         <source>Tools</source>
+        <target>工具</target>
         
       </trans-unit>
       <trans-unit id="translateToolStripMenuItem.Text">
@@ -3206,11 +3195,13 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
-        <source>Author </source>
+        <source>Author</source>
+        <target>作者</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterInfo.Text">
-        <source>Committer </source>
+        <source>Committer</source>
+        <target>提交者</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterToolTip.Text">
@@ -3601,6 +3592,11 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="signOffToolStripMenuItem.Text">
         <source>Sign-off commit</source>
+        
+      </trans-unit>
+      <trans-unit id="stagedResetChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>重設檔案修改</target>
         
       </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
@@ -4101,11 +4097,11 @@ Click on the &quot;Support this project&quot; button to get more information abo
         
       </trans-unit>
       <trans-unit id="_cannotOpenFile.Text">
-        <source>Cannot open file: </source>
+        <source>Cannot open file:</source>
         
       </trans-unit>
       <trans-unit id="_cannotSaveFile.Text">
-        <source>Cannot save file: </source>
+        <source>Cannot save file:</source>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -5017,22 +5013,7 @@ ignoring all changes from all other branches. It is meant to be used to supersed
 subtree 
 This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
 match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
-ancestor tree. </source>
-        <target>解析（resolve） 
-使用三向合併算法，只能解決兩頭合併（比如當前分支和你“拉”操作的來源分支）。 
-此策略會小心的檢測出交叉合併的二義性，總體來說是安全且快速的。 
-
-遞歸（recursive） 
-使用三向合併算法，只能解決兩頭合併。當兩個分支至少有一個共同祖先能夠使用三向合併的時候，此策略會為所有共同祖先建立一個合併樹並且把這棵樹當做三向合併的引用樹。除此以外，此策略還可以檢測和處理重命名的的合併。此策略是“拉”操作和合併單個分支的默認策略。 
-
-章魚（octopus） 
-此策略可以解決大於兩頭的合併，但是會拒絕需要手動解析的複雜合併。主要的作用是把幾個主要的功用分支綁在一起。此策略是“拉”操作和合併多個分支的默認策略。 
-
-排外（ours） 
-此策略可以解決任意頭合併，但是在合併的結果樹中總是保持當前分支的頭，對於忽略一切其他分支的改變的情況來說極其有效。此策略可以用來接替舊的開發歷史中的副分支。 
-
-子樹（subtree） 
-此策略是修改的遞歸策略。當合併A樹和B樹時，如果B樹對應A的一個子樹，B首先會被調整到設和A樹結構的位置，而不是進行同級別的對比。這種調整也會應用在公共祖先樹上。 </target>
+ancestor tree.</source>
         
       </trans-unit>
       <trans-unit id="advanced.Text">
@@ -7701,8 +7682,16 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         <target>mergetool路徑</target>
         
       </trans-unit>
-      <trans-unit id="__diffToolSuggestCaption.Text">
+      <trans-unit id="_diffToolSuggestCaption.Text">
         <source>Suggest difftool cmd</source>
+        
+      </trans-unit>
+      <trans-unit id="_mergeToolSuggestCaption.Text">
+        <source>Suggest mergetool cmd</source>
+        
+      </trans-unit>
+      <trans-unit id="_toolSuggestPathText.Text">
+        <source>Please enter the path to {0} and press suggest.</source>
         
       </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">
@@ -8122,6 +8111,14 @@ This will just checkout on the submodule the commit determined by the superproje
       <trans-unit id="MessageDataGridViewColumn.HeaderText">
         <source>Message</source>
         <target>訊息</target>
+        
+      </trans-unit>
+      <trans-unit id="NavigateBackward.Text">
+        <source>Navigate backward</source>
+        
+      </trans-unit>
+      <trans-unit id="NavigateForward.Text">
+        <source>Navigate forward</source>
         
       </trans-unit>
       <trans-unit id="NextQuickSearch.Text">

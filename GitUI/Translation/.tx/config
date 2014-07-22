@@ -13,6 +13,7 @@ trans.it = Italian.xlf
 trans.ja = Japanese.xlf
 trans.ko = Korean.xlf
 trans.ru = Russian.xlf
+trans.pt_BR = Portuguese (Brazil).xlf
 trans.zh_CN = Simplified Chinese.xlf
 trans.es = Spanish.xlf
 trans.zh_TW = Traditional Chinese.xlf

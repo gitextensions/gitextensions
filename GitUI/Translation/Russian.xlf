@@ -583,20 +583,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CheckSettingsLogic" source-language="en">
-    <body>
-      <trans-unit id="MergeToolSuggestCaption.Text">
-        <source>Suggest mergetool cmd</source>
-        <target>Предложить команду для инструмента слияния</target>
-        
-      </trans-unit>
-      <trans-unit id="ToolSuggestPathText.Text">
-        <source>Please enter the path to {0} and press suggest.</source>
-        <target>Пожалуйста введите путь к {0} и нажмите предложить.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ColorsSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -3467,12 +3453,12 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
-        <source>Author </source>
+        <source>Author</source>
         <target>Автор</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterInfo.Text">
-        <source>Committer </source>
+        <source>Committer</source>
         <target>Автор коммита</target>
         
       </trans-unit>
@@ -3901,6 +3887,11 @@ Do you want to continue?</source>
       <trans-unit id="signOffToolStripMenuItem.Text">
         <source>Sign-off commit</source>
         <target>Подписать коммит</target>
+        
+      </trans-unit>
+      <trans-unit id="stagedResetChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>Отменить изменения</target>
         
       </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
@@ -4446,12 +4437,12 @@ Click on the &quot;Support this project&quot; button to get more information abo
         
       </trans-unit>
       <trans-unit id="_cannotOpenFile.Text">
-        <source>Cannot open file: </source>
+        <source>Cannot open file:</source>
         <target>Немогу открыть файл:</target>
         
       </trans-unit>
       <trans-unit id="_cannotSaveFile.Text">
-        <source>Cannot save file: </source>
+        <source>Cannot save file:</source>
         <target>Немогу сохранить файл:</target>
         
       </trans-unit>
@@ -5482,7 +5473,30 @@ ignoring all changes from all other branches. It is meant to be used to supersed
 subtree 
 This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
 match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
-ancestor tree. </source>
+ancestor tree.</source>
+        <target>разрешить
+Эта стратегия может разрешить две головы (т.е. текущая ветка и другая ветка которую вы получили) только используя 3-ходовой алгоритм слияния.
+Он пытается тщательно обнаружить пересекающиеся неясности слияния и считается в общем безопасным и быстрым.
+
+рекурсивно
+Эта стратегия может разрешить две головы только используя 3-ходовой алгоритм слияния. Когда есть больше чем один общий предок , который может быть
+использован для 3-х ходового слияния, она создает объединенное дерево общих предков и использует его качестве опорного дерева для 3-х ходового
+слияния. Кроме того, это поможет обнаруживать и обрабатывать слияния с переименованием. Это стратегия слияния по умолчанию при получение или
+слияние одной ветки.
+
+осьминог
+Эта стратегия разрешает случаи с более чем двумя головами, но отказывается делать сложные слияния, который должны быть разрешены вручную. Эта стратегия
+прежде всего предназначена для объединения голов ветки темы. Это стратегия слияния по умолчанию при получение или
+слияние более одной ветки.
+
+наш
+Эта стратегия разрешает любое количество голов, но в результате дерево слияния всегда является голова текущей ветки, эффективно
+игнорируя все изменения из всех других веток. Она предназначена для вытеснения старой истории разработки боковых веток.
+
+поддерево
+Это модифицированная рекурсивная стратегия. При слиянии деревьев А и В, если В соответствует поддереву A, B сначала устанавливается  
+соответствовать древовидной структуре А, вместо чтения деревьев на одинаковом уровне. Эта настройка также применяется для общего 
+предка дерева.</target>
         
       </trans-unit>
       <trans-unit id="advanced.Text">
@@ -8415,9 +8429,19 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         <target>Путь к инструменту слияния</target>
         
       </trans-unit>
-      <trans-unit id="__diffToolSuggestCaption.Text">
+      <trans-unit id="_diffToolSuggestCaption.Text">
         <source>Suggest difftool cmd</source>
         <target>Предложить команду инструмента сравнения</target>
+        
+      </trans-unit>
+      <trans-unit id="_mergeToolSuggestCaption.Text">
+        <source>Suggest mergetool cmd</source>
+        <target>Предложить команду для инструмента слияния</target>
+        
+      </trans-unit>
+      <trans-unit id="_toolSuggestPathText.Text">
+        <source>Please enter the path to {0} and press suggest.</source>
+        <target>Пожалуйста введите путь к {0} и нажмите предложить.</target>
         
       </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">
@@ -8884,6 +8908,16 @@ This will just checkout on the submodule the commit determined by the superproje
       <trans-unit id="MessageDataGridViewColumn.HeaderText">
         <source>Message</source>
         <target>Сообщение</target>
+        
+      </trans-unit>
+      <trans-unit id="NavigateBackward.Text">
+        <source>Navigate backward</source>
+        <target>Перейти назад</target>
+        
+      </trans-unit>
+      <trans-unit id="NavigateForward.Text">
+        <source>Navigate forward</source>
+        <target>Перейти вперед</target>
         
       </trans-unit>
       <trans-unit id="NextQuickSearch.Text">
