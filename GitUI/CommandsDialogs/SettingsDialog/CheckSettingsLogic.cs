@@ -31,7 +31,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             valid = SolveDiffToolForKDiff() && valid;
             valid = SolveGitExtensionsDir() && valid;
             valid = SolveEditor() && valid;
-            valid = SolveGitCredentialStore() && valid;
 
             CommonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
             CommonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
@@ -48,40 +47,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             return true;
-        }
-
-        public bool SolveGitCredentialStore()
-        {
-            if (!CheckGitCredentialStore())
-            {
-                string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
-                if (File.Exists(gcsFileName))
-                {
-                    var config = GlobalConfigFileSettings;
-                    if (EnvUtils.RunningOnWindows())
-                        config.SetPathValue("credential.helper", "!\"" + gcsFileName + "\"");
-                    else if (EnvUtils.RunningOnMacOSX())
-                        config.SetValue("credential.helper", "osxkeychain");
-                    else
-                        config.SetValue("credential.helper", "cache --timeout=300"); // 5 min
-                    
-                    return true;
-                }
-                return false;
-            }
-            return true;
-        }
-
-        public bool CheckGitCredentialStore()
-        {
-            string value = GlobalConfigFileSettings.GetValue("credential.helper");
-            bool isValid;
-            if (EnvUtils.RunningOnWindows())
-                isValid = value.Contains("git-credential-winstore.exe");
-            else
-                isValid = !string.IsNullOrEmpty(value);
-
-            return isValid;
         }
 
         public bool SolveLinuxToolsDir(string possibleNewPath = null)
