@@ -63,7 +63,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <source>Use last chosen &quot;local changes&quot; action as default action.
 This action will be performed without warning while checking out branch.</source>
         <target>Использовать последнее выбранное действие &quot;локальные изменения&quot; как действие по умолчанию.
-Данное действие будет выполнено без предупреждение при переключение веток.</target>
+Данное действие будет выполнено без предупреждения при переключении веток.</target>
         
       </trans-unit>
     </body>
@@ -239,7 +239,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="checkBoxEnableBuildServerIntegration.Text">
         <source>Enable build server integration</source>
-        <target>Разрешить интеграция со сборочным сервером</target>
+        <target>Разрешить интеграцию со сборочным сервером</target>
         
       </trans-unit>
       <trans-unit id="checkBoxShowBuildSummary.Text">
@@ -363,7 +363,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="_gitCredentialWinStoreHelperInstalled.Text">
         <source>Git Credential Win Store is installed as credential helper.</source>
-        <target>Git Credential Win Store установлен в качестве помощника учетных данных .</target>
+        <target>Git Credential Win Store установлен в качестве помощника учетных данных.</target>
         
       </trans-unit>
       <trans-unit id="_gitNotFound.Text">
@@ -427,7 +427,7 @@ Please make sure there are linux tools installed (through msysgit or cygwin) or 
       </trans-unit>
       <trans-unit id="_linuxToolsSshNotFound.Text">
         <source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</source>
-        <target>Утилиты Linux(sh) не найдены. Чтобы исправить эту проблему настройте путь в настройках.</target>
+        <target>Утилиты Linux(sh) не найдены. Чтобы исправить эту проблему, вы можете задать правильный путь в настройках.</target>
         
       </trans-unit>
       <trans-unit id="_mergeToolXConfigured.Text">
@@ -437,7 +437,7 @@ Please make sure there are linux tools installed (through msysgit or cygwin) or 
       </trans-unit>
       <trans-unit id="_mergeToolXConfiguredNeedsCmd.Text">
         <source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</source>
-        <target>{0} сконфигурирован как инструмент слияния, это пользовательский инструмент слияния и нуждается в настройки команды для запуска.</target>
+        <target>{0} сконфигурирован как инструмент слияния, это пользовательский инструмент слияния и нуждается в настройке команды для запуска.</target>
         
       </trans-unit>
       <trans-unit id="_noCredentialsHelperInstalled.Text">
@@ -491,7 +491,7 @@ Select no if you want to configure a different mergetool yourself.</source>
       </trans-unit>
       <trans-unit id="_plinkputtyGenpageantNotFound.Text">
         <source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</source>
-        <target>PuTTY настроен как SSH клиент, но не возможно найти plink.exe, puttygen.exe или pageant.exe.</target>
+        <target>PuTTY настроен как SSH клиент, но невозможно найти plink.exe, puttygen.exe или pageant.exe.</target>
         
       </trans-unit>
       <trans-unit id="_puttyConfigured.Text">
@@ -501,7 +501,7 @@ Select no if you want to configure a different mergetool yourself.</source>
       </trans-unit>
       <trans-unit id="_puttyFoundAuto.Text">
         <source>All paths needed for PuTTY could be automatically found and are set.</source>
-        <target>Все пути необходимы для PuTTY могут быть автоматически найдены и установлены.</target>
+        <target>Все пути, необходимые для PuTTY, могут быть автоматически найдены и установлены.</target>
         
       </trans-unit>
       <trans-unit id="_registryKeyGitExtensionsCorrect.Text">
@@ -547,8 +547,8 @@ Select no if you want to configure a different mergetool yourself.</source>
       <trans-unit id="_solveGitCommandFailed.Text">
         <source>The command to run git could not be determined automatically.
 Please make sure git (msysgit or cygwin) is installed or set the correct command manually.</source>
-        <target>Команды для запуска git не может быть определена автоматически.
-Пожалуйста, убедитесь что git (msysgit или сygwin) устанавленны или задайте правильную команду вручную.</target>
+        <target>Команда для запуска git не может быть определена автоматически.
+Пожалуйста, убедитесь что git (msysgit или сygwin) установлен или задайте правильную команду вручную.</target>
         
       </trans-unit>
       <trans-unit id="_solveGitCommandFailedCaption.Text">
@@ -563,7 +563,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
       <trans-unit id="_wrongGitVersion.Text">
         <source>Git found but version {0} is not supported. Upgrade to version {1} or later</source>
-        <target>Git found but version {0} is not supported. Upgrade to version {1} or later</target>
+        <target>Git найден, но версия {0} не поддерживается. Обновите до версии {1} или выше</target>
         
       </trans-unit>
       <trans-unit id="gitCredentialWinStore_Fix.Text">
@@ -741,7 +741,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
       <trans-unit id="chkShowErrorsWhenStagingFiles.Text">
         <source>Show errors when staging files</source>
-        <target>Показывать ошибки при индексируются файлы</target>
+        <target>Показывать ошибки при индексировании файлов</target>
         
       </trans-unit>
       <trans-unit id="chkShowResetAllChanges.Text">
@@ -812,7 +812,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
       <trans-unit id="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Text">
         <source>Show remote branches only when no local branch contains this commit</source>
-        <target>Показывать внешние ветки только когда не существует локальных веток, содержащих этот коммит</target>
+        <target>Показывать внешние ветки, только когда не существует локальных веток, содержащих этот коммит</target>
         
       </trans-unit>
       <trans-unit id="showContainedInBranchesRemoteToolStripMenuItem.Text">
@@ -924,7 +924,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
       <trans-unit id="chkUpdateModules.Text">
         <source>Update submodules on checkout</source>
-        <target>Обновить субмодули при переключение</target>
+        <target>Обновить субмодули при переключении</target>
         
       </trans-unit>
     </body>
@@ -1467,7 +1467,7 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="_noOccurrencesFoundString.Text">
         <source>No occurrences found.</source>
-        <target>Не найдено совпадений.</target>
+        <target>Совпадений не найдено.</target>
         
       </trans-unit>
       <trans-unit id="_noSearchString.Text">
@@ -1482,7 +1482,7 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="_replacedOccurrencesString.Text">
         <source>Replaced {0} occurrences.</source>
-        <target>Произошло {0}  замен.</target>
+        <target>Произошло {0} замен.</target>
         
       </trans-unit>
       <trans-unit id="_selectionOnlyString.Text">
@@ -1996,7 +1996,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="checkboxRevisionFilter.Text">
         <source>Take the files that have changed from the revision above to this one and archive only those</source>
-        <target>Взять файлы которые были изменены с ревизии выше этой и архивировать только их</target>
+        <target>Взять файлы, которые были изменены с ревизии выше этой и архивировать только их</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -2011,7 +2011,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>This revision will be archived:</source>
-        <target>Эта ревизия будет архивированна:</target>
+        <target>Эта ревизия будет заархивирована:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -3255,7 +3255,7 @@ revision:</source>
       </trans-unit>
       <trans-unit id="labelPathHint.Text">
         <source>(one line per path)</source>
-        <target>(она строка на путь)</target>
+        <target>(одна строка на путь)</target>
         
       </trans-unit>
     </body>
@@ -3320,7 +3320,7 @@ revision:</source>
       <trans-unit id="_infoNewRepositoryLocation.Text">
         <source>The repository will be cloned to a new directory located here:
 {0}</source>
-        <target>Репозиторий будет клонирован в новый каталог расположенный здесь:
+        <target>Репозиторий будет клонирован в новый каталог, расположенный здесь:
 {0}</target>
         
       </trans-unit>
@@ -3379,7 +3379,7 @@ Do you want to open the new repository &quot;{0}&quot; now?</source>
         <source>Supported commandline arguments for
 gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target>Поддерживаемые аргументы командной строки для
-gitex.cmd / gitex (находится в той же папке что GitExtensions.exe):</target>
+gitex.cmd / gitex (находится в той же папке, что и GitExtensions.exe):</target>
         
       </trans-unit>
     </body>
@@ -3616,7 +3616,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_notOnBranchCaption.Text">
         <source>Not on a branch</source>
-        <target>Не на ветке.</target>
+        <target>Не на ветке</target>
         
       </trans-unit>
       <trans-unit id="_notOnBranchMainInstruction.Text">
@@ -3646,7 +3646,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_resetSelectedLinesConfirmation.Text">
         <source>Are you sure you want to reset the changes to the selected lines?</source>
-        <target>Вы уверены что хотите сбросить изменения в выбранных строках?</target>
+        <target>Вы уверены, что хотите сбросить изменения в выбранных строках?</target>
         
       </trans-unit>
       <trans-unit id="_resetSelectedLinesToolStripMenuItem.Text">
@@ -3676,7 +3676,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_selectionFilterToolTip.Text">
         <source>Enter a regular expression to select unstaged files.</source>
-        <target>Введите регулярное выражение чтобы выбрать не индексированные файлы.</target>
+        <target>Введите регулярное выражение, чтобы выбрать не индексированные файлы.</target>
         
       </trans-unit>
       <trans-unit id="_stageDetails.Text">
@@ -4151,7 +4151,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
         <source>Clear working directory and index</source>
-        <target>Очистить рабочую каталог и индекс</target>
+        <target>Очистить рабочий каталог и индекс</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -4191,7 +4191,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Create branch at this revision</source>
-        <target>Создать ветку на этой ревизие</target>
+        <target>Создать ветку на этой ревизии</target>
         
       </trans-unit>
     </body>
@@ -4344,7 +4344,7 @@ When you want to delete a not-fully merged branch, you can override this using t
 </source>
         <target>Вы можете удалить только ветки, когда они полностью слиты в HEAD.
 При удалении ветки коммиты могут быть потеряны, потому что ничто не указывает на них.
-Если вы хотите удалить не-полностью интегрированные ветки, можно использовать опцию 'Принудительно удалить'.
+Если вы хотите удалить не полностью интегрированные ветки, можно использовать опцию 'Принудительно удалить'.
 </target>
         
       </trans-unit>
@@ -4369,7 +4369,7 @@ When you want to delete a not-fully merged branch, you can override this using t
       </trans-unit>
       <trans-unit id="deleteTag.Text">
         <source>Delete tag also from the following remote(s):</source>
-        <target>Удалить метку также из внешнего хранилище:</target>
+        <target>Удалить метку также из внешнего хранилища:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -4384,7 +4384,7 @@ When you want to delete a not-fully merged branch, you can override this using t
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>(includes information about deleting tags which are already pushed)</source>
-        <target>(включая информацию о удаляемой метке которая уже отправлена)</target>
+        <target>(включая информацию о удаляемой метке, которая уже отправлена)</target>
         
       </trans-unit>
     </body>
@@ -4413,9 +4413,9 @@ You can help by making a financial contribution to the project. Donations will b
 Click on the &quot;Support this project&quot; button to get more information about making a donation.</source>
         <target>Пожертвовать
 
-Вы можете помочь сделав финансовый вклад в проект. Пожертвования будут использованы для покрытия расходов на хостинг веб-сайта и для получения ресурсов необходимых для поддержания работы проекта.
+Вы можете помочь, сделав финансовый вклад в проект. Пожертвования будут использованы для покрытия расходов на хостинг веб-сайта и для получения ресурсов, необходимых для поддержания работы проекта.
 
-Нажмите на кнопку &quot;Поддержать этот проект&quot; чтобы получить больше информации о том как сделать пожертвование.</target>
+Нажмите на кнопку &quot;Поддержать этот проект&quot;, чтобы получить больше информации о том, как сделать пожертвование.</target>
         
       </trans-unit>
     </body>
@@ -4438,12 +4438,12 @@ Click on the &quot;Support this project&quot; button to get more information abo
       </trans-unit>
       <trans-unit id="_cannotOpenFile.Text">
         <source>Cannot open file:</source>
-        <target>Немогу открыть файл:</target>
+        <target>Не могу открыть файл:</target>
         
       </trans-unit>
       <trans-unit id="_cannotSaveFile.Text">
         <source>Cannot save file:</source>
-        <target>Немогу сохранить файл:</target>
+        <target>Не могу сохранить файл:</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -4506,7 +4506,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="diffToolremotelocalStripMenuItem.Text">
         <source>Difftool selected &lt; - &gt; local</source>
-        <target>Инструменте сравнения выбранный &lt; - &gt; локальный</target>
+        <target>Инструмент сравнения выбранный &lt; - &gt; локальный</target>
         
       </trans-unit>
       <trans-unit id="followFileHistoryToolStripMenuItem.Text">
@@ -4623,7 +4623,7 @@ Do you want Git Extensions to help locate the correct folder?</source>
       </trans-unit>
       <trans-unit id="_noHomeDirectorySpecified.Text">
         <source>Please enter a HOME directory.</source>
-        <target>Пожалуйста введите HOME каталог.</target>
+        <target>Пожалуйста, введите HOME каталог.</target>
         
       </trans-unit>
       <trans-unit id="defaultHome.Text">
@@ -4640,8 +4640,8 @@ Do you want Git Extensions to help locate the correct folder?</source>
         <source>The global config file located in the location stored environment variable %HOME%. 
 By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
 Change the default behaviour only if you experience problems.</source>
-        <target>Глобальный конфигурационный файл расположен в папке хранящейся в переменную среды %HOME%. 
-По умолчанию %HOME% будет установлен в %HOMEDRIVE%%HOMEPATH% если не указана. 
+        <target>Глобальный конфигурационный файл расположен в папке, хранящейся в переменной среды %HOME%. 
+По умолчанию %HOME% будет установлена в %HOMEDRIVE%%HOMEPATH%, если не указана. 
 Измените поведение по умолчанию, только если у вас возникли проблемы.</target>
         
       </trans-unit>
@@ -4671,7 +4671,7 @@ Change the default behaviour only if you experience problems.</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Format patch</source>
-        <target>Формировать патч</target>
+        <target>Сформировать патч</target>
         
       </trans-unit>
       <trans-unit id="Browse.Text">
@@ -4824,7 +4824,7 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
       <trans-unit id="_selectChange.Text">
         <source>Please enter a change</source>
-        <target>Пожалуйста введите изменения</target>
+        <target>Пожалуйста, введите изменения</target>
         
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
@@ -4888,7 +4888,7 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
         <source>Please enter a branch</source>
-        <target>Пожалуйста введите ветку</target>
+        <target>Пожалуйста, введите ветку</target>
         
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
@@ -4929,12 +4929,12 @@ Change the default behaviour only if you experience problems.</source>
         <source>Failed to save .gitattributes.
 Check if file is accessible.</source>
         <target>Неудалось сохранить .gitattributes.
-Проверьте что файл доступен.</target>
+Проверьте, что файл доступен.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitattributesCaption.Text">
         <source>Failed to save .gitattributes</source>
-        <target>Неудалось сохранить .gitattributes</target>
+        <target>Не удалось сохранить .gitattributes</target>
         
       </trans-unit>
       <trans-unit id="_noWorkingDirCaption.Text">
@@ -4970,7 +4970,7 @@ For more information run
 command &quot;git help gitattributes&quot;
 </source>
         <target>Измените атрибуты git
-Определените атрибуты к путям
+Определите атрибуты к путям
 
 Примеры
 Пометить все jpg файлы бинарными:
@@ -5020,7 +5020,7 @@ weirdchars.txt text
         <source>Failed to save .gitignore.
 Check if file is accessible.</source>
         <target>Неудалось сохранить .gitignore.
-Проверьте что файл доступен.</target>
+Проверьте, что файл доступен.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitignoreCaption.Text">
@@ -5153,7 +5153,7 @@ _ReSharper*/
         <source>Failed to save .gitreview.
 Check if file is accessible.</source>
         <target>Неудалось сохранить .gitreview.
-Проверьте что файл доступен.</target>
+Проверьте, что файл доступен.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitreviewCaption.Text">
@@ -5372,13 +5372,13 @@ Please choose a directory.</source>
       <trans-unit id="_cannotAccessMailmap.Text">
         <source>Failed to save .mailmap.
 Check if file is accessible.</source>
-        <target>Неудалось сохранить .mailmap.
-Проверьте что файл доступен.</target>
+        <target>Не удалось сохранить .mailmap.
+Проверьте, что файл доступен.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessMailmapCaption.Text">
         <source>Failed to save .mailmap</source>
-        <target>Неудалось сохранить .mailmap</target>
+        <target>Не удалось сохранить .mailmap</target>
         
       </trans-unit>
       <trans-unit id="_mailmapOnlyInWorkingDirSupported.Text">
@@ -5479,15 +5479,15 @@ ancestor tree.</source>
 Он пытается тщательно обнаружить пересекающиеся неясности слияния и считается в общем безопасным и быстрым.
 
 рекурсивно
-Эта стратегия может разрешить две головы только используя 3-ходовой алгоритм слияния. Когда есть больше чем один общий предок , который может быть
-использован для 3-х ходового слияния, она создает объединенное дерево общих предков и использует его качестве опорного дерева для 3-х ходового
-слияния. Кроме того, это поможет обнаруживать и обрабатывать слияния с переименованием. Это стратегия слияния по умолчанию при получение или
-слияние одной ветки.
+Эта стратегия может разрешить две головы, только используя 3-ходовой алгоритм слияния. Когда есть больше чем один общий предок, который может быть
+использован для 3-х ходового слияния, она создает объединенное дерево общих предков и использует его в качестве опорного дерева для 3-ходового
+слияния. Кроме того, это поможет обнаруживать и обрабатывать слияния с переименованием. Это стратегия слияния по умолчанию при получении или
+слиянии одной ветки.
 
 осьминог
-Эта стратегия разрешает случаи с более чем двумя головами, но отказывается делать сложные слияния, который должны быть разрешены вручную. Эта стратегия
-прежде всего предназначена для объединения голов ветки темы. Это стратегия слияния по умолчанию при получение или
-слияние более одной ветки.
+Эта стратегия разрешает случаи с более чем двумя головами, но отказывается делать сложные слияния, которые должны быть разрешены вручную. Эта стратегия
+прежде всего предназначена для объединения голов ветки темы. Это стратегия слияния по умолчанию при получении или
+слиянии более одной ветки.
 
 наш
 Эта стратегия разрешает любое количество голов, но в результате дерево слияния всегда является голова текущей ветки, эффективно
@@ -5516,7 +5516,7 @@ ancestor tree.</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Merge branch into current branch</source>
-        <target>Слияние текущей ветки с другой веток</target>
+        <target>Слияние ветки с текущей веткой</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -5810,7 +5810,7 @@ but did not specify a remote branch.
 Because this is not the current branch, you must specify a remote branch.</source>
         <target>Вам предложено забрать из внешнего хранилища '{0}',
 но вы не указали внешнею ветку.
-Из за того что это не текущая ветка, вы должны указать внешнею ветку.</target>
+Из-за того что это не текущая ветка, вы должны указать внешнею ветку.</target>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranchMainInstruction.Text">
@@ -5820,7 +5820,7 @@ Because this is not the default configured remote for your local branch,
 you must specify a remote branch.</source>
         <target>Вам предложено получить из внешнего хранилища '{0}',
 но вы не указали внешнею ветку.
-Из за того что не настроен внешний репозиторий для вашей локальной ветки, вы должны указать внешнею ветку.</target>
+Из-за того что не настроен внешний репозиторий для вашей локальной ветки, вы должны указать внешнею ветку.</target>
         
       </trans-unit>
       <trans-unit id="_notOnBranch.Text">
@@ -6079,7 +6079,7 @@ Are you sure you want to push this branch?</source>
       </trans-unit>
       <trans-unit id="_pullRepositoryButtons.Text">
         <source>Pull with last pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
-        <target>Получить используя последнее действие ({0})|Получить и переместить|Получить и объединить|Принудительная отправка|Отмена</target>
+        <target>Получить, используя последнее действие ({0})|Получить и переместить|Получить и объединить|Принудительная отправка|Отмена</target>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
@@ -6394,7 +6394,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="middleDotRB.Text">
         <source>Replace middle part with dots </source>
-        <target>Заменить среднею часть точками</target>
+        <target>Заменить среднюю часть точками</target>
         
       </trans-unit>
       <trans-unit id="mostSigDirRB.Text">
@@ -6419,12 +6419,12 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="sortLessRecentRepos.Text">
         <source>Sort less recent repositories alphabetically</source>
-        <target>Сортировать менее последние репозитория по алфавиту</target>
+        <target>Сортировать менее последние репозитории по алфавиту</target>
         
       </trans-unit>
       <trans-unit id="sortMostRecentRepos.Text">
         <source>Sort most recent repositories alphabetically</source>
-        <target>Сортировать самые последние репозитория по алфавиту</target>
+        <target>Сортировать самые последние репозитории по алфавиту</target>
         
       </trans-unit>
     </body>
@@ -6525,17 +6525,17 @@ Nothing to rebase.</source>
         <source>You have added a new remote repository.
 Do you want to automatically configure the default push and pull behavior for this remote?</source>
         <target>Вы добавили новый внешний репозиторий.
-Вы хотите автоматически настроить поведение по умолчанию при получение и отправки для данного внешнего репозитория?</target>
+Вы хотите автоматически настроить поведение по умолчанию при получении и отправки для данного внешнего репозитория?</target>
         
       </trans-unit>
       <trans-unit id="_questionAutoPullBehaviourCaption.Text">
         <source>New remote</source>
-        <target>Новый внешнее хранилище</target>
+        <target>Новое внешнее хранилище</target>
         
       </trans-unit>
       <trans-unit id="_questionDeleteRemote.Text">
         <source>Are you sure you want to delete this remote?</source>
-        <target>Вы уверены что хотите удалить этот внешнее хранилище?</target>
+        <target>Вы уверены, что хотите удалить это внешнее хранилище?</target>
         
       </trans-unit>
       <trans-unit id="_questionDeleteRemoteCaption.Text">
@@ -6741,7 +6741,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="branchInfo.Text">
         <source>Reset branch '{0}' to revision:</source>
-        <target>Сбросить ветку '{0}' к ревизие:</target>
+        <target>Сбросить ветку '{0}' к ревизии:</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -6843,7 +6843,7 @@ Value has been reset to empty value.</source>
 All changes since the last commit will be deleted.
 
 Do you want to reset changes?</source>
-        <target>Вы можете прервать текущую операцию сбросив все изменения.
+        <target>Вы можете прервать текущую операцию, сбросив все изменения.
 Все изменения с момента последнего коммита будут удалены.
 
 Вы хотите сбросить изменения?</target>
@@ -7181,13 +7181,13 @@ The merge conflict will not be marked as solved. Please try again.</source>
       <trans-unit id="noBaseRevision.Text">
         <source>There is no base revision for {0}.
 Fall back to 2-way merge?</source>
-        <target>Базы слияния для не  {0} существует.
+        <target>Базы слияния для {0} не существует.
 Использовать 2-way слияние ?</target>
         
       </trans-unit>
       <trans-unit id="noMergeTool.Text">
         <source>There is no mergetool configured. Please go to settings and set a mergetool!</source>
-        <target>Инструмент слияния не сконфигурирована. Пожалуйста, перейдите к настройкам и задайте инструмент слияния!</target>
+        <target>Инструмент слияния не сконфигурирован. Пожалуйста, перейдите к настройкам и задайте инструмент слияния!</target>
         
       </trans-unit>
       <trans-unit id="openMergeToolBtn.Text">
@@ -7398,7 +7398,7 @@ Do you want to set the correct command now? If not Global and Local Settings wil
         <target>Команда для запуска git правильно не настроена.
 Вам нужно установить правильный путь, чтобы иметь возможность использовать GitExtensions.
 
-Вы хотите установить правильную команду сейчас? Если нет, глобальных и локальных настройки не будут сохранены.</target>
+Вы хотите установить правильную команду сейчас? Если нет, глобальные и локальные настройки не будут сохранены.</target>
         
       </trans-unit>
       <trans-unit id="_cantFindGitMessageCaption.Text">
@@ -7438,8 +7438,8 @@ any global setting.
       <trans-unit id="labelInstantSaveNotice.Text">
         <source>Changes on the selected page will be saved instantly. 
 Therefore the Cancel button does NOT revert any changes made.</source>
-        <target>Изменения на выбранной странице, будут сохранены мгновенно.
-Поэтому кнопки Отмена не отменяет выполненные изменения.</target>
+        <target>Изменения на выбранной странице будут сохранены мгновенно.
+Поэтому кнопка Отмена не отменяет выполненные изменения.</target>
         
       </trans-unit>
     </body>
@@ -7478,7 +7478,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="areYouSure.Text">
         <source>Are you sure you want to drop the stash? This action cannot be undone.</source>
-        <target>Вы уверены что хотите удалить спрятанное изменение? Это действие не может быть отменено.</target>
+        <target>Вы уверены, что хотите удалить спрятанное изменение? Это действие не может быть отменено.</target>
         
       </trans-unit>
       <trans-unit id="cannotBeUndone.Text">
@@ -7513,12 +7513,12 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupported.Text">
         <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
-        <target>Спрятанные изменения для не отслеживаемых файлов не поддерживается в версии msysgit которую вы используете. Пожалуйста обновите msysgit как минимум до версии 1.7.7, чтобы использовать эту опцию.</target>
+        <target>Спрятанные изменения для не отслеживаемых файлов не поддерживается в версии msysgit, которую вы используете. Пожалуйста, обновите msysgit как минимум до версии 1.7.7, чтобы использовать эту опцию.</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupportedCaption.Text">
         <source>Stash untracked files</source>
-        <target>Спрятать не отслеживаемых файлы</target>
+        <target>Спрятать не отслеживаемые файлы</target>
         
       </trans-unit>
       <trans-unit id="toolStripButton1.Text">
@@ -7931,7 +7931,7 @@ Do you want to select a language code first?</source>
 but also the ones found in alternate object pools.
 </source>
         <target>Проверит не только объекты в GIT_OBJECT_DIRECTORY ($GIT_DIR/объекты),
-но и те что будет найдены в альтернативных пулах объектов.</target>
+но и те что будут найдены в альтернативных пулах объектов.</target>
         
       </trans-unit>
       <trans-unit id="NoReflogs.Text">
@@ -8132,12 +8132,12 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="_installCommitMsgHookFailed.Text">
         <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>Невозможно скачать файл  commit-msg. Пожалуйста установите хук commit-msg вручную.</target>
+        <target>Невозможно скачать файл  commit-msg. Пожалуйста, установите хук commit-msg вручную.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
         <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>Gerrit требует чтобы хук commit-msg был установлен. Хотите установить commit-msg хук в вашем репозиторие?</target>
+        <target>Gerrit требует, чтобы хук commit-msg был установлен. Хотите установить commit-msg хук в вашем репозитории?</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookShortText.Text">
@@ -8219,7 +8219,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="chkCloseProcessDialog.Text">
         <source>Close Process dialog when process succeeds</source>
-        <target>Закрывать окно процесса когда процесс завершился успешно</target>
+        <target>Закрывать окно процесса, когда процесс завершился успешно</target>
         
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistory.Text">
@@ -8294,7 +8294,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="label12.Text">
         <source>Limit number of commits that will be loaded at startup</source>
-        <target>Ограничить количества коммитов которые будут показываться при запуске</target>
+        <target>Ограничить количество коммитов, которые будут показываться при запуске</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -8314,7 +8314,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="lblDefaultCloneDestination.Text">
         <source>Default clone destination</source>
-        <target>Путь назначения по умолчанияю при клонирование</target>
+        <target>Путь назначения по умолчанияю при клонировании</target>
         
       </trans-unit>
     </body>
@@ -8374,7 +8374,7 @@ Context menu for additional operations</source>
       <trans-unit id="label14.Text">
         <source>Path to linux tools (sh). Leave empty when it is in the path.</source>
         <target>Путь к linux утилитам (sh). 
-Оставьте пустым когда он находиться в переменной PATH.</target>
+Оставьте пустым, когда он находится в переменной PATH.</target>
         
       </trans-unit>
       <trans-unit id="label50.Text">
@@ -8385,8 +8385,8 @@ Context menu for additional operations</source>
       <trans-unit id="label51.Text">
         <source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</source>
-        <target>Глобальный конфигурационный файл расположен в папке хранящейся в переменную среды %HOME%. 
-По умолчанию %HOME% будет установлен в %HOMEDRIVE%%HOMEPATH% если не указана. 
+        <target>Глобальный конфигурационный файл расположен в папке, хранящейся в переменной среды %HOME%. 
+По умолчанию %HOME% будет установлена в %HOMEDRIVE%%HOMEPATH%, если не указана. 
 Измените поведение по умолчанию, только если у вас возникли проблемы.</target>
         
       </trans-unit>
@@ -8441,7 +8441,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       </trans-unit>
       <trans-unit id="_toolSuggestPathText.Text">
         <source>Please enter the path to {0} and press suggest.</source>
-        <target>Пожалуйста введите путь к {0} и нажмите предложить.</target>
+        <target>Пожалуйста, введите путь к {0} и нажмите предложить.</target>
         
       </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">
@@ -8698,12 +8698,12 @@ help</source>
 Do you want to trust this host key and then try again?</source>
         <target>Ключ узла сервера не кэширован в реестре.
 
-Вы хотите доверится этому ключу узела, а затем попробовать еще раз?</target>
+Вы хотите довериться этому ключу узла, а затем попробовать еще раз?</target>
         
       </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
         <source>Update submodules on checkout?</source>
-        <target>Обновить субмодули при переключение?</target>
+        <target>Обновить субмодули при переключении?</target>
         
       </trans-unit>
       <trans-unit id="_unableGetSVNInformation.Text">
@@ -8733,7 +8733,7 @@ This will just checkout on the submodule the commit determined by the superproje
         <target>Репозиторий содержит субмодули, необходимо обновить их после каждого переключения.
 
 
-Обновление переключит субмодуль на коммит указанный в суперпроекте.</target>
+Обновление переключит субмодуль на коммит, указанный в суперпроекте.</target>
         
       </trans-unit>
     </body>
@@ -8781,7 +8781,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Select one of the subnodes to view or edit the settings of a Git Extensions Plugin.</source>
-        <target>Выберите один из узлов чтобы просмотреть или изменить настройки плагина Git Extensions.</target>
+        <target>Выберите один из узлов, чтобы просмотреть или изменить настройки плагина Git Extensions.</target>
         
       </trans-unit>
     </body>
@@ -8992,7 +8992,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="_quickSearchQuickHelp.Text">
         <source>Start typing in revision grid to start quick search.</source>
-        <target>Начните вводить в графе ревизий чтобы начать быстрый поиск.</target>
+        <target>Начните вводить в графе ревизий, чтобы начать быстрый поиск.</target>
         
       </trans-unit>
       <trans-unit id="_revisionFilter.Text">
@@ -9094,10 +9094,10 @@ If this is a normal repository, these steps are recommended:
 
 If this is a central repository (bare repository without a working directory):
 - Push changes from another repository</source>
-        <target>В этом репозиторие еще нет коммитов.
+        <target>В этом репозитории еще нет коммитов.
 
 Если это нормальный репозиторий, рекомендуются эти шаги:
-- Убедитесь, что у вас есть соответствующий файл .gitignore в вашем репозиторие.
+- Убедитесь, что у вас есть соответствующий файл .gitignore в вашем репозитории.
 - Зафиксируйте файлы с помощью фиксации
 
 Если это центральный репозиторий (чистый репозиторий без рабочего каталога):
@@ -9700,7 +9700,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_monthsAgo.Text">
         <source>{0} {1:month|months} ago</source>
-        <target>{0} {1:месяц|месяця(ев)} назад</target>
+        <target>{0} {1:месяц|месяца(ев)} назад</target>
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
@@ -9769,7 +9769,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_strCouldNotLoadDiscussion.Text">
         <source>Could not load discussion!</source>
-        <target>Не удалось загурзить обсуждение!</target>
+        <target>Не удалось загрузить обсуждение!</target>
         
       </trans-unit>
       <trans-unit id="_strError.Text">
