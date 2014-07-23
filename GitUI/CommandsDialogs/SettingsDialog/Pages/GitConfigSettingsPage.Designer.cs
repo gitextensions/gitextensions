@@ -118,7 +118,7 @@
             this.DiffToolCmdSuggest.Name = "DiffToolCmdSuggest";
             this.DiffToolCmdSuggest.Size = new System.Drawing.Size(108, 25);
             this.DiffToolCmdSuggest.TabIndex = 74;
-            this.DiffToolCmdSuggest.Text = "Suggest command";
+            this.DiffToolCmdSuggest.Text = "Suggest";
             this.DiffToolCmdSuggest.UseVisualStyleBackColor = true;
             this.DiffToolCmdSuggest.Click += new System.EventHandler(this.DiffToolCmdSuggest_Click);
             // 
@@ -249,7 +249,7 @@
             this.MergeToolCmdSuggest.Name = "MergeToolCmdSuggest";
             this.MergeToolCmdSuggest.Size = new System.Drawing.Size(108, 25);
             this.MergeToolCmdSuggest.TabIndex = 64;
-            this.MergeToolCmdSuggest.Text = "Suggest command";
+            this.MergeToolCmdSuggest.Text = "Suggest";
             this.MergeToolCmdSuggest.UseVisualStyleBackColor = true;
             this.MergeToolCmdSuggest.Click += new System.EventHandler(this.MergeToolCmdSuggest_Click);
             // 
