@@ -6661,11 +6661,11 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         <target />
       </trans-unit>
       <trans-unit id="DiffToolCmdSuggest.Text">
-        <source>Suggest command</source>
+        <source>Suggest</source>
         <target />
       </trans-unit>
       <trans-unit id="MergeToolCmdSuggest.Text">
-        <source>Suggest command</source>
+        <source>Suggest</source>
         <target />
       </trans-unit>
       <trans-unit id="PathToKDiff3.Text">
