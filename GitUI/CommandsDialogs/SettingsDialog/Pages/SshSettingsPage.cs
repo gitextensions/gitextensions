@@ -177,18 +177,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void PuttyBrowse_Click(object sender, EventArgs e)
         {
             PlinkPath.Text = CommonLogic.SelectFile(".",
-                                        "Plink.exe (plink.exe)|plink.exe|TortoisePlink.exe (tortoiseplink.exe)|tortoiseplink.exe",
+                                        "Plink (plink.exe)|plink.exe|TortoiseGitPLink (tortoisegitplink.exe)|tortoisegitplink.exe|TortoisePlink.exe (tortoiseplink.exe)|tortoiseplink.exe",
                                         PlinkPath.Text);
         }
 
         private void PuttygenBrowse_Click(object sender, EventArgs e)
         {
-            PuttygenPath.Text = CommonLogic.SelectFile(".", "puttygen.exe (puttygen.exe)|puttygen.exe", PuttygenPath.Text);
+            PuttygenPath.Text = CommonLogic.SelectFile(".", "PuttyGen (puttygen.exe)|puttygen.exe", PuttygenPath.Text);
         }
 
         private void PageantBrowse_Click(object sender, EventArgs e)
         {
-            PageantPath.Text = CommonLogic.SelectFile(".", "pageant.exe (pageant.exe)|pageant.exe", PageantPath.Text);
+            PageantPath.Text = CommonLogic.SelectFile(".", "PAgeant (pageant.exe)|pageant.exe", PageantPath.Text);
         }
 
         private void BrowseGitCred_Click(object sender, EventArgs e)
