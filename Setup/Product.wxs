@@ -219,6 +219,9 @@
             <Component Id="Github3.dll" Guid="*">
                 <File Source="..\Plugins\Github3\bin\Release\Github3.dll" />
             </Component>
+            <Component Id="GitFlow.dll" Guid="*">
+                <File Source="..\Plugins\GitFlow\bin\Release\GitFlow.dll" />
+            </Component>
             <Component Id="Gerrit.dll" Guid="*">
                 <File Source="..\Plugins\Gerrit\bin\Release\Gerrit.dll" />
             </Component>
@@ -539,6 +542,9 @@
                 </Feature>
                 <Feature Id="Github" Title="Github integration" Level="1">
                     <ComponentRef Id="Github3.dll" />
+                </Feature>
+                <Feature Id="GitFlow" Title="GitFlow" Level="1">
+                    <ComponentRef Id="GitFlow.dll" />
                 </Feature>
                 <Feature Id="Gource" Title="Gource visualization" Level="1">
                     <ComponentRef Id="Gource.dll" />
