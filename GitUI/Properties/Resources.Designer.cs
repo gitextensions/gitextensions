@@ -22,8 +22,8 @@ namespace GitUI.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal partial class Resources {
-        
+    internal partial class Resources
+    {
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
@@ -163,13 +163,15 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Changelog
         ///=========
-        ///### Version 2.47.4 (not released)
-        ///* Fixed issue #2142: Fetch in 2.47.3 creating remote ref from remote HEAD using current local branch&apos;s name
-        ///* Fixed issue #2137: Strange push behaviour 
-        ///* Fixed issue #2136: Git credential helper does not load 
-        ///* Fixed issue #2135: In v2.47.03 the SSH setting defaults to OpenSSH even though PuTTY is selected during installation
-        ///* Fixed issue #2131: No horizontal scrollbar in the main window Diff tab file list
-        ///* Fixed issue #2013: &quot;the branch seem [rest of string was truncated]&quot;;.
+        ///### Version 2.48RC (13 July 2014)
+        ///* Updated msysgit to 1.9.4
+        ///* Implemented auto completion for commit message window.
+        ///* Support intergration with TeamCity and Jenkins build server
+        ///* Support pull request for Atlassian Stash
+        ///* GitExt suggest update submodules after changing revision. PR #2176
+        ///* Show commit changes (i.e: -1+5) on Checkout Branch, CheckoutR evision, Create Branch and Create Tag dialogs
+        ///* Sepatate windows to merge submodules
+        ///* Increased performance and lowered memor [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -178,7 +180,11 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Arkadiy Shapkin, Janusz Białobrzewski, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide, Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind,  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Arkady Shapkin, Janusz Białobrzewski, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
+        ///Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington,
+        ///Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick,
+        ///Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl,
+        ///Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmin [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Coders {
             get {
@@ -1734,7 +1740,10 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D&apos;Archivio, australiensun, Airat Salikhov, Dave Brotherstone, diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh, Victor Shih, bygreencn, mrahn80.
+        ///   Looks up a localized string similar to Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, xaro, bleis-tift, Ralph Haußmann,
+        ///Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D&apos;Archivio, australiensun, Airat Salikhov, Dave Brotherstone,
+        ///diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh, Victor Shih, bygreencn, mrahn80,
+        ///Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87.
         /// </summary>
         internal static string Translators {
             get {
