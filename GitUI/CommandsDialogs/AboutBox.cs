@@ -9,12 +9,32 @@ namespace GitUI.CommandsDialogs
     {
         public AboutBox()
         {
-            _contributersList = string.Join(", ", new []{Resources.Coders, Resources.Translators,
-                Resources.Designers, Resources.Other})
+            _contributersList = string.Join(", ", new []{Coders, Translators,
+                Designers, Other})
                 .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
             InitializeComponent();
             Translate();
+        }
+
+        private string Coders
+        {
+            get { return Resources.Coders.Replace(Environment.NewLine, " "); }
+        }
+
+        private string Translators
+        {
+            get { return Resources.Translators.Replace(Environment.NewLine, " "); }
+        }
+
+        private string Designers
+        {
+            get { return Resources.Designers.Replace(Environment.NewLine, " "); }
+        }
+
+        private string Other
+        {
+            get { return Resources.Other.Replace(Environment.NewLine, " "); }
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -64,8 +84,8 @@ namespace GitUI.CommandsDialogs
         {
             using (FormContributors formContributors = new FormContributors())
             {
-                formContributors.LoadContributors(Resources.Coders, Resources.Translators,
-                    Resources.Designers, Resources.Other);
+                formContributors.LoadContributors(Coders, Translators,
+                    Designers, Other);
                 formContributors.ShowDialog(this);
             }
         }
