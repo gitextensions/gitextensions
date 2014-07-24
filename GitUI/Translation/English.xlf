@@ -2602,7 +2602,7 @@ revision:</source>
         <target />
       </trans-unit>
       <trans-unit id="labelPathHint.Text">
-        <source>(one line per path)</source>
+        <source>(one path per line)</source>
         <target />
       </trans-unit>
     </body>
