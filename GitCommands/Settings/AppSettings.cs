@@ -82,6 +82,18 @@ namespace GitCommands
 
         public static string GetInstallDir()
         {
+            if (IsPortable())
+            {
+                return GetGitExtensionsDirectory();
+            }
+            else
+            {
+                return ReadStringRegValue("InstallDir", string.Empty);
+            }
+        }
+
+        public static string GetResourceDir()
+        {
 #if DEBUG
             string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
             string debugPath = @"GitExtensions\bin\Debug";
@@ -93,15 +105,7 @@ namespace GitCommands
                 return Path.Combine(projectPath, "Bin");
             }
 #endif
-
-            if (IsPortable())
-            {
-                return GetGitExtensionsDirectory();
-            }
-            else
-            {
-                return ReadStringRegValue("InstallDir", string.Empty);
-            }
+            return GetInstallDir();
         }
 
         //for repair only
@@ -910,7 +914,7 @@ namespace GitCommands
 
         public static string GetDictionaryDir()
         {
-            return Path.Combine(GetInstallDir(), "Dictionaries");
+            return Path.Combine(GetResourceDir(), "Dictionaries");
         }
 
         public static void SaveSettings()
