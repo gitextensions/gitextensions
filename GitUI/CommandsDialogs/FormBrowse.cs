@@ -1812,7 +1812,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start(Path.Combine(Settings.GetInstallDir(), "GitExtensionsUserManual.pdf"));
+                Process.Start(Path.Combine(Settings.GetResourceDir(), "GitExtensionsUserManual.pdf"));
             }
             catch (Exception ex)
             {
