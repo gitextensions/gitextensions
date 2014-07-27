@@ -1128,7 +1128,12 @@ namespace GitUI
             else
                 FiltredCurrentCheckout = CurrentCheckout;
 
-            if (LastSelectedRows == null)
+            if (LastSelectedRows != null)
+            {
+                Revisions.SelectedIds = LastSelectedRows;
+                LastSelectedRows = null;
+            }
+            else
             {
                 if (!string.IsNullOrEmpty(_initialSelectedRevision))
                 {
@@ -1142,7 +1147,6 @@ namespace GitUI
                     SetSelectedRevision(FiltredCurrentCheckout);
                 }
             }
-            LastSelectedRows = null;
 
             if (!Revisions.IsRevisionRelative(FiltredCurrentCheckout))
             {
@@ -1214,9 +1218,6 @@ namespace GitUI
             Revisions.DateColumn.HeaderText = GetDateHeaderText();
 
             Revisions.SelectionChanged -= RevisionsSelectionChanged;
-
-            if (LastSelectedRows != null)
-                Revisions.SelectedIds = LastSelectedRows;
 
             Revisions.Enabled = true;
             Revisions.Focus();

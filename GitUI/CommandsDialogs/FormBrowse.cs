@@ -924,7 +924,6 @@ namespace GitUI.CommandsDialogs
         {
             if (RevisionGrid.IndexWatcher.IndexChanged)
             {
-                RevisionGrid.RefreshRevisions();
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
@@ -1028,6 +1027,12 @@ namespace GitUI.CommandsDialogs
             DiffText.SaveCurrentScrollPos();
 
             DiffFiles.SetDiffs(revisions);
+            if (_oldDiffItem != null && revisions.Count > 0 && revisions[0].Guid == _oldRevision)
+            {
+                DiffFiles.SelectedItem = _oldDiffItem;
+                _oldDiffItem = null;
+                _oldRevision = null;
+            }
 
             switch (revisions.Count)
             {
@@ -1039,12 +1044,6 @@ namespace GitUI.CommandsDialogs
                     var revision = revisions[0];
                     if (revision != null && revision.ParentGuids != null && revision.ParentGuids.Length != 0)
                         DiffTabPage.Text = string.Format("{0} (A: parent --> B: selection)", DiffTabPageTitleBase);
-                    if (_oldDiffItem != null && revision.Guid == _oldRevision)
-                    {
-                        DiffFiles.SelectedItem = _oldDiffItem;
-                        _oldDiffItem = null;
-                        _oldRevision = null;
-                    }
                     break;
 
                 case 2: // diff "first clicked revision" --> "second clicked revision"
