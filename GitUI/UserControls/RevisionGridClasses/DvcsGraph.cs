@@ -74,7 +74,6 @@ namespace GitUI.RevisionGridClasses
                 Color.Orange
             };
 
-        private readonly List<string> _toBeSelected = new List<string>();
         private int _backgroundScrollTo;
         private readonly Thread _backgroundThread;
         private volatile bool _shouldRun = true;
@@ -246,7 +245,7 @@ namespace GitUI.RevisionGridClasses
                 for (int i = 0; i < SelectedRows.Count; i++)
                 {
                     if (_graphData[SelectedRows[i].Index] != null)
-                        data[i] = _graphData[SelectedRows[i].Index].Node.Id;
+                        data[SelectedRows.Count - 1 - i] = _graphData[SelectedRows[i].Index].Node.Id;
                 }
                 return data;
             }
@@ -256,11 +255,11 @@ namespace GitUI.RevisionGridClasses
                 {
                     ClearSelection();
                     CurrentCell = null;
-                    _toBeSelected.Clear();
                     if (value == null)
-                    {
                         return;
-                    }
+
+                    ClearSelection();
+                    CurrentCell = null;
 
                     foreach (string rowItem in value)
                     {
@@ -275,11 +274,6 @@ namespace GitUI.RevisionGridClasses
                                 // not see the graph
                                 CurrentCell = Rows[row].Cells[1];
                             }
-                        }
-                        else
-                        {
-                            // Remember this node, and if we see it again, select it.
-                            _toBeSelected.Add(rowItem);
                         }
                     }
                 }
@@ -475,10 +469,10 @@ namespace GitUI.RevisionGridClasses
                 // DO NOT INVOKE! The RowCount is fixed at other strategic points in time.
                 // -Doing this in synch can lock up the application
                 // -Doing this asynch causes the scrollbar to flicker and eats performance
-                // -At first I was concerned that returning might lead to some cases where 
-                //  we have more items in the list than we're showing, but I'm pretty sure 
-                //  when we're done processing we'll update with the final count, so the 
-                //  problem will only be temporary, and not able to distinguish it from 
+                // -At first I was concerned that returning might lead to some cases where
+                //  we have more items in the list than we're showing, but I'm pretty sure
+                //  when we're done processing we'll update with the final count, so the
+                //  problem will only be temporary, and not able to distinguish it from
                 //  just git giving us data slowly.
                 //Invoke(new MethodInvoker(delegate { setRowCount(count); }));
                 return;
@@ -606,7 +600,7 @@ namespace GitUI.RevisionGridClasses
                     }
 
                     // Update the row (if needed)
-                    if (curCount < _visibleBottom || _toBeSelected.Count > 0)
+                    if (curCount < _visibleBottom)
                     {
                         this.InvokeAsync(o => UpdateRow((int)o), curCount);
                     }
@@ -672,36 +666,9 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            // Check to see if the newly added item should be selected
-            if (_toBeSelected.Count > 0)
-            {
-                if (_graphData.Count > row)
-                {
-                    lock (_graphData)
-                    {
-                        if (_graphData.Count > row)
-                        {
-                            string id = _graphData[row].Node.Id;
-                            if (_toBeSelected.Contains(id))
-                            {
-                                _toBeSelected.Remove(id);
-                                Rows[row].Selected = true;
-                                if (CurrentCell == null)
-                                {
-                                    // Set the current cell to the first item. We use cell
-                                    // 1 because cell 0 could be hidden if they've chosen to
-                                    // not see the graph
-                                    CurrentCell = Rows[row].Cells[1];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
             //We only need to invalidate if the row is visible
             if (_visibleBottom >= row &&
-                _visibleTop <= row && 
+                _visibleTop <= row &&
                 row < RowCount)
             {
                 try
@@ -901,7 +868,7 @@ namespace GitUI.RevisionGridClasses
 
             #endregion
 
-            // Compute how much the head needs to move to show the requested item. 
+            // Compute how much the head needs to move to show the requested item.
             int neededHeadAdjustment = aNeededRow - _cacheHead;
             if (neededHeadAdjustment > 0)
             {
