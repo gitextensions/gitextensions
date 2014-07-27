@@ -188,9 +188,9 @@ namespace GitUI
             {
                 if (SelectedItems.Any())
                 {
-                    // Remember the point where the mouse down occurred. 
-                    // The DragSize indicates the size that the mouse can move 
-                    // before a drag event should be started.               
+                    // Remember the point where the mouse down occurred.
+                    // The DragSize indicates the size that the mouse can move
+                    // before a drag event should be started.
                     Size dragSize = SystemInformation.DragSize;
 
                     // Create a rectangle using the DragSize, with the mouse position being
@@ -256,7 +256,7 @@ namespace GitUI
                     DataObject obj = new DataObject();
                     obj.SetFileDropList(fileList);
 
-                    // Proceed with the drag and drop, passing in the list item.                   
+                    // Proceed with the drag and drop, passing in the list item.
                     DoDragDrop(obj, DragDropEffects.Copy);
                     dragBoxFromMouseDown = Rectangle.Empty;
                 }
@@ -347,7 +347,7 @@ namespace GitUI
                 if (value == null)
                     return;
                 foreach (ListViewItem item in FileStatusListView.Items)
-                    if (item.Tag == value)
+                    if (value.CompareTo((GitItemStatus)item.Tag) == 0)
                     {
                         item.Selected = true;
                         item.EnsureVisible();
