@@ -21,7 +21,7 @@ namespace GitUI
         /// One row selected:
         /// B - Selected row
         /// A - B's parent
-        /// 
+        ///
         /// Two rows selected:
         /// A - first selected row
         /// B - second selected row
@@ -103,7 +103,7 @@ namespace GitUI
                 if (revisionToCmp == null)
                     return;
 
-                output = grid.Module.OpenWithDifftool(fileName, null, revisionToCmp);            
+                output = grid.Module.OpenWithDifftool(fileName, null, revisionToCmp);
             }
 
             if (!string.IsNullOrEmpty(output))
@@ -124,6 +124,7 @@ namespace GitUI
         private static PatchApply.Patch GetItemPatch(GitModule module, GitItemStatus file,
             string firstRevision, string secondRevision, string diffArgs, Encoding encoding)
         {
+            bool cacheResult = true;
             if (GitRevision.IsArtificial(firstRevision))
             {
                 bool staged = firstRevision == GitRevision.IndexGuid;
@@ -133,6 +134,7 @@ namespace GitUI
                             diffArgs, encoding);
                 }
 
+                cacheResult = false;
                 firstRevision = secondRevision;
                 secondRevision = string.Empty;
                 if (staged)
@@ -142,7 +144,7 @@ namespace GitUI
                 secondRevision = firstRevision + "^";
 
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
-                    diffArgs, encoding, true);
+                    diffArgs, encoding, cacheResult);
         }
 
         public static string GetSelectedPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file)
@@ -264,7 +266,7 @@ namespace GitUI
 
         public class MaskPanel : PictureBox
         {
-            public MaskPanel() 
+            public MaskPanel()
             {
                 Image = Properties.Resources.loadingpanel;
                 SizeMode = PictureBoxSizeMode.CenterImage;
@@ -290,7 +292,7 @@ namespace GitUI
 
         public static void InvokeAsync(this Control control, Action action)
         {
-            InvokeAsync(control, _ => action(), null);            
+            InvokeAsync(control, _ => action(), null);
         }
 
         public static void InvokeAsync(this Control control, SendOrPostCallback action, object state)
