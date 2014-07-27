@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace GitCommands
 {
-    public class GitItemStatus
+    public class GitItemStatus : IComparable<GitItemStatus>
     {
         public GitItemStatus()
         {
@@ -48,6 +49,14 @@ namespace GitCommands
         public string RenameCopyPercentage { get; set; }
 
         public Task<GitSubmoduleStatus> SubmoduleStatus { get; set; }
+
+        public int CompareTo(GitItemStatus other)
+        {
+            int value = (Name ?? "").CompareTo(other.Name ?? "");
+            if (value == 0)
+                value = (OldName ?? "").CompareTo(other.OldName ?? "");
+            return value;
+        }
 
         public override string ToString()
         {

@@ -1909,6 +1909,7 @@ namespace GitCommands
             else if (fileB.IsNullOrEmpty())
                 fileB = fileA;
 
+            //fix refs slashes
             from = from.ToPosixPath();
             to = to.ToPosixPath();
             string commitRange = string.Empty;

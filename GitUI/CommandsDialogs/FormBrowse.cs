@@ -210,12 +210,25 @@ namespace GitUI.CommandsDialogs
             this.InvokeAsync(RefreshRevisions);
         }
 
+        private string _oldRevision;
+        private GitItemStatus _oldDiffItem;
         private void RefreshRevisions()
         {
             if (_dashboard == null || !_dashboard.Visible)
             {
+                var revisions = RevisionGrid.GetSelectedRevisions();
+                if (revisions.Count != 0) 
+                {
+                    _oldRevision = revisions[0].Guid;
+                    _oldDiffItem = DiffFiles.SelectedItem;
+                }
+                else
+                {
+                    _oldRevision = null;
+                    _oldDiffItem = null;
+                }
                 RevisionGrid.ForceRefreshRevisions();
-                InternalInitialize(false);
+                InternalInitialize(true);
             }
         }
     
@@ -928,10 +941,10 @@ namespace GitUI.CommandsDialogs
             if (CommitInfoTabControl.SelectedTab != TreeTabPage)
                 return;
 
-            if (selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.FileTree))
+            if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.FileTree))
                 return;
 
-            selectedRevisionUpdatedTargets |= UpdateTargets.FileTree;
+            _selectedRevisionUpdatedTargets |= UpdateTargets.FileTree;
 
             try
             {
@@ -1005,10 +1018,10 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.DiffList))
+            if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.DiffList))
                 return;
 
-            selectedRevisionUpdatedTargets |= UpdateTargets.DiffList;
+            _selectedRevisionUpdatedTargets |= UpdateTargets.DiffList;
 
             var revisions = RevisionGrid.GetSelectedRevisions();
 
@@ -1026,6 +1039,12 @@ namespace GitUI.CommandsDialogs
                     var revision = revisions[0];
                     if (revision != null && revision.ParentGuids != null && revision.ParentGuids.Length != 0)
                         DiffTabPage.Text = string.Format("{0} (A: parent --> B: selection)", DiffTabPageTitleBase);
+                    if (_oldDiffItem != null && revision.Guid == _oldRevision)
+                    {
+                        DiffFiles.SelectedItem = _oldDiffItem;
+                        _oldDiffItem = null;
+                        _oldRevision = null;
+                    }
                     break;
 
                 case 2: // diff "first clicked revision" --> "second clicked revision"
@@ -1045,10 +1064,10 @@ namespace GitUI.CommandsDialogs
             if (CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
                 return;
 
-            if (selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
+            if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
                 return;
 
-            selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
+            _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
 
             if (RevisionGrid.GetSelectedRevisions().Count == 0)
                 return;
@@ -1257,12 +1276,12 @@ namespace GitUI.CommandsDialogs
             CommitInfo = 8
         }
 
-        private UpdateTargets selectedRevisionUpdatedTargets = UpdateTargets.None;
+        private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
         private void RevisionGridSelectionChanged(object sender, EventArgs e)
         {
             try
             {
-                selectedRevisionUpdatedTargets = UpdateTargets.None;
+                _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
