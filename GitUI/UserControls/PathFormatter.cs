@@ -62,6 +62,7 @@ namespace GitUI
 
             if (truncatePathMethod.Equals("fileNameOnly"))
             {
+                name = name.TrimEnd(AppSettings.PosixPathSeparator);
                 var fileName = Path.GetFileName(name);
                 var oldFileName = Path.GetFileName(oldName);
                 
