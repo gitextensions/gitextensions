@@ -883,7 +883,7 @@ namespace GitUI.SpellChecker
 
             if (!_autoCompleteListTask.IsCompleted)
             {
-                if (_autoCompleteListTask.Status != TaskStatus.Running)
+                if (_autoCompleteListTask.Status == TaskStatus.Created)
                     _autoCompleteListTask.Start();
 
                 if (calledByUser)
