@@ -92,6 +92,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             globalAutoCrlfFalse.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.False;
             globalAutoCrlfInput.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.Input;
             globalAutoCrlfTrue.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.True;
+            globalAutoCrlfNotSet.Checked = !CurrentSettings.core.autocrlf.Value.HasValue;
         }
 
         /// <summary>
@@ -124,6 +125,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 if (globalAutoCrlfFalse.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.False;
                 if (globalAutoCrlfInput.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.Input;
                 if (globalAutoCrlfTrue.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.True;
+                if (globalAutoCrlfNotSet.Checked) CurrentSettings.core.autocrlf.Value = null;
             }
         }
 
