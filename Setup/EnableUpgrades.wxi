@@ -6,7 +6,7 @@
   <!-- Upgrade WiX installations -->
   <MajorUpgrade
     Schedule="afterInstallInitialize"
-    DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now."
+    DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit."
     AllowSameVersionUpgrades="yes"/>
 
 </Include>
