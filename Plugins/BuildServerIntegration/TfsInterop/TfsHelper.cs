@@ -26,9 +26,10 @@ namespace TfsInterop
     {
         private IBuildDefinition _buildDefinition;
         private string _hostname;
-        private string _teamCollection;
-        private string _projectName;
         private bool _isWebServer;
+        private string _urlPrefix;
+        private IBuildServer _buildServer;
+        private TeamFoundationServer _tfServer;
 
         public bool IsDependencyOk()
         {
@@ -46,11 +47,8 @@ namespace TfsInterop
         public void ConnectToTfsServer(string hostname, string teamCollection, string projectName, string buildDefinitionName = null)
         {
             _hostname = hostname;
-            _teamCollection = teamCollection;
-            _projectName = projectName;
 
             _isWebServer = _hostname.Contains("://");
-
             try
             {
                 string url;
@@ -58,20 +56,22 @@ namespace TfsInterop
                 {
                     _hostname = _hostname.TrimEnd('\\', '/');
                     url = _hostname + "/" + teamCollection;
+                    _urlPrefix = hostname + "/" + teamCollection + "/" + projectName + "/_build#buildUri=";
                 }
                 else
                 {
                     url = "http://" + _hostname + ":8080/tfs/" + teamCollection;
+                    _urlPrefix = "http://" + hostname + ":8080/tfs/Build/Build.aspx?artifactMoniker=";
                 }
 
                 // Get a connection to the desired Team Foundation Server
-                var tfServer = TeamFoundationServerFactory.GetServer(url, new UICredentialsProvider());
+                _tfServer = TeamFoundationServerFactory.GetServer(url, new UICredentialsProvider());
 
                 // Get a reference to a build service
-                var buildServer = tfServer.GetService<IBuildServer>();
+                _buildServer = _tfServer.GetService<IBuildServer>();
 
                 // Retrieve a list of build definitions
-                var buildDefs = buildServer.QueryBuildDefinitions(projectName);
+                var buildDefs = _buildServer.QueryBuildDefinitions(projectName);
 
                 if (buildDefs.Length != 0)
                 {
@@ -96,9 +96,17 @@ namespace TfsInterop
             }
         }
 
-        public IList<IBuild> QueryBuilds()
+        public IList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
         {
-            return _buildDefinition.QueryBuilds().Select(b =>
+            var buildSpec = _buildServer.CreateBuildDetailSpec(_buildDefinition);
+            buildSpec.InformationTypes = null;
+            if (sinceDate.HasValue)
+                buildSpec.MinFinishTime = sinceDate.Value;
+
+            if (running.HasValue && running.Value)
+                buildSpec.Status = Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress;
+
+            return _buildServer.QueryBuilds(buildSpec).Builds.Select(b =>
                 {
                     var id = b.Uri.AbsoluteUri.Substring(b.Uri.AbsoluteUri.LastIndexOf('/') + 1);
                     string duration = string.Empty;
@@ -107,9 +115,9 @@ namespace TfsInterop
                         && b.Status != Microsoft.TeamFoundation.Build.Client.BuildStatus.Stopped)
                     {
                         if (b.Status == Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress)
-                            duration += " / " + GetDuration(DateTime.Now - b.StartTime);
+                            duration = " / " + GetDuration(DateTime.Now - b.StartTime);
                         else
-                            duration += " / " + GetDuration(b.FinishTime - b.StartTime);
+                            duration = " / " + GetDuration(b.FinishTime - b.StartTime);
                     }
 
                     return new BuildInfo
@@ -121,8 +129,9 @@ namespace TfsInterop
                             IsFinished = b.BuildFinished,
                             Description = GetStatus(b) + duration,
                             Revision = b.SourceGetVersion,
-                            Url = _isWebServer ? _hostname + "/" + _teamCollection + "/" + _projectName + "/_build#buildUri=" + Uri.EscapeDataString(b.Uri.AbsoluteUri) + "&_a=summary"
-                                : "http://" + _hostname + ":8080/tfs/Build/Build.aspx?artifactMoniker=" + id,
+                            Url = _urlPrefix + (_isWebServer
+                                      ? Uri.EscapeDataString(b.Uri.AbsoluteUri) + "&_a=summary"
+                                      : id),
                         };
                 }).Cast<IBuild>().ToList();
         }
@@ -190,6 +199,15 @@ namespace TfsInterop
                 s += duration.Minutes.ToString("00") + "m";
             s += duration.Seconds.ToString("00") + "s";
             return s;
+        }
+
+        public void Dispose()
+        {
+            _buildServer = null;
+            if (_tfServer != null)
+                _tfServer.Dispose();
+            _buildDefinition = null;
+            GC.Collect();
         }
     }
 }
