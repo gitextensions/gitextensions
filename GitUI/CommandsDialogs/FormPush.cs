@@ -416,11 +416,6 @@ namespace GitUI.CommandsDialogs
                             {
                                 AppSettings.AutoPullOnPushRejectedAction = AppSettings.PullAction.Default;
                             }
-                            if (Module.LastPullAction == AppSettings.PullAction.None)
-                            {
-                                return false;
-                            }
-                            Module.LastPullActionToFormPullAction();
                             break;
                         case 1:
                             AppSettings.FormPullAction = AppSettings.PullAction.Rebase;
@@ -461,6 +456,16 @@ namespace GitUI.CommandsDialogs
 
                 if (AppSettings.AutoPullOnPushRejectedAction == AppSettings.PullAction.None)
                     return false;
+
+                if (AppSettings.AutoPullOnPushRejectedAction == AppSettings.PullAction.Default)
+                {
+                    if (Module.LastPullAction == AppSettings.PullAction.None)
+                    {
+                        return false;
+                    }
+
+                    Module.LastPullActionToFormPullAction();
+                }
 
                 if (AppSettings.FormPullAction == AppSettings.PullAction.Fetch)
                 {
