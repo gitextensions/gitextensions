@@ -13,7 +13,7 @@ namespace GitPlugin.Commands
     public class Plugin
     {
         private const string GitCommandBarName = "GitExtensions";
-        private const string OldGitMainMenuName = "Git";
+        private const string OldGitMainMenuName = "&Git";
         private const string GitMainMenuName = "&GitExt";
 
         private readonly AddIn _addIn;
