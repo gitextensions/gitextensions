@@ -1830,11 +1830,10 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start(Path.Combine(Settings.GetResourceDir(), "GitExtensionsUserManual.pdf"));
+                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.48/");
             }
-            catch (Exception ex)
+            catch (System.ComponentModel.Win32Exception)
             {
-                MessageBox.Show(this, ex.Message);
             }
         }
 
