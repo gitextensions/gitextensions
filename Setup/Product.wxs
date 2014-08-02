@@ -59,9 +59,6 @@
             <Component Id="gitex.cmd" Guid="*">
                 <File Source="..\bin\gitex.cmd" />
             </Component>
-            <Component Id="GitExtensionsUserManual.pdf" Guid="*">
-                <File Source="..\bin\GitExtensionsUserManual.pdf" />
-            </Component>
             <Component Id="GitExtensions.exe" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\GitExtensions.exe">
                     <netfx:NativeImage Id="ngen_GitExtensions.exe" Platform="all" Priority="1" />
@@ -479,7 +476,6 @@
         <Feature Id="GitExtensions" Title="Git Extensions" Level="1" Display="expand">
             <ComponentRef Id="gitextensions.ico" />
             <ComponentRef Id="gitex.cmd" />
-            <ComponentRef Id="GitExtensionsUserManual.pdf" />
             <ComponentRef Id="GitExtensions.exe" />
             <ComponentRef Id="GitExtensions.exe.config" />
             <ComponentRef Id="TranslationApp.exe" />
