@@ -107,15 +107,6 @@ namespace GitPlugin
             }
         }
 
-        bool IsVS2008OrUpper
-        {
-            get
-            {
-                var ver = new Version(_gitPlugin.Application.Version.Split(new[] { ' ' })[0]);
-                return ver.Major >= 9;
-            }
-        }
-
         private void GitPluginUISetupMainMenu()
         {
             // Try to delete the commandbar if it exists from a previous execution,
