@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
@@ -248,35 +249,40 @@ namespace GitUI.BuildServerIntegration
 
         private IBuildServerAdapter GetBuildServerAdapter()
         {
-            if (Module.Settings.BuildServer.EnableIntegration.ValueOrDefault)
+            if (!Module.Settings.BuildServer.EnableIntegration.ValueOrDefault)
+                return null;
+            var buildServerType = Module.Settings.BuildServer.Type.Value;
+            if (string.IsNullOrEmpty(buildServerType))
+                return null;
+            try
             {
-                var buildServerType = Module.Settings.BuildServer.Type.Value;
-                if (!string.IsNullOrEmpty(buildServerType))
-                {
-                    var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-                    var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
+                var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
 
-                    if (export != null)
+                if (export != null)
+                {
+                    try
                     {
-                        try
+                        var canBeLoaded = export.Metadata.CanBeLoaded;
+                        if (!canBeLoaded.IsNullOrEmpty())
                         {
-                            var canBeLoaded = export.Metadata.CanBeLoaded;
-                            if (!canBeLoaded.IsNullOrEmpty())
-                            {
-                                System.Diagnostics.Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
-                                return null;
-                            }
-                            var buildServerAdapter = export.Value;
-                            buildServerAdapter.Initialize(this, Module.Settings.BuildServer.TypeSettings);
-                            return buildServerAdapter;
+                            System.Diagnostics.Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
+                            return null;
                         }
-                        catch (InvalidOperationException ex)
-                        {
-                            System.Diagnostics.Debug.Write(ex);
-                            // Invalid arguments, do not return a build server adapter
-                        }
+                        var buildServerAdapter = export.Value;
+                        buildServerAdapter.Initialize(this, Module.Settings.BuildServer.TypeSettings);
+                        return buildServerAdapter;
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        Debug.Write(ex);
+                        // Invalid arguments, do not return a build server adapter
                     }
                 }
+            }
+            catch (System.Reflection.ReflectionTypeLoadException)
+            {
+                Trace.WriteLine("GetExports() failed");
             }
             return null;
         }
