@@ -93,6 +93,18 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _nodeNotFoundSelectionNotChanged =
             new TranslationString("Node not found. File tree selection was not changed.");
 
+        private readonly TranslationString _diffNoSelection =
+            new TranslationString("Diff (no selection)");
+
+        private readonly TranslationString _diffParentWithSelection =
+            new TranslationString("Diff (A: parent --> B: selection)");
+
+        private readonly TranslationString _diffTwoSelected =
+            new TranslationString("Diff (A: first --> B: second)");
+
+        private readonly TranslationString _diffNotSupported =
+            new TranslationString("Diff (not supported)");
+
         #endregion
 
         private Dashboard _dashboard;
@@ -111,7 +123,7 @@ namespace GitUI.CommandsDialogs
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
 
-        private const string DiffTabPageTitleBase = "Diff";
+        private string _diffTabPageTitleBase = "";
 
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
@@ -203,6 +215,12 @@ namespace GitUI.CommandsDialogs
             _formBrowseMenuCommands = new FormBrowseMenuCommands(this, RevisionGrid);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
+        }
+
+        private void Translate()
+        {
+            base.Translate();
+            _diffTabPageTitleBase = DiffTabPage.Text;
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
@@ -1010,7 +1028,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillDiff()
         {
-            DiffTabPage.Text = string.Format("{0}", DiffTabPageTitleBase);
+            DiffTabPage.Text = _diffTabPageTitleBase;
 
             if (CommitInfoTabControl.SelectedTab != DiffTabPage)
             {
@@ -1037,23 +1055,23 @@ namespace GitUI.CommandsDialogs
             switch (revisions.Count)
             {
                 case 0:
-                    DiffTabPage.Text = string.Format("{0} (no selection)", DiffTabPageTitleBase);
+                    DiffTabPage.Text = _diffNoSelection.Text;
                     break;
 
                 case 1: // diff "parent" --> "selected revision"
                     var revision = revisions[0];
                     if (revision != null && revision.ParentGuids != null && revision.ParentGuids.Length != 0)
-                        DiffTabPage.Text = string.Format("{0} (A: parent --> B: selection)", DiffTabPageTitleBase);
+                        DiffTabPage.Text = _diffParentWithSelection.Text;
                     break;
 
                 case 2: // diff "first clicked revision" --> "second clicked revision"
                     bool artificialRevSelected = revisions[0].IsArtificial() || revisions[1].IsArtificial();
                     if (!artificialRevSelected)
-                        DiffTabPage.Text = string.Format("{0} (A: first --> B: second)", DiffTabPageTitleBase);
+                        DiffTabPage.Text = _diffTwoSelected.Text;
                     break;
 
                 default: // more than 2 revisions selected => no diff
-                    DiffTabPage.Text = string.Format("{0} (not supported)", DiffTabPageTitleBase);
+                    DiffTabPage.Text = _diffNotSupported.Text;
                     break;
             }
         }
