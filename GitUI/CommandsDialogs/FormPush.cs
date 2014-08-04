@@ -448,8 +448,13 @@ namespace GitUI.CommandsDialogs
 
                 if (forcePush)
                 {
-                    if (!form.ProcessArguments.Contains(" -f "))
-                        form.ProcessArguments = form.ProcessArguments.Replace("push", "push -f");
+                    if (!form.ProcessArguments.Contains(" -f ") && !form.ProcessArguments.Contains(" --force"))
+                    {
+                        if (GitCommandHelpers.VersionInUse.SupportPushForceWithLease)
+                            form.ProcessArguments = form.ProcessArguments.Replace("push", "push --force-with-lease");
+                        else
+                            form.ProcessArguments = form.ProcessArguments.Replace("push", "push -f");
+                    }
                     form.Retry();
                     return true;
                 }
