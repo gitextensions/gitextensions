@@ -1233,6 +1233,14 @@ Do you want to open it?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FolderBrowserButton" source-language="en">
+    <body>
+      <trans-unit id="buttonBrowse.Text">
+        <source>Browse...</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="ForkAndCloneForm" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -4505,7 +4513,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target />
       </trans-unit>
       <trans-unit id="AddRemote.Text">
-        <source>Manage</source>
+        <source>Manage remotes</source>
         <target />
       </trans-unit>
       <trans-unit id="AllTags.Text">
