@@ -576,8 +576,8 @@ namespace GitUI.CommandsDialogs
             {
                 var splitter = new RecentRepoSplitter
                 {
-                    measureFont = _NO_TRANSLATE_Workingdir.Font,
-                    graphics = graphics
+                    MeasureFont = _NO_TRANSLATE_Workingdir.Font,
+                    Graphics = graphics
                 };
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
 
@@ -1914,8 +1914,8 @@ namespace GitUI.CommandsDialogs
             {
                 var splitter = new RecentRepoSplitter
                 {
-                    measureFont = _NO_TRANSLATE_Workingdir.Font,
-                    graphics = graphics
+                    MeasureFont = _NO_TRANSLATE_Workingdir.Font,
+                    Graphics = graphics
                 };
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
             }
