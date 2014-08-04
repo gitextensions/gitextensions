@@ -118,10 +118,10 @@ xcopy /y ..\GitUI\Translation\Japanese.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Japanese.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Korean.gif GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Korean.xlf GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Korean.gif GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Korean.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Russian.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Russian.xlf GitExtensions\Translation\

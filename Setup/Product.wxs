@@ -19,6 +19,7 @@
         <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
         <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
         <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
+        <?define VS_ADDIN_FULL_NAME = "GitPlugin.Connect" ?>
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="ProgramFilesFolder">
                 <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
@@ -48,8 +49,8 @@
         </Directory>
         <?define VsVersions = 2005;2008;2010;2012;2013?>
         <?foreach VsVersion in $(var.VsVersions)?>
-        <Property Id="VS$(var.VsVersion)">
-            <DirectorySearch Id="VS$(var.VsVersion)" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
+        <Property Id="VS$(var.VsVersion)INSTFOLDER">
+            <DirectorySearch Id="VS$(var.VsVersion)DirSearchId" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
         </Property>
         <?endforeach ?>
         <DirectoryRef Id="INSTALLDIR">
@@ -373,12 +374,12 @@
             <Component Id="Japanese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.gif" />
             </Component>
-            <Component Id="Korean.xlf" Guid="*">
+            <!--Component Id="Korean.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.xlf" />
             </Component>
             <Component Id="Korean.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.gif" />
-            </Component>
+            </Component-->
             <Component Id="Russian.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.xlf" />
             </Component>
@@ -454,6 +455,103 @@
             </Directory>
         </DirectoryRef>
         <?endforeach ?>
+
+        <!-- http://www.mztools.com/articles/2011/MZ2011020.aspx -->
+        <!-- Custom action to remove the commands of Visual Studio 2005 when uninstalling the add-in -->
+        <CustomAction Id="RemoveVS2005AddInCommands" Script="vbscript" Execute="deferred" Return="ignore">
+<![CDATA[
+    Set dte = CreateObject("VisualStudio.DTE.8.0")
+    For Each cmd In dte.Commands
+        If InStr(cmd, "$(var.VS_ADDIN_FULL_NAME)") <> 0 Then
+           cmd.Delete()
+        End If
+    Next
+    dte.Quit()
+]]>
+        </CustomAction>
+
+        <!-- Custom action to remove the commands of Visual Studio 2008 when uninstalling the add-in -->
+        <CustomAction Id="RemoveVS2008AddInCommands" Script="vbscript" Execute="deferred" Return="ignore">
+<![CDATA[
+    Set dte = CreateObject("VisualStudio.DTE.9.0")
+    For Each cmd In dte.Commands
+        If InStr(cmd, "$(var.VS_ADDIN_FULL_NAME)") <> 0 Then
+            cmd.Delete()
+        End If
+    Next
+    dte.Quit()
+]]>
+        </CustomAction>
+
+        <!-- Custom action to remove the commands of Visual Studio 2010 when uninstalling the add-in -->
+        <CustomAction Id="RemoveVS2010AddInCommands" Script="vbscript" Execute="deferred" Return="ignore">
+<![CDATA[
+    Set dte = CreateObject("VisualStudio.DTE.10.0")
+    For Each cmd In dte.Commands
+        If InStr(cmd, "$(var.VS_ADDIN_FULL_NAME)") <> 0 Then
+            cmd.Delete()
+        End If
+    Next
+    dte.Quit()
+]]>
+        </CustomAction>
+
+        <!-- Custom action to remove the commands of Visual Studio 2012 when uninstalling the add-in -->
+        <CustomAction Id="RemoveVS2012AddInCommands" Script="vbscript" Execute="deferred" Return="ignore">
+ <![CDATA[
+    Set dte = CreateObject("VisualStudio.DTE.11.0")
+    For Each cmd In dte.Commands
+        If InStr(cmd, "$(var.VS_ADDIN_FULL_NAME)") <> 0 Then
+            cmd.Delete()
+        End If
+    Next
+    dte.Quit()
+ ]]>
+        </CustomAction>
+
+        <!-- Custom action to remove the commands of Visual Studio 2013 when uninstalling the add-in -->
+        <CustomAction Id="RemoveVS2013AddInCommands" Script="vbscript" Execute="deferred" Return="ignore">
+<![CDATA[
+    Set dte = CreateObject("VisualStudio.DTE.12.0")
+    For Each cmd In dte.Commands
+        If InStr(cmd, "$(var.VS_ADDIN_FULL_NAME)") <> 0 Then
+            cmd.Delete()
+        End If
+    Next
+    dte.Quit()
+]]>
+        </CustomAction>
+
+        <InstallExecuteSequence>
+            <!-- Execute the defined custom actions to remove the add-in commands from Visual Studio. They must execute when
+              all the following conditions are true:
+              - The setup has already been run
+              - It is not an upgrade
+              - Visual Studio is installed
+              - The add-in feature state (!feature-state) for the Visual Studio version is installed (3 = INSTALLSTATE_LOCAL). See:
+                Conditional Statement Syntax (http://msdn.microsoft.com/en-us/library/aa368012.aspx)
+            -->
+            <Custom Action="RemoveVS2005AddInCommands"
+                 After="RemoveFiles">Installed <!--AND NOT UPGRADINGPRODUCTCODE -->AND VS2005INSTFOLDER
+                                     AND !VS2005FeatureId=3</Custom>
+
+            <Custom Action="RemoveVS2008AddInCommands"
+                 After="RemoveFiles">Installed <!--AND NOT UPGRADINGPRODUCTCODE -->AND VS2008INSTFOLDER
+                                     AND !VS2008FeatureId=3</Custom>
+
+            <Custom Action="RemoveVS2010AddInCommands"
+                 After="RemoveFiles">Installed <!--AND NOT UPGRADINGPRODUCTCODE -->AND VS2010INSTFOLDER
+                                     AND !VS2010FeatureId=3</Custom>
+
+            <Custom Action="RemoveVS2012AddInCommands"
+                 After="RemoveFiles">Installed <!--AND NOT UPGRADINGPRODUCTCODE -->AND VS2012INSTFOLDER
+                                     AND !VS2012FeatureId=3</Custom>
+
+            <Custom Action="RemoveVS2013AddInCommands"
+                 After="RemoveFiles">Installed <!--AND NOT UPGRADINGPRODUCTCODE -->AND VS2013INSTFOLDER
+                                     AND !VS2013FeatureId=3</Custom>
+        </InstallExecuteSequence>
+
         <DirectoryRef Id="ProgramMenuFolder">
             <Component Id="GitExtensions.newstartmenu" Guid="*">
                 <Shortcut Id="GitExtensions.newstartmenu" Name="$(var.ProductName)" Description="$(var.ProductName)" Icon="gitextensions.ico" Target="[INSTALLDIR]GitExtensions.exe" WorkingDirectory="INSTALLDIR" />
@@ -656,10 +754,10 @@
                     <ComponentRef Id="Japanese.xlf" />
                     <ComponentRef Id="Japanese.gif" />
                 </Feature>
-                <Feature Id="Korean" Title="Korean" Level="1">
+                <!--<Feature Id="Korean" Title="Korean" Level="1">
                     <ComponentRef Id="Korean.xlf" />
                     <ComponentRef Id="Korean.gif" />
-                </Feature>
+                </Feature-->
                 <Feature Id="Russian" Title="Russian" Level="1">
                     <ComponentRef Id="Russian.xlf" />
                     <ComponentRef Id="Russian.gif" />
@@ -686,8 +784,8 @@
             </Feature>
             <Feature Id="VSExtension" Title="Visual Studio extension" Level="1">
                 <?foreach VsVersion in $(var.VsVersions)?>
-                <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
-                    <Condition Level="2">NOT VS$(var.VsVersion)</Condition>
+                <Feature Id="VS$(var.VsVersion)FeatureId" Title="Visual Studio $(var.VsVersion) integration" Level="1">
+                    <Condition Level="2">NOT VS$(var.VsVersion)INSTFOLDER</Condition>
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
