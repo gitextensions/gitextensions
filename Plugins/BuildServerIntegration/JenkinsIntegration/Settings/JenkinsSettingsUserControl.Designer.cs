@@ -28,12 +28,10 @@ namespace JenkinsIntegration.Settings
         /// </summary>
         private void InitializeComponent()
         {
-			System.Windows.Forms.Label label13;
-			System.Windows.Forms.Label label1;
 			this.JenkinsServerUrl = new System.Windows.Forms.TextBox();
 			this.JenkinsProjectName = new System.Windows.Forms.TextBox();
-			label13 = new System.Windows.Forms.Label();
-			label1 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// label13
@@ -92,5 +90,7 @@ namespace JenkinsIntegration.Settings
 
         private System.Windows.Forms.TextBox JenkinsServerUrl;
         private System.Windows.Forms.TextBox JenkinsProjectName;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label1;
     }
 }

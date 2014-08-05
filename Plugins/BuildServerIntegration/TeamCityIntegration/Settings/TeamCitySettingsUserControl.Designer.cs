@@ -28,19 +28,14 @@ namespace TeamCityIntegration.Settings
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Label label13;
-            System.Windows.Forms.Label label1;
-            System.Windows.Forms.Label labelBuildFilter;
-            System.Windows.Forms.Label labelProjectNameComment;
-            System.Windows.Forms.Label labelBuildIdFilter;
             this.TeamCityServerUrl = new System.Windows.Forms.TextBox();
             this.TeamCityProjectName = new System.Windows.Forms.TextBox();
             this.TeamCityBuildIdFilter = new System.Windows.Forms.TextBox();
-            label13 = new System.Windows.Forms.Label();
-            label1 = new System.Windows.Forms.Label();
-            labelBuildFilter = new System.Windows.Forms.Label();
-            labelProjectNameComment = new System.Windows.Forms.Label();
-            labelBuildIdFilter = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelBuildFilter = new System.Windows.Forms.Label();
+            this.labelProjectNameComment = new System.Windows.Forms.Label();
+            this.labelBuildIdFilter = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label13
@@ -142,5 +137,10 @@ namespace TeamCityIntegration.Settings
         private System.Windows.Forms.TextBox TeamCityServerUrl;
         private System.Windows.Forms.TextBox TeamCityProjectName;
         private System.Windows.Forms.TextBox TeamCityBuildIdFilter;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelBuildFilter;
+        private System.Windows.Forms.Label labelProjectNameComment;
+        private System.Windows.Forms.Label labelBuildIdFilter;
     }
 }
