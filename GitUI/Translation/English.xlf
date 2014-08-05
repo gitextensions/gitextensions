@@ -6874,6 +6874,18 @@ help</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="label1.Text">
+        <source>Project name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Jenkins server URL</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="MessageBoxes" source-language="en">
     <body>
       <trans-unit id="_error.Text">
@@ -7733,6 +7745,51 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_yearsAgo.Text">
         <source>{0} {1:year|years} ago</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="label1.Text">
+        <source>Project name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>TeamCity server URL</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelBuildFilter.Text">
+        <source>Build Id Filter</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelBuildIdFilter.Text">
+        <source>Regexp</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelProjectNameComment.Text">
+        <source>Several names splitted by | char</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="label1.Text">
+        <source>Team collection name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Tfs server (Name or URL)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Project name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Build definition name
+(use first found if left empty)</source>
         <target />
       </trans-unit>
     </body>

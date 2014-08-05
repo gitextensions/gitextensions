@@ -28,18 +28,14 @@ namespace TfsIntegration.Settings
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Label label13;
-            System.Windows.Forms.Label label1;
-            System.Windows.Forms.Label label2;
-            System.Windows.Forms.Label label3;
             this.TfsServer = new System.Windows.Forms.TextBox();
             this.TfsProjectName = new System.Windows.Forms.TextBox();
             this.TfsTeamCollectionName = new System.Windows.Forms.TextBox();
             this.TfsBuildDefinitionName = new System.Windows.Forms.TextBox();
-            label13 = new System.Windows.Forms.Label();
-            label1 = new System.Windows.Forms.Label();
-            label2 = new System.Windows.Forms.Label();
-            label3 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label13
@@ -140,5 +136,9 @@ namespace TfsIntegration.Settings
         private System.Windows.Forms.TextBox TfsProjectName;
         private System.Windows.Forms.TextBox TfsTeamCollectionName;
         private System.Windows.Forms.TextBox TfsBuildDefinitionName;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
