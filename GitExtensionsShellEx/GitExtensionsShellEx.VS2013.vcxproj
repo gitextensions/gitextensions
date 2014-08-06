@@ -119,10 +119,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
-    </ResourceCompile>
+    <ResourceCompile />
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>$(ProjectName).def</ModuleDefinitionFile>
@@ -153,10 +150,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
-    </ResourceCompile>
+    <ResourceCompile />
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>$(ProjectName).def</ModuleDefinitionFile>
@@ -193,10 +187,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
-    </ResourceCompile>
+    <ResourceCompile />
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>$(ProjectName).def</ModuleDefinitionFile>
@@ -235,10 +226,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0409</Culture>
-    </ResourceCompile>
+    <ResourceCompile />
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>$(ProjectName).def</ModuleDefinitionFile>
@@ -281,16 +269,7 @@
     <None Include="Resources\IconStash.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include=".\GitExtensionsShellEx.rc">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OUTDIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OUTDIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OUTDIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OUTDIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
+    <ResourceCompile Include=".\GitExtensionsShellEx.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h" />
