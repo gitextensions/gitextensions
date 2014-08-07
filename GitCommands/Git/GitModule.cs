@@ -2288,15 +2288,21 @@ namespace GitCommands
             return result;
         }
 
-        private string GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
+        private CmdResult GetTreeFromRemoteRefsEx(string remote, bool tags, bool branches)
         {
             if (tags && branches)
-                return RunGitCmd("ls-remote --heads --tags \"" + remote + "\"");
+                return RunGitCmdResult("ls-remote --heads --tags \"" + remote + "\"");
             if (tags)
-                return RunGitCmd("ls-remote --tags \"" + remote + "\"");
+                return RunGitCmdResult("ls-remote --tags \"" + remote + "\"");
             if (branches)
-                return RunGitCmd("ls-remote --heads \"" + remote + "\"");
-            return "";
+                return RunGitCmdResult("ls-remote --heads \"" + remote + "\"");
+            return new CmdResult();
+        }
+
+        private string GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
+        {
+            CmdResult result = GetTreeFromRemoteRefsEx(remote, tags, branches);
+            return result.ExitCode == 0 ? result.StdOutput : "";
         }
 
         public IList<GitRef> GetRefs(bool tags = true, bool branches = true)
