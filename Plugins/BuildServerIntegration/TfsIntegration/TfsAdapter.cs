@@ -32,7 +32,7 @@ namespace TfsIntegration
             {
                 if (EnvUtils.IsNet4FullOrHigher())
                     return null;
-                return ".Net 4 full freamwork required";
+                return ".Net 4 full framework required";
             }
         }
     }
