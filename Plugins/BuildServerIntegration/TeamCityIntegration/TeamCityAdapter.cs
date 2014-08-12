@@ -41,7 +41,7 @@ namespace TeamCityIntegration
                 if (EnvUtils.IsNet4FullOrHigher())
                     return null;
                 else
-                    return ".Net 4 full freamwork required";
+                    return ".Net 4 full framework required";
             }
         }
     }
