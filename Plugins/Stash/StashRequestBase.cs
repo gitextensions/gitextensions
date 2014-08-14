@@ -72,7 +72,7 @@ namespace Stash
                 System.Console.WriteLine(jsonString);
                 json = (JObject)JsonConvert.DeserializeObject(jsonString);
             }
-            catch (JsonReaderException e)
+            catch (JsonReaderException)
             {
                 MessageBox.Show(jsonString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 var errorResponse = new StashResponse<T> { Success = false };

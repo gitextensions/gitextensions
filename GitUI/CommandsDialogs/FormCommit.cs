@@ -138,7 +138,6 @@ namespace GitUI.CommandsDialogs
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
         private string _userName = "";
         private string _userEmail = "";
-        private bool RepoUserSettings = false;
         /// <summary>
         /// For VS designer
         /// </summary>
