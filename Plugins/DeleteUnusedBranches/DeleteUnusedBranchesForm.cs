@@ -182,7 +182,7 @@ namespace DeleteUnusedBranches
         private void ClearResults()
         {
             instructionLabel.Text = "Choose branches to delete. Only branches that are fully merged in '" + referenceBranch + "' will be deleted.";
-            lblStatus.Text = "Press '" + Refresh.Text + "' to search for branches to delete.";
+            lblStatus.Text = "Press '" + RefreshBtn.Text + "' to search for branches to delete.";
             branches.Clear();
             branches.ResetBindings();
         }
@@ -244,7 +244,7 @@ namespace DeleteUnusedBranches
                     return;
 
                 refreshCancellation = value ? new CancellationTokenSource() : null;
-                Refresh.Text = value ? "Cancel" : "Search branches";
+                RefreshBtn.Text = value ? "Cancel" : "Search branches";
                 imgLoading.Visible = value;
                 lblStatus.Text = value ? "Loading..." : GetDefaultStatusText();
             }
