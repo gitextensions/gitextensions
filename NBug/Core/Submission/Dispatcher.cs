@@ -37,7 +37,7 @@ namespace NBug.Core.Submission
 					// Log and swallow NBug's internal exceptions by default
 					Task.Factory.StartNew(this.Dispatch)
 					    .ContinueWith(
-						    t => Logger.Error("An exception occurred while dispatching bug report. Check the inner exception for details", t.Exception), 
+						    t => Logger.Error("An exception occurred while dispatching bug report. Check the inner exception for details", t.Exception),
 						    TaskContinuationOptions.OnlyOnFaulted);
 				}
 				else
@@ -94,14 +94,15 @@ namespace NBug.Core.Submission
 			}
 		}
 
-		/// <summary>
-		/// Enumerate all protocols to see if they are properly configured and send using the ones that are configured
-		/// as many times as necessary.
-		/// </summary>
-		/// <param name="reportFile">The file to read the report from.</param>
-		/// <returns>Returns <see langword="true"/> if the sending was successful.
-		/// Returns <see langword="true"/> if the report was submitted to at least one destination.</returns>
-		private bool EnumerateDestinations(Stream reportFile, ExceptionData exceptionData)
+	    /// <summary>
+	    /// Enumerate all protocols to see if they are properly configured and send using the ones that are configured
+	    /// as many times as necessary.
+	    /// </summary>
+	    /// <param name="reportFile">The file to read the report from.</param>
+	    /// <param name="exceptionData"></param>
+	    /// <returns>Returns <see langword="true"/> if the sending was successful.
+	    /// Returns <see langword="true"/> if the report was submitted to at least one destination.</returns>
+	    private bool EnumerateDestinations(Stream reportFile, ExceptionData exceptionData)
 		{
 			var sentSuccessfullyAtLeastOnce = false;
 			var fileName = Path.GetFileName(((FileStream)reportFile).Name);
@@ -118,7 +119,7 @@ namespace NBug.Core.Submission
 				catch (Exception exception)
 				{
 					Logger.Error(
-						string.Format("An exception occurred while submitting bug report with {0}. Check the inner exception for details.", destination.GetType().Name), 
+						string.Format("An exception occurred while submitting bug report with {0}. Check the inner exception for details.", destination.GetType().Name),
 						exception);
 				}
 			}
