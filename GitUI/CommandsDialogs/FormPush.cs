@@ -29,6 +29,12 @@ namespace GitUI.CommandsDialogs
         public bool ErrorOccurred { get; private set; }
 
         #region Translation
+
+        private readonly TranslationString _beforePushScriptFailed =
+            new TranslationString("The last before-push script failed." +
+                                  Environment.NewLine + "" + Environment.NewLine + "Do you want to abort the push?");
+        private readonly TranslationString _beforePushScriptFailedCaption = new TranslationString("Before-push script failed");
+
         private readonly TranslationString _branchNewForRemote =
             new TranslationString("The branch you are about to push seems to be a new branch for the remote." +
                                   Environment.NewLine + "Are you sure you want to push this branch?");
@@ -308,7 +314,8 @@ namespace GitUI.CommandsDialogs
                 pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            if (!ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush, _beforePushScriptFailed.Text, _beforePushScriptFailedCaption.Text))
+                return false;
 
             //controls can be accessed only from UI thread
             _selectedBranch = _NO_TRANSLATE_Branch.Text;

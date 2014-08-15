@@ -10,6 +10,13 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCreateTag : GitModuleForm
     {
+        #region Translation
+
+        private readonly TranslationString _beforePushTagScriptFailed =
+            new TranslationString("The last before-push-create-tag script failed." +
+                                  Environment.NewLine + "" + Environment.NewLine + "Do you want to abort pushing the create-tag?");
+        private readonly TranslationString _beforePushTagScriptFailedCaption = new TranslationString("Before-push-create-tag script failed");
+
         private readonly TranslationString _messageCaption = new TranslationString("Tag");
 
         private readonly TranslationString _noRevisionSelected =
@@ -18,6 +25,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noTagMessage = new TranslationString("Please enter a tag message");
 
         private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
+
+        #endregion
 
         private string _currentRemote = "";
 
@@ -93,7 +102,8 @@ namespace GitUI.CommandsDialogs
         {
             var pushCmd = GitCommandHelpers.PushTagCmd(_currentRemote, tagName, false);
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            if (!ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush, _beforePushTagScriptFailed.Text, _beforePushTagScriptFailedCaption.Text))
+                return;
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
             {

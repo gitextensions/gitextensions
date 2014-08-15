@@ -34,6 +34,14 @@ namespace GitUI.Script
 
         public static bool RunScript(IWin32Window owner, GitModule aModule, string script, RevisionGrid revisionGrid)
         {
+            bool scriptSucceeded;
+            return RunScript(owner, aModule, script, revisionGrid, out scriptSucceeded);
+        }
+        public static bool RunScript(IWin32Window owner, GitModule aModule, string script, RevisionGrid revisionGrid,
+            out bool scriptSucceeded)
+        {
+            scriptSucceeded = false;
+
             if (string.IsNullOrEmpty(script))
                 return false;
 
@@ -62,7 +70,7 @@ namespace GitUI.Script
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            return RunScript(owner, aModule, scriptInfo, revisionGrid);
+            return RunScript(owner, aModule, scriptInfo, revisionGrid, out scriptSucceeded);
         }
 
         private static string GetRemotePath(string url)
@@ -79,7 +87,8 @@ namespace GitUI.Script
             return path;
         }
 
-        internal static bool RunScript(IWin32Window owner, GitModule aModule, ScriptInfo scriptInfo, RevisionGrid revisionGrid)
+        internal static bool RunScript(IWin32Window owner, GitModule aModule, ScriptInfo scriptInfo, RevisionGrid revisionGrid,
+            out bool scriptSucceeded)
         {
             string originalCommand = scriptInfo.Command;
             string argument = scriptInfo.Arguments;
@@ -312,13 +321,17 @@ namespace GitUI.Script
             }
 
             if (!scriptInfo.RunInBackground)
-                FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
+                scriptSucceeded = FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
             else
             {
                 if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
                     Process.Start(argument);
                 else
                     aModule.RunExternalCmdDetached(command, argument);
+
+                // No way to tell if a detached process succeeded at this time...
+                // so for our purposes, assume it does.
+                scriptSucceeded = true;
             }
             return !scriptInfo.RunInBackground;
         }

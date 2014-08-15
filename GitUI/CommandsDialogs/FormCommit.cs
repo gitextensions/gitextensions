@@ -36,6 +36,11 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _amendCommitCaption = new TranslationString("Amend commit");
 
+        private readonly TranslationString _beforeCommitScriptFailed =
+            new TranslationString("The last before-commit script failed." +
+                                  Environment.NewLine + "" + Environment.NewLine + "Do you want to abort the commit?");
+        private readonly TranslationString _beforeCommitScriptFailedCaption = new TranslationString("Before-commit script failed");
+
         private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
 
         private readonly TranslationString _deleteSelectedFiles =
@@ -894,9 +899,12 @@ namespace GitUI.CommandsDialogs
                     SetCommitMessageFromTextBox(Message.Text);
                 }
 
-                ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
+                var errorOccurred = !ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit,
+                    _beforeCommitScriptFailed.Text, _beforeCommitScriptFailedCaption.Text);
+                if (errorOccurred)
+                    return;
 
-                var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage));
+                errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage));
 
                 UICommands.RepoChangedNotifier.Notify();
 
