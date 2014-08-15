@@ -29,7 +29,7 @@ namespace TfsInterop
         private bool _isWebServer;
         private string _urlPrefix;
         private IBuildServer _buildServer;
-        private TeamFoundationServer _tfServer;
+        private TfsTeamProjectCollection _tfsCollection;
 
         public bool IsDependencyOk()
         {
@@ -65,10 +65,10 @@ namespace TfsInterop
                 }
 
                 // Get a connection to the desired Team Foundation Server
-                _tfServer = TeamFoundationServerFactory.GetServer(url, new UICredentialsProvider());
+                _tfsCollection = new TfsTeamProjectCollection(new Uri(url), new TfsClientCredentials());
 
                 // Get a reference to a build service
-                _buildServer = _tfServer.GetService<IBuildServer>();
+                _buildServer = _tfsCollection.GetService<IBuildServer>();
 
                 // Retrieve a list of build definitions
                 var buildDefs = _buildServer.QueryBuildDefinitions(projectName);
@@ -204,8 +204,8 @@ namespace TfsInterop
         public void Dispose()
         {
             _buildServer = null;
-            if (_tfServer != null)
-                _tfServer.Dispose();
+            if (_tfsCollection != null)
+                _tfsCollection.Dispose();
             _buildDefinition = null;
             GC.Collect();
         }
