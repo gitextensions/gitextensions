@@ -19,7 +19,6 @@
         <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
         <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
         <WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
-        <?define VS_ADDIN_FULL_NAME = "GitPlugin.Connect" ?>
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="ProgramFilesFolder">
                 <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
@@ -457,70 +456,27 @@
         <?endforeach ?>
 
         <!-- http://www.mztools.com/articles/2011/MZ2011020.aspx -->
-        <!-- Custom action to remove the commands of Visual Studio 2005 when uninstalling the add-in -->
-        <CustomAction Id="RemoveVS2005AddInCommands" Script="vbscript" Execute="deferred" Return="ignore">
-<![CDATA[
-    Set dte = CreateObject("VisualStudio.DTE.8.0")
-    For Each cmd In dte.Commands
-        If InStr(cmd, "$(var.VS_ADDIN_FULL_NAME)") <> 0 Then
-           cmd.Delete()
-        End If
-    Next
-    dte.Quit()
-]]>
-        </CustomAction>
-
-        <!-- Custom action to remove the commands of Visual Studio 2008 when uninstalling the add-in -->
-        <CustomAction Id="RemoveVS2008AddInCommands" Script="vbscript" Execute="deferred" Return="ignore">
-<![CDATA[
-    Set dte = CreateObject("VisualStudio.DTE.9.0")
-    For Each cmd In dte.Commands
-        If InStr(cmd, "$(var.VS_ADDIN_FULL_NAME)") <> 0 Then
-            cmd.Delete()
-        End If
-    Next
-    dte.Quit()
-]]>
-        </CustomAction>
-
-        <!-- Custom action to remove the commands of Visual Studio 2010 when uninstalling the add-in -->
-        <CustomAction Id="RemoveVS2010AddInCommands" Script="vbscript" Execute="deferred" Return="ignore">
-<![CDATA[
-    Set dte = CreateObject("VisualStudio.DTE.10.0")
-    For Each cmd In dte.Commands
-        If InStr(cmd, "$(var.VS_ADDIN_FULL_NAME)") <> 0 Then
-            cmd.Delete()
-        End If
-    Next
-    dte.Quit()
-]]>
-        </CustomAction>
-
-        <!-- Custom action to remove the commands of Visual Studio 2012 when uninstalling the add-in -->
-        <CustomAction Id="RemoveVS2012AddInCommands" Script="vbscript" Execute="deferred" Return="ignore">
- <![CDATA[
-    Set dte = CreateObject("VisualStudio.DTE.11.0")
-    For Each cmd In dte.Commands
-        If InStr(cmd, "$(var.VS_ADDIN_FULL_NAME)") <> 0 Then
-            cmd.Delete()
-        End If
-    Next
-    dte.Quit()
- ]]>
-        </CustomAction>
-
-        <!-- Custom action to remove the commands of Visual Studio 2013 when uninstalling the add-in -->
-        <CustomAction Id="RemoveVS2013AddInCommands" Script="vbscript" Execute="deferred" Return="ignore">
-<![CDATA[
-    Set dte = CreateObject("VisualStudio.DTE.12.0")
-    For Each cmd In dte.Commands
-        If InStr(cmd, "$(var.VS_ADDIN_FULL_NAME)") <> 0 Then
-            cmd.Delete()
-        End If
-    Next
-    dte.Quit()
-]]>
-        </CustomAction>
+        <Binary Id="BinRemoveVSAddInCommands" SourceFile="RemoveVSAddInCommands.vbs"/>
+        <CustomAction Id='RemoveVS2005AddInCommands'
+            BinaryKey="BinRemoveVSAddInCommands"
+            VBScriptCall="RemoveVS2005AddInCommands"
+            Return="check"/>
+        <CustomAction Id='RemoveVS2008AddInCommands'
+            BinaryKey="BinRemoveVSAddInCommands"
+            VBScriptCall="RemoveVS2008AddInCommands"
+            Return="check"/>
+        <CustomAction Id='RemoveVS2010AddInCommands'
+            BinaryKey="BinRemoveVSAddInCommands"
+            VBScriptCall="RemoveVS2010AddInCommands"
+            Return="check"/>
+        <CustomAction Id='RemoveVS2012AddInCommands'
+            BinaryKey="BinRemoveVSAddInCommands"
+            VBScriptCall="RemoveVS2012AddInCommands"
+            Return="check"/>
+        <CustomAction Id='RemoveVS2013AddInCommands'
+            BinaryKey="BinRemoveVSAddInCommands"
+            VBScriptCall="RemoveVS2013AddInCommands"
+            Return="check"/>
 
         <InstallExecuteSequence>
             <!-- Execute the defined custom actions to remove the add-in commands from Visual Studio. They must execute when
