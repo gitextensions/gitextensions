@@ -488,23 +488,23 @@
                 Conditional Statement Syntax (http://msdn.microsoft.com/en-us/library/aa368012.aspx)
             -->
             <Custom Action="RemoveVS2005AddInCommands"
-                 After="RemoveFiles">Installed <!--AND NOT UPGRADINGPRODUCTCODE -->AND VS2005INSTFOLDER
+                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2005INSTFOLDER
                                      AND !VS2005FeatureId=3</Custom>
 
             <Custom Action="RemoveVS2008AddInCommands"
-                 After="RemoveFiles">Installed <!--AND NOT UPGRADINGPRODUCTCODE -->AND VS2008INSTFOLDER
+                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2008INSTFOLDER
                                      AND !VS2008FeatureId=3</Custom>
 
             <Custom Action="RemoveVS2010AddInCommands"
-                 After="RemoveFiles">Installed <!--AND NOT UPGRADINGPRODUCTCODE -->AND VS2010INSTFOLDER
+                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2010INSTFOLDER
                                      AND !VS2010FeatureId=3</Custom>
 
             <Custom Action="RemoveVS2012AddInCommands"
-                 After="RemoveFiles">Installed <!--AND NOT UPGRADINGPRODUCTCODE -->AND VS2012INSTFOLDER
+                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2012INSTFOLDER
                                      AND !VS2012FeatureId=3</Custom>
 
             <Custom Action="RemoveVS2013AddInCommands"
-                 After="RemoveFiles">Installed <!--AND NOT UPGRADINGPRODUCTCODE -->AND VS2013INSTFOLDER
+                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2013INSTFOLDER
                                      AND !VS2013FeatureId=3</Custom>
         </InstallExecuteSequence>
 
