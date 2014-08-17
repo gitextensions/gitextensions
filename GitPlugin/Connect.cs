@@ -80,6 +80,7 @@ namespace GitPlugin
                     // The add-in was marked to load on startup
                     // Do nothing at this point because the IDE may not be fully initialized
                     // Visual Studio will call OnStartupComplete when fully initialized
+                    GitPluginUIUpdate();
                     break;
 
                 case ext_ConnectMode.ext_cm_AfterStartup:
@@ -112,13 +113,13 @@ namespace GitPlugin
             // Try to delete the commandbar if it exists from a previous execution,
             // because the /resetaddin command-line switch of VS 2005 (or higher) add-in
             // projects only resets commands and buttons, not commandbars
-            _gitPlugin.DeleteOldGitMainMenuBar();
-            _gitPlugin.DeleteGitMainMenuBar();
+            _gitPlugin.DeleteOldGitExtMainMenuBar();
+            _gitPlugin.DeleteGitExtMainMenuBar();
 
             try
             {
                 // Add a new commandbar popup
-                CommandBar mainMenuBar = _gitPlugin.AddGitMainMenuBar(GetToolsMenuName());
+                CommandBar mainMenuBar = _gitPlugin.AddGitExtMainMenuBar(GetToolsMenuName());
                 CommandBarPopup mainMenuPopup = (CommandBarPopup)mainMenuBar.Parent;
 
                 var n = 1;
@@ -178,11 +179,11 @@ namespace GitPlugin
             // Try to delete the commandbar if it exists from a previous execution,
             // because the /resetaddin command-line switch of VS 2005 (or higher) add-in
             // projects only resets commands and buttons, not commandbars
-            _gitPlugin.DeleteGitCommandBar();
+            _gitPlugin.DeleteGitExtCommandBar();
 
             try
             {
-                CommandBar commandBar = _gitPlugin.AddGitCommandBar(MsoBarPosition.msoBarTop);
+                CommandBar commandBar = _gitPlugin.AddGitExtCommandBar(MsoBarPosition.msoBarTop);
 
                 _gitPlugin.AddToolbarCommandWithText(commandBar, "Commit", "Commit", "Commit changes", 7, 1);
                 _gitPlugin.AddToolbarCommand(commandBar, "Browse", "Browse", "Browse repository", 12, 2);
@@ -249,6 +250,20 @@ namespace GitPlugin
             }
         }
 
+        private void GitPluginUIUpdate()
+        {
+            try
+            {
+                if (!_gitPlugin.IsGitExtMainMenuBarExist())
+                {
+                    GitPluginUISetup();
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+        
         private void RegiserGitPluginCommand()
         {
             //GitPlugin.DeleteCommandBar("GitExtensions");
