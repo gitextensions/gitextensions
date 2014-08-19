@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override bool IsInstantSavePage
         {
-            get { return true; }
+            get { return false; }
         }
 
         protected override void SettingsToPage()
