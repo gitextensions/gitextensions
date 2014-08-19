@@ -1,5 +1,22 @@
 ﻿Changelog
 =========
+### Version 2.48 (20 August 2014)
+* Git credential helper now optional product
+* Sort branches and tags in commit info and display only first 20
+* Checkout remote branch dialog try find tracking branch first
+* Show full shell extension menu with Shift pressed
+* Disabled installing MSysGit Git-Cheetah shell extension
+* Visual Studio plugin menu renamed to GitExt
+* Button Browse... and Manage Remotes fixed in form Pull
+* Support machine level HOME environment variable
+* Error string in list of branches fixed
+* Fixed issue #2079: Selection order after refresh fixed
+* Fixed issue #2178: Disabled caching diffs for artificial revisions
+* Fixed issue #2387: Remove pdf manual from installer
+* Fixed issue #2389: Never try to checkout an empty-named branch
+* Fixed issue #2397: Cannot close GitEx window with opened repository
+* Updated translations
+
 ### Version 2.48RC (13 July 2014)
 * Updated msysgit to 1.9.4
 * Implemented auto completion for commit message window.
