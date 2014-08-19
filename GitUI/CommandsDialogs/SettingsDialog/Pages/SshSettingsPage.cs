@@ -193,7 +193,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void BrowseGitCred_Click(object sender, EventArgs e)
         {
-            GitCredPath.Text = "!\"" + CommonLogic.SelectFile(".", "git-credential-winstore (*.exe)|*.exe", GitCredPath.Text) + "\"";
+            var prev = GitCredPath.Text.TrimStart('!').Trim('\"');
+            var filename = CommonLogic.SelectFile(".", "git-credential-winstore (*.exe)|*.exe", prev);
+            if (!string.IsNullOrEmpty(filename))
+                GitCredPath.Text = "!\"" + filename + "\"";
+            else
+                GitCredPath.Text = "";
         }
 
         private void SuggestGitCred_Click(object sender, EventArgs e)
