@@ -1,5 +1,8 @@
 # Git Extensions
 
+WARNING: Repository rewritten to reduce its size. Please clone it again. |
+-----------
+
 ## Introduction
 
 GitExtensions is a shell extension, a Visual Studio 2008 / 2010 / 2012 / 2013 plugin and a standalone Git repository tool.
