@@ -70,6 +70,9 @@ namespace System
                 return left + sep + right;
         }
 
+        /// <summary>
+        /// Quotes string if it is not null
+        /// </summary>
         public static string Quote(this string s)
         {
             return s.Quote("\"");

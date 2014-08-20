@@ -316,7 +316,8 @@ namespace GitCommands
         }
 
         private static GitVersion _versionInUse;
-        private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
+        private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
+            ?? Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
         public static GitVersion VersionInUse
         {

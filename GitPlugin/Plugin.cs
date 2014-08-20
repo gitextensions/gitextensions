@@ -167,7 +167,7 @@ namespace GitPlugin.Commands
             }
         }
 
-        public void DeleteGitCommandBar()
+        public void DeleteGitExtCommandBar()
         {
             CommandBar cb =
                 CommandBars.Cast<CommandBar>()
@@ -178,7 +178,7 @@ namespace GitPlugin.Commands
             }
         }
 
-        public CommandBar AddGitCommandBar(MsoBarPosition position)
+        public CommandBar AddGitExtCommandBar(MsoBarPosition position)
         {
             CommandBar bar =
                 CommandBars.Cast<CommandBar>()
@@ -193,7 +193,7 @@ namespace GitPlugin.Commands
             return bar;
         }
 
-        public void DeleteOldGitMainMenuBar()
+        public void DeleteOldGitExtMainMenuBar()
         {
             try
             {
@@ -218,7 +218,7 @@ namespace GitPlugin.Commands
             }
         }
 
-        public void DeleteGitMainMenuBar()
+        public void DeleteGitExtMainMenuBar()
         {
             try
             {
@@ -235,7 +235,25 @@ namespace GitPlugin.Commands
             }
         }
 
-        public CommandBar AddGitMainMenuBar(string toolsMenuName)
+        public bool IsGitExtMainMenuBarExist()
+        {
+            try
+            {
+                CommandBarControl control =
+                    GetMenuBar().Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.Caption == GitMainMenuName);
+                if (control != null)
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
+        public CommandBar AddGitExtMainMenuBar(string toolsMenuName)
         {
             CommandBar mainMenuBar = null;
             try

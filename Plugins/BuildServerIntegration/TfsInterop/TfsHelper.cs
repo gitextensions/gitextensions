@@ -7,7 +7,6 @@ using Microsoft.TeamFoundation.Build.Client;
 using TfsInterop.Interface;
 using BuildStatus = TfsInterop.Interface.BuildStatus;
 
-
 namespace TfsInterop
 {
     public class BuildInfo : IBuild
@@ -29,7 +28,7 @@ namespace TfsInterop
         private bool _isWebServer;
         private string _urlPrefix;
         private IBuildServer _buildServer;
-        private TeamFoundationServer _tfServer;
+        private TfsTeamProjectCollection _tfsCollection;
 
         public bool IsDependencyOk()
         {
@@ -64,30 +63,17 @@ namespace TfsInterop
                     _urlPrefix = "http://" + hostname + ":8080/tfs/Build/Build.aspx?artifactMoniker=";
                 }
 
-                // Get a connection to the desired Team Foundation Server
-                _tfServer = TeamFoundationServerFactory.GetServer(url, new UICredentialsProvider());
+                _tfsCollection = new TfsTeamProjectCollection(new Uri(url), new TfsClientCredentials());
 
-                // Get a reference to a build service
-                _buildServer = _tfServer.GetService<IBuildServer>();
+                _buildServer = _tfsCollection.GetService<IBuildServer>();
 
-                // Retrieve a list of build definitions
                 var buildDefs = _buildServer.QueryBuildDefinitions(projectName);
 
                 if (buildDefs.Length != 0)
                 {
-                    if (string.IsNullOrWhiteSpace(buildDefinitionName))
-                        _buildDefinition = buildDefs[0];
-                    else
-                    {
-                        foreach (var buildDefinition in buildDefs)
-                        {
-                            if (string.Compare(buildDefinition.Name, buildDefinitionName, true) == 0)
-                            {
-                                _buildDefinition = buildDefinition;
-                                return;
-                            }
-                        }
-                    }
+                    _buildDefinition = string.IsNullOrWhiteSpace(buildDefinitionName)
+                        ? buildDefs[0]
+                        : buildDefs.FirstOrDefault(b => string.Compare(b.Name, buildDefinitionName, StringComparison.InvariantCultureIgnoreCase) == 0);
                 }
             }
             catch (Exception ex)
@@ -204,8 +190,8 @@ namespace TfsInterop
         public void Dispose()
         {
             _buildServer = null;
-            if (_tfServer != null)
-                _tfServer.Dispose();
+            if (_tfsCollection != null)
+                _tfsCollection.Dispose();
             _buildDefinition = null;
             GC.Collect();
         }
