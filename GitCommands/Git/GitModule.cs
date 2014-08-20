@@ -1889,25 +1889,14 @@ namespace GitCommands
 
         public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool cacheResult)
         {
-            string fileA = null;
-            string fileB = null;
-
             if (!string.IsNullOrEmpty(fileName))
             {
-                fileB = fileName;
-                fileName = string.Concat("\"", fileName.ToPosixPath(), "\"");
+                fileName = fileName.ToPosixPath();
             }
-
             if (!string.IsNullOrEmpty(oldFileName))
             {
-                fileA = oldFileName;
-                oldFileName = string.Concat("\"", oldFileName.ToPosixPath(), "\"");
+                oldFileName = oldFileName.ToPosixPath();
             }
-
-            if (fileA.IsNullOrEmpty())
-                fileA = fileB;
-            else if (fileB.IsNullOrEmpty())
-                fileB = fileA;
 
             //fix refs slashes
             from = from.ToPosixPath();
@@ -1922,7 +1911,8 @@ namespace GitCommands
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
 
             var patchManager = new PatchManager();
-            var arguments = String.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange, fileName, oldFileName);
+            var arguments = String.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange,
+                fileName.Quote(), oldFileName.Quote());
             string patch;
             if (cacheResult)
                 patch = RunCacheableCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
@@ -1930,9 +1920,14 @@ namespace GitCommands
                 patch = RunCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
             patchManager.LoadPatch(patch, false, encoding);
 
+            return GetPatch(patchManager, fileName, oldFileName);
+        }
+
+        private Patch GetPatch(PatchApply.PatchManager patchManager, string fileName, string oldFileName)
+        {
             foreach (Patch p in patchManager.Patches)
-                if (p.FileNameA.Equals(fileA) && p.FileNameB.Equals(fileB) ||
-                    p.FileNameA.Equals(fileB) && p.FileNameB.Equals(fileA))
+                if (fileName == p.FileNameB &&
+                    (fileName == p.FileNameA || oldFileName == p.FileNameA))
                     return p;
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
@@ -2116,22 +2111,22 @@ namespace GitCommands
 
         public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
-            fileName = string.Concat("\"", fileName.ToPosixPath(), "\"");
+            fileName = fileName.ToPosixPath();
             if (!string.IsNullOrEmpty(oldFileName))
-                oldFileName = string.Concat("\"", oldFileName.ToPosixPath(), "\"");
+                oldFileName = oldFileName.ToPosixPath();
 
             if (AppSettings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
 
-            var args = string.Concat("diff ", extraDiffArguments, " -- ", fileName);
+            var args = string.Concat("diff ", extraDiffArguments, " -- ", fileName.Quote());
             if (staged)
-                args = string.Concat("diff -M -C --cached ", extraDiffArguments, " -- ", fileName, " ", oldFileName);
+                args = string.Concat("diff -M -C --cached ", extraDiffArguments, " -- ", fileName.Quote(), " ", oldFileName.Quote());
 
             String result = RunGitCmd(args, LosslessEncoding);
             var patchManager = new PatchManager();
             patchManager.LoadPatch(result, false, encoding);
 
-            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
+            return GetPatch(patchManager, fileName, oldFileName);
         }
 
         private string GetFileContents(string path)

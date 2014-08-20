@@ -3209,7 +3209,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormBrowse_Activated(object sender, EventArgs e)
         {
-            OnActivate();
+            this.InvokeAsync(OnActivate);
         }
     }
 }

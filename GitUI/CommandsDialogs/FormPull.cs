@@ -260,14 +260,14 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private void CheckMergeConflicts(IWin32Window owner)
+        private void CheckMergeConflictsOnError(IWin32Window owner)
         {
             // Rebase failed -> special 'rebase' merge conflict
             if (Rebase.Checked && Module.InTheMiddleOfRebase())
             {
                 UICommands.StartRebaseDialog(owner, null);
             }
-            else
+            else if (Module.InTheMiddleOfAction())
             {
                 MergeConflictHandler.HandleMergeConflicts(UICommands, owner);
             }
@@ -356,13 +356,13 @@ namespace GitUI.CommandsDialogs
                     bool aborted = process != null && process.DialogResult == DialogResult.Abort;
                     if (!aborted && !Fetch.Checked)
                     {
-                        if (!ErrorOccurred && !Module.InTheMiddleOfAction())
+                        if (!ErrorOccurred)
                         {
                             if (!InitModules())
                                 UICommands.UpdateSubmodules(owner);
                         }
                         else
-                            CheckMergeConflicts(owner);
+                            CheckMergeConflictsOnError(owner);
                     }
                 }
                 finally
