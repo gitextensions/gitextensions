@@ -44,8 +44,6 @@ namespace GitCommands.Repository
 
         public void RemoveRecentRepository(string repo)
         {
-            if (string.IsNullOrEmpty(repo))
-                return;
             foreach (var recentRepository in Repositories)
             {
                 if (!recentRepository.Path.Equals(repo, StringComparison.CurrentCultureIgnoreCase))

@@ -211,7 +211,15 @@ namespace GitCommands.Repository
                 dirInfo = null;
             }
 
-            if (dirInfo != null)
+            if (dirInfo == null)
+            {
+                repoInfo.Caption = repoInfo.Repo.Path;
+                if (repoInfo.Caption.IsNullOrEmpty())
+                {
+                    repoInfo.Caption = repoInfo.Repo.Title ?? string.Empty;
+                }
+            }
+            else
             {
 
                 string root = null;
