@@ -250,7 +250,13 @@ namespace GitUI
             {
                 // If the previous status call hasn't exited yet, we'll wait until it is
                 // so we don't queue up a bunch of commands
-                if (_commandIsRunning || UICommands.RepoChangedNotifier.IsLocked || Module.IsRunningGitProcess())
+                if (_commandIsRunning ||
+                    //don't update status while repository is being modyfied by GitExt
+                    //or while any git process is running, mostly repository status will change
+                    //after these actions. Moreover, calling git status while other git command is performed
+                    //can cause repository crash
+                    UICommands.RepoChangedNotifier.IsLocked || 
+                    Module.IsRunningGitProcess())
                 {
                     _statusIsUpToDate = false;//tell that computed status isn't up to date
                     return;
