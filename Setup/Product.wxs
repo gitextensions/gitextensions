@@ -148,7 +148,7 @@
             </Component>
             <Component Id="GitExtensionsShellEx64.dll" Guid="*" Win64="yes">
                 <Condition>VersionNT64</Condition>
-                <File Name="GitExtensionsShellEx64.dll" Source="..\GitExtensionsShellEx\Release-x64\GitExtensionsShellEx64.dll" KeyPath="yes" />
+                <File Name="GitExtensionsShellEx64.dll" Source="..\GitExtensionsShellEx\Releasex64\GitExtensionsShellEx64.dll" KeyPath="yes" />
                 <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
                 <?include RegisterShellExtension.wxi?>
                 <?endforeach ?>

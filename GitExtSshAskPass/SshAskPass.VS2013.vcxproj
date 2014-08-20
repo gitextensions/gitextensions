@@ -73,15 +73,15 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)$(Configuration)-x64\</OutDir>
-    <IntDir>$(Configuration)-x64\</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration)x64\</OutDir>
+    <IntDir>$(Configuration)x64\</IntDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules />
     <CodeAnalysisRuleAssemblies />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)$(Configuration)-x64\</OutDir>
-    <IntDir>$(Configuration)-x64\</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration)x64\</OutDir>
+    <IntDir>$(Configuration)x64\</IntDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules />
     <CodeAnalysisRuleAssemblies />

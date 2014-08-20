@@ -86,10 +86,11 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectName)64</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)64</TargetName>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)-x64\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)-x64\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)-x64\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)-x64\</IntDir>
+
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)x64\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)x64</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)x64\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)x64</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -119,7 +120,6 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
-    <ResourceCompile />
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>$(ProjectName).def</ModuleDefinitionFile>
@@ -150,7 +150,6 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
-    <ResourceCompile />
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>$(ProjectName).def</ModuleDefinitionFile>
@@ -187,7 +186,6 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
-    <ResourceCompile />
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>$(ProjectName).def</ModuleDefinitionFile>
@@ -226,7 +224,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
-    <ResourceCompile />
+
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>$(ProjectName).def</ModuleDefinitionFile>
@@ -269,7 +267,7 @@
     <None Include="Resources\IconStash.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include=".\GitExtensionsShellEx.rc" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h" />
