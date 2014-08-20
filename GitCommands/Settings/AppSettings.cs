@@ -1064,6 +1064,12 @@ namespace GitCommands
             set { SetDate("LastUpdateCheck", value); }
         }
 
+        public static bool CheckForReleaseCandidates
+        {
+            get { return GetBool("CheckForReleaseCandidates", false); }
+            set { SetBool("CheckForReleaseCandidates", value); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return Application.ExecutablePath;
