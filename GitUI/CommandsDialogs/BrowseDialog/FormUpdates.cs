@@ -87,11 +87,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         void CheckForNewerVersion(string releases)
         {
-            var versions = ReleaseVersion.Parse(releases).Where(version => 
-                version.ReleaseType == ReleaseType.Major ||
-                version.ReleaseType == ReleaseType.HotFix ||
-                AppSettings.CheckForReleaseCandidates && version.ReleaseType == ReleaseType.ReleaseCandidate);
-            var updates = versions.Where(version => version.Version.CompareTo(CurrentVersion) > 0);
+            var versions = ReleaseVersion.Parse(releases);
+            var updates = ReleaseVersion.GetNewerVersions(CurrentVersion, AppSettings.CheckForReleaseCandidates, versions);
 
             var update = updates.OrderBy(version => version.Version).LastOrDefault();
             if (update != null)
@@ -190,8 +187,22 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ConfigFile cfg = new ConfigFile("", true);
             cfg.LoadFromString(versionsStr);
             var sections = cfg.GetConfigSections("Version");
+            sections = sections.Concat(cfg.GetConfigSections("RCVersion"));
 
             return sections.Select(FromSection).Where(version => version != null);
+        }
+
+        public static IEnumerable<ReleaseVersion> GetNewerVersions(
+            Version currentVersion, 
+            bool checkForReleaseCandidates,
+            IEnumerable<ReleaseVersion> availableVersions)
+        {
+            var versions = availableVersions.Where(version =>
+                    version.ReleaseType == ReleaseType.Major ||
+                    version.ReleaseType == ReleaseType.HotFix ||
+                    checkForReleaseCandidates && version.ReleaseType == ReleaseType.ReleaseCandidate);
+            
+            return versions.Where(version => version.Version.CompareTo(currentVersion) > 0);
         }
 
     }
