@@ -41,7 +41,7 @@
             this.textBoxCommitHash.Name = "textBoxCommitHash";
             this.textBoxCommitHash.Size = new System.Drawing.Size(97, 23);
             this.textBoxCommitHash.TabIndex = 31;
-            this.textBoxCommitHash.TextChanged += new System.EventHandler(this.textBoxCommitHash_TextChanged);
+            this.textBoxCommitHash.Leave += new System.EventHandler(this.textBoxCommitHash_TextLeave);
             // 
             // buttonPickCommit
             // 
