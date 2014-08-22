@@ -80,7 +80,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 if (!enabled)
                     return true;
 
-                if (!Module.IsBareRepository())
+                if (Path != Module.GetGitDirectory())
                     return true;
 
                 return indexChanged;
@@ -119,7 +119,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private void RefreshWatcher()
         {
-            if (!Module.IsBareRepository() ||
+            if (Path != Module.GetGitDirectory() ||
                 enabled != GitCommands.AppSettings.UseFastChecks)
                 SetFileSystemWatcher();
         }
