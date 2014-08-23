@@ -95,7 +95,7 @@ cp "../../../../Bin/RestSharp.dll" "../../../../GitExtensions/bin/$(Configuratio
 copy "$(SolutionDir)\Externals\Git.hub\Git.hub\bin\$(ConfigurationName)\Git.hub.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Windows_NT' ">cp `echo "$(TargetPath)" | tr -s "//" "/"` "../../../../GitExtensions/bin/$(ConfigurationName)/"
-cp "$(SolutionDir)Externals/Git.hub/Git.hub/bin/$(ConfigurationName)/Git.hub.dll" "../../../../GitExtensions/bin/$(ConfigurationName)\"
+cp "../../../../Externals/Git.hub/Git.hub/bin/$(ConfigurationName)/Git.hub.dll" "../../../../GitExtensions/bin/$(ConfigurationName)\"
     </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
