@@ -74,9 +74,6 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="NBug">
-      <HintPath>..\packages\NBug.1.1.1\lib\net40-client\NBug.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -183,6 +180,10 @@
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
       <Name>ResourceManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
+      <Project>{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}</Project>
+      <Name>NBug</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
