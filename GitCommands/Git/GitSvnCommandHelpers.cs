@@ -14,8 +14,8 @@ namespace GitCommands
     {
         private const string SvnPrefix = "svn";
 
-        public static string CloneCmd(string fromSvn, string toPath, string username, 
-            string authorsFile, int fromRevision, 
+        public static string CloneCmd(string fromSvn, string toPath, string username,
+            string authorsFile, int fromRevision,
             string trunk, string tags, string branches)
         {
             toPath = toPath.ToPosixPath();
@@ -45,6 +45,7 @@ namespace GitCommands
             {
                 sb.AppendFormat(" --branches=\"{0}\"", branches);
             }
+            sb.Append(" --prefix=origin/");
             return sb.ToString();
         }
 
