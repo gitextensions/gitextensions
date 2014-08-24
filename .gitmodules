@@ -1,6 +1,3 @@
-[submodule "GitExtensionsTest"]
-	path = GitExtensionsTest
-	url = git://github.com/gitextensions/gitextensionstest.git
 [submodule "GitExtensionsDoc"]
 	path = GitExtensionsDoc
 	url = git://github.com/gitextensions/GitExtensionsDoc.git
