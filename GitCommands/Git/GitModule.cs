@@ -342,6 +342,18 @@ namespace GitCommands
             return repositoryPath == GetGitDirectory(repositoryPath);
         }
 
+        public bool IsSubmodule(string submodulePath)
+        {
+            var result = RunGitCmdResult("submodule status " + submodulePath);
+
+            if (result.ExitCode == 0
+                // submodule removed
+                || result.StdError.StartsWith("No submodule mapping found in .gitmodules for path"))
+                return true;
+
+            return false;
+        }
+
         public bool HasSubmodules()
         {
             return GetSubmodulesLocalPathes(recursive: false).Any();
@@ -608,25 +620,9 @@ namespace GitCommands
 
         public IList<GitItem> GetConflictedFiles()
         {
-            var unmergedFiles = new List<GitItem>();
+            var list = GetConflicts();
 
-            var fileName = "";
-            foreach (var file in GetUnmergedFileListing())
-            {
-                if (file.IndexOf('\t') <= 0)
-                    continue;
-                if (file.Substring(file.IndexOf('\t') + 1) == fileName)
-                    continue;
-                fileName = file.Substring(file.IndexOf('\t') + 1);
-                unmergedFiles.Add(new GitItem(this) { FileName = fileName });
-            }
-
-            return unmergedFiles;
-        }
-
-        private IEnumerable<string> GetUnmergedFileListing()
-        {
-            return RunGitCmd("ls-files -z --unmerged").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return list.Select(item => new GitItem(this) {FileName = item[0].Value}).ToList();
         }
 
         public bool HandleConflictSelectSide(string fileName, string side)
@@ -746,37 +742,28 @@ namespace GitCommands
                     filename + ".REMOTE"
                 };
 
-            var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var unmerged = GetConflict(filename);
 
-            foreach (var file in unmerged)
+            for (int i = 0; i < unmerged.Length; i++)
             {
-                string fileStage = null;
-                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
-                if (findSecondWhitespace >= 0) fileStage = file.Substring(findSecondWhitespace).Trim();
-                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
-                if (findSecondWhitespace >= 0) fileStage = fileStage.Substring(findSecondWhitespace).Trim();
-                if (string.IsNullOrEmpty(fileStage))
+                if (unmerged[i].Value == null)
                     continue;
-
-                int stage;
-                if (!Int32.TryParse(fileStage.Trim()[0].ToString(), out stage))
-                    continue;
-
-                var tempFile = RunGitCmd("checkout-index --temp --stage=" + stage + " -- " + "\"" + filename + "\"");
+                var tempFile =
+                    RunGitCmd("checkout-index --temp --stage=" + (i + 1) + " -- " + "\"" + filename + "\"");
                 tempFile = tempFile.Split('\t')[0];
                 tempFile = Path.Combine(_workingDir, tempFile);
 
-                var newFileName = Path.Combine(_workingDir, fileNames[stage - 1]);
+                var newFileName = Path.Combine(_workingDir, fileNames[i]);
                 try
                 {
-                    fileNames[stage - 1] = newFileName;
+                    fileNames[i] = newFileName;
                     var index = 1;
-                    while (File.Exists(fileNames[stage - 1]) && index < 50)
+                    while (File.Exists(fileNames[i]) && index < 50)
                     {
-                        fileNames[stage - 1] = newFileName + index;
+                        fileNames[i] = newFileName + index;
                         index++;
                     }
-                    File.Move(tempFile, fileNames[stage - 1]);
+                    File.Move(tempFile, fileNames[i]);
                 }
                 catch (Exception ex)
                 {
@@ -791,41 +778,23 @@ namespace GitCommands
             return fileNames;
         }
 
-        public string[] GetConflictedFileNames(string filename)
+        public KeyValuePair<string, string>[] GetConflict(string filename)
         {
-            filename = filename.ToPosixPath();
-
-            var fileNames = new string[3];
-
-            var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var line in unmerged)
-            {
-                int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
-                string fileStage = findSecondWhitespace >= 0 ? line.Substring(findSecondWhitespace).Trim() : "";
-
-                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
-
-                fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
-
-                int stage;
-                if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out stage) && stage >= 1 && stage <= 3)
-                {
-                    fileNames[stage - 1] = fileStage.Substring(2);
-                }
-            }
-
-            return fileNames;
+            return GetConflicts(filename).SingleOrDefault();
         }
 
-        public string[] GetConflictedSubmoduleHashes(string filename)
+        public List<KeyValuePair<string, string>[]> GetConflicts(string filename = "")
         {
             filename = filename.ToPosixPath();
 
-            var hashes = new string[3];
+            var list = new List<KeyValuePair<string, string>[]>();
 
-            var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var unmerged = RunGitCmd("ls-files -z --unmerged " + filename.QuoteNE()).Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
+            var item = new KeyValuePair<string, string>[3];
+
+            int stage = 0;
+            string prevItemName = null;
             foreach (var line in unmerged)
             {
                 int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
@@ -836,14 +805,22 @@ namespace GitCommands
                 string hash = findSecondWhitespace >= 0 ? fileStage.Substring(0, findSecondWhitespace).Trim() : "";
                 fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
 
-                int stage;
                 if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out stage) && stage >= 1 && stage <= 3)
                 {
-                    hashes[stage - 1] = hash;
+                    var itemName = fileStage.Substring(2);
+                    if (prevItemName != itemName && prevItemName != null)
+                    {
+                        list.Add(item);
+                        item = new KeyValuePair<string, string>[3];
+                    }
+                    item[stage - 1] = new KeyValuePair<string, string>(hash, itemName);
+                    prevItemName = itemName;
                 }
             }
+            if (prevItemName != null)
+                list.Add(item);
 
-            return hashes;
+            return list;
         }
 
         public IList<string> GetSortedRefs()
