@@ -14,47 +14,49 @@ namespace GitExtensionsTest.Git
         public void CanGetRelativeDateString()
         {
             AppSettings.CurrentTranslation = "English";
-            Assert.AreEqual("0 seconds ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now));
-            Assert.AreEqual("1 second ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(-1)));
-            Assert.AreEqual("1 minute ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-1)));
-            Assert.AreEqual("1 hour ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-45)));
-            Assert.AreEqual("1 hour ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(-1)));
-            Assert.AreEqual("1 day ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-1)));
-            Assert.AreEqual("1 week ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-7)));
-            Assert.AreEqual("1 month ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-30)));
-            Assert.AreEqual("12 months ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-364)));
-            Assert.AreEqual("1 year ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-365)));
+            DateTime now = DateTime.Now;
+            Assert.AreEqual("0 seconds ago", GitCommandHelpers.GetRelativeDateString(now, now));
+            Assert.AreEqual("1 second ago", GitCommandHelpers.GetRelativeDateString(now, now.AddSeconds(-1)));
+            Assert.AreEqual("1 minute ago", GitCommandHelpers.GetRelativeDateString(now, now.AddMinutes(-1)));
+            Assert.AreEqual("1 hour ago", GitCommandHelpers.GetRelativeDateString(now, now.AddMinutes(-45)));
+            Assert.AreEqual("1 hour ago", GitCommandHelpers.GetRelativeDateString(now, now.AddHours(-1)));
+            Assert.AreEqual("1 day ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(-1)));
+            Assert.AreEqual("1 week ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(-7)));
+            Assert.AreEqual("1 month ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(-30)));
+            Assert.AreEqual("12 months ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(-364)));
+            Assert.AreEqual("1 year ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(-365)));
 
-            Assert.AreEqual("2 seconds ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(-2)));
-            Assert.AreEqual("2 minutes ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-2)));
-            Assert.AreEqual("2 hours ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(-2)));
-            Assert.AreEqual("2 days ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-2)));
-            Assert.AreEqual("2 weeks ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-14)));
-            Assert.AreEqual("2 months ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-60)));
-            Assert.AreEqual("2 years ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-730)));
+            Assert.AreEqual("2 seconds ago", GitCommandHelpers.GetRelativeDateString(now, now.AddSeconds(-2)));
+            Assert.AreEqual("2 minutes ago", GitCommandHelpers.GetRelativeDateString(now, now.AddMinutes(-2)));
+            Assert.AreEqual("2 hours ago", GitCommandHelpers.GetRelativeDateString(now, now.AddHours(-2)));
+            Assert.AreEqual("2 days ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(-2)));
+            Assert.AreEqual("2 weeks ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(-14)));
+            Assert.AreEqual("2 months ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(-60)));
+            Assert.AreEqual("2 years ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(-730)));
         }
 
         [TestMethod]
         public void CanGetRelativeNegativeDateString()
         {
             AppSettings.CurrentTranslation = "English";
-            Assert.AreEqual("-1 second ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(1)));
-            Assert.AreEqual("-1 minute ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(1)));
-            Assert.AreEqual("-1 hour ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(45)));
-            Assert.AreEqual("-1 hour ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(1)));
-            Assert.AreEqual("-1 day ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(1)));
-            Assert.AreEqual("-1 week ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(7)));
-            Assert.AreEqual("-1 month ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(30)));
-            Assert.AreEqual("-12 months ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(364)));
-            Assert.AreEqual("-1 year ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(365)));
+            DateTime now = DateTime.Now;
+            Assert.AreEqual("-1 second ago", GitCommandHelpers.GetRelativeDateString(now, now.AddSeconds(1)));
+            Assert.AreEqual("-1 minute ago", GitCommandHelpers.GetRelativeDateString(now, now.AddMinutes(1)));
+            Assert.AreEqual("-1 hour ago", GitCommandHelpers.GetRelativeDateString(now, now.AddMinutes(45)));
+            Assert.AreEqual("-1 hour ago", GitCommandHelpers.GetRelativeDateString(now, now.AddHours(1)));
+            Assert.AreEqual("-1 day ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(1)));
+            Assert.AreEqual("-1 week ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(7)));
+            Assert.AreEqual("-1 month ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(30)));
+            Assert.AreEqual("-12 months ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(364)));
+            Assert.AreEqual("-1 year ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(365)));
 
-            Assert.AreEqual("-2 seconds ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(2)));
-            Assert.AreEqual("-2 minutes ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(2)));
-            Assert.AreEqual("-2 hours ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(2)));
-            Assert.AreEqual("-2 days ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(2)));
-            Assert.AreEqual("-2 weeks ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(14)));
-            Assert.AreEqual("-2 months ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(60)));
-            Assert.AreEqual("-2 years ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(730)));
+            Assert.AreEqual("-2 seconds ago", GitCommandHelpers.GetRelativeDateString(now, now.AddSeconds(2)));
+            Assert.AreEqual("-2 minutes ago", GitCommandHelpers.GetRelativeDateString(now, now.AddMinutes(2)));
+            Assert.AreEqual("-2 hours ago", GitCommandHelpers.GetRelativeDateString(now, now.AddHours(2)));
+            Assert.AreEqual("-2 days ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(2)));
+            Assert.AreEqual("-2 weeks ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(14)));
+            Assert.AreEqual("-2 months ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(60)));
+            Assert.AreEqual("-2 years ago", GitCommandHelpers.GetRelativeDateString(now, now.AddDays(730)));
         }
 
         [TestMethod]

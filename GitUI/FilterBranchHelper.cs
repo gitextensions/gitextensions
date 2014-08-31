@@ -151,7 +151,8 @@ namespace GitUI
             string filter = _NO_TRANSLATE_toolStripBranches.Text;
             _NO_TRANSLATE_toolStripBranches.Items.Clear();
             var branches = GetBranchAndTagRefs(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
-            _NO_TRANSLATE_toolStripBranches.Items.AddRange(branches.Where(branch => branch.Contains(filter)).ToArray());
+            if (!String.IsNullOrEmpty(filter))
+                _NO_TRANSLATE_toolStripBranches.Items.AddRange(branches.Where(branch => branch.Contains(filter)).ToArray());
             _NO_TRANSLATE_toolStripBranches.SelectionStart = index;
         }
 

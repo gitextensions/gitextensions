@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs
                 currentBranchRemote = defaultRemote;
             }
 
-            if (currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 3)
+            if (currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 2)
             {
                 IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
                 int i = remotes.IndexOf("origin");

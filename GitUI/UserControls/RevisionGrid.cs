@@ -960,7 +960,16 @@ namespace GitUI
                 else
                     revGraphIMF = filterBarIMF;
 
-                _revisionGraphCommand = new RevisionGraph(Module) { BranchFilter = BranchFilter, RefsOptions = _refsOptions, Filter = _revisionFilter.GetFilter() + Filter + FixedFilter };
+                if (_revisionGraphCommand != null)
+                    _revisionGraphCommand.Dispose();
+
+                if (!AppSettings.UseLibGit2ForGraph)
+                    _revisionGraphCommand = new RevisionGraphGit(Module);
+                else
+                    _revisionGraphCommand = new RevisionGraphLibGit2(Module);
+                _revisionGraphCommand.BranchFilter = BranchFilter;
+                _revisionGraphCommand.RefsOptions = _refsOptions;
+                _revisionGraphCommand.Filter = _revisionFilter.GetFilter() + Filter + FixedFilter;
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
@@ -1049,7 +1058,7 @@ namespace GitUI
 
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
         {
-            var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEventArgs)e;
+            var updatedEvent = (RevisionGraphUpdatedEventArgs)e;
             UpdateGraph(updatedEvent.Revision);
         }
 
@@ -1195,7 +1204,7 @@ namespace GitUI
             var allrevisions = Module.ReadGitOutputLines(revListParams + initRevision);
             graphRevision = allrevisions.FirstOrDefault(rev => dict.TryGetValue(rev, out index));
             if (graphRevision != null)
-                return index;
+                    return index;
             return -1;
         }
 
@@ -1322,41 +1331,41 @@ namespace GitUI
 
                 if (columnIndex == messageColIndex)
                 {
-                    int baseOffset = 0;
-                    if (IsCardLayout())
-                    {
-                        baseOffset = 5;
-
-                        Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
-
-                        if (!AppSettings.RevisionGraphDrawNonRelativesGray || Revisions.RowIsRelative(e.RowIndex))
-                        {
-                            e.Graphics.FillRectangle(
-                                new LinearGradientBrush(cellRectangle,
-                                                        Color.FromArgb(255, 220, 220, 231),
-                                                        Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
-                            using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
+                            int baseOffset = 0;
+                            if (IsCardLayout())
                             {
-                                e.Graphics.DrawRectangle(pen, cellRectangle);
+                                baseOffset = 5;
+
+                                Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
+
+                                if (!AppSettings.RevisionGraphDrawNonRelativesGray || Revisions.RowIsRelative(e.RowIndex))
+                                {
+                                    e.Graphics.FillRectangle(
+                                        new LinearGradientBrush(cellRectangle,
+                                                                Color.FromArgb(255, 220, 220, 231),
+                                                                Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
+                                    using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
+                                    {
+                                        e.Graphics.DrawRectangle(pen, cellRectangle);
+                                    }
+                                }
+                                else
+                                {
+                                    e.Graphics.FillRectangle(
+                                        new LinearGradientBrush(cellRectangle,
+                                                                Color.FromArgb(255, 240, 240, 240),
+                                                                Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
+                                }
+
+                                if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
+                                {
+                                    using (var penSelectionBackColor = new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
+                                        e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
+                                }
                             }
-                        }
-                        else
-                        {
-                            e.Graphics.FillRectangle(
-                                new LinearGradientBrush(cellRectangle,
-                                                        Color.FromArgb(255, 240, 240, 240),
-                                                        Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
-                        }
 
-                        if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                        {
-                            using (var penSelectionBackColor = new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
-                                e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
-                        }
-                    }
-
-                    float offset = baseOffset;
-                    var gitRefs = revision.Refs;
+                            float offset = baseOffset;
+                            var gitRefs = revision.Refs;
 
                     drawRefArgs.RefsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
 
@@ -1373,8 +1382,8 @@ namespace GitUI
                     }
 
                     if (gitRefs.Any())
-                    {
-                        gitRefs.Sort((left, right) =>
+                            {
+                                gitRefs.Sort((left, right) =>
                                        {
                                            if (left.IsTag != right.IsTag)
                                                return right.IsTag.CompareTo(left.IsTag);
@@ -1385,15 +1394,15 @@ namespace GitUI
 
                         foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || AppSettings.ShowRemoteBranches)))
                         {
-                            if (gitRef.IsTag)
-                            {
-                                if (!AppSettings.ShowTags)
-                                {
-                                    continue;
-                                }
-                            }
+                                    if (gitRef.IsTag)
+                                    {
+                                        if (!AppSettings.ShowTags)
+                                        {
+                                            continue;
+                                        }
+                                    }
 
-                            Color headColor = GetHeadColor(gitRef);
+                                    Color headColor = GetHeadColor(gitRef);
 
                             ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
                                                   gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
@@ -1418,69 +1427,69 @@ namespace GitUI
                         offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true, false);
                     }
 
-                    if (IsCardLayout())
-                        offset = baseOffset;
+                            if (IsCardLayout())
+                                offset = baseOffset;
 
-                    var text = (string)e.FormattedValue;
-                    var bounds = AdjustCellBounds(e.CellBounds, offset);
-                    DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
+                            var text = (string)e.FormattedValue;
+                            var bounds = AdjustCellBounds(e.CellBounds, offset);
+                            DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
 
-                    if (IsCardLayout())
-                    {
-                        int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
-                        int gravatarSize = _rowHeigth - textHeight - 12;
-                        int gravatarTop = e.CellBounds.Top + textHeight + 6;
-                        int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
+                            if (IsCardLayout())
+                            {
+                                int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
+                                int gravatarSize = _rowHeigth - textHeight - 12;
+                                int gravatarTop = e.CellBounds.Top + textHeight + 6;
+                                int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
 
 
-                        Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, FallBackService.MonsterId);
+                                Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, FallBackService.MonsterId);
 
-                        if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
-                        {
-                            ThreadPool.QueueUserWorkItem(o =>
+                                if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
+                                {
+                                    ThreadPool.QueueUserWorkItem(o =>
                             Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
-                        }
+                                }
 
-                        if (gravatar != null)
-                            e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
+                                if (gravatar != null)
+                                    e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
 
-                        e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
+                                e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
 
-                        string authorText;
-                        string timeText;
+                                string authorText;
+                                string timeText;
 
-                        if (_rowHeigth >= 60)
-                        {
-                            authorText = revision.Author;
-                            timeText = TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
-                        }
-                        else
-                        {
-                            timeText = string.Concat(revision.Author, " (", TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate), ")");
-                            authorText = string.Empty;
-                        }
+                                if (_rowHeigth >= 60)
+                                {
+                                    authorText = revision.Author;
+                                    timeText = TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
+                                }
+                                else
+                                {
+                                    timeText = string.Concat(revision.Author, " (", TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate), ")");
+                                    authorText = string.Empty;
+                                }
 
 
 
-                        e.Graphics.DrawString(authorText, rowFont, foreBrush,
+                                e.Graphics.DrawString(authorText, rowFont, foreBrush,
                                               new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
-                        e.Graphics.DrawString(timeText, rowFont, foreBrush,
+                                e.Graphics.DrawString(timeText, rowFont, foreBrush,
                                               new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
-                    }
-                }
+                            }
+                        }
                 else if (columnIndex == authorColIndex)
-                {
-                    var text = (string)e.FormattedValue;
-                    e.Graphics.DrawString(text, rowFont, foreBrush,
+                        {
+                            var text = (string)e.FormattedValue;
+                            e.Graphics.DrawString(text, rowFont, foreBrush,
                                           new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                }
+                        }
                 else if (columnIndex == dateColIndex)
-                {
-                    var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
-                    var text = TimeToString(time);
-                    e.Graphics.DrawString(text, rowFont, foreBrush,
+                        {
+                            var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                            var text = TimeToString(time);
+                            e.Graphics.DrawString(text, rowFont, foreBrush,
                                           new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                }
+                        }
                 else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
                 {
                     BuildInfoDrawingLogic.BuildStatusImageColumnCellPainting(e, revision, foreBrush, rowFont);
@@ -1575,24 +1584,24 @@ namespace GitUI
 
             if (columnIndex == graphColIndex)
             {
-                e.Value = revision.Guid;
+                    e.Value = revision.Guid;
             }
             else if (columnIndex == messageColIndex)
             {
-                e.Value = revision.Message;
+                    e.Value = revision.Message;
             }
             else if (columnIndex == authorColIndex)
             {
-                e.Value = revision.Author ?? "";
+                    e.Value = revision.Author ?? "";
             }
             else if (columnIndex == dateColIndex)
-            {
-                var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
-                if (time == DateTime.MinValue || time == DateTime.MaxValue)
-                    e.Value = "";
-                else
-                    e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
-            }
+                    {
+                        var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                        if (time == DateTime.MinValue || time == DateTime.MaxValue)
+                            e.Value = "";
+                        else
+                            e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
+                    }
             else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
             {
                 BuildInfoDrawingLogic.BuildStatusImageColumnCellFormatting(e, Revisions, revision);
@@ -1619,7 +1628,7 @@ namespace GitUI
             }
             else
             {
-                e.FormattingApplied = false;
+                    e.FormattingApplied = false;
             }
         }
 

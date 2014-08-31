@@ -105,6 +105,10 @@
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\libgit2sharp\LibGit2Sharp\LibGit2Sharp.csproj">
+      <Project>{ee6ed99f-cb12-4683-b055-d28fc7357a34}</Project>
+      <Name>LibGit2Sharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
       <Project>{7e5433f4-dd13-4d8e-95b2-59b4ffe7d636}</Project>
       <Name>AutoCompileSubmodules</Name>
@@ -225,12 +229,18 @@
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <PropertyGroup>
     <PostBuildEvent>$(ProjectDir)copy_plugins.cmd $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>call $(ProjectDir)copy_plugins.cmd $(ConfigurationName)
+xcopy "$(ProjectDir)..\libgit2sharp\Lib\NativeBinaries\*" "$(TargetDir)NativeBinaries\" /E /D /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <CreateItem Include="$(MSBuildProjectDirectory)\..\libgit2sharp\Lib\NativeBinaries\**\*.*">
+      <Output TaskParameter="Include" ItemName="NativeBinaries" />
+    </CreateItem>
+    <Copy SourceFiles="@(NativeBinaries)" DestinationFiles="@(NativeBinaries->'$(OutputPath)NativeBinaries\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

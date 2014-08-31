@@ -82,6 +82,9 @@
     <Compile Include="FileHelper.cs" />
     <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="RemoteActionResult.cs" />
+    <Compile Include="RevisionGraph.cs" />
+    <Compile Include="RevisionGraphGit.cs" />
+    <Compile Include="RevisionGraphLibGit2.cs" />
     <Compile Include="Settings\BasicSettingTypes.cs" />
     <Compile Include="Settings\CommonSettingsTypes.cs" />
     <Compile Include="Settings\ConfigFileSettings.cs" />
@@ -146,7 +149,6 @@
     <Compile Include="Repository\RepositoryCategoryType.cs" />
     <Compile Include="Repository\RepositoryHistory.cs" />
     <Compile Include="Repository\RepositoryType.cs" />
-    <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
     <Compile Include="Statistics\ImpactLoader.cs" />
@@ -169,6 +171,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\libgit2sharp\LibGit2Sharp\LibGit2Sharp.csproj">
+      <Project>{ee6ed99f-cb12-4683-b055-d28fc7357a34}</Project>
+      <Name>LibGit2Sharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>

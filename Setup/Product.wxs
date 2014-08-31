@@ -26,6 +26,10 @@
                     <Directory Id="PluginsDir" Name="Plugins" />
                     <Directory Id="InstallerDir" Name="Installer" />
                     <Directory Id="DictionariesDir" Name="Dictionaries" />
+                    <Directory Id="NativeBinariesDir" Name="NativeBinaries">
+                        <Directory Id="NativeBinariesX86Dir" Name="x86" />
+                        <Directory Id="NativeBinariesX64Dir" Name="amd64" />
+                    </Directory>
                     <Directory Id="TranslationsDir" Name="Translation" />
                     <Directory Id="IconsDir" Name="Icons" />
                     <Directory Id="DiffScriptsDir" Name="Diff-Scripts" />
@@ -134,6 +138,9 @@
             </Component>
             <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\System.Reactive.PlatformServices.dll" />
+            </Component>
+            <Component Id="LibGit2Sharp.dll" Guid="*">
+                <File Source="..\libgit2sharp\LibGit2Sharp\bin\Release\LibGit2Sharp.dll" />
             </Component>
             <!--Remove unused dll, installed in versions <= 2.31-->
             <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
@@ -302,6 +309,21 @@
             </Component>
             <Component Id="License.txt" Guid="*">
                 <File Source="..\Bin\Diff-Scripts\TortoiseSVN License.txt" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="NativeBinariesDir">
+            <Component Id="libgit2.license.txt" Guid="*">
+                <File Source="..\libgit2sharp\Lib\NativeBinaries\libgit2.license.txt" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="NativeBinariesX86Dir">
+            <Component Id="git2_x86.dll" Guid="*">
+                <File Id="git2_x86.dll" Source="..\libgit2sharp\Lib\NativeBinaries\x86\git2-69db893.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="NativeBinariesX64Dir">
+            <Component Id="git2_x64.dll" Guid="*">
+                <File Id="git2_x64.dll" Source="..\libgit2sharp\Lib\NativeBinaries\amd64\git2-69db893.dll" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="DictionariesDir">
@@ -543,6 +565,10 @@
             <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
             <ComponentRef Id="NBug.dll" />
             <ComponentRef Id="SmartFormat.dll" />
+            <ComponentRef Id="LibGit2Sharp.dll" />
+            <ComponentRef Id="libgit2.license.txt" />
+            <ComponentRef Id="git2_x86.dll" />
+            <ComponentRef Id="git2_x64.dll" />
             <ComponentRef Id="NetSpell.SpellChecker.dll" />
             <ComponentRef Id="ResourceManager.dll" />
             <ComponentRef Id="GitUIPluginInterfaces.dll" />

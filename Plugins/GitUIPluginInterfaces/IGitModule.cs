@@ -6,7 +6,7 @@ using System.Text;
 namespace GitUIPluginInterfaces
 {
     /// <summary>Provides manipulation with git module.</summary>
-    public interface IGitModule
+    public interface IGitModule : IDisposable
     {
         /// <summary>
         /// Run git command, console window is hidden, redirect output

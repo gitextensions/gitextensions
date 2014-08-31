@@ -37,23 +37,23 @@ namespace GitCommands
         static AppSettings()
         {
             ApplicationDataPath = new Lazy<string>(() =>
-            {
-                if (IsPortable())
                 {
-                    return GetGitExtensionsDirectory();
+                    if (IsPortable())
+                    {
+                        return GetGitExtensionsDirectory();
+                    }
+                    else
+                    {
+                        //Make applicationdatapath version independent
+                        return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
+                    }
                 }
-                else
-                {
-                    //Make applicationdatapath version independent
-                    return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
-                }
-            }
             );
-
+            
             _SettingsContainer = new SettingsContainer<RepoDistSettings, GitExtSettingsCache>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
             GitLog = new CommandLogger();
-
+            
             if (!File.Exists(SettingsFilePath))
             {
                 ImportFromRegistry();
@@ -1092,10 +1092,19 @@ namespace GitCommands
             }
         }
 
+        public static bool UseLibGit2ForDiff
+        {
+            get { return false; }
+        }
+
+        public static bool UseLibGit2ForGraph
+        {
+            get { return false; }
+        }
+
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;
-
         }
 
         private static IEnumerable<Tuple<string, string>> GetSettingsFromRegistry()
@@ -1107,7 +1116,7 @@ namespace GitCommands
             foreach (String name in oldSettings.GetValueNames())
             {
                 object value = oldSettings.GetValue(name, null);
-                if (value != null)
+                    if (value != null)
                     yield return new Tuple<string, string>(name, value.ToString());
             }
         }
@@ -1120,7 +1129,7 @@ namespace GitCommands
         public static string PrefixedName(string prefix, string name)
         {
             return prefix == null ? name : prefix + '_' + name;
-        }
+                    }
 
         public static bool? GetBool(string name)
         {
@@ -1145,7 +1154,7 @@ namespace GitCommands
         public static int? GetInt(string name)
         {
             return SettingsContainer.GetInt(name);
-        }
+                }
 
         public static DateTime GetDate(string name, DateTime defaultValue)
         {
@@ -1222,7 +1231,7 @@ namespace GitCommands
             return SettingsContainer.GetString(name, defaultValue);
         }
 
-    }
+        }
 
     /*
     public abstract class Setting<T> : IXmlSerializable
@@ -1246,7 +1255,7 @@ namespace GitCommands
             get
             {
                 return SettingsSource.GetValue(Name, DefaultValue, (s) => DefaultValue);
-            }
+                }
 
             set
             {
@@ -1257,11 +1266,11 @@ namespace GitCommands
         public virtual System.Xml.Schema.XmlSchema GetSchema()
         {
             return null;
-        }
+    }
 
         public abstract void ReadXml(XmlReader reader);
         public abstract void WriteXml(XmlWriter writer);
-    }
+}
 
     */
 

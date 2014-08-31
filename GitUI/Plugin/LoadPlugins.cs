@@ -1,8 +1,8 @@
 ﻿﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Linq;
+﻿using System.Reflection;
 using System.Windows.Forms;
 
 namespace GitUI
@@ -18,10 +18,11 @@ namespace GitUI
 
                 var file = new FileInfo(Application.ExecutablePath);
 
-                FileInfo[] plugins =
-                               Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
-                                   ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
-                                   : new FileInfo[] { };
+                FileInfo[] plugins;
+                if (Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins")))
+                    plugins = new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll");
+                else
+                    plugins = new FileInfo[] {};
 
                 var pluginFiles = plugins.Where(pluginFile => 
                     !pluginFile.Name.StartsWith("System.") &&
