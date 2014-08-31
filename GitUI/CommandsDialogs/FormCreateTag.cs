@@ -4,7 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Script;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
-                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? null : revision.Guid);
+                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
         }
 
         private void FormCreateTag_Load(object sender, EventArgs e)
@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs
                     return string.Empty;
                 }
 
-                File.WriteAllText(Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
+                File.WriteAllText(Path.Combine(Module.GetGitDirectory(), "TAGMESSAGE"), tagMessage.Text);
             }
 
             var s = Module.Tag(textBoxTagName.Text, revision, annotate.Checked, ForceTag.Checked);
@@ -104,8 +104,7 @@ namespace GitUI.CommandsDialogs
 
                 form.ShowDialog();
 
-                if (!Module.InTheMiddleOfConflictedMerge() &&
-                    !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
+                if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                 {
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                 }

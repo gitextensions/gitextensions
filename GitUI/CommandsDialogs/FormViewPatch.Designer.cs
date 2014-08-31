@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs
             this.changedFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
@@ -212,7 +212,7 @@ namespace GitUI.CommandsDialogs
             this.Load += new System.EventHandler(this.ViewPatch_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);

@@ -119,6 +119,6 @@
   </resheader>
   <data name="label51.Text" xml:space="preserve">
     <value>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </value>
+to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</value>
   </data>
 </root>

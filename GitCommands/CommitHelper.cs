@@ -49,7 +49,7 @@ namespace GitCommands
 
         public static string GetCommitMessagePath(GitModule module)
         {
-            return module.WorkingDirGitDir() + AppSettings.PathSeparator.ToString() + "COMMITMESSAGE";
+            return Path.Combine(module.GetGitDirectory(), "COMMITMESSAGE");
         }
     }
 }

@@ -29,6 +29,7 @@ namespace GitUI
         /// </summary>
         private const int MaxUpdatePeriod = 5 * 60 * 1000;
 
+        private bool _commandIsRunning = false;
         private bool _statusIsUpToDate = true;
         private readonly FileSystemWatcher _workTreeWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher _gitDirWatcher = new FileSystemWatcher();
@@ -178,7 +179,7 @@ namespace GitUI
 
         private void WorkTreeChanged(object sender, FileSystemEventArgs e)
         {
-            var fileName = GitCommandHelpers.FixPath(e.FullPath.Substring(_workTreeWatcher.Path.Length));
+            var fileName = e.FullPath.Substring(_workTreeWatcher.Path.Length).ToPosixPath();
             if (_ignoredFiles.Contains(fileName))
                 return;
 
@@ -250,14 +251,21 @@ namespace GitUI
             {
                 // If the previous status call hasn't exited yet, we'll wait until it is
                 // so we don't queue up a bunch of commands
-                if (UICommands.RepoChangedNotifier.IsLocked || Module.IsRunningGitProcess())
+                if (_commandIsRunning ||
+                    //don't update status while repository is being modyfied by GitExt
+                    //or while any git process is running, mostly repository status will change
+                    //after these actions. Moreover, calling git status while other git command is performed
+                    //can cause repository crash
+                    UICommands.RepoChangedNotifier.IsLocked || 
+                    Module.IsRunningGitProcess())
                 {
                     _statusIsUpToDate = false;//tell that computed status isn't up to date
                     return;
                 }
 
+                _commandIsRunning = true;
                 _statusIsUpToDate = true;
-                AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, (e) => { CurrentStatus = WorkingStatus.Stopped; });
+                AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
                 // Always update every 5 min, even if we don't know anything changed
                 ScheduleNextJustInCaseUpdate();
             }
@@ -271,8 +279,16 @@ namespace GitUI
             return index.RetrieveStatus().Where(entry => entry.State != FileStatus.Ignored).ToArray();
         }
 
+        private void OnUpdateStatusError(AsyncErrorEventArgs e)
+        {
+            _commandIsRunning = false;
+            CurrentStatus = WorkingStatus.Stopped;
+        }
+
         private void UpdatedStatusReceived(StatusEntry[] entries)
         {
+            _commandIsRunning = false;
+
             if (CurrentStatus != WorkingStatus.Started)
                 return;
 

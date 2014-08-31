@@ -14,7 +14,7 @@ namespace GitImpact
 
         public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
-            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.GitWorkingDir))
+            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
                 return false;
 
             using (FormImpact form = new FormImpact(gitUIEventArgs.GitModule))

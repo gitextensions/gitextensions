@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
-using ResourceManager.Translation;
+using ResourceManager;
 using System.Collections.Generic;
 
 namespace GitUI.CommandsDialogs
@@ -185,7 +185,7 @@ namespace GitUI.CommandsDialogs
 
         private void ConfigureRemotes()
         {
-            ConfigFile localConfig = Module.GetLocalConfig();
+            var localConfig = Module.LocalConfigFile;
 
             foreach (var remoteHead in Module.GetRefs(true, true))
             {

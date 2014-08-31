@@ -12,12 +12,16 @@ namespace GitCommands
 
         public static string CreateTagLink(string tag)
         {
-            return "<a href='gitext://gototag/" + tag + "'>" + WebUtility.HtmlEncode(tag) + "</a>";
+            if (tag != "…")
+                return "<a href='gitext://gototag/" + tag + "'>" + WebUtility.HtmlEncode(tag) + "</a>";
+            return WebUtility.HtmlEncode(tag);
         }
 
         public static string CreateBranchLink(string noPrefixBranch)
         {
-            return "<a href='gitext://gotobranch/" + noPrefixBranch + "'>" + WebUtility.HtmlEncode(noPrefixBranch) + "</a>";
+            if (noPrefixBranch != "…")
+                return "<a href='gitext://gotobranch/" + noPrefixBranch + "'>" + WebUtility.HtmlEncode(noPrefixBranch) + "</a>";
+            return WebUtility.HtmlEncode(noPrefixBranch);
         }
 
         public static string CreateCommitLink(string guid)

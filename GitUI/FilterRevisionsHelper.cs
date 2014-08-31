@@ -83,7 +83,6 @@ namespace GitUI
 
         public void SetFilter(string filter)
         {
-            if (string.IsNullOrEmpty(filter)) return;
             _NO_TRANSLATE_toolStripTextBoxFilter.Text = filter;
             ApplyFilter();
         }

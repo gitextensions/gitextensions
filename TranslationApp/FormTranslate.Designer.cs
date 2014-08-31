@@ -65,13 +65,13 @@ namespace TranslationApp
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
 #endif
             this.splitContainer2.Panel1.SuspendLayout();
@@ -80,7 +80,7 @@ namespace TranslationApp
             ((System.ComponentModel.ISupportInitialize)(this.translateGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.translateItemBindingSource)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
 #endif
             this.splitContainer4.Panel1.SuspendLayout();
@@ -421,32 +421,6 @@ namespace TranslationApp
             this.tableLayoutPanel3.Size = new System.Drawing.Size(204, 227);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
-            // googleTranslate
-            // 
-            this.googleTranslate.AutoSize = true;
-            this.googleTranslate.Location = new System.Drawing.Point(4, 118);
-            this.googleTranslate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.googleTranslate.Name = "googleTranslate";
-            this.googleTranslate.Size = new System.Drawing.Size(196, 34);
-            this.googleTranslate.TabIndex = 2;
-            this.googleTranslate.Text = "Google translate";
-            this.googleTranslate.UseVisualStyleBackColor = true;
-            this.googleTranslate.Visible = false;
-            this.googleTranslate.Click += new System.EventHandler(this.googleTranslate_Click);
-            // 
-            // googleAll
-            // 
-            this.googleAll.AutoSize = true;
-            this.googleAll.Location = new System.Drawing.Point(4, 160);
-            this.googleAll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.googleAll.Name = "googleAll";
-            this.googleAll.Size = new System.Drawing.Size(196, 34);
-            this.googleAll.TabIndex = 3;
-            this.googleAll.Text = "Google all empty";
-            this.googleAll.UseVisualStyleBackColor = true;
-            this.googleAll.Visible = false;
-            this.googleAll.Click += new System.EventHandler(this.googleAll_Click);
-            // 
             // nextButton
             // 
             this.nextButton.AutoSize = true;
@@ -498,13 +472,13 @@ namespace TranslationApp
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 #endif
             this.splitContainer2.ResumeLayout(false);
@@ -514,7 +488,7 @@ namespace TranslationApp
             this.tableLayoutPanel2.PerformLayout();
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
 #endif
             this.splitContainer4.ResumeLayout(false);

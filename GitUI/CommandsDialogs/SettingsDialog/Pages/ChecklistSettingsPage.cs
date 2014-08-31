@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using Microsoft.Win32;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -85,18 +85,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private readonly TranslationString _emailSet =
             new TranslationString("A username and an email address are configured.");
-
-        private readonly TranslationString _credentialHelperInstalled =
-            new TranslationString("Git credential helper is installed.");
-
-        private readonly TranslationString _noCredentialsHelperInstalled =
-            new TranslationString("No credential helper installed.");
-
-        private readonly TranslationString _gitCredentialWinStoreHelperInstalled =
-            new TranslationString("Git Credential Win Store is installed as credential helper.");
-
-        private readonly TranslationString _noCredentialsHelperInstalledTryGCS =
-            new TranslationString("No credential helper could be installed. Try to install git-credential-winstore.exe.");
 
         private readonly TranslationString _mergeToolXConfiguredNeedsCmd =
             new TranslationString("{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.");
@@ -205,18 +193,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CheckSettings();
         }
 
-        private void gitCredentialWinStore_Fix_Click(object sender, EventArgs e)
+        private string GetGlobalSetting(string settingName)
         {
-            if (CheckSettingsLogic.SolveGitCredentialStore())
-            {
-                MessageBox.Show(this, _gitCredentialWinStoreHelperInstalled.Text);
-            }
-            else
-            {
-                MessageBox.Show(this, _noCredentialsHelperInstalledTryGCS.Text);
-            }
+            return CommonLogic.ConfigFileSettingsSet.GlobalSettings.GetValue(settingName);
+        }
 
-            CheckSettings();
+        private void SetGlobalPathSetting(string settingName, string value)
+        {
+            CommonLogic.ConfigFileSettingsSet.GlobalSettings.SetPathValue(settingName, value);
         }
 
         private void translationConfig_Click(object sender, EventArgs e)
@@ -241,18 +225,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
                 else
                 {
-                    PageHost.GotoPage(SshSettingsPage.GetPageReference());   
+                    PageHost.GotoPage(SshSettingsPage.GetPageReference());
                 }
             }
-
-            // original
-////            if (Putty.Checked)
-////            {
-////                if (AutoFindPuttyPaths())
-////                    MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
-////                else
-////                    tabControl1.SelectTab(tpSsh);
-////            }
         }
 
         private void GitExtensionsInstall_Click(object sender, EventArgs e)
@@ -345,7 +320,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             if (CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings).Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(Module.GetGlobalSetting("difftool.kdiff3.path")))
+                string.IsNullOrEmpty(GetGlobalSetting("difftool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 GotoPageGlobalSettings();
@@ -379,14 +354,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             else if (CommonLogic.IsMergeTool("p4merge") || CommonLogic.IsMergeTool("TortoiseMerge"))
             {
-                CheckSettingsLogic.AutoConfigMergeToolCmd(true);
+                CheckSettingsLogic.AutoConfigMergeToolCmd();
 
-                Module.SetGlobalPathSetting(
+                SetGlobalPathSetting(
                     string.Format("mergetool.{0}.cmd", CommonLogic.GetGlobalMergeTool()), CheckSettingsLogic.GetMergeToolCmdText());
             }
 
             if (CommonLogic.IsMergeTool("kdiff3") &&
-                string.IsNullOrEmpty(Module.GetGlobalSetting("mergetool.kdiff3.path")))
+                string.IsNullOrEmpty(GetGlobalSetting("mergetool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 GotoPageGlobalSettings();
@@ -461,7 +436,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     bValid = CheckGitExtensionRegistrySettings() && bValid;
                     bValid = CheckGitExe() && bValid;
                     bValid = CheckSSHSettings() && bValid;
-                    bValid = CheckGitCredentialStore() && bValid;
                 }
             }
             catch (Exception ex)
@@ -570,28 +544,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return true;
         }
 
-        public bool CheckGitCredentialStore()
-        {
-            gitCredentialWinStore.Visible = true;
-
-            bool isValid = CheckSettingsLogic.CheckGitCredentialStore();
-
-            if (isValid)
-            {
-                gitCredentialWinStore.BackColor = Color.LightGreen;
-                gitCredentialWinStore.Text = _credentialHelperInstalled.Text;
-                gitCredentialWinStore_Fix.Visible = false;
-            }
-            else
-            {
-                gitCredentialWinStore.BackColor = Color.LightSalmon;
-                gitCredentialWinStore.Text = _noCredentialsHelperInstalled.Text;
-                gitCredentialWinStore_Fix.Visible = true;
-            }
-
-            return isValid;
-        }
-
         private bool CheckDiffToolConfiguration()
         {
             DiffTool.Visible = true;
@@ -606,7 +558,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings).Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    string p = Module.GetGlobalSetting("difftool.kdiff3.path");
+                    string p = GetGlobalSetting("difftool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         DiffTool.BackColor = Color.LightSalmon;
@@ -642,7 +594,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (CommonLogic.IsMergeTool("kdiff3"))
                 {
-                    string p = Module.GetGlobalSetting("mergetool.kdiff3.path");
+                    string p = GetGlobalSetting("mergetool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
@@ -658,7 +610,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 string mergetool = CommonLogic.GetGlobalMergeTool().ToLowerInvariant();
                 if (mergetool == "p4merge" || mergetool == "tmerge")
                 {
-                    string p = Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
+                    string p = GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
                     if (string.IsNullOrEmpty(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
@@ -681,8 +633,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckGlobalUserSettingsValid()
         {
             UserNameSet.Visible = true;
-            if (string.IsNullOrEmpty(Module.GetGlobalSetting("user.name")) ||
-                string.IsNullOrEmpty(Module.GetGlobalSetting("user.email")))
+            if (string.IsNullOrEmpty(GetGlobalSetting("user.name")) ||
+                string.IsNullOrEmpty(GetGlobalSetting("user.email")))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
                 UserNameSet.Text = _noEmailSet.Text;
@@ -702,8 +654,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             ShellExtensionsRegistered.Visible = true;
 
-            if (string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.LocalMachine,
-                                                      "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved",
+            if (string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.LocalMachine, "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved",
                                                       "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
                 string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
                                                       "*\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||

@@ -8,33 +8,16 @@ namespace GitPlugin.Commands
     class ToolbarCommand<ItemCommandT> : CommandBase
         where ItemCommandT : ItemCommandBase, new()
     {
+        public ToolbarCommand(bool runForSelection = false)
+        {
+            RunForSelection = runForSelection;
+        }
+
         public override void OnCommand(DTE2 application, OutputWindowPane pane)
         {
-            new ItemCommandT().OnCommand(application, pane);
+            var command = new ItemCommandT {RunForSelection = RunForSelection};
+            command.OnCommand(application, pane);
         }
-
-        static public string ResolveFileNameWithCase(string fullpath)
-        {
-            string dirname = Path.GetDirectoryName(fullpath);
-            string basename = Path.GetFileName(fullpath).ToLower();
-            DirectoryInfo info = new DirectoryInfo(dirname);
-            FileInfo[] files = info.GetFiles();
-
-            foreach (FileInfo file in files)
-            {
-                if (file.Name.ToLower() == basename)
-                {
-                    return file.FullName;
-                }
-            }
-
-            // Should never happen...
-            return fullpath;
-        }
-
-
-
-
 
         public override bool IsEnabled(DTE2 application)
         {

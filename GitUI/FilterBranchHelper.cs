@@ -135,7 +135,6 @@ namespace GitUI
 
         private void toolStripBranches_DropDown(object sender, EventArgs e)
         {
-            InitToolStripBranchFilter();
             UpdateBranchFilterItems();
         }
 

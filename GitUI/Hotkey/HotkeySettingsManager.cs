@@ -180,7 +180,7 @@ namespace GitUI.Hotkey
                 // FormCommit
                 new HotkeySettings(FormCommit.HotkeySettingsName, 
                     hk(FormCommit.Commands.AddToGitIgnore, Keys.None),
-                    hk(FormCommit.Commands.DeleteSelectedFiles, Keys.None),
+                    hk(FormCommit.Commands.DeleteSelectedFiles, Keys.Delete),
                     hk(FormCommit.Commands.FocusUnstagedFiles, Keys.Control | Keys.D1),
                     hk(FormCommit.Commands.FocusSelectedDiff, Keys.Control | Keys.D2),
                     hk(FormCommit.Commands.FocusStagedFiles, Keys.Control | Keys.D3),
@@ -204,6 +204,7 @@ namespace GitUI.Hotkey
                     hk(FormBrowse.Commands.QuickFetch, Keys.Control | Keys.Shift | Keys.Down),
                     hk(FormBrowse.Commands.QuickPull, Keys.Control | Keys.Shift | Keys.P),
                     hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up),
+                    hk(FormBrowse.Commands.CloseRepositry, Keys.Control | Keys.W),
                     hk(FormBrowse.Commands.RotateApplicationIcon, Keys.Control | Keys.Shift | Keys.I)),
                 new HotkeySettings(RevisionGrid.HotkeySettingsName,
                     hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),

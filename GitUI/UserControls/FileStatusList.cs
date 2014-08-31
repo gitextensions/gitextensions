@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
 using GitUI.UserControls;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI
 {
@@ -25,11 +26,22 @@ namespace GitUI
         private readonly TranslationString _DiffWithParent =
             new TranslationString("Diff with parent");
 
+        private readonly IDisposable selectedIndexChangeSubscription;
+        private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
+
         private const int ImageSize = 16;
 
         public FileStatusList()
         {
             InitializeComponent(); Translate();
+
+            selectedIndexChangeSubscription = Observable.FromEventPattern(
+                h => FileStatusListView.SelectedIndexChanged += h,
+                h => FileStatusListView.SelectedIndexChanged -= h)
+                .Throttle(SelectedIndexChangeThrottleDuration)
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
+
             SelectFirstItemOnSetItems = true;
             _noDiffFilesChangesDefaultText = NoFiles.Text;
 #if !__MonoCS__ // TODO Drag'n'Drop doesn't work on Mono/Linux
@@ -49,12 +61,22 @@ namespace GitUI
                 _images.Images.Add(Resources.IconSubmoduleRevisionUpDirty); // 7
                 _images.Images.Add(Resources.IconSubmoduleRevisionDown); // 8
                 _images.Images.Add(Resources.IconSubmoduleRevisionDownDirty); // 9
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiUp); // 10
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiUpDirty); // 11
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiDown); // 12
+                _images.Images.Add(Resources.IconSubmoduleRevisionSemiDownDirty); // 13
+                _images.Images.Add(Resources.IconFileStatusUnknown); // 14
             }
             FileStatusListView.SmallImageList = _images;
             FileStatusListView.LargeImageList = _images;
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
+        }
+
+        protected override void DisposeCustomResources()
+        {
+            selectedIndexChangeSubscription.Dispose();
         }
 
         private static ImageList _images;
@@ -113,13 +135,14 @@ namespace GitUI
                 return;
 
             e.DrawBackground();
+            Color color;
             if (e.Item.Selected)
             {
                 e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
-                e.Item.ForeColor = SystemColors.HighlightText;
+                color = SystemColors.HighlightText;
             }
             else
-                e.Item.ForeColor = SystemColors.WindowText;
+                color = SystemColors.WindowText;
             e.DrawFocusRectangle();
 
             e.Graphics.FillRectangle(Brushes.White, e.Bounds.Left, e.Bounds.Top, ImageSize, e.Bounds.Height);
@@ -128,21 +151,20 @@ namespace GitUI
             if ((e.Bounds.Height - ImageSize) > 1)
                 centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - ImageSize) / 2);
 
-            if (e.Item.ImageIndex != -1)
-            {
-                var image = e.Item.ImageList.Images[e.Item.ImageIndex];
+            var image = e.Item.ImageList.Images[e.Item.ImageIndex];
+
+            if (image != null)
                 e.Graphics.DrawImage(image, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
-            }
 
             GitItemStatus gitItemStatus = (GitItemStatus)e.Item.Tag;
 
             string text = GetItemText(e.Graphics, gitItemStatus);
 
-            using (var solidBrush = new SolidBrush(e.Item.ForeColor))
-            {
-                e.Graphics.DrawString(text, e.Item.ListView.Font,
-                                      solidBrush, e.Bounds.Left + ImageSize, e.Bounds.Top);
-            }
+            if (gitItemStatus.IsSubmodule && gitItemStatus.SubmoduleStatus != null && gitItemStatus.SubmoduleStatus.IsCompleted)
+                text += gitItemStatus.SubmoduleStatus.Result.AddedAndRemovedString();
+
+            e.Graphics.DrawString(text, e.Item.ListView.Font,
+                                  new SolidBrush(color), e.Bounds.Left + ImageSize, e.Bounds.Top);
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
@@ -166,9 +188,9 @@ namespace GitUI
             {
                 if (SelectedItems.Any())
                 {
-                    // Remember the point where the mouse down occurred. 
-                    // The DragSize indicates the size that the mouse can move 
-                    // before a drag event should be started.               
+                    // Remember the point where the mouse down occurred.
+                    // The DragSize indicates the size that the mouse can move
+                    // before a drag event should be started.
                     Size dragSize = SystemInformation.DragSize;
 
                     // Create a rectangle using the DragSize, with the mouse position being
@@ -234,7 +256,7 @@ namespace GitUI
                     DataObject obj = new DataObject();
                     obj.SetFileDropList(fileList);
 
-                    // Proceed with the drag and drop, passing in the list item.                   
+                    // Proceed with the drag and drop, passing in the list item.
                     DoDragDrop(obj, DragDropEffects.Copy);
                     dragBoxFromMouseDown = Rectangle.Empty;
                 }
@@ -325,7 +347,7 @@ namespace GitUI
                 if (value == null)
                     return;
                 foreach (ListViewItem item in FileStatusListView.Items)
-                    if (item.Tag == value)
+                    if (value.CompareTo((GitItemStatus)item.Tag) == 0)
                     {
                         item.Selected = true;
                         item.EnsureVisible();
@@ -409,10 +431,10 @@ namespace GitUI
                 DoubleClick(sender, e);
         }
 
-        void FileStatusListView_SelectedIndexChanged(object sender, EventArgs e)
+        void FileStatusListView_SelectedIndexChanged()
         {
             if (SelectedIndexChanged != null)
-                SelectedIndexChanged(this, e);
+                SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private static int GetItemImageIndex(GitItemStatus gitItemStatus)
@@ -430,17 +452,21 @@ namespace GitUI
                 var status = gitItemStatus.SubmoduleStatus.Result;
                 if (status == null)
                     return 2;
-                if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
+                if (status.Status == SubmoduleStatus.FastForward)
                     return 6 + (status.IsDirty ? 1 : 0);
-                if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
+                if (status.Status == SubmoduleStatus.Rewind)
                     return 8 + (status.IsDirty ? 1 : 0);
+                if (status.Status == SubmoduleStatus.NewerTime)
+                    return 10 + (status.IsDirty ? 1 : 0);
+                if (status.Status == SubmoduleStatus.OlderTime)
+                    return 12 + (status.IsDirty ? 1 : 0);
                 return !status.IsDirty ? 2 : 5;
             }
             if (gitItemStatus.IsRenamed)
                 return 3;
             if (gitItemStatus.IsCopied)
                 return 4;
-            return -1;
+            return 14;//icon unknown
         }
 
         [Browsable(false)]
@@ -493,7 +519,7 @@ namespace GitUI
         }
 
         private GitItemsWithParents _itemsDictionary = new Dictionary<string, IList<GitItemStatus>>();
-
+        private bool _itemsChanging = false;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitItemsWithParents GitItemStatusesWithParents
@@ -504,6 +530,7 @@ namespace GitUI
             }
             set
             {
+                _itemsChanging = true;
                 if (value == null || !value.Any())
                     NoFiles.Visible = true;
                 else
@@ -519,7 +546,7 @@ namespace GitUI
                     if (!empty)
                     {
                         //bug in the ListView control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
-                        FileStatusListView_SelectedIndexChanged(this, EventArgs.Empty);
+                        FileStatusListView_SelectedIndexChanged();
                     }
                     return;
                 }
@@ -552,6 +579,8 @@ namespace GitUI
                     };
                 }
                 FileStatusListView.Items.AddRange(list.ToArray());
+                _itemsChanging = false;
+                FileStatusListView_SizeChanged(null, null);
                 foreach (ListViewItem item in FileStatusListView.Items)
                 {
                     string parentRev = item.Group != null ? item.Group.Tag as string : "";
@@ -598,11 +627,16 @@ namespace GitUI
 
         private void FileStatusListView_SizeChanged(object sender, EventArgs e)
         {
+            if (_itemsChanging)
+                return;
+
             NoFiles.Location = new Point(5, 5);
             NoFiles.Size = new Size(Size.Width - 10, Size.Height - 10);
             Refresh();
             FileStatusListView.BeginUpdate();
-            FileStatusListView.Columns[0].Width = FileStatusListView.ClientSize.Width;
+
+            FileStatusListView.AutoResizeColumn(0,
+                ColumnHeaderAutoResizeStyle.HeaderSize);
             FileStatusListView.EndUpdate();
         }
 
@@ -712,7 +746,7 @@ namespace GitUI
                 GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
             else
             {
-                if (revision.Guid == GitRevision.UnstagedGuid) //working dir changes
+                if (revision.Guid == GitRevision.UnstagedGuid) //working directory changes
                     GitItemStatuses = Module.GetUnstagedFilesWithSubmodulesStatus();
                 else if (revision.Guid == GitRevision.IndexGuid) //index
                     GitItemStatuses = Module.GetStagedFilesWithSubmodulesStatus();

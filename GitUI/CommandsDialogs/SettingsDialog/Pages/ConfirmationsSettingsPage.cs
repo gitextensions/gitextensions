@@ -19,6 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkAutoPopStashAfterCheckout.CheckState = AppSettings.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
             chkPushNewBranch.Checked = AppSettings.DontConfirmPushNewBranch;
             chkAddTrackingRef.Checked = AppSettings.DontConfirmAddTrackingRef;
+            chkUpdateModules.CheckState = AppSettings.UpdateSubmodulesOnCheckout.ToCheckboxState();
         }
 
         protected override void PageToSettings()
@@ -28,6 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
             AppSettings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
             AppSettings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
+            AppSettings.UpdateSubmodulesOnCheckout = chkUpdateModules.CheckState.ToBoolean();
         }
 
         public static SettingsPageReference GetPageReference()

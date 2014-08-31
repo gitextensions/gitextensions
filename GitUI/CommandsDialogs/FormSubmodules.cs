@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -134,7 +134,7 @@ namespace GitUI.CommandsDialogs
             else
                 Module.UnstageFile(".gitmodules");
 
-            var configFile = Module.GetLocalConfig();
+            var configFile = Module.LocalConfigFile;
             configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             configFile.Save();
 

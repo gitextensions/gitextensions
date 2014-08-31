@@ -100,6 +100,8 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AutoCompletion\CommitAutoCompleteProvider.cs" />
+    <Compile Include="AutoCompletion\IAutoCompleteProvider.cs" />
     <Compile Include="BuildServerIntegration\BuildInfoDrawingLogic.cs" />
     <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
     <Compile Include="CommandsDialogs\AboutBox.cs">
@@ -126,6 +128,12 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
+    <Compile Include="CommandsDialogs\FormMergeSubmodule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormMergeSubmodule.Designer.cs">
+      <DependentUpon>FormMergeSubmodule.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,6 +165,7 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\CommitDialogSettingsPage.Designer.cs">
       <DependentUpon>CommitDialogSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\EditorHelper.cs" />
     <Compile Include="HelperDialogs\FormBuildServerCredentials.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,6 +209,7 @@
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="RepoHosts.cs" />
+    <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -233,6 +243,8 @@
     <Compile Include="UserControls\RevisionGridClasses\CaptionCustomMenuRenderer.cs" />
     <Compile Include="UserControls\RevisionGridClasses\GitRefListsForRevision.cs" />
     <Compile Include="UserControls\RevisionGridClasses\MenuUtil.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\NavigationHistory.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\ParentChildNavigationHistory.cs" />
     <Compile Include="UserManual\UserManual.cs" />
     <Compile Include="UserManual\SingleHtmlUserManual.cs" />
     <Compile Include="UserManual\StandardHtmlUserManual.cs" />
@@ -515,7 +527,6 @@
       <DependentUpon>FormCherryPick.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\GitFileTreeComparer.cs" />
-    <Compile Include="Google.cs" />
     <Compile Include="Lemmings.cs" />
     <Compile Include="Plugin\GitPluginSettingsContainer.cs" />
     <Compile Include="Plugin\LoadPlugins.cs" />
@@ -982,6 +993,10 @@
       <DependentUpon>FormUpdates.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\FormMergeSubmodule.resx">
+      <DependentUpon>FormMergeSubmodule.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.resx">
       <DependentUpon>CreatePullRequestForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1411,7 +1426,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+      <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -1432,6 +1447,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Externals\Git.hub\Git.hub\Git.hub.csproj">
+      <Project>{f50b1dbf-1c9f-4437-87ec-7aba805cc446}</Project>
+      <Name>Git.hub</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
@@ -1487,9 +1506,72 @@
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
-    <None Include="Resources\Icons\User.png" />
+    <None Include="Resources\Icons\User.PNG" />
+    <None Include="Translation\Dutch.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\French.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\German.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\Italian.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\Japanese.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\Korean.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\Russian.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\Simplified Chinese.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\Spanish.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\Traditional Chinese.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Translation\Dutch.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\English.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\French.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\German.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Italian.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Japanese.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Korean.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Russian.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Simplified Chinese.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Spanish.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translation\Traditional Chinese.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="..\Bin\Logo\cow-head-blue.ico">
       <Link>Resources\ApplicationIcons\cow-head-blue.ico</Link>
     </None>
@@ -1669,25 +1751,13 @@
     <None Include="Resources\Icons\IconGotoManual.png" />
     <None Include="Resources\Icons\IconWarning.png" />
     <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
+    <None Include="Resources\Icons\IconFileStatusUnknown.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionDown2.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiDown.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiDownDirty.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiUp.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiUpDirty.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
-    <Content Include="Translation\Francais.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Francais.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\German.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\German.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Traditional Chinese.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Traditional Chinese.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Properties\DataSources\GitUI.Script.ScriptInfo.datasource" />
     <None Include="Resources\Icons\nonprintchar.png" />
     <None Include="Resources\Icons\bug.png" />
@@ -1695,46 +1765,6 @@
     <None Include="Resources\Icons\Renamed.png" />
     <None Include="Resources\Icons\Copied.png" />
     <None Include="Resources\Icons\SplitViewLayout.png" />
-    <Content Include="Translation\Dutch.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Dutch.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Translation\English.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Italiano.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Italiano.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Japanese.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Japanese.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Simplified Chinese.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Simplified Chinese.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Spanish.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Russian.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Spanish.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Translation\Russian.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\Icons\Cow_sunglass.png" />
     <None Include="Resources\Icons\Cow_xmass.png" />
     <None Include="Resources\Icons\develop.ico" />
@@ -1776,5 +1806,5 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
 </Project>

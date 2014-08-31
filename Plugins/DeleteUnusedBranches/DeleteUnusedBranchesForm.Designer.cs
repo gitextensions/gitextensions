@@ -29,24 +29,85 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.StatusStrip statusStrip1;
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeleteUnusedBranchesForm));
+            this.pnlBranchesArea = new System.Windows.Forms.Panel();
+            this.imgLoading = new System.Windows.Forms.PictureBox();
             this.BranchesGrid = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonSettings = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
             this.Delete = new System.Windows.Forms.Button();
             this.instructionLabel = new System.Windows.Forms.Label();
-            this.buttonSettings = new System.Windows.Forms.Button();
-            this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.regexFilter = new System.Windows.Forms.TextBox();
+            this.IncludeRemoteBranches = new System.Windows.Forms.CheckBox();
+            this.remote = new System.Windows.Forms.TextBox();
+            this.useRegexFilter = new System.Windows.Forms.CheckBox();
+            this.RefreshBtn = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.mergedIntoBranch = new System.Windows.Forms.TextBox();
+            this.olderThanDays = new System.Windows.Forms.NumericUpDown();
+            this.includeUnmergedBranches = new System.Windows.Forms.CheckBox();
+            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.branchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.deleteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.deleteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.branchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.pnlBranchesArea.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgLoading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BranchesGrid)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.olderThanDays)).BeginInit();
+            statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.branchBindingSource)).BeginInit();
             this.SuspendLayout();
+            // 
+            // statusStrip1
+            // 
+            statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblStatus});
+            statusStrip1.Location = new System.Drawing.Point(0, 399);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new System.Drawing.Size(760, 22);
+            statusStrip1.TabIndex = 2;
+            statusStrip1.Text = "statusStrip1";
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(0, 17);
+            // 
+            // pnlBranchesArea
+            // 
+            this.pnlBranchesArea.Controls.Add(this.imgLoading);
+            this.pnlBranchesArea.Controls.Add(this.BranchesGrid);
+            this.pnlBranchesArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlBranchesArea.Location = new System.Drawing.Point(3, 218);
+            this.pnlBranchesArea.Name = "pnlBranchesArea";
+            this.pnlBranchesArea.Size = new System.Drawing.Size(754, 141);
+            this.pnlBranchesArea.TabIndex = 2;
+            // 
+            // imgLoading
+            // 
+            this.imgLoading.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.imgLoading.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imgLoading.Location = new System.Drawing.Point(0, 0);
+            this.imgLoading.Name = "imgLoading";
+            this.imgLoading.Size = new System.Drawing.Size(754, 141);
+            this.imgLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.imgLoading.TabIndex = 1;
+            this.imgLoading.TabStop = false;
+            this.imgLoading.Visible = false;
             // 
             // BranchesGrid
             // 
@@ -55,51 +116,123 @@
             this.BranchesGrid.AutoGenerateColumns = false;
             this.BranchesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.BranchesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.deleteDataGridViewCheckBoxColumn,
             this.nameDataGridViewTextBoxColumn,
             this.dateDataGridViewTextBoxColumn,
-            this.deleteDataGridViewCheckBoxColumn,
-            this.Result});
+            this.Author,
+            this.Message});
             this.BranchesGrid.DataSource = this.branchBindingSource;
             this.BranchesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BranchesGrid.Location = new System.Drawing.Point(3, 28);
+            this.BranchesGrid.Location = new System.Drawing.Point(0, 0);
             this.BranchesGrid.Name = "BranchesGrid";
             this.BranchesGrid.RowHeadersVisible = false;
-            this.BranchesGrid.Size = new System.Drawing.Size(754, 353);
+            this.BranchesGrid.Size = new System.Drawing.Size(754, 141);
             this.BranchesGrid.TabIndex = 0;
+            this.BranchesGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.BranchesGrid_CellContentClick);
+            // 
+            // deleteDataGridViewCheckBoxColumn
+            // 
+            this.deleteDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.deleteDataGridViewCheckBoxColumn.DataPropertyName = "Delete";
+            this.deleteDataGridViewCheckBoxColumn.FillWeight = 20F;
+            this.deleteDataGridViewCheckBoxColumn.HeaderText = "Delete";
+            this.deleteDataGridViewCheckBoxColumn.Name = "deleteDataGridViewCheckBoxColumn";
+            this.deleteDataGridViewCheckBoxColumn.Width = 50;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.nameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.nameDataGridViewTextBoxColumn.FillWeight = 2F;
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.MinimumWidth = 100;
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // dateDataGridViewTextBoxColumn
+            // 
+            this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dateDataGridViewTextBoxColumn.DataPropertyName = "Date";
+            this.dateDataGridViewTextBoxColumn.FillWeight = 300F;
+            this.dateDataGridViewTextBoxColumn.HeaderText = "Last activity";
+            this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
+            this.dateDataGridViewTextBoxColumn.ReadOnly = true;
+            this.dateDataGridViewTextBoxColumn.Width = 175;
+            // 
+            // Author
+            // 
+            this.Author.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Author.DataPropertyName = "Author";
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.Author.DefaultCellStyle = dataGridViewCellStyle2;
+            this.Author.FillWeight = 2F;
+            this.Author.HeaderText = "Last author";
+            this.Author.Name = "Author";
+            this.Author.ReadOnly = true;
+            this.Author.Width = 85;
+            // 
+            // Message
+            // 
+            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Message.DataPropertyName = "Message";
+            this.Message.HeaderText = "Last message";
+            this.Message.Name = "Message";
+            this.Message.ReadOnly = true;
+            this.Message.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // branchBindingSource
+            // 
+            this.branchBindingSource.DataSource = typeof(DeleteUnusedBranches.Branch);
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.BranchesGrid, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.pnlBranchesArea, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.instructionLabel, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 190F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(760, 421);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(760, 399);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 3;
+            this.tableLayoutPanel2.ColumnCount = 4;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Controls.Add(this.buttonSettings, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.Cancel, 2, 0);
-            this.tableLayoutPanel2.Controls.Add(this.Delete, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.Cancel, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.Delete, 2, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 387);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 365);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(754, 31);
             this.tableLayoutPanel2.TabIndex = 2;
+            // 
+            // buttonSettings
+            // 
+            this.buttonSettings.Location = new System.Drawing.Point(3, 3);
+            this.buttonSettings.Name = "buttonSettings";
+            this.buttonSettings.Size = new System.Drawing.Size(75, 25);
+            this.buttonSettings.TabIndex = 2;
+            this.buttonSettings.Text = "Settings";
+            this.buttonSettings.UseVisualStyleBackColor = true;
+            this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
             // 
             // Cancel
             // 
@@ -133,57 +266,136 @@
             this.instructionLabel.TabIndex = 1;
             this.instructionLabel.Text = "....";
             // 
-            // buttonSettings
+            // tableLayoutPanel3
             // 
-            this.buttonSettings.Location = new System.Drawing.Point(3, 3);
-            this.buttonSettings.Name = "buttonSettings";
-            this.buttonSettings.Size = new System.Drawing.Size(75, 25);
-            this.buttonSettings.TabIndex = 2;
-            this.buttonSettings.Text = "Settings";
-            this.buttonSettings.UseVisualStyleBackColor = true;
-            this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.regexFilter, 1, 3);
+            this.tableLayoutPanel3.Controls.Add(this.IncludeRemoteBranches, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.remote, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this.useRegexFilter, 0, 3);
+            this.tableLayoutPanel3.Controls.Add(this.RefreshBtn, 1, 5);
+            this.tableLayoutPanel3.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.label2, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.mergedIntoBranch, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.olderThanDays, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.includeUnmergedBranches, 0, 4);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 28);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 6;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(754, 184);
+            this.tableLayoutPanel3.TabIndex = 3;
             // 
-            // Result
+            // regexFilter
             // 
-            this.Result.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Result.DataPropertyName = "Result";
-            this.Result.FillWeight = 2F;
-            this.Result.HeaderText = "Result";
-            this.Result.Name = "Result";
-            this.Result.ReadOnly = true;
-            this.Result.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.regexFilter.Location = new System.Drawing.Point(380, 93);
+            this.regexFilter.Name = "regexFilter";
+            this.regexFilter.Size = new System.Drawing.Size(218, 20);
+            this.regexFilter.TabIndex = 6;
+            this.regexFilter.Text = "/(feature|develop)/";
+            this.regexFilter.TextChanged += new System.EventHandler(this.regexFilter_TextChanged);
             // 
-            // nameDataGridViewTextBoxColumn
+            // IncludeRemoteBranches
             // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.FillWeight = 2F;
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.IncludeRemoteBranches.AutoSize = true;
+            this.IncludeRemoteBranches.Location = new System.Drawing.Point(3, 63);
+            this.IncludeRemoteBranches.Name = "IncludeRemoteBranches";
+            this.IncludeRemoteBranches.Size = new System.Drawing.Size(162, 17);
+            this.IncludeRemoteBranches.TabIndex = 3;
+            this.IncludeRemoteBranches.Text = "Delete remote branches from";
+            this.IncludeRemoteBranches.UseVisualStyleBackColor = true;
+            this.IncludeRemoteBranches.CheckedChanged += new System.EventHandler(this.IncludeRemoteBranches_CheckedChanged);
             // 
-            // dateDataGridViewTextBoxColumn
+            // remote
             // 
-            this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dateDataGridViewTextBoxColumn.DataPropertyName = "Date";
-            this.dateDataGridViewTextBoxColumn.FillWeight = 300F;
-            this.dateDataGridViewTextBoxColumn.HeaderText = "Last activity";
-            this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
-            this.dateDataGridViewTextBoxColumn.ReadOnly = true;
-            this.dateDataGridViewTextBoxColumn.Width = 175;
+            this.remote.Location = new System.Drawing.Point(380, 63);
+            this.remote.Name = "remote";
+            this.remote.Size = new System.Drawing.Size(218, 20);
+            this.remote.TabIndex = 4;
+            this.remote.Text = "origin";
+            this.remote.TextChanged += new System.EventHandler(this.remote_TextChanged);
             // 
-            // deleteDataGridViewCheckBoxColumn
+            // useRegexFilter
             // 
-            this.deleteDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.deleteDataGridViewCheckBoxColumn.DataPropertyName = "Delete";
-            this.deleteDataGridViewCheckBoxColumn.FillWeight = 20F;
-            this.deleteDataGridViewCheckBoxColumn.HeaderText = "Delete";
-            this.deleteDataGridViewCheckBoxColumn.Name = "deleteDataGridViewCheckBoxColumn";
-            this.deleteDataGridViewCheckBoxColumn.Width = 50;
+            this.useRegexFilter.AutoSize = true;
+            this.useRegexFilter.Location = new System.Drawing.Point(3, 93);
+            this.useRegexFilter.Name = "useRegexFilter";
+            this.useRegexFilter.Size = new System.Drawing.Size(155, 17);
+            this.useRegexFilter.TabIndex = 5;
+            this.useRegexFilter.Text = "Use regex to filter branches";
+            this.useRegexFilter.UseVisualStyleBackColor = true;
+            this.useRegexFilter.CheckedChanged += new System.EventHandler(this.useRegexFilter_CheckedChanged);
             // 
-            // branchBindingSource
+            // Refresh
             // 
-            this.branchBindingSource.DataSource = typeof(DeleteUnusedBranches.Branch);
+            this.RefreshBtn.Location = new System.Drawing.Point(380, 153);
+            this.RefreshBtn.Name = "Refresh";
+            this.RefreshBtn.Size = new System.Drawing.Size(124, 23);
+            this.RefreshBtn.TabIndex = 7;
+            this.RefreshBtn.Text = "Search branches";
+            this.RefreshBtn.UseVisualStyleBackColor = true;
+            this.RefreshBtn.Click += new System.EventHandler(this.Refresh_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 5);
+            this.label1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(168, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Delete branches older than x days";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 35);
+            this.label2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(200, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Delete branches fully merged into branch";
+            // 
+            // mergedIntoBranch
+            // 
+            this.mergedIntoBranch.Location = new System.Drawing.Point(380, 33);
+            this.mergedIntoBranch.Name = "mergedIntoBranch";
+            this.mergedIntoBranch.Size = new System.Drawing.Size(218, 20);
+            this.mergedIntoBranch.TabIndex = 12;
+            this.mergedIntoBranch.TextChanged += new System.EventHandler(this.mergedIntoBranch_TextChanged);
+            // 
+            // olderThanDays
+            // 
+            this.olderThanDays.Location = new System.Drawing.Point(380, 3);
+            this.olderThanDays.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.olderThanDays.Name = "olderThanDays";
+            this.olderThanDays.Size = new System.Drawing.Size(120, 20);
+            this.olderThanDays.TabIndex = 13;
+            this.olderThanDays.ValueChanged += new System.EventHandler(this.olderThanDays_ValueChanged);
+            // 
+            // includeUnmergedBranches
+            // 
+            this.includeUnmergedBranches.AutoSize = true;
+            this.includeUnmergedBranches.Location = new System.Drawing.Point(3, 123);
+            this.includeUnmergedBranches.Name = "includeUnmergedBranches";
+            this.includeUnmergedBranches.Size = new System.Drawing.Size(158, 17);
+            this.includeUnmergedBranches.TabIndex = 14;
+            this.includeUnmergedBranches.Text = "Include unmerged branches";
+            this.includeUnmergedBranches.UseVisualStyleBackColor = true;
+            this.includeUnmergedBranches.CheckedChanged += new System.EventHandler(this.includeUnmergedBranches_CheckedChanged);
             // 
             // DeleteUnusedBranchesForm
             // 
@@ -192,17 +404,26 @@
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(760, 421);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "DeleteUnusedBranchesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete obsolete branches";
+            this.pnlBranchesArea.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.imgLoading)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BranchesGrid)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.olderThanDays)).EndInit();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.branchBindingSource)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -215,10 +436,25 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Button Cancel;
         private System.Windows.Forms.Button Delete;
+        private System.Windows.Forms.Button buttonSettings;
+        private System.Windows.Forms.CheckBox IncludeRemoteBranches;
+        private System.Windows.Forms.TextBox remote;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TextBox regexFilter;
+        private System.Windows.Forms.CheckBox useRegexFilter;
+        private System.Windows.Forms.Button RefreshBtn;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox mergedIntoBranch;
+        private System.Windows.Forms.NumericUpDown olderThanDays;
+        private System.Windows.Forms.CheckBox includeUnmergedBranches;
+        private System.Windows.Forms.PictureBox imgLoading;
+        private System.Windows.Forms.Panel pnlBranchesArea;
+        private System.Windows.Forms.ToolStripStatusLabel lblStatus;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn deleteDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn deleteDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Result;
-        private System.Windows.Forms.Button buttonSettings;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
     }
 }

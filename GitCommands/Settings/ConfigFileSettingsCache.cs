@@ -1,8 +1,6 @@
 ﻿using GitCommands.Config;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GitCommands.Settings
 {
@@ -73,6 +71,32 @@ namespace GitCommands.Settings
             return _configFile.Value.GetValue(key, null);
         }
 
+        public IList<string> GetValues(string key)
+        {
+            return LockedAction(() =>
+            {
+                EnsureSettingsAreUpToDate();
+                return _configFile.Value.GetValues(key);
+            });
+        }
+
+        public IList<ConfigSection> GetConfigSections()
+        {
+            return LockedAction(() =>
+            {
+                EnsureSettingsAreUpToDate();
+                return _configFile.Value.ConfigSections;
+            });
+        }
+
+        public void RemoveConfigSection(string configSectionName)
+        {
+            LockedAction(() =>
+            {
+                EnsureSettingsAreUpToDate();
+                _configFile.Value.RemoveConfigSection(configSectionName);
+            });
+        }
 
     }
 }

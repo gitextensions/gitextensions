@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -23,7 +24,7 @@ namespace GitUI.CommandsDialogs
 
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
-                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? null : revision.Guid);
+                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
         }
 
         private void FormCreateBranch_Load(object sender, EventArgs e)
@@ -71,6 +72,11 @@ namespace GitUI.CommandsDialogs
                 {// orphan AND orphan creation success AND clear
                     cmd = GitCommandHelpers.RemoveCmd();
                     FormProcess.ShowDialog(this, cmd);
+                }
+
+                if (CheckoutAfterCreate.Checked)
+                {
+                    UICommands.UpdateSubmodules(this);
                 }
 
                 DialogResult = DialogResult.OK;

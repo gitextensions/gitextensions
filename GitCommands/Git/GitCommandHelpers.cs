@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Utils;
 using JetBrains.Annotations;
@@ -82,6 +81,14 @@ namespace GitCommands
             Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
             //to prevent from leaking processes see issue #1092 for details
             Environment.SetEnvironmentVariable("TERM", "msys");
+            string sshAskPass = Path.Combine(AppSettings.GetInstallDir(), @"GitExtSshAskPass.exe");
+            if (EnvUtils.RunningOnWindows())
+            {
+                if (File.Exists(sshAskPass))
+                    Environment.SetEnvironmentVariable("SSH_ASKPASS", sshAskPass);
+            }
+            else if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SSH_ASKPASS")))
+                Environment.SetEnvironmentVariable("SSH_ASKPASS", "ssh-askpass");
         }
 
         public static string GetHomeDir()
@@ -115,13 +122,6 @@ namespace GitCommands
             }
         }
 
-        /// <summary>Trims whitespace and replaces '\' with '/'.</summary>
-        public static string FixPath([NotNull] string path)
-        {
-            path = path.Trim();
-            return path.Replace('\\', '/');
-        }
-
         internal static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
             return new ProcessStartInfo
@@ -147,10 +147,19 @@ namespace GitCommands
             string quotedCmd = fileName;
             if (quotedCmd.IndexOf(' ') != -1)
                 quotedCmd = quotedCmd.Quote();
-            AppSettings.GitLog.Log(quotedCmd + " " + arguments);
+
+            var executionStartTimestamp = DateTime.Now;
 
             var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
-            return Process.Start(startInfo);
+            var startProcess = Process.Start(startInfo);
+            
+            startProcess.Exited += (sender, args) =>
+            {
+              var executionEndTimestamp = DateTime.Now;
+              AppSettings.GitLog.Log (quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+            };
+
+            return startProcess;
         }
 
         internal static bool UseSsh(string arguments)
@@ -307,7 +316,8 @@ namespace GitCommands
         }
 
         private static GitVersion _versionInUse;
-        private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
+        private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
+            ?? Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
         public static GitVersion VersionInUse
         {
@@ -329,10 +339,25 @@ namespace GitCommands
             return cherryPickCmd + " " + arguments + " \"" + cherry + "\"";
         }
 
+        /// <summary>
+        /// Check if a string represents a commit hash
+        /// </summary>
+        private static bool IsCommitHash(string value)
+        {
+            return GitRevision.Sha1HashRegex.IsMatch(value);
+        }
+
         public static string GetFullBranchName(string branch)
         {
             if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
                 return branch;
+
+            // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
+            if (IsCommitHash(branch))
+            {
+                return branch;
+            }
+
             return "refs/heads/" + branch;
         }
 
@@ -374,8 +399,8 @@ namespace GitCommands
 
         public static string AddSubmoduleCmd(string remotePath, string localPath, string branch, bool force)
         {
-            remotePath = FixPath(remotePath);
-            localPath = FixPath(localPath);
+            remotePath = remotePath.ToPosixPath();
+            localPath = localPath.ToPosixPath();
 
             if (!string.IsNullOrEmpty(branch))
                 branch = " -b \"" + branch.Trim() + "\"";
@@ -425,8 +450,8 @@ namespace GitCommands
 
         public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, string branch, int? depth)
         {
-            var from = FixPath(fromPath);
-            var to = FixPath(toPath);
+            var from = fromPath.ToPosixPath();
+            var to = toPath.ToPosixPath();
             var options = new List<string> { "-v" };
             if (central)
                 options.Add("--bare");
@@ -556,7 +581,7 @@ namespace GitCommands
         public static string PushCmd(string remote, string fromBranch, string toBranch,
             bool all, bool force, bool track, int recursiveSubmodules)
         {
-            remote = FixPath(remote);
+            remote = remote.ToPosixPath();
 
             // This method is for pushing to remote branches, so fully qualify the
             // remote branch name with refs/heads/.
@@ -599,7 +624,7 @@ namespace GitCommands
         /// <summary>Pushes multiple sets of local branches to remote branches.</summary>
         public static string PushMultipleCmd(string remote, IEnumerable<GitPushAction> pushActions)
         {
-            remote = FixPath(remote);
+            remote = remote.ToPosixPath();
             return new GitPush(remote, pushActions)
             {
                 ReportProgress = VersionInUse.PushCanAskForProgress
@@ -608,7 +633,7 @@ namespace GitCommands
 
         public static string PushTagCmd(string path, string tag, bool all, bool force = false)
         {
-            path = FixPath(path);
+            path = path.ToPosixPath();
 
             tag = tag.Replace(" ", "");
 
@@ -630,17 +655,16 @@ namespace GitCommands
             return "";
         }
 
-        public static string StashSaveCmd(bool untracked)
+        public static string StashSaveCmd(bool untracked, bool keepIndex, string message)
         {
             var cmd = "stash save";
             if (untracked && VersionInUse.StashUntrackedFilesSupported)
                 cmd += " -u";
-            return cmd;
-        }
+            if (keepIndex)
+                cmd += " --keep-index";
+            cmd = cmd.Combine(" ", message.QuoteNE());
 
-        public static bool PathIsUrl(string path)
-        {
-            return path.Contains(AppSettings.PathSeparator.ToString()) || path.Contains(AppSettings.PathSeparatorWrong.ToString());
+            return cmd;
         }
 
         public static string ContinueRebaseCmd()
@@ -766,17 +790,17 @@ namespace GitCommands
         public static string PatchCmd(string patchFile)
         {
             if (IsDiffFile(patchFile))
-                return "apply \"" + FixPath(patchFile) + "\"";
+                return "apply \"" + patchFile.ToPosixPath() + "\"";
             else
-                return "am --3way --signoff \"" + FixPath(patchFile) + "\"";
+                return "am --3way --signoff \"" + patchFile.ToPosixPath() + "\"";
         }
 
         public static string PatchCmdIgnoreWhitespace(string patchFile)
         {
             if (IsDiffFile(patchFile))
-                return "apply --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+                return "apply --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
             else
-                return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+                return "am --3way --signoff --ignore-whitespace \"" + patchFile.ToPosixPath() + "\"";
         }
 
         public static string PatchDirCmd()
@@ -808,14 +832,6 @@ namespace GitCommands
                 command += " " + paths;
 
             return command;
-        }
-
-        public static ConfigFile GetGlobalConfig()
-        {
-            string configPath = Path.Combine(GetHomeDir(), ".config", "git", "config");
-            if (File.Exists(configPath))
-                return new ConfigFile(configPath, false);
-            return new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = 0)
@@ -866,7 +882,7 @@ namespace GitCommands
         {
             PatchApply.Patch patch = module.GetCurrentChangesUseGit(fileName, oldFileName, staged, "", module.FilesEncoding);
             string text = patch != null ? patch.Text : "";
-            return GetSubmoduleStatus(text);
+            return GetSubmoduleStatus(text, module, fileName);
         }
 
         [CanBeNull]
@@ -875,7 +891,7 @@ namespace GitCommands
             return GetCurrentSubmoduleChanges(module, submodule, submodule, false);
         }
 
-        public static GitSubmoduleStatus GetSubmoduleStatus(string text)
+        public static GitSubmoduleStatus GetSubmoduleStatus(string text, GitModule module, string fileName)
         {
             if (string.IsNullOrEmpty(text))
                 return null;
@@ -928,6 +944,14 @@ namespace GitCommands
                     // TODO: Support combined merge
                 }
             }
+
+            if (status.OldCommit != null && status.Commit != null)
+            {
+                var submodule = module.GetSubmodule(fileName);
+                status.AddedCommits = submodule.GetCommitCount(status.Commit, status.OldCommit);
+                status.RemovedCommits = submodule.GetCommitCount(status.OldCommit, status.Commit);
+            }
+
             return status;
         }
 
@@ -1096,10 +1120,10 @@ namespace GitCommands
             return sb.ToString();
         }
 
-        public static string ProcessSubmodulePatch(GitModule module, PatchApply.Patch patch)
+        public static string ProcessSubmodulePatch(GitModule module, string fileName, PatchApply.Patch patch)
         {
             string text = patch != null ? patch.Text : null;
-            var status = GetSubmoduleStatus(text);
+            var status = GetSubmoduleStatus(text, module, fileName);
             if (status == null)
                 return "";
             return ProcessSubmoduleStatus(module, status);
@@ -1182,6 +1206,25 @@ namespace GitCommands
                 default:
                     sb.AppendLine("Unknown");
                     break;
+            }
+
+            if (status.AddedCommits != null && status.RemovedCommits != null &&
+                (status.AddedCommits != 0 || status.RemovedCommits != 0))
+            {
+                sb.Append("\nCommits: ");
+
+                if (status.RemovedCommits > 0)
+                {
+                    sb.Append(status.RemovedCommits + " removed");
+
+                    if (status.AddedCommits > 0)
+                        sb.Append(", ");
+                }
+
+                if (status.AddedCommits > 0)
+                    sb.Append(status.AddedCommits + " added");
+
+                sb.AppendLine();
             }
 
             if (status.Commit != null && status.OldCommit != null)
@@ -1316,7 +1359,8 @@ namespace GitCommands
             {
                 using (StreamReader sr = new StreamReader(path))
                 {
-                    return sr.ReadLine().StartsWith("diff ");
+                    string line = sr.ReadLine();
+                    return line.StartsWith("diff ") || line.StartsWith("Index: ");
                 }
             }
             catch (Exception)

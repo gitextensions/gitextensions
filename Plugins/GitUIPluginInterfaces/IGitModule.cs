@@ -16,27 +16,27 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
-        string RunGitCmd(string arguments, out int exitCode, Encoding encoding = null, byte[] stdInput = null);
+        string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null);
 
         /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
-        string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null);
-
-        /// <summary>
-        /// Run command, console window is hidden, wait for exit, redirect output
-        /// </summary>
-        string RunCmd(string cmd, string arguments, out int exitCode, Encoding encoding = null, byte[] stdIn = null);
+        CmdResult RunGitCmdResult(string arguments, Encoding encoding = null, byte[] stdInput = null);
 
         /// <summary>
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
         string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdIn = null);
 
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        CmdResult RunCmdResult(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null);
+
         string RunBatchFile(string batchFile);
 
         /// <summary>Gets the directory which contains the git repository.</summary>
-        string GitWorkingDir { get; }
+        string WorkingDir { get; }
 
         /// <summary>Gets the ".git" directory path.</summary>
         string GetGitDirectory();

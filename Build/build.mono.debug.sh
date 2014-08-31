@@ -1,5 +1,5 @@
 #!/bin/bash
-MONOSOLUTION=../GitExtensionsMono.sln
+MONOSOLUTION=GitExtensionsMono.sln
 
 xbuild /t:clean $MONOSOLUTION
 xbuild /p:TargetFrameworkProfile="" $MONOSOLUTION

@@ -70,6 +70,9 @@ namespace System
                 return left + sep + right;
         }
 
+        /// <summary>
+        /// Quotes string if it is not null
+        /// </summary>
         public static string Quote(this string s)
         {
             return s.Quote("\"");
@@ -91,6 +94,16 @@ namespace System
         public static string QuoteNE(this string s)
         {
             return s.IsNullOrEmpty() ? s : s.Quote("\"");
+        }
+
+        /// <summary>
+        /// Adds parentheses if string is not null and not empty
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string AddParenthesesNE(this string s)
+        {
+            return s.IsNullOrEmpty() ? s : "(" + s + ")";
         }
 
         /// <summary>

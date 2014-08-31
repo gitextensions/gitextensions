@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -210,8 +210,7 @@ namespace GitUI.CommandsDialogs
             if (dialogResult.Trim() == "Current branch a is up to date.")
                 MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
 
-            if (!Module.InTheMiddleOfConflictedMerge() &&
-                !Module.InTheMiddleOfRebase() &&
+            if (!Module.InTheMiddleOfAction() &&
                 !Module.InTheMiddleOfPatch())
                 Close();
 

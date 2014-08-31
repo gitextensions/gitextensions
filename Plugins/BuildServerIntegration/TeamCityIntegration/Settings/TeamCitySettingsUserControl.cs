@@ -33,6 +33,7 @@ namespace TeamCityIntegration.Settings
             {
                 TeamCityServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", string.Empty);
                 TeamCityProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
+                TeamCityBuildIdFilter.Text = buildServerConfig.GetString("BuildIdFilter", string.Empty);
             }
         }
 
@@ -40,6 +41,7 @@ namespace TeamCityIntegration.Settings
         {
             buildServerConfig.SetString("BuildServerUrl", TeamCityServerUrl.Text);
             buildServerConfig.SetString("ProjectName", TeamCityProjectName.Text);
+            buildServerConfig.SetString("BuildIdFilter", TeamCityBuildIdFilter.Text);
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.GitExtLinks;
 using GitUI.Editor.RichTextBoxExtension;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommitInfo
 {
@@ -22,10 +22,16 @@ namespace GitUI.CommitInfo
         private readonly TranslationString containedInNoTag = new TranslationString("Contained in no tag");
         private readonly TranslationString trsLinksRelatedToRevision = new TranslationString("Related links:");
 
+        private const int MaximumDisplayedRefs = 20;
+
         public CommitInfo()
         {
             InitializeComponent();
             Translate();
+            GitUICommandsSourceSet += (a, uiCommandsSource) =>
+            {
+                _sortedRefs = null;
+            };
         }
 
         [DefaultValue(false)]
@@ -113,8 +119,11 @@ namespace GitUI.CommitInfo
 
         private string _revisionInfo;
         private string _linksInfo;
+        private List<string> _tags;
         private string _tagInfo;
+        private List<string> _branches;
         private string _branchInfo;
+        private IList<string> _sortedRefs;
 
         private void ReloadCommitInfo()
         {
@@ -138,8 +147,13 @@ namespace GitUI.CommitInfo
             {
                 CommitData.UpdateCommitMessage(data, Module, _revision.Guid, ref error);
                 _revision.Body = data.Body;
-                ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
             }
+
+            ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
+
+            if (_sortedRefs == null)
+                ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
+
             data.ChildrenGuids = _children;
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
 
@@ -171,15 +185,27 @@ namespace GitUI.CommitInfo
             return _revisionHeaderTabStops;
         }
 
+        private void loadSortedRefs()
+        {
+            _sortedRefs = Module.GetSortedRefs();
+            this.InvokeAsync(updateText);
+        }
+
         private void loadTagInfo(string revision)
         {
-            _tagInfo = GetTagsWhichContainsThisCommit(revision, ShowBranchesAsLinks);
+            _tags = Module.GetAllTagsWhichContainGivenCommit(revision).ToList();
             this.InvokeAsync(updateText);
         }
 
         private void loadBranchInfo(string revision)
         {
-            _branchInfo = GetBranchesWhichContainsThisCommit(revision, ShowBranchesAsLinks);
+            // Include local branches if explicitly requested or when needed to decide whether to show remotes
+            bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
+                            AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            // Include remote branches if requested
+            bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
+                             AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            _branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
             this.InvokeAsync(updateText);
         }
 
@@ -192,8 +218,60 @@ namespace GitUI.CommitInfo
             this.InvokeAsync(updateText);
         }
 
+        private class ItemTpComparer : IComparer<string>
+        {
+            private readonly IList<string> _otherList;
+            private readonly string _prefix;
+
+            public ItemTpComparer(IList<string> otherList, string prefix)
+            {
+                _otherList = otherList;
+                _prefix = prefix;
+            }
+
+            public int Compare(string a, string b)
+            {
+                if (a.StartsWith("remotes/"))
+                    a = "refs/" + a;
+                else
+                    a = _prefix + a;
+                if (b.StartsWith("remotes/"))
+                    b = "refs/" + b;
+                else
+                    b = _prefix + b;
+                int i = _otherList.IndexOf(a);
+                int j = _otherList.IndexOf(b);
+                return i - j;
+            }
+        }
+
         private void updateText()
         {
+            if (_sortedRefs != null)
+            {
+                if (_tags != null && string.IsNullOrEmpty(_tagInfo))
+                {
+                    _tags.Sort(new ItemTpComparer(_sortedRefs, "refs/tags/"));
+                    if (_tags.Count > MaximumDisplayedRefs)
+                    {
+                        _tags[MaximumDisplayedRefs - 2] = "…";
+                        _tags[MaximumDisplayedRefs - 1] = _tags[_tags.Count - 1];
+                        _tags.RemoveRange(MaximumDisplayedRefs, _tags.Count - MaximumDisplayedRefs);
+                    }
+                    _tagInfo = GetTagsWhichContainsThisCommit(_tags, ShowBranchesAsLinks);
+                }
+                if (_branches != null && string.IsNullOrEmpty(_branchInfo))
+                {
+                    _branches.Sort(new ItemTpComparer(_sortedRefs, "refs/heads/"));
+                    if (_branches.Count > MaximumDisplayedRefs)
+                    {
+                        _branches[MaximumDisplayedRefs - 2] = "…";
+                        _branches[MaximumDisplayedRefs - 1] = _branches[_branches.Count - 1];
+                        _branches.RemoveRange(MaximumDisplayedRefs, _branches.Count - MaximumDisplayedRefs);
+                    }
+                    _branchInfo = GetBranchesWhichContainsThisCommit(_branches, ShowBranchesAsLinks);
+                }
+            }
             RevisionInfo.SuspendLayout();
             RevisionInfo.SetXHTMLText(_revisionInfo + "\n\n" + _linksInfo + _branchInfo + _tagInfo);
             RevisionInfo.SelectionStart = 0; //scroll up
@@ -207,6 +285,8 @@ namespace GitUI.CommitInfo
             _linksInfo = string.Empty;
             _branchInfo = string.Empty;
             _tagInfo = string.Empty;
+            _branches = null;
+            _tags = null;
             updateText();
             gravatar1.LoadImageForEmail("");
         }
@@ -221,7 +301,7 @@ namespace GitUI.CommitInfo
             gravatar1.LoadImageForEmail(matches[0].Groups[1].Value);
         }
 
-        private string GetBranchesWhichContainsThisCommit(string revision, bool showBranchesAsLinks)
+        private string GetBranchesWhichContainsThisCommit(IEnumerable<string> branches, bool showBranchesAsLinks)
         {
             const string remotesPrefix= "remotes/";
             // Include local branches if explicitly requested or when needed to decide whether to show remotes
@@ -230,7 +310,6 @@ namespace GitUI.CommitInfo
             // Include remote branches if requested
             bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                              AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-            var branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote);
             var links = new List<string>();
             bool allowLocal = AppSettings.CommitInfoShowContainedInBranchesLocal;
             bool allowRemote = getRemote;
@@ -272,9 +351,9 @@ namespace GitUI.CommitInfo
             return Environment.NewLine + WebUtility.HtmlEncode(containedInNoBranch.Text);
         }
 
-        private string GetTagsWhichContainsThisCommit(string revision, bool showBranchesAsLinks)
+        private string GetTagsWhichContainsThisCommit(IEnumerable<string> tags, bool showBranchesAsLinks)
         {
-            var tagString = Module.GetAllTagsWhichContainGivenCommit(revision)
+            var tagString = tags
                 .Select(s => showBranchesAsLinks ? LinkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
 
             if (!String.IsNullOrEmpty(tagString))
@@ -332,6 +411,26 @@ namespace GitUI.CommitInfo
         {
             Module.EditNotes(_revision.Guid);
             ReloadCommitInfo();
+        }
+
+        private void DoCommandClick(string command, string data)
+        {
+            if (CommandClick != null)
+            {
+                CommandClick(this, new CommandEventArgs(command, data));
+            }
+        }
+
+        private void _RevisionHeader_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.XButton1)
+            {
+                DoCommandClick("navigatebackward", null);
+            }
+            else if (e.Button == MouseButtons.XButton2)
+            {
+                DoCommandClick("navigateforward", null);
+            }
         }
     }
 }

@@ -91,7 +91,7 @@ namespace GitCommands
 
         }
 
-        private void EnsureSettingsAreUpToDate()
+        protected void EnsureSettingsAreUpToDate()
         {
             if (NeedRefresh())
             {

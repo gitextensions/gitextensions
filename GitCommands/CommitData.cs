@@ -240,7 +240,7 @@ namespace GitCommands
             if (data == null)
                 throw new ArgumentNullException("data");
 
-            var lines = data.Split('\n');
+            var lines = data.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
 
             var guid = lines[0];
 

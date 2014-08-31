@@ -2,22 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using Microsoft.Win32;
-using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public class CheckSettingsLogic : Translate
+    public class CheckSettingsLogic
     {
-        public readonly TranslationString ToolSuggestPathText =
-            new TranslationString("Please enter the path to {0} and press suggest.");
-
-        public readonly TranslationString MergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
-
         public readonly CommonLogic CommonLogic;
         private GitModule Module { get { return CommonLogic.Module; } }
         private ConfigFileSettings GlobalConfigFileSettings { get { return CommonLogic.ConfigFileSettingsSet.GlobalSettings; } }
@@ -32,14 +25,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             if (!EnvUtils.RunningOnWindows())
                 return SolveGitCommand();
 
-            bool valid = true;
-            valid = SolveGitCommand() && valid;
+            bool valid = SolveGitCommand();
             valid = SolveLinuxToolsDir() && valid;
             valid = SolveMergeToolForKDiff() && valid;
             valid = SolveDiffToolForKDiff() && valid;
             valid = SolveGitExtensionsDir() && valid;
             valid = SolveEditor() && valid;
-            valid = SolveGitCredentialStore() && valid;
 
             CommonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
             CommonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
@@ -58,41 +49,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return true;
         }
 
-        public bool SolveGitCredentialStore()
-        {
-            if (!CheckGitCredentialStore())
-            {
-                string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
-                if (File.Exists(gcsFileName))
-                {
-                    var config = GlobalConfigFileSettings;
-                    if (EnvUtils.RunningOnWindows())
-                        config.SetValue("credential.helper", "!\\\"" + GitCommandHelpers.FixPath(gcsFileName) + "\\\"");
-                    else if (EnvUtils.RunningOnMacOSX())
-                        config.SetValue("credential.helper", "osxkeychain");
-                    else
-                        config.SetValue("credential.helper", "cache --timeout=300"); // 5 min
-                    
-                    return true;
-                }
-                return false;
-            }
-            return true;
-        }
-
-        public bool CheckGitCredentialStore()
-        {
-            string value = GlobalConfigFileSettings.GetValue("credential.helper");
-            bool isValid;
-            if (EnvUtils.RunningOnWindows())
-                isValid = value.Contains("git-credential-winstore.exe");
-            else
-                isValid = !string.IsNullOrEmpty(value);
-
-            return isValid;
-        }
-
-        public bool SolveLinuxToolsDir()
+        public bool SolveLinuxToolsDir(string possibleNewPath = null)
         {
             if (!EnvUtils.RunningOnWindows())
             {
@@ -100,10 +57,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 return true;
             }
 
-            string gitpath = AppSettings.GitCommandValue
-                .Replace(@"\cmd\git.exe", @"\bin\")
+            string gitpath = AppSettings.GitCommandValue;
+            if (!String.IsNullOrWhiteSpace(possibleNewPath))
+            {
+                gitpath = possibleNewPath.Trim();
+            }
+
+            gitpath = gitpath.Replace(@"\cmd\git.exe", @"\bin\")
                 .Replace(@"\cmd\git.cmd", @"\bin\")
                 .Replace(@"\bin\git.exe", @"\bin\");
+
             if (Directory.Exists(gitpath))
             {
                 if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
@@ -154,8 +117,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             yield return @"C:\cygwin\";
         }
 
-        private IEnumerable<string> GetWindowsCommandLocations()
+        private IEnumerable<string> GetWindowsCommandLocations(string possibleNewPath = null)
         {
+            if (!string.IsNullOrEmpty(possibleNewPath) && File.Exists(possibleNewPath))
+                yield return possibleNewPath;
             if (!string.IsNullOrEmpty(AppSettings.GitCommandValue) && File.Exists(AppSettings.GitCommandValue))
                 yield return AppSettings.GitCommandValue;
             foreach (var path in GetGitLocations())
@@ -188,11 +153,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return false;
         }
 
-        public bool SolveGitCommand()
+        public bool SolveGitCommand(string possibleNewPath = null)
         {
             if (EnvUtils.RunningOnWindows())
             {
-                var command = (from cmd in GetWindowsCommandLocations()
+                var command = (from cmd in GetWindowsCommandLocations(possibleNewPath)
                                let output = Module.RunCmd(cmd, string.Empty)
                                where !string.IsNullOrEmpty(output)
                                select cmd).FirstOrDefault();
@@ -281,18 +246,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return !string.IsNullOrEmpty(Module.RunGitCmd(""));
         }
 
-        public void AutoConfigMergeToolCmd(bool silent)
+        public void AutoConfigMergeToolCmd()
         {
             string exeName;
-            string exeFile = MergeToolsHelper.FindMergeToolFullPath(GetGlobalMergeToolText(), out exeName);
+            string exeFile = MergeToolsHelper.FindMergeToolFullPath(CommonLogic.ConfigFileSettingsSet, GetGlobalMergeToolText(), out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 SetMergetoolPathText("");
                 SetMergeToolCmdText("");
-                if (!silent)
-                    MessageBox.Show(/*this, */String.Format(ToolSuggestPathText.Text, exeName),
-                        MergeToolSuggestCaption.Text);
-                return;
             }
 
             SetMergetoolPathText(exeFile);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Policy;
@@ -31,21 +32,21 @@ namespace GitUI.Script
             return anyScriptExecuted;
         }
 
-        public static void RunScript(IWin32Window owner, GitModule aModule, string script, RevisionGrid revisionGrid)
+        public static bool RunScript(IWin32Window owner, GitModule aModule, string script, RevisionGrid revisionGrid)
         {
             if (string.IsNullOrEmpty(script))
-                return;
+                return false;
 
             ScriptInfo scriptInfo = ScriptManager.GetScript(script);
 
             if (scriptInfo == null)
             {
                 MessageBox.Show(owner, "Cannot find script: " + script, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
 
             if (string.IsNullOrEmpty(scriptInfo.Command))
-                return;
+                return false;
 
             string argument = scriptInfo.Arguments;
             foreach (string option in Options)
@@ -59,9 +60,9 @@ namespace GitUI.Script
                 MessageBox.Show(owner, 
                     string.Format("Option {0} is only supported when started from revision grid.", option),
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                return false;
             }
-            RunScript(owner, aModule, scriptInfo, revisionGrid);
+            return RunScript(owner, aModule, scriptInfo, revisionGrid);
         }
 
         private static string GetRemotePath(string url)
@@ -78,12 +79,12 @@ namespace GitUI.Script
             return path;
         }
 
-        internal static void RunScript(IWin32Window owner, GitModule aModule, ScriptInfo scriptInfo, RevisionGrid revisionGrid)
+        internal static bool RunScript(IWin32Window owner, GitModule aModule, ScriptInfo scriptInfo, RevisionGrid revisionGrid)
         {
-            string command = scriptInfo.Command;
+            string originalCommand = scriptInfo.Command;
             string argument = scriptInfo.Arguments;
 
-            command = OverrideCommandWhenNecessary(command);
+            string command = OverrideCommandWhenNecessary(originalCommand);
 
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
@@ -103,7 +104,7 @@ namespace GitUI.Script
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
                     continue;
-                if (!option.StartsWith("{s") || selectedRevision != null)
+                if (option.StartsWith("{c") || selectedRevision != null)
                 {
                     currentRevision = GetCurrentRevision(aModule, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision, option);
 
@@ -117,7 +118,7 @@ namespace GitUI.Script
                                 askToSpecify(currentLocalBranches, "Current Revision Branch")));
                     }
                 }
-                else
+                else if (revisionGrid != null)
                 {
                     selectedRevision = CalculateSelectedRevision(revisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                 }
@@ -313,7 +314,13 @@ namespace GitUI.Script
             if (!scriptInfo.RunInBackground)
                 FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
             else
-                aModule.RunExternalCmdDetached(command, argument);
+            {
+                if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
+                    Process.Start(argument);
+                else
+                    aModule.RunExternalCmdDetached(command, argument);
+            }
+            return !scriptInfo.RunInBackground;
         }
 
         private static GitRevision CalculateSelectedRevision(RevisionGrid revisionGrid, List<GitRef> selectedRemoteBranches,
@@ -419,17 +426,17 @@ namespace GitUI.Script
         private static string OverrideCommandWhenNecessary(string originalCommand)
         {
             //Make sure we are able to run git, even if git is not in the path
-            if (originalCommand.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
-                originalCommand.Equals("{git}", System.StringComparison.CurrentCultureIgnoreCase))
+            if (originalCommand.Equals("git", StringComparison.CurrentCultureIgnoreCase) ||
+                originalCommand.Equals("{git}", StringComparison.CurrentCultureIgnoreCase))
                 return AppSettings.GitCommand;
 
-            if (originalCommand.Equals("gitextensions", System.StringComparison.CurrentCultureIgnoreCase) ||
-                originalCommand.Equals("{gitextensions}", System.StringComparison.CurrentCultureIgnoreCase) ||
-                originalCommand.Equals("gitex", System.StringComparison.CurrentCultureIgnoreCase) ||
-                originalCommand.Equals("{gitex}", System.StringComparison.CurrentCultureIgnoreCase))
+            if (originalCommand.Equals("gitextensions", StringComparison.CurrentCultureIgnoreCase) ||
+                originalCommand.Equals("{gitextensions}", StringComparison.CurrentCultureIgnoreCase) ||
+                originalCommand.Equals("gitex", StringComparison.CurrentCultureIgnoreCase) ||
+                originalCommand.Equals("{gitex}", StringComparison.CurrentCultureIgnoreCase))
                 return AppSettings.GetGitExtensionsFullPath();
 
-            if (originalCommand.Equals("{openurl}", System.StringComparison.CurrentCultureIgnoreCase))
+            if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
                 return "explorer";
             return originalCommand;
         }

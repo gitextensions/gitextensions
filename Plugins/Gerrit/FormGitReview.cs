@@ -5,16 +5,16 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI;
 using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace Gerrit
 {
     public sealed partial class FormGitReview : GitExtensionsForm, IGitUICommandsSource
     {
         private readonly TranslationString _gitreviewOnlyInWorkingDirSupported =
-            new TranslationString(".gitreview is only supported when there is a working dir.");
+            new TranslationString(".gitreview is only supported when there is a working directory.");
         private readonly TranslationString _gitreviewOnlyInWorkingDirSupportedCaption =
-            new TranslationString("No working dir");
+            new TranslationString("No working directory");
 
         private readonly TranslationString _cannotAccessGitreview =
             new TranslationString("Failed to save .gitreview." + Environment.NewLine + "Check if file is accessible.");
@@ -68,8 +68,8 @@ namespace Gerrit
         {
             try
             {
-                if (File.Exists(Module.GitWorkingDir + ".gitreview"))
-                    _NO_TRANSLATE_GitReviewEdit.ViewFile(Module.GitWorkingDir + ".gitreview");
+                if (File.Exists(Module.WorkingDir + ".gitreview"))
+                    _NO_TRANSLATE_GitReviewEdit.ViewFile(Module.WorkingDir + ".gitreview");
             }
             catch (Exception ex)
             {
@@ -91,7 +91,7 @@ namespace Gerrit
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        Module.GitWorkingDir + ".gitreview",
+                        Module.WorkingDir + ".gitreview",
                         x =>
                         {
                             var fileContent = _NO_TRANSLATE_GitReviewEdit.GetText();

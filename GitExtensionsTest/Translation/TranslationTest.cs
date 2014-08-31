@@ -1,20 +1,14 @@
-﻿#if !NUNIT
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Category = Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute;
-#else
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
-
-#endif
 using GitUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ResourceManager.Translation;
+using ResourceManager;
+using ResourceManager.Xliff;
 
-
-namespace GitExtensionsTest.Translation
+namespace GitExtensionsTest.TranslationTest
 {
     [TestClass]
     public class TranslationTest
@@ -29,7 +23,7 @@ namespace GitExtensionsTest.Translation
 
             List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
 
-            ResourceManager.Translation.Translation testTranslation = new ResourceManager.Translation.Translation();
+            var testTranslation = new Translation();
 
             foreach (Type type in translatableTypes)
             {

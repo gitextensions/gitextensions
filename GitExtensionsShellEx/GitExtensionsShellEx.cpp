@@ -29,7 +29,7 @@ void XTrace(LPCTSTR lpszFormat, ...)
 #define MIIM_STRING      0x00000040
 #define MIIM_BITMAP      0x00000080
 
-const wchar_t* const gitExCommandNames[] = 
+const wchar_t* const gitExCommandNames[] =
 {
     L"addfiles",
     L"applypatch",
@@ -49,7 +49,7 @@ const wchar_t* const gitExCommandNames[] =
     L"settings",
     L"stash",
     L"viewdiff"
-}; 
+};
 
 C_ASSERT(gcMaxValue == _countof(gitExCommandNames));
 
@@ -350,14 +350,22 @@ bool CGitExtensionsShellEx::IsValidGitDir(TCHAR m_szFile[])
 
     std::wstring dir(m_szFile);
 
+    bool continueToParentDirectory;
     do
     {
         if (ValidWorkingDir(dir))
             return true;
-        size_t pos = dir.rfind('\\');
-        if (dir.rfind('\\') != std::wstring::npos)
-            dir.resize(pos);
-    } while (dir.rfind('\\') != std::wstring::npos);
+
+        size_t lastBackslashPos = dir.rfind('\\');
+
+        // PathIsRoot returns true for "C:\" and "\\server\share" but false for "C:" and "\\server\share\"
+        // => The right part of the conjunction won't stop the loop for "C:", but the left part will
+        // because "C:".rfind('\\') == wstring::npos
+        continueToParentDirectory = (lastBackslashPos != std::wstring::npos) && !PathIsRoot(dir.c_str());
+
+        if (continueToParentDirectory)
+            dir.resize(lastBackslashPos);
+    } while (continueToParentDirectory);
     return false;
 }
 
@@ -375,7 +383,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
     //by our shell extension when the folder menu is inserted.
     TCHAR menubuf[MAX_PATH];
     int count = GetMenuItemCount(hMenu);
-    for (int i=0; i<count; ++i)
+    for (int i = 0; i < count; ++i)
     {
         MENUITEMINFO miif;
         SecureZeroMemory(&miif, sizeof(MENUITEMINFO));
@@ -384,7 +392,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
         miif.dwTypeData = menubuf;
         miif.cch = _countof(menubuf);
         GetMenuItemInfo(hMenu, i, TRUE, &miif);
-        if (miif.dwItemData == (ULONG_PTR)_Module.GetModuleInstance())
+        if (miif.dwItemData == (ULONG_PTR) _Module.GetModuleInstance())
         {
             DBG_TRACE(L"Menu already added");
             return S_OK;
@@ -395,7 +403,8 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
     if (szCascadeShellMenuItems.IsEmpty())
         szCascadeShellMenuItems = "110111000111111111";
     bool cascadeContextMenu = szCascadeShellMenuItems.Find('1') != -1;
-    bool alwaysShowAllCommands = GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"AlwaysShowAllCommands");
+    SHORT keyState = GetKeyState(VK_SHIFT);
+    bool alwaysShowAllCommands = (keyState & 0x8000) || GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"AlwaysShowAllCommands");
 
     HMENU popupMenu = NULL;
     if (cascadeContextMenu)

@@ -2,12 +2,12 @@
 {
     partial class FolderBrowserButton
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,17 +22,17 @@
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
             this.buttonBrowse = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
+            //
             // buttonBrowse
-            // 
+            //
             this.buttonBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonBrowse.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
             this.buttonBrowse.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -41,12 +41,12 @@
             this.buttonBrowse.Name = "buttonBrowse";
             this.buttonBrowse.Size = new System.Drawing.Size(110, 25);
             this.buttonBrowse.TabIndex = 5;
-            this.buttonBrowse.Text = "Browse";
+            this.buttonBrowse.Text = "Browse...";
             this.buttonBrowse.UseVisualStyleBackColor = true;
             this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
-            // 
+            //
             // FolderBrowserButton
-            // 
+            //
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.buttonBrowse);
             this.Name = "FolderBrowserButton";

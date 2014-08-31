@@ -17,6 +17,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUseLocalChangesAction.Checked = AppSettings.UseDefaultCheckoutBranchAction;
             chkDontSHowHelpImages.Checked = AppSettings.DontShowHelpImages;
             chkAlwaysShowAdvOpt.Checked = AppSettings.AlwaysShowAdvOpt;
+            chkCheckForRCVersions.Checked = AppSettings.CheckForReleaseCandidates;
         }
 
         protected override void PageToSettings()
@@ -25,6 +26,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;
             AppSettings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
             AppSettings.AlwaysShowAdvOpt = chkAlwaysShowAdvOpt.Checked;
+            AppSettings.CheckForReleaseCandidates = chkCheckForRCVersions.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

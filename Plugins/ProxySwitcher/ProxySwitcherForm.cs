@@ -3,14 +3,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using ResourceManager;
+using Settings = GitCommands.AppSettings;
 
 namespace ProxySwitcher
 {
-    public partial class ProxySwitcherForm : Form
+    public partial class ProxySwitcherForm : Form, ITranslate
     {
-        private readonly IGitPluginSettingsContainer settings;
-        private readonly GitUIBaseEventArgs gitUiCommands;
+        private readonly ISettingsSource settings;
         private readonly IGitModule gitCommands;
 
         #region Translation
@@ -18,19 +18,29 @@ namespace ProxySwitcher
         private readonly TranslationString _pleaseSetProxy = new TranslationString("There is no proxy configured. Please set the proxy host in the plugin settings.");
         #endregion
 
-        public ProxySwitcherForm(IGitPluginSettingsContainer settings, GitUIBaseEventArgs gitUiCommands)
+        /// <summary>
+        /// Default constructor added to register all strings to be translated
+        /// Use the other constructor:
+        /// ProxySwitcherForm(IGitPluginSettingsContainer settings, GitUIBaseEventArgs gitUiCommands)
+        /// </summary>
+        public ProxySwitcherForm()
         {
             InitializeComponent();
+        }
+
+        public ProxySwitcherForm(ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
+        {
+            InitializeComponent();
+            Translate();
 
             this.Text = _pluginDescription.Text;
             this.settings = settings;
-            this.gitUiCommands = gitUiCommands;
             this.gitCommands = gitUiCommands.GitModule;
         }
 
         private void ProxySwitcherForm_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(settings.GetSetting(SettingsKey.HttpProxy)))
+            if (string.IsNullOrEmpty(SettingsKey.HttpProxy[settings]))
             {
                 MessageBox.Show(this, _pleaseSetProxy.Text, this.Text, MessageBoxButtons.OK);
                 this.Close();
@@ -57,10 +67,10 @@ namespace ProxySwitcher
         {
             var sb = new StringBuilder();
             sb.Append("\"");
-            var username = settings.GetSetting(SettingsKey.Username);
+            var username = SettingsKey.Username[settings];
             if (!string.IsNullOrEmpty(username))
             {
-                var password = settings.GetSetting(SettingsKey.Password);
+                var password = SettingsKey.Password[settings];
                 sb.Append(username);
                 if(!string.IsNullOrEmpty(password))
                 {
@@ -69,8 +79,8 @@ namespace ProxySwitcher
                 }
                 sb.Append("@");
             }
-            sb.Append(settings.GetSetting(SettingsKey.HttpProxy));
-            var port = settings.GetSetting(SettingsKey.HttpProxyPort);
+            sb.Append(SettingsKey.HttpProxy[settings]);
+            var port = SettingsKey.HttpProxyPort[settings];
             if (!string.IsNullOrEmpty(port))
             {
                 sb.Append(":");
@@ -105,6 +115,21 @@ namespace ProxySwitcher
                 gitCommands.RunGitCmd("config --unset http.proxy");
             }
             RefreshProxy();
+        }
+
+        protected void Translate()
+        {
+            Translator.Translate(this, Settings.CurrentTranslation);
+        }
+
+        public virtual void AddTranslationItems(ITranslation translation)
+        {
+            TranslationUtils.AddTranslationItemsFromFields(GetType().Name, this, translation);
+        }
+
+        public virtual void TranslateItems(ITranslation translation)
+        {
+            TranslationUtils.TranslateItemsFromFields(GetType().Name, this, translation);
         }
     }
 }

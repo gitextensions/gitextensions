@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using Microsoft.Win32;
 
 namespace GitCommands
@@ -26,17 +23,16 @@ namespace GitCommands
     public static class AppSettings
     {
         //semi-constants
-        public static readonly string GitExtensionsVersionString;
-        public static readonly char PathSeparator = '\\';
-        public static readonly char PathSeparatorWrong = '/';
+        public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
+        public static string ProductVersion { get { return Application.ProductVersion; } }
         public const string SettingsFileName = "GitExtensions.settings";
 
         public static Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
-        private static SettingsContainer<RepoDistSettings> _SettingsContainer;
-        public static SettingsContainer<RepoDistSettings> SettingsContainer { get { return _SettingsContainer; } }
+        private static SettingsContainer<RepoDistSettings, GitExtSettingsCache> _SettingsContainer;
+        public static SettingsContainer<RepoDistSettings, GitExtSettingsCache> SettingsContainer { get { return _SettingsContainer; } }
 
         static AppSettings()
         {
@@ -54,17 +50,7 @@ namespace GitCommands
                 }
             );
             
-            _SettingsContainer = new SettingsContainer<RepoDistSettings>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
-            Version version = AppVersion;
-
-            GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
-            if (version.Build > 0)
-                GitExtensionsVersionString += '.' + version.Build.ToString();
-            if (!EnvUtils.RunningOnWindows())
-            {
-                PathSeparator = '/';
-                PathSeparatorWrong = '\\';
-            }
+            _SettingsContainer = new SettingsContainer<RepoDistSettings, GitExtSettingsCache>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
             GitLog = new CommandLogger();
             
@@ -74,7 +60,7 @@ namespace GitCommands
             }
         }
 
-        public static void UsingContainer(SettingsContainer<RepoDistSettings> aSettingsContainer, Action action)
+        public static void UsingContainer(SettingsContainer<RepoDistSettings, GitExtSettingsCache> aSettingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>
                 {
@@ -96,6 +82,18 @@ namespace GitCommands
 
         public static string GetInstallDir()
         {
+            if (IsPortable())
+            {
+                return GetGitExtensionsDirectory();
+            }
+            else
+            {
+                return ReadStringRegValue("InstallDir", string.Empty);
+            }
+        }
+
+        public static string GetResourceDir()
+        {
 #if DEBUG
             string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
             string debugPath = @"GitExtensions\bin\Debug";
@@ -103,25 +101,17 @@ namespace GitCommands
             var path = gitExtDir.Substring(gitExtDir.Length - len);
             if (debugPath.Replace('\\', '/').Equals(path.Replace('\\', '/')))
             {
-                string projectPath = gitExtDir.Substring(0, len + 2);
+                string projectPath = gitExtDir.Substring(0, gitExtDir.Length - len);
                 return Path.Combine(projectPath, "Bin");
             }
 #endif
-
-            if (IsPortable())
-            {
-                return GetGitExtensionsDirectory();
-            }
-            else
-            {
-                return (string)VersionIndependentRegKey.GetValue("InstallDir", string.Empty);
-            }
+            return GetInstallDir();
         }
 
         //for repair only
         public static void SetInstallDir(string dir)
         {
-            VersionIndependentRegKey.SetValue("InstallDir", dir);
+            WriteStringRegValue("InstallDir", dir);
         }
 
         private static bool ReadBoolRegKey(string key, bool defaultValue)
@@ -139,6 +129,16 @@ namespace GitCommands
             VersionIndependentRegKey.SetValue(key, value ? "true" : "false");
         }
 
+        private static string ReadStringRegValue(string key, string defaultValue)
+        {
+            return (string)VersionIndependentRegKey.GetValue(key, defaultValue);
+        }
+
+        private static void WriteStringRegValue(string key, string value)
+        {
+            VersionIndependentRegKey.SetValue(key, value);
+        }
+
         public static bool CheckSettings
         {
             get { return ReadBoolRegKey("CheckSettings", true); }
@@ -147,8 +147,14 @@ namespace GitCommands
 
         public static string CascadeShellMenuItems
         {
-            get { return (string)VersionIndependentRegKey.GetValue("CascadeShellMenuItems", "110111000111111111"); }
-            set { VersionIndependentRegKey.SetValue("CascadeShellMenuItems", value); }
+            get { return ReadStringRegValue("CascadeShellMenuItems", "110111000111111111"); }
+            set { WriteStringRegValue("CascadeShellMenuItems", value); }
+        }
+
+        public static string SshPath
+        {
+            get { return ReadStringRegValue("gitssh", null); }
+            set { WriteStringRegValue("gitssh", value); }
         }
 
         public static bool AlwaysShowAllCommands
@@ -172,14 +178,14 @@ namespace GitCommands
                 if (IsPortable())
                     return GetString("gitcommand", "");
                 else
-                    return (string)VersionIndependentRegKey.GetValue("gitcommand", "");
+                    return ReadStringRegValue("gitcommand", "");
             }
             set
             {
                 if (IsPortable())
                     SetString("gitcommand", value);
                 else
-                    VersionIndependentRegKey.SetValue("gitcommand", value);
+                    WriteStringRegValue("gitcommand", value);
             }
         }
 
@@ -247,6 +253,24 @@ namespace GitCommands
             set { SetInt("commitDialogNumberOfPreviousMessages", value); }
         }
 
+        public static bool ShowCommitAndPush
+        {
+            get { return GetBool("showcommitandpush", true); }
+            set { SetBool("showcommitandpush", value); }
+        }
+
+        public static bool ShowResetUnstagedChanges
+        {
+            get { return GetBool("showresetunstagedchanges", true); }
+            set { SetBool("showresetunstagedchanges", value); }
+        }
+
+        public static bool ShowResetAllChanges
+        {
+            get { return GetBool("showresetallchanges", true); }
+            set { SetBool("showresetallchanges", value); }
+        }
+
         public static string TruncatePathMethod
         {
             get { return GetString("truncatepathmethod", "none"); }
@@ -277,7 +301,7 @@ namespace GitCommands
 
         public static bool CheckForUncommittedChangesInCheckoutBranch
         {
-            get { return GetBool("checkforuncommittedchangesincheckoutbranch", false); }
+            get { return GetBool("checkforuncommittedchangesincheckoutbranch", true); }
             set { SetBool("checkforuncommittedchangesincheckoutbranch", value); }
         }
 
@@ -553,13 +577,13 @@ namespace GitCommands
 
         public static bool IncludeUntrackedFilesInAutoStash
         {
-            get { return GetBool("includeUntrackedFilesInAutoStash", true); }
+            get { return GetBool("includeUntrackedFilesInAutoStash", false); }
             set { SetBool("includeUntrackedFilesInAutoStash", value); }
         }
 
         public static bool IncludeUntrackedFilesInManualStash
         {
-            get { return GetBool("includeUntrackedFilesInManualStash", true); }
+            get { return GetBool("includeUntrackedFilesInManualStash", false); }
             set { SetBool("includeUntrackedFilesInManualStash", value); }
         }
 
@@ -567,6 +591,36 @@ namespace GitCommands
         {
             get { return GetBool("orderrevisionbydate", true); }
             set { SetBool("orderrevisionbydate", value); }
+        }
+
+        public static bool ShowRemoteBranches
+        {
+            get { return GetBool("showRemoteBranches", true); }
+            set { SetBool("showRemoteBranches", value); }
+        }
+
+        public static bool ShowSuperprojectTags
+        {
+            get { return GetBool("showSuperprojectTags", false); }
+            set { SetBool("showSuperprojectTags", value); }
+        }
+
+        public static bool ShowSuperprojectBranches
+        {
+            get { return GetBool("showSuperprojectBranches", true); }
+            set { SetBool("showSuperprojectBranches", value); }
+        }
+
+        public static bool ShowSuperprojectRemoteBranches
+        {
+            get { return GetBool("showSuperprojectRemoteBranches", false); }
+            set { SetBool("showSuperprojectRemoteBranches", value); }
+        }
+
+        public static bool? UpdateSubmodulesOnCheckout
+        {
+            get { return GetBool("updateSubmodulesOnCheckout"); }
+            set { SetBool("updateSubmodulesOnCheckout", value); }
         }
 
         public static string Dictionary
@@ -689,9 +743,7 @@ namespace GitCommands
             get { return GetString("gitbindir", ""); }
             set
             {
-                var temp = value;
-                if (temp.Length > 0 && temp[temp.Length - 1] != PathSeparator)
-                    temp += PathSeparator;
+                var temp = value.EnsureTrailingPathSeparator();
                 SetString("gitbindir", temp);
 
                 //if (string.IsNullOrEmpty(_gitBinDir))
@@ -726,19 +778,19 @@ namespace GitCommands
 
         public static string Plink
         {
-            get { return GetString("plink", ""); }
+            get { return GetString("plink", ReadStringRegValue("plink", "")); }
             set { SetString("plink", value); }
         }
         public static string Puttygen
         {
-            get { return GetString("puttygen", ""); }
+            get { return GetString("puttygen", ReadStringRegValue("puttygen", "")); }
             set { SetString("puttygen", value); }
         }
 
         /// <summary>Gets the path to Pageant (SSH auth agent).</summary>
         public static string Pageant
         {
-            get { return GetString("pageant", ""); }
+            get { return GetString("pageant", ReadStringRegValue("pageant", "")); }
             set { SetString("pageant", value); }
         }
 
@@ -862,7 +914,7 @@ namespace GitCommands
 
         public static string GetDictionaryDir()
         {
-            return Path.Combine(GetInstallDir(), "Dictionaries");
+            return Path.Combine(GetResourceDir(), "Dictionaries");
         }
 
         public static void SaveSettings()
@@ -871,8 +923,8 @@ namespace GitCommands
             {
                 SettingsContainer.LockedAction(() =>
                 {
-                SetString("gitssh", GitCommandHelpers.GetSsh());
-                Repositories.SaveSettings();
+                    SshPath = GitCommandHelpers.GetSsh();
+                    Repositories.SaveSettings();
 
                     SettingsContainer.Save();
                 });
@@ -892,7 +944,7 @@ namespace GitCommands
 
             try
             {
-                GitCommandHelpers.SetSsh(GetString("gitssh", null));
+                GitCommandHelpers.SetSsh(SshPath);
             }
             catch
             { }
@@ -1010,6 +1062,12 @@ namespace GitCommands
         {
             get { return GetDate("LastUpdateCheck", default(DateTime)); }
             set { SetDate("LastUpdateCheck", value); }
+        }
+
+        public static bool CheckForReleaseCandidates
+        {
+            get { return GetBool("CheckForReleaseCandidates", false); }
+            set { SetBool("CheckForReleaseCandidates", value); }
         }
 
         public static string GetGitExtensionsFullPath()

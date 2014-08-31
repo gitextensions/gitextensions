@@ -8,19 +8,18 @@ using GitCommands.Config;
 
 namespace GitCommands.Settings
 {
-    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings>
+    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>
     {
-        public ConfigFileSettings(ConfigFileSettings aLowerPriority, SettingsCache aSettingsCache)
+        public ConfigFileSettings(ConfigFileSettings aLowerPriority, ConfigFileSettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
         {
             core = new CorePath(this);
             mergetool = new MergeToolPath(this);
         }
 
-
         public static ConfigFileSettings CreateEffective(GitModule aModule)
         {
-            return CreateLocal(aModule, CreateGlobal());
+            return CreateLocal(aModule, CreateGlobal(CreateSystemWide()));
         }
 
         public static ConfigFileSettings CreateLocal(GitModule aModule, bool allowCache = true)
@@ -31,14 +30,29 @@ namespace GitCommands.Settings
         private static ConfigFileSettings CreateLocal(GitModule aModule, ConfigFileSettings aLowerPriority, bool allowCache = true)
         {
             return new ConfigFileSettings(aLowerPriority,
-                ConfigFileSettingsCache.Create(Path.Combine(aModule.WorkingDirGitDir(), "config"), true, allowCache));
+                ConfigFileSettingsCache.Create(Path.Combine(aModule.GetGitDirectory(), "config"), true, allowCache));
         }
 
         public static ConfigFileSettings CreateGlobal(bool allowCache = true)
         {
+            return CreateGlobal(null, allowCache);
+        }
+
+        public static ConfigFileSettings CreateGlobal(ConfigFileSettings aLowerPriority, bool allowCache = true)
+        {
             string configPath = Path.Combine(GitCommandHelpers.GetHomeDir(), ".config", "git", "config");
             if (!File.Exists(configPath))
                 configPath = Path.Combine(GitCommandHelpers.GetHomeDir(), ".gitconfig");
+
+            return new ConfigFileSettings(aLowerPriority,
+                ConfigFileSettingsCache.Create(configPath, false, allowCache));
+        }
+
+        public static ConfigFileSettings CreateSystemWide(bool allowCache = true)
+        {
+            string configPath = Path.Combine(AppSettings.GitBinDir, "..", "etc", "gitconfig");
+            if (!File.Exists(configPath))
+                return null;
 
             return new ConfigFileSettings(null,
                 ConfigFileSettingsCache.Create(configPath, false, allowCache));
@@ -51,6 +65,11 @@ namespace GitCommands.Settings
         public string GetValue(string setting)
         {
             return this.GetString(setting, string.Empty);
+        }
+
+        public IList<string> GetValues(string setting)
+        {
+            return SettingsCache.GetValues(setting);
         }
 
         public void SetValue(string setting, string value)
@@ -67,6 +86,16 @@ namespace GitCommands.Settings
         public void SetPathValue(string setting, string value)
         {
             SetValue(setting, ConfigSection.FixPath(value));
+        }
+
+        public IList<ConfigSection> GetConfigSections()
+        {
+            return SettingsCache.GetConfigSections();
+        }
+
+        public void RemoveConfigSection(string configSectionName)
+        {
+            SettingsCache.RemoveConfigSection(configSectionName);
         }
 
         public Encoding FilesEncoding
@@ -114,7 +143,8 @@ namespace GitCommands.Settings
                 }
                 catch (ArgumentException)
                 {
-                    Debug.WriteLine(string.Format("Unsupported encoding set in git config file: {0}\nPlease check the setting {1} in config file.", encodingName, settingName));
+                    Debug.WriteLine("Unsupported encoding set in git config file: {0}\n" +
+                        "Please check the setting {1} in config file.", encodingName, settingName);
                     result = null;
                 }
             }

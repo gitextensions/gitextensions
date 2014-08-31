@@ -606,7 +606,7 @@ namespace PatchApply
             if (result != null)
             {
                 result = result.Combine("\n", "--");
-                result = result.Combine("\n", Application.ProductName + " " + AppSettings.GitExtensionsVersionString);
+                result = result.Combine("\n", Application.ProductName + " " + AppSettings.ProductVersion);
             }
             return result;
         

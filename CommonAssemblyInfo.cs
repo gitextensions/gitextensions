@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-// General Information about an assembly is controlled through the following 
+// General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GitExtensions")]
@@ -8,16 +8,17 @@
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GitExtensions")]
 [assembly: AssemblyProduct("GitExtensions")]
-[assembly: AssemblyCopyright("Copyright © 2013 Henk Westhuis")]
+[assembly: AssemblyCopyright("Copyright © 2008-2014 Henk Westhuis")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Version information for an assembly consists of the following four values:
 //
 //      Major Version
-//      Minor Version 
+//      Minor Version
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.48")]
-[assembly: AssemblyFileVersion("2.48")]
+[assembly: AssemblyVersion("2.48.01")]
+[assembly: AssemblyFileVersion("2.48.01")]
+[assembly: AssemblyInformationalVersion("2.48")]

@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -149,6 +149,7 @@ namespace GitUI.CommandsDialogs
             }
             Cursor.Current = Cursors.WaitCursor;
             if (PatchFileMode.Checked)
+            {
                 if (IgnoreWhitespace.Checked)
                 {
                     FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmdIgnoreWhitespace(PatchFile.Text));
@@ -157,7 +158,9 @@ namespace GitUI.CommandsDialogs
                 {
                     FormProcess.ShowDialog(this, GitCommandHelpers.PatchCmd(PatchFile.Text));
                 }
+            }
             else
+            {
                 if (IgnoreWhitespace.Checked)
                 {
                     Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmdIgnoreWhitespace());
@@ -166,12 +169,13 @@ namespace GitUI.CommandsDialogs
                 {
                     Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmd());
                 }
+            }
 
             UICommands.RepoChangedNotifier.Notify();
 
             EnableButtons();
 
-            if (!Module.InTheMiddleOfConflictedMerge() && !Module.InTheMiddleOfRebase() && !Module.InTheMiddleOfPatch())
+            if (!Module.InTheMiddleOfAction() && !Module.InTheMiddleOfPatch())
                 Close();
             Cursor.Current = Cursors.Default;
         }

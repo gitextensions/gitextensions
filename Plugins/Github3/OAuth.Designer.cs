@@ -1,4 +1,4 @@
-﻿﻿
+﻿
 namespace Github3
 {
     partial class OAuth
@@ -54,7 +54,6 @@ namespace Github3
             this.ShowIcon = false;
             this.Text = "Github Authorization";
             this.ResumeLayout(false);
-
         }
 
         #endregion

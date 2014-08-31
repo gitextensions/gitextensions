@@ -42,7 +42,8 @@ namespace GitUI
 
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
-        public GitModule Module { get { return UICommands.Module; } }
+        public GitModule Module { get { return _uiCommands != null ? _uiCommands.Module : null; } }
+
         public event GitUICommandsChangedEventHandler GitUICommandsChanged;
 
         protected GitModuleForm()

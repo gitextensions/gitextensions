@@ -64,6 +64,7 @@
             this.globalAutoCrlfFalse = new System.Windows.Forms.RadioButton();
             this.globalAutoCrlfInput = new System.Windows.Forms.RadioButton();
             this.globalAutoCrlfTrue = new System.Windows.Forms.RadioButton();
+            this.globalAutoCrlfNotSet = new System.Windows.Forms.RadioButton();
             this.InvalidGitPathGlobal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox9.SuspendLayout();
@@ -72,18 +73,18 @@
             // label60
             // 
             this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(3, 434);
+            this.label60.Location = new System.Drawing.Point(3, 463);
             this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(127, 15);
+            this.label60.Size = new System.Drawing.Size(138, 17);
             this.label60.TabIndex = 79;
             this.label60.Text = "Files content encoding";
             // 
             // Global_FilesEncoding
             // 
             this.Global_FilesEncoding.FormattingEnabled = true;
-            this.Global_FilesEncoding.Location = new System.Drawing.Point(167, 432);
+            this.Global_FilesEncoding.Location = new System.Drawing.Point(167, 461);
             this.Global_FilesEncoding.Name = "Global_FilesEncoding";
-            this.Global_FilesEncoding.Size = new System.Drawing.Size(231, 23);
+            this.Global_FilesEncoding.Size = new System.Drawing.Size(231, 25);
             this.Global_FilesEncoding.TabIndex = 78;
             // 
             // BrowseCommitTemplate
@@ -101,7 +102,7 @@
             this.label57.AutoSize = true;
             this.label57.Location = new System.Drawing.Point(4, 288);
             this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(140, 15);
+            this.label57.Size = new System.Drawing.Size(151, 17);
             this.label57.TabIndex = 76;
             this.label57.Text = "Path to commit template";
             // 
@@ -109,7 +110,7 @@
             // 
             this.CommitTemplatePath.Location = new System.Drawing.Point(198, 284);
             this.CommitTemplatePath.Name = "CommitTemplatePath";
-            this.CommitTemplatePath.Size = new System.Drawing.Size(297, 23);
+            this.CommitTemplatePath.Size = new System.Drawing.Size(297, 25);
             this.CommitTemplatePath.TabIndex = 75;
             // 
             // DiffToolCmdSuggest
@@ -118,7 +119,7 @@
             this.DiffToolCmdSuggest.Name = "DiffToolCmdSuggest";
             this.DiffToolCmdSuggest.Size = new System.Drawing.Size(108, 25);
             this.DiffToolCmdSuggest.TabIndex = 74;
-            this.DiffToolCmdSuggest.Text = "Suggest command";
+            this.DiffToolCmdSuggest.Text = "Suggest";
             this.DiffToolCmdSuggest.UseVisualStyleBackColor = true;
             this.DiffToolCmdSuggest.Click += new System.EventHandler(this.DiffToolCmdSuggest_Click);
             // 
@@ -127,7 +128,7 @@
             this.DifftoolCmd.FormattingEnabled = true;
             this.DifftoolCmd.Location = new System.Drawing.Point(157, 257);
             this.DifftoolCmd.Name = "DifftoolCmd";
-            this.DifftoolCmd.Size = new System.Drawing.Size(338, 23);
+            this.DifftoolCmd.Size = new System.Drawing.Size(338, 25);
             this.DifftoolCmd.TabIndex = 73;
             // 
             // label48
@@ -135,7 +136,7 @@
             this.label48.AutoSize = true;
             this.label48.Location = new System.Drawing.Point(4, 261);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(105, 15);
+            this.label48.Size = new System.Drawing.Size(113, 17);
             this.label48.TabIndex = 72;
             this.label48.Text = "Difftool command";
             // 
@@ -154,7 +155,7 @@
             this.label42.AutoSize = true;
             this.label42.Location = new System.Drawing.Point(4, 234);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(87, 15);
+            this.label42.Size = new System.Drawing.Size(95, 17);
             this.label42.TabIndex = 70;
             this.label42.Text = "Path to difftool";
             // 
@@ -162,7 +163,7 @@
             // 
             this.DifftoolPath.Location = new System.Drawing.Point(157, 230);
             this.DifftoolPath.Name = "DifftoolPath";
-            this.DifftoolPath.Size = new System.Drawing.Size(338, 23);
+            this.DifftoolPath.Size = new System.Drawing.Size(338, 25);
             this.DifftoolPath.TabIndex = 69;
             // 
             // GlobalDiffTool
@@ -171,6 +172,7 @@
             this.GlobalDiffTool.Items.AddRange(new object[] {
             "araxis",
             "beyondcompare3",
+            "beyondcompare4",
             "diffuse",
             "ecmerge",
             "emerge",
@@ -179,6 +181,8 @@
             "kompare",
             "meld",
             "opendiff",
+            "p4merge",
+            "semanticdiff",
             "tkdiff",
             "tmerge",
             "vimdiff",
@@ -186,7 +190,7 @@
             "xxdiff"});
             this.GlobalDiffTool.Location = new System.Drawing.Point(157, 203);
             this.GlobalDiffTool.Name = "GlobalDiffTool";
-            this.GlobalDiffTool.Size = new System.Drawing.Size(155, 23);
+            this.GlobalDiffTool.Size = new System.Drawing.Size(155, 25);
             this.GlobalDiffTool.TabIndex = 68;
             this.GlobalDiffTool.TextChanged += new System.EventHandler(this.GlobalDiffTool_TextChanged);
             // 
@@ -195,7 +199,7 @@
             this.label41.AutoSize = true;
             this.label41.Location = new System.Drawing.Point(5, 206);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(47, 15);
+            this.label41.Size = new System.Drawing.Size(51, 17);
             this.label41.TabIndex = 67;
             this.label41.Text = "Difftool";
             // 
@@ -204,7 +208,7 @@
             this.label28.AutoSize = true;
             this.label28.Location = new System.Drawing.Point(5, 177);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(174, 15);
+            this.label28.Size = new System.Drawing.Size(196, 17);
             this.label28.TabIndex = 66;
             this.label28.Text = "Keep backup (.orig) after merge";
             // 
@@ -225,7 +229,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(63, 6);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(193, 45);
+            this.label9.Size = new System.Drawing.Size(217, 51);
             this.label9.TabIndex = 19;
             this.label9.Text = "You need to set the correct path to \r\ngit before you can change\r\nglobal settings." +
     "\r\n";
@@ -246,7 +250,7 @@
             this.MergeToolCmdSuggest.Name = "MergeToolCmdSuggest";
             this.MergeToolCmdSuggest.Size = new System.Drawing.Size(108, 25);
             this.MergeToolCmdSuggest.TabIndex = 64;
-            this.MergeToolCmdSuggest.Text = "Suggest command";
+            this.MergeToolCmdSuggest.Text = "Suggest";
             this.MergeToolCmdSuggest.UseVisualStyleBackColor = true;
             this.MergeToolCmdSuggest.Click += new System.EventHandler(this.MergeToolCmdSuggest_Click);
             // 
@@ -255,7 +259,7 @@
             this.MergeToolCmd.FormattingEnabled = true;
             this.MergeToolCmd.Location = new System.Drawing.Point(157, 145);
             this.MergeToolCmd.Name = "MergeToolCmd";
-            this.MergeToolCmd.Size = new System.Drawing.Size(338, 23);
+            this.MergeToolCmd.Size = new System.Drawing.Size(338, 25);
             this.MergeToolCmd.TabIndex = 63;
             // 
             // label19
@@ -263,7 +267,7 @@
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(4, 149);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(120, 15);
+            this.label19.Size = new System.Drawing.Size(132, 17);
             this.label19.TabIndex = 62;
             this.label19.Text = "Mergetool command";
             // 
@@ -283,13 +287,15 @@
             this.GlobalMergeTool.Items.AddRange(new object[] {
             "Araxis",
             "BeyondCompare3",
+            "BeyondCompare4",
             "DiffMerge",
             "kdiff3",
             "p4merge",
+            "semanticmerge",
             "TortoiseMerge"});
             this.GlobalMergeTool.Location = new System.Drawing.Point(157, 90);
             this.GlobalMergeTool.Name = "GlobalMergeTool";
-            this.GlobalMergeTool.Size = new System.Drawing.Size(155, 23);
+            this.GlobalMergeTool.Size = new System.Drawing.Size(155, 25);
             this.GlobalMergeTool.TabIndex = 60;
             this.GlobalMergeTool.TextChanged += new System.EventHandler(this.GlobalMergeTool_TextChanged);
             // 
@@ -298,7 +304,7 @@
             this.PathToKDiff3.AutoSize = true;
             this.PathToKDiff3.Location = new System.Drawing.Point(4, 122);
             this.PathToKDiff3.Name = "PathToKDiff3";
-            this.PathToKDiff3.Size = new System.Drawing.Size(103, 15);
+            this.PathToKDiff3.Size = new System.Drawing.Size(114, 17);
             this.PathToKDiff3.TabIndex = 59;
             this.PathToKDiff3.Text = "Path to mergetool";
             // 
@@ -306,7 +312,7 @@
             // 
             this.MergetoolPath.Location = new System.Drawing.Point(157, 118);
             this.MergetoolPath.Name = "MergetoolPath";
-            this.MergetoolPath.Size = new System.Drawing.Size(338, 23);
+            this.MergetoolPath.Size = new System.Drawing.Size(338, 25);
             this.MergetoolPath.TabIndex = 58;
             // 
             // GlobalKeepMergeBackup
@@ -327,7 +333,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(5, 93);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(62, 15);
+            this.label7.Size = new System.Drawing.Size(70, 17);
             this.label7.TabIndex = 56;
             this.label7.Text = "Mergetool";
             // 
@@ -335,7 +341,7 @@
             // 
             this.GlobalEditor.Location = new System.Drawing.Point(157, 63);
             this.GlobalEditor.Name = "GlobalEditor";
-            this.GlobalEditor.Size = new System.Drawing.Size(260, 23);
+            this.GlobalEditor.Size = new System.Drawing.Size(260, 25);
             this.GlobalEditor.TabIndex = 55;
             // 
             // label6
@@ -343,7 +349,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(4, 66);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(38, 15);
+            this.label6.Size = new System.Drawing.Size(43, 17);
             this.label6.TabIndex = 54;
             this.label6.Text = "Editor";
             // 
@@ -351,14 +357,14 @@
             // 
             this.GlobalUserEmail.Location = new System.Drawing.Point(157, 35);
             this.GlobalUserEmail.Name = "GlobalUserEmail";
-            this.GlobalUserEmail.Size = new System.Drawing.Size(241, 23);
+            this.GlobalUserEmail.Size = new System.Drawing.Size(241, 25);
             this.GlobalUserEmail.TabIndex = 53;
             // 
             // GlobalUserName
             // 
             this.GlobalUserName.Location = new System.Drawing.Point(157, 6);
             this.GlobalUserName.Name = "GlobalUserName";
-            this.GlobalUserName.Size = new System.Drawing.Size(241, 23);
+            this.GlobalUserName.Size = new System.Drawing.Size(241, 25);
             this.GlobalUserName.TabIndex = 52;
             // 
             // label4
@@ -366,7 +372,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(3, 37);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(62, 15);
+            this.label4.Size = new System.Drawing.Size(70, 17);
             this.label4.TabIndex = 51;
             this.label4.Text = "User email";
             // 
@@ -375,7 +381,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 10);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(63, 15);
+            this.label3.Size = new System.Drawing.Size(71, 17);
             this.label3.TabIndex = 50;
             this.label3.Text = "User name";
             // 
@@ -383,12 +389,13 @@
             // 
             this.groupBox9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox9.Controls.Add(this.globalAutoCrlfNotSet);
             this.groupBox9.Controls.Add(this.globalAutoCrlfFalse);
             this.groupBox9.Controls.Add(this.globalAutoCrlfInput);
             this.groupBox9.Controls.Add(this.globalAutoCrlfTrue);
             this.groupBox9.Location = new System.Drawing.Point(7, 316);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(679, 105);
+            this.groupBox9.Size = new System.Drawing.Size(1571, 129);
             this.groupBox9.TabIndex = 80;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Line endings";
@@ -398,7 +405,7 @@
             this.globalAutoCrlfFalse.AutoSize = true;
             this.globalAutoCrlfFalse.Location = new System.Drawing.Point(5, 74);
             this.globalAutoCrlfFalse.Name = "globalAutoCrlfFalse";
-            this.globalAutoCrlfFalse.Size = new System.Drawing.Size(349, 19);
+            this.globalAutoCrlfFalse.Size = new System.Drawing.Size(381, 21);
             this.globalAutoCrlfFalse.TabIndex = 2;
             this.globalAutoCrlfFalse.TabStop = true;
             this.globalAutoCrlfFalse.Text = "Checkout as-is, commit as-is (\"core.autocrlf\"  is set to \"false\")";
@@ -409,7 +416,7 @@
             this.globalAutoCrlfInput.AutoSize = true;
             this.globalAutoCrlfInput.Location = new System.Drawing.Point(5, 48);
             this.globalAutoCrlfInput.Name = "globalAutoCrlfInput";
-            this.globalAutoCrlfInput.Size = new System.Drawing.Size(448, 19);
+            this.globalAutoCrlfInput.Size = new System.Drawing.Size(486, 21);
             this.globalAutoCrlfInput.TabIndex = 1;
             this.globalAutoCrlfInput.TabStop = true;
             this.globalAutoCrlfInput.Text = "Checkout as-is, commit Unix-style line endings (\"core.autocrlf\"  is set to \"input" +
@@ -421,14 +428,25 @@
             this.globalAutoCrlfTrue.AutoSize = true;
             this.globalAutoCrlfTrue.Location = new System.Drawing.Point(5, 22);
             this.globalAutoCrlfTrue.Name = "globalAutoCrlfTrue";
-            this.globalAutoCrlfTrue.Size = new System.Drawing.Size(495, 19);
+            this.globalAutoCrlfTrue.Size = new System.Drawing.Size(537, 21);
             this.globalAutoCrlfTrue.TabIndex = 0;
             this.globalAutoCrlfTrue.TabStop = true;
             this.globalAutoCrlfTrue.Text = "Checkout Windows-style, commit Unix-style line endings (\"core.autocrlf\"  is set t" +
     "o \"true\")";
             this.globalAutoCrlfTrue.UseVisualStyleBackColor = true;
             // 
-            // GlobalSettingsSettingsPage
+            // globalAutoCrlfNotSet
+            // 
+            this.globalAutoCrlfNotSet.AutoSize = true;
+            this.globalAutoCrlfNotSet.Location = new System.Drawing.Point(5, 101);
+            this.globalAutoCrlfNotSet.Name = "globalAutoCrlfNotSet";
+            this.globalAutoCrlfNotSet.Size = new System.Drawing.Size(69, 21);
+            this.globalAutoCrlfNotSet.TabIndex = 4;
+            this.globalAutoCrlfNotSet.TabStop = true;
+            this.globalAutoCrlfNotSet.Text = "Not set";
+            this.globalAutoCrlfNotSet.UseVisualStyleBackColor = true;
+            // 
+            // GitConfigSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -463,8 +481,8 @@
             this.Controls.Add(this.GlobalUserName);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Name = "GlobalSettingsSettingsPage";
-            this.Size = new System.Drawing.Size(704, 474);
+            this.Name = "GitConfigSettingsPage";
+            this.Size = new System.Drawing.Size(1596, 592);
             this.InvalidGitPathGlobal.ResumeLayout(false);
             this.InvalidGitPathGlobal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -513,5 +531,6 @@
         private System.Windows.Forms.RadioButton globalAutoCrlfFalse;
         private System.Windows.Forms.RadioButton globalAutoCrlfInput;
         private System.Windows.Forms.RadioButton globalAutoCrlfTrue;
+        private System.Windows.Forms.RadioButton globalAutoCrlfNotSet;
     }
 }

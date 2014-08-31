@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
+using ResourceManager;
 
 namespace GitUI.HelperDialogs
 {
@@ -45,6 +45,8 @@ namespace GitUI.HelperDialogs
                 if (MessageBox.Show(this, resetHardWarning.Text, resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     FormProcess.ShowDialog(this, GitCommandHelpers.ResetHardCmd(Revision.Guid));
+
+                    UICommands.UpdateSubmodules(this);
                 }
                 else
                 {

@@ -7,8 +7,11 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         public enum BuildStatus
         {
             Unknown,
+            InProgress,
             Success,
-            Failure
+            Failure,
+            Unstable,
+            Stopped
         }
 
         public string Id { get; set; }

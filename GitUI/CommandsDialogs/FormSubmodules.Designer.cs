@@ -58,7 +58,7 @@
             this.SubModuleBranch = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.Pull = new System.Windows.Forms.Button();
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
             this.splitContainer1.Panel1.SuspendLayout();
@@ -460,7 +460,7 @@
             this.Shown += new System.EventHandler(this.FormSubmodulesShown);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
+#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);

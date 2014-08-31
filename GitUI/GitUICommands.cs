@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -318,10 +317,65 @@ namespace GitUI
             return StartCheckoutRevisionDialog(null);
         }
 
-        public void Stash(IWin32Window owner)
+        public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "")
         {
-            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
-            FormProcess.ShowDialog(owner, Module, arguments);
+            Func<bool> action = () =>
+            {
+                var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message);
+                FormProcess.ShowDialog(owner, Module, arguments);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        public bool StashPop(IWin32Window owner)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash pop");
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        /// <summary>Creates and checks out a new branch starting from the commit at which the stash was originally created.
+        /// Applies the changes recorded in the stash to the new working directory and index.</summary>
+        public bool StashBranch(IWin32Window owner, string branchName, string stash = null)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash branch " + branchName.Quote().Combine(" ", stash.QuoteNE()));
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+
+        public bool StashDrop(IWin32Window owner, string stashName)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash drop " + stashName.Quote());
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
+        }
+
+        public bool StashApply(IWin32Window owner, string stashName)
+        {
+            Func<bool> action = () =>
+            {
+                FormProcess.ShowDialog(owner, Module, "stash apply " + stashName.Quote());
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
         }
 
         public void InvokeEventOnClose(Form form, GitUIEventHandler ev)
@@ -370,7 +424,7 @@ namespace GitUI
         /// <param name="preEvent">Event invoked before performing action</param>
         /// <param name="postEvent">Event invoked after performing action</param>
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
-        /// <returns>true if action was sccessfully done, false otherwise</returns>
+        /// <returns>true if action was successfully done, false otherwise</returns>
         public bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo, 
             GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<bool> action)
         {
@@ -417,11 +471,11 @@ namespace GitUI
 
         #region Checkout
 
-        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string containRevison)
+        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string[] containRevisons)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
             {
-                using (var form = new FormCheckoutBranch(this, branch, remote, containRevison))
+                using (var form = new FormCheckoutBranch(this, branch, remote, containRevisons))
                     return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
             }
             );
@@ -432,9 +486,9 @@ namespace GitUI
             return StartCheckoutBranch(owner, branch, remote, null);
         }
 
-        public bool StartCheckoutBranch(IWin32Window owner, string containRevison)
+        public bool StartCheckoutBranch(IWin32Window owner, string[] containRevisons)
         {
-            return StartCheckoutBranch(owner, "", false, containRevison);
+            return StartCheckoutBranch(owner, "", false, containRevisons);
         }
 
         public bool StartCheckoutBranch(IWin32Window owner)
@@ -647,6 +701,8 @@ namespace GitUI
 
         public bool StartSvnDcommitDialog(IWin32Window owner)
         {
+            if (!RequiredValidGitSvnWorikingDir(owner))
+                return false;
             Func<bool> action = () =>
             {
                 return FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
@@ -662,6 +718,8 @@ namespace GitUI
 
         public bool StartSvnRebaseDialog(IWin32Window owner)
         {
+            if (!RequiredValidGitSvnWorikingDir(owner))
+                return false;
             Func<bool> action = () =>
             {
                 FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
@@ -678,6 +736,8 @@ namespace GitUI
 
         public bool StartSvnFetchDialog(IWin32Window owner)
         {
+            if (!RequiredValidGitSvnWorikingDir(owner))
+                return false;
             Func<bool> action = () =>
             {
                 return FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.FetchCmd());
@@ -877,6 +937,11 @@ namespace GitUI
         public bool StartResetChangesDialog(IWin32Window owner)
         {
             var unstagedFiles = Module.GetUnstagedFiles();
+            return StartResetChangesDialog(owner, unstagedFiles, false);
+        }
+
+        public bool StartResetChangesDialog(IWin32Window owner, IEnumerable<GitItemStatus> unstagedFiles, bool onlyUnstaged)
+        {
             // Show a form asking the user if they want to reset the changes.
             FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(owner, unstagedFiles.Any(item => !item.IsNew), unstagedFiles.Any(item => item.IsNew));
 
@@ -885,32 +950,21 @@ namespace GitUI
                 return false;
             }
 
-            Cursor.Current = Cursors.WaitCursor;
-
-            // Reset all changes.
-            Module.ResetHard("");
-
-            // Also delete new files, if requested.
-            if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+            Func<bool> action = () =>
             {
-                foreach (var item in unstagedFiles.Where(item => item.IsNew))
-                {
-                    try
-                    {
-                        string path = Path.Combine(Module.WorkingDir, item.Name);
-                        if (File.Exists(path))
-                            File.Delete(path);
-                        else
-                            Directory.Delete(path, true);
-                    }
-                    catch (IOException) { }
-                    catch (UnauthorizedAccessException) { }
-                }
-            }
+                if (onlyUnstaged)
+                    Module.RunGitCmd("checkout -- .");
+                else
+                    // Reset all changes.
+                    Module.ResetHard("");
 
-            Cursor.Current = Cursors.Default;
+                if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+                    Module.RunGitCmd("clean -df");
 
-            return true;
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, true, null, null, action);
         }
 
         public bool StartResetChangesDialog(IWin32Window owner, string fileName)
@@ -1375,6 +1429,17 @@ namespace GitUI
             return StartSyncSubmodulesDialog(null);
         }
 
+        public void UpdateSubmodules(IWin32Window win)
+        {
+            if (!Module.HasSubmodules())
+                return;
+
+            var updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? MessageBoxes.ConfirmUpdateSubmodules(win);
+
+            if (updateSubmodules)
+                StartUpdateSubmodulesDialog(win);
+        }
+
         public bool StartPluginSettingsDialog(IWin32Window owner)
         {
             return StartSettingsDialog(owner, PluginsSettingsGroup.GetPageReference());
@@ -1651,8 +1716,7 @@ namespace GitUI
             WrapRepoHostingCall("View pull requests", gitHoster,
                                 gh =>
                                 {
-                                    var frm = new ViewPullRequestsForm(this, gitHoster);
-                                    frm.ShowInTaskbar = true;
+                                    var frm = new ViewPullRequestsForm(this, gitHoster) {ShowInTaskbar = true};
                                     frm.Show();
                                 });
         }
@@ -1792,7 +1856,7 @@ namespace GitUI
                     Module.OpenWithDifftool(args[2]);
                     return;
                 case "filehistory": // filename
-                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]))
+                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule != null)
                         Module = Module.SuperprojectModule;
                     RunFileHistoryCommand(args);
                     return;
@@ -1955,7 +2019,7 @@ namespace GitUI
 
         private void RunFileHistoryCommand(string[] args)
         {
-            //Remove working dir from filename. This is to prevent filenames that are too
+            //Remove working directory from filename. This is to prevent filenames that are too
             //long while there is room left when the workingdir was not in the path.
             string fileHistoryFileName = String.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
                 args[2].Replace(Module.WorkingDir, "").Replace('\\', '/');
@@ -1981,7 +2045,7 @@ namespace GitUI
 
         private void RunBlameCommand(string[] args)
         {
-            // Remove working dir from filename. This is to prevent filenames that are too
+            // Remove working directory from filename. This is to prevent filenames that are too
             // long while there is room left when the workingdir was not in the path.
             string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").Replace('\\', '/');
             StartBlameDialog(filenameFromBlame);

@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GitCommands.Utils;
 
 namespace GitUI.SpellChecker
 {
@@ -22,7 +23,7 @@ namespace GitUI.SpellChecker
             var richTextBox = textBoxBase as RichTextBox;
 
             //TODO!
-            if (richTextBox == null)
+            if (richTextBox == null || !EnvUtils.RunningOnWindows())
             {
                 return textBoxBase.Font.Height;
             }
@@ -64,7 +65,7 @@ namespace GitUI.SpellChecker
         internal static int GetBaselineOffsetAtCharIndex(TextBoxBase tb, int index)
         {
             var rtb = tb as RichTextBox;
-            if (rtb == null)
+            if (rtb == null || !EnvUtils.RunningOnWindows())
             {
                 return tb.Font.Height;
             }
@@ -128,6 +129,11 @@ namespace GitUI.SpellChecker
         /// <param name = "textBox">The text box to show the caret in.</param>
         internal static void ShowCaret(TextBox textBox)
         {
+            if (!EnvUtils.RunningOnWindows())
+            {
+                return;
+            }
+
             var ret = false;
             var iter = 0;
             while (!ret && iter < 10)
@@ -146,7 +152,7 @@ namespace GitUI.SpellChecker
         /// <param name = "point">The point to find the character for, 
         ///   specified relative to the client area of the text box.</param>
         /// <returns></returns>
-        internal static int CharFromPos(TextBoxBase textBox, Point point)
+        private static int CharFromPos(TextBoxBase textBox, Point point)
         {
             unchecked
             {
@@ -188,7 +194,7 @@ namespace GitUI.SpellChecker
         ///   position needs to be found.</param>
         /// <returns>The position of the character relative to the client
         ///   area of the control.</returns>
-        internal static Point PosFromChar(TextBoxBase textBoxBase, int charIndex)
+        private static Point PosFromChar(TextBoxBase textBoxBase, int charIndex)
         {
             unchecked
             {
@@ -202,7 +208,7 @@ namespace GitUI.SpellChecker
             }
         }
 
-        internal static int GetFirstVisibleLine(TextBoxBase txt)
+        private static int GetFirstVisibleLine(TextBoxBase txt)
         {
             return
                 NativeMethods.SendMessageInt(
@@ -212,7 +218,7 @@ namespace GitUI.SpellChecker
                     IntPtr.Zero).ToInt32();
         }
 
-        internal static int GetLineIndex(TextBoxBase txt, int line)
+        private static int GetLineIndex(TextBoxBase txt, int line)
         {
             return NativeMethods.SendMessageInt(txt.Handle, 0xbb, new IntPtr(line), IntPtr.Zero).ToInt32();
         }

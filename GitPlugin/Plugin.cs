@@ -13,41 +13,51 @@ namespace GitPlugin.Commands
     public class Plugin
     {
         private const string GitCommandBarName = "GitExtensions";
+        private const string OldGitMainMenuName = "&Git";
+        private const string GitMainMenuName = "&GitExt";
 
-        private readonly AddIn m_addIn;
-        private readonly DTE2 m_application;
+        private readonly AddIn _addIn;
+        private readonly DTE2 _application;
 
-        private readonly Dictionary<string, CommandBase> m_commands = new Dictionary<string, CommandBase>();
-        private readonly string m_connectPath;
-        private readonly OutputWindowPane m_outputPane;
-        private readonly Dictionary<string, Command> m_visualStudioCommands = new Dictionary<string, Command>();
+        private readonly Dictionary<string, CommandBase> _commands = new Dictionary<string, CommandBase>();
+        private readonly string _connectPath;
+        private readonly OutputWindowPane _outputPane;
+        private readonly Dictionary<string, Command> _visualStudioCommands = new Dictionary<string, Command>();
 
         public Plugin(DTE2 application, AddIn addIn, string panelName, string connectPath)
         {
             // TODO: This can be figured out from traversing the assembly and locating the Connect class...
-            m_connectPath = connectPath;
+            _connectPath = connectPath;
 
-            m_application = application;
-            m_addIn = addIn;
-            m_outputPane = AquireOutputPane(application, panelName);
+            _application = application;
+            _addIn = addIn;
+            _outputPane = AquireOutputPane(application, panelName);
         }
 
         public OutputWindowPane OutputPane
         {
-            get { return m_outputPane; }
+            get { return _outputPane; }
         }
 
-        public int LocaleID
+        public DTE2 Application
         {
             get
             {
-                return m_application.LocaleID;
+                return _application;
+            }
+        }
+
+        public int LocaleId
+        {
+            get
+            {
+                return _application.LocaleID;
             }
         }
 
         public void DeleteCommands()
         {
-            foreach (Command command in m_visualStudioCommands.Values)
+            foreach (Command command in _visualStudioCommands.Values)
             {
                 command.Delete();
             }
@@ -62,17 +72,16 @@ namespace GitPlugin.Commands
         {
             get
             {
-                return (CommandBars)m_application.CommandBars;
+                return (CommandBars)_application.CommandBars;
             }
         }
-
 
         public void RegisterCommand(string commandName, CommandBase command)
         {
             if (commandName.IndexOf('.') >= 0)
                 throw new ArgumentException("Command name cannot contain dot symbol.", "commandName");
-            if (!m_commands.ContainsKey(commandName))
-                m_commands.Add(commandName, command);
+            if (!_commands.ContainsKey(commandName))
+                _commands.Add(commandName, command);
         }
 
         public bool CanHandleCommand(string commandName)
@@ -83,16 +92,17 @@ namespace GitPlugin.Commands
         public bool IsCommandEnabled(string commandName)
         {
             var command = TryGetCommand(commandName);
-            return command != null && command.IsEnabled(m_application);
+            return command != null && command.IsEnabled(_application);
         }
 
         private CommandBase TryGetCommand(string commandName)
         {
-            var commandKey = commandName.Split('.').LastOrDefault();
-            if (commandKey == null)
+            var array = commandName.Split('.');
+            if (array.Length != 3)
                 return null;
+            var commandKey = array[2];
             CommandBase result;
-            return m_commands.TryGetValue(commandKey, out result) ? result : null;
+            return _commands.TryGetValue(commandKey, out result) ? result : null;
         }
 
         public bool OnCommand(string commandName)
@@ -100,26 +110,20 @@ namespace GitPlugin.Commands
             var command = TryGetCommand(commandName);
             if (command == null)
                 return false;
-            command.OnCommand(m_application, m_outputPane);
+            command.OnCommand(_application, _outputPane);
             return true;
         }
 
         private Command GetCommand(string commandName)
         {
-            try
+            var commands = (Commands2)_application.Commands;
+            string fullName = _connectPath + "." + commandName;
+            foreach (Command command in commands)
             {
-                var commands = (Commands2)m_application.Commands;
-
-                string fullName = m_connectPath + "." + commandName;
-
-                Command command = commands.Item(fullName, -1);
-                return command;
+                if (command.Name == fullName)
+                    return command;
             }
-            catch
-            {
-                //ignore!
-                return null;
-            }
+            return null;
         }
 
         private static MsoButtonStyle CommandStyleToButtonStyle(vsCommandStyle commandStyle)
@@ -157,88 +161,123 @@ namespace GitPlugin.Commands
                     }
                 }
             }
-            catch
-            {
-                //ignore!
-            }
-
-        }
-
-        public void DeleteCommandBar()
-        {
-            var name = GitCommandBarName;
-            var cmdBars = (CommandBars)m_application.CommandBars;
-            try
-            {
-                cmdBars[name].Delete();
-            }
-            catch
-            {
-                //ignore!
-            }
-        }
-
-        public CommandBar AddGitCommandBar(MsoBarPosition position)
-        {
-            var name = GitCommandBarName;
-            var cmdBars = (CommandBars)m_application.CommandBars;
-            CommandBar bar = null;
-
-            try
-            {
-                // Try to find an existing CommandBar
-                bar = cmdBars[name];
-            }
             catch (Exception)
             {
+                //ignore!
             }
+        }
 
-            try
+        public void DeleteGitExtCommandBar()
+        {
+            CommandBar cb =
+                CommandBars.Cast<CommandBar>()
+                    .FirstOrDefault(c => c.accName == GitCommandBarName);
+            if (cb != null)
             {
-                if (bar == null)
-                {
-                    // Create the new CommandBar
-                    bar = cmdBars.Add(name, position, Type.Missing, false);
-                    bar.Visible = true;
-                    bar.Position = MsoBarPosition.msoBarTop;
-                }
+                cb.Delete();
             }
-            catch
+        }
+
+        public CommandBar AddGitExtCommandBar(MsoBarPosition position)
+        {
+            CommandBar bar =
+                CommandBars.Cast<CommandBar>()
+                    .FirstOrDefault(c => c.accName == GitCommandBarName);
+            if (bar == null)
             {
+                bar = (CommandBar)_application.Commands.AddCommandBar(GitCommandBarName, vsCommandBarType.vsCommandBarTypeToolbar);
+                bar.Position = position;
+                bar.RowIndex = -1;
             }
 
             return bar;
         }
 
-        public void AddConsoleOnlyCommand(string commandName, string itemName, string description)
+        public void DeleteOldGitExtMainMenuBar()
         {
-            var contextGuids = new object[] { };
-            var commands = (Commands2)m_application.Commands;
             try
             {
-                int commandStatus = (int)vsCommandStatus.vsCommandStatusSupported +
-                                    (int)vsCommandStatus.vsCommandStatusEnabled;
-
-                var commandStyle = (int)vsCommandStyle.vsCommandStylePictAndText;
-                vsCommandControlType controlType = vsCommandControlType.vsCommandControlTypeButton;
-
-                // TODO: [jt] I think the context guids here are the key to enable commands on just a menu and not through the command line interface.
-                Command command = commands.AddNamedCommand2(m_addIn,
-                                                            commandName,
-                                                            itemName,
-                                                            description,
-                                                            true,
-                                                            59,
-                                                            ref contextGuids,
-                                                            commandStatus,
-                                                            commandStyle,
-                                                            controlType);
-                m_visualStudioCommands[commandName] = command;
+                CommandBarControl control =
+                    GetMenuBar()
+                        .Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.accName == OldGitMainMenuName);
+                if (control != null)
+                {
+                    control.Delete(false);
+                }
+                CommandBar cb =
+                    CommandBars.Cast<CommandBar>()
+                        .FirstOrDefault(c => c.accName == OldGitMainMenuName);
+                if (cb != null && !cb.BuiltIn)
+                {
+                    cb.Delete();
+                }
             }
-            catch (ArgumentException)
+            catch (Exception)
             {
-                Log.Debug("Tried to register the command \"{0}\" twice!", commandName);
             }
+        }
+
+        public void DeleteGitExtMainMenuBar()
+        {
+            try
+            {
+                CommandBarControl control =
+                    GetMenuBar().Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.Caption == GitMainMenuName);
+                if (control != null)
+                {
+                    control.Delete(false);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public bool IsGitExtMainMenuBarExist()
+        {
+            try
+            {
+                CommandBarControl control =
+                    GetMenuBar().Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.Caption == GitMainMenuName);
+                if (control != null)
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
+        public CommandBar AddGitExtMainMenuBar(string toolsMenuName)
+        {
+            CommandBar mainMenuBar = null;
+            try
+            {
+                mainMenuBar = (CommandBar)_application.Commands
+                    .AddCommandBar("GitExt", vsCommandBarType.vsCommandBarTypeMenu, GetMenuBar(), 4);
+
+                ((CommandBarPopup)mainMenuBar.Parent).Caption = GitMainMenuName;
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    OutputPane.OutputString("Error creating git menu (trying to add commands to tools menu): " + ex);
+                    if (mainMenuBar == null)
+                        mainMenuBar = (CommandBar)GetMenuBar().Controls[toolsMenuName];
+                }
+                catch (Exception ex2)
+                {
+                    OutputPane.OutputString("Error menu: " + ex2);
+                }
+            }
+
+            return mainMenuBar;
         }
 
         public void AddToolbarCommand(CommandBar bar, string commandName, string caption,
@@ -262,6 +301,14 @@ namespace GitPlugin.Commands
                                     vsCommandStyle.vsCommandStylePictAndText, beginGroup);
         }
 
+        public void AddMenuCommand(string toolbarName, string commandName, string caption,
+                                   string tooltip, int iconIndex, int insertIndex, bool beginGroup = false)
+        {
+            CommandBar commandBar = CommandBars[toolbarName];
+            if (commandBar != null)
+                AddMenuCommand(commandBar, commandName, caption, tooltip, iconIndex, insertIndex, beginGroup);
+        }
+
         public void AddPopupCommand(CommandBarPopup popup, string commandName, string caption,
                                     string tooltip, int iconIndex, int insertIndex, bool beginGroup = false)
         {
@@ -281,59 +328,63 @@ namespace GitPlugin.Commands
                 return;
 
             // Get commands collection
-            var commands = (Commands2)m_application.Commands;
-            var contextGUIDS = new object[] { };
+            var commands = (Commands2)_application.Commands;
+            var command = GetCommand(commandName, caption, tooltip, iconIndex, commandStyle, commands);
+            if (command == null)
+                return;
+            if (!HasCommand(bar, caption))
+            {
+#if DEBUG
+                OutputPane.OutputString("Add toolbar command: " + caption + Environment.NewLine);
+#endif
+                var control = (CommandBarButton)command.AddControl(bar, insertIndex);
+                control.Style = CommandStyleToButtonStyle(commandStyle);
+                control.BeginGroup = beginGroup;
+            }
+        }
+
+        private Command GetCommand(string commandName, string caption, string tooltip, int iconIndex,
+            vsCommandStyle commandStyle, Commands2 commands)
+        {
+            var contextGUIDS = new object[] {};
 
             // Add command
             Command command = GetCommand(commandName);
-            if (!m_visualStudioCommands.ContainsKey(commandName))
-            {
-                if (command == null)
-                {
-                    if (iconIndex > 0)
-                    {
-                        try
-                        {
-                            command = commands.AddNamedCommand2(m_addIn,
-                                                                commandName, caption, tooltip, false, iconIndex,
-                                                                ref contextGUIDS,
-                                                                (int)vsCommandStatus.vsCommandStatusSupported +
-                                                                (int)vsCommandStatus.vsCommandStatusEnabled,
-                                                                (int)commandStyle,
-                                                                vsCommandControlType.vsCommandControlTypeButton);
-                        }
-                        catch
-                        {
-                        }
-                    }
+            if (_visualStudioCommands.ContainsKey(commandName))
+                return command;
 
-                    if (command == null && commandStyle != vsCommandStyle.vsCommandStylePict)
-                    {
-                        command = commands.AddNamedCommand2(m_addIn,
-                                                            commandName, caption, tooltip, true, -1, ref contextGUIDS,
-                                                            (int)vsCommandStatus.vsCommandStatusSupported +
-                                                            (int)vsCommandStatus.vsCommandStatusEnabled,
-                                                            (int)commandStyle,
-                                                            vsCommandControlType.vsCommandControlTypeButton);
-                    }
-                }
-                if (command != null)
+            if (command == null && iconIndex > 0)
+            {
+                try
                 {
-                    m_visualStudioCommands[commandName] = command;
+                    command = commands.AddNamedCommand2(_addIn,
+                        commandName, caption, tooltip, false, iconIndex,
+                        ref contextGUIDS,
+                        (int) vsCommandStatus.vsCommandStatusSupported |
+                        (int) vsCommandStatus.vsCommandStatusEnabled,
+                        (int) commandStyle,
+                        vsCommandControlType.vsCommandControlTypeButton);
+                }
+                catch (Exception)
+                {
                 }
             }
+
+            if (command == null && commandStyle != vsCommandStyle.vsCommandStylePict)
+            {
+                command = commands.AddNamedCommand2(_addIn,
+                    commandName, caption, tooltip, true, -1, ref contextGUIDS,
+                    (int) vsCommandStatus.vsCommandStatusSupported +
+                    (int) vsCommandStatus.vsCommandStatusEnabled,
+                    (int) commandStyle,
+                    vsCommandControlType.vsCommandControlTypeButton);
+            }
+
             if (command != null)
             {
-                if (!HasCommand(bar, caption))
-                {
-#if DEBUG
-                    OutputPane.OutputString("Add toolbar command: " + caption + Environment.NewLine);
-#endif
-                    CommandBarButton control = command.AddControl(bar, insertIndex) as CommandBarButton;
-                    control.Style = CommandStyleToButtonStyle(commandStyle);
-                    control.BeginGroup = beginGroup;
-                }
+                _visualStudioCommands[commandName] = command;
             }
+            return command;
         }
 
         /*
@@ -650,22 +701,6 @@ namespace GitPlugin.Commands
                     System
          */
 
-        public void AddToolbarCommand(string toolbarName, string commandName, string caption,
-                                      string tooltip, int iconIndex, int insertIndex)
-        {
-            CommandBar commandBar = ((CommandBars)m_application.CommandBars)[toolbarName];
-            if (commandBar != null)
-                AddToolbarCommand(commandBar, commandName, caption, tooltip, iconIndex, insertIndex);
-        }
-
-        public void AddMenuCommand(string toolbarName, string commandName, string caption,
-                                   string tooltip, int iconIndex, int insertIndex, bool beginGroup = false)
-        {
-            CommandBar commandBar = ((CommandBars)m_application.CommandBars)[toolbarName];
-            if (commandBar != null)
-                AddMenuCommand(commandBar, commandName, caption, tooltip, iconIndex, insertIndex, beginGroup);
-        }
-
         private static OutputWindowPane AquireOutputPane(DTE2 app, string name)
         {
             try
@@ -681,7 +716,7 @@ namespace GitPlugin.Commands
                 OutputWindowPanes panes = outputWindow.OutputWindowPanes;
                 return panes.Add(name);
             }
-            catch
+            catch (Exception)
             {
                 //ignore!!
                 return null;
@@ -707,7 +742,7 @@ namespace GitPlugin.Commands
                 }
 
             }
-            catch
+            catch (Exception)
             {
                 //ignore!!
             }

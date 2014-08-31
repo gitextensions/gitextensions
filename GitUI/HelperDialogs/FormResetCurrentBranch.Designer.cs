@@ -55,7 +55,7 @@
             this.groupBox1.Controls.Add(this.Soft);
             this.groupBox1.Location = new System.Drawing.Point(16, 217);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(380, 150);
+            this.groupBox1.Size = new System.Drawing.Size(380, 145);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Reset type";
@@ -68,7 +68,7 @@
             this.Hard.Name = "Hard";
             this.Hard.Size = new System.Drawing.Size(323, 34);
             this.Hard.TabIndex = 2;
-            this.Hard.Text = "Hard: reset working dir and index\r\n(discard ALL local changes, even uncommitted c" +
+            this.Hard.Text = "Hard: reset working directory and index\r\n(discard ALL local changes, even uncommitted c" +
     "hanges)";
             this.Hard.UseVisualStyleBackColor = false;
             // 
@@ -82,7 +82,7 @@
             this.Mixed.Size = new System.Drawing.Size(276, 19);
             this.Mixed.TabIndex = 1;
             this.Mixed.TabStop = true;
-            this.Mixed.Text = "Mixed: leave working dir untouched, reset index";
+            this.Mixed.Text = "Mixed: leave working directory untouched, reset index";
             this.Mixed.UseVisualStyleBackColor = false;
             // 
             // Soft
@@ -93,12 +93,12 @@
             this.Soft.Name = "Soft";
             this.Soft.Size = new System.Drawing.Size(257, 19);
             this.Soft.TabIndex = 0;
-            this.Soft.Text = "Soft: leave working dir and index untouched";
+            this.Soft.Text = "Soft: leave working directory and index untouched";
             this.Soft.UseVisualStyleBackColor = false;
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(302, 373);
+            this.Ok.Location = new System.Drawing.Point(302, 368);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(91, 25);
             this.Ok.TabIndex = 6;
@@ -108,8 +108,8 @@
             // 
             // Cancel
             // 
-            this.Cancel.Location = new System.Drawing.Point(399, 373);
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Cancel.Location = new System.Drawing.Point(399, 368);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(91, 25);
             this.Cancel.TabIndex = 7;
@@ -128,11 +128,11 @@
             // 
             // FormResetCurrentBranch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AcceptButton = this.Ok;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(502, 410);
             this.CancelButton = this.Cancel;
+            this.ClientSize = new System.Drawing.Size(502, 401);
             this.Controls.Add(this.commitSummaryUserControl1);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Ok);
