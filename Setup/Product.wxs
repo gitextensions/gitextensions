@@ -318,12 +318,12 @@
         </DirectoryRef>
         <DirectoryRef Id="NativeBinariesX86Dir">
             <Component Id="git2_x86.dll" Guid="*">
-                <File Id="git2_x86.dll" Source="..\libgit2sharp\Lib\NativeBinaries\x86\git2-711333e.dll" />
+                <File Id="git2_x86.dll" Source="..\libgit2sharp\Lib\NativeBinaries\x86\git2-69db893.dll" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="NativeBinariesX64Dir">
             <Component Id="git2_x64.dll" Guid="*">
-                <File Id="git2_x64.dll" Source="..\libgit2sharp\Lib\NativeBinaries\amd64\git2-711333e.dll" />
+                <File Id="git2_x64.dll" Source="..\libgit2sharp\Lib\NativeBinaries\amd64\git2-69db893.dll" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="DictionariesDir">

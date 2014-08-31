@@ -2669,8 +2669,8 @@ namespace GitCommands
 
         public string GetFileText(string id, Encoding encoding)
         {
-            var blob = Repository.Lookup<LibGit2Sharp.Blob>(new ObjectId(id));
-            return encoding.GetString(blob.Content);
+            var blob = Repository.Lookup<Blob>(new ObjectId(id));
+            return blob.GetContentText(encoding);
         }
 
         public string GetFileBlobHash(string fileName, string revision)
@@ -2764,7 +2764,7 @@ namespace GitCommands
             var bCommit = Repository.Lookup<Commit>(b);
             if (aCommit == null || bCommit == null)
                 return null;
-            var baseCommit = Repository.Commits.FindCommonAncestor(aCommit, bCommit);
+            var baseCommit = Repository.Commits.FindMergeBase(aCommit, bCommit);
             return baseCommit != null ? baseCommit.Sha : null;
         }
 
