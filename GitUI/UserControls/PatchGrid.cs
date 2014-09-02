@@ -7,9 +7,9 @@ namespace GitUI
 {
     public partial class PatchGrid : GitModuleControl
     {
-        private TranslationString _unableToShowPatchDetails = new TranslationString("Unable to show details of patch file.");
+        private readonly TranslationString _unableToShowPatchDetails = new TranslationString("Unable to show details of patch file.");
 
-        public PatchGrid()            
+        public PatchGrid()
         {
             InitializeComponent(); Translate();
             Patches.CellPainting += Patches_CellPainting;
@@ -25,7 +25,7 @@ namespace GitUI
 
         }
 
-        protected override void OnRuntimeLoad( EventArgs e)
+        protected override void OnRuntimeLoad(EventArgs e)
         {
             Initialize();
         }
