@@ -504,6 +504,7 @@
             this.AddRemote.TabIndex = 2;
             this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
+            this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
             // 
             // folderBrowserButton1
             // 
