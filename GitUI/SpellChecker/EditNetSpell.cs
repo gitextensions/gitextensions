@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 using GitUI.AutoCompletion;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
@@ -19,7 +20,7 @@ using ResourceManager;
 namespace GitUI.SpellChecker
 {
     [DefaultEvent("TextChanged")]
-    public partial class EditNetSpell : GitExtensionsControl
+    public partial class EditNetSpell : GitModuleControl
     {
         private readonly TranslationString cutMenuItemText = new TranslationString("Cut");
         private readonly TranslationString copyMenuItemText = new TranslationString("Copy");
@@ -215,6 +216,16 @@ namespace GitUI.SpellChecker
             }
         }
 
+        protected RepoDistSettings Settings
+        {
+            get
+            {
+                return IsUICommandsInitialized ? 
+                    Module.EffectiveSettings:
+                    AppSettings.SettingsContainer;
+            }
+        }
+
         public void SelectAll()
         {
             TextBox.SelectAll();
@@ -256,7 +267,7 @@ namespace GitUI.SpellChecker
 
         private void LoadDictionary()
         {
-            string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), AppSettings.Dictionary), ".dic");
+            string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), Settings.Dictionary), ".dic");
 
             if (_wordDictionary == null || _wordDictionary.DictionaryFile != dictionaryFile)
             {
@@ -453,7 +464,7 @@ namespace GitUI.SpellChecker
 
                 var noDicToolStripMenuItem = new ToolStripMenuItem("None");
                 noDicToolStripMenuItem.Click += DicToolStripMenuItemClick;
-                if (AppSettings.Dictionary == "None")
+                if (Settings.Dictionary == "None")
                     noDicToolStripMenuItem.Checked = true;
 
 
@@ -470,7 +481,7 @@ namespace GitUI.SpellChecker
                     var dicToolStripMenuItem = new ToolStripMenuItem(dic);
                     dicToolStripMenuItem.Click += DicToolStripMenuItemClick;
 
-                    if (AppSettings.Dictionary == dic)
+                    if (Settings.Dictionary == dic)
                         dicToolStripMenuItem.Checked = true;
 
                     toolStripDropDown.Items.Add(dicToolStripMenuItem);
@@ -538,7 +549,15 @@ namespace GitUI.SpellChecker
 
         private void DicToolStripMenuItemClick(object sender, EventArgs e)
         {
-            AppSettings.Dictionary = ((ToolStripItem)sender).Text;
+            RepoDistSettings settings;
+            //if a Module is available, then always change the "repository local" setting
+            //it will set a dictionary only for this Module (repository) localy
+            if (IsUICommandsInitialized)
+                settings = Module.LocalSettings;
+            else
+                settings = Settings;
+
+            settings.Dictionary = ((ToolStripItem)sender).Text;
             LoadDictionary();
             CheckSpelling();
         }
@@ -573,7 +592,7 @@ namespace GitUI.SpellChecker
                 OnTextChanged(e);
             }
 
-            if (AppSettings.Dictionary == "None" || TextBox.Text.Length < 4)
+            if (Settings.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
             SpellCheckTimer.Enabled = false;

@@ -31,8 +31,8 @@ namespace GitCommands
         public static Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
-        private static SettingsContainer<RepoDistSettings, GitExtSettingsCache> _SettingsContainer;
-        public static SettingsContainer<RepoDistSettings, GitExtSettingsCache> SettingsContainer { get { return _SettingsContainer; } }
+        private static RepoDistSettings _SettingsContainer;
+        public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
 
         static AppSettings()
         {
@@ -50,7 +50,7 @@ namespace GitCommands
             }
             );
 
-            _SettingsContainer = new SettingsContainer<RepoDistSettings, GitExtSettingsCache>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
+            _SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
             GitLog = new CommandLogger();
 
@@ -60,7 +60,7 @@ namespace GitCommands
             }
         }
 
-        public static void UsingContainer(SettingsContainer<RepoDistSettings, GitExtSettingsCache> aSettingsContainer, Action action)
+        public static void UsingContainer(RepoDistSettings aSettingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>
                 {
@@ -625,8 +625,8 @@ namespace GitCommands
 
         public static string Dictionary
         {
-            get { return GetString("dictionary", "en-US"); }
-            set { SetString("dictionary", value); }
+            get { return SettingsContainer.Dictionary; }
+            set { SettingsContainer.Dictionary = value; }
         }
 
         public static bool ShowGitCommandLine
