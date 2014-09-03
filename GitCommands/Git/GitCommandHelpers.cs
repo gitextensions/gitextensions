@@ -352,6 +352,9 @@ namespace GitCommands
             if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
                 return branch;
 
+            // If branch is HEAD ref, return it as-is
+            if (branch == "HEAD") return branch;
+
             // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
             if (IsCommitHash(branch))
             {
@@ -587,15 +590,13 @@ namespace GitCommands
             // branch name with refs/heads/, except for special cases
             if (fromBranch == GitModule.DetachedBranch)
                 fromBranch = "";
-            else if (fromBranch != "HEAD")
-                fromBranch = GetFullBranchName(fromBranch);
 
             if (toBranch == GitModule.DetachedBranch)
                 toBranch = "";
             else
                 toBranch = GetFullBranchName(toBranch);
 
-            if (string.IsNullOrEmpty(fromBranch))
+            if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
                 fromBranch = "HEAD";
 
             if (toBranch != null) toBranch = toBranch.Replace(" ", "");
