@@ -208,7 +208,7 @@ namespace GitUI.BuildServerIntegration
                 BuildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
             }
 
-            if (BuildStatusMessageColumnIndex == -1 && Module.Settings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault)
+            if (BuildStatusMessageColumnIndex == -1 && Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault)
             {
                 var buildMessageTextBoxColumn = new DataGridViewTextBoxColumn
                                                 {
@@ -249,9 +249,9 @@ namespace GitUI.BuildServerIntegration
 
         private IBuildServerAdapter GetBuildServerAdapter()
         {
-            if (!Module.Settings.BuildServer.EnableIntegration.ValueOrDefault)
+            if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
                 return null;
-            var buildServerType = Module.Settings.BuildServer.Type.Value;
+            var buildServerType = Module.EffectiveSettings.BuildServer.Type.Value;
             if (string.IsNullOrEmpty(buildServerType))
                 return null;
             try
@@ -270,7 +270,7 @@ namespace GitUI.BuildServerIntegration
                             return null;
                         }
                         var buildServerAdapter = export.Value;
-                        buildServerAdapter.Initialize(this, Module.Settings.BuildServer.TypeSettings);
+                        buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings);
                         return buildServerAdapter;
                     }
                     catch (InvalidOperationException ex)
@@ -300,7 +300,7 @@ namespace GitUI.BuildServerIntegration
                 revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
 
             if (BuildStatusMessageColumnIndex != -1)
-                revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible && Module.Settings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault;
+                revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible && Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault;
         }
 
         public void Dispose()

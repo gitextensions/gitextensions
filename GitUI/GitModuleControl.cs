@@ -27,8 +27,6 @@ namespace GitUI
             {
                 if (_uiCommandsSource == null)
                     SearchForUICommandsSource();
-                if (_uiCommandsSource == null)
-                    throw new NullReferenceException("UICommandsSource");
                 return _uiCommandsSource;
             }
             set
@@ -53,6 +51,14 @@ namespace GitUI
             }
         }
 
+        /// <summary>true if <see cref="UICommands"/> has been initialzed.</summary>
+        public bool IsUICommandsInitialized
+        {
+            get
+            {
+                return UICommandsSource != null;
+            }
+        }
         /// <summary>Gets the <see cref="UICommands"/>' <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
         public GitModule Module

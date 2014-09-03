@@ -142,18 +142,48 @@ namespace GitCommands
             return module;
         }
 
-        private RepoDistSettings _settings;
-        public RepoDistSettings Settings
+        private RepoDistSettings _effectiveSettings;
+        public RepoDistSettings EffectiveSettings
         {
             get
             {
                 lock (_lock)
                 {
-                    if (_settings == null)
-                        _settings = RepoDistSettings.CreateEffective(this);
+                    if (_effectiveSettings == null)
+                        _effectiveSettings = RepoDistSettings.CreateEffective(this);
                 }
 
-                return _settings;
+                return _effectiveSettings;
+            }
+        }
+
+        private RepoDistSettings _distributedSettings;
+        public RepoDistSettings DistributedSettings
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (_distributedSettings == null)
+                        _distributedSettings = new RepoDistSettings(null, EffectiveSettings.LowerPriority.SettingsCache);
+                }
+
+                return _distributedSettings;
+            }
+        }
+
+        private RepoDistSettings _localSettings;
+        public RepoDistSettings LocalSettings
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (_localSettings == null)
+                        _localSettings = new RepoDistSettings(null, EffectiveSettings.SettingsCache);
+                }
+
+                return _localSettings;
             }
         }
 

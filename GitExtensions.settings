@@ -50,6 +50,14 @@
   </item>
   <item>
     <key>
+      <string>dictionary</string>
+    </key>
+    <value>
+      <string>en-US</string>
+    </value>
+  </item>
+  <item>
+    <key>
       <string>RevisionLinkDefs</string>
     </key>
     <value>
