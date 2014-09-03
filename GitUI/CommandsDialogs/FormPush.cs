@@ -268,6 +268,8 @@ namespace GitUI.CommandsDialogs
                 bool pushAllBranches = false;
                 if (_NO_TRANSLATE_Branch.Text == AllRefs)
                     pushAllBranches = true;
+                else if (_NO_TRANSLATE_Branch.Text == HeadText)
+                    srcRev = HeadText;
                 else
                 {
                     srcRev = GitCommandHelpers.GetFullBranchName(_NO_TRANSLATE_Branch.Text);

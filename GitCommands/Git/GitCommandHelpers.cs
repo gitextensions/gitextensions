@@ -584,11 +584,18 @@ namespace GitCommands
             remote = remote.ToPosixPath();
 
             // This method is for pushing to remote branches, so fully qualify the
-            // remote branch name with refs/heads/.
-            fromBranch = GetFullBranchName(fromBranch);
-            toBranch = GetFullBranchName(toBranch);
+            // branch name with refs/heads/, except for special cases
+            if (fromBranch == GitModule.DetachedBranch)
+                fromBranch = "";
+            else if (fromBranch != "HEAD")
+                fromBranch = GetFullBranchName(fromBranch);
 
-            if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
+            if (toBranch == GitModule.DetachedBranch)
+                toBranch = "";
+            else
+                toBranch = GetFullBranchName(toBranch);
+
+            if (string.IsNullOrEmpty(fromBranch))
                 fromBranch = "HEAD";
 
             if (toBranch != null) toBranch = toBranch.Replace(" ", "");
