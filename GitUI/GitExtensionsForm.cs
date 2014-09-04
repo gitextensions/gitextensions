@@ -444,5 +444,15 @@ namespace GitUI
         {
             TranslationUtils.TranslateItemsFromFields(Name, this, translation);
         }
+
+        protected void TranslateItem(string itemName, object item)
+        {
+            ITranslation translation = Translator.GetTranslation(Settings.CurrentTranslation);
+            if (translation == null)
+                return;
+
+            IEnumerable<Tuple<string, object>> itemsToTranslate = new Tuple<string, object>[] { new Tuple<string, object>(itemName, item) };
+            TranslationUtils.TranslateItemsFromList(Name, translation, itemsToTranslate);
+        }
     }
 }

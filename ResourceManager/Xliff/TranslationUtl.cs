@@ -87,7 +87,9 @@ namespace ResourceManager.Xliff
         {
             Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
             {
-                string value = translation.TranslateItem(category, item, propertyInfo.Name, null);
+                Func<string> provideDefaultValue = () => (string)propertyInfo.GetValue(itemObj, null);
+
+                string value = translation.TranslateItem(category, item, propertyInfo.Name, provideDefaultValue);
                 if (!String.IsNullOrEmpty(value))
                 {
                     if (propertyInfo.CanWrite)
@@ -95,7 +97,7 @@ namespace ResourceManager.Xliff
                 }
                 else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
                 {
-                    value = translation.TranslateItem(category, item, "Text", null);
+                    value = translation.TranslateItem(category, item, "Text", provideDefaultValue);
                     if (!String.IsNullOrEmpty(value))
                     {
                         if (propertyInfo.CanWrite)

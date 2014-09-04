@@ -2829,45 +2829,127 @@ namespace GitUI.CommandsDialogs
                 Module.LastPullActionToFormPullAction();
         }
 
-        private void resetFileToAToolStripMenuItem_Click(object sender, EventArgs e)
+        private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+            int selectedRevsCount = revisions.Count;
 
-            if (!revisions.Any() || revisions.Count < 1 || revisions.Count > 2 || !DiffFiles.SelectedItems.Any())
+            if (selectedRevsCount == 1)
             {
-                return;
-            }
+                resetFileToSelectedToolStripMenuItem.Visible = true;
+                TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
+                resetFileToSelectedToolStripMenuItem.Text += " (" + revisions[0].Message.ShortenTo(50) + ")";
 
-            var files = DiffFiles.SelectedItems.Select(item => item.Name);
-
-            if (revisions.Count == 1)
-            {
-                if (!revisions[0].HasParent())
+                if (revisions[0].HasParent())
                 {
-                    MessageBox.Show("Revision must have a parent. Abort.");
-                    ////throw new ApplicationException("Revision must have a parent."); // todo: unified exception handling?
+                    resetFileToParentToolStripMenuItem.Visible = true;
+                    TranslateItem(resetFileToParentToolStripMenuItem.Name, resetFileToParentToolStripMenuItem);
+                    GitRevision parentRev = RevisionGrid.GetRevision(revisions[0].ParentGuids[0]);
+                    if (parentRev != null)
+                    {
+                        resetFileToParentToolStripMenuItem.Text += " (" + parentRev.Message.ShortenTo(50) + ")";
+                    }
                 }
-
-                Module.CheckoutFiles(files, revisions[0].Guid + "^", false);
+                else
+                {
+                    resetFileToParentToolStripMenuItem.Visible = false;
+                }
             }
             else
             {
-                Module.CheckoutFiles(files, revisions[1].Guid, false);
+                resetFileToSelectedToolStripMenuItem.Visible = false;
+                resetFileToParentToolStripMenuItem.Visible = false;
+            }
+
+            if (selectedRevsCount == 2)
+            {
+                resetFileToFirstToolStripMenuItem.Visible = true;
+                TranslateItem(resetFileToFirstToolStripMenuItem.Name, resetFileToFirstToolStripMenuItem);
+                resetFileToFirstToolStripMenuItem.Text += " (" + revisions[1].Message.ShortenTo(50) + ")";
+
+                resetFileToSecondToolStripMenuItem.Visible = true;
+                TranslateItem(resetFileToSecondToolStripMenuItem.Name, resetFileToSecondToolStripMenuItem);
+                resetFileToSecondToolStripMenuItem.Text += " (" + revisions[0].Message.ShortenTo(50) + ")";
+            }
+            else
+            {
+                resetFileToFirstToolStripMenuItem.Visible = false;
+                resetFileToSecondToolStripMenuItem.Visible = false;
             }
         }
 
-        private void resetFileToRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ResetSelectedItemsTo(string revision, bool actsAsChild)
+        {
+            var selectedItems = DiffFiles.SelectedItems;
+            IEnumerable<GitItemStatus> itemsToCheckout;
+            if (actsAsChild)
+            {
+                var deletedItems = selectedItems.Where(item => item.IsDeleted);
+                Module.RemoveFiles(deletedItems.Select(item => item.Name), false);
+                itemsToCheckout = selectedItems.Where(item => !item.IsDeleted);
+            }
+            else //acts as parent
+            {
+                //if file is new to the parent, it has to be removed
+                var addedItems = selectedItems.Where(item => item.IsNew);
+                Module.RemoveFiles(addedItems.Select(item => item.Name), false);
+                itemsToCheckout = selectedItems.Where(item => !item.IsNew);
+            }
+
+            Module.CheckoutFiles(itemsToCheckout.Select(item => item.Name), revision, false);
+        }
+
+        private void resetFileToFirstToolStripMenuItem_Click(object sender, EventArgs e)
         {
             IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
-            if (!revisions.Any() || !DiffFiles.SelectedItems.Any())
+            if (revisions.Count != 2 || !DiffFiles.SelectedItems.Any())
             {
                 return;
             }
 
-            var files = DiffFiles.SelectedItems.Select(item => item.Name);
+            ResetSelectedItemsTo(revisions[1].Guid, false);
+        }
 
-            Module.CheckoutFiles(files, revisions[0].Guid, false);
+        private void resetFileToSecondToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (revisions.Count != 2 || !DiffFiles.SelectedItems.Any())
+            {
+                return;
+            }
+
+            ResetSelectedItemsTo(revisions[0].Guid, true);
+        }
+
+        private void resetFileToParentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (revisions.Count != 1 || !DiffFiles.SelectedItems.Any())
+            {
+                return;
+            }
+
+            if (!revisions[0].HasParent())
+            {
+                throw new ApplicationException("This menu should be disabled for revisions that don't have a parent.");
+            }
+
+            ResetSelectedItemsTo(revisions[0].ParentGuids[0], false);
+        }
+
+        private void resetFileToSelectedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (revisions.Count != 1 || !DiffFiles.SelectedItems.Any())
+            {
+                return;
+            }
+
+            ResetSelectedItemsTo(revisions[0].Guid, true);
         }
 
         private void _NO_TRANSLATE_Workingdir_MouseUp(object sender, MouseEventArgs e)
