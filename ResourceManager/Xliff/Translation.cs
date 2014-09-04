@@ -70,13 +70,27 @@ namespace ResourceManager.Xliff
             FindOrAddTranslationCategory(category).Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, neutralValue));
         }
 
-        public string TranslateItem(string category, string item, string property, string defaultValue)
+        public string TranslateItem(string category, string item, string property, Func<string> provideDefaultValue)
         {
-            TranslationCategory tc = GetTranslationCategory(category);
-            if (tc == null)
-                return defaultValue;
+            TranslationCategory tc = FindOrAddTranslationCategory(category);
+
             TranslationItem ti = tc.Body.GetTranslationItem(item, property);
-            return ti == null || string.IsNullOrEmpty(ti.Value) ? defaultValue : ti.Value;
+
+            if (ti == null)
+            {
+                //if an item is not translated, then store its default value
+                //to be able to retrieve it later (eg. when to a caption 
+                //is added an additional information like 'Commit (<number of changes>)',
+                //and then the caption needs to be refreshed)
+                string defaultValue = provideDefaultValue();
+                tc.Body.AddTranslationItemIfNotExist(new TranslationItem(item, property, defaultValue));
+                return defaultValue;
+            }
+
+            if (string.IsNullOrEmpty(ti.Value))
+                return ti.Source;
+
+            return ti.Value;
         }
     }
 }

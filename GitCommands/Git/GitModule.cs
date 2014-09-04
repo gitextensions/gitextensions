@@ -1410,7 +1410,19 @@ namespace GitCommands
         public string CheckoutFiles(IEnumerable<string> fileList, string revision, bool force)
         {
             string files = fileList.Select(s => s.Quote()).Join(" ");
+            if (files.IsNullOrWhiteSpace())
+                return string.Empty;
+
             return RunGitCmd("checkout " + force.AsForce() + revision.Quote() + " -- " + files);
+        }
+
+        public string RemoveFiles(IEnumerable<string> fileList, bool force)
+        {
+            string files = fileList.Select(s => s.Quote()).Join(" ");
+            if (files.IsNullOrWhiteSpace())
+                return string.Empty;
+
+            return RunGitCmd("rm " + force.AsForce() + " -- " + files);
         }
 
         /// <summary>Tries to start Pageant for the specified remote repo (using the remote's PuTTY key file).</summary>

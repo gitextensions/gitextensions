@@ -7,6 +7,7 @@ namespace ResourceManager
 {
     public static class Translator
     {
+        public static readonly string EnglishTranslationName = "English";
         //Try to cache the translation as long as possible
         private static ITranslation _translation;
         private static string _name;
@@ -19,7 +20,9 @@ namespace ResourceManager
             }
             else if (!translationName.Equals(_name))
             {
-                 _translation = TranslationSerializer.Deserialize(Path.Combine(GetTranslationDir(), translationName + ".xlf"));               
+                 _translation = TranslationSerializer.Deserialize(Path.Combine(GetTranslationDir(), translationName + ".xlf"));
+                 if (_translation == null)
+                     _translation = new Translation();
             }
             _name = translationName;
             return _translation;
@@ -44,7 +47,7 @@ namespace ResourceManager
                 foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))
                 {
                     var name = Path.GetFileNameWithoutExtension(fileName);
-                    if (String.Compare("English", name, StringComparison.CurrentCultureIgnoreCase) == 0)
+                    if (String.Compare(EnglishTranslationName, name, StringComparison.CurrentCultureIgnoreCase) == 0)
                         continue;
                     translations.Add(name);
                 }
