@@ -84,6 +84,9 @@
             <Component Id="GitCommands.dll" Guid="*">
                 <File Source="..\GitCommands\bin\Release\GitCommands.dll" />
             </Component>
+            <Component Id="GitExtUtils.dll" Guid="*">
+                <File Source="..\GitExtUtils\bin\Release\GitExtUtils.dll" />
+            </Component>
             <Component Id="GitUI.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\GitUI.dll" />
             </Component>
@@ -536,6 +539,7 @@
             <ComponentRef Id="TranslationApp.exe.config" />
             <ComponentRef Id="Gravatar.dll" />
             <ComponentRef Id="GitCommands.dll" />
+            <ComponentRef Id="GitExtUtils.dll" />
             <ComponentRef Id="GitUI.dll" />
             <ComponentRef Id="ICSharpCode.TextEditor.dll" />
             <ComponentRef Id="PSTaskDialog.dll" />

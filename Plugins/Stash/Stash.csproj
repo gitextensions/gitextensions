@@ -81,6 +81,10 @@
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
+      <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
+      <Name>GitExtUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
