@@ -590,6 +590,8 @@ namespace GitCommands
             // branch name with refs/heads/, except for special cases
             if (fromBranch == GitModule.DetachedBranch)
                 fromBranch = "";
+            else
+                fromBranch = GetFullBranchName(fromBranch);
 
             if (toBranch == GitModule.DetachedBranch)
                 toBranch = "";
