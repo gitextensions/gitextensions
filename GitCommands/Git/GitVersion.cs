@@ -10,6 +10,7 @@ namespace GitCommands
         private static readonly GitVersion v1_7_7 = new GitVersion("1.7.7");
         private static readonly GitVersion v1_7_11 = new GitVersion("1.7.11");
         private static readonly GitVersion v1_8_5 = new GitVersion("1.8.5");
+        private static readonly GitVersion v2_0_1 = new GitVersion("2.0.1");
 
         public static readonly GitVersion LastSupportedVersion = v1_7_0;
 
@@ -60,6 +61,11 @@ namespace GitCommands
         public bool SupportPushForceWithLease
         {
             get { return this >= v1_8_5; }
+        }
+
+        public bool RaceConditionWhenGitStatusIsUpdatingIndex
+        {
+            get { return this < v2_0_1; }
         }
 
         public bool IsUnknown
