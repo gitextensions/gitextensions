@@ -83,13 +83,12 @@ namespace GitCommands
         public static string GetInstallDir()
         {
             if (IsPortable())
-            {
                 return GetGitExtensionsDirectory();
-            }
-            else
-            {
-                return ReadStringRegValue("InstallDir", string.Empty);
-            }
+
+            string dir = ReadStringRegValue("InstallDir", string.Empty);
+            if (String.IsNullOrEmpty(dir))
+                return GetGitExtensionsDirectory();
+            return dir;
         }
 
         public static string GetResourceDir()
