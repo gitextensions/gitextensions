@@ -353,6 +353,7 @@ namespace GitCommands
                 return branch;
 
             // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
+            // NOTE: We can use `String.IsNullOrEmpty(Module.RevParse(srcRev))` instead
             if (IsCommitHash(branch))
             {
                 return branch;

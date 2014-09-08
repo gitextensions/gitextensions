@@ -1948,12 +1948,12 @@ namespace GitCommands
             var resultCollection = GetDiffFiles(stashName, stashName + "^", true);
 
             // shows untracked files
-                string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
-                if (GitRevision.Sha1HashRegex.IsMatch(untrackedTreeHash))
-                {
-                    var files = GetTreeFiles(untrackedTreeHash, true);
-                    resultCollection.AddRange(files);
-                }
+            string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
+            if (GitRevision.Sha1HashRegex.IsMatch(untrackedTreeHash))
+            {
+                var files = GetTreeFiles(untrackedTreeHash, true);
+                resultCollection.AddRange(files);
+            }
 
             return resultCollection;
         }
