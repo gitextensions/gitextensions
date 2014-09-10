@@ -25,13 +25,23 @@ namespace GitCommands
 
     public class RevisionGraphUpdatedEventArgs : EventArgs
     {
-        public RevisionGraphUpdatedEventArgs(GitRevision revision)
-        {
-            Revision = revision;
-        }
+		public RevisionGraphUpdatedEventArgs(GitRevision revision)
+		{
+			Revision = revision;
+		}
 
         public readonly GitRevision Revision;
     }
+
+	public class RevisionGraphBatchUpdatedEventArgs : EventArgs
+	{
+		public RevisionGraphBatchUpdatedEventArgs(GitRevision[] revisions)
+		{
+			Revisions = revisions;
+		}
+
+		public readonly GitRevision[] Revisions;
+	}
 
     public abstract class RevisionGraph : IDisposable
     {
@@ -74,6 +84,13 @@ namespace GitCommands
             if (Updated != null)
                 Updated(this, new RevisionGraphUpdatedEventArgs(revision));
         }
+
+		public event EventHandler BatchUpdated;
+		protected void OnBatchUpdated(GitRevision[] revisions)
+		{
+			if (BatchUpdated != null)
+				BatchUpdated(this, new RevisionGraphBatchUpdatedEventArgs(revisions));
+		}
 
         public event EventHandler Exited;
         protected virtual void OnExited()

@@ -970,7 +970,7 @@ namespace GitUI
                 _revisionGraphCommand.BranchFilter = BranchFilter;
                 _revisionGraphCommand.RefsOptions = _refsOptions;
                 _revisionGraphCommand.Filter = _revisionFilter.GetFilter() + Filter + FixedFilter;
-                _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
+                _revisionGraphCommand.BatchUpdated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
                 _revisionGraphCommand.InMemFilter = revGraphIMF;
@@ -1058,8 +1058,8 @@ namespace GitUI
 
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
         {
-            var updatedEvent = (RevisionGraphUpdatedEventArgs)e;
-            UpdateGraph(updatedEvent.Revision);
+            var updatedEvent = (RevisionGraphBatchUpdatedEventArgs)e;
+            UpdateGraph(updatedEvent.Revisions);
         }
 
         internal bool FilterIsApplied(bool inclBranchFilter)
@@ -2349,9 +2349,9 @@ namespace GitUI
             return ShowUncommitedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
         }
 
-        private void UpdateGraph(GitRevision rev)
+        private void UpdateGraph(GitRevision[] revisions)
         {
-            if (rev == null)
+			if (revisions == null)
             {
                 // Prune the graph and make sure the row count matches reality
                 Revisions.Prune();
@@ -2361,13 +2361,15 @@ namespace GitUI
                 return;
             }
 
-            var dataType = DvcsGraph.DataType.Normal;
-            if (rev.Guid == FiltredCurrentCheckout)
-                dataType = DvcsGraph.DataType.Active;
-            else if (rev.Refs.Any())
-                dataType = DvcsGraph.DataType.Special;
+			/*var dataType = DvcsGraph.DataType.Normal;
+            
+			if (rev.Guid == FiltredCurrentCheckout)
+				dataType = DvcsGraph.DataType.Active;
+			else if (rev.Refs.Any())
+				dataType = DvcsGraph.DataType.Special;
+			*/
 
-            Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
+			Revisions.AddBatch(revisions, FiltredCurrentCheckout);
         }
 
         private void CheckUncommitedChanged()

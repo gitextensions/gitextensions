@@ -34,6 +34,10 @@ namespace GitCommands
                 filter = new CommitFilter { SortBy = CommitSortStrategies.Topological };
             }
 
+			IList<GitRevision> revisionsToUpdate = new List<GitRevision>(100);
+
+			bool first = true;
+
             foreach (var commit in _module.Repository.Commits.QueryBy(filter))
             {
                 GitRevision revision = new GitRevision(_module, null);
@@ -56,10 +60,24 @@ namespace GitCommands
 
                 RevisionCount++;
 
-                OnUpdated(revision);
+				revisionsToUpdate.Add(revision);
+
+				if (revisionsToUpdate.Count >= 1000 || (first && revisionsToUpdate.Count >= 100))
+				{
+					first = false;
+					OnBatchUpdated(revisionsToUpdate.ToArray());
+					revisionsToUpdate.Clear();
+				}
+
                 if (taskState.IsCancellationRequested)
                     return;
             }
+
+			if (revisionsToUpdate.Count >= 0)
+			{
+				OnBatchUpdated(revisionsToUpdate.ToArray());
+				revisionsToUpdate.Clear();
+			}
         }
     }
 }

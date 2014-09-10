@@ -338,6 +338,26 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
+		public void AddBatch(GitRevision[] revisions, string filtredCurrentCheckout)
+		{
+			lock (_graphData)
+			{
+				foreach (GitRevision revision in revisions)
+				{
+					var dataType = DvcsGraph.DataType.Normal;
+
+					if (revision.Guid == filtredCurrentCheckout)
+						dataType = DvcsGraph.DataType.Active;
+					else if (revision.Refs.Any())
+						dataType = DvcsGraph.DataType.Special;
+
+					_graphData.Add(revision.Guid, revision.ParentGuids, dataType, revision);
+				}
+			}
+
+			UpdateData();
+		}
+
         public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
         {
             lock (_graphData)
@@ -474,7 +494,7 @@ namespace GitUI.RevisionGridClasses
                 //  when we're done processing we'll update with the final count, so the
                 //  problem will only be temporary, and not able to distinguish it from
                 //  just git giving us data slowly.
-                //Invoke(new MethodInvoker(delegate { setRowCount(count); }));
+				//Invoke(new MethodInvoker(delegate { setRowCount(count); }));
                 return;
             }
 
@@ -620,7 +640,7 @@ namespace GitUI.RevisionGridClasses
         private void UpdateData()
         {
             _visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
-            _visibleBottom = _rowHeight > 0 ? _visibleTop + (Height / _rowHeight) : _visibleTop;
+            _visibleBottom = _rowHeight > 0 ? _visibleTop + (Height / _rowHeight) + 10 : _visibleTop + 2;
 
             //Add 5 for safe merge (1 for rounding and 1 for whitespace)....
             if (_visibleBottom + 2 > _graphData.Count)

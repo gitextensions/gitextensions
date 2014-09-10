@@ -1094,12 +1094,12 @@ namespace GitCommands
 
         public static bool UseLibGit2ForDiff
         {
-            get { return false; }
+			get { return true; }
         }
 
         public static bool UseLibGit2ForGraph
         {
-            get { return false; }
+            get { return true; }
         }
 
         public static bool IsPortable()
