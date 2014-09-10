@@ -322,7 +322,7 @@ namespace GitUI.CommandsDialogs
             string fullname = Path.Combine(Module.WorkingDir, filename);
             if (Directory.Exists(fullname) && !File.Exists(fullname))
             {
-                if (Module.GetSubmodulesLocalPathes().Contains(filename.Trim()))
+                if (Module.IsSubmodule(filename.Trim()))
                     return ItemType.Submodule;
                 return ItemType.Directory;
             }
@@ -516,6 +516,13 @@ namespace GitUI.CommandsDialogs
             return inTheMiddleOfRebase ? theirs.Text : ours.Text;
         }
 
+        private string GetShortHash(KeyValuePair<string, string> item)
+        {
+            if (item.Key == null)
+                return "@" + deleted.Text;
+            return '@' + item.Key.Substring(0, 8);
+        }
+
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -526,11 +533,11 @@ namespace GitUI.CommandsDialogs
             }
 
             string filename = GetFileName();
-            string[] filenames = Module.GetConflictedFileNames(filename);
+            var items = Module.GetConflict(filename);
 
-            bool baseFileExists = !string.IsNullOrEmpty(filenames[0]);
-            bool localFileExists = !string.IsNullOrEmpty(filenames[1]);
-            bool remoteFileExists = !string.IsNullOrEmpty(filenames[2]);
+            bool baseFileExists = !string.IsNullOrEmpty(items[0].Value);
+            bool localFileExists = !string.IsNullOrEmpty(items[1].Value);
+            bool remoteFileExists = !string.IsNullOrEmpty(items[2].Value);
 
             string remoteSide = GetRemoteSideString();
             string localSide = GetLocalSideString();
@@ -544,17 +551,17 @@ namespace GitUI.CommandsDialogs
             if (baseFileExists && localFileExists && !remoteFileExists)
                 conflictDescription.Text = string.Format(fileModifiedLocallyAndDelededRemotely.Text, localSide, remoteSide);
 
-            baseFileName.Text = (baseFileExists ? filenames[0] : noBase.Text);
-            localFileName.Text = (localFileExists ? filenames[1] : deleted.Text);
-            remoteFileName.Text = (remoteFileExists ? filenames[2] : deleted.Text);
+            baseFileName.Text = (baseFileExists ? items[0].Value : noBase.Text);
+            localFileName.Text = (localFileExists ? items[1].Value : deleted.Text);
+            remoteFileName.Text = (remoteFileExists ? items[2].Value : deleted.Text);
             
             var itemType = GetItemType(filename);
             if (itemType == ItemType.Submodule)
             {
-                string[] hashes = Module.GetConflictedSubmoduleHashes(filename);
-                baseFileName.Text = baseFileName.Text + '@' + hashes[0].Substring(0, 8);
-                localFileName.Text = localFileName.Text + '@' + hashes[1].Substring(0, 8);
-                remoteFileName.Text = remoteFileName.Text + '@' + hashes[2].Substring(0, 8);
+                var item = Module.GetConflict(filename);
+                baseFileName.Text = baseFileName.Text + GetShortHash(item[0]);
+                localFileName.Text = localFileName.Text + GetShortHash(item[1]);
+                remoteFileName.Text = remoteFileName.Text + GetShortHash(item[2]);
             }
         }
 
@@ -641,7 +648,7 @@ namespace GitUI.CommandsDialogs
 
         private bool CheckForBaseRevision(string filename)
         {
-            if (string.IsNullOrEmpty(Module.GetConflictedFileNames(filename)[0]))
+            if (string.IsNullOrEmpty(Module.GetConflict(filename)[0].Value))
             {
                 string caption = string.Format(fileCreatedLocallyAndRemotelyLong.Text,
                                                 filename,
@@ -668,7 +675,7 @@ namespace GitUI.CommandsDialogs
 
         private bool CheckForLocalRevision(string filename)
         {
-            if (string.IsNullOrEmpty(Module.GetConflictedFileNames(filename)[1]))
+            if (string.IsNullOrEmpty(Module.GetConflict(filename)[1].Value))
             {
                 string caption = string.Format(fileDeletedLocallyAndModifiedRemotelyLong.Text,
                                                 filename,
@@ -695,7 +702,7 @@ namespace GitUI.CommandsDialogs
 
         private bool CheckForRemoteRevision(string filename)
         {
-            if (string.IsNullOrEmpty(Module.GetConflictedFileNames(filename)[2]))
+            if (string.IsNullOrEmpty(Module.GetConflict(filename)[2].Value))
             {
                 string caption = string.Format(fileModifiedLocallyAndDelededRemotelyLong.Text,
                                                 filename,
@@ -845,18 +852,18 @@ namespace GitUI.CommandsDialogs
 
         private void DisableInvalidEntriesInCoflictedFilesContextMenu(string fileName)
         {
-            var conflictedFileNames = Module.GetConflictedFileNames(fileName);
-            if (conflictedFileNames[1].IsNullOrEmpty())
+            var conflictedFileNames = Module.GetConflict(fileName);
+            if (conflictedFileNames[1].Value.IsNullOrEmpty())
             {
                 ContextSaveLocalAs.Enabled = false;
                 ContextOpenLocalWith.Enabled = false;
             }
-            if (conflictedFileNames[2].IsNullOrEmpty())
+            if (conflictedFileNames[2].Value.IsNullOrEmpty())
             {
                 ContextSaveRemoteAs.Enabled = false;
                 ContextOpenRemoteWith.Enabled = false;
             }
-            if (conflictedFileNames[0].IsNullOrEmpty())
+            if (conflictedFileNames[0].Value.IsNullOrEmpty())
             {
                 ContextSaveBaseAs.Enabled = false;
                 ContextOpenBaseWith.Enabled = false;

@@ -58,7 +58,8 @@ namespace GitCommands.Settings
         {
             XmlReaderSettings rSettings = new XmlReaderSettings
             {
-                IgnoreWhitespace = true
+                IgnoreWhitespace = true,
+                CheckCharacters = false
             };
 
             using (System.Xml.XmlReader xr = XmlReader.Create(fileName, rSettings))

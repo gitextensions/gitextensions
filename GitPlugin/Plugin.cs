@@ -14,7 +14,8 @@ namespace GitPlugin.Commands
     {
         private const string GitCommandBarName = "GitExtensions";
         private const string OldGitMainMenuName = "&Git";
-        private const string GitMainMenuName = "&GitExt";
+        private const string OldGitExtMainMenuName = "&GitExt";
+        private const string GitMainMenuName = "G&itExt";
 
         private readonly AddIn _addIn;
         private readonly DTE2 _application;
@@ -204,6 +205,14 @@ namespace GitPlugin.Commands
                 if (control != null)
                 {
                     control.Delete(false);
+                }
+                CommandBarControl control2 =
+                    GetMenuBar()
+                        .Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.accName == OldGitExtMainMenuName);
+                if (control2 != null)
+                {
+                    control2.Delete(false);
                 }
                 CommandBar cb =
                     CommandBars.Cast<CommandBar>()
