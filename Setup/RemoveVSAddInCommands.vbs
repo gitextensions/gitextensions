@@ -2,7 +2,7 @@
 Sub RemoveVSAddInCommands(ByVal ver)
     Set dte = CreateObject("VisualStudio.DTE." + ver)
     For Each ctrl In dte.CommandBars.Item("MenuBar").Controls
-        If ctrl.Caption = "&GitExt" Then
+        If ctrl.Caption = "G&itExt" Then
             ctrl.Delete(false)
             Exit For
         End If

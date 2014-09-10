@@ -9,6 +9,7 @@ namespace GitUI.CommandsDialogs
     {
         readonly string _filename;
         private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
+        private readonly TranslationString _deleted = new TranslationString("deleted");
 
         public FormMergeSubmodule(GitUICommands aCommands, string filename)
             : base(aCommands)
@@ -21,10 +22,10 @@ namespace GitUI.CommandsDialogs
 
         private void FormMergeSubmodule_Load(object sender, EventArgs e)
         {
-            string[] hashes = Module.GetConflictedSubmoduleHashes(_filename);
-            this.tbBase.Text = hashes[0];
-            this.tbLocal.Text = hashes[1];
-            this.tbRemote.Text = hashes[2];
+            var item = Module.GetConflict(_filename);
+            this.tbBase.Text = item[0].Key ?? _deleted.Text;
+            this.tbLocal.Text = item[1].Key ?? _deleted.Text;
+            this.tbRemote.Text = item[2].Key ?? _deleted.Text;
             this.tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
         }
 
