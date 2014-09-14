@@ -26,6 +26,10 @@ namespace NBug.Core.Reporting
 		/// </summary>
 		internal static event Action<Exception, Report> ProcessingException;
 
+		internal static event Action<Exception, SerializableException, Report> PreDisplayBugReportUI;
+
+		internal static event Action<UIDialogResult, Exception, SerializableException, Report> PostDisplayBugReportUI;
+
 		internal ExecutionFlow Report(Exception exception, ExceptionThread exceptionThread)
 		{
 			try
@@ -43,7 +47,14 @@ namespace NBug.Core.Reporting
 					handler(exception, report);
 				}
 
+				if (PreDisplayBugReportUI != null)
+					PreDisplayBugReportUI(exception, serializableException, report);
+
 				var uiDialogResult = UISelector.DisplayBugReportUI(exceptionThread, serializableException, report);
+
+				if (PostDisplayBugReportUI != null)
+					PostDisplayBugReportUI(uiDialogResult, exception, serializableException, report);
+
 				if (uiDialogResult.Report == SendReport.Send)
 				{
 					this.CreateReportZip(serializableException, report);
@@ -128,7 +139,7 @@ namespace NBug.Core.Reporting
 		{
 			// Test if it has NOT been more than x many days since entry assembly was last modified)
 			if (Settings.StopReportingAfter < 0
-			    || File.GetLastWriteTime(Settings.EntryAssembly.Location).AddDays(Settings.StopReportingAfter).CompareTo(DateTime.Now) > 0)
+				|| File.GetLastWriteTime(Settings.EntryAssembly.Location).AddDays(Settings.StopReportingAfter).CompareTo(DateTime.Now) > 0)
 			{
 				// Test if there is already more than enough queued report files
 				if (Settings.MaxQueuedReports < 0 || Storer.GetReportCount() < Settings.MaxQueuedReports)
@@ -153,8 +164,8 @@ namespace NBug.Core.Reporting
 						try
 						{
 							serializer = report.CustomInfo != null
-								             ? new XmlSerializer(typeof(Report), new[] { report.CustomInfo.GetType() })
-								             : new XmlSerializer(typeof(Report));
+											 ? new XmlSerializer(typeof(Report), new[] { report.CustomInfo.GetType() })
+											 : new XmlSerializer(typeof(Report));
 
 							serializer.Serialize(stream, report);
 						}
@@ -185,6 +196,15 @@ namespace NBug.Core.Reporting
 						{
 							// ToDo: This needs a lot more work!
 							this.AddAdditionalFiles(zipStorer);
+						}
+
+						if (report.ProtocolData != null)
+						{
+							stream.SetLength(0);
+							var ser = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+							ser.Serialize(stream, report.ProtocolData);
+							stream.Position = 0;
+							zipStorer.AddStream(ZipStorer.Compression.Deflate, StoredItemFile.ProtocolData, stream, DateTime.UtcNow, string.Empty);
 						}
 					}
 

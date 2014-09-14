@@ -47,7 +47,7 @@ namespace NBug.Core.UI.WinForms
 			this.targetSiteTextBox.Text = exception.TargetSite;
 			this.applicationTextBox.Text = report.GeneralInfo.HostApplication + " [" + report.GeneralInfo.HostApplicationVersion + "]";
 			this.nbugTextBox.Text = report.GeneralInfo.NBugVersion;
-			this.dateTimeTextBox.Text = report.GeneralInfo.DateTime;
+			this.dateTimeTextBox.Text = report.GeneralInfo.DateTime.ToString();
 			this.clrTextBox.Text = report.GeneralInfo.CLRVersion;
 
 			// Fill in the 'Exception' tab

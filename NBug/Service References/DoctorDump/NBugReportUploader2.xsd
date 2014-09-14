@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified" targetNamespace="https://www.drdump.com/services" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="https://drdump.com/Service/NBugReportUploader.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:element name="SendAnonymousReport">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="https://www.drdump.com/services" minOccurs="0" name="clientLib" nillable="true" type="q1:ClientLib" />
+        <xs:element xmlns:q2="https://www.drdump.com/services" minOccurs="0" name="app" nillable="true" type="q2:Application" />
+        <xs:element xmlns:q3="https://www.drdump.com/services" minOccurs="0" name="exception" nillable="true" type="q3:ExceptionDescription" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ClientLib">
+    <xs:sequence>
+      <xs:element name="V1" type="xs:unsignedShort" />
+      <xs:element name="V2" type="xs:unsignedShort" />
+      <xs:element name="V3" type="xs:unsignedShort" />
+      <xs:element name="V4" type="xs:unsignedShort" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q4="https://www.drdump.com/services" name="ClientLib" nillable="true" type="q4:ClientLib" />
+  <xs:complexType name="Application">
+    <xs:sequence>
+      <xs:element name="AppName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ApplicationGUID" nillable="true" type="ser:guid" />
+      <xs:element name="CompanyName" nillable="true" type="xs:string" />
+      <xs:element name="Email" nillable="true" type="xs:string" />
+      <xs:element name="MainModule" nillable="true" type="xs:string" />
+      <xs:element name="V1" type="xs:unsignedShort" />
+      <xs:element name="V2" type="xs:unsignedShort" />
+      <xs:element name="V3" type="xs:unsignedShort" />
+      <xs:element name="V4" type="xs:unsignedShort" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q5="https://www.drdump.com/services" name="Application" nillable="true" type="q5:Application" />
+  <xs:complexType name="ExceptionDescription">
+    <xs:sequence>
+      <xs:element name="ClrVersion" nillable="true" type="xs:string" />
+      <xs:element name="CrashDate" type="xs:dateTime" />
+      <xs:element xmlns:q6="https://www.drdump.com/services" name="Exception" nillable="true" type="q6:ExceptionInfo" />
+      <xs:element name="OS" nillable="true" type="xs:string" />
+      <xs:element name="PCID" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q7="https://www.drdump.com/services" name="ExceptionDescription" nillable="true" type="q7:ExceptionDescription" />
+  <xs:complexType name="ExceptionInfo">
+    <xs:sequence>
+      <xs:element name="HResult" type="xs:int" />
+      <xs:element xmlns:q8="https://www.drdump.com/services" minOccurs="0" name="InnerException" nillable="true" type="q8:ExceptionInfo" />
+      <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Source" nillable="true" type="xs:string" />
+      <xs:element name="StackTrace" nillable="true" type="xs:string" />
+      <xs:element name="Type" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q9="https://www.drdump.com/services" name="ExceptionInfo" nillable="true" type="q9:ExceptionInfo" />
+  <xs:element name="SendAnonymousReportResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q10="https://www.drdump.com/services" minOccurs="0" name="SendAnonymousReportResult" nillable="true" type="q10:Response" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="Response">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ClientID" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Context" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="DumpGroupID" type="xs:int" />
+      <xs:element minOccurs="0" name="DumpID" type="xs:int" />
+      <xs:element minOccurs="0" name="Garbage" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="ProblemID" type="xs:int" />
+      <xs:element minOccurs="0" name="UrlToProblem" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q11="https://www.drdump.com/services" name="Response" nillable="true" type="q11:Response" />
+  <xs:complexType name="NeedReportResponse">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q12="https://www.drdump.com/services" base="q12:Response">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:q13="https://www.drdump.com/services" name="NeedReportResponse" nillable="true" type="q13:NeedReportResponse" />
+  <xs:complexType name="StopResponse">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q14="https://www.drdump.com/services" base="q14:Response">
+        <xs:sequence />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:q15="https://www.drdump.com/services" name="StopResponse" nillable="true" type="q15:StopResponse" />
+  <xs:complexType name="ErrorResponse">
+    <xs:complexContent mixed="false">
+      <xs:extension xmlns:q16="https://www.drdump.com/services" base="q16:Response">
+        <xs:sequence>
+          <xs:element name="Error" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:q17="https://www.drdump.com/services" name="ErrorResponse" nillable="true" type="q17:ErrorResponse" />
+  <xs:element name="SendAdditionalData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="context" nillable="true" type="xs:base64Binary" />
+        <xs:element xmlns:q18="https://www.drdump.com/services" minOccurs="0" name="addInfo" nillable="true" type="q18:DetailedExceptionDescription" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="DetailedExceptionDescription">
+    <xs:sequence>
+      <xs:element xmlns:q19="https://www.drdump.com/services" name="Exception" nillable="true" type="q19:ExceptionDescription" />
+      <xs:element name="Report" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="UserDescription" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element xmlns:q20="https://www.drdump.com/services" name="DetailedExceptionDescription" nillable="true" type="q20:DetailedExceptionDescription" />
+  <xs:element name="SendAdditionalDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q21="https://www.drdump.com/services" minOccurs="0" name="SendAdditionalDataResult" nillable="true" type="q21:Response" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

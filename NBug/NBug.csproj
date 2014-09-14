@@ -58,6 +58,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -75,6 +76,8 @@
     <Compile Include="Core\Submission\IProtocol.cs" />
     <Compile Include="Core\Submission\IProtocolFactory.cs" />
     <Compile Include="Core\Submission\Tracker\BugNet.cs" />
+    <Compile Include="Core\Submission\Tracker\DoctorDump\DoctorDump.cs" />
+    <Compile Include="Core\Submission\Tracker\DoctorDump\DoctorDumpService.cs" />
     <Compile Include="Core\Submission\Tracker\Mantis\AccountData.cs" />
     <Compile Include="Core\Submission\Tracker\Mantis\AttachmentData.cs" />
     <Compile Include="Core\Submission\Tracker\Mantis\CustomFieldValueForIssueData.cs" />
@@ -148,6 +151,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Properties\Localization.ru-RU.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.ru-RU.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Localization.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -186,6 +194,11 @@
     <Compile Include="Core\Submission\Web\Ftp.cs" />
     <Compile Include="Core\Submission\Web\Http.cs" />
     <Compile Include="Core\Submission\Web\Mail.cs" />
+    <Compile Include="Service References\DoctorDump\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Core\UI\Console\ConsoleUI.cs" />
     <Compile Include="Core\UI\UISelector.cs" />
@@ -242,6 +255,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\DoctorDump\NBug.DoctorDump.Response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\UI\Developer\InternalExceptionViewer.resx">
@@ -278,6 +294,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Localization.pt-BR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.ru-RU.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.ru-RU.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Localization.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Localization.Designer.cs</LastGenOutput>
@@ -300,7 +320,34 @@
       <DependentUpon>Normal.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DoctorDump\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DoctorDump\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DoctorDump\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DoctorDump\NBugReportUploader1.wsdl" />
+    <None Include="Service References\DoctorDump\NBugReportUploader2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DoctorDump\NBugReportUploader21.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DoctorDump\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DoctorDump\NBugReportUploader1.disco" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName)==Release copy "$(TargetPath)" "$(SolutionDir)packages\NBug\lib\net40-client" /Y

@@ -30,15 +30,15 @@ namespace NBug.Core.Submission
 			// Test if it has NOT been more than x many days since entry assembly was last modified)
 			// This is the exact verifier code in the BugReport.cs of CreateReportZip() function
 			if (Settings.StopReportingAfter < 0
-			    || File.GetLastWriteTime(Settings.EntryAssembly.Location).AddDays(Settings.StopReportingAfter).CompareTo(DateTime.Now) > 0)
+				|| File.GetLastWriteTime(Settings.EntryAssembly.Location).AddDays(Settings.StopReportingAfter).CompareTo(DateTime.Now) > 0)
 			{
 				if (isAsynchronous)
 				{
 					// Log and swallow NBug's internal exceptions by default
 					Task.Factory.StartNew(this.Dispatch)
-					    .ContinueWith(
-						    t => Logger.Error("An exception occurred while dispatching bug report. Check the inner exception for details", t.Exception), 
-						    TaskContinuationOptions.OnlyOnFaulted);
+						.ContinueWith(
+							t => Logger.Error("An exception occurred while dispatching bug report. Check the inner exception for details", t.Exception), 
+							TaskContinuationOptions.OnlyOnFaulted);
 				}
 				else
 				{
@@ -70,7 +70,7 @@ namespace NBug.Core.Submission
 			Storer.TruncateReportFiles();
 
 			// Now go through configured destinations and submit to all automatically
-			for (var hasReport = true; hasReport;)
+			for (var hasReport = true; hasReport; )
 			{
 				using (var storer = new Storer())
 				using (var stream = storer.GetFirstReportFile())
@@ -78,19 +78,19 @@ namespace NBug.Core.Submission
 					if (stream != null)
 					{
 						// Extract crash/exception report data from the zip file. Delete the zip file if no data can be retrieved (i.e. corrupt file)
-					  ExceptionData exceptionData;
-					  try
-					  {
-              exceptionData = this.GetDataFromZip(stream);
-					  }
-            catch (Exception exception)
-					  {
-              storer.DeleteCurrentReportFile();
-              Logger.Error("An exception occurred while extraction report data from zip file. Check the inner exception for details.", exception);
-					    return;
-					  }
-            
-            // Now submit the report file to all configured bug report submission targets
+						ExceptionData exceptionData;
+						try
+						{
+							exceptionData = this.GetDataFromZip(stream);
+						}
+						catch (Exception exception)
+						{
+							storer.DeleteCurrentReportFile();
+							Logger.Error("An exception occurred while extraction report data from zip file. Check the inner exception for details.", exception);
+							return;
+						}
+
+						// Now submit the report file to all configured bug report submission targets
 						if (this.EnumerateDestinations(stream, exceptionData) == false)
 						{
 							break;
@@ -141,6 +141,7 @@ namespace NBug.Core.Submission
 
 		private ExceptionData GetDataFromZip(Stream stream)
 		{
+			object protocolData = null;
 			var results = new ExceptionData();
 			var zipStorer = ZipStorer.Open(stream, FileAccess.Read);
 			using (Stream zipItemStream = new MemoryStream())
@@ -166,8 +167,19 @@ namespace NBug.Core.Submission
 						results.Report = (Report)deserializer.Deserialize(zipItemStream);
 						zipItemStream.Position = 0;
 					}
+					else if (Path.GetFileName(entry.FilenameInZip) == StoredItemFile.ProtocolData)
+					{
+						zipItemStream.SetLength(0);
+						zipStorer.ExtractFile(entry, zipItemStream);
+						zipItemStream.Position = 0;
+						var deserializer = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+						protocolData = deserializer.Deserialize(zipItemStream);
+						zipItemStream.Position = 0;
+					}
 				}
 			}
+
+			results.Report.ProtocolData = protocolData;
 
 			return results;
 		}

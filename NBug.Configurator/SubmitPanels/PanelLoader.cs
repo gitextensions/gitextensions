@@ -38,6 +38,10 @@ namespace NBug.Configurator.SubmitPanels
             {
                 this.submitComboBox.SelectedItem = "E-Mail";
             }
+            else if (protocol == typeof(Core.Submission.Tracker.DoctorDump.DoctorDump).Name)
+            {
+                this.submitComboBox.SelectedItem = "Doctor Dump E-Mail";
+            }
             else if (protocol == typeof(Redmine).Name)
             {
                 this.submitComboBox.SelectedItem = "Redmine Issue Tracker";
@@ -87,6 +91,10 @@ namespace NBug.Configurator.SubmitPanels
             {
                 case "E-Mail":
                     this.Controls.Add(new Web.Mail());
+                    break;
+
+                case "Doctor Dump E-Mail":
+                    this.Controls.Add(new NBug.Configurator.SubmitPanels.Tracker.DoctorDump());
                     break;
 
                 case "Redmine Issue Tracker":

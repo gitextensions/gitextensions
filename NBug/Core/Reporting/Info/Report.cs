@@ -39,6 +39,9 @@ namespace NBug.Core.Reporting.Info
 		/// </summary>
 		public GeneralInfo GeneralInfo { get; set; }
 
+		internal object ProtocolData { get; set; }
+
+
 		/*/// <summary>
 		/// Gets or sets a custom object property to store user supplied information in the bug report. You need to handle
 		/// <see cref="NBug.Settings.ProcessingException"/> event to fill this property with required information.

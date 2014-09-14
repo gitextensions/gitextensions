@@ -36,7 +36,7 @@ namespace NBug.Core.Reporting.Info
 
 			this.CLRVersion = Environment.Version.ToString();
 
-			this.DateTime = System.DateTime.UtcNow.ToString();
+			this.DateTime = System.DateTime.UtcNow;
 
 			if (serializableException != null)
 			{
@@ -57,7 +57,7 @@ namespace NBug.Core.Reporting.Info
 
 		public string CLRVersion { get; set; }
 
-		public string DateTime { get; set; }
+		public System.DateTime DateTime { get; set; }
 
 		public string ExceptionMessage { get; set; }
 

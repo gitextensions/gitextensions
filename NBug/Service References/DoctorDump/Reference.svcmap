@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="9541a1a3-37c5-46a5-9545-0cf735eb35b0" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>true</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://drdump.com/Service/NBugReportUploader.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="NBugReportUploader1.wsdl" MetadataType="Wsdl" ID="f2720c9c-b2d2-435b-aff7-4ed2f5af03cd" SourceId="1" SourceUrl="https://drdump.com/Service/NBugReportUploader.svc?wsdl" />
+    <MetadataFile FileName="NBugReportUploader2.xsd" MetadataType="Schema" ID="d852d8e7-ec48-459a-a09e-8dba47ca0792" SourceId="1" SourceUrl="https://drdump.com/Service/NBugReportUploader.svc?xsd=xsd0" />
+    <MetadataFile FileName="NBugReportUploader1.disco" MetadataType="Disco" ID="667a20f5-e3ba-417a-8625-9c1164522315" SourceId="1" SourceUrl="https://drdump.com/Service/NBugReportUploader.svc?disco" />
+    <MetadataFile FileName="NBugReportUploader21.xsd" MetadataType="Schema" ID="2f9282ca-602b-4fd5-baff-6eb9950563b4" SourceId="1" SourceUrl="https://drdump.com/Service/NBugReportUploader.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

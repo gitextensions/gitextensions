@@ -128,6 +128,12 @@
       <DependentUpon>Custom.cs</DependentUpon>
     </Compile>
     <Compile Include="SubmitPanels\ISubmitPanel.cs" />
+    <Compile Include="SubmitPanels\Tracker\DoctorDump.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SubmitPanels\Tracker\DoctorDump.Designer.cs">
+      <DependentUpon>DoctorDump.cs</DependentUpon>
+    </Compile>
     <Compile Include="SubmitPanels\Tracker\Mantis.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -189,6 +195,9 @@
     </Compile>
     <EmbeddedResource Include="SubmitPanels\Custom\Custom.resx">
       <DependentUpon>Custom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubmitPanels\Tracker\DoctorDump.resx">
+      <DependentUpon>DoctorDump.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SubmitPanels\Tracker\Mantis.resx">
       <DependentUpon>Mantis.cs</DependentUpon>
