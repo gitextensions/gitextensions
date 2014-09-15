@@ -23,7 +23,5 @@ namespace NBug.Core.Util.Storage
 		internal const string MiniDump = "MiniDump.mdmp";
 
 		internal const string Report = "Report.xml";
-
-		internal const string ProtocolData = "Protocol.bin";
 	}
 }

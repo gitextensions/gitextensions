@@ -63,7 +63,6 @@
             this.submitComboBox.Items.AddRange(new object[] {
             "None",
             "E-Mail",
-            "Doctor Dump E-Mail",
             "Redmine Issue Tracker",
             "FTP",
             "HTTP",
