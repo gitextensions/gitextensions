@@ -9,8 +9,10 @@ namespace NBug.Core.Util.Serialization
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
+	using System.Globalization;
 	using System.IO;
 	using System.Linq;
+	using System.Threading;
 	using System.Xml.Linq;
 	using System.Xml.Serialization;
 
@@ -32,65 +34,80 @@ namespace NBug.Core.Util.Serialization
 				throw new ArgumentNullException();
 			}
 
-			this.Type = exception.GetType().ToString();
-
-			if (exception.Data.Count != 0)
+			var oldCulture = Thread.CurrentThread.CurrentCulture;
+			var oldUICulture = Thread.CurrentThread.CurrentUICulture;
+			try
 			{
-				foreach (DictionaryEntry entry in exception.Data)
-				{
-					if (entry.Value != null)
-					{
-						// Assign 'Data' property only if there is at least one entry with non-null value
-						if (this.Data == null)
-						{
-							this.Data = new SerializableDictionary<object, object>();
-						}
+				// Prefer messages in English, instead of in language of the user.
+				Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+				Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
-						this.Data.Add(entry.Key, entry.Value);
+				this.Type = exception.GetType().ToString();
+
+				if (exception.Data.Count != 0)
+				{
+					foreach (DictionaryEntry entry in exception.Data)
+					{
+						if (entry.Value != null)
+						{
+							// Assign 'Data' property only if there is at least one entry with non-null value
+							if (this.Data == null)
+							{
+								this.Data = new SerializableDictionary<object, object>();
+							}
+
+							this.Data.Add(entry.Key, entry.Value);
+						}
 					}
 				}
-			}
 
-			if (exception.HelpLink != null)
-			{
-				this.HelpLink = exception.HelpLink;
-			}
-
-			if (exception.InnerException != null)
-			{
-				this.InnerException = new SerializableException(exception.InnerException);
-			}
-
-			if (exception is AggregateException)
-			{
-				this.InnerExceptions = new List<SerializableException>();
-
-				foreach (var innerException in ((AggregateException)exception).InnerExceptions)
+				if (exception.HelpLink != null)
 				{
-					this.InnerExceptions.Add(new SerializableException(innerException));
+					this.HelpLink = exception.HelpLink;
 				}
 
-				this.InnerExceptions.RemoveAt(0);
+				if (exception.InnerException != null)
+				{
+					this.InnerException = new SerializableException(exception.InnerException);
+				}
+
+				if (exception is AggregateException)
+				{
+					this.InnerExceptions = new List<SerializableException>();
+
+					foreach (var innerException in ((AggregateException)exception).InnerExceptions)
+					{
+						this.InnerExceptions.Add(new SerializableException(innerException));
+					}
+
+					this.InnerExceptions.RemoveAt(0);
+				}
+
+				this.Message = exception.Message != string.Empty ? exception.Message : string.Empty;
+
+				if (exception.Source != null)
+				{
+					this.Source = exception.Source;
+				}
+
+				if (exception.StackTrace != null)
+				{
+					this.StackTrace = exception.StackTrace;
+				}
+
+				if (exception.TargetSite != null)
+				{
+					this.TargetSite = string.Format("{0} @ {1}", exception.TargetSite, exception.TargetSite.DeclaringType);
+				}
+
+				this.ExtendedInformation = this.GetExtendedInformation(exception);
+
 			}
-
-			this.Message = exception.Message != string.Empty ? exception.Message : string.Empty;
-
-			if (exception.Source != null)
+			finally
 			{
-				this.Source = exception.Source;
+				Thread.CurrentThread.CurrentCulture = oldCulture;
+				Thread.CurrentThread.CurrentUICulture = oldUICulture;
 			}
-
-			if (exception.StackTrace != null)
-			{
-				this.StackTrace = exception.StackTrace;
-			}
-
-			if (exception.TargetSite != null)
-			{
-				this.TargetSite = string.Format("{0} @ {1}", exception.TargetSite, exception.TargetSite.DeclaringType);
-			}
-
-			this.ExtendedInformation = this.GetExtendedInformation(exception);
 		}
 
 		public SerializableDictionary<object, object> Data { get; set; }
@@ -131,11 +148,11 @@ namespace NBug.Core.Util.Serialization
 		private SerializableDictionary<string, object> GetExtendedInformation(Exception exception)
 		{
 			var extendedProperties = (from property in exception.GetType().GetProperties()
-			                         where
-				                         property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException"
-				                         && property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace"
-				                         && property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
-			                         select property).ToArray();
+									  where
+										  property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException"
+										  && property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace"
+										  && property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
+									  select property).ToArray();
 
 			if (extendedProperties.Any())
 			{
