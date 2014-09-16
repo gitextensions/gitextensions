@@ -43,6 +43,8 @@
 			// 
 			// detailsTextBox
 			// 
+			this.detailsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.detailsTextBox.Location = new System.Drawing.Point(5, 261);
 			this.detailsTextBox.Multiline = true;
 			this.detailsTextBox.Name = "detailsTextBox";
@@ -52,6 +54,7 @@
 			// 
 			// detailsLabel
 			// 
+			this.detailsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.detailsLabel.AutoSize = true;
 			this.detailsLabel.Location = new System.Drawing.Point(5, 245);
 			this.detailsLabel.Name = "detailsLabel";
@@ -61,10 +64,13 @@
 			// 
 			// loggerListView
 			// 
+			this.loggerListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.loggerListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.categoryColumnHeader,
-            this.timeColumnHeader,
-            this.messageColumnHeader});
+			this.categoryColumnHeader,
+			this.timeColumnHeader,
+			this.messageColumnHeader});
 			this.loggerListView.FullRowSelect = true;
 			this.loggerListView.Location = new System.Drawing.Point(5, 21);
 			this.loggerListView.MultiSelect = false;
@@ -100,6 +106,7 @@
 			// 
 			// quitButton
 			// 
+			this.quitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.quitButton.Location = new System.Drawing.Point(366, 347);
 			this.quitButton.Name = "quitButton";
 			this.quitButton.Size = new System.Drawing.Size(75, 23);
@@ -118,6 +125,7 @@
 			// 
 			// hideButton
 			// 
+			this.hideButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.hideButton.Location = new System.Drawing.Point(456, 347);
 			this.hideButton.Name = "hideButton";
 			this.hideButton.Size = new System.Drawing.Size(75, 23);
