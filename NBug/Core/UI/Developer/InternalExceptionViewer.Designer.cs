@@ -57,6 +57,7 @@
 			// 
 			// quitButton
 			// 
+            this.quitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.quitButton.Location = new System.Drawing.Point(455, 511);
 			this.quitButton.Name = "quitButton";
 			this.quitButton.Size = new System.Drawing.Size(75, 23);
@@ -67,6 +68,7 @@
 			// 
 			// debugButton
 			// 
+            this.debugButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.debugButton.Image = global::NBug.Properties.Resources.VS2010_16;
 			this.debugButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.debugButton.Location = new System.Drawing.Point(364, 511);
@@ -79,6 +81,7 @@
 			// 
 			// bugReportButton
 			// 
+            this.bugReportButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.bugReportButton.Enabled = false;
 			this.bugReportButton.Image = global::NBug.Properties.Resources.Send;
 			this.bugReportButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -120,7 +123,7 @@
 			this.documentationToolStripButton.Image = global::NBug.Properties.Resources.Help_16;
 			this.documentationToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.documentationToolStripButton.Name = "documentationToolStripButton";
-			this.documentationToolStripButton.Size = new System.Drawing.Size(132, 22);
+            this.documentationToolStripButton.Size = new System.Drawing.Size(148, 22);
 			this.documentationToolStripButton.Tag = "http://www.nbusy.com/projects/nbug/documentation";
 			this.documentationToolStripButton.Text = "Online &Documentation";
 			this.documentationToolStripButton.Click += new System.EventHandler(this.DocumentationToolStripButton_Click);
@@ -135,7 +138,7 @@
 			this.forumToolStripLabel.Image = global::NBug.Properties.Resources.Forum_16;
 			this.forumToolStripLabel.IsLink = true;
 			this.forumToolStripLabel.Name = "forumToolStripLabel";
-			this.forumToolStripLabel.Size = new System.Drawing.Size(105, 22);
+            this.forumToolStripLabel.Size = new System.Drawing.Size(117, 22);
 			this.forumToolStripLabel.Tag = "http://www.nbusy.com/forum/f11/";
 			this.forumToolStripLabel.Text = "Discussion Forum";
 			this.forumToolStripLabel.Click += new System.EventHandler(this.ForumToolStripLabel_Click);
@@ -150,7 +153,7 @@
 			this.trackerToolStripLabel.Image = global::NBug.Properties.Resources.Error_16;
 			this.trackerToolStripLabel.IsLink = true;
 			this.trackerToolStripLabel.Name = "trackerToolStripLabel";
-			this.trackerToolStripLabel.Size = new System.Drawing.Size(80, 22);
+            this.trackerToolStripLabel.Size = new System.Drawing.Size(86, 22);
 			this.trackerToolStripLabel.Tag = "http://www.nbusy.com/tracker/projects/nbug";
 			this.trackerToolStripLabel.Text = "Bug Tracker";
 			this.trackerToolStripLabel.Click += new System.EventHandler(this.TrackerToolStripLabel_Click);
@@ -166,6 +169,8 @@
 			// 
 			// exceptionTextBox
 			// 
+            this.exceptionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.exceptionTextBox.Location = new System.Drawing.Point(74, 93);
 			this.exceptionTextBox.Name = "exceptionTextBox";
 			this.exceptionTextBox.Size = new System.Drawing.Size(226, 20);
@@ -173,6 +178,7 @@
 			// 
 			// invalidSettingLabel
 			// 
+            this.invalidSettingLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.invalidSettingLabel.AutoSize = true;
 			this.invalidSettingLabel.Enabled = false;
 			this.invalidSettingLabel.Location = new System.Drawing.Point(320, 96);
@@ -183,6 +189,7 @@
 			// 
 			// invalidSettingTextBox
 			// 
+            this.invalidSettingTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.invalidSettingTextBox.Enabled = false;
 			this.invalidSettingTextBox.Location = new System.Drawing.Point(403, 93);
 			this.invalidSettingTextBox.Name = "invalidSettingTextBox";
@@ -191,6 +198,8 @@
 			// 
 			// targetSiteTextBox
 			// 
+            this.targetSiteTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.targetSiteTextBox.Location = new System.Drawing.Point(74, 122);
 			this.targetSiteTextBox.Name = "targetSiteTextBox";
 			this.targetSiteTextBox.Size = new System.Drawing.Size(450, 20);
@@ -207,6 +216,8 @@
 			// 
 			// exceptionMessageTextBox
 			// 
+            this.exceptionMessageTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.exceptionMessageTextBox.Location = new System.Drawing.Point(14, 151);
 			this.exceptionMessageTextBox.Multiline = true;
 			this.exceptionMessageTextBox.Name = "exceptionMessageTextBox";
@@ -216,6 +227,9 @@
 			// 
 			// exceptionStackGroupBox
 			// 
+            this.exceptionStackGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.exceptionStackGroupBox.Controls.Add(this.exceptionDetails);
 			this.exceptionStackGroupBox.Location = new System.Drawing.Point(14, 198);
 			this.exceptionStackGroupBox.Name = "exceptionStackGroupBox";
@@ -226,6 +240,9 @@
 			// 
 			// exceptionDetails
 			// 
+            this.exceptionDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.exceptionDetails.InformationColumnWidth = 350;
 			this.exceptionDetails.Location = new System.Drawing.Point(6, 16);
 			this.exceptionDetails.Name = "exceptionDetails";
