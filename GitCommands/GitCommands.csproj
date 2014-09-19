@@ -100,7 +100,7 @@
     <Compile Include="Git\GitBisectOption.cs" />
     <Compile Include="Git\GitCheckoutBranchCmd.cs" />
     <Compile Include="Git\GitCommand.cs" />
-    <Compile Include="Git\EncodingHelper.cs" />
+    <Compile Include="Utils\EncodingHelper.cs" />
     <Compile Include="Git\GitConvert.cs" />
     <Compile Include="Git\GitDeleteBranchCmd.cs" />
     <Compile Include="Git\GitCommandHelpers.cs" />
@@ -154,6 +154,7 @@
     <Compile Include="SynchronizedProcessReader.cs" />
     <Compile Include="System.cs" />
     <Compile Include="Utils\JsonSerializer.cs" />
+    <Compile Include="Utils\RFC2047Decoder.cs" />
     <Compile Include="Utils\WeakRefCache.cs" />
     <Compile Include="XmlSerializableDictionary.cs" />
   </ItemGroup>
