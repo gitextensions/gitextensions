@@ -669,7 +669,10 @@ namespace GitUI.CommandsDialogs
         private void UpdateJumplist(bool validWorkingDir)
         {
 #if !__MonoCS__
-            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (!EnvUtils.RunningOnWindows() || !TaskbarManager.IsPlatformSupported)
+                return;
+
+            try
             {
                 if (validWorkingDir)
                 {
@@ -701,6 +704,10 @@ namespace GitUI.CommandsDialogs
                 }
 
                 CreateOrUpdateTaskBarButtons(validWorkingDir);
+            }
+            catch (System.Runtime.InteropServices.COMException ex)
+            {
+                Trace.WriteLine(ex.Message, "UpdateJumplist");
             }
 #endif
         }
