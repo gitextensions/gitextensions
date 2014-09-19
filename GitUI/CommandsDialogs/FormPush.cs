@@ -269,11 +269,7 @@ namespace GitUI.CommandsDialogs
                 if (_NO_TRANSLATE_Branch.Text == AllRefs)
                     pushAllBranches = true;
                 else
-                {
-                    srcRev = GitCommandHelpers.GetFullBranchName(_NO_TRANSLATE_Branch.Text);
-                    if (String.IsNullOrEmpty(Module.RevParse(srcRev)))
-                        srcRev = _NO_TRANSLATE_Branch.Text;
-                }
+                    srcRev = _NO_TRANSLATE_Branch.Text;
 
                 pushCmd = GitCommandHelpers.PushCmd(destination, srcRev, RemoteBranch.Text,
                     pushAllBranches, ForcePushBranches.Checked, track, RecursiveSubmodules.SelectedIndex);

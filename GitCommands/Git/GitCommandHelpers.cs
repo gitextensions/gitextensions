@@ -352,6 +352,9 @@ namespace GitCommands
             if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
                 return branch;
 
+            // If branch is HEAD ref, return it as-is
+            if (branch == "HEAD") return branch;
+
             // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
             // NOTE: We can use `String.IsNullOrEmpty(Module.RevParse(srcRev))` instead
             if (IsCommitHash(branch))
@@ -585,9 +588,16 @@ namespace GitCommands
             remote = remote.ToPosixPath();
 
             // This method is for pushing to remote branches, so fully qualify the
-            // remote branch name with refs/heads/.
-            fromBranch = GetFullBranchName(fromBranch);
-            toBranch = GetFullBranchName(toBranch);
+            // branch name with refs/heads/, except for special cases
+            if (fromBranch == GitModule.DetachedBranch)
+                fromBranch = "";
+            else
+                fromBranch = GetFullBranchName(fromBranch);
+
+            if (toBranch == GitModule.DetachedBranch)
+                toBranch = "";
+            else
+                toBranch = GetFullBranchName(toBranch);
 
             if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
                 fromBranch = "HEAD";
