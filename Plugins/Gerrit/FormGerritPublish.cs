@@ -34,6 +34,23 @@ namespace Gerrit
                 Close();
         }
 
+        private string PushCmd(string remote, string toBranch)
+        {
+            remote = remote.ToPosixPath();
+
+            toBranch = GitCommandHelpers.GetFullBranchName(toBranch);
+
+            const string fromBranch = "HEAD";
+
+            if (toBranch != null) toBranch = toBranch.Replace(" ", "");
+
+            var sprogressOption = "";
+            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+                sprogressOption = "--progress ";
+
+            return String.Format("push {0}\"{1}\" {2}:{3}", sprogressOption, remote.Trim(), fromBranch, toBranch);
+        }
+
         private bool PublishChange(IWin32Window owner)
         {
             string branch = _NO_TRANSLATE_Branch.Text.Trim();
@@ -61,10 +78,9 @@ namespace Gerrit
             if (!string.IsNullOrEmpty(topic))
                 targetBranch += "/" + topic;
 
-            pushCommand.CommandText = GitCommandHelpers.PushCmd(
+            pushCommand.CommandText = PushCmd(
                 _NO_TRANSLATE_Remotes.Text,
-                targetBranch,
-                false
+                targetBranch
             );
             pushCommand.Remote = _NO_TRANSLATE_Remotes.Text;
             pushCommand.Title = _publishCaption.Text;
