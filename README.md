@@ -1,6 +1,6 @@
 # Git Extensions
 
-WARNING: Repository rewritten to reduce its size. Please clone it again. |
+WARNING: Repository rewritten on 2014-08-24 to reduce its size. Please clone it again. |
 -----------
 
 ## Introduction
