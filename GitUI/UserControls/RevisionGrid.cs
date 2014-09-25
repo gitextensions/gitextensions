@@ -2041,7 +2041,7 @@ namespace GitUI
             foreach (var head in gitRefListsForRevision.AllTags)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                ToolStripItem tagName = new ToolStripMenuItem(head.Name);
+                toolStripItem.Tag = head.Name;
                 toolStripItem.Click += ToolStripItemClickDeleteTag;
                 deleteTagDropDown.Items.Add(toolStripItem);
             }
@@ -2061,10 +2061,12 @@ namespace GitUI
                 else
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Tag = head.CompleteName;
                     toolStripItem.Click += ToolStripItemClickMergeBranch;
                     mergeBranchDropDown.Items.Add(toolStripItem);
 
                     toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Tag = head.CompleteName;
                     toolStripItem.Click += ToolStripItemClickRebaseBranch;
                     rebaseDropDown.Items.Add(toolStripItem);
                 }
@@ -2074,6 +2076,7 @@ namespace GitUI
             if (rebaseDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
+                toolStripItem.Tag = revision.Guid;
                 toolStripItem.Click += ToolStripItemClickRebaseBranch;
                 rebaseDropDown.Items.Add(toolStripItem);
             }
@@ -2082,6 +2085,7 @@ namespace GitUI
             if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
+                toolStripItem.Tag = revision.Guid;
                 toolStripItem.Click += ToolStripItemClickMergeBranch;
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
@@ -2114,11 +2118,13 @@ namespace GitUI
                     if (!head.Name.Equals(currentBranch))
                     {
                         toolStripItem = new ToolStripMenuItem(head.Name);
+                        toolStripItem.Tag = head.Name;
                         toolStripItem.Click += ToolStripItemClickDeleteBranch;
                         deleteBranchDropDown.Items.Add(toolStripItem); //Add to delete branch
                     }
 
                     toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Tag = head.Name;
                     toolStripItem.Click += ToolStripItemClickRenameBranch;
                     renameDropDown.Items.Add(toolStripItem); //Add to rename branch
                 }
@@ -2170,7 +2176,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            UICommands.StartDeleteTagDialog(this, toolStripItem.Text);
+            UICommands.StartDeleteTagDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickDeleteBranch(object sender, EventArgs e)
@@ -2180,7 +2186,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            UICommands.StartDeleteBranchDialog(this, toolStripItem.Text);
+            UICommands.StartDeleteBranchDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickCheckoutBranch(object sender, EventArgs e)
@@ -2211,7 +2217,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            UICommands.StartMergeBranchDialog(this, toolStripItem.Text);
+            UICommands.StartMergeBranchDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
@@ -2221,7 +2227,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            UICommands.StartRebaseDialog(this, toolStripItem.Text);
+            UICommands.StartRebaseDialog(this, toolStripItem.Tag as string);
         }
 
         private void ToolStripItemClickRenameBranch(object sender, EventArgs e)
@@ -2231,7 +2237,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            UICommands.StartRenameDialog(this, toolStripItem.Text);
+            UICommands.StartRenameDialog(this, toolStripItem.Tag as string);
         }
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
