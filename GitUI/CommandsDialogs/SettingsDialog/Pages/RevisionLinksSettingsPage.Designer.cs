@@ -372,7 +372,7 @@
             this.LocalBranchChx.Name = "LocalBranchChx";
             this.LocalBranchChx.Size = new System.Drawing.Size(86, 17);
             this.LocalBranchChx.TabIndex = 1;
-            this.LocalBranchChx.Text = "Local branch";
+            this.LocalBranchChx.Text = "Local branch name";
             this.LocalBranchChx.UseVisualStyleBackColor = true;
             this.LocalBranchChx.CheckedChanged += new System.EventHandler(this.LocalBranchChx_CheckedChanged);
             // 
@@ -383,7 +383,7 @@
             this.RemoteBranchChx.Name = "RemoteBranchChx";
             this.RemoteBranchChx.Size = new System.Drawing.Size(99, 17);
             this.RemoteBranchChx.TabIndex = 2;
-            this.RemoteBranchChx.Text = "Remote branch";
+            this.RemoteBranchChx.Text = "Remote branch name";
             this.RemoteBranchChx.UseVisualStyleBackColor = true;
             this.RemoteBranchChx.CheckedChanged += new System.EventHandler(this.RemoteBranchChx_CheckedChanged);
             // 
