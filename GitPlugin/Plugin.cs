@@ -172,7 +172,7 @@ namespace GitPlugin.Commands
         {
             CommandBar cb =
                 CommandBars.Cast<CommandBar>()
-                    .FirstOrDefault(c => c.accName == GitCommandBarName);
+                    .FirstOrDefault(c => c.Name == GitCommandBarName);
             if (cb != null)
             {
                 cb.Delete();
@@ -183,7 +183,7 @@ namespace GitPlugin.Commands
         {
             CommandBar bar =
                 CommandBars.Cast<CommandBar>()
-                    .FirstOrDefault(c => c.accName == GitCommandBarName);
+                    .FirstOrDefault(c => c.Name == GitCommandBarName);
             if (bar == null)
             {
                 bar = (CommandBar)_application.Commands.AddCommandBar(GitCommandBarName, vsCommandBarType.vsCommandBarTypeToolbar);
@@ -201,22 +201,22 @@ namespace GitPlugin.Commands
                 CommandBarControl control =
                     GetMenuBar()
                         .Controls.Cast<CommandBarControl>()
-                        .FirstOrDefault(c => c.accName == OldGitMainMenuName);
+                        .FirstOrDefault(c => c.Caption == OldGitMainMenuName);
                 if (control != null)
                 {
                     control.Delete(false);
                 }
-                CommandBarControl control2 =
+                control =
                     GetMenuBar()
                         .Controls.Cast<CommandBarControl>()
-                        .FirstOrDefault(c => c.accName == OldGitExtMainMenuName);
-                if (control2 != null)
+                        .FirstOrDefault(c => c.Caption == OldGitExtMainMenuName);
+                if (control != null)
                 {
-                    control2.Delete(false);
+                    control.Delete(false);
                 }
                 CommandBar cb =
                     CommandBars.Cast<CommandBar>()
-                        .FirstOrDefault(c => c.accName == OldGitMainMenuName);
+                        .FirstOrDefault(c => c.Name == OldGitMainMenuName);
                 if (cb != null && !cb.BuiltIn)
                 {
                     cb.Delete();
@@ -244,14 +244,39 @@ namespace GitPlugin.Commands
             }
         }
 
-        public bool IsGitExtMainMenuBarExist()
+        public bool IsReinstallRequired()
         {
             try
             {
                 CommandBarControl control =
                     GetMenuBar().Controls.Cast<CommandBarControl>()
                         .FirstOrDefault(c => c.Caption == GitMainMenuName);
+                if (control == null)
+                {
+                    return true;
+                }
+
+                // menu from old versions
+                control =
+                    GetMenuBar()
+                        .Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.Caption == OldGitMainMenuName);
                 if (control != null)
+                {
+                    return true;
+                }
+                control =
+                    GetMenuBar()
+                        .Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.Caption == OldGitExtMainMenuName);
+                if (control != null)
+                {
+                    return true;
+                }
+                CommandBar cb =
+                    CommandBars.Cast<CommandBar>()
+                        .FirstOrDefault(c => c.Name == OldGitMainMenuName);
+                if (cb != null && !cb.BuiltIn)
                 {
                     return true;
                 }

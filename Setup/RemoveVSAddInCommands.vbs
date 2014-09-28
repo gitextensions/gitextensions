@@ -2,15 +2,15 @@
 Sub RemoveVSAddInCommands(ByVal ver)
     Set dte = CreateObject("VisualStudio.DTE." + ver)
     For Each ctrl In dte.CommandBars.Item("MenuBar").Controls
-        If ctrl.Caption = "G&itExt" Then
+        If ctrl.Caption = "&GitExt" Then
             ctrl.Delete(false)
-            Exit For
+        ElseIf ctrl.Caption = "G&itExt" Then
+            ctrl.Delete(false)
         End If
     Next
     For Each cmdBar In dte.CommandBars
         If cmdBar.Name = "GitExtensions" Then
             dte.Commands.RemoveCommandBar(cmdBar)
-            Exit For
         End If
     Next
     For Each cmd In dte.Commands
@@ -50,7 +50,7 @@ Function RemoveVS2012AddInCommands
 End Function
 
 ' Custom action to remove the commands of Visual Studio 2013 when uninstalling the add-in
-Function RemoveVS2013AddInCommands()
+Function RemoveVS2013AddInCommands
     On Error Resume Next
     RemoveVSAddInCommands("12.0")
     RemoveVS2013AddInCommands = msiDoActionStatusSuccess

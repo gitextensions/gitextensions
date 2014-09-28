@@ -261,22 +261,16 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                // Try to make source rev into a fully qualified branch name. If that
-                // doesn't exist, then it must be something other than a branch, so
-                // fall back to using the name just as it was passed in.
-                string srcRev = "";
-                bool pushAllBranches = false;
                 if (_NO_TRANSLATE_Branch.Text == AllRefs)
-                    pushAllBranches = true;
+                {
+                    pushCmd = Module.PushAllCmd(destination, ForcePushBranches.Checked, track,
+                        RecursiveSubmodules.SelectedIndex);
+                }
                 else
                 {
-                    srcRev = GitCommandHelpers.GetFullBranchName(_NO_TRANSLATE_Branch.Text);
-                    if (String.IsNullOrEmpty(Module.RevParse(srcRev)))
-                        srcRev = _NO_TRANSLATE_Branch.Text;
+                    pushCmd = Module.PushCmd(destination, _NO_TRANSLATE_Branch.Text, RemoteBranch.Text,
+                        ForcePushBranches.Checked, track, RecursiveSubmodules.SelectedIndex);
                 }
-
-                pushCmd = GitCommandHelpers.PushCmd(destination, srcRev, RemoteBranch.Text,
-                    pushAllBranches, ForcePushBranches.Checked, track, RecursiveSubmodules.SelectedIndex);
             }
             else if (TabControlTagBranch.SelectedTab == TagTab)
             {

@@ -349,6 +349,8 @@ namespace GitCommands
 
         public static string GetFullBranchName(string branch)
         {
+            branch = branch.Trim();
+
             if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
                 return branch;
 
@@ -545,81 +547,6 @@ namespace GitCommands
             var ssh = Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process);
 
             return ssh ?? "";
-        }
-
-        /// <summary>Creates a 'git push' command using the specified parameters, pushing from HEAD.</summary>
-        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
-        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
-        /// <param name="all">All refs under 'refs/heads/' will be pushed.</param>
-        /// <returns>'git push' command with the specified parameters.</returns>
-        public static string PushCmd(string remote, string toBranch, bool all)
-        {
-            return PushCmd(remote, null, toBranch, all, false, true, 0);
-        }
-
-        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
-        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
-        /// <param name="fromBranch">Name of the branch to push.</param>
-        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
-        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
-        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
-        /// <returns>'git push' command with the specified parameters.</returns>
-        public static string PushCmd(string remote, string fromBranch, string toBranch, bool force = false)
-        {
-            return PushCmd(remote, fromBranch, toBranch, false, force, false, 0);
-        }
-
-        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
-        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
-        /// <param name="fromBranch">Name of the branch to push.</param>
-        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
-        /// <param name="all">All refs under 'refs/heads/' will be pushed.</param>
-        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
-        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
-        /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
-        /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
-        /// <returns>'git push' command with the specified parameters.</returns>
-        public static string PushCmd(string remote, string fromBranch, string toBranch,
-            bool all, bool force, bool track, int recursiveSubmodules)
-        {
-            remote = remote.ToPosixPath();
-
-            // This method is for pushing to remote branches, so fully qualify the
-            // remote branch name with refs/heads/.
-            fromBranch = GetFullBranchName(fromBranch);
-            toBranch = GetFullBranchName(toBranch);
-
-            if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
-                fromBranch = "HEAD";
-
-            if (toBranch != null) toBranch = toBranch.Replace(" ", "");
-
-            var sforce = "";
-            if (force)
-                sforce = "-f ";
-
-            var strack = "";
-            if (track)
-                strack = "-u ";
-
-            var srecursiveSubmodules = "";
-            if (recursiveSubmodules == 1)
-                srecursiveSubmodules = "--recurse-submodules=check ";
-            if (recursiveSubmodules == 2)
-                srecursiveSubmodules = "--recurse-submodules=on-demand ";
-
-            var sprogressOption = "";
-            if (VersionInUse.PushCanAskForProgress)
-                sprogressOption = "--progress ";
-
-            var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
-            if (all)
-                return string.Format("push {0}--all \"{1}\"", options, remote.Trim());
-
-            if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}\"{1}\" {2}:{3}", options, remote.Trim(), fromBranch, toBranch);
-
-            return string.Format("push {0}\"{1}\" {2}", options, remote.Trim(), fromBranch);
         }
 
         /// <summary>Pushes multiple sets of local branches to remote branches.</summary>

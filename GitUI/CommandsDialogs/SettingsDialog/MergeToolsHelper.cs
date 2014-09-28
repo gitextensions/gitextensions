@@ -281,7 +281,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                                                                   @"Beyond Compare 4\");
                 case "diffmerge":
                     exeName = "DiffMerge.exe";
-                    return FindFileInFolders(exeName, @"SourceGear\DiffMerge\");
+                    return FindFileInFolders(exeName, @"SourceGear\Common\DiffMerge\", @"SourceGear\DiffMerge\");
                 case "kdiff3":
                     exeName = "kdiff3.exe";
                     string kdiff3path = UnquoteString(GetGlobalSetting(settings, "mergetool.kdiff3.path"));
