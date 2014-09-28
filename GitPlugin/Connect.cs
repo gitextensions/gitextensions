@@ -254,7 +254,7 @@ namespace GitPlugin
         {
             try
             {
-                if (!_gitPlugin.IsGitExtMainMenuBarExist())
+                if (_gitPlugin.IsReinstallRequired())
                 {
                     GitPluginUISetup();
                 }

@@ -1478,7 +1478,7 @@ namespace GitCommands
             {
                 if (remoteBranch.StartsWith("+"))
                     remoteBranch = remoteBranch.Remove(0, 1);
-                remoteBranchArguments = "+" + GitCommandHelpers.GetFullBranchName(remoteBranch);
+                remoteBranchArguments = "+" + FormatBranchName(remoteBranch);
             }
 
             string localBranchArguments;
@@ -1489,7 +1489,7 @@ namespace GitCommands
             else if (string.IsNullOrEmpty(localBranch) || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
                 localBranchArguments = "";
             else
-                localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch + "";
+                localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch;
 
             string arguments = fetchTags == true ? " --tags" : fetchTags == false ? " --no-tags" : "";
 
@@ -1507,6 +1507,88 @@ namespace GitCommands
                 return gitDirectory + "rebase" + Path.DirectorySeparatorChar;
 
             return "";
+        }
+
+        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
+        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
+        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
+        /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
+        /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
+        /// <returns>'git push' command with the specified parameters.</returns>
+        public string PushAllCmd(string remote, bool force, bool track, int recursiveSubmodules)
+        {
+            remote = remote.ToPosixPath();
+
+            var sforce = "";
+            if (force)
+                sforce = "-f ";
+
+            var strack = "";
+            if (track)
+                strack = "-u ";
+
+            var srecursiveSubmodules = "";
+            if (recursiveSubmodules == 1)
+                srecursiveSubmodules = "--recurse-submodules=check ";
+            if (recursiveSubmodules == 2)
+                srecursiveSubmodules = "--recurse-submodules=on-demand ";
+
+            var sprogressOption = "";
+            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+                sprogressOption = "--progress ";
+
+            var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
+            return String.Format("push {0}--all \"{1}\"", options, remote.Trim());
+        }
+
+        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
+        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
+        /// <param name="fromBranch">Name of the branch to push.</param>
+        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
+        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
+        /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
+        /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
+        /// <returns>'git push' command with the specified parameters.</returns>
+        public string PushCmd(string remote, string fromBranch, string toBranch,
+            bool force, bool track, int recursiveSubmodules)
+        {
+            remote = remote.ToPosixPath();
+
+            // This method is for pushing to remote branches, so fully qualify the
+            // remote branch name with refs/heads/.
+            fromBranch = FormatBranchName(fromBranch);
+            toBranch = GitCommandHelpers.GetFullBranchName(toBranch);
+
+            if (String.IsNullOrEmpty(fromBranch) && !String.IsNullOrEmpty(toBranch))
+                fromBranch = "HEAD";
+
+            if (toBranch != null) toBranch = toBranch.Replace(" ", "");
+
+            var sforce = "";
+            if (force)
+                sforce = "-f ";
+
+            var strack = "";
+            if (track)
+                strack = "-u ";
+
+            var srecursiveSubmodules = "";
+            if (recursiveSubmodules == 1)
+                srecursiveSubmodules = "--recurse-submodules=check ";
+            if (recursiveSubmodules == 2)
+                srecursiveSubmodules = "--recurse-submodules=on-demand ";
+
+            var sprogressOption = "";
+            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+                sprogressOption = "--progress ";
+
+            var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
+            if (!String.IsNullOrEmpty(toBranch) && !String.IsNullOrEmpty(fromBranch))
+                return String.Format("push {0}\"{1}\" {2}:{3}", options, remote.Trim(), fromBranch, toBranch);
+
+            return String.Format("push {0}\"{1}\" {2}", options, remote.Trim(), fromBranch);
         }
 
         private ProcessStartInfo CreateGitStartInfo(string arguments)
@@ -2782,6 +2864,23 @@ namespace GitCommands
 
             var result = RunGitCmdResult(string.Format("check-ref-format --branch \"{0}\"", branchName));
             return result.ExitCode == 0;
+        }
+
+        /// <summary>
+        /// Format branch name, check if name is valid for repository.
+        /// </summary>
+        /// <param name="branchName">Branch name to test.</param>
+        /// <returns>Well formed branch name.</returns>
+        public string FormatBranchName([NotNull] string branchName)
+        {
+            if (branchName == null)
+                throw new ArgumentNullException("branchName");
+
+            string fullBranchName = GitCommandHelpers.GetFullBranchName(branchName);
+            if (String.IsNullOrEmpty(RevParse(fullBranchName)))
+                fullBranchName = branchName;
+
+            return fullBranchName;
         }
 
         public bool IsLockedIndex()
