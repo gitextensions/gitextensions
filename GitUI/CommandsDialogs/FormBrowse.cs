@@ -2638,6 +2638,7 @@ namespace GitUI.CommandsDialogs
             bool isExcactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
             openWithDifftoolToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
             saveAsToolStripMenuItem1.Enabled = isExcactlyOneItemSelected;
+            cherryPickSelectedDiffFileToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
             diffShowInFileTreeToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
             fileHistoryDiffToolstripMenuItem.Enabled = isExcactlyOneItemSelected;
             blameToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
@@ -3299,6 +3300,11 @@ namespace GitUI.CommandsDialogs
         private void FormBrowse_Activated(object sender, EventArgs e)
         {
             this.InvokeAsync(OnActivate);
+        }
+
+        private void cherryPickSelectedDiffFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DiffText.CherryPickAllChanges();
         }
     }
 }
