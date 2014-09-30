@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.CommandsDialogs;
 using GitUI.Hotkey;
 using ICSharpCode.TextEditor.Util;
 using PatchApply;
@@ -268,7 +269,7 @@ namespace GitUI.Editor
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
 
-        public void SetVisibilityDiffContextMenu(bool visible)
+        public void SetVisibilityDiffContextMenu(bool visible, bool isStaging_diff)
         {
             _currentViewIsPatch = visible;
             ignoreWhitespaceChangesToolStripMenuItem.Visible = visible;
@@ -277,6 +278,10 @@ namespace GitUI.Editor
             showEntireFileToolStripMenuItem.Visible = visible;
             toolStripSeparator2.Visible = visible;
             treatAllFilesAsTextToolStripMenuItem.Visible = visible;
+            copyNewVersionToolStripMenuItem.Visible = visible;
+            copyOldVersionToolStripMenuItem.Visible = visible;
+            cherrypickSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff;
+            copyPatchToolStripMenuItem.Visible = visible;
         }
 
 
@@ -609,7 +614,7 @@ namespace GitUI.Editor
         private void Reset(bool diff, bool text, bool staging_diff)
         {
             patchHighlighting = diff;
-            SetVisibilityDiffContextMenu(diff);
+            SetVisibilityDiffContextMenu(diff, staging_diff);
             ClearImage();
             PictureBox.Visible = !text;
             _internalFileViewer.Visible = text;
@@ -982,6 +987,27 @@ namespace GitUI.Editor
         private void copyOldVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CopyNotStartingWith('+');
+        }
+
+        private void cherrypickSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Prepare git command
+            string args = "apply --3way --whitespace=nowarn";
+
+            byte[] patch;
+                patch = PatchManager.GetSelectedLinesAsPatch(Module, GetText(),
+                    GetSelectionPosition(), GetSelectionLength(),
+                    false, Encoding, false);
+
+            if (patch != null && patch.Length > 0)
+            {
+                string output = Module.RunGitCmd(args, null, patch);
+                if (!string.IsNullOrEmpty(output))
+                {
+                    if (!MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false))
+                        MessageBox.Show(this, output + "\n\n" + Encoding.GetString(patch));
+                }
+            }
         }
 
     }
