@@ -228,6 +228,7 @@ namespace GitUI.CommandsDialogs
             this.commitcountPerUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitcommandLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.cherryPickSelectedDiffFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 #if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
 #endif
@@ -957,6 +958,7 @@ namespace GitUI.CommandsDialogs
             this.openWithDifftoolToolStripMenuItem,
             this.saveAsToolStripMenuItem1,
             this.resetFileToToolStripMenuItem,
+            this.cherryPickSelectedDiffFileToolStripMenuItem,
             this.toolStripSeparator32,
             this.copyFilenameToClipboardToolStripMenuItem1,
             this.openContainingFolderToolStripMenuItem,
@@ -1975,6 +1977,14 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(191, 6);
             // 
+            // cherryPickToolStripMenuItem1
+            // 
+            this.cherryPickSelectedDiffFileToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCherryPick;
+            this.cherryPickSelectedDiffFileToolStripMenuItem.Name = "cherryPickToolStripMenuItem1";
+            this.cherryPickSelectedDiffFileToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.cherryPickSelectedDiffFileToolStripMenuItem.Text = "Cherry pick file's changes";
+            this.cherryPickSelectedDiffFileToolStripMenuItem.Click += new System.EventHandler(this.cherryPickSelectedDiffFileToolStripMenuItem_Click);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -2233,5 +2243,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem commitcountPerUserToolStripMenuItem;
         private ToolStripMenuItem gitcommandLogToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator7;
+        private ToolStripMenuItem cherryPickSelectedDiffFileToolStripMenuItem;
     }
 }

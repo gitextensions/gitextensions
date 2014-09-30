@@ -33,6 +33,7 @@
             this.components = new System.ComponentModel.Container();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cherrypickSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyNewVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyOldVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,7 +59,6 @@
             this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.PictureBox = new System.Windows.Forms.PictureBox();
-            this.cherrypickSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
@@ -92,6 +92,14 @@
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItemClick);
+            // 
+            // cherrypickSelectedLinesToolStripMenuItem
+            // 
+            this.cherrypickSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCherryPick;
+            this.cherrypickSelectedLinesToolStripMenuItem.Name = "cherrypickSelectedLinesToolStripMenuItem";
+            this.cherrypickSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.cherrypickSelectedLinesToolStripMenuItem.Text = "Cherry pick selected lines";
+            this.cherrypickSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.cherrypickSelectedLinesToolStripMenuItem_Click);
             // 
             // copyPatchToolStripMenuItem
             // 
@@ -304,13 +312,6 @@
             this.PictureBox.TabIndex = 7;
             this.PictureBox.TabStop = false;
             this.PictureBox.Visible = false;
-            // 
-            // cherrypickSelectedLinesToolStripMenuItem
-            // 
-            this.cherrypickSelectedLinesToolStripMenuItem.Name = "cherrypickSelectedLinesToolStripMenuItem";
-            this.cherrypickSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.cherrypickSelectedLinesToolStripMenuItem.Text = "Cherry-pick selected lines";
-            this.cherrypickSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.cherrypickSelectedLinesToolStripMenuItem_Click);
             // 
             // FileViewer
             // 

@@ -989,15 +989,15 @@ namespace GitUI.Editor
             CopyNotStartingWith('+');
         }
 
-        private void cherrypickSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cherrypickSelectedLines(int selectionStart, int selectionLength)
         {
             // Prepare git command
             string args = "apply --3way --whitespace=nowarn";
 
             byte[] patch;
-                patch = PatchManager.GetSelectedLinesAsPatch(Module, GetText(),
-                    GetSelectionPosition(), GetSelectionLength(),
-                    false, Encoding, false);
+            patch = PatchManager.GetSelectedLinesAsPatch(Module, GetText(),
+                selectionStart, selectionLength,
+                false, Encoding, false);
 
             if (patch != null && patch.Length > 0)
             {
@@ -1007,6 +1007,19 @@ namespace GitUI.Editor
                     if (!MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false))
                         MessageBox.Show(this, output + "\n\n" + Encoding.GetString(patch));
                 }
+            }
+        }
+
+        private void cherrypickSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cherrypickSelectedLines(GetSelectionPosition(), GetSelectionLength());
+        }
+
+        public void CherryPickAllChanges()
+        {
+            if (GetText().Length > 0)
+            {
+                cherrypickSelectedLines(0, GetText().Length);
             }
         }
 
