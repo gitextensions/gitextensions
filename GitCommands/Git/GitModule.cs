@@ -32,6 +32,26 @@ namespace GitCommands
         SameTime
     }
 
+    [DebuggerDisplay("{Filename}")]
+    public struct ConflictData
+    {
+        public ConflictData(KeyValuePair<string, string> _base, KeyValuePair<string, string> _local,
+            KeyValuePair<string, string> _remote)
+        {
+            Base = _base;
+            Local = _local;
+            Remote = _remote;
+        }
+        public KeyValuePair<string, string> Base;
+        public KeyValuePair<string, string> Local;
+        public KeyValuePair<string, string> Remote;
+
+        public string Filename
+        {
+            get { return Local.Value ?? Base.Value ?? Remote.Value; }
+        }
+    }
+
     /// <summary>Provides manipulation with git module. 
     /// <remarks>Several instances may be created for submodules.</remarks></summary>
     [DebuggerDisplay("GitModule ( {_workingDir} )")]
@@ -649,13 +669,6 @@ namespace GitCommands
             return !string.IsNullOrEmpty(RunGitCmd("ls-files -z --unmerged"));
         }
 
-        public IList<GitItem> GetConflictedFiles()
-        {
-            var list = GetConflicts();
-
-            return list.Select(item => new GitItem(this) {FileName = item[0].Value}).ToList();
-        }
-
         public bool HandleConflictSelectSide(string fileName, string side)
         {
             Directory.SetCurrentDirectory(_workingDir);
@@ -760,11 +773,11 @@ namespace GitCommands
             return side;
         }
 
-        public string[] GetConflictedFiles(string filename)
+        public string[] CheckoutConflictedFiles(ConflictData unmergedData)
         {
             Directory.SetCurrentDirectory(_workingDir);
 
-            filename = filename.ToPosixPath();
+            var filename = unmergedData.Filename;
 
             string[] fileNames =
                 {
@@ -773,14 +786,14 @@ namespace GitCommands
                     filename + ".REMOTE"
                 };
 
-            var unmerged = GetConflict(filename);
+            var unmerged = new[] { unmergedData.Base.Value, unmergedData.Local.Value, unmergedData.Remote.Value };
 
             for (int i = 0; i < unmerged.Length; i++)
             {
-                if (unmerged[i].Value == null)
+                if (unmerged[i] == null)
                     continue;
                 var tempFile =
-                    RunGitCmd("checkout-index --temp --stage=" + (i + 1) + " -- " + "\"" + filename + "\"");
+                    RunGitCmd("checkout-index --temp --stage=" + (i + 1) + " -- \"" + filename + "\"");
                 tempFile = tempFile.Split('\t')[0];
                 tempFile = Path.Combine(_workingDir, tempFile);
 
@@ -809,23 +822,23 @@ namespace GitCommands
             return fileNames;
         }
 
-        public KeyValuePair<string, string>[] GetConflict(string filename)
+        public ConflictData GetConflict(string filename)
         {
             return GetConflicts(filename).SingleOrDefault();
         }
 
-        public List<KeyValuePair<string, string>[]> GetConflicts(string filename = "")
+        public List<ConflictData> GetConflicts(string filename = "")
         {
             filename = filename.ToPosixPath();
 
-            var list = new List<KeyValuePair<string, string>[]>();
+            var list = new List<ConflictData>();
 
             var unmerged = RunGitCmd("ls-files -z --unmerged " + filename.QuoteNE()).Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             var item = new KeyValuePair<string, string>[3];
 
-            int stage = 0;
             string prevItemName = null;
+
             foreach (var line in unmerged)
             {
                 int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
@@ -836,12 +849,13 @@ namespace GitCommands
                 string hash = findSecondWhitespace >= 0 ? fileStage.Substring(0, findSecondWhitespace).Trim() : "";
                 fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
 
+                int stage;
                 if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out stage) && stage >= 1 && stage <= 3)
                 {
                     var itemName = fileStage.Substring(2);
                     if (prevItemName != itemName && prevItemName != null)
                     {
-                        list.Add(item);
+                        list.Add(new ConflictData(item[0], item[1], item[2]));
                         item = new KeyValuePair<string, string>[3];
                     }
                     item[stage - 1] = new KeyValuePair<string, string>(hash, itemName);
@@ -849,7 +863,7 @@ namespace GitCommands
                 }
             }
             if (prevItemName != null)
-                list.Add(item);
+                list.Add(new ConflictData(item[0], item[1], item[2]));
 
             return list;
         }
