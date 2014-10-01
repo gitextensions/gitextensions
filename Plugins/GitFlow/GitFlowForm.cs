@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitFlow.Properties;
@@ -108,7 +109,7 @@ namespace GitFlow
             cbManageType.Enabled = false;
             cbBranches.DataSource = new List<string> {"Loading..."};
             if (!Branches.ContainsKey(branchType))
-                _task.Load(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchDatas(); }); 
+                _task.Load(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchDatas(); });
             else
                 DisplayBranchDatas();
         }
@@ -229,18 +230,19 @@ namespace GitFlow
             ttDebug.RemoveAll();
             ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + result.ExitCode);
 
+            var resultText = Regex.Replace(result.GetString(), @"\r\n?|\n", Environment.NewLine);
             if (result.ExitCode == 0)
             {
                 pbResultCommand.Image = Resource.success;
-                ShowToolTip(pbResultCommand, result.GetString());
+                ShowToolTip(pbResultCommand, resultText);
                 DisplayHead();
-                txtResult.Text = result.GetString();
+                txtResult.Text = resultText;
             }
             else
             {
                 pbResultCommand.Image = Resource.error;
-                ShowToolTip(pbResultCommand, "error: " + result.GetString());
-                txtResult.Text = result.GetString();
+                ShowToolTip(pbResultCommand, "error: " + resultText);
+                txtResult.Text = resultText;
             }
             return result.ExitCode == 0;
         }
