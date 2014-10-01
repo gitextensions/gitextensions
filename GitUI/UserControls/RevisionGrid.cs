@@ -998,9 +998,9 @@ namespace GitUI
             {
                 // return local and remote hashes
                 var array = Module.SuperprojectModule.GetConflict(Module.SubmodulePath);
-                spi.Conflict_Base = array[0].Key;
-                spi.Conflict_Local = array[1].Key;
-                spi.Conflict_Remote = array[2].Key;
+                spi.Conflict_Base = array.Base.Key;
+                spi.Conflict_Local = array.Local.Key;
+                spi.Conflict_Remote = array.Remote.Key;
             }
             else
             {
