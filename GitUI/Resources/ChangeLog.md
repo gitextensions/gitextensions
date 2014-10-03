@@ -1,5 +1,8 @@
 ﻿Changelog
 =========
+### Version 2.49 (no due date)
+* Cherry pick selected file/selected lines.
+
 ### Version 2.48 (20 August 2014)
 * Git credential helper now optional product
 * Sort branches and tags in commit info and display only first 20
