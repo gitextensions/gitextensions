@@ -98,6 +98,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private IEnumerable<string> GetGitLocations()
         {
+            string envVariable = Environment.GetEnvironmentVariable("GITEXT_GIT");
+            if (!String.IsNullOrEmpty(envVariable)) yield return envVariable;
             yield return
                 CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
@@ -175,8 +177,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static bool CheckIfFileIsInPath(string fileName)
         {
-            string path = string.Concat(Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.User), ";",
-                                        Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine));
+            string path = Environment.GetEnvironmentVariable("PATH");
 
             return path.Split(';').Any(dir => File.Exists(dir + " \\" + fileName) || File.Exists(Path.Combine(dir, fileName)));
         }
