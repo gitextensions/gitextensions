@@ -39,7 +39,7 @@ namespace GitStatistics
         {
             return
                 IsWebReferenceFile() ||
-                (string.Compare(File.Name, ".Designer.", System.StringComparison.OrdinalIgnoreCase) == 0);
+                (CultureInfo.CurrentCulture.CompareInfo.IndexOf(File.Name, ".Designer.", CompareOptions.IgnoreCase) != -1);
         }
 
         private bool IsWebReferenceFile()
