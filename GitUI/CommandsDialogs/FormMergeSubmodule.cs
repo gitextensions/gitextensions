@@ -23,9 +23,9 @@ namespace GitUI.CommandsDialogs
         private void FormMergeSubmodule_Load(object sender, EventArgs e)
         {
             var item = Module.GetConflict(_filename);
-            this.tbBase.Text = item.Base.Key ?? _deleted.Text;
-            this.tbLocal.Text = item.Local.Key ?? _deleted.Text;
-            this.tbRemote.Text = item.Remote.Key ?? _deleted.Text;
+            this.tbBase.Text = item.Base.Hash ?? _deleted.Text;
+            this.tbLocal.Text = item.Local.Hash ?? _deleted.Text;
+            this.tbRemote.Text = item.Remote.Hash ?? _deleted.Text;
             this.tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
         }
 
