@@ -440,13 +440,12 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
-                DeleteTemporaryFiles(item);
+                DeleteTemporaryFiles(filenames);
             }
         }
 
-        private static void DeleteTemporaryFiles(ConflictData item)
+        private static void DeleteTemporaryFiles(string[] filenames)
         {
-            var filenames = new[] {item.Base.Value, item.Local.Value, item.Remote.Value};
             if (filenames[0] != null && File.Exists(filenames[0]))
                 File.Delete(filenames[0]);
             if (filenames[1] != null && File.Exists(filenames[1]))
