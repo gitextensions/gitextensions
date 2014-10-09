@@ -51,7 +51,8 @@ namespace Gource
                             ".\n\n.Do you want to reset the configured path?", "Gource", MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
                     {
-                        //todo add reset code
+                        Settings.SetValue<string>(GourcePath.Name, GourcePath.DefaultValue, s => s);
+                        pathToGource = GourcePath.DefaultValue;
                     }
                 }
             }
@@ -97,7 +98,8 @@ namespace Gource
             using (var gourceStart = new GourceStart(pathToGource, eventArgs, GourceArguments[Settings]))
             {
                 gourceStart.ShowDialog(ownerForm);
-                //todo store path and arguments in settings
+                Settings.SetValue<string>(GourceArguments.Name, gourceStart.GourceArguments, s => s);
+                Settings.SetValue<string>(GourcePath.Name, gourceStart.PathToGource, s => s);
             }
             return true;
         }
