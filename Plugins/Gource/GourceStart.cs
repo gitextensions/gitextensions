@@ -1,9 +1,9 @@
-﻿using System;
+﻿using GitUIPluginInterfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using GitUIPluginInterfaces;
 
 namespace Gource
 {
@@ -129,7 +129,7 @@ namespace Gource
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"http://code.google.com/p/gource/");
+            Process.Start(@"https://github.com/acaudwell/Gource/");
         }
     }
 }
