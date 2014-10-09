@@ -1606,6 +1606,7 @@ namespace GitCommands
         public string StageFiles(IList<GitItemStatus> files, out bool wereErrors)
         {
             var output = "";
+            string error = "";
             wereErrors = false;
             var startInfo = CreateGitStartInfo("update-index --add --stdin");
             var process = new Lazy<Process>(() => Process.Start(startInfo));
@@ -1616,9 +1617,12 @@ namespace GitCommands
             if (process.IsValueCreated)
             {
                 process.Value.StandardInput.Close();
+                string stdOutput, stdError;
+                SynchronizedProcessReader.Read(process.Value, out stdOutput, out stdError);
+                output = stdOutput;
+                error = stdError;
                 process.Value.WaitForExit();
                 wereErrors = process.Value.ExitCode != 0;
-                output = process.Value.StandardOutput.ReadToEnd().Trim();
             }
 
             startInfo.Arguments = "update-index --remove --stdin";
@@ -1630,15 +1634,15 @@ namespace GitCommands
             if (process.IsValueCreated)
             {
                 process.Value.StandardInput.Close();
+                string stdOutput, stdError;
+                SynchronizedProcessReader.Read(process.Value, out stdOutput, out stdError);
+                output = output.Combine(Environment.NewLine, stdOutput);
+                error = error.Combine(Environment.NewLine, stdError);
                 process.Value.WaitForExit();
                 wereErrors = wereErrors || process.Value.ExitCode != 0;
-
-                if (!string.IsNullOrEmpty(output))
-                    output += Environment.NewLine;
-                output += process.Value.StandardOutput.ReadToEnd().Trim();
             }
 
-            return output;
+            return output.Combine(Environment.NewLine, error);
         }
 
         public string UnstageFiles(IList<GitItemStatus> files)
