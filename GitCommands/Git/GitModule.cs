@@ -32,23 +32,34 @@ namespace GitCommands
         SameTime
     }
 
+    public struct ConflictedFileData
+    {
+        public ConflictedFileData(string hash, string filename)
+        {
+            Hash = hash;
+            Filename = filename;
+        }
+        public string Hash;
+        public string Filename;
+    }
+
     [DebuggerDisplay("{Filename}")]
     public struct ConflictData
     {
-        public ConflictData(KeyValuePair<string, string> _base, KeyValuePair<string, string> _local,
-            KeyValuePair<string, string> _remote)
+        public ConflictData(ConflictedFileData _base, ConflictedFileData _local,
+            ConflictedFileData _remote)
         {
             Base = _base;
             Local = _local;
             Remote = _remote;
         }
-        public KeyValuePair<string, string> Base;
-        public KeyValuePair<string, string> Local;
-        public KeyValuePair<string, string> Remote;
+        public ConflictedFileData Base;
+        public ConflictedFileData Local;
+        public ConflictedFileData Remote;
 
         public string Filename
         {
-            get { return Local.Value ?? Base.Value ?? Remote.Value; }
+            get { return Local.Filename ?? Base.Filename ?? Remote.Filename; }
         }
     }
 
@@ -786,7 +797,7 @@ namespace GitCommands
                     filename + ".REMOTE"
                 };
 
-            var unmerged = new[] { unmergedData.Base.Value, unmergedData.Local.Value, unmergedData.Remote.Value };
+            var unmerged = new[] { unmergedData.Base.Filename, unmergedData.Local.Filename, unmergedData.Remote.Filename };
 
             for (int i = 0; i < unmerged.Length; i++)
             {
@@ -835,7 +846,7 @@ namespace GitCommands
 
             var unmerged = RunGitCmd("ls-files -z --unmerged " + filename.QuoteNE()).Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var item = new KeyValuePair<string, string>[3];
+            var item = new ConflictedFileData[3];
 
             string prevItemName = null;
 
@@ -856,9 +867,9 @@ namespace GitCommands
                     if (prevItemName != itemName && prevItemName != null)
                     {
                         list.Add(new ConflictData(item[0], item[1], item[2]));
-                        item = new KeyValuePair<string, string>[3];
+                        item = new ConflictedFileData[3];
                     }
-                    item[stage - 1] = new KeyValuePair<string, string>(hash, itemName);
+                    item[stage - 1] = new ConflictedFileData(hash, itemName);
                     prevItemName = itemName;
                 }
             }
@@ -1638,6 +1649,7 @@ namespace GitCommands
         public string StageFiles(IList<GitItemStatus> files, out bool wereErrors)
         {
             var output = "";
+            string error = "";
             wereErrors = false;
             var startInfo = CreateGitStartInfo("update-index --add --stdin");
             var process = new Lazy<Process>(() => Process.Start(startInfo));
@@ -1648,9 +1660,12 @@ namespace GitCommands
             if (process.IsValueCreated)
             {
                 process.Value.StandardInput.Close();
+                string stdOutput, stdError;
+                SynchronizedProcessReader.Read(process.Value, out stdOutput, out stdError);
+                output = stdOutput;
+                error = stdError;
                 process.Value.WaitForExit();
                 wereErrors = process.Value.ExitCode != 0;
-                output = process.Value.StandardOutput.ReadToEnd().Trim();
             }
 
             startInfo.Arguments = "update-index --remove --stdin";
@@ -1662,15 +1677,15 @@ namespace GitCommands
             if (process.IsValueCreated)
             {
                 process.Value.StandardInput.Close();
+                string stdOutput, stdError;
+                SynchronizedProcessReader.Read(process.Value, out stdOutput, out stdError);
+                output = output.Combine(Environment.NewLine, stdOutput);
+                error = error.Combine(Environment.NewLine, stdError);
                 process.Value.WaitForExit();
                 wereErrors = wereErrors || process.Value.ExitCode != 0;
-
-                if (!string.IsNullOrEmpty(output))
-                    output += Environment.NewLine;
-                output += process.Value.StandardOutput.ReadToEnd().Trim();
             }
 
-            return output;
+            return output.Combine(Environment.NewLine, error);
         }
 
         public string UnstageFiles(IList<GitItemStatus> files)

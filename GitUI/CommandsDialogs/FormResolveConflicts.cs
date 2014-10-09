@@ -373,7 +373,7 @@ namespace GitUI.CommandsDialogs
                         return;
                     }
 
-                    if (FileHelper.IsBinaryFile(Module, item.Local.Value))
+                    if (FileHelper.IsBinaryFile(Module, item.Local.Filename))
                     {
                         if (MessageBox.Show(this, string.Format(fileIsBinary.Text, _mergetool),
                             _binaryFileWarningCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
@@ -390,7 +390,7 @@ namespace GitUI.CommandsDialogs
                     //For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
                     //filenames are quoted, this takes a little extra effort. We need to remove these 
                     //quotes also. For tortoise and araxis a little bit more magic is needed.
-                    if (item.Base.Value == null)
+                    if (item.Base.Filename == null)
                     {
                         var text = string.Format(noBaseRevision.Text, item.Filename);
                         DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text, 
@@ -523,11 +523,11 @@ namespace GitUI.CommandsDialogs
             return inTheMiddleOfRebase ? theirs.Text : ours.Text;
         }
 
-        private string GetShortHash(KeyValuePair<string, string> item)
+        private string GetShortHash(ConflictedFileData item)
         {
-            if (item.Key == null)
+            if (item.Hash == null)
                 return "@" + deleted.Text;
-            return '@' + item.Key.Substring(0, 8);
+            return '@' + item.Hash.Substring(0, 8);
         }
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
@@ -541,9 +541,9 @@ namespace GitUI.CommandsDialogs
 
             var item = GetConflict();
 
-            bool baseFileExists = !string.IsNullOrEmpty(item.Base.Value);
-            bool localFileExists = !string.IsNullOrEmpty(item.Local.Value);
-            bool remoteFileExists = !string.IsNullOrEmpty(item.Remote.Value);
+            bool baseFileExists = !string.IsNullOrEmpty(item.Base.Filename);
+            bool localFileExists = !string.IsNullOrEmpty(item.Local.Filename);
+            bool remoteFileExists = !string.IsNullOrEmpty(item.Remote.Filename);
 
             string remoteSide = GetRemoteSideString();
             string localSide = GetLocalSideString();
@@ -557,9 +557,9 @@ namespace GitUI.CommandsDialogs
             if (baseFileExists && localFileExists && !remoteFileExists)
                 conflictDescription.Text = string.Format(fileModifiedLocallyAndDelededRemotely.Text, localSide, remoteSide);
 
-            baseFileName.Text = (baseFileExists ? item.Base.Value : noBase.Text);
-            localFileName.Text = (localFileExists ? item.Local.Value : deleted.Text);
-            remoteFileName.Text = (remoteFileExists ? item.Remote.Value : deleted.Text);
+            baseFileName.Text = (baseFileExists ? item.Base.Filename : noBase.Text);
+            localFileName.Text = (localFileExists ? item.Local.Filename : deleted.Text);
+            remoteFileName.Text = (remoteFileExists ? item.Remote.Filename : deleted.Text);
 
             var itemType = GetItemType(item.Filename);
             if (itemType == ItemType.Submodule)
@@ -577,7 +577,7 @@ namespace GitUI.CommandsDialogs
             var item = GetConflict();
             if (CheckForBaseRevision(item))
             {
-                ChooseBaseOnConflict(item.Base.Value);
+                ChooseBaseOnConflict(item.Base.Filename);
             }
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -631,7 +631,7 @@ namespace GitUI.CommandsDialogs
         private void BinairyFilesChooseLocalBaseRemote(ConflictData item)
         {
             string caption = string.Format(fileBinairyChooseLocalBaseRemote.Text,
-                                            item.Local.Value,
+                                            item.Local.Filename,
                                             GetLocalSideString(),
                                             GetRemoteSideString());
 
@@ -652,7 +652,7 @@ namespace GitUI.CommandsDialogs
 
         private bool CheckForBaseRevision(ConflictData item)
         {
-            if (!string.IsNullOrEmpty(item.Base.Value))
+            if (!string.IsNullOrEmpty(item.Base.Filename))
                 return true;
 
             string caption = string.Format(fileCreatedLocallyAndRemotelyLong.Text,
@@ -678,7 +678,7 @@ namespace GitUI.CommandsDialogs
 
         private bool CheckForLocalRevision(ConflictData item)
         {
-            if (!string.IsNullOrEmpty(item.Local.Value))
+            if (!string.IsNullOrEmpty(item.Local.Filename))
                 return true;
 
             string caption = string.Format(fileDeletedLocallyAndModifiedRemotelyLong.Text,
@@ -704,7 +704,7 @@ namespace GitUI.CommandsDialogs
 
         private bool CheckForRemoteRevision(ConflictData item)
         {
-            if (!string.IsNullOrEmpty(item.Remote.Value))
+            if (!string.IsNullOrEmpty(item.Remote.Filename))
                 return true;
 
             string caption = string.Format(fileModifiedLocallyAndDelededRemotelyLong.Text,
@@ -856,17 +856,17 @@ namespace GitUI.CommandsDialogs
         private void DisableInvalidEntriesInCoflictedFilesContextMenu(string fileName)
         {
             var conflictedFileNames = Module.GetConflict(fileName);
-            if (conflictedFileNames.Local.Value.IsNullOrEmpty())
+            if (conflictedFileNames.Local.Filename.IsNullOrEmpty())
             {
                 ContextSaveLocalAs.Enabled = false;
                 ContextOpenLocalWith.Enabled = false;
             }
-            if (conflictedFileNames.Remote.Value.IsNullOrEmpty())
+            if (conflictedFileNames.Remote.Filename.IsNullOrEmpty())
             {
                 ContextSaveRemoteAs.Enabled = false;
                 ContextOpenRemoteWith.Enabled = false;
             }
-            if (conflictedFileNames.Base.Value.IsNullOrEmpty())
+            if (conflictedFileNames.Base.Filename.IsNullOrEmpty())
             {
                 ContextSaveBaseAs.Enabled = false;
                 ContextOpenBaseWith.Enabled = false;
