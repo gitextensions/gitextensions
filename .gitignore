@@ -59,3 +59,5 @@ UpgradeLog*.htm*
 packages/
 GitExtensions.*.sln.VisualState.xml
 GitExtensions.settings.backup
+/Bin/Git-[[:digit:]]*.exe
+/Bin/Kdiff*
