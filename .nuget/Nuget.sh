@@ -3,6 +3,7 @@
 if [ ! -d 'packages' ]; then
 	mkdir packages
 fi
+.nuget/NuGet.exe update -Self  #update NuGet exe if needed
 if [ "$1" = "NoMono" ] ; then
 
 	find ./ -name packages.config -exec .nuget/NuGet.exe install {} -o packages \;
