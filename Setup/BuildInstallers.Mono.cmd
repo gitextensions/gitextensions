@@ -9,6 +9,7 @@ set project=..\GitExtensionsMono.sln
 set nuget=..\.nuget\nuget.exe
 set EnableNuGetPackageRestore=true
 
+%nuget% update -Self
 %nuget% install ..\Plugins\BackgroundFetch\packages.config -OutputDirectory ..\packages
 %nuget% install ..\Plugins\BuildServerIntegration\TeamCityIntegration\packages.config -OutputDirectory ..\packages
 
