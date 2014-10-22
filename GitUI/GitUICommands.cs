@@ -669,19 +669,18 @@ namespace GitUI
 
         public bool StartCommitDialog(IWin32Window owner, bool showOnlyWhenChanges)
         {
+            var form = new FormCommit(this);
             Func<bool> action = () =>
             {
-                using (var form = new FormCommit(this))
-                {
-                    if (showOnlyWhenChanges)
-                        form.ShowDialogWhenChanges(owner);
-                    else
-                        form.ShowDialog(owner);
-                }
+                if (showOnlyWhenChanges)
+                    form.ShowDialogWhenChanges(owner);
+                else
+                    form.ShowDialog(owner);
+                form.Dispose();
                 return true;
             };
 
-            return DoActionOnRepo(owner, true, false, PreCommit, PostCommit, action);
+            return DoActionOnRepo(form, true, false, PreCommit, PostCommit, action);
         }
 
         public bool StartCommitDialog(IWin32Window owner)
