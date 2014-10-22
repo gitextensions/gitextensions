@@ -55,12 +55,12 @@ namespace JiraComminTipPlugin
             {
                 if (jira == null || jira.GetAccessToken() == null)
                     return;
+                filter = jira.GetFilters().FirstOrDefault(f => f.Name.Equals(filterName[Settings]));
             }
             catch (Exception)
             {
                 return;
             }
-            filter = jira.GetFilters().FirstOrDefault(f => f.Name.Equals(filterName[Settings]));
         }
 
         private void gitUiCommands_PostSettings(object sender, GitUIPostActionEventArgs e)
@@ -111,8 +111,15 @@ namespace JiraComminTipPlugin
         {
             if (filter == null)
                 return "<! Your Jira Commit Tip Plugin not configured !> ";
-            return string.Join(Environment.NewLine,
-                jira.GetIssuesFromFilter(filter.Name).Select(i => i.Key + " " + i.Summary));
+            try
+            {
+                return string.Join(Environment.NewLine,
+                    jira.GetIssuesFromFilter(filter.Name).Select(i => i.Key + " " + i.Summary));
+            }
+            catch (Exception)
+            {
+                return "<! No connection to Jira !> ";
+            }
         }
     }
 }

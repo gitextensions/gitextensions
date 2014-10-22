@@ -2441,7 +2441,7 @@ namespace GitUI.CommandsDialogs
             Message.Text += message;
         }
 
-        public void AddInfoButton(ToolStripButton button)
+        public void AddInfoButton(ToolStripItem button)
         {
             toolbarCommit.Items.Add(button);
         }
