@@ -2435,6 +2435,16 @@ namespace GitUI.CommandsDialogs
         {
             updateAuthorInfo();
         }
+
+        public void AppendToMessage(string message)
+        {
+            Message.Text += message;
+        }
+
+        public void AddInfoButton(ToolStripButton button)
+        {
+            toolbarCommit.Items.Add(button);
+        }
     }
 
     /// <summary>
