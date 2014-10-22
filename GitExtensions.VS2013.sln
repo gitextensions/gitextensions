@@ -115,6 +115,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsInterop.Vs2013", "Plugin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtUtils", "GitExtUtils\GitExtUtils.csproj", "{0F1F1168-A4B2-4FA2-B17B-735140D17F39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraCommitTipPlugin", "Plugins\JiraCommitTipPlugin\JiraCommitTipPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -385,6 +387,14 @@ Global
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
