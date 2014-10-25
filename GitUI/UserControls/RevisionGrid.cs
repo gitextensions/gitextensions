@@ -22,6 +22,7 @@ using Gravatar;
 using ResourceManager;
 using GitUI.UserControls.RevisionGridClasses;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.UserControls;
 
 namespace GitUI
 {
@@ -292,6 +293,9 @@ namespace GitUI
             }
         }
 
+        [Browsable(false)]
+        [Description("Object calculating in memory history rewrites")]
+        public FollowParentRewriter Rewriter { get; set; }
 
         public void SetInitialRevision(GitRevision initialSelectedRevision)
         {
@@ -1050,7 +1054,15 @@ namespace GitUI
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
         {
             var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEventArgs)e;
-            UpdateGraph(updatedEvent.Revision);
+            if (Rewriter != null)
+            {
+                Rewriter.PushRevision(updatedEvent.Revision);
+                Rewriter.Flush(false, UpdateGraph);
+            }
+            else
+            {
+                UpdateGraph(updatedEvent.Revision);
+            }
         }
 
         internal bool FilterIsApplied(bool inclBranchFilter)
@@ -1088,6 +1100,11 @@ namespace GitUI
 
         private void GitGetCommitsCommandExited(object sender, EventArgs e)
         {
+            if (Rewriter != null)
+            {
+                Rewriter.Flush(true, UpdateGraph);
+            }
+
             _isLoading = false;
 
             if (_revisionGraphCommand.RevisionCount == 0 &&
