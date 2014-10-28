@@ -448,9 +448,21 @@ namespace GitUI.Editor
             }
         }
 
+        private string GetFileTextIfBlobExists(string guid)
+        {
+            if (guid != "")
+            {
+                return Module.GetFileText(guid, Encoding);
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         public void ViewGitItem(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => Module.GetFileText(guid, Encoding),
+            ViewItem(fileName, () => GetImage(fileName, guid), () => GetFileTextIfBlobExists(guid),
                 () => GitCommandHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), guid));
         }
 
