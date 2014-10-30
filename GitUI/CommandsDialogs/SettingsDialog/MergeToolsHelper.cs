@@ -123,9 +123,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "araxis":
                     return "Compare.exe";
                 case "beyondcompare3":
-                    return "bcomp.exe";
+                    return "BComp.exe";
                 case "beyondcompare4":
-                    return "bcomp.exe";
+                    return "BComp.exe";
                 case "kdiff3":
                     return "kdiff3.exe";
                 case "meld":
@@ -150,7 +150,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "beyondcompare3":
                     string bcomppath = UnquoteString(GetGlobalSetting(settings, "difftool.beyondcompare3.path"));
                     
-                    exeName = "bcomp.exe";
+                    exeName = "BComp.exe";
 
                     return FindFileInFolders(exeName, bcomppath,
                                                           @"Beyond Compare 3 (x86)\",
@@ -158,7 +158,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "beyondcompare4":
                     string bcomppath4 = UnquoteString(GetGlobalSetting(settings, "difftool.beyondcompare4.path"));
 
-                    exeName = "bcomp.exe";
+                    exeName = "BComp.exe";
 
                     return FindFileInFolders(exeName, bcomppath4,
                                                           @"Beyond Compare 4 (x86)\",
@@ -237,9 +237,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "araxis":
                     return "Compare.exe";
                 case "beyondcompare3":
-                    return "bcomp.exe";
+                    return "BComp.exe";
                 case "beyondcompare4":
-                    return "bcomp.exe";
+                    return "BComp.exe";
                 case "diffmerge":
                     return "DiffMerge.exe";
                 case "kdiff3":
@@ -270,13 +270,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "beyondcompare3":
                     string bcomppath = UnquoteString(GetGlobalSetting(settings, "mergetool.beyondcompare3.path"));
 
-                    exeName = "bcomp.exe";
+                    exeName = "BComp.exe";
                     return FindFileInFolders(exeName, bcomppath, @"Beyond Compare 3 (x86)\",
                                                                  @"Beyond Compare 3\");
                 case "beyondcompare4":
                     string bcomppath4 = UnquoteString(GetGlobalSetting(settings, "mergetool.beyondcompare4.path"));
 
-                    exeName = "bcomp.exe";
+                    exeName = "BComp.exe";
                     return FindFileInFolders(exeName, bcomppath4, @"Beyond Compare 4 (x86)\",
                                                                   @"Beyond Compare 4\");
                 case "diffmerge":
