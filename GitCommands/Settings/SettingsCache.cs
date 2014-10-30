@@ -130,10 +130,22 @@ namespace GitCommands
 
         public bool HasValue(string name)
         {
+            return GetValue(name) != null;
+        }
+
+        public bool HasADifferentValue<T>(string name, T value, Func<T, string> encode)
+        {
+            string s;
+
+            if (value == null)
+                s = null;
+            else
+                s = encode(value);
+
             return LockedAction<bool>(() =>
             {
-                EnsureSettingsAreUpToDate();
-                return GetValueImpl(name) != null;
+                string inMemValue = GetValue(name);
+                return inMemValue != null && !string.Equals(inMemValue, s);
             });
         }
 
