@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using ResourceManager;
+using GitUI.UserControls.RevisionGridClasses;
 
 namespace GitUI.CommandsDialogs
 {
@@ -100,14 +101,21 @@ namespace GitUI.CommandsDialogs
             {
                 if (filter == null)
                     return;
-                FileChanges.FixedFilter = filter;
+                FileChanges.FixedFilter = filter.Filter;
+                FileChanges.Rewriter = filter.Rewriter;
                 FileChanges.FiltredFileName = FileName;
                 FileChanges.AllowGraphWithFilter = true;
                 FileChanges.Load();
             });
         }
 
-        private string BuildFilter(string fileName)
+        private class FixedFilterTuple
+        {
+            public string Filter;
+            public FollowParentRewriter Rewriter;
+        }
+
+        private FixedFilterTuple BuildFilter(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
                 return null;
@@ -142,55 +150,38 @@ namespace GitUI.CommandsDialogs
 
             FileName = fileName;
 
-            string filter;
+            FixedFilterTuple res = new FixedFilterTuple();
             if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
             {
                 // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
-                //
-                // But we can take a more complicated path to get reasonable results:
-                //  1. use git log --follow to get all previous filenames of the file we are interested in
-                //  2. use git log "list of files names" to get the history graph 
-                //
-                // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
-                // 
-
-                string arg = "log --format=\"%n\" --name-only --follow -- \"" + fileName + "\"";
-                Process p = Module.RunGitCmdDetached(arg);
-
-                // the sequence of (quoted) file names - start with the initial filename for the search.
-                var listOfFileNames = new StringBuilder("\"" + fileName + "\"");
-
-                // keep a set of the file names already seen
-                var setOfFileNames = new HashSet<string> { fileName };
-
-                string line;
-                do
-                {
-                    line = p.StandardOutput.ReadLine();
-
-                    if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
-                    {
-                        listOfFileNames.Append(" \"");
-                        listOfFileNames.Append(line);
-                        listOfFileNames.Append('\"');
-                    }
-                } while (line != null);
-
+                FollowParentRewriter hrw = new FollowParentRewriter(fileName, delegate(string arg){
+                    Process p = Module.RunGitCmdDetached(arg);
+                    return p.StandardOutput;
+                });
                 // here we need --name-only to get the previous filenames in the revision graph
-                filter = " -M -C --name-only --parents -- " + listOfFileNames;
+                if (hrw.RewriteNecessary)
+                {
+                    res.Rewriter = hrw;
+                    res.Filter = " -M -C --name-only --follow -- \"" + fileName + "\"";
+                }
+                else
+                {
+                    res.Filter = " -M -C --name-only --parents -- \"" + fileName + "\"";
+                }
+
             }
             else
             {
                 // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                filter = " --parents -- \"" + fileName + "\"";
+                res.Filter = " --follow --parents -- \"" + fileName + "\"";
             }
 
             if (AppSettings.FullHistoryInFileHistory)
             {
-                filter = string.Concat(" --full-history --simplify-by-decoration ", filter);
+                res.Filter = string.Concat(" --full-history --simplify-by-decoration ", res.Filter);
             }
 
-            return filter;
+            return res;
         }
 
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
