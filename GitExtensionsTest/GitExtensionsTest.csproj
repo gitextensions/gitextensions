@@ -63,6 +63,7 @@
     <Compile Include="GitCommands\Helpers\FileInfoExtensionsTest.cs" />
     <Compile Include="GitCommands\Patch\PatchManagerTest.cs" />
     <Compile Include="GitCommands\Patch\PatchTest.cs" />
+    <Compile Include="GitUI\FollowParentRewriterFixture.cs" />
     <Compile Include="GitUI\FormUpdateFixture.cs" />
     <Compile Include="GitUI\HotkeySettingsManagerFixture.cs" />
     <Compile Include="GitUI\SingleHtmlUserManualFixture.cs" />
