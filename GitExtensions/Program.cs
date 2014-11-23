@@ -52,7 +52,7 @@ namespace GitExtensions
                 }
             }
 
-            string[] args = Environment.GetCommandLineArgs();
+            string[] args = FixArgs(Environment.GetCommandLineArgs());
             FormSplash.ShowSplash();
             //Store here SynchronizationContext.Current, because later sometimes it can be null
             //see http://stackoverflow.com/questions/11621372/synchronizationcontext-current-is-null-in-continuation-on-the-main-ui-thread
@@ -123,6 +123,39 @@ namespace GitExtensions
             }
 
             AppSettings.SaveSettings();
+        }
+
+        private static string[] FixArgs(string[] args)
+        {
+            /* http://msdn.microsoft.com/en-us/library/system.environment.getcommandlineargs.aspx
+             * 
+             * Excerpt: 
+             * If a double quotation mark follows an odd number of backslashes, including just one,
+             * each preceding pair is replaced with one backslash and the remaining backslash is removed;
+             * however, in this case the double quotation mark is not removed.
+             * 
+             * This can be a problem when dealing with files and directories paths.
+             * For example, if the Shell Extension calls GitExtension.exe with args="clone \"D:\\\"" (unescaped version: clone "D:\")
+             * Then the resulting args array received in GitExtension.exe will be {"GitExtensions.exe", "clone", "D:\""} 
+             * and the last arg is wrong! It's a path, but it contains a double quote! (unescaped version: D:")
+             */
+            if (args == null)
+                return null;
+
+            var argsCopy = new string[args.Length];
+            for (int i = 0; i < args.Length; i++)
+            {
+                // Only handles the case of a root path, as the Shell Extension args seem to work for all the other cases...
+                if (args[i] != null && args[i].Length == 3 && args[i].EndsWith(":\""))
+                {
+                    argsCopy[i] = args[i][0] + ":\\"; // D: is not a valid directory. The trailing slash is mandatory in this case
+                }
+                else
+                {
+                    argsCopy[i] = args[i];
+                }
+            }
+            return argsCopy;
         }
 
         private static string GetWorkingDir(string[] args)
