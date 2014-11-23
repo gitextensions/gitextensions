@@ -61,6 +61,7 @@
     <Compile Include="GitCommands\Git\EncodingHelperTest.cs" />
     <Compile Include="GitCommands\Helpers\FileInfoExtensions.cs" />
     <Compile Include="GitCommands\Helpers\FileInfoExtensionsTest.cs" />
+    <Compile Include="GitCommands\Helpers\PathUtilTest.cs" />
     <Compile Include="GitCommands\Patch\PatchManagerTest.cs" />
     <Compile Include="GitCommands\Patch\PatchTest.cs" />
     <Compile Include="GitUI\FormUpdateFixture.cs" />
