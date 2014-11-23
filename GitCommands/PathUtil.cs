@@ -22,14 +22,16 @@ namespace GitCommands
         /// <summary>
         /// Code guideline: "A directory path should always end with / or \.
         /// Better use Path.Combine instead of Setting.PathSeparator"
-        /// 
+        ///
         /// This method can be used to add (or keep) a trailing path separator character to a directory path.
         /// </summary>
         /// <param name="dirPath"></param>
         /// <returns></returns>
         public static string EnsureTrailingPathSeparator(this string dirPath)
         {
-            if (!dirPath.IsNullOrEmpty() && dirPath[dirPath.Length - 1] != Path.DirectorySeparatorChar)
+            if (!dirPath.IsNullOrEmpty() &&
+                dirPath[dirPath.Length - 1] != Path.DirectorySeparatorChar &&
+                dirPath[dirPath.Length - 1] != AppSettings.PosixPathSeparator)
             {
                 dirPath += Path.DirectorySeparatorChar;
             }
@@ -51,11 +53,9 @@ namespace GitCommands
             var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
             var pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
-            {
                 fileName = fileName.Substring(0, pos);
-                if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
-                    return "";
-            }
+            if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
+                return "";
             return fileName;
         }
 
