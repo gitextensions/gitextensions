@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormClone : GitModuleForm
     {
-        private readonly TranslationString _infoNewRepositoryLocation = 
+        private readonly TranslationString _infoNewRepositoryLocation =
             new TranslationString("The repository will be cloned to a new directory located here:"  + Environment.NewLine +
                                   "{0}");
 
@@ -25,8 +25,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _questionOpenRepo =
             new TranslationString("The repository has been cloned successfully." + Environment.NewLine +
                                   "Do you want to open the new repository \"{0}\" now?");
-        
-        private readonly TranslationString _questionOpenRepoCaption = 
+
+        private readonly TranslationString _questionOpenRepoCaption =
             new TranslationString("Open");
 
         private bool openedFromProtocolHandler;
@@ -84,7 +84,6 @@ namespace GitUI.CommandsDialogs
                 var dirTo = Path.Combine(_NO_TRANSLATE_To.Text, _NO_TRANSLATE_NewDirectory.Text);
 
                 Repositories.AddMostRecentRepository(_NO_TRANSLATE_From.Text);
-                Repositories.AddMostRecentRepository(dirTo);
 
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);
@@ -99,6 +98,8 @@ namespace GitUI.CommandsDialogs
                     if (fromProcess.ErrorOccurred() || Module.InTheMiddleOfPatch())
                         return;
                 }
+
+                Repositories.AddMostRecentRepository(dirTo);
 
                 if (openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
@@ -147,9 +148,9 @@ namespace GitUI.CommandsDialogs
         }
 
         private void FillFromDropDown()
-        {          
+        {
             System.ComponentModel.BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
-            if (_NO_TRANSLATE_From.Items.Count != repos.Count) 
+            if (_NO_TRANSLATE_From.Items.Count != repos.Count)
             {
                 _NO_TRANSLATE_To.Items.Clear();
                 foreach (Repository repo in repos)
@@ -198,7 +199,7 @@ namespace GitUI.CommandsDialogs
 
             if (path.Contains("\\") || path.Contains("/"))
                 _NO_TRANSLATE_NewDirectory.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
-            
+
             Branches.DataSource = null;
 
             ToTextUpdate(sender, e);
@@ -206,7 +207,7 @@ namespace GitUI.CommandsDialogs
 
         private void ToTextUpdate(object sender, EventArgs e)
         {
-            string destinationPath = string.Empty;                
+            string destinationPath = string.Empty;
 
             if (string.IsNullOrEmpty(_NO_TRANSLATE_To.Text))
                 destinationPath += "[" + label2.Text + "]";
@@ -214,7 +215,7 @@ namespace GitUI.CommandsDialogs
                 destinationPath += _NO_TRANSLATE_To.Text.TrimEnd(new[] { '\\', '/' });
 
             destinationPath += "\\";
-            
+
             if (string.IsNullOrEmpty(_NO_TRANSLATE_NewDirectory.Text))
                 destinationPath += "[" + label3.Text + "]";
             else

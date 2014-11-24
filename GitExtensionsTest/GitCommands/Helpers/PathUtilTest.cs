@@ -38,6 +38,15 @@ namespace GitExtensionsTest
         }
 
         [TestMethod]
+        public void IsLocalFileTest()
+        {
+            Assert.AreEqual(PathUtil.IsLocalFile("\\\\my-pc\\Work\\GitExtensions"), true);
+            Assert.AreEqual(PathUtil.IsLocalFile("C:\\Work\\GitExtensions"), true);
+            Assert.AreEqual(PathUtil.IsLocalFile("C:\\Work\\GitExtensions\\"), true);
+            Assert.AreEqual(PathUtil.IsLocalFile("ssh://domain\\user@serverip/cache/git/something/something.git"), false);
+        }
+
+        [TestMethod]
         public void GetFileNameTest()
         {
             Assert.AreEqual(PathUtil.GetFileName("\\\\my-pc\\Work\\GitExtensions"), "GitExtensions");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using GitCommands.Utils;
 
 namespace GitCommands
@@ -37,6 +38,16 @@ namespace GitCommands
             }
 
             return dirPath;
+        }
+
+        public static bool IsLocalFile(string fileName)
+        {
+            Regex regex = new Regex(@"^(\w+):\/\/([\S]+)");
+            if (regex.IsMatch(fileName))
+            {
+                return false;
+            }
+            return true;
         }
 
         public static string GetFileName(string fileName)
