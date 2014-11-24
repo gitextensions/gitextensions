@@ -152,7 +152,7 @@ namespace GitCommands
 
             var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
             var startProcess = Process.Start(startInfo);
-            
+
             startProcess.Exited += (sender, args) =>
             {
               var executionEndTimestamp = DateTime.Now;
@@ -453,7 +453,7 @@ namespace GitCommands
 
         public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, string branch, int? depth)
         {
-            var from = fromPath.ToPosixPath();
+            var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
             var to = toPath.ToPosixPath();
             var options = new List<string> { "-v" };
             if (central)
@@ -843,7 +843,7 @@ namespace GitCommands
                         {
                             status.Name = match.Groups[1].Value;
                             status.OldName = match.Groups[1].Value;
-                        } 
+                        }
                     }
                 }
 
