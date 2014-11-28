@@ -483,6 +483,10 @@
             BinaryKey="BinRemoveVSAddInCommands"
             VBScriptCall="RemoveVS2013AddInCommands"
             Return="check"/>
+        <CustomAction Id="UninstallGitExtensions"
+            FileKey="GitExtensions.exe"
+            ExeCommand="uninstall"
+            Return="asyncWait" />
 
         <InstallExecuteSequence>
             <!-- Execute the defined custom actions to remove the add-in commands from Visual Studio. They must execute when
@@ -512,6 +516,9 @@
             <Custom Action="RemoveVS2013AddInCommands"
                  After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2013INSTFOLDER
                                      AND !VS2013FeatureId=3</Custom>
+
+            <Custom Action="UninstallGitExtensions"
+                After="InstallInitialize">(REMOVE="ALL") AND (NOT UPGRADINGPRODUCTCODE)</Custom>
         </InstallExecuteSequence>
 
         <DirectoryRef Id="ProgramMenuFolder">
