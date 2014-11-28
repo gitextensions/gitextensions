@@ -1928,6 +1928,9 @@ namespace GitUI
                 case "viewpatch":   // [filename]
                     StartViewPatchDialog(args.Length == 3 ? args[2] : "");
                     return;
+                case "uninstall":
+                    Uninstall();
+                    return;
                 default:
                     if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
                     {
@@ -1956,6 +1959,24 @@ namespace GitUI
 
             var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
             configFileGlobalSettings.SetValue("credential.helper", "!\"" + gcsFileName + "\"");
+            configFileGlobalSettings.Save();
+        }
+
+        private void Uninstall()
+        {
+            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
+
+            var coreEditor = configFileGlobalSettings.GetValue("core.editor");
+            if (coreEditor.ToLowerInvariant().Contains(AppSettings.GetInstallDir().ToPosixPath().ToLowerInvariant()))
+            {
+                configFileGlobalSettings.SetValue("core.editor", "");
+            }
+
+            var credentialHelper = configFileGlobalSettings.GetValue("credential.helper");
+            if (credentialHelper.ToLowerInvariant().Contains(AppSettings.GetInstallDir().ToLowerInvariant()))
+            {
+                configFileGlobalSettings.SetValue("credential.helper", "");
+            }
             configFileGlobalSettings.Save();
         }
 
