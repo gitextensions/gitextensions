@@ -55,6 +55,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonGitInfo.cs">
+      <Link>Properties\CommonGitInfo.cs</Link>
+    </Compile>
     <Compile Include="GitCommands\CommitInformationTest.cs" />
     <Compile Include="GitCommands\Config\ConfigFileTest.cs" />
     <Compile Include="GitCommands\Git\GitCommandHelpersTest.cs" />
