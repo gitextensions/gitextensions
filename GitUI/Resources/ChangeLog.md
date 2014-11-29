@@ -3,6 +3,25 @@
 ### Version 2.49 (no due date)
 * Cherry pick selected file/selected lines.
 
+### Version 2.48.02 (29 November 2014)
+* Updated msysgit to 1.9.4 20140929
+* VS plugin menu hotkey changed to Alt+I
+* Updated kdiff3 to version 0.9.98-2 64bit
+* Form pull "Manage remotes" button fixed
+* Resolving conflict for removed submodule fixed
+* Svn clone prefix fixed
+* Fixed issue #2509: Backslash correction turned off for URLs
+* Fixed issue #2420: Indicate change when repository changed
+* Fixed issue #2454: Support changed path to DiffMerge
+* Fixed issue #2450: There is no verification that settings can not contain invalid xml characters
+* Fixed issue #2407: Double appearance of "Current unstaged changes" fixed
+* Fixed issue #2269: Ignore COM exceptions in UpdateJumplist
+* Fixed issue #2165: Pushing HEAD fixed
+* Fixed issue #2463: Crash fixed when selecting a file with no base in the "Resolve merge conflicts" dialog
+* Fixed issue #2448: Freeze while commit many files with warnings
+* Fixed issue #2467, #2483: Installing GitCredentialsHelper fixed
+* Fixed issue #1493: Should fix command bar position saving in some cases
+
 ### Version 2.48 (20 August 2014)
 * Git credential helper now optional product
 * Sort branches and tags in commit info and display only first 20
@@ -339,7 +358,7 @@ where it is installed on their system
 * Fixed issue 825: add Lua & Perl sources support to statistics plugin
 * Fixed issue 839: splash screen doesn't refresh
 * Fixed issue 851: crash in AutoCheckForUpdates fixed
-* Fixed issue 868: github username/apitoken invalid or network down 
+* Fixed issue 868: github username/apitoken invalid or network down
 * Fixed issue 876: enable option "show current changes in toolbar" by default
 * Fixed issue 876: enable option "show current branch in Visual Studio" by default
 * Fixed issue 898: Github plugin disabled because it doesn't work with new GitHub API v3
@@ -420,7 +439,7 @@ where it is installed on their system
 * Fixed issue 627: The start page does not refresh upon changing the start pages settings fixed
 * Fixed issue 631: Adding a new item to the start page settings auto-select that item
 * Fixed issue 667: Push command support recursive submodules check
-* Fixed issue 668: Git directory for submodules fixed with Git 1.7.7 
+* Fixed issue 668: Git directory for submodules fixed with Git 1.7.7
 * Fixed issue 718: Exception while filtering revision grid.
 * Fixed issue 736: "Downloads" link fixed on project home page
 * Fixed issue 735: ArgumentOutOfRangeException in "Format patch" dialog for first commit
@@ -489,7 +508,7 @@ where it is installed on their system
 * When searching in the diff view, all files are searched
 * Added option to GitHub plugin to clear account info
 * Added a new variable '{UserInput}' which can be used in scripts to ask user for input
-* Added "Add filepattern to .gitignore" dialog 
+* Added "Add filepattern to .gitignore" dialog
 * Added support for global configuration commit.template
 * Added more hotkeys
 * Added menu in revision grid to manipulate commit (revert, cherry pick, squash, fixup)
@@ -553,7 +572,7 @@ where it is installed on their system
 * Added hotkeys for ShowAllBranches and ShowCurrentBranchOnly
 * Added more commandline options
 * Show current branch in Visual Studio toolbar (default off)
-* Scripts can be executed before and after actions* * 
+* Scripts can be executed before and after actions* *
 
 ### Version 2.17 (15 March 2011)
 * Fixed exception thrown while loading Visual Studio plugin
@@ -815,7 +834,7 @@ where it is installed on their system
 * Added toolbar to diff viewer to jump to next change
 * Added option to show nonprinting characters in file viewer
 * Added file explorer option to the file menu
-* Added from and to branch to push dialog 
+* Added from and to branch to push dialog
 * Added option to create annotated tag
 * Added splash screen
 * Added warning when about to push a branch that doesn't exist on a remote yet
@@ -866,7 +885,7 @@ where it is installed on their system
 * Added "Show relative date" option to context menu of revision grid
 * Copy from diff viewer copies code without '+', '-' or ' ' markings
 * Added "Open with difftool" option to diff view in browse dialog
-* Added tooltip to show long filenames in commit dialog 
+* Added tooltip to show long filenames in commit dialog
 * Added tooltip to show long filenames in diff view of browse
 
 ### Version 1.89
@@ -953,8 +972,8 @@ where it is installed on their system
 ### Version 1.77
 * Fixed bug in version 1.76 that file history was broken when started from Visual Studio
 * Commit message now supports multiline (first line is the summary)
-* Revision grid resizes graph column automatically. 
-* Settings user.name and user.email are only saved when changed. This to work around a bug that utf8 chars are only allowed when editing the .config file manually. 
+* Revision grid resizes graph column automatically.
+* Settings user.name and user.email are only saved when changed. This to work around a bug that utf8 chars are only allowed when editing the .config file manually.
 * Recent repository list handles doubles better.
 
 ### Version 1.76
@@ -1010,7 +1029,7 @@ where it is installed on their system
 
 ### Version 1.67
 * Fixed exception when AutoCRLF is left empty
-* Clicking 'Rescan changes' twice no longer results in 
+* Clicking 'Rescan changes' twice no longer results in
 * Mergeconflict dialog closes when there are no mergeconflicts left
 * Pull dialog closes after successful pull
 * Delete branch from revision grid now uses the correct dialog
@@ -1143,26 +1162,26 @@ where it is installed on their system
 * Fixed bug that remote branches could not be saved
 
 ### Version 1.45
-* No more taskbar terror! 
-* Added "prune" button in remotes dialog 
-* Browse window title includes working dir 
-* Added diff view to browse window 
-* Commit dialog improved (working dir changes is now a menu!!!) 
-* Default .gitignore file added (for use in Visual Studio and/or resharper) 
-* Fixed a bug letting GitExtensions hang when using OpenSSH 
-* Fixed a bug that some mergeconflicts where ignored 
+* No more taskbar terror!
+* Added "prune" button in remotes dialog
+* Browse window title includes working dir
+* Added diff view to browse window
+* Commit dialog improved (working dir changes is now a menu!!!)
+* Default .gitignore file added (for use in Visual Studio and/or resharper)
+* Fixed a bug letting GitExtensions hang when using OpenSSH
+* Fixed a bug that some mergeconflicts where ignored
 * Fixed some minor bugs
 
-### Version 1.44 
-* Fixed some problems in new Visual Studio plugin 
+### Version 1.44
+* Fixed some problems in new Visual Studio plugin
 
-### Version 1.42 
-* Fixed VS2005 plugin 
+### Version 1.42
+* Fixed VS2005 plugin
 
-### Version 1.41 
+### Version 1.41
 * Fixed a bug in Visual Studio plugin
 
-### Version 1.40 
+### Version 1.40
 * Better Visual Studio intergration.
 
 ### Version 1.38
@@ -1172,27 +1191,27 @@ where it is installed on their system
 * Settings dialog will now have a normal size when started on gitextensions startup
 * Filter feature added
 
-### Version 1.37 
-* Added diff highlighting (+/-) highlighting 
-* Auto-fix settings refreshes automaticly 
+### Version 1.37
+* Added diff highlighting (+/-) highlighting
+* Auto-fix settings refreshes automaticly
 
 ### Version 1.36
 * Improved performance of commit dialog a lot.
 * Minor changes
 
-### Version 1.35 
-* Fixed bug causing multiple config entries 
-* Improved solve mergeconflict features 
-* Small changes to improve usuability 
+### Version 1.35
+* Fixed bug causing multiple config entries
+* Improved solve mergeconflict features
+* Small changes to improve usuability
 
-### Version 1.30 
-* Added support for custom mergetools 
-* Fixed settings for git 1.6.1.xxx 
-* Improved patch and rebase features 
-* Removed a lot of annoying mergeconlict popups 
-* 32 bit and 64bit support is now in same setup 
-* Fixed (and probably created) some bugs 
-* Some small 64bit Windows improvements (auto-settings, some paths) 
+### Version 1.30
+* Added support for custom mergetools
+* Fixed settings for git 1.6.1.xxx
+* Improved patch and rebase features
+* Removed a lot of annoying mergeconlict popups
+* 32 bit and 64bit support is now in same setup
+* Fixed (and probably created) some bugs
+* Some small 64bit Windows improvements (auto-settings, some paths)
 
 ### Version 1.28
 * Added 64-bit support
@@ -1202,73 +1221,73 @@ where it is installed on their system
 * Added commit revert
 * Various small improvements
 
-### Version 1.27 
-* Removed usage of git-clone.exe because it cause problems. 
+### Version 1.27
+* Removed usage of git-clone.exe because it cause problems.
 
-### Version 1.26 
-* Fixed shell extensions.... 
+### Version 1.26
+* Fixed shell extensions....
 
-### Version 1.25 
-* PuTTY is working fine not (at least for me) 
-* Setup is improved 
-* Rebase improved 
-* As long as you use PuTTY and not OpenSSH, all is fine. 
+### Version 1.25
+* PuTTY is working fine not (at least for me)
+* Setup is improved
+* Rebase improved
+* As long as you use PuTTY and not OpenSSH, all is fine.
 
-### Version 1.21 
-* Fixed some small bugs that sneeked in version 1.20 
+### Version 1.21
+* Fixed some small bugs that sneeked in version 1.20
 
-### Version 1.20 
-* Added PuTTY support. 
-* PuTTY can now be used instead of OpenSSH. 
-* When using PuTTY the commandline windows that are needed for entering 
-* OpenSSH passprase are not needed anymore. 
-* PuTTY private keys can be configured per remote, so key is automatilly loaded. 
+### Version 1.20
+* Added PuTTY support.
+* PuTTY can now be used instead of OpenSSH.
+* When using PuTTY the commandline windows that are needed for entering
+* OpenSSH passprase are not needed anymore.
+* PuTTY private keys can be configured per remote, so key is automatilly loaded.
 
-### Version 1.14 
-* Improved rebase features a bit. 
-* Minor bug fixes. 
+### Version 1.14
+* Improved rebase features a bit.
+* Minor bug fixes.
 
-### Version 1.13 
-* I'm still focussing on the push and pull features, because I use this a lot myself. 
-* Improved auto-settings-correct features 
-* Added rebase features 
-* Improved merge conflict handling a bit. 
+### Version 1.13
+* I'm still focussing on the push and pull features, because I use this a lot myself.
+* Improved auto-settings-correct features
+* Added rebase features
+* Improved merge conflict handling a bit.
 
 ### Version 1.12
-* Fixed lots of remote feature mistakes and added some missing features. 
+* Fixed lots of remote feature mistakes and added some missing features.
 * Push/pull/fetch should work as suppost to.
 * Added multiple stash support.
 * Did some testing, fixed minor bugs.
 * Know bug: delay loading commit graph is broken, I will fix this in the next release!
 
-### Version 1.11 
-* Added remote repository functions push/pull/fetch improved delete improved some small changes and bug fixes 
+### Version 1.11
+* Added remote repository functions push/pull/fetch improved delete improved some small changes and bug fixes
 
-### Version 1.09 
-* Added Visual Studio 2005 and Visual Studio 2008 plugin to the setup as options. 
-* Added .mailmap edit 
-* Minor changes No bugfixes 
+### Version 1.09
+* Added Visual Studio 2005 and Visual Studio 2008 plugin to the setup as options.
+* Added .mailmap edit
+* Minor changes No bugfixes
 
 ### Version 1.08
-* Fixed drop down boxes in clone dialog 
-* Added archive function 
-* Fixed commit count 
-* Fixed using " (quote) in commit message 
+* Fixed drop down boxes in clone dialog
+* Added archive function
+* Fixed commit count
+* Fixed using " (quote) in commit message
 
-### Version 1.07 
-* Path of git.cmd can be edited 
-* Format path fixed 
-* Auto-config: register files fixed 
+### Version 1.07
+* Path of git.cmd can be edited
+* Format path fixed
+* Auto-config: register files fixed
 
-### Version 1.06 
-* Fixed file history diff, broke since using git.cmd 
+### Version 1.06
+* Fixed file history diff, broke since using git.cmd
 
-### Version 1.05 
-* Unstage files problems fixed Problems cause by replace git.exe for git.cmd fixed (I hope) 
-* Added progress dialog for a few commands 
+### Version 1.05
+* Unstage files problems fixed Problems cause by replace git.exe for git.cmd fixed (I hope)
+* Added progress dialog for a few commands
 
-### Version 1.04 
-* Using git.cmd instead of git.exe. 
+### Version 1.04
+* Using git.cmd instead of git.exe.
 
 ### Version 1.03
 * Bugs in commit solved
@@ -1302,33 +1321,33 @@ where it is installed on their system
 
 ### Version 0.93
 * Performance of commit is increased (about 2x faster).
-* The installer is not needed anymore. 
-* The program will check if it is installed correct and offers to fix the problems. 
+* The installer is not needed anymore.
+* The program will check if it is installed correct and offers to fix the problems.
 * The installer is still recommended, because it adds icons and uninstaller.
 
-### Version 0.92 
-* Fixed a bug in clone/push/pull. 
+### Version 0.92
+* Fixed a bug in clone/push/pull.
 
-* For this version I also added a non-installer version. This is just a zip file that cointains the binairy files. 
-* Please note that this is just the standalone application without shell extensions! 
+* For this version I also added a non-installer version. This is just a zip file that cointains the binairy files.
+* Please note that this is just the standalone application without shell extensions!
 
 ### Version 0.91
-* Rewritten most of commit logic. This works better now. 
+* Rewritten most of commit logic. This works better now.
 * Colors added on tag/branch/stach labels
 * I also added a directory history on open/push/pull/clone, just to increase useabillity
 
 ### Version 0.9
 * Removed Visual Studio plugin
-* First stable release. 
-* Please uninstall older versions carefully. 
+* First stable release.
+* Please uninstall older versions carefully.
 
 ### Version 0.71
-* There was a nasty bug in the shell extensions in the last release, this caused explorer to crash. This is fixed now. 
-* Lots of cosmetic changes too. 
+* There was a nasty bug in the shell extensions in the last release, this caused explorer to crash. This is fixed now.
+* Lots of cosmetic changes too.
 * Reinstalling since version 0.7 shouldn't be a pain anymore singe there is no .net registration.
 
 ### Version 0.7
-* Rewritten shell extensions in c++, the program is a lot more stable now. 
+* Rewritten shell extensions in c++, the program is a lot more stable now.
 * Fixed some small bugs, added lots of warnings and messages to prevent users from making mistakes.
 * Some small features added, nothing mayor since 0.6.
 

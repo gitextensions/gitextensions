@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.DirectoryServices;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -121,7 +122,7 @@ namespace GitUI
             SetShowBranches();
             Filter = "";
             FixedFilter = "";
-            InMemFilterIgnoreCase = false;
+            InMemFilterIgnoreCase = true;
             InMemAuthorFilter = "";
             InMemCommitterFilter = "";
             InMemMessageFilter = "";
@@ -213,7 +214,7 @@ namespace GitUI
         [DefaultValue("")]
         public string FixedFilter { get; set; }
         [Category("Filter")]
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         public bool InMemFilterIgnoreCase { get; set; }
         [Category("Filter")]
         [DefaultValue("")]
@@ -236,8 +237,6 @@ namespace GitUI
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string FiltredFileName { get; set; }
-        [Browsable(false)]
-        private string FiltredCurrentCheckout { get; set; }
         [Browsable(false)]
         public Task<SuperProjectInfo> SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
@@ -866,6 +865,14 @@ namespace GitUI
             return false;
         }
 
+        [Browsable(false)]
+        public Task<bool> UnstagedChanges { get; private set; }
+
+        [Browsable(false)]
+        public Task<bool> StagedChanges { get; private set; }
+
+        private string _filtredCurrentCheckout;
+
         public void ForceRefreshRevisions()
         {
             try
@@ -886,6 +893,13 @@ namespace GitUI
                     Task.Factory.StartNew(() => GetSuperprojectCheckout(ShowRemoteRef));
                 newSuperPrjectInfo.ContinueWith((task) => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
+                //Only check for tracked files. This usually makes more sense and it performs a lot
+                //better then checking for untracked files.
+                // TODO: Check FiltredFileName
+                Task<bool> unstagedChanges =
+                    Task.Factory.StartNew(() => Module.GetUnstagedFiles().Any());
+                Task<bool> stagedChanges =
+                    Task.Factory.StartNew(() => Module.GetStagedFiles().Any());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -901,8 +915,11 @@ namespace GitUI
 
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
-                FiltredCurrentCheckout = CurrentCheckout;
+                _filtredCurrentCheckout = null;
+                _currentCheckoutParents = null;
                 SuperprojectCurrentCheckout = newSuperPrjectInfo;
+                UnstagedChanges = unstagedChanges;
+                StagedChanges = stagedChanges;
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -960,7 +977,9 @@ namespace GitUI
                 else
                     revGraphIMF = filterBarIMF;
 
-                _revisionGraphCommand = new RevisionGraph(Module) { BranchFilter = BranchFilter, RefsOptions = _refsOptions, Filter = _revisionFilter.GetFilter() + Filter + FixedFilter };
+                _revisionGraphCommand = new RevisionGraph(Module) { BranchFilter = BranchFilter,
+                    RefsOptions = _refsOptions, Filter = _revisionFilter.GetFilter() + Filter + FixedFilter
+                };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
@@ -1122,12 +1141,7 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            string filtredCurrentCheckout;
-            if (SearchRevision(CurrentCheckout, out filtredCurrentCheckout) >= 0)
-                FiltredCurrentCheckout = filtredCurrentCheckout;
-            else
-                FiltredCurrentCheckout = CurrentCheckout;
-
+            string filtredCurrentCheckout = _filtredCurrentCheckout;
             if (LastSelectedRows != null)
             {
                 Revisions.SelectedIds = LastSelectedRows;
@@ -1137,24 +1151,23 @@ namespace GitUI
             {
                 if (!string.IsNullOrEmpty(_initialSelectedRevision))
                 {
-                    string revision;
-                    int index = SearchRevision(_initialSelectedRevision, out revision);
+                    int index = SearchRevision(_initialSelectedRevision);
                     if (index >= 0)
                         SetSelectedIndex(index);
                 }
                 else
                 {
-                    SetSelectedRevision(FiltredCurrentCheckout);
+                    SetSelectedRevision(filtredCurrentCheckout);
                 }
             }
 
-            if (!Revisions.IsRevisionRelative(FiltredCurrentCheckout))
+            if (!Revisions.IsRevisionRelative(filtredCurrentCheckout))
             {
-                HighlightBranch(FiltredCurrentCheckout);
+                HighlightBranch(filtredCurrentCheckout);
             }
         }
 
-        internal int TrySearchRevision(string initRevision, out string graphRevision)
+        internal int TrySearchRevision(string initRevision)
         {
             var rows = Revisions
                 .Rows
@@ -1165,25 +1178,14 @@ namespace GitUI
             var idx = revisions.FirstOrDefault(rev => rev.Guid == initRevision);
             if (idx != null)
             {
-                graphRevision = idx.Guid;
                 return idx.Index;
             }
 
-            graphRevision = null;
             return -1;
         }
 
-        private int SearchRevision(string initRevision, out string graphRevision)
+        private IEnumerable<string> GetAllParents(string initRevision)
         {
-            int index = TrySearchRevision(initRevision, out graphRevision);
-            if (index >= 0)
-                return index;
-
-            var rows = Revisions
-                .Rows
-                .Cast<DataGridViewRow>();
-            var dict = rows
-                .ToDictionary(row => GetRevision(row.Index).Guid, row => row.Index);
             var revListParams = "rev-list ";
             if (AppSettings.OrderRevisionByDate)
                 revListParams += "--date-order ";
@@ -1192,8 +1194,22 @@ namespace GitUI
             if (AppSettings.MaxRevisionGraphCommits > 0)
                 revListParams += string.Format("--max-count=\"{0}\" ", (int)AppSettings.MaxRevisionGraphCommits);
 
-            var allrevisions = Module.ReadGitOutputLines(revListParams + initRevision);
-            graphRevision = allrevisions.FirstOrDefault(rev => dict.TryGetValue(rev, out index));
+            return Module.ReadGitOutputLines(revListParams + initRevision);
+        }
+
+        private int SearchRevision(string initRevision)
+        {
+            int index = TrySearchRevision(initRevision);
+            if (index >= 0)
+                return index;
+
+            var rows = Revisions
+                .Rows
+                .Cast<DataGridViewRow>();
+            var dict = rows
+                .ToDictionary(row => GetRevision(row.Index).Guid, row => row.Index);
+            var allrevisions = GetAllParents(initRevision);
+            var graphRevision = allrevisions.FirstOrDefault(rev => dict.TryGetValue(rev, out index));
             if (graphRevision != null)
                 return index;
             return -1;
@@ -2050,7 +2066,6 @@ namespace GitUI
             bool bareRepository = Module.IsBareRepository();
             string currentBranch = Module.GetSelectedBranch();
             var allBranches = gitRefListsForRevision.AllBranches;
-            var localBranches = gitRefListsForRevision.LocalBranches;
             var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;
@@ -2341,10 +2356,12 @@ namespace GitUI
             return GitCommandHelpers.GetRelativeDateString(DateTime.Now, time, false);
         }
 
-        private bool ShowUncommitedChanged()
+        private bool ShowUncommitedChanges()
         {
             return ShowUncommitedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
         }
+
+        private IEnumerable<string> _currentCheckoutParents;
 
         private void UpdateGraph(GitRevision rev)
         {
@@ -2352,14 +2369,33 @@ namespace GitUI
             {
                 // Prune the graph and make sure the row count matches reality
                 Revisions.Prune();
-
-                if (Revisions.RowCount == 0 && ShowUncommitedChanged())
-                    CheckUncommitedChanged();
                 return;
             }
 
+            if (_filtredCurrentCheckout == null)
+            {
+                if (rev.Guid == CurrentCheckout)
+                {
+                    _filtredCurrentCheckout = CurrentCheckout;
+                }
+                else
+                {
+                    if (_currentCheckoutParents == null)
+                    {
+                        _currentCheckoutParents = GetAllParents(CurrentCheckout);
+                    }
+                    _filtredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == rev.Guid);
+                }
+            }
+            string filtredCurrentCheckout = _filtredCurrentCheckout;
+
+            if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges())
+            {
+                CheckUncommitedChanged( filtredCurrentCheckout );
+            }
+
             var dataType = DvcsGraph.DataType.Normal;
-            if (rev.Guid == FiltredCurrentCheckout)
+            if (rev.Guid == filtredCurrentCheckout)
                 dataType = DvcsGraph.DataType.Active;
             else if (rev.Refs.Any())
                 dataType = DvcsGraph.DataType.Special;
@@ -2367,41 +2403,30 @@ namespace GitUI
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
         }
 
-        private void CheckUncommitedChanged()
+        private void CheckUncommitedChanged(string filtredCurrentCheckout)
         {
-            bool unstagedChanges = false;
-            bool stagedChanges = false;
-            //Only check for tracked files. This usually makes more sense and it performs a lot
-            //better then checking for untracked files.
-            // TODO: Check FiltredFileName
-            if (Module.GetUnstagedFiles().Any())
-                unstagedChanges = true;
-            if (Module.GetStagedFiles().Any())
-                stagedChanges = true;
-
-            // FiltredCurrentCheckout doesn't works here because only calculated after loading all revisions in SelectInitialRevision()
-            if (unstagedChanges)
+            if (UnstagedChanges.Result)
             {
                 //Add working directory as virtual commit
                 var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
-                                     {
-                                         Message = Strings.GetCurrentUnstagedChanges(),
-                                         ParentGuids =
-                                             stagedChanges
-                                                 ? new[] { GitRevision.IndexGuid }
-                                                 : new[] { FiltredCurrentCheckout }
-                                     };
+                {
+                    Message = Strings.GetCurrentUnstagedChanges(),
+                    ParentGuids =
+                        StagedChanges.Result
+                            ? new[] { GitRevision.IndexGuid }
+                            : new[] { filtredCurrentCheckout }
+                };
                 Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
             }
 
-            if (stagedChanges)
+            if (StagedChanges.Result)
             {
                 //Add index as virtual commit
                 var index = new GitRevision(Module, GitRevision.IndexGuid)
-                                {
-                                    Message = Strings.GetCurrentIndex(),
-                                    ParentGuids = new[] { FiltredCurrentCheckout }
-                                };
+                {
+                    Message = Strings.GetCurrentIndex(),
+                    ParentGuids = new[] { filtredCurrentCheckout }
+                };
                 Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
             }
         }

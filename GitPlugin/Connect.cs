@@ -80,13 +80,12 @@ namespace GitPlugin
                     // The add-in was marked to load on startup
                     // Do nothing at this point because the IDE may not be fully initialized
                     // Visual Studio will call OnStartupComplete when fully initialized
-                    GitPluginUIUpdate();
                     break;
 
                 case ext_ConnectMode.ext_cm_AfterStartup:
                     // The add-in was loaded by hand after startup using the Add-In Manager
                     // Initialize it in the same way that when is loaded on startup
-                    GitPluginInit();
+                    GitPluginUIUpdate();
                     break;
             }
         }
@@ -252,18 +251,47 @@ namespace GitPlugin
 
         private void GitPluginUIUpdate()
         {
+            if (_gitPlugin == null) return;
+
+            GitPluginInit();
+            GitPluginUIUpdateMenu();
+            GitPluginUIUpdateCommandBar();
+        }
+
+        private void GitPluginUIUpdateMenu()
+        {
             try
             {
-                if (_gitPlugin.IsReinstallRequired())
+                if (_gitPlugin.IsReinstallMenuRequired())
                 {
-                    GitPluginUISetup();
+                    GitPluginUISetupMainMenu();
+                    GitPluginUISetupContextMenu();
+                }
+            }
+            catch (Exception ex)
+            {
+                this._gitPlugin.OutputPane.OutputString("Error installing GitExt menu: " + ex);
+            }
+        }
+
+        private void GitPluginUIUpdateCommandBar()
+        {
+            try
+            {
+                if (_gitPlugin.IsReinstallCommandBarRequired())
+                {
+                    GitPluginUISetupCommandBar();
+                }
+                else
+                {
+                    _gitPlugin.UpdateCommandBarStyles();
                 }
             }
             catch (Exception)
             {
             }
         }
-        
+
         private void RegiserGitPluginCommand()
         {
             //GitPlugin.DeleteCommandBar("GitExtensions");
@@ -356,7 +384,7 @@ namespace GitPlugin
 
         public void OnStartupComplete(ref Array custom)
         {
-            this.GitPluginInit();
+            GitPluginUIUpdate();
         }
 
         public void OnBeginShutdown(ref Array custom)

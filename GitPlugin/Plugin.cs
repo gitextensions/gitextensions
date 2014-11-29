@@ -244,7 +244,7 @@ namespace GitPlugin.Commands
             }
         }
 
-        public bool IsReinstallRequired()
+        public bool IsReinstallMenuRequired()
         {
             try
             {
@@ -274,6 +274,32 @@ namespace GitPlugin.Commands
                     return true;
                 }
                 CommandBar cb =
+                    CommandBars.Cast<CommandBar>()
+                        .FirstOrDefault(c => c.Name == OldGitMainMenuName);
+                if (cb != null && !cb.BuiltIn)
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
+        public bool IsReinstallCommandBarRequired()
+        {
+            try
+            {
+                CommandBar cb =
+                    CommandBars.Cast<CommandBar>()
+                        .FirstOrDefault(c => c.Name == GitCommandBarName);
+                if (cb == null)
+                {
+                    return true;
+                }
+
+                cb =
                     CommandBars.Cast<CommandBar>()
                         .FirstOrDefault(c => c.Name == OldGitMainMenuName);
                 if (cb != null && !cb.BuiltIn)
@@ -374,6 +400,21 @@ namespace GitPlugin.Commands
                 var control = (CommandBarButton)command.AddControl(bar, insertIndex);
                 control.Style = CommandStyleToButtonStyle(commandStyle);
                 control.BeginGroup = beginGroup;
+            }
+        }
+
+        public void UpdateCommandBarStyles()
+        {
+            CommandBar cb =
+                CommandBars.Cast<CommandBar>()
+                    .FirstOrDefault(c => c.Name == GitCommandBarName);
+            if (cb != null)
+            {
+                foreach (CommandBarButton control in cb.Controls)
+                {
+                    if (control.Caption != "Commit")
+                        control.Style = MsoButtonStyle.msoButtonIcon;
+                }
             }
         }
 
