@@ -21,4 +21,7 @@
 //
 [assembly: AssemblyVersion("2.48.02")]
 [assembly: AssemblyFileVersion("2.48.02")]
-[assembly: AssemblyInformationalVersion("2.48.02")]
+
+//Modify InformationalVersion.txt to generate the beginning of the AssemblyInformationalVersion attribute.
+//The attribute will follow the template below
+//<Contents of text file>-<Git commit hash>[-<dirty worktree>]

@@ -61,3 +61,4 @@ GitExtensions.*.sln.VisualState.xml
 GitExtensions.settings.backup
 /Build.proj
 /.build
+CommonGitInfo.cs
