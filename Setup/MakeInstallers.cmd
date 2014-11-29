@@ -6,8 +6,8 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=2.48
-set numericVersion=2.48.01
+set version=2.48.02
+set numericVersion=2.48.02
 
 set normal=GitExtensions-%Version%-Setup.msi
 set complete=GitExtensions-%Version%-SetupComplete.msi

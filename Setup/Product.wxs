@@ -24,6 +24,7 @@
                 <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
                     <Directory Id="PuttyDir" Name="PuTTY" />
                     <Directory Id="PluginsDir" Name="Plugins" />
+                    <Directory Id="GitCredentialWinStoreDir" Name="GitCredentialWinStore" />
                     <Directory Id="InstallerDir" Name="Installer" />
                     <Directory Id="DictionariesDir" Name="Dictionaries" />
                     <Directory Id="TranslationsDir" Name="Translation" />
@@ -192,6 +193,11 @@
                 <RegistryKey Root="HKCR" Key="github-windows\shell\open\command">
                     <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
                 </RegistryKey>
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="GitCredentialWinStoreDir">
+            <Component Id="GitCredentialWinStore.exe" Guid="*">
+                <File Source="..\bin\git-credential-winstore.exe" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="PluginsDir">
@@ -480,6 +486,10 @@
             BinaryKey="BinRemoveVSAddInCommands"
             VBScriptCall="RemoveVS2013AddInCommands"
             Return="check"/>
+        <CustomAction Id="UninstallGitExtensions"
+            FileKey="GitExtensions.exe"
+            ExeCommand="uninstall"
+            Return="asyncWait" />
 
         <InstallExecuteSequence>
             <!-- Execute the defined custom actions to remove the add-in commands from Visual Studio. They must execute when
@@ -509,6 +519,9 @@
             <Custom Action="RemoveVS2013AddInCommands"
                  After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2013INSTFOLDER
                                      AND !VS2013FeatureId=3</Custom>
+
+            <Custom Action="UninstallGitExtensions"
+                After="InstallInitialize">(REMOVE="ALL") AND (NOT UPGRADINGPRODUCTCODE)</Custom>
         </InstallExecuteSequence>
 
         <DirectoryRef Id="ProgramMenuFolder">
@@ -545,6 +558,10 @@
             <ComponentRef Id="PSTaskDialog.dll" />
             <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
             <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
+            <ComponentRef Id="System.Reactive.Core.dll" />
+            <ComponentRef Id="System.Reactive.Interfaces.dll" />
+            <ComponentRef Id="System.Reactive.Linq.dll" />
+            <ComponentRef Id="System.Reactive.PlatformServices.dll" />
             <ComponentRef Id="NBug.dll" />
             <ComponentRef Id="SmartFormat.dll" />
             <ComponentRef Id="NetSpell.SpellChecker.dll" />
@@ -561,6 +578,7 @@
             <ComponentRef Id="puttygen.exe" />
             <ComponentRef Id="puttygen.reg" />
             <ComponentRef Id="GitExtSshAskPass.exe" />
+            <ComponentRef Id="GitCredentialWinStore.exe" />
             <ComponentRef Id="GitExtensions.newstartmenu" />
             <ComponentRef Id="GitExtensions.startmenu" />
             <ComponentRef Id="English.gif" />
@@ -576,10 +594,6 @@
                 </Feature>
                 <Feature Id="BackgroundFetch" Title="Periodic background fetch" Level="1">
                     <ComponentRef Id="BackgroundFetch.dll" />
-                    <ComponentRef Id="System.Reactive.Core.dll" />
-                    <ComponentRef Id="System.Reactive.Interfaces.dll" />
-                    <ComponentRef Id="System.Reactive.Linq.dll" />
-                    <ComponentRef Id="System.Reactive.PlatformServices.dll" />
                 </Feature>
                 <Feature Id="CreateLocalBranches" Title="Create local branches" Level="1">
                     <ComponentRef Id="CreateLocalBranches.dll" />
@@ -761,15 +775,14 @@
         </Feature>
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
         <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-64bit-Setup_0.9.98-2.exe" />
-        <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
+        <CustomAction Id="InstallKDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
         <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.9.4-preview20140929.exe" />
-        <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
-        <Binary Id="GitCredentialWinStore" SourceFile="..\Bin\git-credential-winstore.exe" />
-        <CustomAction Id="GitCredentialWinStore" Impersonate="no" BinaryKey="GitCredentialWinStore" Execute="deferred" ExeCommand="" Return="ignore" />
-         <InstallExecuteSequence>
-            <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
-            <Custom Action="MsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
-            <Custom Action="GitCredentialWinStore" After="InstallFiles"><![CDATA[INSTALLGITCREDENTIALWINSTORE=1]]></Custom>
+        <CustomAction Id="InstallMsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
+        <CustomAction Id="InstallGitCredentialWinStore" FileKey="GitExtensions.exe" ExeCommand="installcredhelper" Return="asyncWait" />
+        <InstallExecuteSequence>
+            <Custom Action="InstallKDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
+            <Custom Action="InstallMsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
+            <Custom Action="InstallGitCredentialWinStore" After="InstallFinalize"><![CDATA[INSTALLGITCREDENTIALWINSTORE=1]]></Custom>
         </InstallExecuteSequence>
         <?endif ?>
         <UI />
