@@ -12,6 +12,7 @@ set EnableNuGetPackageRestore=true
 
 set msbuildparams=/p:Configuration=Release /t:Rebuild /nologo /v:m
 
+%nuget% update -Self
 %nuget% install ..\GitUI\packages.config -OutputDirectory ..\packages -Source https://nuget.org/api/v2/
 %nuget% install ..\Plugins\BackgroundFetch\packages.config -OutputDirectory ..\packages -Source https://nuget.org/api/v2/
 %nuget% install ..\Plugins\BuildServerIntegration\TeamCityIntegration\packages.config -OutputDirectory ..\packages -Source https://nuget.org/api/v2/
