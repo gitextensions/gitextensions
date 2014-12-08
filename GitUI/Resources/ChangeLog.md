@@ -1,5 +1,8 @@
 ﻿Changelog
 =========
+### Version 2.48.03 (9 December 2014)
+* Fixed issue #2538: Fix crash happening when deleting a remote branch
+
 ### Version 2.48.02 (29 November 2014)
 * Updated msysgit to 1.9.4 20140929
 * VS plugin menu hotkey changed to Alt+I
