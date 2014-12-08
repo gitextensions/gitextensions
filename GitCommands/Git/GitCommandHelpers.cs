@@ -349,12 +349,12 @@ namespace GitCommands
 
         public static string GetFullBranchName(string branch)
         {
-            if (string.IsNullOrEmpty(branch))
-                return branch;
+            if (branch == null)
+                return null;
 
             branch = branch.Trim();
 
-            if (branch.StartsWith("refs/"))
+            if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
                 return branch;
 
             // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
