@@ -17,9 +17,15 @@ namespace GitPlugin.Commands
             {
                 var activeDocument = application.ActiveDocument;
 
-                if ((activeDocument == null || activeDocument.ProjectItem == null) && IsTargetSupported(CommandTarget.Empty))
+                if (activeDocument == null || activeDocument.ProjectItem == null)
                 {
-                    OnExecute(null, null, pane);
+                    // no active document - try solution target
+                    if (application.Solution.IsOpen && IsTargetSupported(CommandTarget.Solution))
+                        OnExecute(null, application.Solution.FullName, pane);
+                    // solution (or not supported) - try empty target
+                    else if (IsTargetSupported(CommandTarget.Empty))
+                        OnExecute(null, null, pane);
+
                     return;
                 }
 
