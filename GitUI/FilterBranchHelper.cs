@@ -97,20 +97,9 @@ namespace GitUI
 
         private IEnumerable<string> GetTagsRefs(bool local, bool remote)
         {
-            var list = new List<string>();
-            if (!remote)
-                return list;
-            if (local)
-            {
-                var tags = Module.GetRefs(true, true);
-                list.AddRange(tags.Where(tag => tag.IsTag).Select(tag => tag.Name));
-            }
-            else
-            {
-                var tags = Module.GetRefs(true, true);
-                list.AddRange(tags.Where(tag => tag.IsRemote && tag.IsTag).Select(tag => tag.Name));
-            }
-            return list;
+            if (!local)
+                return new List<string>();
+            return Module.GetRefs(true, false).Select(tag => tag.Name);
         }
 
         private List<string> GetBranchAndTagRefs(bool local, bool remote)
