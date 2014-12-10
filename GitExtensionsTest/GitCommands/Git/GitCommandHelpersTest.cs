@@ -93,7 +93,20 @@ namespace GitExtensionsTest.Git
                 Assert.IsTrue(status[0].Name == "adfs.h");
                 Assert.IsTrue(status[1].Name == "dir.c");
             }
+        }
 
+        [TestMethod]
+        public void GetFullBranchNameTest()
+        {
+            Assert.AreEqual(null, GitCommandHelpers.GetFullBranchName(null));
+            Assert.AreEqual("", GitCommandHelpers.GetFullBranchName(""));
+            Assert.AreEqual("", GitCommandHelpers.GetFullBranchName("    "));
+            Assert.AreEqual("4e0f0fe3f6add43557913c354de02560b8faec32", GitCommandHelpers.GetFullBranchName("4e0f0fe3f6add43557913c354de02560b8faec32"));
+            Assert.AreEqual("refs/heads/master", GitCommandHelpers.GetFullBranchName("master"));
+            Assert.AreEqual("refs/heads/master", GitCommandHelpers.GetFullBranchName(" master "));
+            Assert.AreEqual("refs/heads/master", GitCommandHelpers.GetFullBranchName("refs/heads/master"));
+            Assert.AreEqual("refs/heads/release/2.48", GitCommandHelpers.GetFullBranchName("refs/heads/release/2.48"));
+            Assert.AreEqual("refs/tags/my-tag", GitCommandHelpers.GetFullBranchName("refs/tags/my-tag"));
         }
     }
 }
