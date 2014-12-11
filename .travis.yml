@@ -12,6 +12,6 @@ before_install:
 install:
   - mozroots --import --sync --quiet
   - .nuget/Nuget.sh
-  - tree -af
+  - tree -afI ".git"
 script:
   - Build/build.mono.debug.sh 
