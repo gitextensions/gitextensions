@@ -138,6 +138,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtUtils", "GitExtUtils\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonInfo", "CommonInfo\CommonInfo.csproj", "{28A3A8F1-F01C-4474-986E-8C90D82C1495}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{317F03C8-A938-44AD-985C-EE7D58A3C72A}"
+	ProjectSection(SolutionItems) = preProject
+		.build\MSBuild.Community.Tasks.dll = .build\MSBuild.Community.Tasks.dll
+		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -253,11 +259,9 @@ Global
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Any CPU.Build.0 = Release|Any CPU
 		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AF6D7B1B-FAF6-4793-AC05-00C63A5BC0F5} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
