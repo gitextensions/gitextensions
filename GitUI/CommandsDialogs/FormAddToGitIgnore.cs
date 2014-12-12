@@ -13,6 +13,7 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormAddToGitIgnore : GitModuleForm
     {
         private readonly TranslationString _matchingFilesString = new TranslationString("{0} file(s) matched");
+        private readonly TranslationString _updateStatusString = new TranslationString("Updating ...");
 
         private readonly ManualResetEvent _notifyThread;
         private volatile bool _stopUpdateThread;
@@ -54,8 +55,8 @@ namespace GitUI.CommandsDialogs
 
                 // switch UI to 'refreshing' state and retrieve patterns
                 GitUIExtensions.UISynchronizationContext.Send(state => {
-                    _NO_TRANSLATE_filesWillBeIgnored.Text = "Updating ...";
-                    _NO_TRANSLATE_Preview.DataSource = new List<string> { "Updating ..." };
+                    _NO_TRANSLATE_filesWillBeIgnored.Text = _updateStatusString.Text;
+                    _NO_TRANSLATE_Preview.DataSource = new List<string> { _updateStatusString.Text };
                     _NO_TRANSLATE_Preview.Enabled = false;
 
                     patterns = GetCurrentPatterns().ToArray();

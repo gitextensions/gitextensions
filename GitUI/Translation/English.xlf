@@ -1465,6 +1465,10 @@ You will have push access. {2}</source>
         <source>{0} file(s) matched</source>
         <target />
       </trans-unit>
+      <trans-unit id="_updateStatusString.Text">
+        <source>Updating ...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="btnCancel.Text">
         <source>Cancel</source>
         <target />
