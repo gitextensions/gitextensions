@@ -1814,6 +1814,11 @@ You will have push access. {2}</source>
         <target>{0} файл(ов) найдено</target>
         
       </trans-unit>
+      <trans-unit id="_updateStatusString.Text">
+        <source>Updating ...</source>
+        <target>Обновление ...</target>
+        
+      </trans-unit>
       <trans-unit id="btnCancel.Text">
         <source>Cancel</source>
         <target>Отмена</target>
