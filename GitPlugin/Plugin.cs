@@ -412,7 +412,9 @@ namespace GitPlugin.Commands
             {
                 foreach (CommandBarButton control in cb.Controls)
                 {
-                    if (control.Caption != "Commit")
+                    if (control.Caption.StartsWith("Commit"))
+                        control.Style = MsoButtonStyle.msoButtonIconAndCaption;
+                    else
                         control.Style = MsoButtonStyle.msoButtonIcon;
                 }
             }
@@ -437,8 +439,7 @@ namespace GitPlugin.Commands
                         ref contextGUIDS,
                         (int) vsCommandStatus.vsCommandStatusSupported |
                         (int) vsCommandStatus.vsCommandStatusEnabled,
-                        (int) commandStyle,
-                        vsCommandControlType.vsCommandControlTypeButton);
+                        (int) commandStyle);
                 }
                 catch (Exception)
                 {
@@ -449,10 +450,9 @@ namespace GitPlugin.Commands
             {
                 command = commands.AddNamedCommand2(_addIn,
                     commandName, caption, tooltip, true, -1, ref contextGUIDS,
-                    (int) vsCommandStatus.vsCommandStatusSupported +
+                    (int) vsCommandStatus.vsCommandStatusSupported |
                     (int) vsCommandStatus.vsCommandStatusEnabled,
-                    (int) commandStyle,
-                    vsCommandControlType.vsCommandControlTypeButton);
+                    (int) commandStyle);
             }
 
             if (command != null)
