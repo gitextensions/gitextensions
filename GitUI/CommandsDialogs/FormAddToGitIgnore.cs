@@ -17,6 +17,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly ManualResetEvent _notifyThread;
         private volatile bool _stopUpdateThread;
+        private volatile string[] _patterns;
 
         public FormAddToGitIgnore(GitUICommands aCommands, params string[] filePatterns)
             : base(aCommands)
@@ -24,17 +25,20 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            // closed by thread
             _notifyThread = new ManualResetEvent(false);
 
-            // when form is closed - notify thread for stop activity, but do not wait for actual stop
-            // waithing can lead to deadlocks, because thread uses SyncContext.Send
+            Thread thread = new Thread(UpdateIgnoreItemsThreadProc);
+            thread.IsBackground = true;
+
+            // when form is closed - notify thread for stop activity and wait thread finish work
             FormClosed += (sender, args) => {
                 _stopUpdateThread = true;
                 _notifyThread.Set();
+                thread.Join();
+                _notifyThread.Close();
             };
 
-            new Thread(UpdateIgnoreItemsThreadProc).Start();
+            thread.Start();
 
             if (filePatterns != null)
                 FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
@@ -51,23 +55,9 @@ namespace GitUI.CommandsDialogs
                 if (_stopUpdateThread)
                     break;
 
-                string[] patterns = null;
-
-                // switch UI to 'refreshing' state and retrieve patterns
-                GitUIExtensions.UISynchronizationContext.Send(state => {
-                    _NO_TRANSLATE_filesWillBeIgnored.Text = _updateStatusString.Text;
-                    _NO_TRANSLATE_Preview.DataSource = new List<string> { _updateStatusString.Text };
-                    _NO_TRANSLATE_Preview.Enabled = false;
-
-                    patterns = GetCurrentPatterns().ToArray();
-                }, null);
+                var ignoredFiles = Module.GetIgnoredFiles(_patterns);
 
                 // check quit condition after each long work
-                if (_stopUpdateThread)
-                    break;
-
-                var ignoredFiles = Module.GetIgnoredFiles(patterns);
-
                 if (_stopUpdateThread)
                     break;
 
@@ -78,8 +68,6 @@ namespace GitUI.CommandsDialogs
                 // finally - update UI
                 GitUIExtensions.UISynchronizationContext.Post(state => UpdatePreviewPanel((IList<string>)state), ignoredFiles);
             }
-
-            _notifyThread.Close();
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
@@ -148,6 +136,12 @@ namespace GitUI.CommandsDialogs
 
         private void FilePattern_TextChanged(object sender, EventArgs e)
         {
+            _NO_TRANSLATE_filesWillBeIgnored.Text = _updateStatusString.Text;
+            _NO_TRANSLATE_Preview.DataSource = new List<string> { _updateStatusString.Text };
+            _NO_TRANSLATE_Preview.Enabled = false;
+
+            _patterns = GetCurrentPatterns().ToArray();
+
             _notifyThread.Set();
         }
 
