@@ -1878,7 +1878,7 @@ namespace GitUI
                 case "installcredhelper":
                     InstallCredHelper();
                     return;
-                case "istall":        // [path]
+                case "init":        // [path]
                     RunInitCommand(args);
                     return;
                 case "merge":       // [--branch name]
