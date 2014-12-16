@@ -11,7 +11,7 @@ before_install:
 
 install:
   - mozroots --import --sync --quiet
-  - .nuget/Nuget.sh
+  - mono --runtime=v4.0 ./.nuget/NuGet.exe restore ./GitExtensionsMono.sln
 
 script:
-  - Build/build.mono.debug.sh 
+  - xbuild /p:TargetFrameworkProfile="" ./GitExtensionsMono.sln
