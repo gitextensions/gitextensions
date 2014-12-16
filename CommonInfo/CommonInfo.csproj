@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <MSBuildCommunityTasksPath>$(SolutionDir)\.build</MSBuildCommunityTasksPath>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <MSBuildCommunityTasksPath>$(SolutionDir).build\</MSBuildCommunityTasksPath>
     <RestorePackages>true</RestorePackages>
     <ProjectGuid>{28A3A8F1-F01C-4474-986E-8C90D82C1495}</ProjectGuid>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -32,7 +32,7 @@
       <Link>CommonGitInfo.cs</Link>
     </Compile>
   </ItemGroup>
-  <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.targets" />
+  <Import Project="$(MSBuildCommunityTasksPath)MSBuild.Community.Tasks.targets" />
   <Target Name="Build" DependsOnTargets="GitVer;GitPending">
     <ReadLinesFromFile File="$(SolutionDir)\InformationalVersion.txt">
       <Output TaskParameter="Lines" PropertyName="InformationalVersion" />
@@ -44,7 +44,7 @@
       <Dirty>
       </Dirty>
     </PropertyGroup>
-    <Message text="Generating InformationalVersion of $(InformationalVersion)-$(GitHash)$(Dirty)" />
+    <Message Text="Generating InformationalVersion of $(InformationalVersion)-$(GitHash)$(Dirty)" />
     <AssemblyInfo CodeLanguage="CS" OutputFile="$(SolutionDir)\CommonGitInfo.cs" AssemblyInformationalVersion="$(InformationalVersion)-$(GitHash)$(Dirty)" />
   </Target>
   <Target Name="GitVer">
