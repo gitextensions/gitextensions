@@ -2,6 +2,7 @@
 
 WARNING: Repository rewritten on 2014-08-24 to reduce its size. Please clone it again. |
 -----------
+[![Issue Stats](http://www.issuestats.com/github/gitextensions/gitextensions/badge/pr?style=flat)](http://www.issuestats.com/github/gitextensions/gitextensions) [![Issue Stats](http://www.issuestats.com/github/gitextensions/gitextensions/badge/issue?style=flat)](http://www.issuestats.com/github/gitextensions/gitextensions)
 
 ## Introduction
 
@@ -14,7 +15,9 @@ Build status: master [![Status](http://teamcity.codebetter.com/app/rest/builds/b
 Mono Build status: master
 [![Build Status](https://travis-ci.org/gitextensions/gitextensions.svg?branch=master)](https://travis-ci.org/gitextensions/gitextensions)
 
-Translation: [Transifex](https://www.transifex.com/organization/git-extensions/dashboard/git-extensions)
+Translation: [![Transifex](https://ds0k0en9abmn1.cloudfront.net/static/charts/images/tx-logo-micro.646b0065fce6.png)](https://www.transifex.com/projects/p/git-extensions/)
+
+[![Transifex Stats](https://www.transifex.com/projects/p/git-extensions/resource/ui-master/chart/image_png)](https://www.transifex.com/projects/p/git-extensions/resource/ui-master/)
 
 The [build](http://teamcity.codebetter.com/project.html?projectId=GitExtensions&branch_GitExtensions=__all_branches__) is generously hosted and run on the [CodeBetter TeamCity](http://codebetter.com/codebetter-ci/) infrastructure.
 
