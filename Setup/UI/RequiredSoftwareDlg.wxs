@@ -14,7 +14,7 @@
         <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}Required Software" />
         <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Install the additional software required to run Git Extensions" />
 
-        <Control Id="MsysGitTitle" Type="Text" Height="12" Width="200" X="15" Y="55" Text="{\WixUI_Font_Title}MsysGit 1.9.4" />
+        <Control Id="MsysGitTitle" Type="Text" Height="12" Width="200" X="15" Y="55" Text="{\WixUI_Font_Title}MsysGit 1.9.5" />
         <Control Id="MsysGitDescription" Type="Text" Height="40" Width="238" X="25" Y="71" Text="MsysGit is the native version of Git for Windows that powers Git Extensions. You must have a version of MsysGit installed for Git Extensions to function properly." />
         <Control Id="MsysGitCheckBox" Type="CheckBox" Height="20" Width="78" X="274" Y="72" Text="Install MsysGit" Property="INSTALLMSYSGIT" CheckBoxValue="1" />
 
