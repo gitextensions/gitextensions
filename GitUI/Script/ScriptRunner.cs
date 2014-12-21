@@ -86,6 +86,8 @@ namespace GitUI.Script
 
             string command = OverrideCommandWhenNecessary(originalCommand);
 
+            var allSelectedRevisions = new List<GitRevision>();
+
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
 
@@ -120,6 +122,8 @@ namespace GitUI.Script
                 }
                 else if (revisionGrid != null)
                 {
+                    allSelectedRevisions = revisionGrid.GetSelectedRevisions();
+                    allSelectedRevisions.Reverse(); // Put first clicked revisions first
                     selectedRevision = CalculateSelectedRevision(revisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                 }
 
@@ -127,6 +131,10 @@ namespace GitUI.Script
                 string url;
                 switch (option)
                 {
+                    case "{sHashes}":
+                        argument = argument.Replace(option,
+                            string.Join(" ", allSelectedRevisions.Select(revision => revision.Guid).ToArray()));
+                        break;
                     case "{sTag}":
                         if (selectedTags.Count == 1)
                             argument = argument.Replace(option, selectedTags[0].Name);
@@ -391,6 +399,7 @@ namespace GitUI.Script
             {
                 string[] options =
                     {
+                        "{sHashes}",
                         "{sTag}",
                         "{sBranch}",
                         "{sLocalBranch}",
