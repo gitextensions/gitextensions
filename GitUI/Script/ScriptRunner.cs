@@ -106,9 +106,9 @@ namespace GitUI.Script
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
                     continue;
-                if (option.StartsWith("{c") || selectedRevision != null)
+                if (option.StartsWith("{c") && currentRevision == null)
                 {
-                    currentRevision = GetCurrentRevision(aModule, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision, option);
+                    currentRevision = GetCurrentRevision(aModule, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision);
 
                     if (currentLocalBranches.Count == 1)
                         currentRemote = aModule.GetSetting(string.Format("branch.{0}.remote", currentLocalBranches[0].Name));
@@ -120,7 +120,7 @@ namespace GitUI.Script
                                 askToSpecify(currentLocalBranches, "Current Revision Branch")));
                     }
                 }
-                else if (revisionGrid != null)
+                else if (option.StartsWith("{s") && selectedRevision == null && revisionGrid != null)
                 {
                     allSelectedRevisions = revisionGrid.GetSelectedRevisions();
                     allSelectedRevisions.Reverse(); // Put first clicked revisions first
@@ -359,9 +359,9 @@ namespace GitUI.Script
 
         private static GitRevision GetCurrentRevision(GitModule aModule, RevisionGrid RevisionGrid, List<GitRef> currentTags, List<GitRef> currentLocalBranches,
                                                       List<GitRef> currentRemoteBranches, List<GitRef> currentBranches,
-                                                      GitRevision currentRevision, string option)
+                                                      GitRevision currentRevision)
         {
-            if (option.StartsWith("{c") && currentRevision == null)
+            if (currentRevision == null)
             {
                 IList<GitRef> refs;
 
