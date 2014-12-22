@@ -41,6 +41,9 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonGitInfo.cs">
+      <Link>CommonGitInfo.cs</Link>
+    </Compile>
     <Compile Include="CreateLocalBranchesForm.cs">
       <SubType>Form</SubType>
     </Compile>

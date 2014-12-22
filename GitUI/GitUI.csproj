@@ -100,6 +100,9 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\CommonGitInfo.cs">
+      <Link>Properties\CommonGitInfo.cs</Link>
+    </Compile>
     <Compile Include="AutoCompletion\CommitAutoCompleteProvider.cs" />
     <Compile Include="AutoCompletion\IAutoCompleteProvider.cs" />
     <Compile Include="BuildServerIntegration\BuildInfoDrawingLogic.cs" />

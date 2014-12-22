@@ -45,6 +45,9 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\CommonGitInfo.cs">
+      <Link>Properties\CommonGitInfo.cs</Link>
+    </Compile>
     <Compile Include="GitObject.cs" />
     <Compile Include="FindLargeFilesPlugin.cs" />
     <Compile Include="FindLargeFilesForm.cs">

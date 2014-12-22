@@ -40,6 +40,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonGitInfo.cs">
+      <Link>Properties\CommonGitInfo.cs</Link>
+    </Compile>
     <Compile Include="Github3.cs" />
     <Compile Include="GithubBranch.cs" />
     <Compile Include="GithubHostedRemote.cs" />

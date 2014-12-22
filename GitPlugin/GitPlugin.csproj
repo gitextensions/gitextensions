@@ -74,6 +74,9 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\CommonGitInfo.cs">
+      <Link>Properties\CommonGitInfo.cs</Link>
+    </Compile>
     <Compile Include="Commands\FindFile.cs" />
     <Compile Include="Commands\OpenWithDifftool.cs" />
     <Compile Include="Commands\ViewChanges.cs">

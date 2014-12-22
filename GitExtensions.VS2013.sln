@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}"
 EndProject
@@ -13,18 +13,34 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions", "GitExtensi
 		{101D3C78-27CC-446A-98EC-E2DE88BF0641} = {101D3C78-27CC-446A-98EC-E2DE88BF0641}
 		{452CBBA1-8AF0-4F3B-8BEB-B8B31DC2B749} = {452CBBA1-8AF0-4F3B-8BEB-B8B31DC2B749}
 		{121965D1-4399-4538-B8BF-403EB5B847C3} = {121965D1-4399-4538-B8BF-403EB5B847C3}
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
 		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC} = {EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitPlugin", "GitPlugin\GitPlugin.csproj", "{E996BE2D-B07D-472D-9D74-3EA2D48EF269}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUI", "GitUI\GitUI.csproj", "{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitCommands", "GitCommands\GitCommands.csproj", "{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUIPluginInterfaces", "Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj", "{27559302-F35E-4B62-A6EC-11FF21A5FA6F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitStatistics", "Plugins\Statistics\GitStatistics\GitStatistics.csproj", "{92B57383-233E-46AE-8A86-6E98BF349A72}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "Setup\Setup.wixproj", "{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -32,30 +48,69 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "Setup\Setup.wixpro
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManager", "ResourceManager\ResourceManager.csproj", "{D3440FD7-AFC5-4351-8741-6CDBF15CE944}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gource", "Plugins\Gource\Gource.csproj", "{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gravatar", "Gravatar\Gravatar.csproj", "{4041B976-50D0-4C6E-ABAF-7E67458A1264}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeleteUnusedBranches", "Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj", "{921F0443-C3A1-4A09-82E8-C4AFB9654943}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpellChecker", "NetSpell.SpellChecker\SpellChecker.csproj", "{A426EE0B-E52E-4D74-AF24-06797142D7B2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitImpact", "Plugins\Statistics\GitImpact\GitImpact.csproj", "{0B131F9D-BB10-4C3E-9656-5AB858158DE5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLocalBranches", "Plugins\CreateLocalBranches\CreateLocalBranches.csproj", "{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindLargeFiles", "Plugins\FindLargeFiles\FindLargeFiles.csproj", "{F261BCD1-F5F7-4664-A229-E52032E6E9FD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Github3", "Plugins\Github3\Github3.csproj", "{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gerrit", "Plugins\Gerrit\Gerrit.csproj", "{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxySwitcher", "Plugins\ProxySwitcher\ProxySwitcher.csproj", "{274F449F-7472-4248-9A57-8CA665A75B5D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensionsTest", "GitExtensionsTest\GitExtensionsTest.csproj", "{AC8FDEDF-6390-4F87-BBC3-1A974810B589}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotesGenerator", "Plugins\ReleaseNotesGenerator\ReleaseNotesGenerator.csproj", "{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationApp", "TranslationApp\TranslationApp.csproj", "{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -75,6 +130,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationApp", "Translati
 		{121965D1-4399-4538-B8BF-403EB5B847C3} = {121965D1-4399-4538-B8BF-403EB5B847C3}
 		{F261BCD1-F5F7-4664-A229-E52032E6E9FD} = {F261BCD1-F5F7-4664-A229-E52032E6E9FD}
 		{F261BCD1-F5F7-4664-A230-E52032E6E9FD} = {F261BCD1-F5F7-4664-A230-E52032E6E9FD}
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
 		{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8} = {8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}
 		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636} = {7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}
 		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC} = {EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}
@@ -88,12 +144,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BB46D9
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundFetch", "Plugins\BackgroundFetch\BackgroundFetch.csproj", "{F261BCD1-F5F7-4664-A230-E52032E6E9FD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCompileSubmodules", "Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj", "{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitFlow", "Plugins\GitFlow\GitFlow.csproj", "{D4628A13-CD53-401F-A645-CB16FD15ABBB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamCityIntegration", "Plugins\BuildServerIntegration\TeamCityIntegration\TeamCityIntegration.csproj", "{121965D1-4399-4538-B8BF-403EB5B847C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildServerIntegration", "BuildServerIntegration", "{F1B97F5D-CA42-4280-94A1-CE412BEA20DF}"
 EndProject
@@ -104,16 +169,40 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBug", "Externals\NBug\NBug\NBug.csproj", "{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stash", "Plugins\Stash\Stash.csproj", "{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JenkinsIntegration", "Plugins\BuildServerIntegration\JenkinsIntegration\JenkinsIntegration.csproj", "{E6AAC693-815B-4D1A-83D7-F4DE36072793}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsIntegration", "Plugins\BuildServerIntegration\TfsIntegration\TfsIntegration.csproj", "{452CBBA1-8AF0-4F3B-8BEB-B8B31DC2B749}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsInterop.Vs2012", "Plugins\BuildServerIntegration\TfsInterop\TfsInterop.Vs2012.csproj", "{699CE23D-8BBD-4C15-82E9-7A628ACCA4C6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsInterop.Vs2013", "Plugins\BuildServerIntegration\TfsInterop\TfsInterop.Vs2013.csproj", "{101D3C78-27CC-446A-98EC-E2DE88BF0641}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtUtils", "GitExtUtils\GitExtUtils.csproj", "{0F1F1168-A4B2-4FA2-B17B-735140D17F39}"
+	ProjectSection(ProjectDependencies) = postProject
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495} = {28A3A8F1-F01C-4474-986E-8C90D82C1495}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{CF043C5C-829A-4271-B169-B595B1E99DD5}"
+	ProjectSection(SolutionItems) = preProject
+		Build.proj = Build.proj
+		.build\MSBuild.Community.Tasks.dll = .build\MSBuild.Community.Tasks.dll
+		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonInfo", "CommonInfo\CommonInfo.csproj", "{28A3A8F1-F01C-4474-986E-8C90D82C1495}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -385,6 +474,14 @@ Global
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{28A3A8F1-F01C-4474-986E-8C90D82C1495}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

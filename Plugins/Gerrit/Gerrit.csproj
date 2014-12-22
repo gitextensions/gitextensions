@@ -44,6 +44,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\CommonGitInfo.cs">
+      <Link>Properties\CommonGitInfo.cs</Link>
+    </Compile>
     <Compile Include="FormPluginInformation.cs">
       <SubType>Form</SubType>
     </Compile>
