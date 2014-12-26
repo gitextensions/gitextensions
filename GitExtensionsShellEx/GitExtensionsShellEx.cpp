@@ -609,9 +609,16 @@ void CGitExtensionsShellEx::RunGitEx(const TCHAR* command)
     CString szCommandName = command;
     CString args;
 
+    if (szFile.GetLength() > 1 && szFile[szFile.GetLength() - 1] == '\\')
+    {
+        // Escape the final backslash to avoid escaping the quote.
+        // This is a problem for drive roots on Windows, such as "C:\".
+        szFile += '\\';
+    }
+
     args += command;
     args += " \"";
-    args += m_szFile;
+    args += szFile;
     args += "\"";
 
     CString dir = "";
