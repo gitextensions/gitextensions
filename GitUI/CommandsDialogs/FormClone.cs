@@ -70,6 +70,30 @@ namespace GitUI.CommandsDialogs
                     _NO_TRANSLATE_To.Text = Module.WorkingDir;
             }
 
+            if (_NO_TRANSLATE_From.Text == _NO_TRANSLATE_To.Text)
+            {
+                // Try to be more helpful to the user.
+                // Use the cliboard text as a potential source URL.
+                try
+                {
+                    if (Clipboard.ContainsText(TextDataFormat.Text))
+                    {
+                        string text = Clipboard.GetText(TextDataFormat.Text) ?? string.Empty;
+
+                        // See if it's a valid URL.
+                        string lowerText = text.ToLowerInvariant();
+                        if (lowerText.StartsWith("http") ||
+                            lowerText.StartsWith("git@"))
+                        {
+                            _NO_TRANSLATE_From.Text = text;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // We tried.
+                }
+            }
 
             FromTextUpdate(null, null);
         }
