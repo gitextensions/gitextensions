@@ -1161,9 +1161,12 @@ namespace GitUI
                 }
             }
 
-            if (!Revisions.IsRevisionRelative(filtredCurrentCheckout))
+            if (filtredCurrentCheckout != null)
             {
-                HighlightBranch(filtredCurrentCheckout);
+                if (!Revisions.IsRevisionRelative(filtredCurrentCheckout))
+                {
+                    HighlightBranch(filtredCurrentCheckout);
+                }
             }
         }
 
