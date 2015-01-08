@@ -48,7 +48,9 @@ namespace GitPlugin.Commands
                 {
                     _lastUpdatedCaption = newCaption;
 
-                    Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", newCaption);
+                    // try apply new caption (operation can fail)
+                    if (!Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", newCaption))
+                        _lastUpdatedCaption = null;
                 }
 
                 lastBranchCheck = DateTime.Now;
