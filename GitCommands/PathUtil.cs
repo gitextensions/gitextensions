@@ -101,5 +101,20 @@ namespace GitCommands
         {
             return new PathEqualityComparer();
         }
+
+        public static string GetRepositoryName(string repositoryUrl)
+        {
+            const string standardRepositorySuffix = ".git";
+            string path = repositoryUrl.TrimEnd(new[] { '\\', '/' });
+            string name = "";
+
+            if (path.EndsWith(standardRepositorySuffix))
+                path = path.Substring(0, path.Length - standardRepositorySuffix.Length);
+
+            if (path.Contains("\\") || path.Contains("/"))
+                name = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
+
+            return name;
+        }
     }
 }
