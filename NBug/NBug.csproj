@@ -123,6 +123,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Properties\Localization.es-MX.Designer.cs">
+      <DependentUpon>Localization.es-MX.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Properties\Localization.fi-FI.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -257,6 +262,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core\UI\WinForms\Panels\ExceptionDetails.resx">
       <DependentUpon>ExceptionDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.es-MX.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.es-MX.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Localization.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
