@@ -1158,7 +1158,7 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            string filtredCurrentCheckout = _filtredCurrentCheckout;
+            string filtredCurrentCheckout = _filtredCurrentCheckout ?? string.Empty;
             if (LastSelectedRows != null)
             {
                 Revisions.SelectedIds = LastSelectedRows;
