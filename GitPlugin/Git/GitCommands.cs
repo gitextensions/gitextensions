@@ -65,7 +65,16 @@ namespace GitPlugin.Git
         public static Process RunGitEx(string command, string filename)
         {
             if (!string.IsNullOrEmpty(filename))
+            {
+                if (filename.EndsWith("\\"))
+                {
+                    // Escape the final backslash to avoid escaping the quote.
+                    // This is a problem for drive roots on Windows, such as "C:\".
+                    filename += "\\";
+                }
+
                 command += " \"" + filename + "\"";
+            }
 
             string path = GetGitExRegValue("InstallDir");
             string workDir = Path.GetDirectoryName(filename);
