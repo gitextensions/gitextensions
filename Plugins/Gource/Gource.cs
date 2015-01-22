@@ -1,12 +1,12 @@
-﻿using System;
+﻿using GitUIPluginInterfaces;
+using ICSharpCode.SharpZipLib.Zip;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using GitUIPluginInterfaces;
-using ICSharpCode.SharpZipLib.Zip;
 
 namespace Gource
 {
@@ -14,6 +14,7 @@ namespace Gource
     {
         private StringSetting GourcePath = new StringSetting("Path to \"gource\"", "");
         private StringSetting GourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
+
         #region IGitPlugin Members
 
         public override string Description
@@ -30,7 +31,6 @@ namespace Gource
 
         public override bool Execute(GitUIBaseEventArgs eventArgs)
         {
-
             IGitModule gitUiCommands = eventArgs.GitModule;
             var ownerForm = eventArgs.OwnerForm as IWin32Window;
             if (!gitUiCommands.IsValidGitWorkingDir())
@@ -51,9 +51,8 @@ namespace Gource
                             ".\n\n.Do you want to reset the configured path?", "Gource", MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
                     {
-                        //GourcePath.Value = GourcePath.DefaultValue;
-                        //Settings.SetSetting("Path to \"gource\"", "");
-                        //pathToGource = Settings.GetSetting("Path to \"gource\"");
+                        Settings.SetValue<string>(GourcePath.Name, GourcePath.DefaultValue, s => s);
+                        pathToGource = GourcePath.DefaultValue;
                     }
                 }
             }
@@ -84,7 +83,6 @@ namespace Gource
                         var newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
                         if (File.Exists(newGourcePath))
                         {
-                            //Settings.SetSetting("Path to \"gource\"", newGourcePath);
                             MessageBox.Show(ownerForm, "\"gource\" has been downloaded and unzipped.");
                             pathToGource = newGourcePath;
                         }
@@ -96,19 +94,17 @@ namespace Gource
                     }
                 }
             }
-            
-            //using (var gourceStart = new GourceStart(pathToGource, eventArgs,
-            //                                  Settings.GetSetting("Arguments")))
-            //{
-            //    gourceStart.ShowDialog(ownerForm);
 
-            //    Settings.SetSetting("Arguments", gourceStart.GourceArguments);
-            //    Settings.SetSetting("Path to \"gource\"", gourceStart.PathToGource);
-            //}
-            return false;
+            using (var gourceStart = new GourceStart(pathToGource, eventArgs, GourceArguments[Settings]))
+            {
+                gourceStart.ShowDialog(ownerForm);
+                Settings.SetValue<string>(GourceArguments.Name, gourceStart.GourceArguments, s => s);
+                Settings.SetValue<string>(GourcePath.Name, gourceStart.PathToGource, s => s);
+            }
+            return true;
         }
 
-        #endregion
+        #endregion IGitPlugin Members
 
         public static void UnZipFiles(string zipPathAndFile, string outputFolder, bool deleteZipFile)
         {
@@ -121,7 +117,7 @@ namespace Gource
                 {
                     var directoryName = outputFolder;
                     var fileName = Path.GetFileName(theEntry.Name);
-                    // create directory 
+                    // create directory
                     if (directoryName != "")
                     {
                         Directory.CreateDirectory(directoryName);
@@ -160,7 +156,6 @@ namespace Gource
             }
         }
 
-
         public int DownloadFile(String remoteFilename, String localFilename)
         {
             // Function will return the number of bytes processed
@@ -175,7 +170,7 @@ namespace Gource
             // classes throw exceptions upon error
             try
             {
-                var webClient = new WebClient {Proxy = WebRequest.DefaultWebProxy};
+                var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
                 // Once the WebResponse object has been retrieved,
@@ -209,7 +204,7 @@ namespace Gource
             }
             finally
             {
-                // Close the response and streams objects here 
+                // Close the response and streams objects here
                 // to make sure they're closed even if an exception
                 // is thrown at some point
                 if (localStream != null) localStream.Close();
@@ -219,27 +214,25 @@ namespace Gource
             return bytesProcessed;
         }
 
-
         private static string SearchForGourceUrl()
         {
             try
             {
-                var webClient = new WebClient {Proxy = WebRequest.DefaultWebProxy};
+                var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
                 webClient.Encoding = Encoding.UTF8;
 
-                var response = webClient.DownloadString(@"http://code.google.com/p/gource/");
+                var response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/latest");
 
                 //find http://gource.googlecode.com/files/gource-0.26b.win32.zip
                 //find http://gource.googlecode.com/files/gource-0.34-rc2.win32.zip
-                var regEx = new Regex(@"gource-.{3,15}win32\.zip");
-
+                var regEx = new Regex(@"(?:<a .*href="")(.*gource-.{3,15}win32\.zip)""");
 
                 var matches = regEx.Matches(response);
 
                 foreach (Match match in matches)
                 {
-                    return "http://gource.googlecode.com/files/" + match.Value;
+                    return "https://github.com" + match.Groups[1].Value;
                 }
 
                 return string.Empty;
