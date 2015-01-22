@@ -2010,7 +2010,7 @@ namespace GitCommands
             for (int i = 0; i < list.Length; i++)
             {
                 string stashString = list[i];
-                if (stashString.IndexOf(':') > 0)
+                if (stashString.IndexOf(':') > 0 && ! stashString.StartsWith("fatal: "))
                 {
                     stashes.Add(new GitStash(stashString, i));
                 }
@@ -2517,7 +2517,7 @@ namespace GitCommands
 
             foreach (var itemsString in itemsStrings)
             {
-                if (itemsString == null || itemsString.Length <= 42)
+                if (itemsString == null || itemsString.Length <= 42 || itemsString.StartsWith("error: "))
                     continue;
 
                 var completeName = itemsString.Substring(41).Trim();
