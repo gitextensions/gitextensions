@@ -18,7 +18,7 @@ Mono Build status: master
 
 Translation: [![Transifex](https://ds0k0en9abmn1.cloudfront.net/static/charts/images/tx-logo-micro.646b0065fce6.png)](https://www.transifex.com/projects/p/git-extensions/)
 
-[![Transifex Stats](https://www.transifex.com/projects/p/git-extensions/resource/ui-master/chart/image_png)](https://www.transifex.com/projects/p/git-extensions/resource/ui-master/)
+[![Transifex Stats](https://www.transifex.com/projects/p/git-extensions/resource/ui-master/chart/image_png)](https://www.transifex.com/projects/p/git-extensions/)
 
 The [build](http://teamcity.codebetter.com/project.html?projectId=GitExtensions&branch_GitExtensions=__all_branches__) is generously hosted and run on the [CodeBetter TeamCity](http://codebetter.com/codebetter-ci/) infrastructure.
 
