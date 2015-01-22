@@ -31,7 +31,9 @@ namespace GitPlugin.Commands
 
                 var fileName = activeDocument.ProjectItem.get_FileNames(1);
 
-                SelectedItem selectedItem = application.SelectedItems.Cast<SelectedItem>().FirstOrDefault(solutionItem => solutionItem.ProjectItem.get_FileNames(1) == fileName);
+                SelectedItem selectedItem = application.SelectedItems
+                    .Cast<SelectedItem>()
+                    .FirstOrDefault(solutionItem => solutionItem.ProjectItem != null && solutionItem.ProjectItem.get_FileNames(1) == fileName);
 
                 OnExecute(selectedItem, fileName, pane);
                 return;
