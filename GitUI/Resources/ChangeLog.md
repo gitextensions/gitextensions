@@ -3,6 +3,9 @@
 ### Version 2.49 (no due date)
 * Cherry pick selected file/selected lines.
 
+### Version 2.48.04 (no due date)
+* Fixed issue #1643: Do stage of 16506 files and GUI becomes Not Respoding
+
 ### Version 2.48.03 (9 December 2014)
 * Fixed issue #2538: Fix crash happening when deleting a remote branch
 * Fixed issue #2498: VS Plugin use solution scope if no active document

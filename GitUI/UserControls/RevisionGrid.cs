@@ -1178,12 +1178,12 @@ namespace GitUI
                 }
             }
 
-            if (filtredCurrentCheckout != null)
+            if (string.IsNullOrEmpty(filtredCurrentCheckout))
+                return;
+
+            if (!Revisions.IsRevisionRelative(filtredCurrentCheckout))
             {
-                if (!Revisions.IsRevisionRelative(filtredCurrentCheckout))
-                {
-                    HighlightBranch(filtredCurrentCheckout);
-                }
+                HighlightBranch(filtredCurrentCheckout);
             }
         }
 
@@ -1204,7 +1204,7 @@ namespace GitUI
             return -1;
         }
 
-        private IEnumerable<string> GetAllParents(string initRevision)
+        private string[] GetAllParents(string initRevision)
         {
             var revListParams = "rev-list ";
             if (AppSettings.OrderRevisionByDate)
@@ -1214,7 +1214,7 @@ namespace GitUI
             if (AppSettings.MaxRevisionGraphCommits > 0)
                 revListParams += string.Format("--max-count=\"{0}\" ", (int)AppSettings.MaxRevisionGraphCommits);
 
-            return Module.ReadGitOutputLines(revListParams + initRevision);
+            return Module.ReadGitOutputLines(revListParams + initRevision).ToArray();
         }
 
         private int SearchRevision(string initRevision)
@@ -2381,7 +2381,7 @@ namespace GitUI
             return ShowUncommitedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
         }
 
-        private IEnumerable<string> _currentCheckoutParents;
+        private string[] _currentCheckoutParents;
 
         private void UpdateGraph(GitRevision rev)
         {
