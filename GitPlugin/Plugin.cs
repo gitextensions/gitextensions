@@ -427,8 +427,6 @@ namespace GitPlugin.Commands
                         control.Style = MsoButtonStyle.msoButtonIconAndCaption;
                     else
                         control.Style = MsoButtonStyle.msoButtonIcon;
-                    else
-                        control.Style = MsoButtonStyle.msoButtonIconAndCaption;
                 }
             }
         }
