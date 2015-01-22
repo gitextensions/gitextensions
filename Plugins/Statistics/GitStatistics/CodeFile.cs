@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 
 namespace GitStatistics
@@ -143,7 +144,7 @@ namespace GitStatistics
             else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.StartsWith("--[["))
                 _inCommentBlock = true;
 
-            // If we're not in a code-generated region, we should still check for normal 
+            // If we're not in a code-generated region, we should still check for normal
             // comments. This should help improve accuracy on resx files
             if (File.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
                 (File.Extension.Equals(".resx", StringComparison.OrdinalIgnoreCase) && !_inCodeGeneratedRegion) ||
