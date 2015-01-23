@@ -1457,25 +1457,6 @@ namespace GitCommands
             return GetPathSetting(string.Format("remote.{0}.puttykeyfile", remote));
         }
 
-        public string GetPlinkCompatibleUrl(string inputUrl)
-        {
-            // We don't need putty for http:// links and git@... urls are already usable.
-            // But ssh:// urls can cause problems
-            if (!inputUrl.StartsWith("ssh") || !Uri.IsWellFormedUriString(inputUrl, UriKind.Absolute))
-                return inputUrl;
-
-            // Turn ssh://user@host/path into user@host:path, which works better
-            Uri uri = new Uri(inputUrl, UriKind.Absolute);
-            string fixedUrl = "";
-
-            if (!String.IsNullOrEmpty(uri.UserInfo))
-                fixedUrl = uri.UserInfo + "@";
-            fixedUrl += uri.Authority;
-            fixedUrl += uri.IsDefaultPort ? ":" + uri.LocalPath.Substring(1) : uri.LocalPath;
-
-            return fixedUrl;
-        }
-
         public static bool PathIsUrl(string path)
         {
             return path.Contains(Path.DirectorySeparatorChar) || path.Contains(AppSettings.PosixPathSeparator.ToString());
