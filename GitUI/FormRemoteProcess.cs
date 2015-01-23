@@ -140,7 +140,7 @@ namespace GitUI
         {
             if (!remoteUrl.IsNullOrEmpty() && MessageBoxes.CacheHostkey(owner))
             {
-                remoteUrl = module.GetPlinkCompatibleUrl(remoteUrl);
+                remoteUrl = GitCommandHelpers.GetPlinkCompatibleUrl(remoteUrl);
 
                 module.RunExternalCmdShowConsole(
                     "cmd.exe",
@@ -162,7 +162,7 @@ namespace GitUI
                     {
                         string remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                         remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
-                        remoteUrl = Module.GetPlinkCompatibleUrl(remoteUrl);
+                        remoteUrl = GitCommandHelpers.GetPlinkCompatibleUrl(remoteUrl);
 
                         Module.RunExternalCmdShowConsole("cmd.exe", string.Format("/k \"\"{0}\" {1}\"", AppSettings.Plink, remoteUrl));
 

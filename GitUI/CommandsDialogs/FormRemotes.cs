@@ -257,7 +257,7 @@ namespace GitUI.CommandsDialogs
 
         private void TestConnectionClick(object sender, EventArgs e)
         {
-            string url = Module.GetPlinkCompatibleUrl(Url.Text);
+            string url = GitCommandHelpers.GetPlinkCompatibleUrl(Url.Text);
 
             Module.RunExternalCmdDetachedShowConsole(
                 "cmd.exe",
