@@ -105,6 +105,17 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _diffNotSupported =
             new TranslationString("Diff (not supported)");
 
+        private readonly TranslationString _pullFetch =
+            new TranslationString("Pull - fetch");
+        private readonly TranslationString _pullFetchAll =
+            new TranslationString("Pull - fetch all");
+        private readonly TranslationString _pullMerge =
+            new TranslationString("Pull - merge");
+        private readonly TranslationString _pullRebase =
+            new TranslationString("Pull - rebase");
+        private readonly TranslationString _pullOpenDialog =
+            new TranslationString("Open pull dialog");
+
         #endregion
 
         private Dashboard _dashboard;
@@ -206,7 +217,7 @@ namespace GitUI.CommandsDialogs
             {
                 RefreshPullIcon();
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
-                UICommands.BrowseRepo = this;                
+                UICommands.BrowseRepo = this;
             }
 
             FillBuildReport();  // Ensure correct page visibility
@@ -235,7 +246,7 @@ namespace GitUI.CommandsDialogs
             if (_dashboard == null || !_dashboard.Visible)
             {
                 var revisions = RevisionGrid.GetSelectedRevisions();
-                if (revisions.Count != 0) 
+                if (revisions.Count != 0)
                 {
                     _oldRevision = revisions[0].Guid;
                     _oldDiffItem = DiffFiles.SelectedItem;
@@ -249,7 +260,7 @@ namespace GitUI.CommandsDialogs
                 InternalInitialize(true);
             }
         }
-    
+
         #region IBrowseRepo
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
@@ -403,7 +414,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// to avoid showing menu items that should not be there during
         /// the transition from dashboard to repo browser and vice versa
-        /// 
+        ///
         /// and reset hotkeys that are shared between mutual exclusive menu items
         /// </summary>
         private void HideVariableMainMenuItems()
@@ -552,7 +563,7 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private void SetShortcutKeyDisplayStringsFromHotkeySettings()
         {
@@ -1097,13 +1108,13 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var revision = RevisionGrid.GetSelectedRevisions()[0];
-            
+
             var children = RevisionGrid.GetRevisionChildren(revision.Guid);
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
         private BuildReportTabPageExtension BuildReportTabPageExtension;
-        
+
         private void FillBuildReport()
         {
             if(EnvUtils.IsMonoRuntime())
@@ -1356,7 +1367,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsBlob)
             {
-                UICommands.StartFileHistoryDialog(this, item.FileName, null);                
+                UICommands.StartFileHistoryDialog(this, item.FileName, null);
             }
             else if (item.IsCommit)
             {
@@ -1404,7 +1415,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
                 else
-                { 
+                {
                     bSilent = (sender == toolStripButtonPull);
                     Module.LastPullActionToFormPullAction();
                 }
@@ -1720,7 +1731,7 @@ namespace GitUI.CommandsDialogs
         {
             UICommands.StartSubmodulesDialog(this);
         }
-        
+
         private void UpdateSubmoduleToolStripMenuItemClick(object sender, EventArgs e)
         {
             var submodule = (sender as ToolStripMenuItem).Tag as string;
@@ -2359,7 +2370,7 @@ namespace GitUI.CommandsDialogs
                     UICommands.StartPullDialog(this, true);
                     break;
                 case Commands.QuickPush:
-                    UICommands.StartPushDialog(this, true);                   
+                    UICommands.StartPushDialog(this, true);
                     break;
                 case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
                 case Commands.CloseRepositry: CloseToolStripMenuItemClick(null, null); break;
@@ -2521,7 +2532,7 @@ namespace GitUI.CommandsDialogs
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var diffGitItemStatus = DiffFiles.SelectedItems.First();
-            
+
             ExecuteCommand((int)Commands.FocusFileTree); // switch to view (and fills the first level of file tree data model if not already done)
 
             var currentNodes = GitTree.Nodes;
@@ -2558,7 +2569,7 @@ namespace GitUI.CommandsDialogs
                 if (i < pathParts.Length - 1) // if not the last path part...
                 {
                     foundNode.Expand(); // load more data
-                    
+
                     if (currentFoundNode.Nodes == null)
                     {
                         isIncompleteMatch = true;
@@ -2797,27 +2808,27 @@ namespace GitUI.CommandsDialogs
             {
                 case Settings.PullAction.Fetch:
                     toolStripButtonPull.Image = Properties.Resources.PullFetch;
-                    toolStripButtonPull.ToolTipText = "Pull - fetch";
+                    toolStripButtonPull.ToolTipText = _pullFetch.Text;
                     break;
 
                 case Settings.PullAction.FetchAll:
                     toolStripButtonPull.Image = Properties.Resources.PullFetchAll;
-                    toolStripButtonPull.ToolTipText = "Pull - fetch all";
+                    toolStripButtonPull.ToolTipText = _pullFetchAll.Text;
                     break;
 
                 case Settings.PullAction.Merge:
                     toolStripButtonPull.Image = Properties.Resources.PullMerge;
-                    toolStripButtonPull.ToolTipText = "Pull - merge";
+                    toolStripButtonPull.ToolTipText = _pullMerge.Text;
                     break;
 
                 case Settings.PullAction.Rebase:
                     toolStripButtonPull.Image = Properties.Resources.PullRebase;
-                    toolStripButtonPull.ToolTipText = "Pull - rebase";
+                    toolStripButtonPull.ToolTipText = _pullRebase.Text;
                     break;
 
                 default:
                     toolStripButtonPull.Image = Properties.Resources.Icon_4;
-                    toolStripButtonPull.ToolTipText = "Open pull dialog";
+                    toolStripButtonPull.ToolTipText = _pullOpenDialog.Text;
                     break;
             }
         }
@@ -3283,7 +3294,7 @@ namespace GitUI.CommandsDialogs
             }
             catch(Exception){}
 
-            Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new?body=" + WebUtility.HtmlEncode(issueData));            
+            Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new?body=" + WebUtility.HtmlEncode(issueData));
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
