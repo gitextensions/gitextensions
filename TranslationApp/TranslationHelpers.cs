@@ -24,6 +24,9 @@ namespace TranslationApp
                     ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
                     if (obj != null)
                         obj.AddTranslationItems(neutralTranslation);
+                    IDisposable disposable = obj as IDisposable;
+                    if (disposable != null)
+                        disposable.Dispose();
                 }
             }
             finally
