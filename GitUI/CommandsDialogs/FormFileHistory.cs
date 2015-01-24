@@ -170,10 +170,16 @@ namespace GitUI.CommandsDialogs
                 }
 
             }
-            else
+            else if (AppSettings.FollowRenamesInFileHistory)
             {
+                // history of a directory
                 // --parents doesn't work with --follow enabled, but needed to graph a filtered log
                 res.Filter = " --follow --parents -- \"" + fileName + "\"";
+            }
+            else
+            {
+                // rename following disabled
+                res.Filter = " --parents -- \"" + fileName + "\"";
             }
 
             if (AppSettings.FullHistoryInFileHistory)
