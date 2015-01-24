@@ -430,6 +430,12 @@ namespace GitCommands
             set { SetBool("followrenamesinfilehistory", value); }
         }
 
+        public static bool FollowRenamesInFileHistoryExactOnly
+        {
+            get { return GetBool("followrenamesinfilehistoryexactonly", false); }
+            set { SetBool("followrenamesinfilehistoryexactonly", value); }
+        }
+
         public static bool FullHistoryInFileHistory
         {
             get { return GetBool("fullhistoryinfilehistory", false); }

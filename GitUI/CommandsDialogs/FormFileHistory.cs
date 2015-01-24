@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
 
-            followFileHistoryToolStripMenuItem.Checked = AppSettings.FollowRenamesInFileHistory;
+            UpdateFollowHistoryMenuItems();
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
             loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
             loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow;
@@ -162,11 +162,11 @@ namespace GitUI.CommandsDialogs
                 if (hrw.RewriteNecessary)
                 {
                     res.Rewriter = hrw;
-                    res.Filter = " -M -C --name-only --follow -- \"" + fileName + "\"";
+                    res.Filter = " " + GitCommandHelpers.FindRenamesAndCopiesOpts() + " --name-only --follow -- \"" + fileName + "\"";
                 }
                 else
                 {
-                    res.Filter = " -M -C --name-only --parents -- \"" + fileName + "\"";
+                    res.Filter = " " + GitCommandHelpers.FindRenamesAndCopiesOpts() + " --name-only --parents -- \"" + fileName + "\"";
                 }
 
             }
@@ -174,7 +174,7 @@ namespace GitUI.CommandsDialogs
             {
                 // history of a directory
                 // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                res.Filter = " --follow --parents -- \"" + fileName + "\"";
+                res.Filter = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents -- \"" + fileName + "\"";
             }
             else
             {
@@ -326,9 +326,16 @@ namespace GitUI.CommandsDialogs
         private void followFileHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AppSettings.FollowRenamesInFileHistory = !AppSettings.FollowRenamesInFileHistory;
-            followFileHistoryToolStripMenuItem.Checked = AppSettings.FollowRenamesInFileHistory;
+            UpdateFollowHistoryMenuItems();
 
             LoadFileHistory();
+        }
+
+        private void UpdateFollowHistoryMenuItems()
+        {
+            followFileHistoryToolStripMenuItem.Checked = AppSettings.FollowRenamesInFileHistory;
+            followFileHistoryRenamesToolStripMenuItem.Enabled = AppSettings.FollowRenamesInFileHistory;
+            followFileHistoryRenamesToolStripMenuItem.Checked = AppSettings.FollowRenamesInFileHistoryExactOnly;
         }
 
         private void fullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -420,6 +427,23 @@ namespace GitUI.CommandsDialogs
             {
                 FileChanges.NavigateForward();
             }
+        }
+
+        private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
+        private void ToolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void followFileHistoryRenamesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.FollowRenamesInFileHistoryExactOnly = !AppSettings.FollowRenamesInFileHistoryExactOnly;
+            UpdateFollowHistoryMenuItems();
+            LoadFileHistory();
         }
     }
 }
