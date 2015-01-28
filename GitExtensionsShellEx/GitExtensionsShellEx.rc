@@ -69,7 +69,7 @@ BEGIN
             VALUE "FileDescription", "Git Extensions"
             VALUE "FileVersion", "2.48.04"
             VALUE "InternalName", "Git Extensions"
-            VALUE "LegalCopyright", "Copyright 2014"
+            VALUE "LegalCopyright", "Copyright 2015"
             VALUE "OriginalFilename", "GitExtensionsShellEx.dll"
             VALUE "ProductName", "Git Extensions"
             VALUE "ProductVersion", "2.48.04"
@@ -116,18 +116,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include ""winres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\0"
 END

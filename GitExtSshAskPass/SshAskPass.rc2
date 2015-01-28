@@ -32,7 +32,7 @@ BEGIN
             VALUE "FileDescription", "Git Extensions"
             VALUE "FileVersion", "2.48.04"
             VALUE "InternalName", "Git Extensions"
-            VALUE "LegalCopyright", "Copyright 2014"
+            VALUE "LegalCopyright", "Copyright 2015"
             VALUE "OriginalFilename", "GitExtSshAskPass.exe"
             VALUE "ProductName", "Git Extensions"
             VALUE "ProductVersion", "2.48.04"
