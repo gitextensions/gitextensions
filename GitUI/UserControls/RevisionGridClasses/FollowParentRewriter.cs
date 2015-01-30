@@ -122,7 +122,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         // Fetches previous names of _fileName, stores in _previousNames
         private void LoadPreviousNames()
         {
-            string arg = "log -M -C --follow --name-only --format=\"%n\"";
+            string arg = "log " + GitCommandHelpers.FindRenamesAndCopiesOpts() + " --follow --name-only --format=\"%n\"";
             if (AppSettings.FullHistoryInFileHistory)
             {
                 arg += " --full-history";
@@ -169,7 +169,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private void LoadParents()
         {
-            string arg = "log -M -C --simplify-merges --parents --boundary --not --glob=notes --not --all --format=\"%H %P\"";
+            string arg = "log " + GitCommandHelpers.FindRenamesAndCopiesOpts() + " --simplify-merges --parents --boundary --not --glob=notes --not --all --format=\"%H %P\"";
             if (AppSettings.OrderRevisionByDate)
             {
                 arg += " --date-order";

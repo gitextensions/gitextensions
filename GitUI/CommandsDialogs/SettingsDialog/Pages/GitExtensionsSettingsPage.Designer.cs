@@ -30,6 +30,7 @@
         {
             this.groupBoxBehaviour = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelBehaviour = new System.Windows.Forms.TableLayoutPanel();
+            this.chkFollowRenamesInFileHistoryExact = new System.Windows.Forms.CheckBox();
             this.RevisionGridQuickSearchTimeout = new System.Windows.Forms.NumericUpDown();
             this.btnDefaultDestinationBrowse = new System.Windows.Forms.Button();
             this.label24 = new System.Windows.Forms.Label();
@@ -91,6 +92,7 @@
             this.tableLayoutPanelBehaviour.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelBehaviour.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelBehaviour.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelBehaviour.Controls.Add(this.chkFollowRenamesInFileHistoryExact, 1, 4);
             this.tableLayoutPanelBehaviour.Controls.Add(this.RevisionGridQuickSearchTimeout, 1, 7);
             this.tableLayoutPanelBehaviour.Controls.Add(this.btnDefaultDestinationBrowse, 2, 6);
             this.tableLayoutPanelBehaviour.Controls.Add(this.label24, 0, 7);
@@ -117,6 +119,16 @@
             this.tableLayoutPanelBehaviour.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelBehaviour.Size = new System.Drawing.Size(970, 214);
             this.tableLayoutPanelBehaviour.TabIndex = 61;
+            // 
+            // chkFollowRenamesInFileHistoryExact
+            // 
+            this.chkFollowRenamesInFileHistoryExact.AutoSize = true;
+            this.chkFollowRenamesInFileHistoryExact.Location = new System.Drawing.Point(273, 95);
+            this.chkFollowRenamesInFileHistoryExact.Name = "chkFollowRenamesInFileHistoryExact";
+            this.chkFollowRenamesInFileHistoryExact.Size = new System.Drawing.Size(153, 17);
+            this.chkFollowRenamesInFileHistoryExact.TabIndex = 15;
+            this.chkFollowRenamesInFileHistoryExact.Text = "Follow exact renames and copies only";
+            this.chkFollowRenamesInFileHistoryExact.UseVisualStyleBackColor = true;
             // 
             // RevisionGridQuickSearchTimeout
             // 
@@ -204,7 +216,7 @@
             this.lblDefaultCloneDestination.Location = new System.Drawing.Point(3, 162);
             this.lblDefaultCloneDestination.Name = "lblDefaultCloneDestination";
             this.lblDefaultCloneDestination.Size = new System.Drawing.Size(148, 16);
-            this.lblDefaultCloneDestination.TabIndex = 17;
+            this.lblDefaultCloneDestination.TabIndex = 18;
             this.lblDefaultCloneDestination.Text = "Default clone destination";
             // 
             // chkUsePatienceDiffAlgorithm
@@ -223,7 +235,7 @@
             this.chkPlaySpecialStartupSound.Location = new System.Drawing.Point(322, 133);
             this.chkPlaySpecialStartupSound.Name = "chkPlaySpecialStartupSound";
             this.chkPlaySpecialStartupSound.Size = new System.Drawing.Size(181, 20);
-            this.chkPlaySpecialStartupSound.TabIndex = 16;
+            this.chkPlaySpecialStartupSound.TabIndex = 17;
             this.chkPlaySpecialStartupSound.Text = "Play Special Startup Sound";
             this.chkPlaySpecialStartupSound.UseVisualStyleBackColor = true;
             // 
@@ -243,7 +255,7 @@
             this.chkStartWithRecentWorkingDir.Location = new System.Drawing.Point(3, 133);
             this.chkStartWithRecentWorkingDir.Name = "chkStartWithRecentWorkingDir";
             this.chkStartWithRecentWorkingDir.Size = new System.Drawing.Size(211, 20);
-            this.chkStartWithRecentWorkingDir.TabIndex = 15;
+            this.chkStartWithRecentWorkingDir.TabIndex = 16;
             this.chkStartWithRecentWorkingDir.Text = "Open last working directory on startup";
             this.chkStartWithRecentWorkingDir.UseVisualStyleBackColor = true;
             // 
@@ -561,5 +573,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelBehaviour;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelEmailSettings;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelSmtpServer;
+        private System.Windows.Forms.CheckBox chkFollowRenamesInFileHistoryExact;
     }
 }
