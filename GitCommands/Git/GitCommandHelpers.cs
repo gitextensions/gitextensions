@@ -1322,6 +1322,28 @@ namespace GitCommands
             }
         }
 
+        // returns " --find-renames=..." according to app settings 
+        public static string FindRenamesOpt()
+        {
+            string result = " --find-renames";
+            if (AppSettings.FollowRenamesInFileHistoryExactOnly)
+            {
+                result += "=\"100%\"";
+            }
+            return result;
+        }
+
+        // returns " --find-renames=... --find-copies=..." according to app settings 
+        public static string FindRenamesAndCopiesOpts()
+        {
+            string findCopies = " --find-copies";
+            if (AppSettings.FollowRenamesInFileHistoryExactOnly)
+            {
+                findCopies += "=\"100%\"";
+            }
+            return FindRenamesOpt() + findCopies;
+        }
+
 #if !__MonoCS__
         static class NativeMethods
         {
