@@ -10,7 +10,9 @@ namespace GitStatistics
         StringSetting CodeFiles = new StringSetting("Code files",
                                 "*.c;*.cpp;*.cc;*.h;*.hpp;*.inl;*.idl;*.asm;*.inc;*.cs;*.xsd;*.wsdl;*.xml;*.htm;*.html;*.css;" + 
                                 "*.vbs;*.vb;*.sql;*.aspx;*.asp;*.php;*.nav;*.pas;*.py;*.rb;*.js");
-        StringSetting IgnoreDirectories = new StringSetting("Directories to ignore (EndsWith)", "\\Debug;\\Release;\\obj;\\bin;\\lib");
+
+        StringSetting IgnoreDirectories = new StringSetting("Ignore directories containing the following names", "\\Debug;\\Release;\\obj;\\bin;\\lib");
+        BoolSetting UseEndsWith = new BoolSetting("Use old directory filtering (EndsWith)", false);
         BoolSetting IgnoreSubmodules = new BoolSetting("Ignore submodules", true);
 
         #region IGitPlugin Members
@@ -23,6 +25,7 @@ namespace GitStatistics
         {
             yield return CodeFiles;
             yield return IgnoreDirectories;
+            yield return UseEndsWith;
             yield return IgnoreSubmodules;
         }
 
@@ -34,7 +37,8 @@ namespace GitStatistics
             using (var formGitStatistics =
                 new FormGitStatistics(gitUIEventArgs.GitModule, CodeFiles[Settings])
                     {
-                        DirectoriesToIgnore = IgnoreDirectories[Settings]
+                        DirectoriesToIgnore = IgnoreDirectories[Settings],
+                        EndsWithCompare = UseEndsWith[Settings].GetValueOrDefault()
                     })
             {
 

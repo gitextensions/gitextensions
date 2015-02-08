@@ -35,6 +35,7 @@ namespace GitStatistics
                 };
 
         public string DirectoriesToIgnore;
+        public bool EndsWithCompare;
         public DirectoryInfo WorkingDir;
         private SynchronizationContext syncContext;
         private LineCounter lineCounter;
@@ -147,7 +148,7 @@ namespace GitStatistics
         
         public void LoadLinesOfCode()
         {
-            lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore);
+            lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore, EndsWithCompare);
         }
 
         void lineCounter_LinesOfCodeUpdated(object sender, EventArgs e)
