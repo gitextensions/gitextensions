@@ -137,7 +137,9 @@ namespace GitUI
             Revisions.DragEnter += Revisions_DragEnter;
             Revisions.DragDrop += Revisions_DragDrop;
             Revisions.AllowDrop = true;
+
             Revisions.ColumnHeadersVisible = false;
+            Revisions.IdColumn.Visible = AppSettings.ShowIds;
 
             IsMessageMultilineDataGridViewColumn.Width = 25;
             IsMessageMultilineDataGridViewColumn.DisplayIndex = 2;
@@ -200,6 +202,7 @@ namespace GitUI
                 _normalFont = value;
                 MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                IdDataGridViewColumn.DefaultCellStyle.Font = new Font("Consolas", _normalFont.SizeInPoints);
                 IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
 
                 RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
@@ -1296,6 +1299,7 @@ namespace GitUI
             int messageColIndex = MessageDataGridViewColumn.Index;
             int authorColIndex = AuthorDataGridViewColumn.Index;
             int dateColIndex = DateDataGridViewColumn.Index;
+            int idColIndex = IdDataGridViewColumn.Index;
             int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
 
             // The graph column is handled by the DvcsGraph
@@ -1516,6 +1520,15 @@ namespace GitUI
                     var text = TimeToString(time);
                     e.Graphics.DrawString(text, rowFont, foreBrush,
                                           new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                }
+                else if (columnIndex == idColIndex)
+                {
+                    if (!revision.IsArtificial())
+                    { 
+                        var text = revision.Guid;
+                        e.Graphics.DrawString(text, new Font("Consolas", rowFont.SizeInPoints), foreBrush, 
+                                              new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    }
                 }
                 else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
                 {
@@ -2697,6 +2710,14 @@ namespace GitUI
         internal void ShowTags_ToolStripMenuItemClick(object sender, EventArgs e)
         {
             AppSettings.ShowTags = !AppSettings.ShowTags;
+            _revisionGridMenuCommands.TriggerMenuChanged();
+            Refresh();
+        }
+
+        internal void ShowIds_ToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            AppSettings.ShowIds = !AppSettings.ShowIds;
+            Revisions.IdColumn.Visible = AppSettings.ShowIds;
             _revisionGridMenuCommands.TriggerMenuChanged();
             Refresh();
         }

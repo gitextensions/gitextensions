@@ -345,13 +345,23 @@ namespace GitUI.UserControls.RevisionGridClasses
             }
 
             {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "showTagsToolStripMenuItem";
-                menuCommand.Text = "Show tags";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowTags;
+              var menuCommand = new MenuCommand();
+              menuCommand.Name = "showTagsToolStripMenuItem";
+              menuCommand.Text = "Show tags";
+              menuCommand.ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(null, null);
+              menuCommand.IsCheckedFunc = () => AppSettings.ShowTags;
 
-                resultList.Add(menuCommand);
+              resultList.Add(menuCommand);
+            }
+
+            {
+              var menuCommand = new MenuCommand();
+              menuCommand.Name = "showIdsToolStripMenuItem";
+              menuCommand.Text = "Show SHA1";
+              menuCommand.ExecuteAction = () => _revisionGrid.ShowIds_ToolStripMenuItemClick(null, null);
+              menuCommand.IsCheckedFunc = () => AppSettings.ShowIds;
+
+              resultList.Add(menuCommand);
             }
 
             {
