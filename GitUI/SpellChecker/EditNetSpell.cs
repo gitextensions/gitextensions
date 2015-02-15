@@ -983,8 +983,11 @@ namespace GitUI.SpellChecker
 
         private void AutoCompleteTimer_Tick (object sender, EventArgs e)
         {
-            UpdateOrShowAutoComplete(false);
-            AutoCompleteTimer.Stop();
+            if (!_customUnderlines.IsImeStartingComposition)
+            {
+                UpdateOrShowAutoComplete(false);
+                AutoCompleteTimer.Stop();
+            }
         }
 
         public void CancelAutoComplete ()
