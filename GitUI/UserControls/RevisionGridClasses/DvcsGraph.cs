@@ -1069,43 +1069,46 @@ namespace GitUI.RevisionGridClasses
                             }
                         }
 
+                        bool singleLane = laneInfo.ConnectLane == lane;
+                        int x0 = mid;
+                        int y0 = top - 1;
+                        int x1 = singleLane ? x0 : mid + (laneInfo.ConnectLane - lane) * _laneWidth;
+                        int y1 = top + _rowHeight + 2;
+
+                        Point p0 = new Point(x0, y0);
+                        Point p1 = new Point(x1, y1);
+                        Point c0 = Point.Empty, c1 = Point.Empty;
+                        if (!singleLane)
+                        {
+                            c0 = new Point(x0, top + _rowHeight/2 + 2);
+                            c1 = new Point(x1, top - 1 + _rowHeight/2);
+                        }
+
                         for (int i = drawBorder ? 0 : 2; i < 3; i++)
                         {
-                            Pen penLine = null;
-                            if (i == 0)
+                            Pen penLine;
+                            switch (i)
                             {
+                              case 0:
                                 penLine = _whiteBorderPen;
-                            }
-                            else if (i == 1)
-                            {
+                                break;
+                              case 1:
                                 penLine = _blackBorderPen;
-                            }
-                            else
-                            {
+                                break;
+                              default:
                                 if (brushLineColorPen == null)
-                                    brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
+                                  brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
                                 penLine = brushLineColorPen;
+                                break;
                             }
 
-                            if (laneInfo.ConnectLane == lane)
+                            if (singleLane)
                             {
-                                wa.DrawLine
-                                    (
-                                        penLine,
-                                        new Point(mid, top - 1),
-                                        new Point(mid, top + _rowHeight + 2)
-                                    );
+                                wa.DrawLine(penLine, p0, p1);
                             }
                             else
                             {
-                                wa.DrawBezier
-                                    (
-                                        penLine,
-                                        new Point(mid, top - 1),
-                                        new Point(mid, top + _rowHeight + 2),
-                                        new Point(mid + (laneInfo.ConnectLane - lane) * _laneWidth, top - 1),
-                                        new Point(mid + (laneInfo.ConnectLane - lane) * _laneWidth, top + _rowHeight + 2)
-                                    );
+                                wa.DrawBezier(penLine, p0, c0, c1, p1);
                             }
                         }
                     }
