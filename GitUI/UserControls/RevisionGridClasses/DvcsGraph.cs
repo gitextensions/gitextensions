@@ -1069,19 +1069,28 @@ namespace GitUI.RevisionGridClasses
                             }
                         }
 
+                        // Precalculate line endpoints
                         bool singleLane = laneInfo.ConnectLane == lane;
                         int x0 = mid;
                         int y0 = top - 1;
                         int x1 = singleLane ? x0 : mid + (laneInfo.ConnectLane - lane) * _laneWidth;
-                        int y1 = top + _rowHeight + 2;
+                        int y1 = top + _rowHeight;
 
                         Point p0 = new Point(x0, y0);
                         Point p1 = new Point(x1, y1);
-                        Point c0 = Point.Empty, c1 = Point.Empty;
-                        if (!singleLane)
+
+                        // Precalculate curve control points when needed
+                        Point c0, c1;
+                        if (singleLane)
                         {
-                            c0 = new Point(x0, top + _rowHeight/2 + 2);
-                            c1 = new Point(x1, top - 1 + _rowHeight/2);
+                            c0 = c1 = Point.Empty;
+                        }
+                        else
+                        {
+                            // Controls the curvature of cross-lane lines (0 = straight line, 1 = 90 degree turns)
+                            const float severity = 0.5f;
+                            c0 = new Point(x0, (int)(y0 * (1.0f - severity) + y1 * severity));
+                            c1 = new Point(x1, (int)(y1 * (1.0f - severity) + y0 * severity));
                         }
 
                         for (int i = drawBorder ? 0 : 2; i < 3; i++)
