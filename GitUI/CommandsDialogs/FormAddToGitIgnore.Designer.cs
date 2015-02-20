@@ -204,7 +204,7 @@
             this.MinimizeBox = false;
             this.Name = "FormAddToGitIgnore";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Add files(s) to .gitIgnore";
+            this.Text = "Add file(s) to .gitignore";
             this.groupBox1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
