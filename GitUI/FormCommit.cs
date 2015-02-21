@@ -530,6 +530,15 @@ namespace GitUI
         {
             initialized = true;
 
+            ThreadPool.QueueUserWorkItem(
+                o =>
+                {
+                    var text =
+                        string.Format(_formTitle.Text, Module.GetSelectedBranch(),
+                            Module.WorkingDir);
+
+                    _syncContext.Post(state1 => Text = text, null);
+                });
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -1306,16 +1315,6 @@ namespace GitUI
 
             if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
                 Message.Text = message;
-
-            ThreadPool.QueueUserWorkItem(
-                o =>
-                {
-                    var text =
-                        string.Format(_formTitle.Text, Module.GetSelectedBranch(),
-                                      Module.WorkingDir);
-
-                    _syncContext.Post(state1 => Text = text, null);
-                });
         }
 
         private void SetCommitMessageFromTextBox(string commitMessageText)
