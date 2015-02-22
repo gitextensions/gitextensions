@@ -124,6 +124,7 @@ namespace GitUI.CommitInfo
         private List<string> _branches;
         private string _branchInfo;
         private IList<string> _sortedRefs;
+        private System.Drawing.Rectangle _headerResize; // Cache desired size for commit header
 
         private void ReloadCommitInfo()
         {
@@ -158,7 +159,7 @@ namespace GitUI.CommitInfo
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
-            _RevisionHeader.Height = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
+            _RevisionHeader.Height = _headerResize.Height;
             _revisionInfo = commitInformation.Body;
             updateText();
             LoadAuthorImage(data.Author ?? data.Committer);
@@ -431,6 +432,12 @@ namespace GitUI.CommitInfo
             {
                 DoCommandClick("navigateforward", null);
             }
+        }
+
+        private void _RevisionHeader_ContentsResized(object sender, ContentsResizedEventArgs e)
+        {
+            // Cache desired size for commit header
+            _headerResize = e.NewRectangle;
         }
     }
 }
