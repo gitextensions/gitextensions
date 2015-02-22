@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitUI.CommandsDialogs.FormatPatchDialog;
 using ResourceManager;
 
@@ -44,7 +45,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             if (aCommands != null)
-                MailFrom.Text = Module.GetEffectiveSetting("user.email");
+                MailFrom.Text = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
         }
 
         private void Browse_Click(object sender, EventArgs e)

@@ -480,14 +480,24 @@ namespace GitUI.RevisionGridClasses
 
             lock (_backgroundThread)
             {
-                if (CurrentCell == null)
+                UpdatingVisibleRows = true;
+
+                try
                 {
-                    RowCount = count;
-                    CurrentCell = null;
+                    if (CurrentCell == null)
+                    {
+                        RowCount = count;
+                        CurrentCell = null;
+                    }
+                    else
+                    {
+                        RowCount = count;
+                    }
+
                 }
-                else
+                finally
                 {
-                    RowCount = count;
+                    UpdatingVisibleRows = false;
                 }
             }
         }
@@ -682,6 +692,8 @@ namespace GitUI.RevisionGridClasses
                 }
             }
         }
+
+        public bool UpdatingVisibleRows { get; private set; }
 
         private void UpdateColumnWidth()
         {

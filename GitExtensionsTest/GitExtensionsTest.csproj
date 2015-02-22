@@ -64,6 +64,7 @@
     <Compile Include="GitCommands\Helpers\PathUtilTest.cs" />
     <Compile Include="GitCommands\Patch\PatchManagerTest.cs" />
     <Compile Include="GitCommands\Patch\PatchTest.cs" />
+    <Compile Include="GitUI\AuthorEmailBasedRevisionHighlightingFixture.cs" />
     <Compile Include="GitUI\FollowParentRewriterFixture.cs" />
     <Compile Include="GitUI\FormUpdateFixture.cs" />
     <Compile Include="GitUI\HotkeySettingsManagerFixture.cs" />

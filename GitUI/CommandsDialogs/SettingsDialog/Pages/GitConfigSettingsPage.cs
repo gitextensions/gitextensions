@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using GitCommands.Config;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using ResourceManager;
@@ -73,8 +74,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             CommonLogic.EncodingToCombo(CurrentSettings.FilesEncoding, Global_FilesEncoding);
 
-            GlobalUserName.Text = CurrentSettings.GetValue("user.name");
-            GlobalUserEmail.Text = CurrentSettings.GetValue("user.email");
+            GlobalUserName.Text = CurrentSettings.GetValue(SettingKeyString.UserName);
+            GlobalUserEmail.Text = CurrentSettings.GetValue(SettingKeyString.UserEmail);
             GlobalEditor.Text = CurrentSettings.GetValue("core.editor");
             GlobalMergeTool.Text = CurrentSettings.GetValue("merge.tool");
             CommitTemplatePath.Text = CurrentSettings.GetValue("commit.template");
@@ -105,8 +106,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (CheckSettingsLogic.CanFindGitCmd())
             {
-                CurrentSettings.SetValue("user.name", GlobalUserName.Text);
-                CurrentSettings.SetValue("user.email", GlobalUserEmail.Text);
+                CurrentSettings.SetValue(SettingKeyString.UserName, GlobalUserName.Text);
+                CurrentSettings.SetValue(SettingKeyString.UserEmail, GlobalUserEmail.Text);
                 CurrentSettings.SetValue("commit.template", CommitTemplatePath.Text);
                 CurrentSettings.SetPathValue("core.editor", GlobalEditor.Text);
 
