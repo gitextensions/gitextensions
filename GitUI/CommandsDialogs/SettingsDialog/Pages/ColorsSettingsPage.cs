@@ -29,6 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             DrawNonRelativesTextGray.Checked = AppSettings.RevisionGraphDrawNonRelativesTextGray;
             BranchBorders.Checked = AppSettings.BranchBorders;
             StripedBanchChange.Checked = AppSettings.StripedBranchChange;
+            HighlightAuthoredRevisions.Checked = AppSettings.HighlightAuthoredRevisions;
 
             _NO_TRANSLATE_ColorGraphLabel.BackColor = AppSettings.GraphColor;
             _NO_TRANSLATE_ColorGraphLabel.Text = AppSettings.GraphColor.Name;
@@ -73,6 +74,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_ColorSectionLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorSectionLabel.BackColor);
 
+            _NO_TRANSLATE_ColorAuthoredRevisions.BackColor = AppSettings.AuthoredRevisionsColor;
+            _NO_TRANSLATE_ColorAuthoredRevisions.Text = AppSettings.AuthoredRevisionsColor.Name;
+            _NO_TRANSLATE_ColorAuthoredRevisions.ForeColor =
+                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAuthoredRevisions.BackColor);
+
             string iconColor = AppSettings.IconColor.ToLower();
             DefaultIcon.Checked = iconColor == "default";
             BlueIcon.Checked = iconColor == "blue";
@@ -94,11 +100,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
             AppSettings.BranchBorders = BranchBorders.Checked;
             AppSettings.StripedBranchChange = StripedBanchChange.Checked;
+            AppSettings.HighlightAuthoredRevisions = HighlightAuthoredRevisions.Checked;
+
             AppSettings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
             AppSettings.TagColor = _NO_TRANSLATE_ColorTagLabel.BackColor;
             AppSettings.BranchColor = _NO_TRANSLATE_ColorBranchLabel.BackColor;
             AppSettings.RemoteBranchColor = _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor;
             AppSettings.OtherTagColor = _NO_TRANSLATE_ColorOtherLabel.BackColor;
+            AppSettings.AuthoredRevisionsColor = _NO_TRANSLATE_ColorAuthoredRevisions.BackColor;
 
             AppSettings.DiffAddedColor = _NO_TRANSLATE_ColorAddedLineLabel.BackColor;
             AppSettings.DiffRemovedColor = _NO_TRANSLATE_ColorRemovedLine.BackColor;
@@ -185,138 +194,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
             }
+        } 
+
+        private void ColorLabel_Click(object sender, EventArgs e)
+        {
+            PickColor((Label) sender);
         }
 
-        private void ColorAddedLineDiffLabel_Click(object sender, EventArgs e)
+        private void PickColor(Control targetColorControl)
         {
-            using (var colorDialog = new ColorDialog
-            {
-                Color = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor
-            })
+            using (var colorDialog = new ColorDialog {Color = targetColorControl.BackColor})
             {
                 colorDialog.ShowDialog(this);
-                _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor = colorDialog.Color;
-                _NO_TRANSLATE_ColorAddedLineDiffLabel.Text = colorDialog.Color.Name;
+                targetColorControl.BackColor = colorDialog.Color;
+                targetColorControl.Text = colorDialog.Color.Name;
             }
-            _NO_TRANSLATE_ColorAddedLineDiffLabel.ForeColor =
-                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor);
-        }
 
-        private void _ColorGraphLabel_Click(object sender, EventArgs e)
-        {
-            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorGraphLabel.BackColor })
-            {
-                colorDialog.ShowDialog(this);
-                _NO_TRANSLATE_ColorGraphLabel.BackColor = colorDialog.Color;
-                _NO_TRANSLATE_ColorGraphLabel.Text = colorDialog.Color.Name;
-            }
-            _NO_TRANSLATE_ColorGraphLabel.ForeColor =
-                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor);
-        }
-
-        private void colorAddedLineLabel_Click(object sender, EventArgs e)
-        {
-            using (var colorDialog = new ColorDialog
-            {
-                Color = _NO_TRANSLATE_ColorAddedLineLabel.BackColor
-            })
-            {
-                colorDialog.ShowDialog(this);
-                _NO_TRANSLATE_ColorAddedLineLabel.BackColor = colorDialog.Color;
-                _NO_TRANSLATE_ColorAddedLineLabel.Text = colorDialog.Color.Name;
-            }
-            _NO_TRANSLATE_ColorAddedLineLabel.ForeColor =
-                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAddedLineLabel.BackColor);
-        }
-
-        private void ColorRemovedLineDiffLabel_Click(object sender, EventArgs e)
-        {
-            using (var colorDialog = new ColorDialog
-            {
-                Color = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor
-            })
-            {
-                colorDialog.ShowDialog(this);
-                _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor = colorDialog.Color;
-                _NO_TRANSLATE_ColorRemovedLineDiffLabel.Text = colorDialog.Color.Name;
-            }
-            _NO_TRANSLATE_ColorRemovedLineDiffLabel.ForeColor =
-                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor);
-        }
-
-        private void ColorRemovedLine_Click(object sender, EventArgs e)
-        {
-            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorRemovedLine.BackColor })
-            {
-                colorDialog.ShowDialog(this);
-                _NO_TRANSLATE_ColorRemovedLine.BackColor = colorDialog.Color;
-                _NO_TRANSLATE_ColorRemovedLine.Text = colorDialog.Color.Name;
-            }
-            _NO_TRANSLATE_ColorRemovedLine.ForeColor =
-                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorRemovedLine.BackColor);
-        }
-
-        private void ColorSectionLabel_Click(object sender, EventArgs e)
-        {
-            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorSectionLabel.BackColor })
-            {
-                colorDialog.ShowDialog(this);
-                _NO_TRANSLATE_ColorSectionLabel.BackColor = colorDialog.Color;
-                _NO_TRANSLATE_ColorSectionLabel.Text = colorDialog.Color.Name;
-            }
-            _NO_TRANSLATE_ColorSectionLabel.ForeColor =
-                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorSectionLabel.BackColor);
-        }
-
-        private void ColorTagLabel_Click(object sender, EventArgs e)
-        {
-            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorTagLabel.BackColor })
-            {
-                colorDialog.ShowDialog(this);
-                _NO_TRANSLATE_ColorTagLabel.BackColor = colorDialog.Color;
-                _NO_TRANSLATE_ColorTagLabel.Text = colorDialog.Color.Name;
-            }
-            _NO_TRANSLATE_ColorTagLabel.ForeColor =
-                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorTagLabel.BackColor);
-        }
-
-        private void ColorBranchLabel_Click(object sender, EventArgs e)
-        {
-            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorBranchLabel.BackColor })
-            {
-                colorDialog.ShowDialog(this);
-                _NO_TRANSLATE_ColorBranchLabel.BackColor = colorDialog.Color;
-                _NO_TRANSLATE_ColorBranchLabel.Text = colorDialog.Color.Name;
-            }
-            _NO_TRANSLATE_ColorBranchLabel.ForeColor =
-                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorBranchLabel.BackColor);
-        }
-
-        private void ColorRemoteBranchLabel_Click(object sender, EventArgs e)
-        {
-            using (var colorDialog = new ColorDialog
-            {
-                Color = _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor
-            })
-            {
-                colorDialog.ShowDialog(this);
-                _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor = colorDialog.Color;
-                _NO_TRANSLATE_ColorRemoteBranchLabel.Text = colorDialog.Color.Name;
-            }
-            _NO_TRANSLATE_ColorRemoteBranchLabel.ForeColor =
-                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorRemoteBranchLabel.BackColor);
-        }
-
-        private void ColorOtherLabel_Click(object sender, EventArgs e)
-        {
-            using (var colorDialog = new ColorDialog { Color = _NO_TRANSLATE_ColorOtherLabel.BackColor })
-            {
-                colorDialog.ShowDialog(this);
-                _NO_TRANSLATE_ColorOtherLabel.BackColor = colorDialog.Color;
-                _NO_TRANSLATE_ColorOtherLabel.Text = colorDialog.Color.Name;
-            }
-            _NO_TRANSLATE_ColorOtherLabel.ForeColor =
-                ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorOtherLabel.BackColor);
+            targetColorControl.ForeColor =
+                ColorHelper.GetForeColorForBackColor(targetColorControl.BackColor);
         }
     }
 }

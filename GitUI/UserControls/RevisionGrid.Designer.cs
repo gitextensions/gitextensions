@@ -39,6 +39,12 @@ namespace GitUI
                     _filledItemBrush.Dispose();
                     _filledItemBrush = null;
                 }
+
+                if (_authoredRevisionsBrush != null)
+                {
+                    _authoredRevisionsBrush.Dispose();
+                    _authoredRevisionsBrush = null;
+                }
             }
 
             if (disposing && (components != null))

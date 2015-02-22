@@ -873,6 +873,12 @@ namespace GitCommands
             set { SetColor("diffaddedextracolor", value); }
         }
 
+        public static Color AuthoredRevisionsColor
+        {
+            get { return GetColor("authoredrevisionscolor", Color.LightYellow); }
+            set { SetColor("authoredrevisionscolor", value); }
+        }
+
         public static Font DiffFont
         {
             get { return GetFont("difffont", new Font("Courier New", 10)); }
@@ -909,6 +915,12 @@ namespace GitCommands
         {
             get { return GetBool("branchborders", true); }
             set { SetBool("branchborders", value); }
+        }
+
+        public static bool HighlightAuthoredRevisions
+        {
+            get { return GetBool("highlightauthoredrevisions", true); }
+            set { SetBool("highlightauthoredrevisions", value); }
         }
 
         public static string LastFormatPatchDir
