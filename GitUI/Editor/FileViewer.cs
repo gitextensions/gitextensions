@@ -12,6 +12,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Hotkey;
 using ICSharpCode.TextEditor.Util;
 using PatchApply;
+using GitCommands.Settings;
 
 namespace GitUI.Editor
 {
@@ -706,7 +707,7 @@ namespace GitUI.Editor
                 }
             }
 
-            Clipboard.SetText(code);
+            Clipboard.SetText(DoAutoCRLF(code));
         }
 
         private void CopyPatchToolStripMenuItemClick(object sender, EventArgs e)
@@ -987,9 +988,18 @@ namespace GitUI.Editor
                 code = string.Join("\n", lines);
             }
 
-            Clipboard.SetText(code);
+            Clipboard.SetText(DoAutoCRLF(code));
         }
 
+        private string DoAutoCRLF(string s)
+        {
+            if (Module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
+            {
+                return s.Replace("\n", Environment.NewLine);
+            }
+
+            return s;
+        }
 
         private void copyNewVersionToolStripMenuItem_Click(object sender, EventArgs e)
         {
