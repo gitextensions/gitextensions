@@ -70,7 +70,8 @@ namespace GitUI.CommandsDialogs
                     _NO_TRANSLATE_To.Text = Module.WorkingDir;
             }
 
-            if (_NO_TRANSLATE_From.Text == _NO_TRANSLATE_To.Text)
+            if (_NO_TRANSLATE_To.Text == _NO_TRANSLATE_From.Text ||
+                _NO_TRANSLATE_To.Text == PathUtil.EnsureTrailingPathSeparator(_NO_TRANSLATE_From.Text))
             {
                 // Try to be more helpful to the user.
                 // Use the cliboard text as a potential source URL.
