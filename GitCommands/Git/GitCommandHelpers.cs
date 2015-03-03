@@ -189,7 +189,7 @@ namespace GitCommands
             // We don't need putty for http:// links and git@... urls are already usable.
             // But ssh:// urls can cause problems
             if (!inputUrl.StartsWith("ssh") || !Uri.IsWellFormedUriString(inputUrl, UriKind.Absolute))
-                return inputUrl;
+                return "\"" + inputUrl + "\"";
 
             // Turn ssh://user@host/path into user@host:path, which works better
             Uri uri = new Uri(inputUrl, UriKind.Absolute);
