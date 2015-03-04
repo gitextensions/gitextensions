@@ -195,7 +195,8 @@ namespace GitCommands
             Uri uri = new Uri(inputUrl, UriKind.Absolute);
             string fixedUrl = "";
             if (!uri.IsDefaultPort)
-                fixedUrl += "-P " + uri.Port + " \"";
+                fixedUrl += "-P " + uri.Port + " ";
+            fixedUrl += "\"";
 
             if (!String.IsNullOrEmpty(uri.UserInfo))
                 fixedUrl += uri.UserInfo + "@";
