@@ -953,15 +953,27 @@ namespace GitUI.SpellChecker
 
             var cursorPos = GetCursorPosition();
 
+            var top = cursorPos.Y;
             var height = (sizes.Count + 1) * AutoComplete.ItemHeight;
             var width = sizes.Max(x => x.Width);
-            if (cursorPos.Y + height > TextBox.Height)
+            if (top + height > TextBox.Height)
             {
-                height = TextBox.Height - cursorPos.Y;
+                // if reduced height is not too small then shrink only
+                if (TextBox.Height - top > TextBox.Height / 2)
+                {
+                    height = TextBox.Height - top;
+                }
+                else
+                {
+                    // if shrinking wasn't acceptable, move higher
+                    top = Math.Max(0, TextBox.Height - height);
+                    // and reduce height if moving up wasn't enough
+                    height = Math.Min(TextBox.Height - top, height);
+                }
                 width += SystemInformation.VerticalScrollBarWidth;
             }
 
-            AutoComplete.SetBounds(cursorPos.X, cursorPos.Y, width, height);
+            AutoComplete.SetBounds(cursorPos.X, top, width, height);
 
             AutoComplete.DataSource = list.ToList();
             AutoComplete.Show();
