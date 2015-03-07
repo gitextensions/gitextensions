@@ -4643,9 +4643,9 @@ Check if file is accessible.</source>
         <source>Specify filepatterns you want git to ignore.
 
 Example:
-#ignore thumbnails created by windows
+#Ignore thumbnails created by Windows
 Thumbs.db
-#Ignore files build by Visual Studio
+#Ignore files built by Visual Studio
 *.user
 *.aps
 *.pch
@@ -4667,9 +4667,9 @@ _ReSharper*/</source>
         <target>Specifica i pattern per i file/cartelle che si vogliono far ignorare da git.
 
 Esempio:
-#ignore thumbnails created by windows
+#Ignore thumbnails created by Windows
 Thumbs.db
-#Ignore files build by Visual Studio
+#Ignore files built by Visual Studio
 *.obj
 *.exe
 *.pdb
