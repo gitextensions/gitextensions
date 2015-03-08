@@ -31,9 +31,9 @@ namespace GitUI.CommandsDialogs
         private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
         private static readonly string[] DefaultIgnorePatterns = new[]
         {
-            "#ignore thumbnails created by windows",
+            "#Ignore thumbnails created by Windows",
             "Thumbs.db",
-            "#Ignore files build by Visual Studio",
+            "#Ignore files built by Visual Studio",
             "*.obj",
             "*.exe",
             "*.pdb",
