@@ -159,6 +159,7 @@ namespace GitStatistics
             // splitContainer4.Panel1
             // 
             this.splitContainer4.Panel1.Controls.Add(this.CommitStatistics);
+            this.splitContainer4.Panel1MinSize = 250;
             // 
             // splitContainer4.Panel2
             // 
@@ -234,6 +235,7 @@ namespace GitStatistics
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.LinesOfCodePerLanguageText);
+            this.splitContainer1.Panel1MinSize = 250;
             // 
             // splitContainer1.Panel2
             // 
@@ -309,6 +311,7 @@ namespace GitStatistics
             // splitContainer6.Panel1
             // 
             this.splitContainer6.Panel1.Controls.Add(this.LinesOfCodePerTypeText);
+            this.splitContainer6.Panel1MinSize = 250;
             // 
             // splitContainer6.Panel2
             // 
@@ -384,6 +387,7 @@ namespace GitStatistics
             // splitContainer8.Panel1
             // 
             this.splitContainer8.Panel1.Controls.Add(this.TestCodeText);
+            this.splitContainer8.Panel1MinSize = 250;
             // 
             // splitContainer8.Panel2
             // 
@@ -428,6 +432,7 @@ namespace GitStatistics
             this.Controls.Add(this.LoadingLabel);
             this.Controls.Add(this.Tabs);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(350, 250);
             this.Name = "FormGitStatistics";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Statistics";
