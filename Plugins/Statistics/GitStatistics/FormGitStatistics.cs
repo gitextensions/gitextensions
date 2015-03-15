@@ -118,11 +118,9 @@ namespace GitStatistics
             pie.SetBottomMargin(10);
             pie.SetFitChart(false);
             pie.SetEdgeColorType(EdgeColorType.DarkerThanSurface);
-            pie.InitialAngle = -30;
             pie.SetSliceRelativeHeight(0.20f);
             pie.SetColors(DecentColors);
             pie.SetShadowStyle(ShadowStyle.GradualShadow);
-            pie.Dock = DockStyle.None;
 
             if (pie.Parent.Width > pie.Parent.Height)
             {
