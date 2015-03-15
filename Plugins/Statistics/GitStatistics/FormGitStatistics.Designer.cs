@@ -179,8 +179,8 @@ namespace GitStatistics
             // 
             // CommitCountPie
             // 
-            this.CommitCountPie.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommitCountPie.InitialAngle = 0F;
+            this.CommitCountPie.Dock = System.Windows.Forms.DockStyle.None;
+            this.CommitCountPie.InitialAngle = -30;
             this.CommitCountPie.Location = new System.Drawing.Point(0, 0);
             this.CommitCountPie.Name = "CommitCountPie";
             this.CommitCountPie.Size = new System.Drawing.Size(447, 400);
@@ -255,8 +255,8 @@ namespace GitStatistics
             // 
             // LinesOfCodeExtensionPie
             // 
-            this.LinesOfCodeExtensionPie.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LinesOfCodeExtensionPie.InitialAngle = 0F;
+            this.LinesOfCodeExtensionPie.Dock = System.Windows.Forms.DockStyle.None;
+            this.LinesOfCodeExtensionPie.InitialAngle = -30;
             this.LinesOfCodeExtensionPie.Location = new System.Drawing.Point(0, 0);
             this.LinesOfCodeExtensionPie.Name = "LinesOfCodeExtensionPie";
             this.LinesOfCodeExtensionPie.Size = new System.Drawing.Size(447, 400);
@@ -331,8 +331,8 @@ namespace GitStatistics
             // 
             // LinesOfCodePie
             // 
-            this.LinesOfCodePie.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LinesOfCodePie.InitialAngle = 0F;
+            this.LinesOfCodePie.Dock = System.Windows.Forms.DockStyle.None;
+            this.LinesOfCodePie.InitialAngle = -30;
             this.LinesOfCodePie.Location = new System.Drawing.Point(0, 0);
             this.LinesOfCodePie.Name = "LinesOfCodePie";
             this.LinesOfCodePie.Size = new System.Drawing.Size(447, 400);
@@ -407,8 +407,8 @@ namespace GitStatistics
             // 
             // TestCodePie
             // 
-            this.TestCodePie.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TestCodePie.InitialAngle = 0F;
+            this.TestCodePie.Dock = System.Windows.Forms.DockStyle.None;
+            this.TestCodePie.InitialAngle = -30;
             this.TestCodePie.Location = new System.Drawing.Point(0, 0);
             this.TestCodePie.Name = "TestCodePie";
             this.TestCodePie.Size = new System.Drawing.Size(447, 400);
