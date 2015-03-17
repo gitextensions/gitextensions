@@ -1086,24 +1086,24 @@ namespace GitUI.Editor.RichTextBoxExtension
         /// </summary>
         private static string EscapeNonXMLChars(string input)
         {
-            string result = "";
+            StringBuilder result = new StringBuilder();
             foreach (char ch in input)
             {
                 if (XmlConvert.IsXmlChar(ch))
                 {
-                    result += ch;
+                    result.Append(ch);
                 }
                 else
                     try
                     {
-                        result += "&#" + (int)ch + ';';
+                        result.Append("&#" + (int)ch + ';');
                     }
                     catch (ArgumentException)
                     {
-                        result += "?";
+                        result.Append('?');
                     }
             }
-            return result;
+            return result.ToString();
         }
 
         private class RTFCurrentState
