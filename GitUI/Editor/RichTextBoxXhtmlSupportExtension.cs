@@ -1078,6 +1078,34 @@ namespace GitUI.Editor.RichTextBoxExtension
             return text.ToString();
         }
 
+        /// <summary>
+        /// Returns input text with characters disallowed by XML spec (e.g. most control codes in 0x00-0x20 range)
+        /// replaced with equivalent character references or question marks if there is an unrecoverable error.
+        /// Although they are disallowed even when escaped, this step seems necessary to make them acceptable
+        /// by XmlReader with CheckCharacters disabled.
+        /// </summary>
+        private static string EscapeNonXMLChars(string input)
+        {
+            string result = "";
+            foreach (char ch in input)
+            {
+                if (XmlConvert.IsXmlChar(ch))
+                {
+                    result += ch;
+                }
+                else
+                    try
+                    {
+                        result += "&#" + (int)ch + ';';
+                    }
+                    catch (ArgumentException)
+                    {
+                        result += "?";
+                    }
+            }
+            return result;
+        }
+
         private class RTFCurrentState
         {
             public RTFCurrentState()
@@ -1122,10 +1150,11 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.ConformanceLevel = ConformanceLevel.Fragment;
+            settings.CheckCharacters = false;
 
             try
             {
-                using (StringReader stringreader = new StringReader(xhtmlText))
+                using (StringReader stringreader = new StringReader(EscapeNonXMLChars(xhtmlText)))
                 {
                     XmlReader reader = XmlReader.Create(stringreader, settings);
                     while (reader.Read())
