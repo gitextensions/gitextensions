@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Utils;
 using Microsoft.Win32;
 using ResourceManager;
@@ -633,8 +634,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckGlobalUserSettingsValid()
         {
             UserNameSet.Visible = true;
-            if (string.IsNullOrEmpty(GetGlobalSetting("user.name")) ||
-                string.IsNullOrEmpty(GetGlobalSetting("user.email")))
+            if (string.IsNullOrEmpty(GetGlobalSetting(SettingKeyString.UserName)) ||
+                string.IsNullOrEmpty(GetGlobalSetting(SettingKeyString.UserEmail)))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
                 UserNameSet.Text = _noEmailSet.Text;
