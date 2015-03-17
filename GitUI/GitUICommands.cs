@@ -1460,12 +1460,18 @@ namespace GitUI
         {
             if (!InvokeEvent(owner, PreBrowse))
                 return false;
-
             var form = new FormBrowse(this, filter);
-            Application.Run(form);
+
+            if (Application.MessageLoop)
+            {
+                form.Show();
+            }
+            else
+            {
+                Application.Run(form);
+            }
 
             InvokeEvent(owner, PostBrowse);
-
             return true;
         }
 
