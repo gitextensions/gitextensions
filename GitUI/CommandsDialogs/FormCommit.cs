@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Utils;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
@@ -25,9 +26,6 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm //, IHotkeyable
     {
-        const string UserNameKey = "user.name";
-        const string UserEmailKey = "user.email";
-
         #region Translation
         private readonly TranslationString _amendCommit =
             new TranslationString("You are about to rewrite history." + Environment.NewLine +
@@ -1852,8 +1850,8 @@ namespace GitUI.CommandsDialogs
 
         private void GetUserSettings()
         {
-            _userName = Module.GetEffectiveSetting(UserNameKey);
-            _userEmail = Module.GetEffectiveSetting(UserEmailKey);
+            _userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
+            _userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
 
 
