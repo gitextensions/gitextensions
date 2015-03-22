@@ -21,6 +21,8 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.");
         private readonly TranslationString _branchUpToDateCaption = new TranslationString("Rebase");
 
+        private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
+
         private readonly string _defaultBranch;
         private readonly string _defaultToBranch;
 
@@ -34,6 +36,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
             if (AppSettings.AlwaysShowAdvOpt)
                 ShowOptions_LinkClicked(null, null);
         }

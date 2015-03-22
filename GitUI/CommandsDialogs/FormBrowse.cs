@@ -116,6 +116,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullOpenDialog =
             new TranslationString("Open pull dialog");
 
+        private readonly TranslationString _resetFileCaption =
+            new TranslationString("Reset");
+        private readonly TranslationString _resetFileText =
+            new TranslationString("Are you sure you want to reset this file or directory?");
+        private readonly TranslationString _resetFileError =
+            new TranslationString("Exactly one revision must be selected. Abort.");
         #endregion
 
         private Dashboard _dashboard;
@@ -2059,12 +2065,11 @@ namespace GitUI.CommandsDialogs
 
             if (!revisions.Any() || revisions.Count != 1)
             {
-                MessageBox.Show("Exactly one revision must be selected. Abort.");
+                MessageBox.Show(_resetFileError.Text, _resetFileCaption.Text);
                 return;
-                ////throw new ApplicationException("Exactly one revision must be selected"); // todo: unified exception handling?
             }
 
-            if (MessageBox.Show("Really reset selected file / directory?", "Reset", MessageBoxButtons.OKCancel)
+            if (MessageBox.Show(_resetFileText.Text, _resetFileCaption.Text, MessageBoxButtons.OKCancel)
                 == System.Windows.Forms.DialogResult.OK)
             {
                 var item = GitTree.SelectedNode.Tag as GitItem;
