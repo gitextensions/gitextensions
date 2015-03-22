@@ -347,6 +347,9 @@
             <Component Id="ruRU.dic" Guid="*">
                 <File Source="..\Bin\Dictionaries\ru-RU.dic" />
             </Component>
+            <Component Id="plPL.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\pl-PL.dic" />
+            </Component>
         </DirectoryRef>
         <DirectoryRef Id="TranslationsDir">
             <Component Id="English.gif" Guid="*">
@@ -705,6 +708,9 @@
                 </Feature>
                 <Feature Id="ruRU" Title="ru-RU" Level="1">
                     <ComponentRef Id="ruRU.dic" />
+                </Feature>
+                <Feature Id="plPL" Title="pl-PL" Level="1">
+                    <ComponentRef Id="plPL.dic" />
                 </Feature>
             </Feature>
             <Feature Id="Translation" Title="Translations" Level="1">
