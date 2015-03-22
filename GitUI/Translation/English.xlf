@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.48.03">
+<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.49a1">
   <file datatype="plaintext" original="AboutBox" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -482,6 +482,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <source>Green</source>
         <target />
       </trans-unit>
+      <trans-unit id="HighlightAuthoredRevisions.Text">
+        <source>Highlight authored revisions</source>
+        <target />
+      </trans-unit>
       <trans-unit id="LightblueIcon.Text">
         <source>Light blue</source>
         <target />
@@ -520,6 +524,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
       <trans-unit id="groupBox5.Text">
         <source>Application Icon</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Color authored revisions</source>
         <target />
       </trans-unit>
       <trans-unit id="label25.Text">
@@ -1462,7 +1470,7 @@ You will have push access. {2}</source>
   <file datatype="plaintext" original="FormAddToGitIgnore" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Add files(s) to .gitIgnore</source>
+        <source>Add file(s) to .gitignore</source>
         <target />
       </trans-unit>
       <trans-unit id="AddToIngore.Text">
@@ -1826,6 +1834,18 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_repositoryHostsToolStripMenuItem.Text">
         <source>(Repository hosts)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetFileCaption.Text">
+        <source>Reset</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetFileError.Text">
+        <source>Exactly one revision must be selected. Abort.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetFileText.Text">
+        <source>Are you sure you want to reset this file or directory?</source>
         <target />
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
@@ -3672,6 +3692,10 @@ If you are not sure just close this window.</source>
         <source>Difftool selected &lt; - &gt; local</source>
         <target />
       </trans-unit>
+      <trans-unit id="followFileHistoryRenamesToolStripMenuItem.Text">
+        <source>Detect and follow - exact renames and copies only</source>
+        <target />
+      </trans-unit>
       <trans-unit id="followFileHistoryToolStripMenuItem.Text">
         <source>Detect and follow renames</source>
         <target />
@@ -4647,6 +4671,10 @@ If you want to fetch all remote branches, choose fetch.
 If you want to fetch and merge a branch, choose a specific branch.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_hoverShowImageLabelText.Text">
+        <source>Hover to see scenario when fast forward is possible.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noRemoteBranch.Text">
         <source>You didn't specify a remote branch</source>
         <target />
@@ -5033,6 +5061,10 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="_continueRebaseText2.Text">
         <source>&gt;Continue rebase&lt;</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_hoverShowImageLabelText.Text">
+        <source>Hover to see scenario when fast forward is possible.</source>
         <target />
       </trans-unit>
       <trans-unit id="_noBranchSelectedText.Text">
@@ -6696,6 +6728,10 @@ global settings.
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistory.Text">
         <source>Follow renames in file history (experimental)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
+        <source>Follow exact renames and copies only</source>
         <target />
       </trans-unit>
       <trans-unit id="chkPlaySpecialStartupSound.Text">
