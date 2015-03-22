@@ -110,37 +110,37 @@ namespace GitCommands
 
         public static string GetNSecondsAgoText(int value)
         {
-            return Smart.Format(Instance._secondsAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._secondsAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNMinutesAgoText(int value)
         {
-            return Smart.Format(Instance._minutesAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._minutesAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNHoursAgoText(int value)
         {
-            return Smart.Format(Instance._hoursAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._hoursAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNDaysAgoText(int value)
         {
-            return Smart.Format(Instance._daysAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._daysAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNWeeksAgoText(int value)
         {
-            return Smart.Format(Instance._weeksAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._weeksAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNMonthsAgoText(int value)
         {
-            return Smart.Format(Instance._monthsAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._monthsAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNYearsAgoText(int value)
         {
-            return Smart.Format(Instance._yearsAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._yearsAgo.Text, value, Math.Abs(value));
         }
 
         private readonly TranslationString _secondsAgo = new TranslationString("{0} {1:second|seconds} ago");

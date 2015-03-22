@@ -1271,10 +1271,10 @@ namespace GitUI.CommandsDialogs
                     FormStatus.ProcessStart processStart =
                         form =>
                         {
-                            form.AddMessageLine(string.Format(_stageFiles.Text,
+                            form.AppendMessageCrossThread(string.Format(_stageFiles.Text + "\n",
                                                          files.Count));
                             var output = Module.StageFiles(files, out wereErrors);
-                            form.AddMessageLine(output);
+                            form.AppendMessageCrossThread(output);
                             form.Done(string.IsNullOrEmpty(output));
                         };
                     using (var process = new FormStatus(processStart, null) { Text = _stageDetails.Text })
