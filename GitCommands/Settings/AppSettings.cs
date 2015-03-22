@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -344,6 +345,44 @@ namespace GitCommands
         {
             get { return _currentTranslation ?? Translation; }
             set { _currentTranslation = value; }
+        }
+
+
+        private static readonly Dictionary<string, string> _languageCodes =
+            new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "English", "en" },
+            { "Czech", "cs" },
+            { "French", "fr" },
+            { "German", "de" },
+            { "Indonesian", "id" },
+            { "Italian", "it" },
+            { "Japanese", "ja" },
+            { "Korean", "ko" },
+            { "Polish", "pl" },
+            { "Russian", "ru" },
+            { "Portuguese (Brazil)", "pt_BR" },
+            { "Portuguese (Portugal)", "pt_PT" },
+            { "Romanian", "ro" },
+            { "Simplified Chinese", "zh_CN" },
+            { "Spanish", "es" },
+            { "Traditional Chinese", "zh_TW" }
+        };
+
+        public static string CurrentLanguageCode
+        {
+            get
+            {
+                string code;
+                if (_languageCodes.TryGetValue(CurrentTranslation, out code))
+                    return code;
+                return "en";
+            }
+        }
+
+        public static CultureInfo CurrentCultureInfo
+        {
+            get { return CultureInfo.GetCultureInfo(CurrentLanguageCode); }
         }
 
         public static bool UserProfileHomeDir
