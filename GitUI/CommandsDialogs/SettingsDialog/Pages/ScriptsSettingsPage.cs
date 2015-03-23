@@ -16,6 +16,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new TranslationString(@"User Input:
 {UserInput}
 
+Selected Commits:
+{sHashes}
+
 Selected Branch:
 {sTag}
 {sBranch}
