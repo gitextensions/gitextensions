@@ -567,6 +567,10 @@ namespace GitUI.CommandsDialogs
         {
             _initialized = true;
 
+            Task.Factory.StartNew(() => string.Format(_formTitle.Text, Module.GetSelectedBranch(),
+                                      Module.WorkingDir))
+                .ContinueWith(task => Text = task.Result, _taskScheduler);
+
             Cursor.Current = Cursors.WaitCursor;
 
             if (loadUnstaged)
@@ -1535,10 +1539,6 @@ namespace GitUI.CommandsDialogs
 
             if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
                 Message.Text = message;
-
-            Task.Factory.StartNew(() => string.Format(_formTitle.Text, Module.GetSelectedBranch(),
-                                      Module.WorkingDir))
-                .ContinueWith(task => Text = task.Result, _taskScheduler);
         }
 
         private void SetCommitMessageFromTextBox(string commitMessageText)
