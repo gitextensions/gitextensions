@@ -118,17 +118,20 @@ namespace GitStatistics
             pie.SetBottomMargin(10);
             pie.SetFitChart(false);
             pie.SetEdgeColorType(EdgeColorType.DarkerThanSurface);
-            pie.InitialAngle = -30;
             pie.SetSliceRelativeHeight(0.20f);
             pie.SetColors(DecentColors);
             pie.SetShadowStyle(ShadowStyle.GradualShadow);
-            pie.Dock = DockStyle.None;
-            pie.Height = pie.Parent.Height;
-            pie.Width = pie.Parent.Width;
-            if (pie.Width > pie.Height)
-                pie.Width = pie.Height;
+
+            if (pie.Parent.Width > pie.Parent.Height)
+            {
+                pie.Height = pie.Parent.Height;
+                pie.Width = pie.Parent.Height;
+            }
             else
-                pie.Height = pie.Width;
+            {
+                pie.Height = pie.Parent.Width;
+                pie.Width = pie.Parent.Width;
+            }
         }
 
         bool initializeLinesOfCodeDone;
