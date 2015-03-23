@@ -144,7 +144,7 @@ namespace GitUI
 
                 module.RunExternalCmdShowConsole(
                     "cmd.exe",
-                    string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, remoteUrl));
+                    string.Format("/k \"\"{0}\" -T {1}\"", AppSettings.Plink, remoteUrl));
 
                 return true;
             }

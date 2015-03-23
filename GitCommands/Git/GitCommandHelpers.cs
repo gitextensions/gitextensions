@@ -155,8 +155,8 @@ namespace GitCommands
 
             startProcess.Exited += (sender, args) =>
             {
-              var executionEndTimestamp = DateTime.Now;
-              AppSettings.GitLog.Log (quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+                var executionEndTimestamp = DateTime.Now;
+                AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
             };
 
             return startProcess;
@@ -189,16 +189,19 @@ namespace GitCommands
             // We don't need putty for http:// links and git@... urls are already usable.
             // But ssh:// urls can cause problems
             if (!inputUrl.StartsWith("ssh") || !Uri.IsWellFormedUriString(inputUrl, UriKind.Absolute))
-                return inputUrl;
+                return "\"" + inputUrl + "\"";
 
             // Turn ssh://user@host/path into user@host:path, which works better
             Uri uri = new Uri(inputUrl, UriKind.Absolute);
             string fixedUrl = "";
+            if (!uri.IsDefaultPort)
+                fixedUrl += "-P " + uri.Port + " ";
+            fixedUrl += "\"";
 
             if (!String.IsNullOrEmpty(uri.UserInfo))
-                fixedUrl = uri.UserInfo + "@";
-            fixedUrl += uri.Authority;
-            fixedUrl += uri.IsDefaultPort ? ":" + uri.LocalPath.Substring(1) : uri.LocalPath;
+                fixedUrl += uri.UserInfo + "@";
+            fixedUrl += uri.Host;
+            fixedUrl += ":" + uri.LocalPath.Substring(1) + "\"";
 
             return fixedUrl;
         }
@@ -911,7 +914,7 @@ namespace GitCommands
         /*
                source: C:\Program Files\msysgit\doc\git\html\git-status.html
         */
-        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff  = false)
+        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff = false)
         {
             var diffFiles = new List<GitItemStatus>();
 

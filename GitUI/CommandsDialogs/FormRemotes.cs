@@ -261,7 +261,7 @@ namespace GitUI.CommandsDialogs
 
             Module.RunExternalCmdDetachedShowConsole(
                 "cmd.exe",
-                string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, url));
+                string.Format("/k \"\"{0}\" -T {1}\"", AppSettings.Plink, url));
         }
 
         private void PruneClick(object sender, EventArgs e)
