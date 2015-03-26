@@ -235,6 +235,17 @@ namespace Gource
                     return "https://github.com" + match.Groups[1].Value;
                 }
 
+                response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/tag/gource-0.42");
+
+                regEx = new Regex(@"(?:<a .*href="")(.*gource-.{3,15}win32\.zip)""");
+
+                matches = regEx.Matches(response);
+
+                foreach (Match match in matches)
+                {
+                    return "https://github.com" + match.Groups[1].Value;
+                }
+
                 return string.Empty;
             }
             catch (Exception ex)
