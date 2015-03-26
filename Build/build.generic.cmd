@@ -2,7 +2,7 @@
 
 rem
 rem Parameters
-rem   %1: vs_solution_version: VS solution version: VS2010, VS2012
+rem   %1: vs_solution_version: VS solution version: VS2012, VS2013
 rem   %2: vs_configuration:    VS configuration:    Debug, Release
 rem   %3: vs_target:           target:              Build or Rebuild
 rem
