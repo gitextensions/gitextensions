@@ -48,8 +48,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TfsHelper.cs" />
+    <Compile Include="..\TfsInterop.Common\Properties\AssemblyInfo.cs" />
+    <Compile Include="..\TfsInterop.Common\TfsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TfsIntegration\TfsIntegration.csproj">
