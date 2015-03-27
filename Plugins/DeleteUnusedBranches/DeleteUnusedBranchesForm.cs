@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace DeleteUnusedBranches
 {
-    public sealed partial class DeleteUnusedBranchesForm : Form
+    public sealed partial class DeleteUnusedBranchesForm : ResourceManager.GitExtensionsFormBase
     {
         private readonly SortableBranchesList branches = new SortableBranchesList();
         private int days;
@@ -20,9 +20,16 @@ namespace DeleteUnusedBranches
         private readonly IGitPlugin _gitPlugin;
         private CancellationTokenSource refreshCancellation;
 
+        public DeleteUnusedBranchesForm()
+        {
+            InitializeComponent();
+            Translate();
+        }
+
         public DeleteUnusedBranchesForm(int days, string referenceBranch, IGitModule gitCommands, IGitUICommands gitUICommands, IGitPlugin gitPlugin)
         {
             InitializeComponent();
+            Translate();
 
             this.referenceBranch = referenceBranch;
             this.days = days;
@@ -53,8 +60,8 @@ namespace DeleteUnusedBranches
                 var commitLog = context.Commands.RunGitCmd(string.Concat("log --pretty=%ci\n%an\n%s ", branchName, "^1..", branchName)).Split('\n');
                 DateTime commitDate;
                 DateTime.TryParse(commitLog[0], out commitDate);
-				var authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
-				var message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
+                var authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
+                var message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
 
                 yield return new Branch(branchName, commitDate, authorName, message, commitDate < DateTime.Now - context.ObsolescenceDuration);
             }

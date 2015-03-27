@@ -59,7 +59,7 @@ namespace GitImpact
         {
             impact_loader = new ImpactLoader(Module);
             impact_loader.RespectMailmap = true; // respect the .mailmap file
-            impact_loader.Updated += OnImpactUpdate;        
+            impact_loader.Updated += OnImpactUpdate;
         }
 
         private void Clear()
@@ -144,6 +144,7 @@ namespace GitImpact
         }
 
         private bool showSubmodules;
+        [DefaultValue(false)]
         public bool ShowSubmodules
         {
             get { return showSubmodules; }
@@ -160,9 +161,9 @@ namespace GitImpact
         {
             this.scrollBar = new System.Windows.Forms.HScrollBar();
             this.SuspendLayout();
-            // 
+            //
             // scrollBar
-            // 
+            //
             this.scrollBar.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.scrollBar.LargeChange = 0;
             this.scrollBar.Location = new System.Drawing.Point(0, 133);
@@ -172,9 +173,9 @@ namespace GitImpact
             this.scrollBar.SmallChange = 0;
             this.scrollBar.TabIndex = 0;
             this.scrollBar.Scroll += this.OnScroll;
-            // 
+            //
             // ImpactControl
-            // 
+            //
             this.Controls.Add(this.scrollBar);
             this.Name = "ImpactControl";
             this.Paint += this.OnPaint;
@@ -472,7 +473,7 @@ namespace GitImpact
             lock (data_lock)
             {
                 return author_stack.Last();
-            }           
+            }
         }
 
         private void OnScroll(object sender, ScrollEventArgs e)
@@ -493,7 +494,7 @@ namespace GitImpact
 
         [Browsable(false)]
         public List<string> Authors { get { lock(data_lock) return author_stack; } }
-        
+
         public ImpactLoader.DataPoint GetAuthorInfo(string author)
         {
             lock (data_lock)

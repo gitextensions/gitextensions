@@ -12,7 +12,7 @@ using GitUIPluginInterfaces;
 
 namespace GitStatistics
 {
-    public partial class FormGitStatistics : Form
+    public partial class FormGitStatistics : ResourceManager.GitExtensionsFormBase
     {
         private readonly string _codeFilePattern;
 
@@ -46,6 +46,7 @@ namespace GitStatistics
             Module = aModule;
             _codeFilePattern = codeFilePattern;
             InitializeComponent();
+            Translate();
 
             TotalLinesOfCode.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             TotalLinesOfCode2.Font = TotalLinesOfCode.Font;
@@ -139,7 +140,7 @@ namespace GitStatistics
         {
             if (initializeLinesOfCodeDone)
                 return;
-            
+
             initializeLinesOfCodeDone = true;
 
             lineCounter = new LineCounter(WorkingDir);
@@ -147,7 +148,7 @@ namespace GitStatistics
 
             loadThread = Task.Factory.StartNew(LoadLinesOfCode);
         }
-        
+
         public void LoadLinesOfCode()
         {
             lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore);
