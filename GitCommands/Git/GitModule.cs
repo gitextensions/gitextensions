@@ -2402,7 +2402,7 @@ namespace GitCommands
             {
                 result.AuthenticationFail = true;
             }
-            else if (tree.ToLower().Contains("the server's host key is not cached in the registry"))
+            else if (tree.Contains("the server's host key is not cached in the registry", StringComparison.OrdinalIgnoreCase))
             {
                 result.HostKeyFail = true;
             }

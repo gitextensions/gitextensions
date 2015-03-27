@@ -2120,9 +2120,7 @@ namespace GitUI
         {
             var candidates = Module.GetFullTree("HEAD");
 
-            string nameAsLower = name.ToLower();
-
-            return candidates.Where(fileName => fileName.ToLower().Contains(nameAsLower)).ToList();
+            return candidates.Where(fileName => fileName.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         private void Commit(Dictionary<string, string> arguments)

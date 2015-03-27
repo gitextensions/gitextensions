@@ -1220,9 +1220,7 @@ namespace GitUI.CommandsDialogs
         {
             var candidates = Module.GetFullTree(RevisionGrid.GetSelectedRevisions()[0].TreeGuid);
 
-            string nameAsLower = name.ToLower();
-
-            return candidates.Where(fileName => fileName.ToLower().Contains(nameAsLower)).ToList();
+            return candidates.Where(fileName => fileName.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         private string SaveSelectedItemToTempFile()
@@ -2741,18 +2739,14 @@ namespace GitUI.CommandsDialogs
 
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             var candidates = DiffFiles.GitItemStatuses;
 
             Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
             {
-
-                string nameAsLower = name.ToLower();
-
                 return candidates.Where(item =>
                     {
-                        return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
-                            || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
+                        return item.Name != null && item.Name.Contains(name, StringComparison.OrdinalIgnoreCase)
+                            || item.OldName != null && item.OldName.Contains(name, StringComparison.OrdinalIgnoreCase);
                     }
                     ).ToList();
             };
