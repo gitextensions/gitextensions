@@ -6,11 +6,10 @@ using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using System.Linq;
 using System.Threading;
-using System.Data;
 
 namespace Stash
 {
-    public partial class StashPullRequestForm : Form
+    public partial class StashPullRequestForm : ResourceManager.GitExtensionsFormBase
     {
         private Settings _settings;
         private readonly GitUIBaseEventArgs _gitUiCommands;
@@ -23,6 +22,7 @@ namespace Stash
             ISettingsSource settings)
         {
             InitializeComponent();
+            Translate();
 
             _gitUiCommands = gitUiCommands;
             _settingsContainer = settings;
@@ -75,7 +75,7 @@ namespace Stash
                 catch(System.InvalidOperationException){
                     return;
                 }
-                
+
             });
         }
 

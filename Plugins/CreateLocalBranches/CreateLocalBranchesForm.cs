@@ -4,13 +4,14 @@ using GitUIPluginInterfaces;
 
 namespace CreateLocalBranches
 {
-    public partial class CreateLocalBranchesForm : Form
+    public partial class CreateLocalBranchesForm : ResourceManager.GitExtensionsFormBase
     {
         private GitUIBaseEventArgs m_gitUiCommands;
 
         public CreateLocalBranchesForm(GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
+            Translate();
 
             m_gitUiCommands = gitUiCommands;
         }

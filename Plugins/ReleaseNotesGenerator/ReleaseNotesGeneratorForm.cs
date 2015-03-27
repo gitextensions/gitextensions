@@ -11,7 +11,7 @@ namespace ReleaseNotesGenerator
     /// <summary>
     /// Test on GE repository from "2.00" to "2.10". Should display 687 items.
     /// </summary>
-    public partial class ReleaseNotesGeneratorForm : Form
+    public partial class ReleaseNotesGeneratorForm : ResourceManager.GitExtensionsFormBase
     {
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private IEnumerable<LogLine> _lastGeneratedLogLines;
@@ -19,9 +19,10 @@ namespace ReleaseNotesGenerator
         public ReleaseNotesGeneratorForm(GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
+            Translate();
 
             _gitUiCommands = gitUiCommands;
-            Icon = _gitUiCommands.GitUICommands.FormIcon;
+            Icon = _gitUiCommands != null ? _gitUiCommands.GitUICommands.FormIcon : null;
         }
 
         private void ReleaseNotesGeneratorForm_Load(object sender, EventArgs e)

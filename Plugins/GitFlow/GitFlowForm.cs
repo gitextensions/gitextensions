@@ -12,9 +12,9 @@ using GitUIPluginInterfaces;
 
 namespace GitFlow
 {
-    public partial class GitFlowForm : Form
+    public partial class GitFlowForm : ResourceManager.GitExtensionsFormBase
     {
-        GitUIBaseEventArgs m_gitUiCommands;
+        GitUIBaseEventArgs _gitUiCommands;
 
         Dictionary<string,List<string>> Branches { get; set; }
 
@@ -40,21 +40,23 @@ namespace GitFlow
 
         private bool IsGitFlowInited
         {
-            get { return !string.IsNullOrWhiteSpace(m_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master")); }
+            get { return !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master")); }
         }
 
         public GitFlowForm(GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
+            Translate();
 
-            m_gitUiCommands = gitUiCommands;
+            _gitUiCommands = gitUiCommands;
 
             Branches = new Dictionary<string, List<string>>();
 
             lblPrefixManage.Text = string.Empty;
             ttGitFlow.SetToolTip(lnkGitFlow, "A good branch model for your project with Git...");
 
-            Init();
+            if (_gitUiCommands != null)
+                Init();
         }
 
         private void Init()
@@ -69,7 +71,7 @@ namespace GitFlow
 
             if (isGitFlowInited)
             {
-                var remotes = m_gitUiCommands.GitModule.GetRemotes(true).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
+                var remotes = _gitUiCommands.GitModule.GetRemotes(true).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
                 cbRemote.DataSource = remotes;
                 btnPull.Enabled = btnPublish.Enabled = remotes.Any();
 
@@ -116,7 +118,7 @@ namespace GitFlow
 
         private List<string> GetBranches(string typeBranch)
         {
-            var result = m_gitUiCommands.GitModule.RunGitCmdResult("flow " + typeBranch);
+            var result = _gitUiCommands.GitModule.RunGitCmdResult("flow " + typeBranch);
             if (result.ExitCode != 0)
                 return new List<string>();
             string[] references = result.StdOutput.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
@@ -125,7 +127,7 @@ namespace GitFlow
 
         private List<string> GetLocalBranches()
         {
-            string[] references = m_gitUiCommands.GitModule.RunGitCmd("branch")
+            string[] references = _gitUiCommands.GitModule.RunGitCmd("branch")
                                                  .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
 
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
@@ -223,7 +225,7 @@ namespace GitFlow
             txtResult.Text = "running...";
             ForceRefresh(txtResult);
 
-            var result = m_gitUiCommands.GitModule.RunGitCmdResult(commandText);
+            var result = _gitUiCommands.GitModule.RunGitCmdResult(commandText);
 
             IsRefreshNeeded = true;
 
@@ -301,7 +303,7 @@ namespace GitFlow
 
         private void DisplayHead()
         {
-            var head = m_gitUiCommands.GitModule.RunGitCmd("symbolic-ref HEAD").Trim('*', ' ', '\n', '\r');
+            var head = _gitUiCommands.GitModule.RunGitCmd("symbolic-ref HEAD").Trim('*', ' ', '\n', '\r');
             lblHead.Text = head;
             var currentRef = head.StartsWith(refHeads) ? head.Substring(refHeads.Length) : head;
 

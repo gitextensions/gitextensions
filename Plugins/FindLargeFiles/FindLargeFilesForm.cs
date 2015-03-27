@@ -9,7 +9,7 @@ using GitUIPluginInterfaces;
 
 namespace FindLargeFiles
 {
-    public sealed partial class FindLargeFilesForm : Form
+    public sealed partial class FindLargeFilesForm : ResourceManager.GitExtensionsFormBase
     {
         private readonly float threshold = 1.0f;
         private readonly GitUIBaseEventArgs gitUiCommands;
@@ -21,10 +21,11 @@ namespace FindLargeFiles
         public FindLargeFilesForm(float threshold, GitUIBaseEventArgs gitUiEventArgs)
         {
             InitializeComponent();
+            Translate();
 
             this.threshold = threshold;
             this.gitUiCommands = gitUiEventArgs;
-            this.gitCommands = gitUiEventArgs.GitModule;
+            this.gitCommands = gitUiEventArgs != null ? gitUiEventArgs.GitModule : null;
         }
 
         private void findLargeFilesFunction()

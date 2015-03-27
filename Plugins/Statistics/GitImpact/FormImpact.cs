@@ -6,7 +6,7 @@ using GitUIPluginInterfaces;
 
 namespace GitImpact
 {
-    public partial class FormImpact : Form
+    public partial class FormImpact : ResourceManager.GitExtensionsFormBase
     {
         private readonly SynchronizationContext syncContext;
 
@@ -15,10 +15,14 @@ namespace GitImpact
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+            Translate();
             UpdateAuthorInfo("");
-            Impact.Init(Module);
-            Impact.UpdateData();
-            Impact.Invalidated += Impact_Invalidated;
+            if (Module != null)
+            {
+                Impact.Init(Module);
+                Impact.UpdateData();
+                Impact.Invalidated += Impact_Invalidated;
+            }
         }
 
         protected override void OnClosed(EventArgs e)
@@ -58,7 +62,7 @@ namespace GitImpact
                 // -> Draw it above all others
                 Impact.SelectAuthor(author);
                 Impact.Invalidate();
-            }            
+            }
         }
 
         private void cbShowSubmodules_CheckedChanged(object sender, EventArgs e)

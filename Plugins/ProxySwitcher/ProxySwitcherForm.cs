@@ -8,7 +8,7 @@ using Settings = GitCommands.AppSettings;
 
 namespace ProxySwitcher
 {
-    public partial class ProxySwitcherForm : Form, ITranslate
+    public partial class ProxySwitcherForm : GitExtensionsFormBase
     {
         private readonly ISettingsSource settings;
         private readonly IGitModule gitCommands;
@@ -115,21 +115,6 @@ namespace ProxySwitcher
                 gitCommands.RunGitCmd("config --unset http.proxy");
             }
             RefreshProxy();
-        }
-
-        protected void Translate()
-        {
-            Translator.Translate(this, Settings.CurrentTranslation);
-        }
-
-        public virtual void AddTranslationItems(ITranslation translation)
-        {
-            TranslationUtils.AddTranslationItemsFromFields(GetType().Name, this, translation);
-        }
-
-        public virtual void TranslateItems(ITranslation translation)
-        {
-            TranslationUtils.TranslateItemsFromFields(GetType().Name, this, translation);
         }
     }
 }
