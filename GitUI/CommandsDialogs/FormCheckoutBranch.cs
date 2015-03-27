@@ -25,6 +25,19 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _dontShowAgain =
             new TranslationString("Don't show me this message again.");
+
+        private readonly TranslationString _handleLocalChangesButtons =
+            new TranslationString("Commit to current branch|Stash changes|Reset changes|Merge to target branch|Cancel");
+
+        private readonly TranslationString _handleLocalChangesTitle = new TranslationString("Unable to checkout branch");
+
+        private readonly TranslationString _handleLocalChangesInstructions =
+            new TranslationString("Handle your local changes before switching branch.");
+
+        private readonly TranslationString _handleLocalChangesContent =
+            new TranslationString(
+                "Your local changes would be overwritten by the checkout.\nPlease handle the changes before switching branch.");
+
         #endregion
 
         private readonly string[] _containRevisons;
@@ -95,7 +108,10 @@ namespace GitUI.CommandsDialogs
                     _isDirtyDir = null;
 
                 localChangesGB.Visible = IsThereUncommittedChanges();
-                ChangesMode = AppSettings.CheckoutBranchAction;
+                ChangesMode = AppSettings.CheckoutBranchAction == LocalChangesAction.Reset
+                    || AppSettings.CheckoutBranchAction == LocalChangesAction.Merge
+                    ? LocalChangesAction.DontChange
+                    : AppSettings.CheckoutBranchAction;
             }
             finally
             {
@@ -149,21 +165,12 @@ namespace GitUI.CommandsDialogs
 
         private LocalChangesAction ChangesMode
         {
-            get
+            get 
             {
-                if (rbReset.Checked)
-                    return LocalChangesAction.Reset;
-                else if (rbMerge.Checked)
-                    return LocalChangesAction.Merge;
-                else if (rbStash.Checked)
-                    return LocalChangesAction.Stash;
-                else
-                    return LocalChangesAction.DontChange;
+                return rbStash.Checked ? LocalChangesAction.Stash : LocalChangesAction.DontChange;
             }
             set
             {
-                rbReset.Checked = value == LocalChangesAction.Reset;
-                rbMerge.Checked = value == LocalChangesAction.Merge;
                 rbStash.Checked = value == LocalChangesAction.Stash;
                 rbDontChange.Checked = value == LocalChangesAction.DontChange;
             }
@@ -214,49 +221,28 @@ namespace GitUI.CommandsDialogs
             LocalChangesAction changes = ChangesMode;
             AppSettings.CheckoutBranchAction = changes;
 
-            if ((Visible || AppSettings.UseDefaultCheckoutBranchAction) && IsThereUncommittedChanges())
-                cmd.LocalChanges = changes;
-            else
-                cmd.LocalChanges = LocalChangesAction.DontChange;
+            var hasUncommitedChanges = (Visible || AppSettings.UseDefaultCheckoutBranchAction) &&
+                                           IsThereUncommittedChanges();
+            cmd.LocalChanges = hasUncommitedChanges ? changes : LocalChangesAction.DontChange;
 
             IWin32Window owner = Visible ? this : Owner;
 
-            bool stash = false;
+            var stash = false;
+
             if (changes == LocalChangesAction.Stash)
             {
-                if (_isDirtyDir == null && Visible)
-                    _isDirtyDir = Module.IsDirtyDir();
-                stash = _isDirtyDir == true;
-                if (stash)
-                    UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
+                stash = StashChanges(owner);
             }
 
-            if (UICommands.StartCommandLineProcessDialog(cmd, owner))
+            HandleOnExit handleOnExit = (ref bool isError, FormProcess form) => 
+                AnyErrCausedByLocalChanges(isError, hasUncommitedChanges, form) 
+                && HandleErrCausedByLocalChanges(form, cmd, ref stash);
+
+            if (UICommands.StartCommandLineProcessDialog(cmd, owner, handleOnExit))
             {
                 if (stash)
                 {
-                    bool? messageBoxResult = AppSettings.AutoPopStashAfterCheckoutBranch;
-                    if (messageBoxResult == null)
-                    {
-                        DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
-                            this,
-                            _applyShashedItemsAgainCaption.Text,
-                            "",
-                            _applyShashedItemsAgain.Text,
-                            "",
-                            "",
-                            _dontShowAgain.Text,
-                            PSTaskDialog.eTaskDialogButtons.YesNo,
-                            PSTaskDialog.eSysIcons.Question,
-                            PSTaskDialog.eSysIcons.Question);
-                        messageBoxResult = (res == DialogResult.Yes);
-                        if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                            AppSettings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
-                    }
-                    if (messageBoxResult ?? false)
-                    {
-                        UICommands.StashPop(this);
-                    }
+                    PopFromStash();
                 }
 
                 UICommands.UpdateSubmodules(this);
@@ -265,6 +251,101 @@ namespace GitUI.CommandsDialogs
             }
 
             return DialogResult.None;
+        }
+
+        private static bool AnyErrCausedByLocalChanges(bool isError,
+            bool needToHandleLocalChanges, FormStatus form)
+        {
+            if (!isError)
+            {
+                return false;
+            }
+            if (!needToHandleLocalChanges)
+            {
+                return false;
+            }
+
+            var errCausedByLocalChanges = form.GetOutputString()
+                .Contains("commit your changes or stash them before you can switch branches");
+            return errCausedByLocalChanges;
+        }
+
+        private bool HandleErrCausedByLocalChanges(FormProcess form, GitCheckoutBranchCmd cmd, ref bool stash)
+        {
+            var idx = PSTaskDialog.cTaskDialog.ShowCommandBox(form.Owner,
+                _handleLocalChangesTitle.Text,
+                _handleLocalChangesInstructions.Text,
+                _handleLocalChangesContent.Text,
+                "",
+                "",
+                "",
+                _handleLocalChangesButtons.Text,
+                true,
+                0,
+                0);
+
+            switch (idx)
+            {
+                case 0: // commit
+                    using (var commitForm = new FormCommit(UICommands))
+                    {
+                        commitForm.ShowDialog();
+                    }
+                    cmd.LocalChanges = LocalChangesAction.DontChange;
+                    break;
+                case 1: // stash
+                    cmd.LocalChanges = LocalChangesAction.Stash;
+                    stash = StashChanges(form.Owner);
+                    break;
+                case 2: // reset local changes
+                    cmd.LocalChanges = LocalChangesAction.Reset;
+                    break;
+                case 3: // merge changes
+                    cmd.LocalChanges = LocalChangesAction.Merge;
+                    break;
+                case 4:
+                case -1: // cancel
+                    return false;
+            }
+            form.ProcessArguments = cmd.ToLine();
+            form.Retry();
+            return true;
+        }
+
+        private void PopFromStash()
+        {
+            bool? messageBoxResult = AppSettings.AutoPopStashAfterCheckoutBranch;
+            if (messageBoxResult == null)
+            {
+                DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                    this,
+                    _applyShashedItemsAgainCaption.Text,
+                    "",
+                    _applyShashedItemsAgain.Text,
+                    "",
+                    "",
+                    _dontShowAgain.Text,
+                    PSTaskDialog.eTaskDialogButtons.YesNo,
+                    PSTaskDialog.eSysIcons.Question,
+                    PSTaskDialog.eSysIcons.Question);
+                messageBoxResult = (res == DialogResult.Yes);
+                if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                    AppSettings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
+            }
+            if (messageBoxResult ?? false)
+            {
+                UICommands.StashPop(this);
+            }
+        }
+
+        private bool StashChanges(IWin32Window owner)
+        {
+            if (_isDirtyDir == null && Visible)
+                _isDirtyDir = Module.IsDirtyDir();
+            var stash = _isDirtyDir == true;
+            if (stash)
+                UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
+            return stash;
         }
 
         private void BranchTypeChanged()

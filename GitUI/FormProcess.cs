@@ -50,6 +50,12 @@ namespace GitUI
             return ShowDialog(owner, null, arguments, module.WorkingDir, null, true);
         }
 
+        public static bool ShowDialog(IWin32Window owner, GitModule module, string arguments,
+            HandleOnExit handleOnExit)
+        {
+            return ShowDialog(owner, null, arguments, module.WorkingDir, null, true, handleOnExit);
+        }
+
         public static bool ShowDialog(IWin32Window owner, GitModule module, string process, string arguments)
         {
             return ShowDialog(owner, process, arguments, module.WorkingDir, null, true);
@@ -75,11 +81,17 @@ namespace GitUI
             return ShowDialog(owner, null, arguments, module.WorkingDir, null, useDialogSettings);
         }
 
-
-        public static bool ShowDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+        public static bool ShowDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory,
+            string input, bool useDialogSettings)
+        {
+            return ShowDialog(owner, process, arguments, aWorkingDirectory, input, useDialogSettings,
+                (ref bool error, FormProcess form) => false);
+        }
+        public static bool ShowDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings, HandleOnExit handleOnExit)
         {
             using (var formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings))
             {
+                formProcess.HandleOnExitCallback = handleOnExit;
                 formProcess.ShowDialog(owner);
                 return !formProcess.ErrorOccurred();
             }
