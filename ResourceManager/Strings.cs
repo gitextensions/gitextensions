@@ -1,8 +1,8 @@
-﻿using System;
-using ResourceManager;
+using System;
+using GitCommands;
 using SmartFormat;
 
-namespace GitCommands
+namespace ResourceManager
 {
     public class Strings : Translate
     {

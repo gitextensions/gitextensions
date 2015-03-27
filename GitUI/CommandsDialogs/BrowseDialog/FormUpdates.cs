@@ -78,7 +78,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 this.InvokeSync((state) =>
                     {
-                        GitCommands.ExceptionUtils.ShowException(this, ex, string.Empty, true);
+                        ExceptionUtils.ShowException(this, ex, string.Empty, true);
                     }, null);
                 Done();
             }
@@ -193,7 +193,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         public static IEnumerable<ReleaseVersion> GetNewerVersions(
-            Version currentVersion, 
+            Version currentVersion,
             bool checkForReleaseCandidates,
             IEnumerable<ReleaseVersion> availableVersions)
         {
@@ -201,7 +201,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     version.ReleaseType == ReleaseType.Major ||
                     version.ReleaseType == ReleaseType.HotFix ||
                     checkForReleaseCandidates && version.ReleaseType == ReleaseType.ReleaseCandidate);
-            
+
             return versions.Where(version => version.Version.CompareTo(currentVersion) > 0);
         }
 

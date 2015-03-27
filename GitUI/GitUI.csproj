@@ -364,7 +364,6 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\ControlHotkeys.Designer.cs">
       <DependentUpon>ControlHotkeys.cs</DependentUpon>
     </Compile>
-    <Compile Include="Hotkey\HotkeyCommand.cs" />
     <Compile Include="Hotkey\HotkeySettings.cs" />
     <Compile Include="Hotkey\HotkeySettingsManager.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\TextboxHotkey.cs">

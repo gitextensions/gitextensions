@@ -307,7 +307,7 @@ namespace GitUI.CommandsDialogs
                 FileText.ViewGitItem(item.FileName, item.Guid);
             else if (item.IsCommit)
                 FileText.ViewText(item.FileName,
-                    GitCommandHelpers.GetSubmoduleText(Module, item.FileName, item.Guid));
+                    LocalizationHelpers.GetSubmoduleText(Module, item.FileName, item.Guid));
             else
                 FileText.ViewText("", "");
         }

@@ -112,11 +112,9 @@
     <Compile Include="Git\GitSubmoduleStatus.cs" />
     <Compile Include="Git\GitSvnCommandHelpers.cs" />
     <Compile Include="Git\GitCommandsInstance.cs" />
-    <Compile Include="LinkFactory.cs" />
     <Compile Include="LockableNotifier.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
     <Compile Include="CommitHelper.cs" />
-    <Compile Include="CommitInformation.cs" />
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\ConfigSection.cs" />
     <Compile Include="Git\GitCommandCache.cs" />
@@ -151,7 +149,6 @@
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
     <Compile Include="Statistics\ImpactLoader.cs" />
-    <Compile Include="Strings.cs" />
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="SynchronizedProcessReader.cs" />
     <Compile Include="System.cs" />
@@ -178,10 +175,6 @@
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
-      <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
-      <Name>ResourceManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

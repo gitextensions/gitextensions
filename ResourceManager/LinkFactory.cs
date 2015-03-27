@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Net;
+using GitCommands;
 
-namespace GitCommands
+namespace ResourceManager
 {
     public class LinkFactory
     {

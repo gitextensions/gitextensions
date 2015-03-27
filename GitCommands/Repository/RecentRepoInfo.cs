@@ -32,7 +32,7 @@ namespace GitCommands.Repository
                 ShortName = Repo.Title;
             else if (DirInfo != null)
                 ShortName = DirInfo.Name;
-            
+
 
             if (DirInfo != null)
                 DirInfo = DirInfo.Parent;
@@ -312,7 +312,7 @@ namespace GitCommands.Repository
                 {
                     shortenPathWithCompany(0);
                 }
-                //else skip symbols beginning from the middle to both sides, 
+                //else skip symbols beginning from the middle to both sides,
                 //so we'll see "E:\Compa...toryName\WorkingDirName" and "E:\...\WorkingDirName" at the end.
                 else
                 {
@@ -338,6 +338,6 @@ namespace GitCommands.Repository
             }
             list.Add(repoInfo);
         }
-    
+
     }
 }

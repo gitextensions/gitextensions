@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -90,7 +91,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             IconStyle.Text = AppSettings.IconStyle;
 
-            ShowIconPreview();            
+            ShowIconPreview();
         }
 
         protected override void PageToSettings()
@@ -116,7 +117,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
             AppSettings.IconColor = GetSelectedApplicationIconColor();
-            AppSettings.IconStyle = IconStyle.Text;            
+            AppSettings.IconStyle = IconStyle.Text;
         }
 
         private string GetSelectedApplicationIconColor()
@@ -194,7 +195,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
             }
-        } 
+        }
 
         private void ColorLabel_Click(object sender, EventArgs e)
         {

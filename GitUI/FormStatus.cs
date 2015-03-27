@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using ResourceManager;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif

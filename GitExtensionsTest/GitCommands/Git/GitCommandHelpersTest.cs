@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GitCommands;
 using NUnit.Framework;
+using ResourceManager;
 using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
 
@@ -14,47 +15,47 @@ namespace GitExtensionsTest.Git
         public void CanGetRelativeDateString()
         {
             AppSettings.CurrentTranslation = "English";
-            Assert.AreEqual("0 seconds ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now));
-            Assert.AreEqual("1 second ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(-1)));
-            Assert.AreEqual("1 minute ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-1)));
-            Assert.AreEqual("1 hour ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-45)));
-            Assert.AreEqual("1 hour ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(-1)));
-            Assert.AreEqual("1 day ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-1)));
-            Assert.AreEqual("1 week ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-7)));
-            Assert.AreEqual("1 month ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-30)));
-            Assert.AreEqual("12 months ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-364)));
-            Assert.AreEqual("1 year ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-365)));
+            Assert.AreEqual("0 seconds ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now));
+            Assert.AreEqual("1 second ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(-1)));
+            Assert.AreEqual("1 minute ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-1)));
+            Assert.AreEqual("1 hour ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-45)));
+            Assert.AreEqual("1 hour ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(-1)));
+            Assert.AreEqual("1 day ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-1)));
+            Assert.AreEqual("1 week ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-7)));
+            Assert.AreEqual("1 month ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-30)));
+            Assert.AreEqual("12 months ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-364)));
+            Assert.AreEqual("1 year ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-365)));
 
-            Assert.AreEqual("2 seconds ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(-2)));
-            Assert.AreEqual("2 minutes ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-2)));
-            Assert.AreEqual("2 hours ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(-2)));
-            Assert.AreEqual("2 days ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-2)));
-            Assert.AreEqual("2 weeks ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-14)));
-            Assert.AreEqual("2 months ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-60)));
-            Assert.AreEqual("2 years ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-730)));
+            Assert.AreEqual("2 seconds ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(-2)));
+            Assert.AreEqual("2 minutes ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(-2)));
+            Assert.AreEqual("2 hours ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(-2)));
+            Assert.AreEqual("2 days ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-2)));
+            Assert.AreEqual("2 weeks ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-14)));
+            Assert.AreEqual("2 months ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-60)));
+            Assert.AreEqual("2 years ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(-730)));
         }
 
         [TestMethod]
         public void CanGetRelativeNegativeDateString()
         {
             AppSettings.CurrentTranslation = "English";
-            Assert.AreEqual("-1 second ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(1)));
-            Assert.AreEqual("-1 minute ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(1)));
-            Assert.AreEqual("-1 hour ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(45)));
-            Assert.AreEqual("-1 hour ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(1)));
-            Assert.AreEqual("-1 day ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(1)));
-            Assert.AreEqual("-1 week ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(7)));
-            Assert.AreEqual("-1 month ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(30)));
-            Assert.AreEqual("-12 months ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(364)));
-            Assert.AreEqual("-1 year ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(365)));
+            Assert.AreEqual("-1 second ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(1)));
+            Assert.AreEqual("-1 minute ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(1)));
+            Assert.AreEqual("-1 hour ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(45)));
+            Assert.AreEqual("-1 hour ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(1)));
+            Assert.AreEqual("-1 day ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(1)));
+            Assert.AreEqual("-1 week ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(7)));
+            Assert.AreEqual("-1 month ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(30)));
+            Assert.AreEqual("-12 months ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(364)));
+            Assert.AreEqual("-1 year ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(365)));
 
-            Assert.AreEqual("-2 seconds ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(2)));
-            Assert.AreEqual("-2 minutes ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(2)));
-            Assert.AreEqual("-2 hours ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(2)));
-            Assert.AreEqual("-2 days ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(2)));
-            Assert.AreEqual("-2 weeks ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(14)));
-            Assert.AreEqual("-2 months ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(60)));
-            Assert.AreEqual("-2 years ago", GitCommandHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(730)));
+            Assert.AreEqual("-2 seconds ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddSeconds(2)));
+            Assert.AreEqual("-2 minutes ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddMinutes(2)));
+            Assert.AreEqual("-2 hours ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddHours(2)));
+            Assert.AreEqual("-2 days ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(2)));
+            Assert.AreEqual("-2 weeks ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(14)));
+            Assert.AreEqual("-2 months ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(60)));
+            Assert.AreEqual("-2 years ago", LocalizationHelpers.GetRelativeDateString(DateTime.Now, DateTime.Now.AddDays(730)));
         }
 
         [TestMethod]
@@ -112,7 +113,7 @@ namespace GitExtensionsTest.Git
         [TestMethod]
         public void TestGetPlinkCompatibleUrl_Incompatible()
         {
-            // Test urls that are incompatible and need to be changed      
+            // Test urls that are incompatible and need to be changed
             string inUrl, expectUrl, outUrl;
 
             // ssh urls can cause problems
@@ -153,7 +154,7 @@ namespace GitExtensionsTest.Git
         [TestMethod]
         public void TestGetPlinkCompatibleUrl_NoPlink()
         {
-            // Test urls that are no valid uris, these should be ignored    
+            // Test urls that are no valid uris, these should be ignored
             string inUrl, outUrl;
 
             // git protocol does not have authentication
@@ -200,7 +201,7 @@ namespace GitExtensionsTest.Git
         [TestMethod]
         public void TestGetPlinkCompatibleUrl_Invalid()
         {
-            // Test urls that are no valid uris, these should be ignored  
+            // Test urls that are no valid uris, these should be ignored
             string inUrl, outUrl;
 
             inUrl = "foo://server/path/to/project.git";

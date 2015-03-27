@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI.RevisionGridClasses
 {
@@ -61,7 +62,7 @@ namespace GitUI.RevisionGridClasses
                     MessageCheck.Checked ||
                     SinceCheck.Checked ||
                     CheckUntil.Checked ||
-                    FileFilterCheck.Checked);                
+                    FileFilterCheck.Checked);
         }
 
         public string GetFilter()

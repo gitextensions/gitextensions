@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

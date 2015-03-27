@@ -28,7 +28,7 @@ namespace GitCommands.Repository
 
         public string Title { get; set; }
         private string _path;
-        public string Path 
+        public string Path
         {
             get
             {

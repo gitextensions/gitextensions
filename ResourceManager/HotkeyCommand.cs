@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
-namespace GitUI.Hotkey
+namespace ResourceManager
 {
     [Serializable]
     [DebuggerDisplay("Hotkey: {CommandCode} {Name}")]

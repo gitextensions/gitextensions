@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitUI.Hotkey;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
