@@ -182,7 +182,7 @@ namespace PatchApply
                     if (line.Length > 1)
                         insertLine = line.Substring(1);
 
-                    //Is the patch allready applied?
+                    //Is the patch already applied?
                     if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(insertLine) == 0)
                     {
                         Rate -= 20;
