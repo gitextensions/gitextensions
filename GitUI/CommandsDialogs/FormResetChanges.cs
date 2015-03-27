@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -27,7 +28,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (!hasNewFiles)
             {
-                // No new files => force the "delete new files" checkbox off. 
+                // No new files => force the "delete new files" checkbox off.
                 cbDeleteNewFilesAndDirectories.Enabled = false;
                 cbDeleteNewFilesAndDirectories.Checked = false;
             }

@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -21,7 +22,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         private void GitLogFormLoad(object sender, EventArgs e)
-        {            
+        {
             SubscribeToEvents();
             RefreshLogItems();
 

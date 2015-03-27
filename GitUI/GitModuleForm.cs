@@ -5,7 +5,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    /// <summary>Base class for a <see cref="Form"/> requiring 
+    /// <summary>Base class for a <see cref="Form"/> requiring
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
@@ -47,12 +47,12 @@ namespace GitUI
         public event GitUICommandsChangedEventHandler GitUICommandsChanged;
 
         protected GitModuleForm()
-        {            
+        {
         }
 
         public GitModuleForm(GitUICommands aCommands)
             : this(true, aCommands)
-        {         
+        {
         }
 
         public GitModuleForm(bool enablePositionRestore, GitUICommands aCommands)

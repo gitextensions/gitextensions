@@ -4,6 +4,7 @@ using System.Linq;
 using GitCommands;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

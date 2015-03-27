@@ -16,7 +16,6 @@ using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using PatchApply;
 using SmartFormat;
-using System.Threading;
 
 namespace GitCommands
 {
@@ -64,7 +63,7 @@ namespace GitCommands
         }
     }
 
-    /// <summary>Provides manipulation with git module. 
+    /// <summary>Provides manipulation with git module.
     /// <remarks>Several instances may be created for submodules.</remarks></summary>
     [DebuggerDisplay("GitModule ( {_workingDir} )")]
     public sealed class GitModule : IGitModule
@@ -276,11 +275,11 @@ namespace GitCommands
 
         //Encoding that let us read all bytes without replacing any char
         //It is using to read output of commands, which may consist of:
-        //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
+        //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of
         //   pretty parameter (pretty=raw - recoded, pretty=format - not recoded)
         //2) file content encoded in its original encoding
         //3) file path (file name is encoded in system default encoding),
-        //   when core.quotepath is on, every non ASCII character is escaped 
+        //   when core.quotepath is on, every non ASCII character is escaped
         //   with \ followed by its code as a three digit octal number
         //4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
@@ -423,7 +422,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// This is a faster function to get the names of all submodules then the 
+        /// This is a faster function to get the names of all submodules then the
         /// GetSubmodules() function. The command @git submodule is very slow.
         /// </summary>
         public IList<string> GetSubmodulesLocalPathes(bool recursive = true)
@@ -1490,7 +1489,7 @@ namespace GitCommands
         {
             remote = remote.ToPosixPath();
 
-            //Remove spaces... 
+            //Remove spaces...
             if (remoteBranch != null)
                 remoteBranch = remoteBranch.Replace(" ", "");
             if (localBranch != null)
@@ -1537,7 +1536,7 @@ namespace GitCommands
 
         /// <summary>Creates a 'git push' command using the specified parameters.</summary>
         /// <param name="remote">Remote repository that is the destination of the push operation.</param>
-        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it.
         /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
         /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
         /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
@@ -1572,7 +1571,7 @@ namespace GitCommands
         /// <param name="remote">Remote repository that is the destination of the push operation.</param>
         /// <param name="fromBranch">Name of the branch to push.</param>
         /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
-        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it.
         /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
         /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
         /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
@@ -1726,7 +1725,7 @@ namespace GitCommands
             //process.StandardInput.WriteLine("\"" + ToPosixPath(file.Name) + "\"");
             byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
                                                       "\"" + filename.ToPosixPath() + "\"" + processReader.Value.Process.StandardInput.NewLine);
-            processReader.Value.Process.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);            
+            processReader.Value.Process.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
         }
 
         public bool InTheMiddleOfBisect()
@@ -1769,7 +1768,7 @@ namespace GitCommands
 
         private static string DecodeString(string str)
         {
-            // decode QuotedPrintable text using .NET internal decoder 
+            // decode QuotedPrintable text using .NET internal decoder
             Attachment attachment = Attachment.CreateAttachmentFromString("", str);
             return attachment.Name;
         }
@@ -2398,7 +2397,7 @@ namespace GitCommands
 
             var tree = GetTreeFromRemoteRefs(remote, tags, branches);
 
-            // If the authentication failed because of a missing key, ask the user to supply one. 
+            // If the authentication failed because of a missing key, ask the user to supply one.
             if (tree.Contains("FATAL ERROR") && tree.Contains("authentication"))
             {
                 result.AuthenticationFail = true;
@@ -2439,7 +2438,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="option">Ordery by date is slower.</param>
         /// <returns></returns>
@@ -2610,7 +2609,7 @@ namespace GitCommands
                     notEmptyPatterns
                     .Select(pattern => "-x " + pattern.Quote())
                     .Join(" ");
-                // filter duplicates out of the result because options -c and -m may return 
+                // filter duplicates out of the result because options -c and -m may return
                 // same files at times
                 return RunGitCmd("ls-files -z -o -m -c -i " + excludeParams)
                     .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)

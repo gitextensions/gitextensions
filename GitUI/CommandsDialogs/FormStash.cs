@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs
                         View.ViewGitItem(stashedItem.Name, stashedItem.TreeGuid);
                     else
                         View.ViewText(stashedItem.Name,
-                            GitCommandHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid));
+                            LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid));
                 }
                 else
                 {
@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
                         if (patch == null)
                             return String.Empty;
                         if (stashedItem.IsSubmodule)
-                            return GitCommandHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch);
+                            return LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch);
                         return patch.Text;
                     });
                 }
@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs
 
         private void ApplyClick(object sender, EventArgs e)
         {
-            UICommands.StashApply(this, Stashes.Text);            
+            UICommands.StashApply(this, Stashes.Text);
             Initialize();
         }
 
@@ -279,7 +279,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
         }
- 
+
         private void StashMessage_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left)
@@ -303,6 +303,6 @@ namespace GitUI.CommandsDialogs
                 StashMessage.ReadOnly = false;
             }
         }
-    
+
     }
 }

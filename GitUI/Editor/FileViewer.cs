@@ -13,6 +13,7 @@ using GitUI.Hotkey;
 using ICSharpCode.TextEditor.Util;
 using PatchApply;
 using GitCommands.Settings;
+using ResourceManager;
 
 namespace GitUI.Editor
 {
@@ -60,7 +61,7 @@ namespace GitUI.Editor
             IgnoreWhitespaceChanges = false;
 
             IsReadOnly = true;
-            
+
             this.encodingToolStripComboBox.Items.AddRange(new Object[]
                                                     {
                                                         "Default (" + Encoding.Default.HeaderName + ")", "ASCII",
@@ -77,7 +78,7 @@ namespace GitUI.Editor
 
             if (RunTime() && ContextMenuStrip == null)
                 ContextMenuStrip = contextMenu;
-            contextMenu.Opening += ContextMenu_Opening; 
+            contextMenu.Opening += ContextMenu_Opening;
         }
 
         void FileViewer_GitUICommandsSourceSet(object sender, IGitUICommandsSource uiCommandsSource)
@@ -136,7 +137,7 @@ namespace GitUI.Editor
         private Encoding _Encoding;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public Encoding Encoding 
+        public Encoding Encoding
         {
             get
             {
@@ -151,7 +152,7 @@ namespace GitUI.Editor
                 _Encoding = value;
             }
         }
-                         
+
         [DefaultValue(0)]
         [Browsable(false)]
         public int ScrollPos
@@ -212,7 +213,7 @@ namespace GitUI.Editor
         {
             ToolStripSeparator separator = new ToolStripSeparator();
             contextMenu.Items.Add(separator);
-            return separator;        
+            return separator;
         }
 
         public ToolStripMenuItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
@@ -348,7 +349,7 @@ namespace GitUI.Editor
         public void ViewFile(string fileName)
         {
             ViewItem(fileName, () => GetImage(fileName), () => GetFileText(fileName),
-                () => GitCommandHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
+                () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
         }
 
         public string GetText()
@@ -377,10 +378,10 @@ namespace GitUI.Editor
                     {
                         if (status.Result == null)
                             return string.Format("Submodule \"{0}\" has unresolved conflicts", fileName);
-                        return GitCommandHelpers.ProcessSubmoduleStatus(Module, status.Result);
+                        return LocalizationHelpers.ProcessSubmoduleStatus(Module, status.Result);
                     }, ViewPatch);
             else
-                _async.Load(() => GitCommandHelpers.ProcessSubmodulePatch(Module, fileName,
+                _async.Load(() => LocalizationHelpers.ProcessSubmodulePatch(Module, fileName,
                     Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)), ViewPatch);
         }
 
@@ -464,7 +465,7 @@ namespace GitUI.Editor
         public void ViewGitItem(string fileName, string guid)
         {
             ViewItem(fileName, () => GetImage(fileName, guid), () => GetFileTextIfBlobExists(guid),
-                () => GitCommandHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), guid));
+                () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), guid));
         }
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
@@ -692,7 +693,7 @@ namespace GitUI.Editor
                 //add artificail space if selected text is not starting from line begining, it will be removed later
                 int pos = _internalFileViewer.GetSelectionPosition();
                 string fileText = _internalFileViewer.GetText();
-                int hpos = fileText.IndexOf("\n@@");                
+                int hpos = fileText.IndexOf("\n@@");
                 //if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
                 {
@@ -718,7 +719,7 @@ namespace GitUI.Editor
                 Clipboard.SetText(selectedText);
                 return;
             }
-            
+
             var text = _internalFileViewer.GetText();
             if (!text.IsNullOrEmpty())
                 Clipboard.SetText(text);
@@ -986,7 +987,7 @@ namespace GitUI.Editor
                 if (hpos <= pos)
                 {
                     char[] specials = new char[] { ' ', '-', '+' };
-                    lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s.Substring(1) : s);                    
+                    lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s.Substring(1) : s);
                 }
 
                 code = string.Join("\n", lines);

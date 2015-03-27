@@ -32,13 +32,13 @@ namespace PatchApply
 
             if (selectedChunks == null)
                 return null;
-            
+
             string body = selectedChunks.ToResetUnstagedLinesPatch();
 
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
             if (body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
-                body = body.Replace("\r", "");            
+                body = body.Replace("\r", "");
 
             if (header == null || body == null)
                 return null;
@@ -86,7 +86,7 @@ namespace PatchApply
                     sb.Append(line + "\n");
             }
 
-            return sb.ToString();        
+            return sb.ToString();
         }
 
         public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset)
@@ -116,12 +116,12 @@ namespace PatchApply
 
             if (selectedChunks == null)
                 return null;
-            
+
             string body = selectedChunks.ToStagePatch(false);
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
             if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
-                body = body.Replace("\r", "");            
+                body = body.Replace("\r", "");
 
             if (header == null || body == null)
                 return null;
@@ -136,7 +136,7 @@ namespace PatchApply
             byte[] result = new byte[hb.Length + bb.Length];
             hb.CopyTo(result, 0);
             bb.CopyTo(result, hb.Length);
-            return result;        
+            return result;
         }
 
         public string GetMD5Hash(string input)
@@ -276,7 +276,7 @@ namespace PatchApply
             diff = diff.Combine("\n", postPart);
             foreach (PatchLine line in PostContext)
                 diff = diff.Combine("\n", line.Text);
-            //stage no new line at the end only if last +- line is selected 
+            //stage no new line at the end only if last +- line is selected
             if (PostContext.Count == 0 && (selectedLastLine || staged))
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
             if (PostContext.Count > 0)
@@ -468,7 +468,7 @@ namespace PatchApply
             else if ("native".Equals(gitEol))
                 eol = Environment.NewLine;
             else
-                eol = "\n";            
+                eol = "\n";
 
             int eolLength = eol.Length;
 
@@ -609,9 +609,9 @@ namespace PatchApply
                 result = result.Combine("\n", Application.ProductName + " " + AppSettings.ProductVersion);
             }
             return result;
-        
+
         }
-    
+
     }
 
 

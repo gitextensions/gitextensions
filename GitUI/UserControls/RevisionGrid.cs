@@ -89,7 +89,7 @@ namespace GitUI
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
- 
+
         public RevisionGrid()
         {
             InitLayout();
@@ -585,7 +585,7 @@ namespace GitUI
         }
 
         public override void Refresh()
-        { 
+        {
             SetRevisionsLayout();
 
             base.Refresh();
@@ -684,10 +684,10 @@ namespace GitUI
             SelectionTimer.Enabled = false;
             SelectionTimer.Stop();
             SelectionTimer.Enabled = true;
-            SelectionTimer.Start(); 
- 
+            SelectionTimer.Start();
+
             var selectedRevisions = GetSelectedRevisions();
-            var firstSelectedRevision = selectedRevisions.FirstOrDefault(); 
+            var firstSelectedRevision = selectedRevisions.FirstOrDefault();
             if (selectedRevisions.Count == 1 && firstSelectedRevision != null)
                 _navigationHistory.Push(firstSelectedRevision.Guid);
 
@@ -697,7 +697,7 @@ namespace GitUI
             {
                 Refresh();
             }
-        } 
+        }
 
         public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
         {
@@ -1644,7 +1644,7 @@ namespace GitUI
             }
             else if (columnIndex == authorColIndex)
             {
-                e.Value = revision.Author ?? ""; 
+                e.Value = revision.Author ?? "";
             }
             else if (columnIndex == dateColIndex)
             {
@@ -2398,7 +2398,7 @@ namespace GitUI
             if (!AppSettings.RelativeDate)
                 return string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
 
-            return GitCommandHelpers.GetRelativeDateString(DateTime.Now, time, false);
+            return LocalizationHelpers.GetRelativeDateString(DateTime.Now, time, false);
         }
 
         private bool ShowUncommitedChanges()
@@ -2828,7 +2828,7 @@ namespace GitUI
             {
                 _authoredRevisionsBrush.Dispose();
                 _authoredRevisionsBrush = null;
-            } 
+            }
 
             if (_authoredRevisionsBrush == null)
             {
@@ -3039,7 +3039,7 @@ namespace GitUI
         /// </summary>
         /// <param name="commandCode"></param>
         /// <returns></returns>
-        private Hotkey.HotkeyCommand GetHotkeyCommand(int commandCode)
+        private HotkeyCommand GetHotkeyCommand(int commandCode)
         {
             if (Hotkeys == null)
                 return null;
