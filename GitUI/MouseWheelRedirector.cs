@@ -65,7 +65,8 @@ namespace GitUI
         private static class NativeMethods
         {
             // P/Invoke declarations
-            [DllImport("user32.dll")]
+            // BUG: Suppressed due to a known FxCop issue https://social.msdn.microsoft.com/Forums/en-US/180fcf90-ff90-45b2-839f-438eb17f2f07/is-this-a-bug-in-vs-code-analysis?forum=vstscode
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1901:PInvokeDeclarationsShouldBePortable", MessageId = "0"), DllImport("user32.dll")]
             public static extern IntPtr WindowFromPoint(POINT pt);
 
             [DllImport("user32.dll")]
