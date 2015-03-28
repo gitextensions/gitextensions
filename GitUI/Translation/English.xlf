@@ -167,6 +167,60 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Auto compile SubModules</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MsBuildArguments.Caption">
+        <source>msbuild.exe arguments</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MsBuildEnabled.Caption">
+        <source>Enabled</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MsBuildPath.Caption">
+        <source>Path to msbuild.exe</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_doYouWantBuild.Text">
+        <source>Do you want to build {0}?
+
+{1}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_enterCorrectMsBuildPath.Text">
+        <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en">
+    <body>
+      <trans-unit id="AutoRefresh.Caption">
+        <source>Refresh view after fetch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Periodic background fetch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="FetchAllSubmodules.Caption">
+        <source>Fetch all submodules</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="FetchInterval.Caption">
+        <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GitCommand.Caption">
+        <source>Arguments of git command to run</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="BlameControl" source-language="en">
     <body>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
@@ -797,6 +851,14 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Create local tracking branches</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="CreatePullRequestForm" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -1101,6 +1163,22 @@ Do you want to open it?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en">
+    <body>
+      <trans-unit id="DaysOlderThan.Caption">
+        <source>Delete obsolete branches older than (days)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Delete obsolete branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MergedInBranch.Caption">
+        <source>Branch where all branches should be merged in</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="EditNetSpell" source-language="en">
     <body>
       <trans-unit id="addToDictionaryText.Text">
@@ -1385,6 +1463,18 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Find large files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="SizeLargeFile.Caption">
+        <source>Find large files bigger than (Mb)</source>
         <target />
       </trans-unit>
     </body>
@@ -6743,6 +6833,10 @@ Context menu for additional operations</source>
   </file>
   <file datatype="plaintext" original="GerritPlugin" source-language="en">
     <body>
+      <trans-unit id="Description.Text">
+        <source>Gerrit Code Review</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_downloadGerritChange.Text">
         <source>Download Gerrit Change</source>
         <target />
@@ -6765,10 +6859,6 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="_installCommitMsgHookShortText.Text">
         <source>Install commit-msg hook</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Gerrit Code Review</source>
         <target />
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
@@ -7108,6 +7198,30 @@ global settings.
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitFlowPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>GitFlow</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="Github3Plugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Github</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Impact Graph</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -7165,6 +7279,26 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
+    <body>
+      <trans-unit id="CodeFiles.Caption">
+        <source>Code files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Statistics</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="IgnoreDirectories.Caption">
+        <source>Directories to ignore (EndsWith)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="IgnoreSubmodules.Caption">
+        <source>Ignore submodules</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GotoUserManualControl" source-language="en">
     <body>
       <trans-unit id="_gotoUserManualControlTooltip.Text">
@@ -7173,6 +7307,22 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       </trans-unit>
       <trans-unit id="linkLabelHelp.Text">
         <source>Help</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GourcePlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Gource</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GourceArguments.Caption">
+        <source>Arguments</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GourcePath.Caption">
+        <source>Path to "gource"</source>
         <target />
       </trans-unit>
     </body>
@@ -7533,6 +7683,14 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Proxy Switcher</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -7618,8 +7776,12 @@ branch names, tag names)</source>
         <source>n/a</source>
         <target />
       </trans-unit>
-      <trans-unit id="textBoxGitLogArguments.Text">
-        <source>--pretty="format:%h@%s%b" --abbrev-commit {0}..{1}</source>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Release Notes Generator</source>
         <target />
       </trans-unit>
     </body>
@@ -8242,6 +8404,14 @@ When OpenSSH is used, command line dialogs are shown!
     <body>
       <trans-unit id="$this.Text">
         <source>Start Page</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="StashPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Create Stash Pull Request</source>
         <target />
       </trans-unit>
     </body>

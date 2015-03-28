@@ -4,15 +4,12 @@ using ResourceManager;
 
 namespace ReleaseNotesGenerator
 {
-    public class ReleaseNotesGenerator : GitPluginBase
+    public class ReleaseNotesGeneratorPlugin : GitPluginBase
     {
-        #region Translation
-        private readonly TranslationString _pluginDescription = new TranslationString("Release Notes Generator");
-        #endregion
-
-        public override string Description
+        public ReleaseNotesGeneratorPlugin()
         {
-            get { return _pluginDescription.Text; }
+            Description = "Release Notes Generator";
+            Translate();
         }
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)

@@ -1,14 +1,20 @@
 using System;
+using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using GitCommands;
 using GitUIPluginInterfaces;
-using System.Collections.Generic;
+using ResourceManager;
 
 namespace BackgroundFetch
 {
     public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
     {
+        public BackgroundFetchPlugin()
+        {
+            Description = "Periodic background fetch";
+            Translate();
+        }
+
         private IDisposable cancellationToken;
         private IGitUICommands currentGitUiCommands;
 
@@ -24,11 +30,6 @@ namespace BackgroundFetch
             yield return FetchInterval;
             yield return AutoRefresh;
             yield return FetchAllSubmodules;
-        }
-
-        public override string Description
-        {
-            get { return "Periodic background fetch"; }
         }
 
         public override void Register(IGitUICommands gitUiCommands)

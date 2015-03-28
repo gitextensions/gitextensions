@@ -32,7 +32,7 @@ namespace ReleaseNotesGenerator
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
-            string logArgs = string.Format(textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text);
+            string logArgs = string.Format(_NO_TRANSLATE_textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text);
             string result = _gitUiCommands.GitModule.RunGitCmd("log " + logArgs);
 
             if (!result.Contains("\r\n"))

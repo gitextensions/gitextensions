@@ -1,17 +1,19 @@
 ﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace DeleteUnusedBranches
 {
     public class DeleteUnusedBranchesPlugin : GitPluginBase, IGitPluginForRepository
     {
+        public DeleteUnusedBranchesPlugin()
+        {
+            Description = "Delete obsolete branches";
+            Translate();
+        }
+
         private StringSetting MergedInBranch = new StringSetting("Branch where all branches should be merged in", "HEAD");
         private NumberSetting<int> DaysOlderThan = new NumberSetting<int>("Delete obsolete branches older than (days)", 30);
-
-        public override string Description
-        {
-            get { return "Delete obsolete branches"; }
-        }
 
         public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
         {

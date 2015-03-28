@@ -1,16 +1,18 @@
 ﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitImpact
 {
     public class GitImpactPlugin : GitPluginBase, IGitPluginForRepository
     {
-        #region IGitPlugin Members
-
-        public override string Description
+        public GitImpactPlugin()
         {
-            get { return "Impact Graph"; }
+            Description = "Impact Graph";
+            Translate();
         }
+
+        #region IGitPlugin Members
 
         public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {

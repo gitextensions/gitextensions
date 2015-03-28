@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace FindLargeFiles
 {
     public class FindLargeFilesPlugin : GitPluginBase, IGitPluginForRepository
     {
-        private NumberSetting<float> SizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
-        public override string Description
+        public FindLargeFilesPlugin()
         {
-            get { return "Find large files"; }
+            Description = "Find large files";
+            Translate();
         }
+
+        private NumberSetting<float> SizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
 
         public override IEnumerable<ISetting> GetSettings()
         {
