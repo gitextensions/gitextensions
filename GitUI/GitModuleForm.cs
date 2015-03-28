@@ -17,7 +17,7 @@ namespace GitUI
             get
             {
                 if (_uiCommands == null)
-                    throw new NullReferenceException("Commands");
+                    throw new ArgumentNullException("Commands");
 
                 return _uiCommands;
             }
