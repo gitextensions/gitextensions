@@ -70,12 +70,13 @@ namespace GitCommands.Statistics
 
         ~ImpactLoader()
         {
-            Stop();
+            Dispose();
         }
 
         public void Dispose()
         {
             Stop();
+            _backgroundLoaderTokenSource.Dispose();
         }
 
         public void Stop()
