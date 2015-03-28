@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
 
         private bool openedFromProtocolHandler;
         private readonly string url;
-        private GitModuleChangedEventHandler GitModuleChanged;
+        private EventHandler<GitModuleEventArgs> GitModuleChanged;
 
         // for translation only
         private FormClone()
@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormClone(GitUICommands aCommands, string url, bool openedFromProtocolHandler, GitModuleChangedEventHandler GitModuleChanged)
+        public FormClone(GitUICommands aCommands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> GitModuleChanged)
             : base(aCommands)
         {
             this.GitModuleChanged = GitModuleChanged;
@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else if (ShowInTaskbar == false && GitModuleChanged != null &&
                     AskIfNewRepositoryShouldBeOpened(dirTo))
-                    GitModuleChanged(new GitModule(dirTo));
+                    GitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
 
                 Close();
             }

@@ -1337,7 +1337,7 @@ namespace GitUI.CommandsDialogs
         {
             GitModule module = FormOpenDirectory.OpenModule(this);
             if (module != null)
-                SetGitModule(module);
+                SetGitModule(this, new GitModuleEventArgs(module));
         }
 
         private void CheckoutToolStripMenuItemClick(object sender, EventArgs e)
@@ -1798,7 +1798,7 @@ namespace GitUI.CommandsDialogs
                     return;
             }
 
-            SetGitModule(module);
+            SetGitModule(this, new GitModuleEventArgs(module));
         }
 
         private void HistoryItemMenuClick(object sender, EventArgs e)
@@ -1958,11 +1958,12 @@ namespace GitUI.CommandsDialogs
 
         private void SetWorkingDir(string path)
         {
-            SetGitModule(new GitModule(path));
+            SetGitModule(this, new GitModuleEventArgs(new GitModule(path)));
         }
 
-        private void SetGitModule(GitModule module)
+        private void SetGitModule(object sender, GitModuleEventArgs e)
         {
+            var module = e.GitModule;
             HideVariableMainMenuItems();
             UnregisterPlugins();
             UICommands = new GitUICommands(module);
@@ -2920,7 +2921,7 @@ namespace GitUI.CommandsDialogs
                 return;
 
             if (button.Tag is GitModule)
-                SetGitModule(button.Tag as GitModule);
+                SetGitModule(this, new GitModuleEventArgs(button.Tag as GitModule));
             else
                 SetWorkingDir(button.Tag as string);
         }
@@ -3122,7 +3123,7 @@ namespace GitUI.CommandsDialogs
         private void toolStripButtonLevelUp_ButtonClick(object sender, EventArgs e)
         {
             if (Module.SuperprojectModule != null)
-                SetGitModule(Module.SuperprojectModule);
+                SetGitModule(this, new GitModuleEventArgs(Module.SuperprojectModule));
             else
                 toolStripButtonLevelUp.ShowDropDown();
         }
