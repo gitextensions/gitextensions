@@ -2451,6 +2451,7 @@ namespace GitUI.CommandsDialogs
             if (disposing && _interactiveAddBashCloseWaitCts != null)
             {
                 _interactiveAddBashCloseWaitCts.Cancel();
+                _interactiveAddBashCloseWaitCts.Dispose();
                 _interactiveAddBashCloseWaitCts = null;
             }
 
