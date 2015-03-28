@@ -56,8 +56,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Load += Dashboard_Load;
         }
 
-        void RecentRepositories_RepositoryRemoved(Repository repository)
+        void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
         {
+            var repository = e.Repository;
             if (repository != null)
                 Repositories.RepositoryHistory.RemoveRepository(repository);
         }
