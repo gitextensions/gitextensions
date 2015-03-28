@@ -158,7 +158,7 @@ namespace GitUI.Editor
             set { _internalFileViewer.ScrollPos = value; }
         }
 
-        private void WorkingDirChanged(IGitUICommandsSource source, GitUICommands old)
+        private void WorkingDirChanged(object sender, GitUICommandsChangedEventArgs e)
         {
             this.Encoding = null;
         }
