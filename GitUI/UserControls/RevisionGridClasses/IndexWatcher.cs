@@ -36,7 +36,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             RefsWatcher.Changed += fileSystemWatcher_Changed;
         }
 
-        void UICommandsSource_GitUICommandsChanged(IGitUICommandsSource sender, GitUICommands oldCommands)
+        void UICommandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
             Clear();
         }
