@@ -127,10 +127,15 @@ namespace GitCommands
             return args.Handled;
         }
 
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
             if (_cancelledTokenSource != null)
                 _cancelledTokenSource.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 
