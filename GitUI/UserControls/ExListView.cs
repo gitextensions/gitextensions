@@ -67,7 +67,7 @@ namespace GitUI.UserControls
                                                    ref LVHITTESTINFO lParam);
 
             [DllImport("user32", CharSet = CharSet.Auto)]
-            public static extern int SendMessage(HandleRef hWnd,
+            public static extern IntPtr SendMessage(HandleRef hWnd,
                                                    int msg,
                                                    IntPtr wParam,
                                                    ref LVGROUP lParam);
