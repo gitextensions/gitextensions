@@ -192,13 +192,13 @@ namespace GitUI.Editor
             this.OnMouseLeave(e);
         }
 
-        void _internalFileViewer_SelectedLineChanged(object sender, int selectedLine)
+        void _internalFileViewer_SelectedLineChanged(object sender, SelectedLineEventArgs e)
         {
             if (SelectedLineChanged != null)
-                SelectedLineChanged(sender, selectedLine);
+                SelectedLineChanged(sender, e);
         }
 
-        public event SelectedLineChangedEventHandler SelectedLineChanged;
+        public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
 
         public event EventHandler ScrollPosChanged;
         public event EventHandler RequestDiffView;
