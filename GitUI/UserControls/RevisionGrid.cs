@@ -74,7 +74,7 @@ namespace GitUI
 
         private RevisionGridLayout _layout;
         private int _rowHeigth;
-        public event GitModuleChangedEventHandler GitModuleChanged;
+        public event EventHandler<GitModuleEventArgs> GitModuleChanged;
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
 
         private readonly RevisionGridMenuCommands _revisionGridMenuCommands;
@@ -2617,10 +2617,10 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        public void OnModuleChanged(GitModule aModule)
+        public void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
             if (GitModuleChanged != null)
-                GitModuleChanged(aModule);
+                GitModuleChanged(this, e);
         }
 
         private void InitRepository_Click(object sender, EventArgs e)
