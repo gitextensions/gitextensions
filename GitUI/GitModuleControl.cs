@@ -28,7 +28,7 @@ namespace GitUI
                 if (_uiCommandsSource == null)
                     SearchForUICommandsSource();
                 if (_uiCommandsSource == null)
-                    throw new NullReferenceException("UICommandsSource");
+                    throw new ArgumentNullException("UICommandsSource");
                 return _uiCommandsSource;
             }
             set
