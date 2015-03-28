@@ -3230,6 +3230,7 @@ namespace GitUI.CommandsDialogs
             {
                 _submodulesStatusImagesCTS.Dispose();
                 _pushButton.Dispose();
+                _pullButton.Dispose();
             }
 
             if (disposing && (components != null))
