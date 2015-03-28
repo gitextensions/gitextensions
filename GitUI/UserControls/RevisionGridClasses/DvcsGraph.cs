@@ -280,6 +280,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
         protected override void Dispose(bool disposing)
         {
             lock (_backgroundEvent)
