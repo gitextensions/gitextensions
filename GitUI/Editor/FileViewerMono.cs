@@ -47,12 +47,12 @@ namespace GitUI.Editor
                 MouseLeave(sender, e);
         }
 
-        public event SelectedLineChangedEventHandler SelectedLineChanged;
+        public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
 
         void OnSelectedLineChanged(int selectedLine)
         {
             if (SelectedLineChanged != null)
-                SelectedLineChanged(this, selectedLine);
+                SelectedLineChanged(this, new SelectedLineEventArgs(selectedLine));
         }
 
         void TextEditor_MouseDown(object sender, MouseEventArgs e)
