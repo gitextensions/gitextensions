@@ -16,12 +16,12 @@ namespace GitCommands
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         ~SettingsCache()
