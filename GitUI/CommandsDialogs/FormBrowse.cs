@@ -1,4 +1,4 @@
-susing GitUI.UserControls.RevisionGridClasses;
+using GitUI.UserControls.RevisionGridClasses;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
