@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace GitCommands
@@ -12,6 +13,14 @@ namespace GitCommands
     public class XmlSerializableDictionary<TKey, TValue>
             : Dictionary<TKey, TValue>, IXmlSerializable
     {
+        public XmlSerializableDictionary()
+        {
+        }
+
+        protected XmlSerializableDictionary(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
 
         #region IXmlSerializable Members
 
