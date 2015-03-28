@@ -1,4 +1,4 @@
-using GitUI.UserControls.RevisionGridClasses;
+susing GitUI.UserControls.RevisionGridClasses;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -3231,13 +3231,15 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                _submodulesStatusImagesCTS.Dispose();
+#if !__MonoCS__
+                _commitButton.Dispose();
                 _pushButton.Dispose();
                 _pullButton.Dispose();
+#endif
+                _submodulesStatusImagesCTS.Dispose();
                 _formBrowseMenus.Dispose();
                 _filterRevisionsHelper.Dispose();
                 _filterBranchHelper.Dispose();
-                _commitButton.Dispose();
             }
 
             if (disposing && (components != null))
