@@ -593,6 +593,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
         private void UpdateGraph(int curCount, int scrollTo)
         {
             while (curCount < scrollTo)
