@@ -36,11 +36,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.TeamFoundation.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\Microsoft.TeamFoundation.Client.11.0.51106.1\lib\Microsoft.TeamFoundation.Client.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.TeamFoundation.Client.11.0.51106.1\lib\Microsoft.TeamFoundation.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Build.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\Microsoft.TeamFoundation.Build.Client.11.0.60610.1\lib\Microsoft.TeamFoundation.Build.Client.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.TeamFoundation.Build.Client.11.0.60610.1\lib\Microsoft.TeamFoundation.Build.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -52,7 +52,7 @@
     <Compile Include="..\TfsInterop.Common\TfsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\TfsIntegration\TfsIntegration.csproj">
+    <ProjectReference Include="..\TfsIntegration\TfsIntegration.csproj">
       <Project>{452cbba1-8af0-4f3b-8beb-b8b31dc2b749}</Project>
       <Name>TfsIntegration</Name>
       <Private>False</Private>
