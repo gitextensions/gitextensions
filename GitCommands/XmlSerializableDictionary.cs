@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -7,7 +8,7 @@ namespace GitCommands
 
 
     [XmlRoot("dictionary")]
-
+    [Serializable]
     public class XmlSerializableDictionary<TKey, TValue>
             : Dictionary<TKey, TValue>, IXmlSerializable
     {
