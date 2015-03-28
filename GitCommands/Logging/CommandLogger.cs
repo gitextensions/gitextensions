@@ -6,11 +6,10 @@ namespace GitCommands.Logging
 {
     public sealed class CommandLogger
     {
-        public delegate void CommandsChangedHandler();
         private const int LogLimit = 500;
         private readonly Queue<CommandLogEntry> _logQueue = new Queue<CommandLogEntry>(LogLimit);
 
-        public event CommandsChangedHandler CommandsChanged = delegate { };
+        public event EventHandler CommandsChanged = delegate { };
 
         public CommandLogEntry[] GetCommands()
         {
@@ -30,7 +29,7 @@ namespace GitCommands.Logging
                 var commandLogEntry = new CommandLogEntry(command, executionStartTimestamp, executionEndTimestamp);
                 _logQueue.Enqueue(commandLogEntry);
             }
-            CommandsChanged();
+            CommandsChanged(this, EventArgs.Empty);
         }
 
         public override string ToString()
