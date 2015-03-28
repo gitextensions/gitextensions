@@ -16,7 +16,15 @@ namespace GitUI.RevisionGridClasses
     {
         #region Delegates
 
-        public delegate void LoadingEventHandler(bool isLoading);
+        public class LoadingEventArgs : EventArgs
+        {
+            public LoadingEventArgs(bool isLoading)
+            {
+                IsLoading = isLoading;
+            }
+
+            public bool IsLoading { get; private set; }
+        }
 
         #endregion
 
@@ -313,7 +321,7 @@ namespace GitUI.RevisionGridClasses
 
         [Description("Loading Handler. NOTE: This will often happen on a background thread so UI operations may not be safe!")]
         [Category("Behavior")]
-        public event LoadingEventHandler Loading;
+        public event EventHandler<LoadingEventArgs> Loading;
 
         public void ShowRevisionGraph()
         {
@@ -630,7 +638,7 @@ namespace GitUI.RevisionGridClasses
                 //rows that the user is viewing
                 if (Loading != null && _graphData.Count > RowCount)// && graphData.Count != RowCount)
                 {
-                    Loading(true);
+                    Loading(this, new LoadingEventArgs(true));
                 }
             }
             else
@@ -639,7 +647,7 @@ namespace GitUI.RevisionGridClasses
                 //animation that is shown. (the event Loading(bool) triggers this!)
                 if (Loading != null)
                 {
-                    Loading(false);
+                    Loading(this, new LoadingEventArgs(false));
                 }
             }
 
