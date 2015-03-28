@@ -73,7 +73,8 @@ namespace GitCommands.Utils
 
         protected virtual void Dispose(bool disposing)
         {
-            _clearTimer.Dispose();
+            if (disposing)
+                _clearTimer.Dispose();
         }
 
         ~WeakRefCache()
