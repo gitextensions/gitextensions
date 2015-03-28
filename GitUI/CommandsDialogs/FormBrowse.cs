@@ -3234,7 +3234,7 @@ namespace GitUI.CommandsDialogs
                 _submodulesStatusImagesCTS.Dispose();
                 _pushButton.Dispose();
                 _pullButton.Dispose();
-                _commitButton.Dispose();
+                _formBrowseMenus.Dispose();
             }
 
             if (disposing && (components != null))
