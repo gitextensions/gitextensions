@@ -104,6 +104,7 @@ namespace GitCommands
         public void Dispose()
         {
             _backgroundLoader.Cancel();
+            _backgroundLoader.Dispose();
         }
 
         public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
