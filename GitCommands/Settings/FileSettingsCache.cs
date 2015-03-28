@@ -51,7 +51,7 @@ namespace GitCommands.Settings
             FileChanged();
         }
 
-        protected override void DisposeImpl()
+        protected override void Dispose(bool disposing)
         {
             LockedAction(() =>
             {
@@ -74,7 +74,7 @@ namespace GitCommands.Settings
             });
 
        
-            base.DisposeImpl();
+            base.Dispose(disposing);
         }
 
         public static T FromCache<T>(string aSettingsFilePath, Lazy<T> createSettingsCache)
