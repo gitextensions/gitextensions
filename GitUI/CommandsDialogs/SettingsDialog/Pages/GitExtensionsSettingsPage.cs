@@ -49,6 +49,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUseFastChecks.Checked = AppSettings.UseFastChecks;
             cbDefaultCloneDestination.Text = AppSettings.DefaultCloneDestinationPath;
             chkFollowRenamesInFileHistoryExact.Checked = AppSettings.FollowRenamesInFileHistoryExactOnly;
+            chkOpenSubmoduleDiffInSeparateWindow.Checked = AppSettings.OpenSubmoduleDiffInSeparateWindow;
         }
 
         protected override void PageToSettings()
@@ -74,6 +75,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
             AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
             AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
+            AppSettings.OpenSubmoduleDiffInSeparateWindow = chkOpenSubmoduleDiffInSeparateWindow.Checked;
         }
 
         private void chkUseSSL_CheckedChanged(object sender, System.EventArgs e)

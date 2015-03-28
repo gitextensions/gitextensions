@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -426,7 +427,25 @@ namespace GitUI
         void FileStatusListView_DoubleClick(object sender, EventArgs e)
         {
             if (DoubleClick == null)
-                UICommands.StartFileHistoryDialog(this, SelectedItem.Name, Revision);
+            {
+                if (AppSettings.OpenSubmoduleDiffInSeparateWindow && SelectedItem.IsSubmodule)
+                {
+                    var submoduleName = SelectedItem.Name;
+                    SelectedItem.SubmoduleStatus.ContinueWith(
+                        (t) =>
+                        {
+                            Process process = new Process();
+                            process.StartInfo.FileName = Application.ExecutablePath;
+                            process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
+                            process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, submoduleName.EnsureTrailingPathSeparator());
+                            process.Start();
+                        });
+                }
+                else
+                {
+                    UICommands.StartFileHistoryDialog(this, SelectedItem.Name, Revision);
+                }
+            }
             else
                 DoubleClick(sender, e);
         }
