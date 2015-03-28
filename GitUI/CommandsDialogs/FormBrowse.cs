@@ -3227,7 +3227,10 @@ namespace GitUI.CommandsDialogs
         protected override void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 _submodulesStatusImagesCTS.Dispose();
+                _pushButton.Dispose();
+            }
 
             if (disposing && (components != null))
             {
