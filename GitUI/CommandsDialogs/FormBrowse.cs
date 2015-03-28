@@ -3236,6 +3236,7 @@ namespace GitUI.CommandsDialogs
                 _pullButton.Dispose();
                 _formBrowseMenus.Dispose();
                 _filterRevisionsHelper.Dispose();
+                _filterBranchHelper.Dispose();
             }
 
             if (disposing && (components != null))
