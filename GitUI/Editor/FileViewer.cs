@@ -78,7 +78,7 @@ namespace GitUI.Editor
             contextMenu.Opening += ContextMenu_Opening; 
         }
 
-        void FileViewer_GitUICommandsSourceSet(object sender, IGitUICommandsSource uiCommandsSource)
+        void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
         {
             UICommandsSource.GitUICommandsChanged += WorkingDirChanged;
             WorkingDirChanged(UICommandsSource, null);
