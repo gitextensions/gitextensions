@@ -1067,6 +1067,7 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, action);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public bool StartCherryPickDialog(IWin32Window owner, IEnumerable<GitRevision> revisions)
         {
             if (revisions == null)
