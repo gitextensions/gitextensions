@@ -11,10 +11,9 @@ using ResourceManager;
 
 namespace Gerrit
 {
-    public class GerritPlugin : GitPluginBase, IGitPluginForRepository, ITranslate
+    public class GerritPlugin : GitPluginBase, IGitPluginForRepository
     {
         #region Translation
-        private readonly TranslationString _pluginDescription = new TranslationString("Gerrit Code Review");
         private readonly TranslationString _editGitReview = new TranslationString("Edit .gitreview");
         private readonly TranslationString _downloadGerritChange = new TranslationString("Download Gerrit Change");
         private readonly TranslationString _publishGerritChange = new TranslationString("Publish Gerrit Change");
@@ -33,16 +32,12 @@ namespace Gerrit
         private Form _mainForm;
         private IGitUICommands _gitUiCommands;
         private ToolStripButton _installCommitMsgMenuItem;
-        
+
         // public only because of FormTranslate
         public GerritPlugin()
         {
-            Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
-        }
-
-        public override string Description
-        {
-            get { return _pluginDescription.Text; }
+            Description = "Gerrit Code Review";
+            Translate();
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -57,16 +52,6 @@ namespace Gerrit
             gitUiCommands.PostBrowseInitialize -= gitUiCommands_PostBrowseInitialize;
             gitUiCommands.PostRegisterPlugin -= gitUiCommands_PostRegisterPlugin;
             _gitUiCommands = null;
-        }
-
-        public virtual void AddTranslationItems(ITranslation translation)
-        {
-            TranslationUtils.AddTranslationItemsFromFields(GetType().Name, this, translation);
-        }
-
-        public virtual void TranslateItems(ITranslation translation)
-        {
-            TranslationUtils.TranslateItemsFromFields(GetType().Name, this, translation);
         }
 
         void gitUiCommands_PostRegisterPlugin(object sender, GitUIBaseEventArgs e)
@@ -346,7 +331,7 @@ namespace Gerrit
             );
 
             // The first line of the output contains the file we're receiving
-            // in a format like "C0755 4248 commit-msg". 
+            // in a format like "C0755 4248 commit-msg".
 
             if (String.IsNullOrEmpty(content))
                 return null;

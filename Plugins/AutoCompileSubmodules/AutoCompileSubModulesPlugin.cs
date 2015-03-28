@@ -4,15 +4,27 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace AutoCompileSubmodules
 {
-    public class AutoCompileSubModules : GitPluginBase, IGitPluginForRepository
+    public class AutoCompileSubModulesPlugin : GitPluginBase, IGitPluginForRepository
     {
+        private readonly TranslationString _doYouWantBuild =
+            new TranslationString("Do you want to build {0}?\n\n{1}");
+        private readonly TranslationString _enterCorrectMsBuildPath =
+            new TranslationString("Please enter correct MSBuild path in the plugin settings dialog and try again.");
+
+        public AutoCompileSubModulesPlugin()
+        {
+            Description = "Auto compile SubModules";
+            Translate();
+        }
+
         private BoolSetting MsBuildEnabled = new BoolSetting("Enabled", false);
         private StringSetting MsBuildPath = new StringSetting("Path to msbuild.exe", FindMsBuild());
         private StringSetting MsBuildArguments = new StringSetting("msbuild.exe arguments", "/p:Configuration=Debug");
-        
+
         private const string DefaultMsBuildPath = @"C:\Windows\Microsoft.NET\Framework\v3.5\msbuild.exe";
         private static string FindMsBuild()
         {
@@ -20,15 +32,6 @@ namespace AutoCompileSubmodules
         }
 
         #region IGitPlugin Members
-
-        /// <summary>
-        ///   Gets the plugin description.
-        /// </summary>
-        /// <value>The description.</value>
-        public override string Description
-        {
-            get { return "Auto compile SubModules"; }
-        }
 
         public override IEnumerable<ISetting> GetSettings()
         {
@@ -66,10 +69,10 @@ namespace AutoCompileSubmodules
 
                 var result =
                     MessageBox.Show(e.OwnerForm,
-                        string.Format("Do you want to build {0}?\n\n{1}",
-                                      solutionFile.Name, 
+                        string.Format(_doYouWantBuild.Text,
+                                      solutionFile.Name,
                                       SolutionFilesToString(solutionFiles)),
-                        "Build", 
+                        "Build",
                         MessageBoxButtons.YesNoCancel);
 
                 if (result == DialogResult.Cancel)
@@ -79,7 +82,7 @@ namespace AutoCompileSubmodules
                     continue;
 
                 if (string.IsNullOrEmpty(msbuildpath) || !File.Exists(msbuildpath))
-                    MessageBox.Show(e.OwnerForm, "Please enter correct MSBuild path in the plugin settings dialog and try again.");
+                    MessageBox.Show(e.OwnerForm, _enterCorrectMsBuildPath.Text);
                 else
                     e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + MsBuildArguments[Settings]);
             }
@@ -89,7 +92,7 @@ namespace AutoCompileSubmodules
         #endregion
 
         /// <summary>
-        ///   Automaticly compile all solution files found in any submodule
+        ///   Automatically compile all solution files found in any submodule
         /// </summary>
         private void GitUiCommandsPostUpdateSubmodules(object sender, GitUIPostActionEventArgs e)
         {

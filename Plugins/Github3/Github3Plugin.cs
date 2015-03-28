@@ -7,6 +7,7 @@ using Git.hub;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
+using ResourceManager;
 
 namespace Github3
 {
@@ -30,7 +31,7 @@ namespace Github3
 
                 try
                 {
-                    var user = Github3.github.getCurrentUser();
+                    var user = Github3Plugin.github.getCurrentUser();
                     if (user != null)
                     {
                         _username = user.Login;
@@ -53,36 +54,32 @@ namespace Github3
         {
             get
             {
-                return Github3.instance.OAuthToken[Github3.instance.Settings];
+                return Github3Plugin.instance.OAuthToken[Github3Plugin.instance.Settings];
             }
             set
             {
                 _username = null;
-                Github3.instance.OAuthToken[Github3.instance.Settings] = value;
-                Github3.github.setOAuth2Token(value);
+                Github3Plugin.instance.OAuthToken[Github3Plugin.instance.Settings] = value;
+                Github3Plugin.github.setOAuth2Token(value);
             }
         }
     }
 
-    public class Github3 : GitPluginBase, IRepositoryHostPlugin
+    public class Github3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
         public StringSetting OAuthToken = new StringSetting("OAuth Token", "");
-        
-        internal static Github3 instance;
-        internal static Client github;
-        public Github3()
-        {
-            if (instance != null)
-                throw new InvalidOperationException("tried to create second instance");
 
-            instance = this;
+        internal static Github3Plugin instance;
+        internal static Client github;
+        public Github3Plugin()
+        {
+            Description = "Github";
+            Translate();
+
+            if (instance == null)
+                instance = this;
 
             github = new Client();
-        }
-
-        public override string Description
-        {
-            get { return "Github"; }
         }
 
         public override IEnumerable<ISetting> GetSettings()

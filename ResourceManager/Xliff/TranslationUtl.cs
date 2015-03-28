@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
 
 namespace ResourceManager.Xliff
 {
@@ -16,7 +17,7 @@ namespace ResourceManager.Xliff
             return text.Any(Char.IsLetter);
         }
 
-        public static IEnumerable<Tuple<string, object>> GetObjProperties(object obj, string objName)
+        public static IEnumerable<Tuple<string, object>> GetObjFields(object obj, string objName)
         {
             if (objName != null)
                 yield return new Tuple<string, object>(objName, obj);
@@ -32,12 +33,31 @@ namespace ResourceManager.Xliff
             }
         }
 
+        public static void AddTranslationItem(string category, object obj, string propName, ITranslation translation)
+        {
+            if (obj == null)
+                return;
+
+            var propertyInfo = obj.GetType().GetProperty(propName,
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
+                BindingFlags.NonPublic | BindingFlags.SetProperty);
+            if (propertyInfo == null)
+            {
+                return;
+            }
+            var value = (string)propertyInfo.GetValue(obj, null);
+            if (AllowTranslateProperty(value))
+            {
+                translation.AddTranslationItem(category, propName, "Text", value);
+            }
+        }
+
         public static void AddTranslationItemsFromFields(string category, object obj, ITranslation translation)
         {
             if (obj == null)
                 return;
 
-            AddTranslationItemsFromList(category, translation, GetObjProperties(obj, "$this"));
+            AddTranslationItemsFromList(category, translation, GetObjFields(obj, "$this"));
         }
 
         public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items)
@@ -83,7 +103,7 @@ namespace ResourceManager.Xliff
             }
         }
 
-        public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items) 
+        public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items)
         {
             Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
             {
@@ -108,12 +128,34 @@ namespace ResourceManager.Xliff
             ForEachItem(items, action);
         }
 
+        public static void TranslateProperty(string category, object obj, string propName, ITranslation translation)
+        {
+            if (obj == null)
+                return;
+
+            var propertyInfo = obj.GetType().GetProperty(propName,
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
+                BindingFlags.NonPublic | BindingFlags.SetProperty);
+            if (propertyInfo == null)
+            {
+                return;
+            }
+
+            Func<string> provideDefaultValue = () => "";
+            string value = translation.TranslateItem(category, propName, "Text", provideDefaultValue);
+            if (!String.IsNullOrEmpty(value))
+            {
+                if (propertyInfo.CanWrite)
+                    propertyInfo.SetValue(obj, value, null);
+            }
+        }
+
         public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
         {
             if (obj == null)
                 return;
 
-            TranslateItemsFromList(category, translation, GetObjProperties(obj, "$this"));
+            TranslateItemsFromList(category, translation, GetObjFields(obj, "$this"));
         }
 
         public static void ForEachProperty(object obj, Action<PropertyInfo> action, Func<PropertyInfo, bool> IsTranslatableItem)

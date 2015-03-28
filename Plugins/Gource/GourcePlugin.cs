@@ -7,20 +7,22 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using ResourceManager;
 
 namespace Gource
 {
-    public class Gource : GitPluginBase, IGitPluginForRepository
+    public class GourcePlugin : GitPluginBase, IGitPluginForRepository
     {
+        public GourcePlugin()
+        {
+            Description = "Gource";
+            Translate();
+        }
+
         private StringSetting GourcePath = new StringSetting("Path to \"gource\"", "");
         private StringSetting GourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
         #region IGitPlugin Members
-
-        public override string Description
-        {
-            get { return "gource"; }
-        }
 
         public override IEnumerable<ISetting> GetSettings()
         {

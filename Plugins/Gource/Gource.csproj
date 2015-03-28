@@ -63,7 +63,7 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Gource.cs" />
+    <Compile Include="GourcePlugin.cs" />
     <Compile Include="GourceStart.cs">
       <SubType>Form</SubType>
     </Compile>
