@@ -435,6 +435,7 @@ namespace GitUI.CommandsDialogs
             {
                 _asyncLoader.Cancel();
                 _asyncLoader.Dispose();
+                _filterRevisionsHelper.Dispose();
             }
 
             if (disposing && (components != null))
