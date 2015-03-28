@@ -14,7 +14,7 @@ namespace GitUI
 
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
-        public event GitUICommandsSourceSetEventHandler GitUICommandsSourceSet;
+        public event EventHandler<GitUICommandsSourceEventArgs> GitUICommandsSourceSet;
         private IGitUICommandsSource _uiCommandsSource;
 
 
@@ -129,7 +129,7 @@ namespace GitUI
         {
             var handler = GitUICommandsSourceSet;
             if (handler != null)
-                handler(this, newSource);
+                handler(this, new GitUICommandsSourceEventArgs(newSource));
         }
     }
 }
