@@ -179,7 +179,7 @@ namespace GitUI.RevisionGridClasses
             this.DateColumn.Visible = show;
         }
 
-        [DefaultValue(FilterType.None)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity"), DefaultValue(FilterType.None)]
         [Category("Behavior")]
         public FilterType FilterMode
         {
