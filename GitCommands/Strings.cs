@@ -4,7 +4,7 @@ using SmartFormat;
 
 namespace GitCommands
 {
-    public class Strings : Translate, IDisposable
+    public class Strings : Translate
     {
         // public only because of FormTranslate
         public Strings()
@@ -150,14 +150,5 @@ namespace GitCommands
         private readonly TranslationString _weeksAgo   = new TranslationString("{0} {1:week|weeks} ago");
         private readonly TranslationString _monthsAgo  = new TranslationString("{0} {1:month|months} ago");
         private readonly TranslationString _yearsAgo   = new TranslationString("{0} {1:year|years} ago");
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-        }
     }
 }
