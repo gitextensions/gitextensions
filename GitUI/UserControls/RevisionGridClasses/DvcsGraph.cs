@@ -472,6 +472,7 @@ namespace GitUI.RevisionGridClasses
             Invalidate(true);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
         private void SetRowCount(int count)
         {
             if (InvokeRequired)
