@@ -342,7 +342,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 ref Point lParam);
 
             [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern int SendMessage(HandleRef hWnd,
+            internal static extern IntPtr SendMessage(HandleRef hWnd,
                 int msg,
                 IntPtr wParam,
                 ref PARAFORMAT lp);
