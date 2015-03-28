@@ -248,14 +248,22 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 DashboardCategoryChanged(sender, e);
         }
 
-        public delegate void RepositoryRemovedHandler(Repository repository);
+        public class RepositoryEventArgs : EventArgs
+        {
+            public RepositoryEventArgs(Repository repository)
+            {
+                Repository = repository;
+            }
 
-        public event RepositoryRemovedHandler RepositoryRemoved;
+            public Repository Repository { get; private set; }
+        }
+
+        public event EventHandler<RepositoryEventArgs> RepositoryRemoved;
 
         private void repositoryRemoved(Repository repository)
         {
             if (RepositoryRemoved != null)
-                RepositoryRemoved(repository);
+                RepositoryRemoved(this, new RepositoryEventArgs(repository));
         }
 
         public void AddItem(DashboardItem dashboardItem)
