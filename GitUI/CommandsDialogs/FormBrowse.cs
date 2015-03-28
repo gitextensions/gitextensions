@@ -1,3 +1,4 @@
+using GitUI.UserControls.RevisionGridClasses;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -332,8 +333,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        void _indexWatcher_Changed(bool indexChanged)
+        void _indexWatcher_Changed(object sender, IndexChangedEventArgs e)
         {
+            bool indexChanged = e.IsIndexChanged;
             this.InvokeAsync(() =>
             {
                 RefreshButton.Image = indexChanged && Settings.UseFastChecks && Module.IsValidGitWorkingDir()
