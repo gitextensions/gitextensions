@@ -339,5 +339,21 @@ namespace GitUI.Blame
             using (var frm = new FormCommitDiff(UICommands, commit))
                 frm.ShowDialog(this);
         }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                    components.Dispose();
+
+                blameLoader.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }
