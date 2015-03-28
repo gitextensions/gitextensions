@@ -987,7 +987,10 @@ namespace GitUI.SpellChecker
         protected override void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 _autoCompleteListTask.Dispose();
+                _autoCompleteCancellationTokenSource.Dispose();
+            }
 
             if (disposing && (components != null))
             {
