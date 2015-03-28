@@ -357,6 +357,7 @@ namespace GitUI.RevisionGridClasses
             UpdateData();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
         public void Clear()
         {
             lock (_backgroundThread)
