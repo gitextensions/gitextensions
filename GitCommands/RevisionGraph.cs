@@ -98,10 +98,16 @@ namespace GitCommands
 
         ~RevisionGraph()
         {
-            Dispose();
+            Dispose(false);
         }
 
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
         {
             _backgroundLoader.Cancel();
             _backgroundLoader.Dispose();
