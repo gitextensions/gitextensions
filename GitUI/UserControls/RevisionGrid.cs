@@ -298,12 +298,12 @@ namespace GitUI
         }
 
         private bool _isLoading;
-        private void RevisionsLoading(bool isLoading)
+        private void RevisionsLoading(object sender, DvcsGraph.LoadingEventArgs e)
         {
             // Since this can happen on a background thread, we'll just set a
             // flag and deal with it next time we paint (a bit of a hack, but
             // it works)
-            _isLoading = isLoading;
+            _isLoading = e.IsLoading;
         }
 
         private void ShowQuickSearchString()
