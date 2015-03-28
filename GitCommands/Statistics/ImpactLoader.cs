@@ -9,7 +9,15 @@ namespace GitCommands.Statistics
 {
     public sealed class ImpactLoader : IDisposable
     {
-        public delegate void UpdateEventHandler(Commit commit);
+        public class CommitEventArgs : EventArgs
+        {
+            public CommitEventArgs(Commit commit)
+            {
+                Commit = commit;
+            }
+
+            public Commit Commit { get; private set; }
+        }
 
         /// <summary>
         /// property to enable mailmap respectfulness
@@ -17,7 +25,7 @@ namespace GitCommands.Statistics
         public bool RespectMailmap { get; set; }
 
         public event EventHandler Exited;
-        public event UpdateEventHandler Updated;
+        public event EventHandler<CommitEventArgs> Updated;
 
         public struct DataPoint
         {
@@ -182,7 +190,7 @@ namespace GitCommands.Statistics
                 }
 
                 if (Updated != null && !token.IsCancellationRequested)
-                    Updated(commit);
+                    Updated(this, new CommitEventArgs(commit));
             }
         }
 
