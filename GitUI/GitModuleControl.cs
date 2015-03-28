@@ -9,6 +9,8 @@ namespace GitUI
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleControl : GitExtensionsControl
     {
+        private object _lock = new object();
+
         [Browsable(false)]
         public bool UICommandsSourceParentSearch { get; private set; }
 
@@ -92,7 +94,7 @@ namespace GitUI
             if (!UICommandsSourceParentSearch)
                 return;
 
-            lock (this)
+            lock (_lock)
             {
                 if (_uiCommandsSource != null)
                     return;
