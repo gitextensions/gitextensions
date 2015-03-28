@@ -33,7 +33,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         private static int BeginUpdate(HandleRef handleRef)
         {
             // Prevent the control from raising any events.
-            int oldEventMask = NativeMethods.SendMessage(handleRef,
+            int oldEventMask = (int) NativeMethods.SendMessage(handleRef,
                 NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, IntPtr.Zero);
 
             // Prevent the control from redrawing itself.
@@ -330,7 +330,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             internal const int LF_FACESIZE = 32;
 
             [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern int SendMessage(HandleRef hWnd,
+            internal static extern IntPtr SendMessage(HandleRef hWnd,
                 int msg,
                 IntPtr wParam,
                 IntPtr lParam);
