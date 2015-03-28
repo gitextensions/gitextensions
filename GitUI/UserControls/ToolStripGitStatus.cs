@@ -105,9 +105,9 @@ namespace GitUI
 
         private void GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
-            var oldCommands = e.OldCommands;
-            if (oldCommands != null)
+            if (e != null)
             {
+                var oldCommands = e.OldCommands;
                 oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
                 oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;
                 oldCommands.PostCheckoutBranch -= GitUICommands_PostCheckout;
