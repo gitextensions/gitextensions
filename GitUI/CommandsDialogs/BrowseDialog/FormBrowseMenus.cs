@@ -223,11 +223,6 @@ namespace GitUI.CommandsDialogs
             GC.SuppressFinalize(this);
         }
 
-        ~FormBrowseMenus()
-        {
-            Dispose(false);
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
