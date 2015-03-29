@@ -55,7 +55,7 @@ namespace Gource
         {
             if (!File.Exists(GourcePath.Text))
             {
-                MessageBox.Show(this, "Cannot find \"gource\".\nPlease download \"gource\" and set the correct path.");
+                MessageBox.Show(this, "Cannot find Gource.\nPlease download Gource and set the correct path.");
                 return;
             }
 
@@ -131,6 +131,11 @@ namespace Gource
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"https://github.com/acaudwell/Gource/");
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"https://github.com/acaudwell/Gource/blob/master/README");
         }
     }
 }
