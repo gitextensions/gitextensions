@@ -286,11 +286,9 @@ namespace GitUI.CommandsDialogs
             {
                 selectedItemsHeader.Detach();
                 selectedItemsHeader.Dispose();
-            }
 
-            if (disposing && (components != null))
-            {
-                components.Dispose();
+                if (components != null)
+                    components.Dispose();
             }
             base.Dispose(disposing);
         }
