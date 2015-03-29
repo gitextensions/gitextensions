@@ -113,7 +113,7 @@
                 <File Source="..\bin\PSTaskDialog.dll" />
             </Component>
             <Component Id="RestSharp.dll" Guid="*">
-                <File Source="..\packages\RestSharp.104.2.0\lib\net4-client\RestSharp.dll" />
+                <File Source="..\GitExtensions\bin\Release\RestSharp.dll" />
             </Component>
             <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.dll" />
@@ -125,7 +125,7 @@
                 <File Source="..\Externals\NBug\NBug\bin\Release\NBug.dll" />
             </Component>
             <Component Id="SmartFormat.dll" Guid="*">
-                <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
+                <File Source="..\GitExtensions\bin\Release\SmartFormat.dll" />
             </Component>
             <Component Id="System.Reactive.Core.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll" />
@@ -235,7 +235,7 @@
                 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll" />
             </Component>
             <Component Id="Newtonsoft.Json.dll" Guid="*">
-                <File Source="..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll" />
+                <File Source="..\GitExtensions\bin\Release\Newtonsoft.Json.dll" />
             </Component>
             <!--Remove unused dll, installed in versions <= 2.31-->
             <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
@@ -257,17 +257,8 @@
             <Component Id="System.Net.Http.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll" />
             </Component>
-            <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.WebRequest.dll" />
-            </Component>
             <Component Id="System.Net.Http.Primitives.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll" />
-            </Component>
-            <Component Id="System.Runtime.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll" />
-            </Component>
-            <Component Id="System.Threading.Tasks.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll" />
             </Component>
             <Component Id="TeamCityIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
@@ -686,23 +677,15 @@
                 </Feature>
                 <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
                     <ComponentRef Id="System.Net.Http.dll" />
-                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
                     <ComponentRef Id="System.Net.Http.Primitives.dll" />
-                    <ComponentRef Id="System.Runtime.dll" />
-                    <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="TeamCityIntegration.dll" />
                 </Feature>
                 <Feature Id="JenkinsIntegration" Title="Jenkins integration" Level="1">
                     <ComponentRef Id="System.Net.Http.dll" />
-                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
                     <ComponentRef Id="System.Net.Http.Primitives.dll" />
-                    <ComponentRef Id="System.Runtime.dll" />
-                    <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="JenkinsIntegration.dll" />
                 </Feature>
                 <Feature Id="TfsIntegration" Title="Tfs integration" Level="1">
-                    <ComponentRef Id="System.Runtime.dll" />
-                    <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="TfsIntegration.dll" />
                     <ComponentRef Id="TfsInterop.Vs2012.dll" />
                     <!-- ComponentRef Id="TfsInterop.Vs2013.dll" /-->
