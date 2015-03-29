@@ -187,7 +187,8 @@ namespace GitUI.RevisionGridClasses
             this.DateColumn.Visible = show;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity"), DefaultValue(FilterType.None)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
+        [DefaultValue(FilterType.None)]
         [Category("Behavior")]
         public FilterType FilterMode
         {
@@ -288,7 +289,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         protected override void Dispose(bool disposing)
         {
             lock (_backgroundEvent)
@@ -357,7 +358,7 @@ namespace GitUI.RevisionGridClasses
             UpdateData();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         public void Clear()
         {
             lock (_backgroundThread)
@@ -472,7 +473,7 @@ namespace GitUI.RevisionGridClasses
             Invalidate(true);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void SetRowCount(int count)
         {
             if (InvokeRequired)
@@ -557,7 +558,7 @@ namespace GitUI.RevisionGridClasses
             UpdateColumnWidth();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void BackgroundThreadEntry()
         {
             while (_shouldRun)
@@ -594,7 +595,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void UpdateGraph(int curCount, int scrollTo)
         {
             while (curCount < scrollTo)
