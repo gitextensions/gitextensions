@@ -24,11 +24,6 @@ namespace GitCommands
         {
         }
 
-        ~SettingsCache()
-        {
-            Dispose(false);
-        }
-
         public void LockedAction(Action action)
         {
             LockedAction<object>(() =>
