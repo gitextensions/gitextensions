@@ -206,7 +206,7 @@ namespace ResourceManager.Xliff
         };
 
         /// <summary>true if the specified <see cref="Assembly"/> may be translatable.</summary>
-        public static bool IsTranslatable(this Assembly assembly)
+        private static bool IsTranslatable(this Assembly assembly)
         {
             bool isInvalid = UnTranslatableDLLs.Any(
                 asm => assembly.FullName.StartsWith(asm, StringComparison.OrdinalIgnoreCase));
@@ -214,20 +214,35 @@ namespace ResourceManager.Xliff
             return !isInvalid;
         }
 
-        public static List<Type> GetTranslatableTypes()
+        /// <summary>true if the specified <see cref="Assembly"/> may be translatable.</summary>
+        private static bool IsPlugin(this Assembly assembly)
         {
-            var list = new List<Type>();
+            return assembly.CodeBase.IndexOf("Plugins/", StringComparison.OrdinalIgnoreCase) > 0;
+        }
+
+        public static Dictionary<string, List<Type>> GetTranslatableTypes()
+        {
+            var dictionary = new Dictionary<string, List<Type>>();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (!assembly.IsTranslatable())
                     continue;
                 foreach (var type in assembly.GetTypes())
                 {
-                    if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
+                    if (type.IsClass && typeof (ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
+                    {
+                        var val = !assembly.IsPlugin() ? "" : ".Plugins";
+                        List<Type> list;
+                        if (!dictionary.TryGetValue(val, out list))
+                        {
+                            list = new List<Type>();
+                            dictionary.Add(val, list);
+                        }
                         list.Add(type);
+                    }
                 }
             }
-            return list;
+            return dictionary;
         }
 
         public static object CreateInstanceOfClass(Type type)

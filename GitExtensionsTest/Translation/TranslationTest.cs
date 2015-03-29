@@ -21,24 +21,29 @@ namespace GitExtensionsTest.TranslationTest
             // just reference to GitUI
             MouseWheelRedirector.Active = true;
 
-            List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
+            var translatableTypes = TranslationUtl.GetTranslatableTypes();
 
-            var testTranslation = new Translation();
+            var testTranslation = new Dictionary<string, TranslationFile>();
 
-            foreach (Type type in translatableTypes)
+            foreach (var types in translatableTypes)
             {
-                try
+                var tranlation = new TranslationFile();
+                foreach (Type type in types.Value)
                 {
-                    ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
-                    obj.AddTranslationItems(testTranslation);
-                    obj.TranslateItems(testTranslation);
+                    try
+                    {
+                        ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
+                        obj.AddTranslationItems(tranlation);
+                        obj.TranslateItems(tranlation);
+                    }
+                    catch (System.Exception)
+                    {
+                        Trace.WriteLine("Problem with class: " + type.FullName);
+                        throw;
+                    }
                 }
-                catch (System.Exception)
-                {
-                    Trace.WriteLine("Problem with class: " + type.FullName);
-                    throw;
-                }
+                testTranslation[types.Key] = tranlation;
             }
-        }       
+        }
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.48RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -54,6 +54,11 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
         <target>Vždy zobrazovat dialog získání</target>
         
       </trans-unit>
+      <trans-unit id="chkCheckForRCVersions.Text">
+        <source>Check for release candidate versions</source>
+        <target>Kontrolovat dostupnost nevydaných verzí (release candidate)</target>
+        
+      </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
         <source>Don't show help images</source>
         <target>Nezobrazovat obrázky nápovědy</target>
@@ -62,7 +67,8 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen &quot;local changes&quot; action as default action.
 This action will be performed without warning while checking out branch.</source>
-        <target>Použít poslední akci pro &quot;lokální změny&quot; jako výchozí. Při získávání větve bude tato akce provedena bez varování.</target>
+        <target>Použít poslední akci pro &quot;lokální změny&quot; jako výchozí.
+Při získávání větve bude tato akce provedena bez varování.</target>
         
       </trans-unit>
     </body>
@@ -86,7 +92,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="_noDictFilesFound.Text">
         <source>No dictionary files found in: {0}</source>
-        <target>V adresáři {0} nenalezeny žádné slovníky</target>
+        <target>Ve složce {0} nenalezeny žádné slovníky</target>
         
       </trans-unit>
       <trans-unit id="applicationFontChangeButton.Text">
@@ -238,7 +244,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="checkBoxEnableBuildServerIntegration.Text">
         <source>Enable build server integration</source>
-        <target>Povolit integraci se sestavovacím server</target>
+        <target>Povolit integraci se sestavovacím serverem</target>
         
       </trans-unit>
       <trans-unit id="checkBoxShowBuildSummary.Text">
@@ -368,7 +374,8 @@ This action will be performed without warning while checking out branch.</source
       <trans-unit id="_kdiff3NotFoundAuto.Text">
         <source>Path to kdiff3 could not be found automatically.
 Please make sure KDiff3 is installed or set path manually.</source>
-        <target>Cesta k programu kdiff3 nemohla být nalezena automaticky. Prosím ujistěte se že je program kdiff3 nainstalován nebo nastavte cestu ručně.</target>
+        <target>Cesta k programu kdiff3 nemohla být nalezena automaticky.
+Prosím ujistěte se že je program kdiff3 nainstalován nebo nastavte cestu ručně.</target>
         
       </trans-unit>
       <trans-unit id="_kdiffAsDiffConfigured.Text">
@@ -399,7 +406,8 @@ Please make sure KDiff3 is installed or set path manually.</source>
       <trans-unit id="_linuxToolsShNotFound.Text">
         <source>The path to linux tools (sh) could not be found automatically.
 Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.</source>
-        <target>Cesta k linuxovým nástrojům (sh) nemohla být nalezena automaticky. Prosím ujistěte se že jsou linuxové nástroje nainstalovány (buď přes msysgit nebo přes cygwin) nebo nastavte cestu ručně.</target>
+        <target>Cesta k linuxovým nástrojům (sh) nemohla být nalezena automaticky.
+Prosím ujistěte se že jsou linuxové nástroje nainstalovány (buď přes msysgit nebo přes cygwin) nebo nastavte cestu ručně.</target>
         
       </trans-unit>
       <trans-unit id="_linuxToolsShNotFoundCaption.Text">
@@ -430,7 +438,8 @@ Please make sure there are linux tools installed (through msysgit or cygwin) or 
       <trans-unit id="_noDiffToolConfigured.Text">
         <source>There is no difftool configured. Do you want to configure kdiff3 as your difftool?
 Select no if you want to configure a different difftool yourself.</source>
-        <target>Není nastaven žádný nástroj na rozdíly. Chcete použít kdiff3? Zvolte &quot;ne&quot; pokud si sami chcete nastavit jiný nástroj.</target>
+        <target>Není nastaven žádný nástroj na rozdíly. Chcete použít kdiff3?
+Zvolte &quot;ne&quot; pokud si sami chcete nastavit jiný nástroj.</target>
         
       </trans-unit>
       <trans-unit id="_noDiffToolConfiguredCaption.Text">
@@ -451,7 +460,8 @@ Select no if you want to configure a different difftool yourself.</source>
       <trans-unit id="_noMergeToolConfigured.Text">
         <source>There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?
 Select no if you want to configure a different mergetool yourself.</source>
-        <target>Není nastaven žádný nástroj na sloučení. Chcete použít kdiff3? Zvolte &quot;ne&quot; pokud si sami chcete nastavit jiný nástroj.</target>
+        <target>Není nastaven žádný nástroj na sloučení. Chcete použít kdiff3?
+Zvolte &quot;ne&quot; pokud si sami chcete nastavit jiný nástroj.</target>
         
       </trans-unit>
       <trans-unit id="_noMergeToolConfiguredCaption.Text">
@@ -522,7 +532,8 @@ Select no if you want to configure a different mergetool yourself.</source>
       <trans-unit id="_solveGitCommandFailed.Text">
         <source>The command to run git could not be determined automatically.
 Please make sure git (msysgit or cygwin) is installed or set the correct command manually.</source>
-        <target>Příkaz pro spuštění gitu nemohl být automaticky určen. Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován nebo nastavte příkaz ručně.</target>
+        <target>Příkaz pro spuštění gitu nemohl být automaticky určen.
+Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován nebo nastavte příkaz ručně.</target>
         
       </trans-unit>
       <trans-unit id="_solveGitCommandFailedCaption.Text">
@@ -589,6 +600,11 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <target>Zelená</target>
         
       </trans-unit>
+      <trans-unit id="HighlightAuthoredRevisions.Text">
+        <source>Highlight authored revisions</source>
+        <target>Zvýraznit revize jejihž jsem autorem</target>
+        
+      </trans-unit>
       <trans-unit id="LightblueIcon.Text">
         <source>Light blue</source>
         <target>Světle modrá</target>
@@ -637,6 +653,11 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       <trans-unit id="groupBox5.Text">
         <source>Application Icon</source>
         <target>Ikona aplikace</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Color authored revisions</source>
+        <target>Obarvit revize jejihž jsem autorem</target>
         
       </trans-unit>
       <trans-unit id="label25.Text">
@@ -726,7 +747,8 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       <trans-unit id="chkWriteCommitMessageInCommitWindow.Text">
         <source>Compose commit messages in Commit dialog
 (otherwise the message will be requested during commit)</source>
-        <target>Napsat zprávu odevzdání v dialogu odevzdání (jinak bude vyžádána při provedení odevzdání)</target>
+        <target>Napsat zprávu odevzdání v dialogu odevzdání
+(jinak bude vyžádána při provedení odevzdání)</target>
         
       </trans-unit>
       <trans-unit id="groupBoxBehaviour.Text">
@@ -1071,7 +1093,9 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <source>The selected item is not a valid git repository.
 
 Do you want to abort and remove it from the recent repositories list?</source>
-        <target>Zvolená položka není platným git repozitářem. Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
+        <target>Zvolená položka není platným git repozitářem.
+
+Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
         
       </trans-unit>
       <trans-unit id="directoryIsNotAValidRepositoryCaption.Text">
@@ -1083,7 +1107,9 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <source>The selected item is not a valid git repository.
 
 Do you want to open it?</source>
-        <target>Zvolení položka není platným git repozitářem. Chcete jí otevřít?</target>
+        <target>Zvolení položka není platným git repozitářem.
+
+Chcete jí otevřít?</target>
         
       </trans-unit>
       <trans-unit id="donate.Text">
@@ -1309,6 +1335,11 @@ Do you want to open it?</source>
       <trans-unit id="DecreaseNumberOfLines.ToolTipText">
         <source>Decrease number of visible lines</source>
         <target>Snížit počet viditelných řádků</target>
+        
+      </trans-unit>
+      <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
+        <source>Cherry pick selected lines</source>
+        <target>Vybrat nejlepší označené řádky</target>
         
       </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
@@ -1629,7 +1660,7 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="_strFailedToGetRepos.Text">
         <source>Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu &quot;Plugins/{0}&quot;.</source>
-        <target>Nemohu získat repozitáře. Pravděpodobně nemáte nastavené {0}, prosím nastavte si to v menu &quot;Pluginy/{0}&quot;.</target>
+        <target>Nemohu získat repozitáře. Pravděpodobně nemáte nastavené {0}, prosím nastavte si to v menu &quot;Zásuvné moduly/{0}&quot;.</target>
         
       </trans-unit>
       <trans-unit id="_strLoading.Text">
@@ -1676,13 +1707,14 @@ Do you want to open it?</source>
         <source>Will clone {0} into {1}.
 You can not push unless you are a collaborator. {2}</source>
         <target>Naklonuje {0} do {1}.
- Pokud nejste veden jako přispěvovatel, nebudete moci odesílat. {2}</target>
+Pokud nejste veden jako přispěvovatel, nebudete moci odesílat. {2}</target>
         
       </trans-unit>
       <trans-unit id="_strWillCloneWithPushAccess.Text">
         <source>Will clone {0} into {1}.
 You will have push access. {2}</source>
-        <target>Naklonuje {0} do {1} Budete moci odesílat. {2}</target>
+        <target>Naklonuje {0} do {1}.
+Budete moci odesílat. {2}</target>
         
       </trans-unit>
       <trans-unit id="_strYes.Text">
@@ -1780,7 +1812,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Branch</source>
-        <target>Větvit</target>
+        <target>Větev</target>
         
       </trans-unit>
     </body>
@@ -1788,7 +1820,7 @@ You will have push access. {2}</source>
   <file datatype="plaintext" original="FormAddToGitIgnore" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Add files(s) to .gitIgnore</source>
+        <source>Add file(s) to .gitignore</source>
         <target>Přidat soubor(y) do .gitignore</target>
         
       </trans-unit>
@@ -1800,6 +1832,11 @@ You will have push access. {2}</source>
       <trans-unit id="_matchingFilesString.Text">
         <source>{0} file(s) matched</source>
         <target>{0} soubor(ů) odpovídá</target>
+        
+      </trans-unit>
+      <trans-unit id="_updateStatusString.Text">
+        <source>Updating ...</source>
+        <target>Aktualizuji...</target>
         
       </trans-unit>
       <trans-unit id="btnCancel.Text">
@@ -1889,7 +1926,8 @@ You will have push access. {2}</source>
       <trans-unit id="SolveMergeconflicts.Text">
         <source>There are unresolved mergeconflicts
 </source>
-        <target>Existují nevyřešené konflikty sloučení</target>
+        <target>Existují nevyřešené konflikty sloučení
+</target>
         
       </trans-unit>
       <trans-unit id="_applyPatchMsgBox.Text">
@@ -1989,7 +2027,8 @@ You will have push access. {2}</source>
       <trans-unit id="label2.Text">
         <source>Choose another
 revision:</source>
-        <target>Zvolte další revizi:</target>
+        <target>Zvolte další
+revizi:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
@@ -2072,7 +2111,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="CommitInfoTabPage.Text">
         <source>Commit</source>
-        <target>Odevzdat</target>
+        <target>Odevzdání</target>
         
       </trans-unit>
       <trans-unit id="DiffTabPage.Text">
@@ -2087,7 +2126,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="GitBash.ToolTipText">
         <source>Git bash</source>
-        <target>Git bash</target>
+        <target>Git Bash</target>
         
       </trans-unit>
       <trans-unit id="PuTTYToolStripMenuItem.Text">
@@ -2157,7 +2196,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
         <source>Fork/Clone repository...</source>
-        <target>Fork/Klonovat repozitář...</target>
+        <target>Rozvětvit/Klonovat repozitář...</target>
         
       </trans-unit>
       <trans-unit id="_hintUnresolvedMergeConflicts.Text">
@@ -2205,9 +2244,49 @@ compare with first:</source>
         <target>Uzel nenalezen. Výběr stromu souborů neby změněn.</target>
         
       </trans-unit>
+      <trans-unit id="_pullFetch.Text">
+        <source>Pull - fetch</source>
+        <target>Stáhnout - přenést</target>
+        
+      </trans-unit>
+      <trans-unit id="_pullFetchAll.Text">
+        <source>Pull - fetch all</source>
+        <target>Stáhnout - přenést všechny</target>
+        
+      </trans-unit>
+      <trans-unit id="_pullMerge.Text">
+        <source>Pull - merge</source>
+        <target>Stáhnout - sloučit</target>
+        
+      </trans-unit>
+      <trans-unit id="_pullOpenDialog.Text">
+        <source>Open pull dialog</source>
+        <target>Otevřít dialog stažení</target>
+        
+      </trans-unit>
+      <trans-unit id="_pullRebase.Text">
+        <source>Pull - rebase</source>
+        <target>Stáhnout - přeskládat</target>
+        
+      </trans-unit>
       <trans-unit id="_repositoryHostsToolStripMenuItem.Text">
         <source>(Repository hosts)</source>
         <target>(Hostitelé repozitářů)</target>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileCaption.Text">
+        <source>Reset</source>
+        <target>Zahodit</target>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileError.Text">
+        <source>Exactly one revision must be selected. Abort.</source>
+        <target>Musí být vybrána přesně jedna revize. Přerušuji.</target>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileText.Text">
+        <source>Are you sure you want to reset this file or directory?</source>
+        <target>Opravdu chcete obnovit tento soubor nebo složku?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
@@ -2340,6 +2419,11 @@ compare with first:</source>
         <target>Získat revizi...</target>
         
       </trans-unit>
+      <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
+        <source>Cherry pick file's changes</source>
+        <target>Vybrat nejlepší změny souboru</target>
+        
+      </trans-unit>
       <trans-unit id="cherryPickToolStripMenuItem.Text">
         <source>Cherry pick...</source>
         <target>Vybrat nejlepší...</target>
@@ -2444,7 +2528,9 @@ compare with first:</source>
         <source>The selected item is not a valid git repository.
 
 Do you want to abort and remove it from the recent repositories list?</source>
-        <target>Zvolená položka není platným git repozitářem. Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
+        <target>Zvolená položka není platným git repozitářem.
+
+Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
         
       </trans-unit>
       <trans-unit id="directoryIsNotAValidRepositoryCaption.Text">
@@ -2747,12 +2833,24 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <target>Repozitář</target>
         
       </trans-unit>
-      <trans-unit id="resetFileToAToolStripMenuItem.Text">
-        <source>A</source>
+      <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
+        <source>First</source>
+        <target>První</target>
         
       </trans-unit>
-      <trans-unit id="resetFileToRemoteToolStripMenuItem.Text">
-        <source>B</source>
+      <trans-unit id="resetFileToParentToolStripMenuItem.Text">
+        <source>Parent</source>
+        <target>Rodič</target>
+        
+      </trans-unit>
+      <trans-unit id="resetFileToSecondToolStripMenuItem.Text">
+        <source>Second</source>
+        <target>Druhý</target>
+        
+      </trans-unit>
+      <trans-unit id="resetFileToSelectedToolStripMenuItem.Text">
+        <source>Selected</source>
+        <target>Vybraný</target>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
@@ -2767,7 +2865,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="resetToolStripMenuItem.Text">
         <source>Reset changes...</source>
-        <target>Obnovit změny...</target>
+        <target>Zahodit změny...</target>
         
       </trans-unit>
       <trans-unit id="runMergetoolToolStripMenuItem.Text">
@@ -2802,7 +2900,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="startAuthenticationAgentToolStripMenuItem.Text">
         <source>Start authentication agent</source>
-        <target>Spustit autentizačního agenta</target>
+        <target>Spustit autentifikačního agenta</target>
         
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.Text">
@@ -2828,6 +2926,11 @@ Do you want to abort and remove it from the recent repositories list?</source>
       <trans-unit id="tagToolStripMenuItem.Text">
         <source>Create tag...</source>
         <target>Vytvořit značku...</target>
+        
+      </trans-unit>
+      <trans-unit id="tagsToolStripMenuItem.Text">
+        <source>Tag</source>
+        <target>Značka</target>
         
       </trans-unit>
       <trans-unit id="toggleSplitViewLayout.ToolTipText">
@@ -2950,7 +3053,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgainCaption.Text">
         <source>Auto stash</source>
-        <target>Auto-uschovat</target>
+        <target>Auto uschovat</target>
         
       </trans-unit>
       <trans-unit id="_createBranch.Text">
@@ -2967,7 +3070,8 @@ Enter valid branch name or select predefined value.</source>
       <trans-unit id="_customBranchNameIsNotValid.Text">
         <source>“{0}” is not valid branch name.
 Enter valid branch name or select predefined value.</source>
-        <target>&quot;{0}&quot; není platný název větve. Zadejte platný název větve nebo si vyberte z předdefinovaných.</target>
+        <target>&quot;{0}&quot; není platný název větve.
+Zadejte platný název větve nebo si vyberte z předdefinovaných.</target>
         
       </trans-unit>
       <trans-unit id="_dontShowAgain.Text">
@@ -3017,7 +3121,7 @@ Enter valid branch name or select predefined value.</source>
       </trans-unit>
       <trans-unit id="rbStash.Text">
         <source>Stash</source>
-        <target>Úschovna</target>
+        <target>Uschovat</target>
         
       </trans-unit>
     </body>
@@ -3121,7 +3225,8 @@ Enter valid branch name or select predefined value.</source>
       <trans-unit id="label2.Text">
         <source>Choose another
 revision:</source>
-        <target>Zvolte další revizi:</target>
+        <target>Zvolte další
+revizi:</target>
         
       </trans-unit>
     </body>
@@ -3303,13 +3408,15 @@ revision:</source>
       <trans-unit id="_infoNewRepositoryLocation.Text">
         <source>The repository will be cloned to a new directory located here:
 {0}</source>
-        <target>Repozitář bude klonován do nové složky umístěné v: {0}</target>
+        <target>Repozitář bude klonován do nové složky umístěné v:
+{0}</target>
         
       </trans-unit>
       <trans-unit id="_questionOpenRepo.Text">
         <source>The repository has been cloned successfully.
 Do you want to open the new repository &quot;{0}&quot; now?</source>
-        <target>Repozitář byl úspěšně naklonovaný. Chcete nyní otevřít nový repozitář &quot;{0}&quot;</target>
+        <target>Repozitář byl úspěšně naklonovaný.
+Chcete nyní otevřít nový repozitář &quot;{0}&quot;?</target>
         
       </trans-unit>
       <trans-unit id="_questionOpenRepoCaption.Text">
@@ -3359,7 +3466,8 @@ Do you want to open the new repository &quot;{0}&quot; now?</source>
       <trans-unit id="label1.Text">
         <source>Supported commandline arguments for
 gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
-        <target>Podporované parametry příkazové řádky pro gitex.cmd / gitex (umístěný ve stejné složce jako GitExtensions.exe)</target>
+        <target>Podporované parametry příkazové řádky pro
+gitex.cmd / gitex (umístěný ve stejné složce jako GitExtensions.exe):</target>
         
       </trans-unit>
     </body>
@@ -3368,7 +3476,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Commit</source>
-        <target>Odevzdat</target>
+        <target>Odevzdání</target>
         
       </trans-unit>
       <trans-unit id="Amend.Text">
@@ -3398,7 +3506,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="Reset.Text">
         <source>Reset all changes</source>
-        <target>Vrátit všechny změny</target>
+        <target>Zahodit všechny změny</target>
         
       </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
@@ -3422,7 +3530,10 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
 Only use amend if the commit is not published yet!
 
 Do you want to continue?</source>
-        <target>Chystáte se přepsat historii. Používejte pozměnění pouze pokud ještě nebylo odevzdání odesláno! Chcete pokračovat?</target>
+        <target>Chystáte se přepsat historii.
+Používejte pozměnění pouze pokud ještě nebylo odevzdání odesláno!
+
+Chcete pokračovat?</target>
         
       </trans-unit>
       <trans-unit id="_amendCommitCaption.Text">
@@ -3442,7 +3553,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_commitCommitterToolTip.Text">
         <source>Click to change committer information.</source>
-        <target>Klepněte sem pro změny informací o odevzdávajícím</target>
+        <target>Klepněte pro změnu informací o odevzdávajícím.</target>
         
       </trans-unit>
       <trans-unit id="_commitMessageDisabled.Text">
@@ -3453,7 +3564,8 @@ Do you want to continue?</source>
       <trans-unit id="_commitMsgFirstLineInvalid.Text">
         <source>First line of commit message contains too many characters.
 Do you want to continue?</source>
-        <target>První řádek zprávy obsahuje příliš mnoho znaků. Chcete pokračovat?</target>
+        <target>První řádek zprávy obsahuje příliš mnoho znaků.
+Chcete pokračovat?</target>
         
       </trans-unit>
       <trans-unit id="_commitMsgLineInvalid.Text">
@@ -3462,19 +3574,25 @@ Do you want to continue?</source>
 {0}
 
 Do you want to continue?</source>
-        <target>Následující řádka obsahuje příliš mnoho znaků {0} Chcete pokračovat?</target>
+        <target>Následující řádka obsahuje příliš mnoho znaků:
+
+{0}
+
+Chcete pokračovat?</target>
         
       </trans-unit>
       <trans-unit id="_commitMsgRegExNotMatched.Text">
         <source>Commit message does not match RegEx.
 Do you want to continue?</source>
-        <target>Zpráva odevzdání neodpovídá regulérnímu výrazu. Chcete pokračovat?</target>
+        <target>Zpráva odevzdání neodpovídá regulérnímu výrazu.
+Chcete pokračovat?</target>
         
       </trans-unit>
       <trans-unit id="_commitMsgSecondLineNotEmpty.Text">
         <source>Second line of commit message is not empty.
 Do you want to continue?</source>
-        <target>Druhá řádka zprávy odevzdání není prázdná. Chcete pokračovat?</target>
+        <target>Druhá řádka zprávy odevzdání není prázdná.
+Chcete pokračovat?</target>
         
       </trans-unit>
       <trans-unit id="_commitTemplateSettings.Text">
@@ -3545,7 +3663,8 @@ Do you want to continue?</source>
       <trans-unit id="_noFilesStagedAndConfirmAnEmptyMergeCommit.Text">
         <source>There are no files staged for this commit.
 Are you sure you want to commit?</source>
-        <target>Pro toto odevzdání nejsou připraveny žádné soubory. Opravdu chcete provést odevzdání?</target>
+        <target>Pro toto odevzdání nejsou připraveny žádné soubory.
+Opravdu chcete provést odevzdání?</target>
         
       </trans-unit>
       <trans-unit id="_noFilesStagedAndNothingToCommit.Text">
@@ -3572,7 +3691,9 @@ Are you sure you want to commit?</source>
         <source>This commit will be unreferenced when switching to another branch and can be lost.
 
 Do you want to continue?</source>
-        <target>Toto odevzdání nebude referencováno při přepnutí na jinou větev a může být ztraceno. Chcete pokračovat?</target>
+        <target>Toto odevzdání nebude referencováno při přepnutí na jinou větev a může být ztraceno.
+
+Chcete pokračovat?</target>
         
       </trans-unit>
       <trans-unit id="_notOnBranchButtons.Text">
@@ -4019,7 +4140,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="groupBoxCommitValidation.Text">
         <source>Commit validation</source>
-        <target>Ověření odevzdání</target>
+        <target>Potvrzení odevzdání</target>
         
       </trans-unit>
       <trans-unit id="labelAutoWrap.Text">
@@ -4073,7 +4194,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="codersLabel.Text">
         <source>Coders</source>
-        <target>Kodéři</target>
+        <target>Programátoři</target>
         
       </trans-unit>
       <trans-unit id="designersLabel.Text">
@@ -4083,7 +4204,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Coders:</source>
-        <target>Kodéři:</target>
+        <target>Programátoři:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -4294,7 +4415,8 @@ Do you want to continue?</source>
       <trans-unit id="_deleteBranchQuestion.Text">
         <source>Are you sure you want to delete selected branches?
 Deleting a branch can cause commits to be deleted too!</source>
-        <target>Opravdu chcete smazat vybrané větve? Smazáním větve smažete i přiřazená odevzdání!</target>
+        <target>Opravdu chcete smazat vybrané větve?
+Smazáním větve smažete i přiřazená odevzdání!</target>
         
       </trans-unit>
       <trans-unit id="_deleteUnmergedBranchForcingSuggestion.Text">
@@ -4307,7 +4429,10 @@ Deleting a branch can cause commits to be deleted too!</source>
 When you delete a branch the commits can get lost because nothing points to them.
 When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
 </source>
-        <target>Můžete smazat pouze větve které jsou plně sloučené v čelním sestavení (HEAD). Pokud smažete větev můžete přijít o některá odevzdání, protože na ně nebude nic vést. Pokud chcete smazat plně nesloučenou větev, tak použijte volbu &quot;vynutit smazání&quot;.</target>
+        <target>Můžete smazat pouze větve které jsou plně sloučené v čelním sestavení (HEAD).
+Pokud smažete větev můžete přijít o některá odevzdání, protože na ně nebude nic vést.
+Pokud chcete smazat plně nesloučenou větev, tak použijte volbu &quot;vynutit smazání&quot;.
+</target>
         
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
@@ -4427,7 +4552,9 @@ Pro získání více informací jak přispět klepněte na tlačítko &quot;Podp
         <source>Here be dragons!
 Changing this file by hand can be harmful and might break something.
 If you are not sure just close this window.</source>
-        <target>Tady to kouše! Ruční úpravy tohoto souboru mohou být potenciálně nebezpečné a mohou vám způsobit problémy. Pokud si nejste jisti, prostě zavřete toto okno.</target>
+        <target>Tady to kouše!
+Ruční úpravy tohoto souboru mohou být potenciálně nebezpečné a mohou vám způsobit problémy.
+Pokud si nejste jisti, prostě zavřete toto okno.</target>
         
       </trans-unit>
       <trans-unit id="toolStripSaveButton.ToolTipText">
@@ -4467,6 +4594,11 @@ If you are not sure just close this window.</source>
       <trans-unit id="diffToolremotelocalStripMenuItem.Text">
         <source>Difftool selected &lt; - &gt; local</source>
         <target>Vybrané nástrojem na rozdíly &lt; - &gt; místní</target>
+        
+      </trans-unit>
+      <trans-unit id="followFileHistoryRenamesToolStripMenuItem.Text">
+        <source>Detect and follow - exact renames and copies only</source>
+        <target>Zjistit a následovat - pouze přesné přejmenování a kopie</target>
         
       </trans-unit>
       <trans-unit id="followFileHistoryToolStripMenuItem.Text">
@@ -4577,7 +4709,8 @@ Chcete aby vám program Git Extensions pomohl najít správnou složku?</target>
       <trans-unit id="_homeNotAccessible.Text">
         <source>The environment variable HOME points to a directory that is not accessible:
 &quot;{0}&quot;</source>
-        <target>Proměnná prostředí HOME vede do složky která není přístupná: {0}</target>
+        <target>Proměnná prostředí HOME vede do složky která není přístupná:
+&quot;{0}&quot;</target>
         
       </trans-unit>
       <trans-unit id="_noHomeDirectorySpecified.Text">
@@ -4599,7 +4732,9 @@ Chcete aby vám program Git Extensions pomohl najít správnou složku?</target>
         <source>The global config file located in the location stored environment variable %HOME%. 
 By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
 Change the default behaviour only if you experience problems.</source>
-        <target>Globální soubor nastavení se nachází ve složce na kterou míří proměnná prostředí %HOME%. Ve výchozím nastavení je tato nastavená na %HOMEDRIVE%%HOMEPATH%, pokud je prázdná. Výchozí chování měňte pouze pokud máte problémy.</target>
+        <target>Globální soubor nastavení se nachází ve složce na kterou míří proměnná prostředí %HOME%.
+Ve výchozím nastavení je tato nastavená na %HOMEDRIVE%%HOMEPATH%, pokud je prázdná.
+Výchozí chování měňte pouze pokud máte problémy.</target>
         
       </trans-unit>
       <trans-unit id="ok.Text">
@@ -4648,7 +4783,7 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
       <trans-unit id="SelectedBranch.Text">
         <source>Branch</source>
-        <target>Větvit</target>
+        <target>Větev</target>
         
       </trans-unit>
       <trans-unit id="_currentBranchText.Text">
@@ -4728,148 +4863,6 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Change Submitted</source>
-        <target>Změny odeslány</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Zavřít</target>
-        
-      </trans-unit>
-      <trans-unit id="labelSubmitted.Text">
-        <source>Your change has been submitted for review at the following location:</source>
-        <target>Vaše změny byly odeslány ke shlédnutí na následující adrese:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Download Gerrit Change</source>
-        <target>Stáhnout změny z Gerritu</target>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>Spravovat zdroje</target>
-        
-      </trans-unit>
-      <trans-unit id="Download.Text">
-        <source>&amp;Download</source>
-        <target>Stáhnout (&amp;D)</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotGetChangeDetails.Text">
-        <source>Could not retrieve the change details</source>
-        <target>Nemohu získat detaily změny</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadCaption.Text">
-        <source>Download change {0}</source>
-        <target>Stáhnout změny {0}</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadGerritChangeCaption.Text">
-        <source>Download Gerrit Change</source>
-        <target>Stáhnout změny z Gerritu</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectChange.Text">
-        <source>Please enter a change</source>
-        <target>Prosím zadejte změnu</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        <target>Prosím zvolte vzdálený repozitář</target>
-        
-      </trans-unit>
-      <trans-unit id="labelChange.Text">
-        <source>Change:</source>
-        <target>Změna:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelEnterChangeIdOrNumber.Text">
-        <source>Enter the Change-Id or the number from the Gerrit URL</source>
-        <target>Zadejte ID změny nebo číslo z URL Gerritu</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        <target>Vzdálená:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelTopicBranch.Text">
-        <source>Topic branch:</source>
-        <target>Větev:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Vydat změny z Gerritu</target>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>Spravovat zdroje</target>
-        
-      </trans-unit>
-      <trans-unit id="Publish.Text">
-        <source>&amp;Publish</source>
-        <target>Vydat (&amp;P)</target>
-        
-      </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>Odeslat revizi jako koncept</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishCaption.Text">
-        <source>Publish change</source>
-        <target>Vydat změny</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishGerritChangeCaption.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Vydat změny z Gerritu</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectBranch.Text">
-        <source>Please enter a branch</source>
-        <target>Prosím zadejte větev</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        <target>Prosím zvolte vzdálený repozitář</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBranch.Text">
-        <source>Branch:</source>
-        <target>Větev:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        <target>Vzdálená:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelTopic.Text">
-        <source>Topic:</source>
-        <target>Předmět:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormGitAttributes" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -4885,7 +4878,8 @@ Change the default behaviour only if you experience problems.</source>
       <trans-unit id="_cannotAccessGitattributes.Text">
         <source>Failed to save .gitattributes.
 Check if file is accessible.</source>
-        <target>Nemohu uložit .gitattributes. Zkontrolujte jestli je soubor přístupný.</target>
+        <target>Nemohu uložit .gitattributes.
+Zkontrolujte jestli je soubor přístupný.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitattributesCaption.Text">
@@ -4975,7 +4969,8 @@ Pro více informací spusťte příkaz
       <trans-unit id="_cannotAccessGitignore.Text">
         <source>Failed to save .gitignore.
 Check if file is accessible.</source>
-        <target>Nemohu uložit .gitignore. Zkontrolujte jestli je soubor přístupný.</target>
+        <target>Nemohu uložit .gitignore.
+Zkontrolujte jestli je soubor přístupný.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitignoreCaption.Text">
@@ -5081,83 +5076,6 @@ _ReSharper*/</target>
       <trans-unit id="tabPageCommandLog.Text">
         <source>Command log</source>
         <target>Záznam příkazů</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Edit .gitreview</source>
-        <target>Upravit .gitreview</target>
-        
-      </trans-unit>
-      <trans-unit id="Save.Text">
-        <source>Save</source>
-        <target>Uložit</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreview.Text">
-        <source>Failed to save .gitreview.
-Check if file is accessible.</source>
-        <target>Nemohu uložit .gitreview. Zkontrolujte jestli je soubor přístupný.</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreviewCaption.Text">
-        <source>Failed to save .gitreview</source>
-        <target>Nemohu uložit .gitreview</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
-        <source>.gitreview is only supported when there is a working directory.</source>
-        <target>.gitreview je podporovaný pouze v pracovní složce</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
-        <source>No working directory</source>
-        <target>Pracovní složka není k dispozici</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestion.Text">
-        <source>Save changes to .gitreview?</source>
-        <target>Uložit změny do .gitreview?</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestionCaption.Text">
-        <source>Save changes?</source>
-        <target>Uložit změny?</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Provide the configuration for
-.gitreview to setup Gerrit.
-
-Example configuration:
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</source>
-        <target>Poskytuje nastavení pro Gerrit
-souborem .gitreview.
-
-Příklad nastavení:
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitReviewHelp.Text">
-        <source>GitHub page for git-review</source>
-        <target>Stránka git-review na GitHubu</target>
         
       </trans-unit>
     </body>
@@ -5278,7 +5196,8 @@ defaultrebase=0</target>
       <trans-unit id="_chooseDirectoryNotFile.Text">
         <source>Cannot initialize a new repository on a file.
 Please choose a directory.</source>
-        <target>Nemohu vytvořit nový repozitář v souboru. Prosím zvolte si složku.</target>
+        <target>Nemohu vytvořit nový repozitář v souboru.
+Prosím zvolte si složku.</target>
         
       </trans-unit>
       <trans-unit id="_chooseDirectoryNotFileCaption.Text">
@@ -5318,7 +5237,8 @@ Please choose a directory.</source>
       <trans-unit id="_cannotAccessMailmap.Text">
         <source>Failed to save .mailmap.
 Check if file is accessible.</source>
-        <target>Nemohu uložit .mailmap. Zkontrolujte jestli je soubor přístupný.</target>
+        <target>Nemohu uložit .mailmap.
+Zkontrolujte jestli je soubor přístupný.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessMailmapCaption.Text">
@@ -5496,6 +5416,11 @@ Tato úprava je také provedena na stromě společného předka.</target>
         <target>Konflikt podmodulu</target>
         
       </trans-unit>
+      <trans-unit id="_deleted.Text">
+        <source>deleted</source>
+        <target>smazáno</target>
+        
+      </trans-unit>
       <trans-unit id="_stageFilename.Text">
         <source>Stage {0}</source>
         <target>Připravit {0}</target>
@@ -5582,29 +5507,6 @@ Tato úprava je také provedena na stromě společného předka.</target>
       <trans-unit id="label1.Text">
         <source>Directory</source>
         <target>Složka</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Gerrit Plugin</source>
-        <target>Zásuvný modul Gerrit</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Zavřít</target>
-        
-      </trans-unit>
-      <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
-
-To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>Zásuvný modul Gerrit pro GitExtensions poskytuje integraci s nástrojem Gerrit. Tento zásuvný modul je založen na nástroji git-review.
-
-Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitreview. Toto můžete provést pomocí nabídky Repozitář/Upravit. Pro více informací o souboru .gitreview a nástroji git-review viz odkaz níže.</target>
         
       </trans-unit>
     </body>
@@ -5704,7 +5606,8 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
       <trans-unit id="_areYouSureYouWantToRebaseMerge.Text">
         <source>The current commit is a merge.
 Are you sure you want to rebase this merge?</source>
-        <target>Toto odevzdání je sloučení. Opravdu chcete přeskládat toto sloučení?</target>
+        <target>Toto odevzdání je sloučení.
+Opravdu chcete přeskládat toto sloučení?</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureYouWantToRebaseMergeCaption.Text">
@@ -5724,6 +5627,11 @@ If you want to fetch and merge a branch, choose a specific branch.</source>
         <target>Můžete pouze přenést všechny vzdálené větve (*) bez sloučení nebo přeskládání.
 Pokud chcete přenést všechny vzdálené větve, zvolte přenést.
 Pokud chcete přenést a přeskládat větev, zvolte konkrétní větev.</target>
+        
+      </trans-unit>
+      <trans-unit id="_hoverShowImageLabelText.Text">
+        <source>Hover to see scenario when fast forward is possible.</source>
+        <target>Aby se zobrazil scénář rychlého posunutí přejeďte myší.</target>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranch.Text">
@@ -5762,7 +5670,7 @@ Because this is not the default configured remote for your local branch,
 you must specify a remote branch.</source>
         <target>Chtěli jste přenést větev ze vzdáleného zdroje '{0}',
 ale neuvedli jste vzdálenou větev.
-Protože toto není současná větev, musíte uvést vzdálenou větev.</target>
+Protože toto není výchozí vzdálený zdroj pro vaší místní větev, musíte uvést vzdálenou větev.</target>
         
       </trans-unit>
       <trans-unit id="_notOnBranch.Text">
@@ -5848,7 +5756,7 @@ Tímto rekurzivně inicializujete a aktualizujete všechny podmoduly.</target>
       </trans-unit>
       <trans-unit id="groupBox3.Text">
         <source>Branch</source>
-        <target>Větvit</target>
+        <target>Větev</target>
         
       </trans-unit>
       <trans-unit id="groupBox4.Text">
@@ -5973,7 +5881,8 @@ Tímto rekurzivně inicializujete a aktualizujete všechny podmoduly.</target>
       <trans-unit id="_branchNewForRemote.Text">
         <source>The branch you are about to push seems to be a new branch for the remote.
 Are you sure you want to push this branch?</source>
-        <target>Větev kterou se chystáte odeslat je pro vzdálený zdroj nová. Opravdu chcete odeslat tuto větev?</target>
+        <target>Větev kterou se chystáte odeslat je pro vzdálený zdroj nová.
+Opravdu chcete odeslat tuto větev?</target>
         
       </trans-unit>
       <trans-unit id="_createPullRequestCB.Text">
@@ -6068,7 +5977,7 @@ Are you sure you want to push this branch?</source>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Branch</source>
-        <target>Větvit</target>
+        <target>Větev</target>
         
       </trans-unit>
       <trans-unit id="groupBox2.Text">
@@ -6198,7 +6107,8 @@ Are you sure you want to push this branch?</source>
       <trans-unit id="_branchUpToDateText.Text">
         <source>Current branch a is up to date.
 Nothing to rebase.</source>
-        <target>Současná větev je aktuální. Není potřeba nic přeskládávat.</target>
+        <target>Současná větev je aktuální.
+Není potřeba nic přeskládávat.</target>
         
       </trans-unit>
       <trans-unit id="_continueRebaseText.Text">
@@ -6209,6 +6119,11 @@ Nothing to rebase.</source>
       <trans-unit id="_continueRebaseText2.Text">
         <source>&gt;Continue rebase&lt;</source>
         <target>&gt;Pokračovat v přeskládávání&lt;</target>
+        
+      </trans-unit>
+      <trans-unit id="_hoverShowImageLabelText.Text">
+        <source>Hover to see scenario when fast forward is possible.</source>
+        <target>Aby se zobrazil scénář rychlého posunutí přejeďte myší.</target>
         
       </trans-unit>
       <trans-unit id="_noBranchSelectedText.Text">
@@ -6273,7 +6188,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="lblRangeTo.Text">
         <source>To</source>
-        <target>Příjemce</target>
+        <target>Do</target>
         
       </trans-unit>
     </body>
@@ -6462,7 +6377,8 @@ Nothing to rebase.</source>
       <trans-unit id="_questionAutoPullBehaviour.Text">
         <source>You have added a new remote repository.
 Do you want to automatically configure the default push and pull behavior for this remote?</source>
-        <target>Přidali jste nový vzdálený repozitář. Chcete automaticky nastavit výchozí chování odeslání a stažení?</target>
+        <target>Přidali jste nový vzdálený repozitář.
+Chcete automaticky nastavit výchozí chování odeslání a stažení?</target>
         
       </trans-unit>
       <trans-unit id="_questionAutoPullBehaviourCaption.Text">
@@ -6483,7 +6399,8 @@ Do you want to automatically configure the default push and pull behavior for th
       <trans-unit id="_remoteBranchDataError.Text">
         <source>Invalid ´{1}´ found for branch ´{0}´.
 Value has been reset to empty value.</source>
-        <target>Neplatný '{1}' nalezen pro větev '{0}'. Hodnota byla změněna na prázdnou.</target>
+        <target>Neplatný '{1}' nalezen pro větev '{0}'.
+Hodnota byla změněna na prázdnou.</target>
         
       </trans-unit>
       <trans-unit id="_sshKeyOpenCaption.Text">
@@ -6568,7 +6485,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Branch</source>
-        <target>Větvit</target>
+        <target>Větev</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -6656,7 +6573,8 @@ Value has been reset to empty value.</source>
       <trans-unit id="Hard.Text">
         <source>Hard: reset working directory and index
 (discard ALL local changes, even uncommitted changes)</source>
-        <target>Natvrdo (Hard): Obnoví pracovní složku a index. (VŠECHNY místní změny včetně neodevzdaných budou smazány)</target>
+        <target>Natvrdo (Hard): Obnoví pracovní složku a index.
+(VŠECHNY místní změny včetně neodevzdaných budou smazány)</target>
         
       </trans-unit>
       <trans-unit id="Mixed.Text">
@@ -6710,7 +6628,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="ContextChooseLocal.Text">
         <source>Choose local</source>
-        <target>Vybrat místní</target>
+        <target>Vyberat místní</target>
         
       </trans-unit>
       <trans-unit id="ContextChooseRemote.Text">
@@ -6894,12 +6812,13 @@ This action cannot be made undone.</source>
       <trans-unit id="allConflictsResolved.Text">
         <source>All mergeconflicts are resolved, you can commit.
 Do you want to commit now?</source>
-        <target>Všechny konflikty sloučení jsou vyřešené. Nyní můžete provést odevzdání. Chcete provést odevzdání?</target>
+        <target>Všechny konflikty sloučení jsou vyřešené.Nyní můžete provést odevzdání.
+Chcete provést odevzdání?</target>
         
       </trans-unit>
       <trans-unit id="allConflictsResolvedCaption.Text">
         <source>Commit</source>
-        <target>Odevzdat</target>
+        <target>Odevzdání</target>
         
       </trans-unit>
       <trans-unit id="askMergeConflictSolved.Text">
@@ -6912,7 +6831,10 @@ Do you want to commit now?</source>
 {0}
 
 Is the mergeconflict solved?</source>
-        <target>Konflikt sloučení musí být vyřešen a výsledek musí být uložen jako {0}. Je konflikt sloučení vyřešený?</target>
+        <target>Konflikt sloučení musí být vyřešen a výsledek musí být uložen jako:
+{0}
+
+Je konflikt sloučení vyřešený?</target>
         
       </trans-unit>
       <trans-unit id="askMergeConflictSolvedCaption.Text">
@@ -6981,7 +6903,10 @@ Choose to keep the local({1}), remote({2}) or base file.</source>
 A file with the same name has been created locally({1}) and remotely({2}) causing this conflict.
 
 Choose the file you want to keep, merge the files or delete the file?</source>
-        <target>Soubor {0} nemá základní revizi. Soubor o stejném názvu byl vytvořen místně ({1}) i vzdáleně ({2}). Vyberte soubor který chcete zachovat, sloučit nebo smazat.</target>
+        <target>Soubor {0} nemá základní revizi.
+Soubor o stejném názvu byl vytvořen místně ({1}) i vzdáleně ({2}).
+
+Vyberte soubor který chcete zachovat, sloučit nebo smazat.</target>
         
       </trans-unit>
       <trans-unit id="fileDeletedLocallyAndModifiedRemotely.Text">
@@ -6994,7 +6919,10 @@ Choose the file you want to keep, merge the files or delete the file?</source>
 The file has been deleted locally({1}) but modified remotely({2}).
 
 Choose to delete the file or keep the modified version.</source>
-        <target>Soubor {0} nemá místní revizi. Soubor byl místně smazaný ({1}) a vzdálené změněný ({2}). Vyberte jestli chcete soubor smazat nebo zachovat změněnou verzi.</target>
+        <target>Soubor {0} nemá místní revizi.
+Soubor byl místně smazaný ({1}) a vzdálené změněný ({2}).
+
+Vyberte jestli chcete soubor smazat nebo zachovat změněnou verzi.</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -7005,7 +6933,8 @@ Choose to delete the file or keep the modified version.</source>
       <trans-unit id="fileIsBinary.Text">
         <source>The selected file appears to be a binary file.
 Are you sure you want to open this file in {0}?</source>
-        <target>Vybraný soubor vypadá že je v binárním formátu. Opravdu chcete otevřít tento soubor pomocí {0}?</target>
+        <target>Vybraný soubor vypadá že je v binárním formátu.
+Opravdu chcete otevřít tento soubor pomocí {0}?</target>
         
       </trans-unit>
       <trans-unit id="fileModifiedLocallyAndDelededRemotely.Text">
@@ -7018,7 +6947,10 @@ Are you sure you want to open this file in {0}?</source>
 The file has been modified locally({1}) but deleted remotely({2}).
 
 Choose to delete the file or keep the modified version.</source>
-        <target>Soubor {0} nemá vzdálenou revizi. Soubor byl změněn místně ({1}) a smazán vzdáleně ({2}). Vyberte jestli chcete soubor smazat nebo zachovat změněnou verzi.</target>
+        <target>Soubor {0} nemá vzdálenou revizi.
+Soubor byl změněn místně ({1}) a smazán vzdáleně ({2}).
+
+Vyberte jestli chcete soubor smazat nebo zachovat změněnou verzi.</target>
         
       </trans-unit>
       <trans-unit id="fileNameDataGridViewTextBoxColumn.HeaderText">
@@ -7030,7 +6962,9 @@ Choose to delete the file or keep the modified version.</source>
         <source>The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location.
 
 The merge conflict will not be marked as solved. Please try again.</source>
-        <target>Soubor nebyl změněný při sloučení. Toto obvykle znamená, že soubor byl uložen do špatné složky. Konflikt sloučení nebude označen jako vyřešený. Prosím zkuste to znovu.</target>
+        <target>Soubor nebyl změněný při sloučení. Toto obvykle znamená, že soubor byl uložen do špatné složky.
+
+Konflikt sloučení nebude označen jako vyřešený. Prosím zkuste to znovu.</target>
         
       </trans-unit>
       <trans-unit id="guidDataGridViewTextBoxColumn.HeaderText">
@@ -7096,7 +7030,8 @@ The merge conflict will not be marked as solved. Please try again.</source>
       <trans-unit id="noBaseRevision.Text">
         <source>There is no base revision for {0}.
 Fall back to 2-way merge?</source>
-        <target>Pro {0} neexistuje základová revize. Pokračovat dvousměrným sloučením?</target>
+        <target>Pro {0} neexistuje základová revize.
+Pokračovat dvousměrným sloučením?</target>
         
       </trans-unit>
       <trans-unit id="noMergeTool.Text">
@@ -7143,7 +7078,9 @@ Fall back to 2-way merge?</source>
         <source>There is a custom merge script ({0}) for this file type.
 
 Do you want to use this custom merge script?</source>
-        <target>Pro tento druh souboru existuje skript na sloučení ({0}). Chcete použít skript na sloučení?</target>
+        <target>Pro tento druh souboru existuje skript na sloučení ({0}).
+
+Chcete použít skript na sloučení?</target>
         
       </trans-unit>
       <trans-unit id="uskUseCustomMergeScriptCaption.Text">
@@ -7343,7 +7280,10 @@ Chcete nyní nastavit správný příkaz? Pokud ne, globální a místní nastav
 git.cmd before you can change
 any global setting.
 </source>
-        <target>Nejdříve musíte nastavit správnou cestu k git.cmd a pak budete moci měnit globální nastavení.</target>
+        <target>Nejdříve musíte nastavit správnou cestu k
+git.cmd a pak budete moci měnit
+globální nastavení.
+</target>
         
       </trans-unit>
       <trans-unit id="labelInstantSaveNotice.Text">
@@ -7558,12 +7498,12 @@ Chcete zaregistrovat otisk hostitele a restartovat proces?</target>
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>Commit</source>
-        <target>Odevzdat</target>
+        <target>Odevzdání</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Branch</source>
-        <target>Větvit</target>
+        <target>Větev</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
@@ -7598,7 +7538,8 @@ Chcete zaregistrovat otisk hostitele a restartovat proces?</target>
       <trans-unit id="_questionOpenRepo.Text">
         <source>The repository has been cloned successfully.
 Do you want to open the new repository &quot;{0}&quot; now?</source>
-        <target>Repozitář byl úspěšně naklonovaný. Chcete nyní otevřít nový repozitář &quot;{0}&quot;</target>
+        <target>Repozitář byl úspěšně naklonovaný.
+Chcete nyní otevřít nový repozitář &quot;{0}&quot;?</target>
         
       </trans-unit>
       <trans-unit id="_questionOpenRepoCaption.Text">
@@ -7713,7 +7654,8 @@ Do you want to open the new repository &quot;{0}&quot; now?</source>
       <trans-unit id="noLanguageCodeSelected.Text">
         <source>There is no language code selected.
 Do you want to select a language code first?</source>
-        <target>Není vybraný kód jazyka. Chcete nejdříve vybrat kód jazyka?</target>
+        <target>Není vybraný kód jazyka.
+Chcete nejdříve vybrat kód jazyka?</target>
         
       </trans-unit>
       <trans-unit id="noLanguageCodeSelectedCaption.Text">
@@ -7838,7 +7780,9 @@ Do you want to select a language code first?</source>
         <source>Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), 
 but also the ones found in alternate object pools.
 </source>
-        <target>Kontrolovat nejen objekty v GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), ale i ty co se nachází v alternativních úložištích.</target>
+        <target>Kontrolovat nejen objekty v GIT_OBJECT_DIRECTORY ($GIT_DIR/objects),
+ale i ty co se nachází v alternativních úložištích.
+</target>
         
       </trans-unit>
       <trans-unit id="NoReflogs.Text">
@@ -7866,7 +7810,9 @@ reflog to be reachable.</source>
         <source>Print out objects that exist but that aren't readable from any of the reference 
 nodes.
 </source>
-        <target>Vypsat objekty co existují, ale nejsou dosažitelné z referencových uzlů.</target>
+        <target>Vypsat objekty co existují, ale nejsou dosažitelné z referencových
+uzlů.
+</target>
         
       </trans-unit>
       <trans-unit id="_removeDanglingObjectsCaption.Text">
@@ -7883,7 +7829,9 @@ nodes.
         <source>{0} Tags created.
 
 Do not forget to delete these tags when finished.</source>
-        <target>Vytvořeno {0} značek. Nezapomeňte tyto značky smazat, až budete hotovi.</target>
+        <target>Vytvořeno {0} značek.
+
+Nezapomeňte tyto značky smazat, až budete hotovi.</target>
         
       </trans-unit>
       <trans-unit id="btnCloseDialog.Text">
@@ -7934,10 +7882,13 @@ dangling objects&quot;
 
 Check commits you want to recover and press Recover button
 Context menu for additional operations</source>
-        <target>Při výchozím nastavení jsou z databáze odstraňovány pouze nereferencované objekty starší než 2 týdny.
-Všechny ostatní objekty jsou smazány když spustíte &quot;Odstranit &quot;plandající&quot; objekty&quot;
+        <target>Při výchozím nastavení jsou z databáze odstraňovány
+pouze nereferencované objekty starší než 2 týdny.
+Všechny ostatní objekty jsou smazány když spustíte
+&quot;Odstranit &quot;plandající&quot; objekty&quot;
 
-Zaškrtněte odevzdání která chcete obnovit a zmáčkněte kontextové menu na tlačítku Obnovit pro další operace</target>
+Zaškrtněte odevzdání která chcete obnovit a zmáčkněte kontextové
+menu na tlačítku Obnovit pro další operace</target>
         
       </trans-unit>
       <trans-unit id="mnuLostObjectView.Text">
@@ -8007,84 +7958,6 @@ Zaškrtněte odevzdání která chcete obnovit a zmáčkněte kontextové menu n
       <trans-unit id="typeDataGridViewTextBoxColumn.HeaderText">
         <source>Change</source>
         <target>Změna</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en">
-    <body>
-      <trans-unit id="_downloadGerritChange.Text">
-        <source>Download Gerrit Change</source>
-        <target>Stáhnout změny z Gerritu</target>
-        
-      </trans-unit>
-      <trans-unit id="_editGitReview.Text">
-        <source>Edit .gitreview</source>
-        <target>Upravit .gitreview</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHook.Text">
-        <source>Install Hook</source>
-        <target>Nainstalovat hákovací skript</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookFailed.Text">
-        <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>Nemohu stáhnout soubor commit-msg. Prosím nainstalujte hákovací skript commit-msg ručně.</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookMessage.Text">
-        <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>Gerrit požaduje nainstalovaný hákovací skript commit-msg. Chcete nainstalovat commit-msg do vašeho repozitáře?</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookShortText.Text">
-        <source>Install commit-msg hook</source>
-        <target>Instalovat hákovací skript commit-msg</target>
-        
-      </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Gerrit Code Review</source>
-        <target>Gerrit - Revize kódu</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishGerritChange.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Vydat změny z Gerritu</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en">
-    <body>
-      <trans-unit id="_settingsError.Text">
-        <source>Error loading .gitreview file.</source>
-        <target>Chyba při načítání souboru .gitreview.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
-        <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
-        <target>Vzdálený zdroj &quot;{0}&quot; uvedený nastavení &quot;dualremote&quot; v souboru .gitreview nevede na nastavený vzdálený zdroj. Buď vytvořte tento vzdálený zdroj nebo změňte soubor .gitreview.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorFileNotFound.Text">
-        <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
-        <target>V pracovní složce nemohu nalézt soubor &quot;.gitreview&quot;.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorHostNotEntered.Text">
-        <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
-        <target>Nastavení &quot;host&quot; (hostitel) v souboru .gitreview je povinné.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorPortNotNumeric.Text">
-        <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
-        <target>Nastavení &quot;port&quot; v souboru .gitreview může obsahovat pouze číslice.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorProjectNotEntered.Text">
-        <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
-        <target>Nastavení &quot;projekt&quot; v souboru .gitreview je povinné.</target>
         
       </trans-unit>
     </body>
@@ -8161,7 +8034,7 @@ Zaškrtněte odevzdání která chcete obnovit a zmáčkněte kontextové menu n
         <target>Získávat Windowsové, odevzdávat Unixové konce řádků (&quot;core.autocrlf nastaveno na &quot;true&quot;)</target>
         
       </trans-unit>
-      <trans-unit id="groupBox9.Text">
+      <trans-unit id="groupBoxLineEndings.Text">
         <source>Line endings</source>
         <target>Konce řádků</target>
         
@@ -8226,7 +8099,10 @@ Zaškrtněte odevzdání která chcete obnovit a zmáčkněte kontextové menu n
 git before you can change
 global settings.
 </source>
-        <target>Musíte nastavit spřávnou cestu ke gitu před tím než budet moci měnit globální nastavení.</target>
+        <target>Musíte nastavit spřávnou cestu
+ke gitu před tím než budet moci
+měnit globální nastavení.
+</target>
         
       </trans-unit>
     </body>
@@ -8265,6 +8141,11 @@ global settings.
       <trans-unit id="chkFollowRenamesInFileHistory.Text">
         <source>Follow renames in file history (experimental)</source>
         <target>Sledovat přejmenování v historii souborů (experimentální vlastnost)</target>
+        
+      </trans-unit>
+      <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
+        <source>Follow exact renames and copies only</source>
+        <target>Následovat pouze přesné přejmenování a kopie.</target>
         
       </trans-unit>
       <trans-unit id="chkPlaySpecialStartupSound.Text">
@@ -8527,7 +8408,8 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       <trans-unit id="linkLabelShowHelp.Text">
         <source>Show
 help</source>
-        <target>Zobrazit nápovědu</target>
+        <target>Zobrazit
+nápovědu</target>
         
       </trans-unit>
     </body>
@@ -8537,20 +8419,6 @@ help</source>
       <trans-unit id="$this.Text">
         <source>Hotkeys</source>
         <target>Horké klávesy</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en">
-    <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        <target>Název projektu</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>Jenkins server URL</source>
-        <target>Adresa serveru Jenkins</target>
         
       </trans-unit>
     </body>
@@ -8606,7 +8474,9 @@ help</source>
         <source>The server's host key is not cached in the registry.
 
 Do you want to trust this host key and then try again?</source>
-        <target>Hostitelský klíč serveru není uložen v registru. Chcete důvěřovat tomuto hostitelskému klíci a zkusit znova?</target>
+        <target>Hostitelský klíč serveru není uložen v registru.
+
+Chcete důvěřovat tomuto hostitelskému klíci a zkusit znova?</target>
         
       </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
@@ -8638,7 +8508,9 @@ Do you want to trust this host key and then try again?</source>
         <source>Since this repository has submodules, it's necessary to update them on every checkout.
 
 This will just checkout on the submodule the commit determined by the superproject.</source>
-        <target>Tento repozitář má podmoduly, tudíž je nezbytné je aktualizovat při každém získání. Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</target>
+        <target>Tento repozitář má podmoduly, tudíž je nezbytné je aktualizovat při každém získání.
+
+Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</target>
         
       </trans-unit>
     </body>
@@ -8709,50 +8581,6 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Proxy Switcher</source>
-        <target>Přepínač proxy serverů</target>
-        
-      </trans-unit>
-      <trans-unit id="ApplyGlobally_CheckBox.Text">
-        <source>Apply globally</source>
-        <target>Použít globálně</target>
-        
-      </trans-unit>
-      <trans-unit id="GlobalHttpProxy_Label.Text">
-        <source>Global http.proxy:</source>
-        <target>Globální http.proxy:</target>
-        
-      </trans-unit>
-      <trans-unit id="LocalHttpProxy_Label.Text">
-        <source>Local http.proxy:</source>
-        <target>Místní http.proxy:</target>
-        
-      </trans-unit>
-      <trans-unit id="SetProxy_Button.Text">
-        <source>Set proxy</source>
-        <target>Nastavit proxy</target>
-        
-      </trans-unit>
-      <trans-unit id="UnsetProxy_Button.Text">
-        <source>Unset proxy</source>
-        <target>Od-nastavit proxy</target>
-        
-      </trans-unit>
-      <trans-unit id="_pleaseSetProxy.Text">
-        <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>Není nastaven žádný proxy server. Prosím nastavte proxy server v nastaveních zásuvného modulu.</target>
-        
-      </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Proxy Switcher</source>
-        <target>Přepínač proxy serverů</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="RevisionGrid" source-language="en">
     <body>
       <trans-unit id="AuthorDataGridViewColumn.HeaderText">
@@ -8767,7 +8595,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="Commit.Text">
         <source>Commit</source>
-        <target>Odevzdat</target>
+        <target>Odevzdání</target>
         
       </trans-unit>
       <trans-unit id="DateDataGridViewColumn.HeaderText">
@@ -9159,8 +8987,8 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
         
       </trans-unit>
       <trans-unit id="LocalBranchChx.Text">
-        <source>Local branch</source>
-        <target>Místní větev</target>
+        <source>Local branch name</source>
+        <target>Název místní větve</target>
         
       </trans-unit>
       <trans-unit id="MessageChx.Text">
@@ -9169,8 +8997,8 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
         
       </trans-unit>
       <trans-unit id="RemoteBranchChx.Text">
-        <source>Remote branch</source>
-        <target>Vzdálená větev</target>
+        <source>Remote branch name</source>
+        <target>Název vzdálené větve</target>
         
       </trans-unit>
       <trans-unit id="Remove.Text">
@@ -9246,6 +9074,9 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
         <source>User Input:
 {UserInput}
 
+Selected Commits:
+{sHashes}
+
 Selected Branch:
 {sTag}
 {sBranch}
@@ -9275,38 +9106,6 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
-        <target>Uživatelský vstup:
-{UserInput}
-
-Zvolená větev:
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-Současná větev:
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cHash}
-{cMessage}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="addScriptButton.Text">
@@ -9351,7 +9150,7 @@ Současná větev:
       </trans-unit>
       <trans-unit id="nameLabel.Text">
         <source>Name:</source>
-        <target>Jméno:</target>
+        <target>Název:</target>
         
       </trans-unit>
       <trans-unit id="removeScriptButton.Text">
@@ -9431,7 +9230,8 @@ when all items are shown:</source>
       <trans-unit id="lblMenuEntries.Text">
         <source>Select items to be shown in the cascaded context menu.
 (Unchecked items will be shown top level for direct access.)</source>
-        <target>Zvolte položky co se zobrazí v kaskádové kontextové nabídce. (nezvolené položky se zobrazí na nejvyšší úrovni)</target>
+        <target>Zvolte položky co se zobrazí v kaskádové kontextové nabídce.
+(nezvolené položky se zobrazí na nejvyšší úrovni)</target>
         
       </trans-unit>
     </body>
@@ -9528,7 +9328,10 @@ when all items are shown:</source>
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </source>
-        <target>OpenSSH je nástroj příkazové řádky. PuTTY je více uživatelsky přívětivější k uživatelům Windows, ale vyžaduje aby byl na pozadí spuštěn klient autentifikace. Při použití OpenSSH se budou zobrazovat dialogová okna příkazové řádky!</target>
+        <target>OpenSSH je nástroj příkazové řádky. PuTTY je více uživatelsky přívětivější k uživatelům Windows,
+ale vyžaduje aby byl na pozadí spuštěn klient autentifikace.
+Při použití OpenSSH se budou zobrazovat dialogová okna příkazové řádky!
+</target>
         
       </trans-unit>
       <trans-unit id="label48.Text">
@@ -9566,7 +9369,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
         <source>Commit date</source>
-        <target>Datum odevzdáni</target>
+        <target>Datum odevzdání</target>
         
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
@@ -9642,60 +9445,6 @@ When OpenSSH is used, command line dialogs are shown!
       <trans-unit id="_yearsAgo.Text">
         <source>{0} {1:year|years} ago</source>
         <target>Před {0} {1:rokem|lety}</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en">
-    <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        <target>Název projektu</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>TeamCity server URL</source>
-        <target>Adresa serveru TeamCity</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBuildFilter.Text">
-        <source>Build Id Filter</source>
-        <target>Filtr ID sestavení</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBuildIdFilter.Text">
-        <source>Regexp</source>
-        <target>Regulární výraz</target>
-        
-      </trans-unit>
-      <trans-unit id="labelProjectNameComment.Text">
-        <source>Several names splitted by | char</source>
-        <target>Několik názvů oddělených znakem | (roura)</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en">
-    <body>
-      <trans-unit id="label1.Text">
-        <source>Team collection name</source>
-        <target>Název týmové kolekce</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>Tfs server (Name or URL)</source>
-        <target>TFS server (název nebo adresa)</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Project name</source>
-        <target>Název projektu</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Build definition name
-(use first found if left empty)</source>
-        <target>Definice názvu sestavení (pokud necháte prázdné použije se první nalezená)</target>
         
       </trans-unit>
     </body>
@@ -9780,7 +9529,8 @@ When OpenSSH is used, command line dialogs are shown!
       <trans-unit id="_strRemoteAlreadyExist.Text">
         <source>ERROR: Remote with name {0} already exists but it does not point to the same repository!
 Details: Is {1} expected {2}</source>
-        <target>CHYBA: Vzdálený zdroj se jménem {0} již existuje ale nemíří na stejný repozitář! Detaily: Je {1}, očekáváno {2}</target>
+        <target>CHYBA: Vzdálený zdroj se jménem {0} již existuje ale nemíří na stejný repozitář!
+Detaily: Je {1}, očekáváno {2}</target>
         
       </trans-unit>
       <trans-unit id="_strUnableUnderstandPatch.Text">

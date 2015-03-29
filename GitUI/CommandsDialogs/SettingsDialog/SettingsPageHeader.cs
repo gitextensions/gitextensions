@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -104,7 +105,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         {
                             repoDistPage.SetRepoDistSettings();
                         }
-                    };                
+                    };
                 }
 
             }

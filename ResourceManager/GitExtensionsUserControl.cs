@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
 
-namespace GitUI
+namespace ResourceManager
 {
     /// <summary>Provides translation and hotkey plumbing for GitEx <see cref="UserControl"/>s.</summary>
     public class GitExtensionsControl : UserControl, ITranslate

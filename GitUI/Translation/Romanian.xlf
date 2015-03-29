@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.48RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -43,6 +43,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       </trans-unit>
       <trans-unit id="chkAlwaysShowCheckoutDlg.Text">
         <source>Always show checkout dialog</source>
+        
+      </trans-unit>
+      <trans-unit id="chkCheckForRCVersions.Text">
+        <source>Check for release candidate versions</source>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -500,6 +504,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <target>Verde</target>
         
       </trans-unit>
+      <trans-unit id="HighlightAuthoredRevisions.Text">
+        <source>Highlight authored revisions</source>
+        
+      </trans-unit>
       <trans-unit id="LightblueIcon.Text">
         <source>Light blue</source>
         <target>Albastru deschis</target>
@@ -544,6 +552,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       <trans-unit id="groupBox5.Text">
         <source>Application Icon</source>
         <target>Icoană proiect</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Color authored revisions</source>
         
       </trans-unit>
       <trans-unit id="label25.Text">
@@ -1111,6 +1123,10 @@ Do you want to open it?</source>
         <source>Decrease number of visible lines</source>
         
       </trans-unit>
+      <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
+        <source>Cherry pick selected lines</source>
+        
+      </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
         <source>Copy new version</source>
         
@@ -1513,7 +1529,7 @@ You will have push access. {2}</source>
   <file datatype="plaintext" original="FormAddToGitIgnore" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Add files(s) to .gitIgnore</source>
+        <source>Add file(s) to .gitignore</source>
         
       </trans-unit>
       <trans-unit id="AddToIngore.Text">
@@ -1522,6 +1538,10 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="_matchingFilesString.Text">
         <source>{0} file(s) matched</source>
+        
+      </trans-unit>
+      <trans-unit id="_updateStatusString.Text">
+        <source>Updating ...</source>
         
       </trans-unit>
       <trans-unit id="btnCancel.Text">
@@ -1857,8 +1877,40 @@ compare with first:</source>
         <source>Node not found. File tree selection was not changed.</source>
         
       </trans-unit>
+      <trans-unit id="_pullFetch.Text">
+        <source>Pull - fetch</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullFetchAll.Text">
+        <source>Pull - fetch all</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullMerge.Text">
+        <source>Pull - merge</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullOpenDialog.Text">
+        <source>Open pull dialog</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullRebase.Text">
+        <source>Pull - rebase</source>
+        
+      </trans-unit>
       <trans-unit id="_repositoryHostsToolStripMenuItem.Text">
         <source>(Repository hosts)</source>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileCaption.Text">
+        <source>Reset</source>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileError.Text">
+        <source>Exactly one revision must be selected. Abort.</source>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileText.Text">
+        <source>Are you sure you want to reset this file or directory?</source>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
@@ -1966,6 +2018,10 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="checkoutToolStripMenuItem.Text">
         <source>Checkout revision...</source>
+        
+      </trans-unit>
+      <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
+        <source>Cherry pick file's changes</source>
         
       </trans-unit>
       <trans-unit id="cherryPickToolStripMenuItem.Text">
@@ -2297,12 +2353,20 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <source>Repository</source>
         
       </trans-unit>
-      <trans-unit id="resetFileToAToolStripMenuItem.Text">
-        <source>A</source>
+      <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
+        <source>First</source>
         
       </trans-unit>
-      <trans-unit id="resetFileToRemoteToolStripMenuItem.Text">
-        <source>B</source>
+      <trans-unit id="resetFileToParentToolStripMenuItem.Text">
+        <source>Parent</source>
+        
+      </trans-unit>
+      <trans-unit id="resetFileToSecondToolStripMenuItem.Text">
+        <source>Second</source>
+        
+      </trans-unit>
+      <trans-unit id="resetFileToSelectedToolStripMenuItem.Text">
+        <source>Selected</source>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
@@ -2364,6 +2428,10 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="tagToolStripMenuItem.Text">
         <source>Create tag...</source>
+        
+      </trans-unit>
+      <trans-unit id="tagsToolStripMenuItem.Text">
+        <source>Tag</source>
         
       </trans-unit>
       <trans-unit id="toggleSplitViewLayout.ToolTipText">
@@ -2772,6 +2840,7 @@ Do you want to open the new repository &quot;{0}&quot; now?</source>
       </trans-unit>
       <trans-unit id="brachLabel.Text">
         <source>&amp;Branch:</source>
+        <target>Ramură</target>
         
       </trans-unit>
       <trans-unit id="cbIntializeAllSubmodules.Text">
@@ -3517,6 +3586,7 @@ Do you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Enter Caption</source>
+        <target>Titlu</target>
         
       </trans-unit>
       <trans-unit id="OkButton.Text">
@@ -3530,10 +3600,12 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_needEnterCaptionTextCaption.Text">
         <source>Enter caption</source>
+        <target>Titlu</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Enter caption</source>
+        <target>Titlu</target>
         
       </trans-unit>
     </body>
@@ -3719,6 +3791,10 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="diffToolremotelocalStripMenuItem.Text">
         <source>Difftool selected &lt; - &gt; local</source>
+        
+      </trans-unit>
+      <trans-unit id="followFileHistoryRenamesToolStripMenuItem.Text">
+        <source>Detect and follow - exact renames and copies only</source>
         
       </trans-unit>
       <trans-unit id="followFileHistoryToolStripMenuItem.Text">
@@ -3932,123 +4008,6 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Change Submitted</source>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Închide</target>
-        
-      </trans-unit>
-      <trans-unit id="labelSubmitted.Text">
-        <source>Your change has been submitted for review at the following location:</source>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Download Gerrit Change</source>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        
-      </trans-unit>
-      <trans-unit id="Download.Text">
-        <source>&amp;Download</source>
-        
-      </trans-unit>
-      <trans-unit id="_cannotGetChangeDetails.Text">
-        <source>Could not retrieve the change details</source>
-        
-      </trans-unit>
-      <trans-unit id="_downloadCaption.Text">
-        <source>Download change {0}</source>
-        
-      </trans-unit>
-      <trans-unit id="_downloadGerritChangeCaption.Text">
-        <source>Download Gerrit Change</source>
-        
-      </trans-unit>
-      <trans-unit id="_selectChange.Text">
-        <source>Please enter a change</source>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        
-      </trans-unit>
-      <trans-unit id="labelChange.Text">
-        <source>Change:</source>
-        
-      </trans-unit>
-      <trans-unit id="labelEnterChangeIdOrNumber.Text">
-        <source>Enter the Change-Id or the number from the Gerrit URL</source>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        
-      </trans-unit>
-      <trans-unit id="labelTopicBranch.Text">
-        <source>Topic branch:</source>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Publish Gerrit Change</source>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        
-      </trans-unit>
-      <trans-unit id="Publish.Text">
-        <source>&amp;Publish</source>
-        
-      </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        
-      </trans-unit>
-      <trans-unit id="_publishCaption.Text">
-        <source>Publish change</source>
-        
-      </trans-unit>
-      <trans-unit id="_publishGerritChangeCaption.Text">
-        <source>Publish Gerrit Change</source>
-        
-      </trans-unit>
-      <trans-unit id="_selectBranch.Text">
-        <source>Please enter a branch</source>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        
-      </trans-unit>
-      <trans-unit id="labelBranch.Text">
-        <source>Branch:</source>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        
-      </trans-unit>
-      <trans-unit id="labelTopic.Text">
-        <source>Topic:</source>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormGitAttributes" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -4199,63 +4158,6 @@ _ReSharper*/</source>
       </trans-unit>
       <trans-unit id="tabPageCommandLog.Text">
         <source>Command log</source>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Edit .gitreview</source>
-        
-      </trans-unit>
-      <trans-unit id="Save.Text">
-        <source>Save</source>
-        <target>Salvează</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreview.Text">
-        <source>Failed to save .gitreview.
-Check if file is accessible.</source>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreviewCaption.Text">
-        <source>Failed to save .gitreview</source>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
-        <source>.gitreview is only supported when there is a working directory.</source>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
-        <source>No working directory</source>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestion.Text">
-        <source>Save changes to .gitreview?</source>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestionCaption.Text">
-        <source>Save changes?</source>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Provide the configuration for
-.gitreview to setup Gerrit.
-
-Example configuration:
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</source>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitReviewHelp.Text">
-        <source>GitHub page for git-review</source>
         
       </trans-unit>
     </body>
@@ -4520,6 +4422,10 @@ ancestor tree.</source>
         <source>Submodule conflict</source>
         
       </trans-unit>
+      <trans-unit id="_deleted.Text">
+        <source>deleted</source>
+        
+      </trans-unit>
       <trans-unit id="_stageFilename.Text">
         <source>Stage {0}</source>
         
@@ -4591,25 +4497,6 @@ ancestor tree.</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Directory</source>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Gerrit Plugin</source>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Închide</target>
-        
-      </trans-unit>
-      <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
-
-To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
         
       </trans-unit>
     </body>
@@ -4707,6 +4594,10 @@ Are you sure you want to rebase this merge?</source>
         <source>You can only fetch all remote branches (*) without merge or rebase.
 If you want to fetch all remote branches, choose fetch.
 If you want to fetch and merge a branch, choose a specific branch.</source>
+        
+      </trans-unit>
+      <trans-unit id="_hoverShowImageLabelText.Text">
+        <source>Hover to see scenario when fast forward is possible.</source>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranch.Text">
@@ -5104,6 +4995,10 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="_continueRebaseText2.Text">
         <source>&gt;Continue rebase&lt;</source>
+        
+      </trans-unit>
+      <trans-unit id="_hoverShowImageLabelText.Text">
+        <source>Hover to see scenario when fast forward is possible.</source>
         
       </trans-unit>
       <trans-unit id="_noBranchSelectedText.Text">
@@ -5996,6 +5891,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Branches</source>
+        <target>Ramură</target>
         
       </trans-unit>
     </body>
@@ -6606,70 +6502,6 @@ Context menu for additional operations</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en">
-    <body>
-      <trans-unit id="_downloadGerritChange.Text">
-        <source>Download Gerrit Change</source>
-        
-      </trans-unit>
-      <trans-unit id="_editGitReview.Text">
-        <source>Edit .gitreview</source>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHook.Text">
-        <source>Install Hook</source>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookFailed.Text">
-        <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookMessage.Text">
-        <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookShortText.Text">
-        <source>Install commit-msg hook</source>
-        
-      </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Gerrit Code Review</source>
-        
-      </trans-unit>
-      <trans-unit id="_publishGerritChange.Text">
-        <source>Publish Gerrit Change</source>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en">
-    <body>
-      <trans-unit id="_settingsError.Text">
-        <source>Error loading .gitreview file.</source>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
-        <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorFileNotFound.Text">
-        <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorHostNotEntered.Text">
-        <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorPortNotNumeric.Text">
-        <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorProjectNotEntered.Text">
-        <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -6728,7 +6560,7 @@ Context menu for additional operations</source>
         <source>Checkout Windows-style, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;true&quot;)</source>
         
       </trans-unit>
-      <trans-unit id="groupBox9.Text">
+      <trans-unit id="groupBoxLineEndings.Text">
         <source>Line endings</source>
         
       </trans-unit>
@@ -6813,6 +6645,10 @@ global settings.
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistory.Text">
         <source>Follow renames in file history (experimental)</source>
+        
+      </trans-unit>
+      <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
+        <source>Follow exact renames and copies only</source>
         
       </trans-unit>
       <trans-unit id="chkPlaySpecialStartupSound.Text">
@@ -7042,18 +6878,6 @@ help</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en">
-    <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>Jenkins server URL</source>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="MessageBoxes" source-language="en">
     <body>
       <trans-unit id="_error.Text">
@@ -7183,42 +7007,6 @@ This will just checkout on the submodule the commit determined by the superproje
     <body>
       <trans-unit id="$this.Title">
         <source>Plugins</source>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Proxy Switcher</source>
-        
-      </trans-unit>
-      <trans-unit id="ApplyGlobally_CheckBox.Text">
-        <source>Apply globally</source>
-        
-      </trans-unit>
-      <trans-unit id="GlobalHttpProxy_Label.Text">
-        <source>Global http.proxy:</source>
-        
-      </trans-unit>
-      <trans-unit id="LocalHttpProxy_Label.Text">
-        <source>Local http.proxy:</source>
-        
-      </trans-unit>
-      <trans-unit id="SetProxy_Button.Text">
-        <source>Set proxy</source>
-        
-      </trans-unit>
-      <trans-unit id="UnsetProxy_Button.Text">
-        <source>Unset proxy</source>
-        
-      </trans-unit>
-      <trans-unit id="_pleaseSetProxy.Text">
-        <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        
-      </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Proxy Switcher</source>
         
       </trans-unit>
     </body>
@@ -7555,7 +7343,8 @@ If this is a central repository (bare repository without a working directory):
         
       </trans-unit>
       <trans-unit id="LocalBranchChx.Text">
-        <source>Local branch</source>
+        <source>Local branch name</source>
+        <target>Denumirea ramurii locale</target>
         
       </trans-unit>
       <trans-unit id="MessageChx.Text">
@@ -7564,7 +7353,7 @@ If this is a central repository (bare repository without a working directory):
         
       </trans-unit>
       <trans-unit id="RemoteBranchChx.Text">
-        <source>Remote branch</source>
+        <source>Remote branch name</source>
         
       </trans-unit>
       <trans-unit id="Remove.Text">
@@ -7628,6 +7417,9 @@ If this is a central repository (bare repository without a working directory):
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
         <source>User Input:
 {UserInput}
+
+Selected Commits:
+{sHashes}
 
 Selected Branch:
 {sTag}
@@ -7936,51 +7728,6 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_yearsAgo.Text">
         <source>{0} {1:year|years} ago</source>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en">
-    <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>TeamCity server URL</source>
-        
-      </trans-unit>
-      <trans-unit id="labelBuildFilter.Text">
-        <source>Build Id Filter</source>
-        
-      </trans-unit>
-      <trans-unit id="labelBuildIdFilter.Text">
-        <source>Regexp</source>
-        
-      </trans-unit>
-      <trans-unit id="labelProjectNameComment.Text">
-        <source>Several names splitted by | char</source>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en">
-    <body>
-      <trans-unit id="label1.Text">
-        <source>Team collection name</source>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>Tfs server (Name or URL)</source>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Project name</source>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Build definition name
-(use first found if left empty)</source>
         
       </trans-unit>
     </body>

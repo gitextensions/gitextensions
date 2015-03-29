@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands.Repository;
 using GitUI.Properties;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {

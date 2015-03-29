@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrEmpty(fileName))
                 return null;
 
-            //Replace windows path separator to Linux path separator. 
+            //Replace windows path separator to Linux path separator.
             //This is needed to keep the file history working when started from file tree in
             //browse dialog.
             fileName = fileName.Replace('\\', '/');
@@ -218,7 +218,7 @@ namespace GitUI.CommandsDialogs
             if (!fileName.IsNullOrEmpty() && !fileName.Equals(FileName))
                 Text = Text + string.Format(" ({0})", fileName);
 
-            Text += " - " + Module.WorkingDir;        
+            Text += " - " + Module.WorkingDir;
         }
 
         private void UpdateSelectedFileViewers()
@@ -234,7 +234,7 @@ namespace GitUI.CommandsDialogs
 
             if (string.IsNullOrEmpty(fileName))
                 fileName = FileName;
-            
+
             SetTitle(fileName);
 
             if (tabControl1.SelectedTab == BlameTab)

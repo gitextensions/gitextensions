@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GitUI.Properties;
 using Gravatar;
+using ResourceManager;
 using Settings = GitCommands.AppSettings;
 
 namespace GitUI

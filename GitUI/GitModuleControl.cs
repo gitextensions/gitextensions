@@ -2,10 +2,11 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI
 {
-    /// <summary>Base class for a <see cref="UserControl"/> requiring 
+    /// <summary>Base class for a <see cref="UserControl"/> requiring
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleControl : GitExtensionsControl
     {
@@ -123,7 +124,7 @@ namespace GitUI
                 || base.ExecuteCommand(command);
         }
 
-        /// <summary>Tries to run scripts identified by a <paramref name="command"/> 
+        /// <summary>Tries to run scripts identified by a <paramref name="command"/>
         /// and returns true if any executed.</summary>
         protected bool ExecuteScriptCommand(int command)
         {
