@@ -172,11 +172,6 @@ namespace GitUI
             GC.SuppressFinalize(this);
         }
 
-        ~FilterBranchHelper()
-        {
-            Dispose(false);
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
