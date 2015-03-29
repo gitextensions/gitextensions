@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
+using GitUI.Objects;
 using GitUI.Properties;
 using GitUI.Script;
 using ResourceManager;
@@ -94,6 +96,8 @@ namespace GitUI.CommandsDialogs
         private IList<GitRef> _heads;
         private string _branch;
         private const string AllRemotes = "[ All ]";
+        private readonly GitRemoteController _gitRemoteController;
+
 
         private FormPull()
             : this(null, null, null)
@@ -109,7 +113,10 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
 
             if (aCommands != null)
+            {
+                _gitRemoteController = new GitRemoteController(Module);
                 Init(defaultRemote);
+            }
 
             Merge.Checked = Settings.FormPullAction == Settings.PullAction.Merge;
             Rebase.Checked = Settings.FormPullAction == Settings.PullAction.Rebase;
@@ -125,38 +132,41 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+
         private void Init(string defaultRemote)
         {
-            UpdateRemotesList();
-
             _branch = Module.GetSelectedBranch();
-
-            string currentBranchRemote;
-            if (defaultRemote.IsNullOrEmpty())
-            {
-                currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", _branch));
-            }
-            else
-            {
-                currentBranchRemote = defaultRemote;
-            }
-
-            if (currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 3)
-            {
-                IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
-                int i = remotes.IndexOf("origin");
-                _NO_TRANSLATE_Remotes.SelectedIndex = i >= 0 ? i : 1;
-            }
-            else
-                _NO_TRANSLATE_Remotes.Text = currentBranchRemote;
             localBranch.Text = _branch;
+
+            BindRemotesDropDown(defaultRemote);
         }
 
-        private void UpdateRemotesList()
+        private void BindRemotesDropDown(string selectedRemoteName)
         {
-            IList<string> remotes = new List<string>(Module.GetRemotes());
-            remotes.Insert(0, AllRemotes);
-            _NO_TRANSLATE_Remotes.DataSource = remotes;
+            // refresh registered git remotes
+            _gitRemoteController.Refresh();
+
+            _NO_TRANSLATE_Remotes.Sorted = false;
+            _NO_TRANSLATE_Remotes.DataSource = new[] { new GitRemote { Name = AllRemotes } }.Union(_gitRemoteController.Remotes).ToList();
+            _NO_TRANSLATE_Remotes.DisplayMember = "Name";
+            _NO_TRANSLATE_Remotes.SelectedIndex = -1;
+        
+            var currentBranchRemote = _gitRemoteController.Remotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
+            if (currentBranchRemote != null)
+            {
+                _NO_TRANSLATE_Remotes.SelectedItem = currentBranchRemote;
+            }
+            else if (_gitRemoteController.Remotes.Any())
+            {
+                // we couldn't find the default assigned remote for the selected branch
+                // it is usually gets mapped via FormRemotes -> "default pull behavior" tab
+                // so pick the default user remote
+                _NO_TRANSLATE_Remotes.SelectedIndex = 1;
+            }
+            else
+            {
+                _NO_TRANSLATE_Remotes.SelectedIndex = 0;
+            }
         }
 
         public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
@@ -771,11 +781,7 @@ namespace GitUI.CommandsDialogs
 
             _bInternalUpdate = true;
             string origText = _NO_TRANSLATE_Remotes.Text;
-            UpdateRemotesList();
-            if (_NO_TRANSLATE_Remotes.Items.Contains(origText)) // else first item gets selected
-            {
-                _NO_TRANSLATE_Remotes.Text = origText;
-            }
+            BindRemotesDropDown(origText);
             _bInternalUpdate = false;
         }
 

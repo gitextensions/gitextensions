@@ -563,8 +563,6 @@
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
             this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(398, 28);
             this._NO_TRANSLATE_Remotes.TabIndex = 1;
-            this._NO_TRANSLATE_Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
-            this._NO_TRANSLATE_Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
             this._NO_TRANSLATE_Remotes.Validated += new System.EventHandler(this.RemotesValidated);
             //
             // Pull
