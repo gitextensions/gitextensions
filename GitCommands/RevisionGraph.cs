@@ -96,11 +96,6 @@ namespace GitCommands
             _module = module;
         }
 
-        ~RevisionGraph()
-        {
-            Dispose(false);
-        }
-
         public void Dispose()
         {
             Dispose(true);
