@@ -75,11 +75,9 @@ namespace GitCommands.Settings
 
                         _fileWatcher.Dispose();
                     }
-                })
+                });
             }
-            ;
 
-       
             base.Dispose(disposing);
         }
 
