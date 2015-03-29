@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Text.RegularExpressions;
 using GitCommands;
 
 namespace ResourceManager
@@ -49,6 +50,8 @@ namespace ResourceManager
             string header = data.GetHeader(showRevisionsAsLinks);
             string body = "\n" + WebUtility.HtmlEncode(data.Body.Trim());
 
+            if (showRevisionsAsLinks)
+                body = Regex.Replace(body, @"\b[0-9a-f]{40}\b", "<a href='gitext://gotocommit/$0'>$0</a>");
             return new CommitInformation(header, body);
         }
     }
