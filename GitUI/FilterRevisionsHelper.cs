@@ -168,11 +168,6 @@ namespace GitUI
             GC.SuppressFinalize(this);
         }
 
-        ~FilterRevisionsHelper()
-        {
-            Dispose(false);
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
