@@ -219,7 +219,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
         }
 
-        private new void Translate()
+        protected override void Translate()
         {
             base.Translate();
             _diffTabPageTitleBase = DiffTabPage.Text;
