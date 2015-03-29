@@ -205,11 +205,6 @@ namespace GitUI.SpellChecker
             GC.SuppressFinalize(this);
         }
 
-        ~SpellCheckEditControl()
-        {
-            Dispose(false);
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
