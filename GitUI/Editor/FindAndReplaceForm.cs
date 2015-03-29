@@ -326,11 +326,11 @@ namespace GitUI
         protected override void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 _search.Dispose();
 
-            if (disposing && (components != null))
-            {
-                components.Dispose();
+                if (components != null)
+                    components.Dispose();
             }
             base.Dispose(disposing);
         }
