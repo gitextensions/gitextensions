@@ -56,6 +56,8 @@ namespace GitCommands
         public Task Load(Action<CancellationToken> loadContent, Action onLoaded)
         {
             Cancel();
+            if (_cancelledTokenSource != null)
+                _cancelledTokenSource.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
             return Task.Factory.StartNew(() => loadContent(token), token)
