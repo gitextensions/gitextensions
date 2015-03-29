@@ -68,6 +68,27 @@
   <Import Project="$(WixTargetsPath)" />
   <Target Name="BeforeBuild">
     <Exec Command="DownloadExternals.cmd" />
+    <MSBuild
+      Condition="!Exists('..\GitExtensionsShellEx\Release\GitExtensionsShellEx32.dll')"
+      Projects="..\GitExtensionsShellEx\GitExtensionsShellEx.VS2013.sln"
+      Targets="Rebuild"
+      Properties="Configuration=Release;Platform=Win32"
+      RebaseOutputs="true"
+    />
+    <MSBuild
+      Condition="!Exists('..\GitExtensionsShellEx\Release-x64\GitExtensionsShellEx64.dll')"
+      Projects="..\GitExtensionsShellEx\GitExtensionsShellEx.VS2013.sln"
+      Targets="Rebuild"
+      Properties="Configuration=Release;Platform=x64"
+      RebaseOutputs="true"
+    />
+    <MSBuild
+      Condition="!Exists('..\GitExtSshAskPass\Release\GitExtSshAskPass.exe')"
+      Projects="..\GitExtSshAskPass\GitExtSshAskPass.VS2013.sln"
+      Targets="Rebuild"
+      Properties="Configuration=Release;Platform=Win32"
+      RebaseOutputs="true"
+    />
   </Target>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.
