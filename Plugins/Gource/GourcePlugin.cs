@@ -19,7 +19,7 @@ namespace Gource
             Translate();
         }
 
-        private StringSetting GourcePath = new StringSetting("Path to \"gource\"", "");
+        private StringSetting GourcePath = new StringSetting("Path to Gource", "");
         private StringSetting GourceArguments = new StringSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
         #region IGitPlugin Members
@@ -49,7 +49,7 @@ namespace Gource
                 if (!File.Exists(pathToGource))
                 {
                     if (MessageBox.Show(ownerForm,
-                            "Cannot find \"gource\" in the configured path: " + pathToGource +
+                            "Cannot find Gource in the configured path: " + pathToGource +
                             ".\n\n.Do you want to reset the configured path?", "Gource", MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
                     {
@@ -62,7 +62,7 @@ namespace Gource
             if (string.IsNullOrEmpty(pathToGource))
             {
                 if (MessageBox.Show(ownerForm,
-                        "There is no path to \"gource\" configured.\n\nDo you want to automaticly download \"gource\"?",
+                        "There is no path to Gource configured.\n\nDo you want to automatically download Gource?",
                         "Download", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     var gourceUrl = SearchForGourceUrl();
@@ -70,7 +70,7 @@ namespace Gource
                     if (string.IsNullOrEmpty(gourceUrl))
                     {
                         MessageBox.Show(ownerForm,
-                            "Cannot find \"gource\".\nPlease download \"gource\" and set the path in the plugins settings dialog.");
+                            "Cannot find Gource.\nPlease download Gource and set the path in the plugins settings dialog.");
                         return false;
                     }
                     var downloadDir = Path.GetTempPath();
@@ -85,14 +85,14 @@ namespace Gource
                         var newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
                         if (File.Exists(newGourcePath))
                         {
-                            MessageBox.Show(ownerForm, "\"gource\" has been downloaded and unzipped.");
+                            MessageBox.Show(ownerForm, "Gource has been downloaded and unzipped.");
                             pathToGource = newGourcePath;
                         }
                     }
                     else
                     {
                         MessageBox.Show(ownerForm,
-                            "Downloading failed.\nPlease download \"gource\" and set the path in the plugins settings dialog.");
+                            "Downloading failed.\nPlease download Gource and set the path in the plugins settings dialog.");
                     }
                 }
             }
