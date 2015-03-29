@@ -51,7 +51,7 @@ namespace ResourceManager
             string body = "\n" + WebUtility.HtmlEncode(data.Body.Trim());
 
             if (showRevisionsAsLinks)
-                body = Regex.Replace(body, @"\b[0-9a-f]{40}\b", "<a href='gitext://gotocommit/$0'>$0</a>");
+                body = Regex.Replace(body, @"\b[0-9a-f]{10,40}\b", m => LinkFactory.CreateCommitLink(m.Value));
             return new CommitInformation(header, body);
         }
     }
