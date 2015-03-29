@@ -281,7 +281,7 @@ namespace GitUI
         }
 
         /// <summary>Translates the <see cref="Form"/>'s fields and properties, including child controls.</summary>
-        protected void Translate()
+        protected virtual void Translate()
         {
             Translator.Translate(this, Settings.CurrentTranslation);
             _translated = true;
