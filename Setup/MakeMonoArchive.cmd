@@ -30,13 +30,11 @@ xcopy /y ..\GitExtensions\bin\Release\GitUIPluginInterfaces.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\Gravatar.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http*.dll GitExtensions\Plugins\
+xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\ICSharpCode.SharpZipLib.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
@@ -166,11 +164,11 @@ xcopy /y ..\GitUI\Translation\Spanish.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Spanish.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\TraditionalChinese.gif GitExtensions\Translation\
+xcopy /y "..\GitUI\Translation\Traditional Chinese.gif" GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\TraditionalChinese.xlf GitExtensions\Translation\
+xcopy /y "..\GitUI\Translation\Traditional Chinese.xlf" GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\TraditionalChinese.Plugins.xlf GitExtensions\Translation\
+xcopy /y "..\GitUI\Translation\Traditional Chinese.Plugins.xlf" GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Dictionaries GitExtensions\Dictionaries\
 IF ERRORLEVEL 1 EXIT /B 1
