@@ -68,11 +68,6 @@ namespace GitCommands.Statistics
             Module = aModule;
         }
 
-        ~ImpactLoader()
-        {
-            Dispose(false);
-        }
-
         public void Dispose()
         {
             Dispose(true);
