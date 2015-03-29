@@ -2446,18 +2446,15 @@ namespace GitUI.CommandsDialogs
             {
                 _unstagedLoader.Cancel();
                 _unstagedLoader.Dispose();
-            }
+                if (_interactiveAddBashCloseWaitCts != null)
+                {
+                    _interactiveAddBashCloseWaitCts.Cancel();
+                    _interactiveAddBashCloseWaitCts.Dispose();
+                    _interactiveAddBashCloseWaitCts = null;
+                }
 
-            if (disposing && _interactiveAddBashCloseWaitCts != null)
-            {
-                _interactiveAddBashCloseWaitCts.Cancel();
-                _interactiveAddBashCloseWaitCts.Dispose();
-                _interactiveAddBashCloseWaitCts = null;
-            }
-
-            if (disposing && (components != null))
-            {
-                components.Dispose();
+                if (components != null)
+                    components.Dispose();
             }
             base.Dispose(disposing);
         }
