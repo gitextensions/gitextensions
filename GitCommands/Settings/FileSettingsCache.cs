@@ -55,25 +55,29 @@ namespace GitCommands.Settings
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_fileWatcher")]
         protected override void Dispose(bool disposing)
         {
-            LockedAction(() =>
+            if (disposing)
             {
-                if (SaveTimer != null)
+                LockedAction(() =>
                 {
-
-                    SaveTimer.Dispose();
-                    SaveTimer = null;
-                    _fileWatcher.Changed -= _fileWatcher_Changed;
-                    _fileWatcher.Renamed -= _fileWatcher_Renamed;
-                    _fileWatcher.Created -= _fileWatcher_Created;
-
-                    if (_autoSave)
+                    if (SaveTimer != null)
                     {
-                        Save();
-                    }
 
-                    _fileWatcher.Dispose();
-                }
-            });
+                        SaveTimer.Dispose();
+                        SaveTimer = null;
+                        _fileWatcher.Changed -= _fileWatcher_Changed;
+                        _fileWatcher.Renamed -= _fileWatcher_Renamed;
+                        _fileWatcher.Created -= _fileWatcher_Created;
+
+                        if (_autoSave)
+                        {
+                            Save();
+                        }
+
+                        _fileWatcher.Dispose();
+                    }
+                })
+            }
+            ;
 
        
             base.Dispose(disposing);
