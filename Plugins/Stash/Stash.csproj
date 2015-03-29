@@ -76,18 +76,22 @@
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
       <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
       <Name>GitExtUtils</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj">
       <Project>{d3440fd7-afc5-4351-8741-6cdbf15ce944}</Project>
       <Name>ResourceManager</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

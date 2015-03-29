@@ -81,6 +81,7 @@
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj">
       <Project>{d3440fd7-afc5-4351-8741-6cdbf15ce944}</Project>
       <Name>ResourceManager</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

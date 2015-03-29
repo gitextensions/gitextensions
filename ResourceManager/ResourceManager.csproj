@@ -75,6 +75,9 @@
     <Compile Include="GitExtensionsFormBase.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GitExtensionsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="GitPluginBase.cs" />
     <Compile Include="HotkeyCommand.cs" />
     <Compile Include="ITranslate.cs" />
@@ -90,7 +93,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Translator.cs" />
-    <Compile Include="Xliff\Translation.cs" />
+    <Compile Include="Xliff\TranslationFile.cs" />
     <Compile Include="Xliff\TranslationBody.cs" />
     <Compile Include="Xliff\TranslationCategory.cs">
       <SubType>Code</SubType>
@@ -131,6 +134,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GitExtensionsUserControl.resx">
+      <DependentUpon>GitExtensionsUserControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

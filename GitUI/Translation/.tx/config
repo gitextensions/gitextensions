@@ -23,6 +23,28 @@ trans.es = Spanish.xlf
 trans.zh_TW = Traditional Chinese.xlf
 type = XLIFF
 
+[git-extensions.plugins-master]
+file_filter = <lang>.xlf
+source_file = English.Plugins.xlf
+source_lang = en
+trans.cs = Czech.Plugins.xlf
+trans.nl = Dutch.Plugins.xlf
+trans.fr = French.Plugins.xlf
+trans.de = German.Plugins.xlf
+trans.id = Indonesian.Plugins.xlf
+trans.it = Italian.Plugins.xlf
+trans.ja = Japanese.Plugins.xlf
+trans.ko = Korean.Plugins.xlf
+trans.pl = Polish.Plugins.xlf
+trans.ru = Russian.Plugins.xlf
+trans.pt_BR = Portuguese (Brazil).Plugins.xlf
+trans.pt_PT = Portuguese (Portugal).Plugins.xlf
+trans.ro = Romanian.Plugins.xlf
+trans.zh_CN = Simplified Chinese.Plugins.xlf
+trans.es = Spanish.Plugins.xlf
+trans.zh_TW = Traditional Chinese.Plugins.xlf
+type = XLIFF
+
 [git-extensions.ui-248]
 file_filter = <lang>.xlf
 source_file = English.xlf

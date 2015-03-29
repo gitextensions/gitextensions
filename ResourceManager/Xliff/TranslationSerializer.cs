@@ -7,21 +7,21 @@ namespace ResourceManager.Xliff
     /// <summary>Serializes and deserialize a <see cref="Translation"/>.</summary>
     public static class TranslationSerializer
     {
-        public static void Serialize(Translation translation, string path)
+        public static void Serialize(TranslationFile translation, string path)
         {
             using (TextWriter tw = new StreamWriter(path, false))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(Translation));
+                XmlSerializer serializer = new XmlSerializer(typeof(TranslationFile));
                 serializer.Serialize(tw, translation);
             }
         }
 
-        public static Translation Deserialize(string path)
+        public static TranslationFile Deserialize(string path)
         {
             if (!File.Exists(path))
                 return null;
 
-            XmlSerializer serializer = new XmlSerializer(typeof(Translation));
+            XmlSerializer serializer = new XmlSerializer(typeof(TranslationFile));
             TextReader stringReader = null;
             try
             {
@@ -29,7 +29,7 @@ namespace ResourceManager.Xliff
                 using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
                 {
                     stringReader = null;
-                    return (Translation)serializer.Deserialize(xmlReader);
+                    return (TranslationFile)serializer.Deserialize(xmlReader);
                 }
             }
             finally

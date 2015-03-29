@@ -99,7 +99,7 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// inserts 
+        /// inserts
         /// - Navigate (after Repository)
         /// - View (after Navigate)
         /// </summary>

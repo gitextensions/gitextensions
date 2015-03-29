@@ -6,15 +6,15 @@ namespace ResourceManager.Xliff
 {
     /// <summary>Provides a translation for a specific language.</summary>
     [XmlRoot("xliff")]
-    public class Translation : ITranslation
+    public class TranslationFile : ITranslation
     {
-        public Translation()
+        public TranslationFile()
         {
             Version = "1.0";
             TranslationCategories = new List<TranslationCategory>();
         }
 
-        public Translation(string gitExVersion, string languageCode)
+        public TranslationFile(string gitExVersion, string languageCode)
             : this()
         {
             GitExVersion = gitExVersion;
@@ -79,7 +79,7 @@ namespace ResourceManager.Xliff
             if (ti == null)
             {
                 //if an item is not translated, then store its default value
-                //to be able to retrieve it later (eg. when to a caption 
+                //to be able to retrieve it later (eg. when to a caption
                 //is added an additional information like 'Commit (<number of changes>)',
                 //and then the caption needs to be refreshed)
                 string defaultValue = provideDefaultValue();

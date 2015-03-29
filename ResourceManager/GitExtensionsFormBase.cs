@@ -120,12 +120,14 @@ namespace ResourceManager
 
         protected void TranslateItem(string itemName, object item)
         {
-            ITranslation translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
-            if (translation == null)
+            var translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
+            if (translation.Count == 0)
                 return;
-
-            IEnumerable<Tuple<string, object>> itemsToTranslate = new Tuple<string, object>[] { new Tuple<string, object>(itemName, item) };
-            TranslationUtils.TranslateItemsFromList(Name, translation, itemsToTranslate);
+            foreach (var pair in translation)
+            {
+                IEnumerable<Tuple<string, object>> itemsToTranslate = new[] { new Tuple<string, object>(itemName, item) };
+                TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
+            }
         }
     }
 }
