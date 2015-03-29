@@ -244,11 +244,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _tagsLoader.Dispose();
                 _branchesLoader.Cancel();
                 _branchesLoader.Dispose();
-            }
 
-            if (disposing && (components != null))
-            {
-                components.Dispose();
+                if (components != null)
+                    components.Dispose();
             }
             base.Dispose(disposing);
         }
