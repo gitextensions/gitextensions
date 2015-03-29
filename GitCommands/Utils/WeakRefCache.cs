@@ -76,10 +76,5 @@ namespace GitCommands.Utils
             if (disposing)
                 _clearTimer.Dispose();
         }
-
-        ~WeakRefCache()
-        {
-            Dispose(false);
-        }
     }
 }
