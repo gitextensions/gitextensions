@@ -76,9 +76,11 @@ namespace GitCommands.Statistics
 
         private void Dispose(bool disposing)
         {
-            Stop();
             if (disposing)
+            {
+                Stop();
                 _backgroundLoaderTokenSource.Dispose();
+            }
         }
 
         public void Stop()
