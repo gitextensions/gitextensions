@@ -856,11 +856,8 @@ namespace GitUI.CommandsDialogs
             {
                 _remoteBranchesLoader.Cancel();
                 _remoteBranchesLoader.Dispose();
-            }
-
-            if (disposing && (components != null))
-            {
-                components.Dispose();
+                if (components != null)
+                    components.Dispose();
             }
             base.Dispose(disposing);
         }
