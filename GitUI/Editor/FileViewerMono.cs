@@ -51,8 +51,9 @@ namespace GitUI.Editor
 
         void OnSelectedLineChanged(int selectedLine)
         {
-            if (SelectedLineChanged != null)
-                SelectedLineChanged(this, new SelectedLineEventArgs(selectedLine));
+            var handler = SelectedLineChanged;
+            if (handler != null)
+                handler(this, new SelectedLineEventArgs(selectedLine));
         }
 
         void TextEditor_MouseDown(object sender, MouseEventArgs e)
