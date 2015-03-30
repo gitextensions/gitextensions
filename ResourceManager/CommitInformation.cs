@@ -56,8 +56,8 @@ namespace ResourceManager
 
         private static string ProcessHashCandidate(GitModule module, string hash)
         {
-            string revParseResult = module.RunGitCmd(string.Format("rev-parse --verify --quiet {0}", hash));
-            if (string.IsNullOrEmpty(revParseResult) || revParseResult.Contains("ambiguous"))
+            string revParseResult = module.RunGitCmd(string.Format("rev-parse --verify --quiet {0}^{{commit}}", hash));
+            if (string.IsNullOrEmpty(revParseResult) || revParseResult.Contains("error"))
                 return hash;
             return LinkFactory.CreateCommitLink(hash, preserveGuidInLinkText: true);
         }
