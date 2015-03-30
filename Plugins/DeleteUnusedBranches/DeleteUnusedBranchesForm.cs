@@ -94,7 +94,7 @@ namespace DeleteUnusedBranches
             if (MessageBox.Show(this, string.Format("Are you sure to delete {0} selected branches?", selectedBranches.Count), "Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
 
-            var remoteName = remote.Text;
+            var remoteName = _NO_TRANSLATE_remote.Text;
             var remoteBranchPrefix = remoteName + "/";
             var remoteBranchesSource = IncludeRemoteBranches.Checked
                 ? selectedBranches.Where(branch => branch.Name.StartsWith(remoteBranchPrefix))
@@ -220,7 +220,7 @@ namespace DeleteUnusedBranches
 
             IsRefreshing = true;
 
-            var context = new RefreshContext(gitCommands, IncludeRemoteBranches.Checked, includeUnmergedBranches.Checked, referenceBranch, remote.Text,
+            var context = new RefreshContext(gitCommands, IncludeRemoteBranches.Checked, includeUnmergedBranches.Checked, referenceBranch, _NO_TRANSLATE_remote.Text,
                 useRegexFilter.Checked ? regexFilter.Text : null, TimeSpan.FromDays(days), refreshCancellation.Token);
             Task.Factory.StartNew(() => GetObsoleteBranches(context).ToList(), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default)
                 .ContinueWith(task =>
