@@ -1,6 +1,5 @@
 using System;
 using System.Net;
-using System.Text.RegularExpressions;
 using GitCommands;
 
 namespace ResourceManager
@@ -42,7 +41,7 @@ namespace ResourceManager
         /// Gets the commit info from CommitData.
         /// </summary>
         /// <returns></returns>
-        public static CommitInformation GetCommitInfo(CommitData data, bool showRevisionsAsLinks)
+        public static CommitInformation GetCommitInfo(CommitData data, bool showRevisionsAsLinks, GitModule module = null)
         {
             if (data == null)
                 throw new ArgumentNullException("data");
@@ -51,8 +50,16 @@ namespace ResourceManager
             string body = "\n" + WebUtility.HtmlEncode(data.Body.Trim());
 
             if (showRevisionsAsLinks)
-                body = GitRevision.Sha1HashShortRegex.Replace(body, m => LinkFactory.CreateCommitLink(m.Value, preserveGuidInLinkText: true));
+                body = GitRevision.Sha1HashShortRegex.Replace(body, match => ProcessHashCandidate(module, hash: match.Value));
             return new CommitInformation(header, body);
+        }
+
+        private static string ProcessHashCandidate(GitModule module, string hash)
+        {
+            string revParseResult = module.RunGitCmd(string.Format("rev-parse --verify --quiet {0}", hash));
+            if (string.IsNullOrEmpty(revParseResult))
+                return hash;
+            return LinkFactory.CreateCommitLink(hash, preserveGuidInLinkText: true);
         }
     }
 }
