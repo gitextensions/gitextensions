@@ -56,6 +56,8 @@ namespace ResourceManager
 
         private static string ProcessHashCandidate(GitModule module, string hash)
         {
+            if (module == null)
+                return hash;
             string revParseResult = module.RunGitCmd(string.Format("rev-parse --verify --quiet {0}^{{commit}}", hash));
             if (string.IsNullOrEmpty(revParseResult) || revParseResult.Contains("error"))
                 return hash;
