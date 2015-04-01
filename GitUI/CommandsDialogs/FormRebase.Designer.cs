@@ -361,7 +361,7 @@ namespace GitUI.CommandsDialogs
             // patchGrid1
             // 
             this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.patchGrid1.Location = new System.Drawing.Point(3, 261);
+            this.patchGrid1.Location = new System.Drawing.Point(3, 180);
             this.patchGrid1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.patchGrid1.Name = "patchGrid1";
             this.patchGrid1.Size = new System.Drawing.Size(503, 286);
@@ -370,7 +370,7 @@ namespace GitUI.CommandsDialogs
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 234);
+            this.label3.Location = new System.Drawing.Point(3, 153);
             this.label3.Name = "label3";
             this.label3.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.label3.Size = new System.Drawing.Size(120, 25);
@@ -513,9 +513,10 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.Controls.Add(this.OptionsPanel, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel2, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.rebasePanel, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.patchGrid1, 0, 6);
+            this.tableLayoutPanel3.Controls.Add(this.patchGrid1, 0, 7);
             this.tableLayoutPanel3.Controls.Add(this.label3, 0, 5);
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel3, 0, 4);
+			this.tableLayoutPanel3.Controls.Add(this.localChangesGB, 0, 6);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(298, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -554,13 +555,14 @@ namespace GitUI.CommandsDialogs
             // localChangesGB
             // 
             this.localChangesGB.AutoSize = true;
+            this.tableLayoutPanel3.SetColumnSpan(this.localChangesGB, 2);
             this.localChangesGB.Controls.Add(this.tableLayoutPanel2);
-            this.localChangesGB.Location = new System.Drawing.Point(2, 10);
+            this.localChangesGB.Location = new System.Drawing.Point(2, 478);
             this.localChangesGB.Margin = new System.Windows.Forms.Padding(2, 10, 2, 2);
             this.localChangesGB.Name = "localChangesGB";
             this.localChangesGB.Padding = new System.Windows.Forms.Padding(6);
             this.localChangesGB.Size = new System.Drawing.Size(126, 51);
-            this.localChangesGB.TabIndex = 34;
+            this.localChangesGB.TabIndex = 33;
             this.localChangesGB.TabStop = false;
             this.localChangesGB.Text = "Local changes";
             // 
