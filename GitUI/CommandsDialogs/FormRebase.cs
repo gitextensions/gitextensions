@@ -26,6 +26,28 @@ namespace GitUI.CommandsDialogs
         private readonly string _defaultBranch;
         private readonly string _defaultToBranch;
 
+        private bool _didStash = false;
+
+        private LocalChangesAction ChangesMode
+        {
+            get
+            {
+                if (rbReset.Checked)
+                    return LocalChangesAction.Reset;
+
+                if (rbStash.Checked)
+                    return LocalChangesAction.Stash;
+
+                return LocalChangesAction.DontChange;
+            }
+
+            set
+            {
+                rbReset.Checked = value == LocalChangesAction.Reset;
+                rbStash.Checked = value == LocalChangesAction.Stash;
+            }
+        }
+
         private FormRebase()
             : this(null)
         { }
@@ -155,7 +177,14 @@ namespace GitUI.CommandsDialogs
             FormProcess.ShowDialog(this, GitCommandHelpers.ContinueRebaseCmd());
 
             if (!Module.InTheMiddleOfRebase())
+            {
+                if (_didStash)
+                {
+                    UICommands.StashPop(this);
+                }
+
                 Close();
+            }
 
             EnableButtons();
             patchGrid1.Initialize();
@@ -168,7 +197,14 @@ namespace GitUI.CommandsDialogs
             FormProcess.ShowDialog(this, GitCommandHelpers.SkipRebaseCmd());
 
             if (!Module.InTheMiddleOfRebase())
+            {
+                if (_didStash)
+                {
+                    UICommands.StashPop(this);
+                }
+
                 Close();
+            }
 
             EnableButtons();
             patchGrid1.Initialize();
@@ -181,7 +217,14 @@ namespace GitUI.CommandsDialogs
             FormProcess.ShowDialog(this, GitCommandHelpers.AbortRebaseCmd());
 
             if (!Module.InTheMiddleOfRebase())
+            {
+                if (_didStash)
+                {
+                    UICommands.StashPop(this);
+                }
+
                 Close();
+            }
 
             EnableButtons();
             patchGrid1.Initialize();
@@ -197,6 +240,27 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            var localChanges = ChangesMode;
+            if (localChanges == LocalChangesAction.Stash)
+            {
+                if (Visible && Module.IsDirtyDir())
+                {
+                    UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInAutoStash);
+                    _didStash = true;
+                }
+            }
+
+            if (localChanges == LocalChangesAction.Reset)
+            {
+                if (Visible && Module.IsDirtyDir())
+                {
+                    UICommands.GitCommand("reset --hard");
+                }
+            }
+
+            rbStash.Enabled = false;
+            rbReset.Enabled = false;
+
             string rebaseCmd;
             if (chkSpecificRange.Checked && !String.IsNullOrWhiteSpace(txtFrom.Text) && !String.IsNullOrWhiteSpace(cboTo.Text))
             {
@@ -211,11 +275,20 @@ namespace GitUI.CommandsDialogs
 
             var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
             if (dialogResult.Trim() == "Current branch a is up to date.")
+            {
                 MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
+            }
 
             if (!Module.InTheMiddleOfAction() &&
                 !Module.InTheMiddleOfPatch())
+            {
+                if (_didStash)
+                {
+                    UICommands.StashPop(this);
+                }
+
                 Close();
+            }
 
             EnableButtons();
             patchGrid1.Initialize();
