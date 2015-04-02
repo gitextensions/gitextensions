@@ -67,6 +67,7 @@ namespace GitUI.CommandsDialogs
             this.panel4 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.rebasePanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.localChangesGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.rbReset = new System.Windows.Forms.RadioButton();
@@ -81,6 +82,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.rebasePanel.SuspendLayout();
+            this.flowLayoutPanel3.SuspendLayout();
             this.localChangesGB.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -359,7 +361,7 @@ namespace GitUI.CommandsDialogs
             // patchGrid1
             // 
             this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.patchGrid1.Location = new System.Drawing.Point(3, 180);
+            this.patchGrid1.Location = new System.Drawing.Point(3, 261);
             this.patchGrid1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.patchGrid1.Name = "patchGrid1";
             this.patchGrid1.Size = new System.Drawing.Size(503, 286);
@@ -368,7 +370,7 @@ namespace GitUI.CommandsDialogs
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 153);
+            this.label3.Location = new System.Drawing.Point(3, 234);
             this.label3.Name = "label3";
             this.label3.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.label3.Size = new System.Drawing.Size(120, 25);
@@ -511,9 +513,9 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.Controls.Add(this.OptionsPanel, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel2, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.rebasePanel, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.patchGrid1, 0, 5);
-            this.tableLayoutPanel3.Controls.Add(this.label3, 0, 4);
-            this.tableLayoutPanel3.Controls.Add(this.localChangesGB, 0, 6);
+            this.tableLayoutPanel3.Controls.Add(this.patchGrid1, 0, 6);
+            this.tableLayoutPanel3.Controls.Add(this.label3, 0, 5);
+            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel3, 0, 4);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(298, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -540,17 +542,25 @@ namespace GitUI.CommandsDialogs
             this.rebasePanel.Size = new System.Drawing.Size(503, 29);
             this.rebasePanel.TabIndex = 32;
             // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.Controls.Add(this.localChangesGB);
+            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 156);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(503, 75);
+            this.flowLayoutPanel3.TabIndex = 33;
+            // 
             // localChangesGB
             // 
             this.localChangesGB.AutoSize = true;
-            this.tableLayoutPanel3.SetColumnSpan(this.localChangesGB, 2);
             this.localChangesGB.Controls.Add(this.tableLayoutPanel2);
-            this.localChangesGB.Location = new System.Drawing.Point(2, 478);
+            this.localChangesGB.Location = new System.Drawing.Point(2, 10);
             this.localChangesGB.Margin = new System.Windows.Forms.Padding(2, 10, 2, 2);
             this.localChangesGB.Name = "localChangesGB";
             this.localChangesGB.Padding = new System.Windows.Forms.Padding(6);
             this.localChangesGB.Size = new System.Drawing.Size(126, 51);
-            this.localChangesGB.TabIndex = 33;
+            this.localChangesGB.TabIndex = 34;
             this.localChangesGB.TabStop = false;
             this.localChangesGB.Text = "Local changes";
             // 
@@ -630,6 +640,8 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.PerformLayout();
             this.rebasePanel.ResumeLayout(false);
             this.rebasePanel.PerformLayout();
+            this.flowLayoutPanel3.ResumeLayout(false);
+            this.flowLayoutPanel3.PerformLayout();
             this.localChangesGB.ResumeLayout(false);
             this.localChangesGB.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
@@ -679,6 +691,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.FlowLayoutPanel rebasePanel;
         private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.GroupBox localChangesGB;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.RadioButton rbReset;
