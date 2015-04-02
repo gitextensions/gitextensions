@@ -1,51 +1,57 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using GitUI.Properties;
 using GitUI.CommandsDialogs.AboutBoxDialog;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public partial class AboutBox : GitExtensionsForm
     {
+        private readonly string[] _all;
+        private readonly Random _random;
+        private readonly string[] _coders;
+        private readonly string[] _translators;
+        private readonly string[] _designers;
+        private readonly string[] _other;
+
         public AboutBox()
         {
-            _contributersList = string.Join(", ", new []{Coders, Translators,
-                Designers, Other})
-                .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+            _coders = Resources.Coders.Split(',').Select(c => c.Trim()).ToArray();
+            _translators = Resources.Translators.Split(',').Select(c => c.Trim()).ToArray();
+            _designers = Resources.Designers.Split(',').Select(c => c.Trim()).ToArray();
+            _other = Resources.Other.Split(',').Select(c => c.Trim()).ToArray();
+            _all = _coders.Concat(_translators).Concat(_designers).Concat(_other).ToArray();
+            _random = new Random();
 
             InitializeComponent();
             Translate();
         }
 
-        private string Coders
+        private IList<string> Coders
         {
-            get { return Resources.Coders.Replace(Environment.NewLine, " "); }
+            get { return _coders; }
         }
 
-        private string Translators
+        private IList<string> Translators
         {
-            get { return Resources.Translators.Replace(Environment.NewLine, " "); }
+            get { return _translators; }
         }
 
-        private string Designers
+        private IList<string> Designers
         {
-            get { return Resources.Designers.Replace(Environment.NewLine, " "); }
+            get { return _designers; }
         }
 
-        private string Other
+        private IList<string> Other
         {
-            get { return Resources.Other.Replace(Environment.NewLine, " "); }
+            get { return _other; }
         }
 
         private void okButton_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void labelVersion_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -73,12 +79,9 @@ namespace GitUI.CommandsDialogs
                 GitCommands.AppSettings.ProductVersion);
         }
 
-        private readonly string[] _contributersList;
-        private readonly Random _random = new Random();
-
         private void thanksTimer_Tick(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_thanksToTicker.Text = _contributersList[_random.Next(_contributersList.Length - 1)].Trim();
+            _NO_TRANSLATE_thanksToTicker.Text = _all[_random.Next(_all.Length - 1)].Trim();
         }
 
         private void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)
