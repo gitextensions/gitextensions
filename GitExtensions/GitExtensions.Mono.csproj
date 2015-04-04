@@ -185,10 +185,6 @@
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
       <Name>ResourceManager</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TranslationApp\TranslationApp.Mono.csproj">
-      <Project>{7c106fac-cb81-4d37-be98-e7f6a5bdd143}</Project>
-      <Name>TranslationApp.Mono</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
