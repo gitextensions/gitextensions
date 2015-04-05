@@ -67,7 +67,6 @@ namespace GitUI.CommandsDialogs
             this.panel4 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.rebasePanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.localChangesGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.rbReset = new System.Windows.Forms.RadioButton();
@@ -82,7 +81,6 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.rebasePanel.SuspendLayout();
-            this.flowLayoutPanel3.SuspendLayout();
             this.localChangesGB.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -206,13 +204,15 @@ namespace GitUI.CommandsDialogs
             this.OptionsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.OptionsPanel.Controls.Add(this.flowLayoutPanel4, 0, 0);
             this.OptionsPanel.Controls.Add(this.flowLayoutPanel5, 0, 1);
+            this.OptionsPanel.Controls.Add(this.localChangesGB, 0, 2);
             this.OptionsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OptionsPanel.Location = new System.Drawing.Point(3, 78);
             this.OptionsPanel.Name = "OptionsPanel";
-            this.OptionsPanel.RowCount = 2;
+            this.OptionsPanel.RowCount = 3;
             this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.OptionsPanel.Size = new System.Drawing.Size(503, 72);
+            this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.OptionsPanel.Size = new System.Drawing.Size(503, 140);
             this.OptionsPanel.TabIndex = 30;
             this.OptionsPanel.Visible = false;
             // 
@@ -513,20 +513,19 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.Controls.Add(this.OptionsPanel, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel2, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.rebasePanel, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.patchGrid1, 0, 6);
-            this.tableLayoutPanel3.Controls.Add(this.label3, 0, 5);
-            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel3, 0, 4);
+            this.tableLayoutPanel3.Controls.Add(this.patchGrid1, 0, 5);
+            this.tableLayoutPanel3.Controls.Add(this.label3, 0, 4);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(298, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 7;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowCount = 6;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(509, 549);
             this.tableLayoutPanel3.TabIndex = 32;
             // 
@@ -542,20 +541,11 @@ namespace GitUI.CommandsDialogs
             this.rebasePanel.Size = new System.Drawing.Size(503, 29);
             this.rebasePanel.TabIndex = 32;
             // 
-            // flowLayoutPanel3
-            // 
-            this.flowLayoutPanel3.Controls.Add(this.localChangesGB);
-            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 156);
-            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(503, 75);
-            this.flowLayoutPanel3.TabIndex = 33;
-            // 
             // localChangesGB
             // 
             this.localChangesGB.AutoSize = true;
             this.localChangesGB.Controls.Add(this.tableLayoutPanel2);
-            this.localChangesGB.Location = new System.Drawing.Point(2, 10);
+            this.localChangesGB.Location = new System.Drawing.Point(2, 77);
             this.localChangesGB.Margin = new System.Windows.Forms.Padding(2, 10, 2, 2);
             this.localChangesGB.Name = "localChangesGB";
             this.localChangesGB.Padding = new System.Windows.Forms.Padding(6);
@@ -640,8 +630,6 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.PerformLayout();
             this.rebasePanel.ResumeLayout(false);
             this.rebasePanel.PerformLayout();
-            this.flowLayoutPanel3.ResumeLayout(false);
-            this.flowLayoutPanel3.PerformLayout();
             this.localChangesGB.ResumeLayout(false);
             this.localChangesGB.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
@@ -691,7 +679,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.FlowLayoutPanel rebasePanel;
         private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.GroupBox localChangesGB;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.RadioButton rbReset;
