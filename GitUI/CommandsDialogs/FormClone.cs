@@ -84,7 +84,8 @@ namespace GitUI.CommandsDialogs
                         // See if it's a valid URL.
                         string lowerText = text.ToLowerInvariant();
                         if (lowerText.StartsWith("http") ||
-                            lowerText.StartsWith("git@"))
+                            lowerText.StartsWith("git") ||
+                            lowerText.StartsWith("ssh"))
                         {
                             _NO_TRANSLATE_From.Text = text;
                         }
