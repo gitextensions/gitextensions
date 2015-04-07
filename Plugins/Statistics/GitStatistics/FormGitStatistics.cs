@@ -183,7 +183,9 @@ namespace GitStatistics
         private void UpdateUI(LineCounter lineCounter, string linesOfCodePerLanguageText, decimal[] extensionValues,
                               string[] extensionLabels)
         {
-            TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
+            TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines +
+                                        (lineCounter.Counting ? "+" : "") +
+                                        " Lines of test code";
 
             TestCodePie.SetValues(new Decimal[]
                 {
@@ -238,7 +240,9 @@ namespace GitStatistics
             LinesOfCodeExtensionPie.SetValues(extensionValues);
             LinesOfCodeExtensionPie.ToolTips = extensionLabels;
 
-            TotalLinesOfCode2.Text = TotalLinesOfCode.Text = lineCounter.NumberCodeLines + " Lines of code";
+            TotalLinesOfCode2.Text = TotalLinesOfCode.Text = lineCounter.NumberCodeLines +
+                                                             (lineCounter.Counting ? "+" : "") +
+                                                             " Lines of code";
         }
 
         private void FormGitStatisticsShown(object sender, EventArgs e)

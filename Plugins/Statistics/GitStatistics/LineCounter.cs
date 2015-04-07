@@ -22,6 +22,7 @@ namespace GitStatistics
         public int NumberTestCodeLines { get; private set; }
         public int NumberBlankLines { get; private set; }
         public int NumberCodeLines { get; private set; }
+        public bool Counting { get; private set; }
 
         public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
 
@@ -35,7 +36,7 @@ namespace GitStatistics
             return false;
         }
 
-        private IEnumerable<string> GetFiles(IEnumerable<string> dirs, string filter, string[] directoryFilter)
+        private IEnumerable<string> GetFiles(IEnumerable<string> dirs, string filter)
         {
             foreach (var directory in dirs)
             {
@@ -60,50 +61,56 @@ namespace GitStatistics
 
         public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore)
         {
-            NumberLines = 0;
-            NumberBlankLines = 0;
-            NumberLinesInDesignerFiles = 0;
-            NumberCommentsLines = 0;
-            NumberCodeLines = 0;
-            NumberTestCodeLines = 0;
-
-            var filters = filePattern.Split(';');
-            var directoryFilter = directoriesToIgnore.Split(';');
-            string root = _directory.FullName;
-            List<string> dirs = new List<string>(1024);
-            dirs.Add(root);
-            foreach (var dir in Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories))
+            try
             {
-                if (dir.IndexOf(".git", root.Length, StringComparison.InvariantCultureIgnoreCase) < 0 &&
-                    !DirectoryIsFiltered(dir, directoryFilter))
+                Counting = true;
+                NumberLines = 0;
+                NumberBlankLines = 0;
+                NumberLinesInDesignerFiles = 0;
+                NumberCommentsLines = 0;
+                NumberCodeLines = 0;
+                NumberTestCodeLines = 0;
+
+                var timer = new TimeSpan(0, 0, 0, 0, 500);
+                var directoryFilter = directoriesToIgnore.Split(';');
+                string root = _directory.FullName;
+                List<string> dirs = new List<string>(1024);
+                dirs.Add(root);
+                foreach (var dir in Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories))
                 {
-                    dirs.Add(dir);
-                }
-            }
-
-            var lastUpdate = DateTime.Now;
-            var timer = new TimeSpan(0,0,0,0,500);
-
-            foreach (var filter in filters)
-            {
-                foreach (var file in GetFiles(dirs, filter.Trim(), directoryFilter))
-                {
-                    var codeFile = new CodeFile(file);
-                    codeFile.CountLines();
-
-                    CalculateSums(codeFile);
-
-                    if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer)
+                    if (dir.IndexOf(".git", root.Length, StringComparison.InvariantCultureIgnoreCase) < 0 &&
+                        !DirectoryIsFiltered(dir, directoryFilter))
                     {
-                        lastUpdate = DateTime.Now;
-                        LinesOfCodeUpdated(this, EventArgs.Empty);
+                        dirs.Add(dir);
+                    }
+                }
+
+                var lastUpdate = DateTime.Now;
+                foreach (var filter in filePattern.Split(';'))
+                {
+                    foreach (var file in GetFiles(dirs, filter.Trim()))
+                    {
+                        var codeFile = new CodeFile(file);
+                        codeFile.CountLines();
+
+                        CalculateSums(codeFile);
+
+                        if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer)
+                        {
+                            LinesOfCodeUpdated(this, EventArgs.Empty);
+                            lastUpdate = DateTime.Now;
+                        }
                     }
                 }
             }
-
-            //Send 'changed' event when done
-            if (LinesOfCodeUpdated != null)
-                LinesOfCodeUpdated(this, EventArgs.Empty);
+            finally
+            {
+                Counting = false;
+                
+                //Send 'changed' event when done
+                if (LinesOfCodeUpdated != null)
+                    LinesOfCodeUpdated(this, EventArgs.Empty);
+            }
         }
 
         private void CalculateSums(CodeFile codeFile)
