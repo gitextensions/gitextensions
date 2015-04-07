@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -11,6 +12,7 @@ namespace GitStatistics
         public event EventHandler LinesOfCodeUpdated;
 
         private readonly DirectoryInfo _directory;
+        private int _updatingUI = 0;
 
         public LineCounter(DirectoryInfo directory)
         {
@@ -77,16 +79,17 @@ namespace GitStatistics
                 var timer = new TimeSpan(0, 0, 0, 0, 500);
                 var directoryFilter = directoriesToIgnore.Split(';');
                 string root = _directory.FullName;
-                List<string> dirs = new List<string>(1024);
+                var dirs = new ConcurrentBag<string>();
                 dirs.Add(root);
-                foreach (var dir in Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories))
-                {
-                    if (dir.IndexOf(".git", root.Length, StringComparison.InvariantCultureIgnoreCase) < 0 &&
-                        !DirectoryIsFiltered(dir, directoryFilter))
+                Parallel.ForEach(Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories),
+                    (dir) =>
                     {
-                        dirs.Add(dir);
-                    }
-                }
+                        if (dir.IndexOf(".git", root.Length, StringComparison.InvariantCultureIgnoreCase) < 0 &&
+                            !DirectoryIsFiltered(dir, directoryFilter))
+                        {
+                            dirs.Add(dir);
+                        }
+                    });
 
                 // Setup the parallel foreach.
                 ParallelOptions po = new ParallelOptions();
@@ -95,27 +98,29 @@ namespace GitStatistics
                 po.MaxDegreeOfParallelism = System.Environment.ProcessorCount;
 
                 var lastUpdate = DateTime.Now;
-                foreach (var filter in filePattern.Split(';'))
-                {
-                    Parallel.ForEach(GetFiles(dirs, filter.Trim()), po,
-                        (file, loopState, localCount) =>
-                        {
-                            var codeFile = new CodeFile(file);
-                            codeFile.CountLines();
-                            CalculateSums(codeFile);
-
-                            if (Cancel)
+                Parallel.ForEach(filePattern.Split(';'), po,
+                    (filter) =>
+                    {
+                        Parallel.ForEach(GetFiles(dirs, filter.Trim()), po,
+                            (file) =>
                             {
-                                cts.Cancel();
-                            }
+                                var codeFile = new CodeFile(file);
+                                codeFile.CountLines();
+                                CalculateSums(codeFile);
+                                if (Cancel)
+                                {
+                                    cts.Cancel();
+                                }
 
-                            if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer)
-                            {
-                                LinesOfCodeUpdated(this, EventArgs.Empty);
-                                lastUpdate = DateTime.Now;
-                            }
-                        });
-                }
+                                if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer &&
+                                    Interlocked.Exchange(ref _updatingUI, 1) == 0)
+                                {
+                                    LinesOfCodeUpdated(this, EventArgs.Empty);
+                                    lastUpdate = DateTime.Now;
+                                    Interlocked.Exchange(ref _updatingUI, 0);
+                                }
+                            });
+                    });
             }
             finally
             {
