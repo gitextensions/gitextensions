@@ -35,7 +35,7 @@ namespace GitStatistics
             return false;
         }
 
-        private IEnumerable<FileInfo> GetFiles(DirectoryInfo startDirectory, string filter)
+        private IEnumerable<FileInfo> GetFiles(DirectoryInfo startDirectory, string filter, string[] directoryFilter)
         {
             Queue<DirectoryInfo> queue = new Queue<DirectoryInfo>();
             queue.Enqueue(startDirectory);
@@ -45,7 +45,8 @@ namespace GitStatistics
                 FileInfo[] files = null;
                 try
                 {
-                    files = directory.GetFiles(filter);
+                    if (!DirectoryIsFiltered(directory, directoryFilter))
+                        files = directory.GetFiles(filter);
                     DirectoryInfo[] directories = directory.GetDirectories();
                     foreach (var dir in directories)
                         queue.Enqueue(dir);
@@ -53,6 +54,7 @@ namespace GitStatistics
                 catch (System.UnauthorizedAccessException)
                 {
                 }
+
                 if (files != null)
                 {
                     foreach (var file in files)
@@ -77,11 +79,8 @@ namespace GitStatistics
 
             foreach (var filter in filters)
             {
-                foreach (var file in GetFiles(_directory, filter.Trim()))
+                foreach (var file in GetFiles(_directory, filter.Trim(), directoryFilter))
                 {
-                    if (DirectoryIsFiltered(file.Directory, directoryFilter))
-                        continue;
-
                     var codeFile = new CodeFile(file.FullName);
                     codeFile.CountLines();
 
