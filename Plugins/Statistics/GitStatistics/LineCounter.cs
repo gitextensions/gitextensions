@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GitStatistics
 {
@@ -86,33 +88,39 @@ namespace GitStatistics
                     }
                 }
 
+                // Setup the parallel foreach.
+                ParallelOptions po = new ParallelOptions();
+                CancellationTokenSource cts = new CancellationTokenSource();
+                po.CancellationToken = cts.Token;
+                po.MaxDegreeOfParallelism = System.Environment.ProcessorCount;
+
                 var lastUpdate = DateTime.Now;
                 foreach (var filter in filePattern.Split(';'))
                 {
-                    foreach (var file in GetFiles(dirs, filter.Trim()))
-                    {
-                        var codeFile = new CodeFile(file);
-                        codeFile.CountLines();
-
-                        CalculateSums(codeFile);
-
-                        if (Cancel)
+                    Parallel.ForEach(GetFiles(dirs, filter.Trim()), po,
+                        (file, loopState, localCount) =>
                         {
-                            return;
-                        }
+                            var codeFile = new CodeFile(file);
+                            codeFile.CountLines();
+                            CalculateSums(codeFile);
 
-                        if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer)
-                        {
-                            LinesOfCodeUpdated(this, EventArgs.Empty);
-                            lastUpdate = DateTime.Now;
-                        }
-                    }
+                            if (Cancel)
+                            {
+                                cts.Cancel();
+                            }
+
+                            if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer)
+                            {
+                                LinesOfCodeUpdated(this, EventArgs.Empty);
+                                lastUpdate = DateTime.Now;
+                            }
+                        });
                 }
             }
             finally
             {
                 Counting = false;
-                
+
                 //Send 'changed' event when done
                 if (LinesOfCodeUpdated != null && !Cancel)
                     LinesOfCodeUpdated(this, EventArgs.Empty);
@@ -121,11 +129,6 @@ namespace GitStatistics
 
         private void CalculateSums(CodeFile codeFile)
         {
-            NumberLines += codeFile.NumberLines;
-            NumberBlankLines += codeFile.NumberBlankLines;
-            NumberCommentsLines += codeFile.NumberCommentsLines;
-            NumberLinesInDesignerFiles += codeFile.NumberLinesInDesignerFiles;
-
             var codeLines =
                 codeFile.NumberLines -
                 codeFile.NumberBlankLines -
@@ -134,18 +137,24 @@ namespace GitStatistics
 
             var extension = codeFile.File.Extension.ToLower();
 
-            if (!LinesOfCodePerExtension.ContainsKey(extension))
-                LinesOfCodePerExtension.Add(extension, 0);
-
-            LinesOfCodePerExtension[extension] += codeLines;
-            NumberCodeLines += codeLines;
-
-            if (codeFile.IsTestFile || codeFile.File.Directory.FullName.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
+            lock (LinesOfCodePerExtension)
             {
-                NumberTestCodeLines += codeLines;
+                NumberLines += codeFile.NumberLines;
+                NumberBlankLines += codeFile.NumberBlankLines;
+                NumberCommentsLines += codeFile.NumberCommentsLines;
+                NumberLinesInDesignerFiles += codeFile.NumberLinesInDesignerFiles;
+
+                if (!LinesOfCodePerExtension.ContainsKey(extension))
+                    LinesOfCodePerExtension.Add(extension, 0);
+
+                LinesOfCodePerExtension[extension] += codeLines;
+                NumberCodeLines += codeLines;
+
+                if (codeFile.IsTestFile || codeFile.File.Directory.FullName.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    NumberTestCodeLines += codeLines;
+                }
             }
-
-
         }
     }
 }
