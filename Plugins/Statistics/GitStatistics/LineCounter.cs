@@ -25,29 +25,29 @@ namespace GitStatistics
 
         public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
 
-        private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
+        private static bool DirectoryIsFiltered(string path, IEnumerable<string> directoryFilters)
         {
             foreach (var directoryFilter in directoryFilters)
             {
-                if (dir.FullName.EndsWith(directoryFilter, StringComparison.InvariantCultureIgnoreCase))
+                if (path.EndsWith(directoryFilter, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             }
             return false;
         }
 
-        private IEnumerable<FileInfo> GetFiles(DirectoryInfo startDirectory, string filter, string[] directoryFilter)
+        private IEnumerable<string> GetFiles(string startDirectory, string filter, string[] directoryFilter)
         {
-            Queue<DirectoryInfo> queue = new Queue<DirectoryInfo>();
+            Queue<string> queue = new Queue<string>();
             queue.Enqueue(startDirectory);
             while(queue.Count != 0)
             {
                 IEnumerable<string> efs = null;
                 try
                 {
-                    DirectoryInfo directory = queue.Dequeue();
-                    foreach (var dir in Directory.EnumerateDirectories(directory.FullName))
+                    string directory = queue.Dequeue();
+                    foreach (var dir in Directory.EnumerateDirectories(directory))
                     {
-                        queue.Enqueue(new DirectoryInfo(dir));
+                        queue.Enqueue(dir);
                     }
 
                     if (DirectoryIsFiltered(directory, directoryFilter))
@@ -55,7 +55,7 @@ namespace GitStatistics
                         continue;
                     }
 
-                    efs = Directory.EnumerateFileSystemEntries(directory.FullName, filter);
+                    efs = Directory.EnumerateFileSystemEntries(directory, filter);
                 }
                 catch (System.Exception)
                 {
@@ -66,7 +66,7 @@ namespace GitStatistics
 
                 foreach (var entry in efs)
                 {
-                    yield return new FileInfo(entry);
+                    yield return entry;
                 }
             }
         }
@@ -87,9 +87,9 @@ namespace GitStatistics
 
             foreach (var filter in filters)
             {
-                foreach (var file in GetFiles(_directory, filter.Trim(), directoryFilter))
+                foreach (var file in GetFiles(_directory.FullName, filter.Trim(), directoryFilter))
                 {
-                    var codeFile = new CodeFile(file.FullName);
+                    var codeFile = new CodeFile(file);
                     codeFile.CountLines();
 
                     CalculateSums(codeFile);
