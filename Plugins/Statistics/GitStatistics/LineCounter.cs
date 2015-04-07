@@ -41,24 +41,32 @@ namespace GitStatistics
             queue.Enqueue(startDirectory);
             while(queue.Count != 0)
             {
-                DirectoryInfo directory = queue.Dequeue();
-                FileInfo[] files = null;
+                IEnumerable<string> efs = null;
                 try
                 {
-                    if (!DirectoryIsFiltered(directory, directoryFilter))
-                        files = directory.GetFiles(filter);
-                    DirectoryInfo[] directories = directory.GetDirectories();
-                    foreach (var dir in directories)
-                        queue.Enqueue(dir);
+                    DirectoryInfo directory = queue.Dequeue();
+                    foreach (var dir in Directory.EnumerateDirectories(directory.FullName))
+                    {
+                        queue.Enqueue(new DirectoryInfo(dir));
+                    }
+
+                    if (DirectoryIsFiltered(directory, directoryFilter))
+                    {
+                        continue;
+                    }
+
+                    efs = Directory.EnumerateFileSystemEntries(directory.FullName, filter);
                 }
-                catch (System.UnauthorizedAccessException)
+                catch (System.Exception)
                 {
+                    // Mostly permission and unmapped drive errors.
+                    // But we also skip anything else as unimportant.
+                    continue;
                 }
 
-                if (files != null)
+                foreach (var entry in efs)
                 {
-                    foreach (var file in files)
-                        yield return file;
+                    yield return new FileInfo(entry);
                 }
             }
         }
