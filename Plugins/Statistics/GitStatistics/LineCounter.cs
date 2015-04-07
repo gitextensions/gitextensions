@@ -35,26 +35,13 @@ namespace GitStatistics
             return false;
         }
 
-        private IEnumerable<string> GetFiles(string startDirectory, string filter, string[] directoryFilter)
+        private IEnumerable<string> GetFiles(IEnumerable<string> dirs, string filter, string[] directoryFilter)
         {
-            Queue<string> queue = new Queue<string>();
-            queue.Enqueue(startDirectory);
-            while(queue.Count != 0)
+            foreach (var directory in dirs)
             {
                 IEnumerable<string> efs = null;
                 try
                 {
-                    string directory = queue.Dequeue();
-                    foreach (var dir in Directory.EnumerateDirectories(directory))
-                    {
-                        queue.Enqueue(dir);
-                    }
-
-                    if (DirectoryIsFiltered(directory, directoryFilter))
-                    {
-                        continue;
-                    }
-
                     efs = Directory.EnumerateFileSystemEntries(directory, filter);
                 }
                 catch (System.Exception)
@@ -82,12 +69,22 @@ namespace GitStatistics
 
             var filters = filePattern.Split(';');
             var directoryFilter = directoriesToIgnore.Split(';');
+            List<string> dirs = new List<string>(1024);
+            dirs.Add(_directory.FullName);
+            foreach (var dir in Directory.EnumerateDirectories(_directory.FullName, "*", SearchOption.AllDirectories))
+            {
+                if (!DirectoryIsFiltered(dir, directoryFilter))
+                {
+                    dirs.Add(dir);
+                }
+            }
+
             var lastUpdate = DateTime.Now;
             var timer = new TimeSpan(0,0,0,0,500);
 
             foreach (var filter in filters)
             {
-                foreach (var file in GetFiles(_directory.FullName, filter.Trim(), directoryFilter))
+                foreach (var file in GetFiles(dirs, filter.Trim(), directoryFilter))
                 {
                     var codeFile = new CodeFile(file);
                     codeFile.CountLines();
