@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Repository;
 using ResourceManager;
 
@@ -56,20 +57,68 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (url != null)
+            if (url.IsNotNullOrWhitespace())
             {
                 _NO_TRANSLATE_From.Text = url;
-                if (!Module.IsValidGitWorkingDir())
-                    _NO_TRANSLATE_To.Text = Module.WorkingDir;
             }
             else
             {
-                if (Module.IsValidGitWorkingDir())
-                    _NO_TRANSLATE_From.Text = Module.WorkingDir;
-                else if (!string.IsNullOrEmpty(Module.WorkingDir))
-                    _NO_TRANSLATE_To.Text = Module.WorkingDir;
+                // Try to be more helpful to the user.
+                // Use the cliboard text as a potential source URL.
+                try
+                {
+                    if (Clipboard.ContainsText(TextDataFormat.Text))
+                    {
+                        string text = Clipboard.GetText(TextDataFormat.Text) ?? string.Empty;
+
+                        // See if it's a valid URL.
+                        string lowerText = text.ToLowerInvariant();
+                        if (lowerText.StartsWith("http") ||
+                            lowerText.StartsWith("git") ||
+                            lowerText.StartsWith("ssh"))
+                        {
+                            _NO_TRANSLATE_From.Text = text;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // We tried.
+                }
+                //if the From field is empty, then fill it with the current repository remote URL in hope
+                //that the cloned repository is hosted on the same server
+                if (_NO_TRANSLATE_From.Text.IsNullOrWhiteSpace())
+                {
+                    var currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", Module.GetSelectedBranch()));
+                    if (currentBranchRemote.IsNullOrEmpty())
+                    {
+                        var remotes = Module.GetRemotes();
+
+                        if (remotes.Any(s => s.Equals("origin", StringComparison.InvariantCultureIgnoreCase)))
+                            currentBranchRemote = "origin";
+                        else
+                            currentBranchRemote = remotes.FirstOrDefault();
+                    }
+
+                    string pushUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemotePushUrl, currentBranchRemote));
+                    if (pushUrl.IsNullOrEmpty())
+                    {
+                        pushUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentBranchRemote));
+                    }
+
+
+                    _NO_TRANSLATE_From.Text = pushUrl;
+                }
             }
 
+            try
+            {
+                //if there is no destination directory, then use the parent directory of the current repository
+                if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+                    _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
+            }
+            catch (Exception)
+            { }
 
             FromTextUpdate(null, null);
         }
