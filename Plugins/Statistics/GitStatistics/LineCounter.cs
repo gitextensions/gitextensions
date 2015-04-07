@@ -69,11 +69,13 @@ namespace GitStatistics
 
             var filters = filePattern.Split(';');
             var directoryFilter = directoriesToIgnore.Split(';');
+            string root = _directory.FullName;
             List<string> dirs = new List<string>(1024);
-            dirs.Add(_directory.FullName);
-            foreach (var dir in Directory.EnumerateDirectories(_directory.FullName, "*", SearchOption.AllDirectories))
+            dirs.Add(root);
+            foreach (var dir in Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories))
             {
-                if (!DirectoryIsFiltered(dir, directoryFilter))
+                if (dir.IndexOf(".git", root.Length, StringComparison.InvariantCultureIgnoreCase) < 0 &&
+                    !DirectoryIsFiltered(dir, directoryFilter))
                 {
                     dirs.Add(dir);
                 }
