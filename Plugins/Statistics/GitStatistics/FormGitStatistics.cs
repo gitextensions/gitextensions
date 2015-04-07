@@ -265,6 +265,7 @@ namespace GitStatistics
 
         private void FormGitStatistics_FormClosing(object sender, FormClosingEventArgs e)
         {
+            lineCounter.Cancel = true;
             lineCounter.LinesOfCodeUpdated -= lineCounter_LinesOfCodeUpdated;
         }
     }

@@ -23,6 +23,7 @@ namespace GitStatistics
         public int NumberBlankLines { get; private set; }
         public int NumberCodeLines { get; private set; }
         public bool Counting { get; private set; }
+        public bool Cancel { get; set; }
 
         public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
 
@@ -95,6 +96,11 @@ namespace GitStatistics
 
                         CalculateSums(codeFile);
 
+                        if (Cancel)
+                        {
+                            return;
+                        }
+
                         if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer)
                         {
                             LinesOfCodeUpdated(this, EventArgs.Empty);
@@ -108,7 +114,7 @@ namespace GitStatistics
                 Counting = false;
                 
                 //Send 'changed' event when done
-                if (LinesOfCodeUpdated != null)
+                if (LinesOfCodeUpdated != null && !Cancel)
                     LinesOfCodeUpdated(this, EventArgs.Empty);
             }
         }
