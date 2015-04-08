@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Threading;
 
 namespace GitStatistics
 {
@@ -25,12 +27,22 @@ namespace GitStatistics
 
         public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
 
-        private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
+        private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters, bool? endsWithCompare = false)
         {
+            var culture = Thread.CurrentThread.CurrentCulture;
+
             foreach (var directoryFilter in directoryFilters)
             {
-                if (dir.FullName.EndsWith(directoryFilter, StringComparison.InvariantCultureIgnoreCase))
-                    return true;
+                if (endsWithCompare.GetValueOrDefault())
+                {
+                    if (dir.FullName.EndsWith(directoryFilter, StringComparison.InvariantCultureIgnoreCase))
+                        return true;
+                }
+                else
+                {
+                    if (culture.CompareInfo.IndexOf(dir.FullName, directoryFilter, CompareOptions.IgnoreCase) >= 0)
+                        return true;
+                }
             }
             return false;
         }
@@ -61,7 +73,7 @@ namespace GitStatistics
             }
         }
 
-        public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore)
+        public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore, bool? endsWithCompare = false)
         {
             NumberLines = 0;
             NumberBlankLines = 0;
@@ -79,7 +91,7 @@ namespace GitStatistics
             {
                 foreach (var file in GetFiles(_directory, filter.Trim()))
                 {
-                    if (DirectoryIsFiltered(file.Directory, directoryFilter))
+                    if (DirectoryIsFiltered(file.Directory, directoryFilter, endsWithCompare))
                         continue;
 
                     var codeFile = new CodeFile(file.FullName);
