@@ -141,6 +141,9 @@ namespace GitStatistics
                 codeFile.NumberLinesInDesignerFiles;
 
             var extension = codeFile.File.Extension.ToLower();
+            var isTestFile = codeFile.IsTestFile ||
+                             codeFile.File.Directory.FullName.IndexOf("test",
+                                     StringComparison.OrdinalIgnoreCase) >= 0;
 
             lock (LinesOfCodePerExtension)
             {
@@ -155,7 +158,7 @@ namespace GitStatistics
                 LinesOfCodePerExtension[extension] += codeLines;
                 NumberCodeLines += codeLines;
 
-                if (codeFile.IsTestFile || codeFile.File.Directory.FullName.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
+                if (isTestFile)
                 {
                     NumberTestCodeLines += codeLines;
                 }
