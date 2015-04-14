@@ -69,7 +69,7 @@ namespace NBug.Core.Util.Serialization
         {
             foreach (var key in this.Keys)
             {
-                writer.WriteStartElement(key.ToString());
+                writer.WriteStartElement(key.ToString().Replace(" ", ""));
                 // Check to see if we can actually serialize element
                 if (this[key].GetType().IsSerializable)
                 {
