@@ -26,7 +26,8 @@ namespace GitUI.CommandsDialogs
         private readonly string _defaultBranch;
         private readonly string _defaultToBranch;
 
-        private bool _didStash = false;
+        private bool _didStash;
+        private bool _wasDirty;
 
         private LocalChangesAction ChangesMode
         {
@@ -79,6 +80,7 @@ namespace GitUI.CommandsDialogs
         private void FormRebaseLoad(object sender, EventArgs e)
         {
             var selectedHead = Module.GetSelectedBranch();
+            _wasDirty = Module.IsDirtyDir();
             Currentbranch.Text = selectedHead;
 
             Branches.DisplayMember = "Name";
@@ -115,6 +117,11 @@ namespace GitUI.CommandsDialogs
                 Branches.Enabled = false;
                 Ok.Enabled = false;
 
+                if (_wasDirty)
+                {
+                    localChangesGB.Enabled = false;
+                }
+
                 AddFiles.Enabled = true;
                 Resolved.Enabled = !Module.InTheMiddleOfConflictedMerge();
                 Mergetool.Enabled = Module.InTheMiddleOfConflictedMerge();
@@ -123,6 +130,11 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
+                if (_wasDirty)
+                {
+                    localChangesGB.Enabled = true;
+                }
+
                 Branches.Enabled = true;
                 Ok.Enabled = true;
                 AddFiles.Enabled = false;
@@ -241,21 +253,18 @@ namespace GitUI.CommandsDialogs
             }
 
             var localChanges = ChangesMode;
-            if (localChanges == LocalChangesAction.Stash)
+            if (localChanges == LocalChangesAction.Stash &&
+                Visible &&
+                Module.IsDirtyDir())
             {
-                if (Visible && Module.IsDirtyDir())
-                {
-                    UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInAutoStash);
-                    _didStash = true;
-                }
+                _didStash = true;
             }
 
-            if (localChanges == LocalChangesAction.Reset)
+            if (localChanges == LocalChangesAction.Reset &&
+                Visible &&
+                Module.IsDirtyDir())
             {
-                if (Visible && Module.IsDirtyDir())
-                {
-                    UICommands.GitCommand("reset --hard");
-                }
+                UICommands.GitCommand("reset --hard");
             }
 
             rbStash.Enabled = false;

@@ -51,6 +51,10 @@ namespace GitUI.CommandsDialogs
             this.btnChooseFromRevision = new System.Windows.Forms.Button();
             this.lblRangeTo = new System.Windows.Forms.Label();
             this.cboTo = new System.Windows.Forms.ComboBox();
+            this.localChangesGB = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.rbReset = new System.Windows.Forms.RadioButton();
+            this.rbStash = new System.Windows.Forms.RadioButton();
             this.ShowOptions = new System.Windows.Forms.LinkLabel();
             this.patchGrid1 = new GitUI.PatchGrid();
             this.label3 = new System.Windows.Forms.Label();
@@ -67,22 +71,18 @@ namespace GitUI.CommandsDialogs
             this.panel4 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.rebasePanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.localChangesGB = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.rbReset = new System.Windows.Forms.RadioButton();
-            this.rbStash = new System.Windows.Forms.RadioButton();
             this.flowLayoutPanel2.SuspendLayout();
             this.OptionsPanel.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
+            this.localChangesGB.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
             this.ContinuePanel.SuspendLayout();
             this.MergeToolPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.rebasePanel.SuspendLayout();
-            this.localChangesGB.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -345,6 +345,66 @@ namespace GitUI.CommandsDialogs
             this.cboTo.Size = new System.Drawing.Size(184, 23);
             this.cboTo.TabIndex = 29;
             // 
+            // localChangesGB
+            // 
+            this.localChangesGB.AutoSize = true;
+            this.localChangesGB.Controls.Add(this.tableLayoutPanel2);
+            this.localChangesGB.Enabled = false;
+            this.localChangesGB.Location = new System.Drawing.Point(2, 77);
+            this.localChangesGB.Margin = new System.Windows.Forms.Padding(2, 10, 2, 2);
+            this.localChangesGB.Name = "localChangesGB";
+            this.localChangesGB.Padding = new System.Windows.Forms.Padding(6);
+            this.localChangesGB.Size = new System.Drawing.Size(126, 51);
+            this.localChangesGB.TabIndex = 34;
+            this.localChangesGB.TabStop = false;
+            this.localChangesGB.Text = "Local changes";
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.AutoSize = true;
+            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel2.ColumnCount = 4;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.Controls.Add(this.rbReset, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.rbStash, 2, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 22);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(114, 23);
+            this.tableLayoutPanel2.TabIndex = 20;
+            // 
+            // rbReset
+            // 
+            this.rbReset.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.rbReset.AutoSize = true;
+            this.rbReset.Location = new System.Drawing.Point(59, 2);
+            this.rbReset.Margin = new System.Windows.Forms.Padding(2);
+            this.rbReset.Name = "rbReset";
+            this.rbReset.Size = new System.Drawing.Size(53, 19);
+            this.rbReset.TabIndex = 4;
+            this.rbReset.Text = "Reset";
+            this.rbReset.UseVisualStyleBackColor = true;
+            // 
+            // rbStash
+            // 
+            this.rbStash.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.rbStash.AutoSize = true;
+            this.rbStash.Checked = true;
+            this.rbStash.Location = new System.Drawing.Point(2, 2);
+            this.rbStash.Margin = new System.Windows.Forms.Padding(2);
+            this.rbStash.Name = "rbStash";
+            this.rbStash.Size = new System.Drawing.Size(53, 19);
+            this.rbStash.TabIndex = 3;
+            this.rbStash.TabStop = true;
+            this.rbStash.Text = "Stash";
+            this.rbStash.UseVisualStyleBackColor = true;
+            // 
             // ShowOptions
             // 
             this.ShowOptions.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -540,65 +600,6 @@ namespace GitUI.CommandsDialogs
             this.rebasePanel.Size = new System.Drawing.Size(503, 29);
             this.rebasePanel.TabIndex = 32;
             // 
-            // localChangesGB
-            // 
-            this.localChangesGB.AutoSize = true;
-            this.localChangesGB.Controls.Add(this.tableLayoutPanel2);
-            this.localChangesGB.Location = new System.Drawing.Point(2, 77);
-            this.localChangesGB.Margin = new System.Windows.Forms.Padding(2, 10, 2, 2);
-            this.localChangesGB.Name = "localChangesGB";
-            this.localChangesGB.Padding = new System.Windows.Forms.Padding(6);
-            this.localChangesGB.Size = new System.Drawing.Size(126, 51);
-            this.localChangesGB.TabIndex = 34;
-            this.localChangesGB.TabStop = false;
-            this.localChangesGB.Text = "Local changes";
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel2.ColumnCount = 4;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.rbReset, 3, 0);
-            this.tableLayoutPanel2.Controls.Add(this.rbStash, 2, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 22);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(114, 23);
-            this.tableLayoutPanel2.TabIndex = 20;
-            // 
-            // rbReset
-            // 
-            this.rbReset.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.rbReset.AutoSize = true;
-            this.rbReset.Location = new System.Drawing.Point(59, 2);
-            this.rbReset.Margin = new System.Windows.Forms.Padding(2);
-            this.rbReset.Name = "rbReset";
-            this.rbReset.Size = new System.Drawing.Size(53, 19);
-            this.rbReset.TabIndex = 4;
-            this.rbReset.Text = "Reset";
-            this.rbReset.UseVisualStyleBackColor = true;
-            // 
-            // rbStash
-            // 
-            this.rbStash.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.rbStash.AutoSize = true;
-            this.rbStash.Checked = true;
-            this.rbStash.Location = new System.Drawing.Point(2, 2);
-            this.rbStash.Margin = new System.Windows.Forms.Padding(2);
-            this.rbStash.Name = "rbStash";
-            this.rbStash.Size = new System.Drawing.Size(53, 19);
-            this.rbStash.TabIndex = 3;
-            this.rbStash.TabStop = true;
-            this.rbStash.Text = "Stash";
-            this.rbStash.UseVisualStyleBackColor = true;
-            // 
             // FormRebase
             // 
             this.AcceptButton = this.Ok;
@@ -620,6 +621,10 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel4.PerformLayout();
             this.flowLayoutPanel5.ResumeLayout(false);
             this.flowLayoutPanel5.PerformLayout();
+            this.localChangesGB.ResumeLayout(false);
+            this.localChangesGB.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
             this.ContinuePanel.ResumeLayout(false);
             this.MergeToolPanel.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -629,10 +634,6 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.PerformLayout();
             this.rebasePanel.ResumeLayout(false);
             this.rebasePanel.PerformLayout();
-            this.localChangesGB.ResumeLayout(false);
-            this.localChangesGB.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
