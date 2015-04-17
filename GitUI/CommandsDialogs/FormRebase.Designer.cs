@@ -250,7 +250,6 @@ namespace GitUI.CommandsDialogs
             this.chkPreserveMerges.TabIndex = 7;
             this.chkPreserveMerges.Text = "Preserve Merges";
             this.chkPreserveMerges.UseVisualStyleBackColor = true;
-            this.chkPreserveMerges.CheckedChanged += new System.EventHandler(this.chkPreserveMerges_CheckedChanged);
             this.chkPreserveMerges.Click += new System.EventHandler(this.InteractiveRebaseClick);
             // 
             // chkAutosquash
