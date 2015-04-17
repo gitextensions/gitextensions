@@ -257,6 +257,7 @@ namespace GitUI.CommandsDialogs
                 Visible &&
                 Module.IsDirtyDir())
             {
+                UICommands.StashSave(this, true); // INFO: [minidfx 17.04.15 07:28] Force to include untracked files because it doesn't make sense to avoid to stash them in this use case.
                 _didStash = true;
             }
 
