@@ -26,7 +26,6 @@ namespace GitUI.CommandsDialogs
         private readonly string _defaultBranch;
         private readonly string _defaultToBranch;
 
-        private bool _didStash;
         private bool _wasDirty;
 
         private LocalChangesAction ChangesMode
@@ -190,11 +189,6 @@ namespace GitUI.CommandsDialogs
 
             if (!Module.InTheMiddleOfRebase())
             {
-                if (_didStash)
-                {
-                    UICommands.StashPop(this);
-                }
-
                 Close();
             }
 
@@ -210,11 +204,6 @@ namespace GitUI.CommandsDialogs
 
             if (!Module.InTheMiddleOfRebase())
             {
-                if (_didStash)
-                {
-                    UICommands.StashPop(this);
-                }
-
                 Close();
             }
 
@@ -230,11 +219,6 @@ namespace GitUI.CommandsDialogs
 
             if (!Module.InTheMiddleOfRebase())
             {
-                if (_didStash)
-                {
-                    UICommands.StashPop(this);
-                }
-
                 Close();
             }
 
@@ -253,14 +237,6 @@ namespace GitUI.CommandsDialogs
             }
 
             var localChanges = ChangesMode;
-            if (localChanges == LocalChangesAction.Stash &&
-                Visible &&
-                Module.IsDirtyDir())
-            {
-                UICommands.StashSave(this, true); // INFO: [minidfx 17.04.15 07:28] Force to include untracked files because it doesn't make sense to avoid to stash them in this use case.
-                _didStash = true;
-            }
-
             if (localChanges == LocalChangesAction.Reset &&
                 Visible &&
                 Module.IsDirtyDir())
@@ -272,15 +248,16 @@ namespace GitUI.CommandsDialogs
             rbReset.Enabled = false;
 
             string rebaseCmd;
+            var autoStash = localChanges == LocalChangesAction.Stash;
             if (chkSpecificRange.Checked && !String.IsNullOrWhiteSpace(txtFrom.Text) && !String.IsNullOrWhiteSpace(cboTo.Text))
             {
                 rebaseCmd = GitCommandHelpers.RebaseRangeCmd(txtFrom.Text, cboTo.Text, Branches.Text,
                                                              chkInteractive.Checked, chkPreserveMerges.Checked,
-                                                             chkAutosquash.Checked);
+                                                             chkAutosquash.Checked, autoStash);
             }
             else
             {
-                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked);
+                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked, autoStash);
             }
 
             var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
@@ -292,11 +269,6 @@ namespace GitUI.CommandsDialogs
             if (!Module.InTheMiddleOfAction() &&
                 !Module.InTheMiddleOfPatch())
             {
-                if (_didStash)
-                {
-                    UICommands.StashPop(this);
-                }
-
                 Close();
             }
 
