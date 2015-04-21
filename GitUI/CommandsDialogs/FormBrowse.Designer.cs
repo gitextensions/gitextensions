@@ -65,6 +65,7 @@ namespace GitUI.CommandsDialogs
             this.FileTreeSplitContainer = new System.Windows.Forms.SplitContainer();
             this.GitTree = new System.Windows.Forms.TreeView();
             this.FileTreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openSubmoduleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToThisRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator30 = new System.Windows.Forms.ToolStripSeparator();
@@ -731,6 +732,7 @@ namespace GitUI.CommandsDialogs
             this.saveAsToolStripMenuItem,
             this.resetToThisRevisionToolStripMenuItem,
             this.toolStripSeparator30,
+            this.openSubmoduleMenuItem,
             this.copyFilenameToClipboardToolStripMenuItem,
             this.fileTreeOpenContainingFolderToolStripMenuItem,
             this.fileTreeArchiveToolStripMenuItem,
@@ -750,6 +752,14 @@ namespace GitUI.CommandsDialogs
             this.FileTreeContextMenu.Name = "FileTreeContextMenu";
             this.FileTreeContextMenu.Size = new System.Drawing.Size(297, 358);
             this.FileTreeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.FileTreeContextMenu_Opening);
+            // 
+            // openSubmoduleMenuItem
+            // 
+            this.openSubmoduleMenuItem.Image = global::GitUI.Properties.Resources.IconFolderSubmodule;
+            this.openSubmoduleMenuItem.Name = "openSubmoduleMenuItem";
+            this.openSubmoduleMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.openSubmoduleMenuItem.Text = "Open with Git Extensions";
+            this.openSubmoduleMenuItem.Click += new System.EventHandler(this.OpenSubmoduleMenuItemOnClick);
             // 
             // saveAsToolStripMenuItem
             // 
@@ -2104,6 +2114,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
         private ContextMenuStrip FileTreeContextMenu;
         private ToolStripMenuItem saveAsToolStripMenuItem;
+        private ToolStripMenuItem openSubmoduleMenuItem;
         private ToolStripMenuItem resetToThisRevisionToolStripMenuItem;
         private ToolStripMenuItem openFileToolStripMenuItem;
         private ToolStripMenuItem openFileWithToolStripMenuItem;

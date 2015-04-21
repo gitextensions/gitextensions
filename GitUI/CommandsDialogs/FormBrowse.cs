@@ -1342,12 +1342,25 @@ namespace GitUI.CommandsDialogs
             var gitItem = (GitTree.SelectedNode != null) ? GitTree.SelectedNode.Tag as GitItem : null;
             var enableItems = gitItem != null && gitItem.IsBlob;
 
-            saveAsToolStripMenuItem.Enabled = enableItems;
-            openFileToolStripMenuItem.Enabled = enableItems;
-            openFileWithToolStripMenuItem.Enabled = enableItems;
-            openWithToolStripMenuItem.Enabled = enableItems;
-            copyFilenameToClipboardToolStripMenuItem.Enabled = gitItem != null && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
-            editCheckedOutFileToolStripMenuItem.Enabled = enableItems;
+            if (gitItem != null && gitItem.IsCommit)
+            {
+                openSubmoduleMenuItem.Visible = true;
+                if (!openSubmoduleMenuItem.Font.Bold)
+                {
+                    openSubmoduleMenuItem.Font = new Font(openSubmoduleMenuItem.Font, FontStyle.Bold);
+                }
+            }
+            else
+            {
+                openSubmoduleMenuItem.Visible = false;
+            }
+            
+            saveAsToolStripMenuItem.Visible = enableItems;
+            openFileToolStripMenuItem.Visible = enableItems;
+            openFileWithToolStripMenuItem.Visible = enableItems;
+            openWithToolStripMenuItem.Visible = enableItems;
+            copyFilenameToClipboardToolStripMenuItem.Visible = gitItem != null && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
+            editCheckedOutFileToolStripMenuItem.Visible = enableItems;
         }
 
         protected void LoadInTree(IEnumerable<IGitItem> items, TreeNodeCollection node)
@@ -1456,12 +1469,17 @@ namespace GitUI.CommandsDialogs
             }
             else if (item.IsCommit)
             {
-                Process process = new Process();
-                process.StartInfo.FileName = Application.ExecutablePath;
-                process.StartInfo.Arguments = "browse";
-                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName.EnsureTrailingPathSeparator());
-                process.Start();
+                SpawnCommitBrowser(item);
             }
+        }
+
+        private void SpawnCommitBrowser(GitItem item)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = Application.ExecutablePath;
+            process.StartInfo.Arguments = "browse";
+            process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName.EnsureTrailingPathSeparator());
+            process.Start();
         }
 
         private void CloneToolStripMenuItemClick(object sender, EventArgs e)
@@ -2147,6 +2165,16 @@ namespace GitUI.CommandsDialogs
         {
             // TODO: Replace with a status page?
             CommitToolStripMenuItemClick(sender, e);
+        }
+
+        public void OpenSubmoduleMenuItemOnClick(object sender, EventArgs e)
+        {
+            var item = GitTree.SelectedNode.Tag as GitItem;
+
+            if (item.IsCommit)
+	        {
+                SpawnCommitBrowser(item);
+	        }
         }
 
         public void SaveAsOnClick(object sender, EventArgs e)
