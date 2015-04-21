@@ -206,7 +206,7 @@ namespace GitUI.CommandsDialogs
             {
                 RefreshPullIcon();
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
-                UICommands.BrowseRepo = this;                
+                UICommands.BrowseRepo = this;
             }
 
             FillBuildReport();  // Ensure correct page visibility
@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs
             if (_dashboard == null || !_dashboard.Visible)
             {
                 var revisions = RevisionGrid.GetSelectedRevisions();
-                if (revisions.Count != 0) 
+                if (revisions.Count != 0)
                 {
                     _oldRevision = revisions[0].Guid;
                     _oldDiffItem = DiffFiles.SelectedItem;
@@ -249,7 +249,7 @@ namespace GitUI.CommandsDialogs
                 InternalInitialize(true);
             }
         }
-    
+
         #region IBrowseRepo
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
@@ -403,7 +403,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// to avoid showing menu items that should not be there during
         /// the transition from dashboard to repo browser and vice versa
-        /// 
+        ///
         /// and reset hotkeys that are shared between mutual exclusive menu items
         /// </summary>
         private void HideVariableMainMenuItems()
@@ -552,7 +552,7 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private void SetShortcutKeyDisplayStringsFromHotkeySettings()
         {
@@ -1097,13 +1097,13 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var revision = RevisionGrid.GetSelectedRevisions()[0];
-            
+
             var children = RevisionGrid.GetRevisionChildren(revision.Guid);
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
         private BuildReportTabPageExtension BuildReportTabPageExtension;
-        
+
         private void FillBuildReport()
         {
             if(EnvUtils.IsMonoRuntime())
@@ -1347,6 +1347,11 @@ namespace GitUI.CommandsDialogs
 
         private void GitTreeDoubleClick(object sender, EventArgs e)
         {
+            OnItemActivated();
+        }
+
+        private void OnItemActivated()
+        {
             if (GitTree.SelectedNode == null || !(GitTree.SelectedNode.Tag is IGitItem))
                 return;
 
@@ -1356,7 +1361,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsBlob)
             {
-                UICommands.StartFileHistoryDialog(this, item.FileName, null);                
+                UICommands.StartFileHistoryDialog(this, item.FileName, null);
             }
             else if (item.IsCommit)
             {
@@ -1404,7 +1409,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
                 else
-                { 
+                {
                     bSilent = (sender == toolStripButtonPull);
                     Module.LastPullActionToFormPullAction();
                 }
@@ -1720,7 +1725,7 @@ namespace GitUI.CommandsDialogs
         {
             UICommands.StartSubmodulesDialog(this);
         }
-        
+
         private void UpdateSubmoduleToolStripMenuItemClick(object sender, EventArgs e)
         {
             var submodule = (sender as ToolStripMenuItem).Tag as string;
@@ -2359,7 +2364,7 @@ namespace GitUI.CommandsDialogs
                     UICommands.StartPullDialog(this, true);
                     break;
                 case Commands.QuickPush:
-                    UICommands.StartPushDialog(this, true);                   
+                    UICommands.StartPushDialog(this, true);
                     break;
                 case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
                 case Commands.CloseRepositry: CloseToolStripMenuItemClick(null, null); break;
@@ -2521,7 +2526,7 @@ namespace GitUI.CommandsDialogs
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var diffGitItemStatus = DiffFiles.SelectedItems.First();
-            
+
             ExecuteCommand((int)Commands.FocusFileTree); // switch to view (and fills the first level of file tree data model if not already done)
 
             var currentNodes = GitTree.Nodes;
@@ -2558,7 +2563,7 @@ namespace GitUI.CommandsDialogs
                 if (i < pathParts.Length - 1) // if not the last path part...
                 {
                     foundNode.Expand(); // load more data
-                    
+
                     if (currentFoundNode.Nodes == null)
                     {
                         isIncompleteMatch = true;
@@ -3200,7 +3205,7 @@ namespace GitUI.CommandsDialogs
             }
             catch(Exception){}
 
-            Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new?body=" + WebUtility.HtmlEncode(issueData));            
+            Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new?body=" + WebUtility.HtmlEncode(issueData));
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3217,6 +3222,18 @@ namespace GitUI.CommandsDialogs
         private void FormBrowse_Activated(object sender, EventArgs e)
         {
             this.InvokeAsync(OnActivate);
+        }
+
+        private void GitTreeKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            {
+                if (GitTree.SelectedNode != null)
+                {
+                    OnItemActivated();
+                    e.Handled = true;
+                }
+            }
         }
     }
 }
