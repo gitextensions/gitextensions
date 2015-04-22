@@ -248,7 +248,7 @@ namespace GitUI.CommandsDialogs
             rbReset.Enabled = false;
 
             string rebaseCmd;
-            var autoStash = localChanges == LocalChangesAction.Stash;
+            var autoStash = localChanges == LocalChangesAction.Stash && _wasDirty;
             if (chkSpecificRange.Checked && !String.IsNullOrWhiteSpace(txtFrom.Text) && !String.IsNullOrWhiteSpace(cboTo.Text))
             {
                 rebaseCmd = GitCommandHelpers.RebaseRangeCmd(txtFrom.Text, cboTo.Text, Branches.Text,
