@@ -103,10 +103,11 @@ namespace GitUI.CommandsDialogs
 
         private void browseButton_Click(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog { SelectedPath = this._NO_TRANSLATE_destinationComboBox.Text })
+            var userSelectedPath = OsShellUtil.PickFolder(this, this._NO_TRANSLATE_destinationComboBox.Text);
+
+            if (userSelectedPath != null)
             {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    this._NO_TRANSLATE_destinationComboBox.Text = dialog.SelectedPath;
+                this._NO_TRANSLATE_destinationComboBox.Text = userSelectedPath;
             }
         }
 

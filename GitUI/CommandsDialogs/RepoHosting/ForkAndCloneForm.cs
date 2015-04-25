@@ -217,14 +217,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             var initialDir = _destinationTB.Text.Length > 0 ? _destinationTB.Text : "C:\\";
 
-            using (var browseDialog = new FolderBrowserDialog { SelectedPath = initialDir })
-            {
+            var userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
 
-                if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    _destinationTB.Text = browseDialog.SelectedPath;
-                    _destinationTB_TextChanged(sender, e);
-                }
+            if (userSelectedPath != null)
+            {
+                _destinationTB.Text = userSelectedPath;
+                _destinationTB_TextChanged(sender, e);
             }
         }
 
