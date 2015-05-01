@@ -1,4 +1,4 @@
-# [![NBug](http://www.soygul.com/wp-content/uploads/2011/07/NBug_logo.png)](http://www.soygul.com/nbug/)
+# [![NBug](http://soygul.com/nbug/logo.png)](http://www.soygul.com/nbug/)
 NBug is a .NET library created to automate the bug reporting process. It automatically creates and sends:
 * Bug reports,
 * Crash reports with minidump,
