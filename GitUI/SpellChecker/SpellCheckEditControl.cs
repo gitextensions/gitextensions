@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -9,7 +10,7 @@ using GitCommands.Utils;
 
 namespace GitUI.SpellChecker
 {
-    public class SpellCheckEditControl : NativeWindow
+    public class SpellCheckEditControl : NativeWindow, IDisposable
     {
         public bool IsImeStartingComposition { get; private set; }
 
@@ -197,5 +198,21 @@ namespace GitUI.SpellChecker
         };
 
         #endregion
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _bitmap.Dispose();
+                _bufferGraphics.Dispose();
+                _textBoxGraphics.Dispose();
+            }
+        }
     }
 }

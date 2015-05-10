@@ -52,7 +52,7 @@ namespace GitUI
             {
                 _UICommandsSource = value;
                 _UICommandsSource.GitUICommandsChanged += GitUICommandsChanged;
-                GitUICommandsChanged(UICommandsSource, null);
+                GitUICommandsChanged(UICommandsSource, new GitUICommandsChangedEventArgs(oldCommands: null));
             }
         }
         
@@ -103,8 +103,10 @@ namespace GitUI
             _gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;            
         }
 
-        private void GitUICommandsChanged(IGitUICommandsSource source, GitUICommands oldCommands)
+        private void GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
+            var oldCommands = e.OldCommands;
+
             if (oldCommands != null)
             {
                 oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;

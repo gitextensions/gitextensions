@@ -29,13 +29,13 @@ namespace Gerrit
         private string _originalGitReviewFileContent = string.Empty;
         private IGitModule Module { get { return UICommands.GitModule; } }
 
-        public event GitUICommandsChangedEventHandler GitUICommandsChanged;
+        public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
 
         private void OnGitUICommandsChanged(GitUICommands oldcommands)
         {
-            GitUICommandsChangedEventHandler handler = GitUICommandsChanged;
+            EventHandler<GitUICommandsChangedEventArgs> handler = GitUICommandsChanged;
             if (handler != null)
-                handler(this, oldcommands);
+                handler(this, new GitUICommandsChangedEventArgs(oldcommands));
         }
 
         private GitUICommands _uiCommands;
