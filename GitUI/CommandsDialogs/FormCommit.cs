@@ -138,7 +138,6 @@ namespace GitUI.CommandsDialogs
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
         private string _userName = "";
         private string _userEmail = "";
-        private bool RepoUserSettings = false;
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -2435,6 +2434,29 @@ namespace GitUI.CommandsDialogs
         private void toolAuthor_Leave(object sender, EventArgs e)
         {
             updateAuthorInfo();
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _unstagedLoader.Cancel();
+                _unstagedLoader.Dispose();
+                if (_interactiveAddBashCloseWaitCts != null)
+                {
+                    _interactiveAddBashCloseWaitCts.Cancel();
+                    _interactiveAddBashCloseWaitCts.Dispose();
+                    _interactiveAddBashCloseWaitCts = null;
+                }
+
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace GitCommands
 {
-    public class AsyncLoader
+    public class AsyncLoader : IDisposable
     {
         private readonly TaskScheduler _taskScheduler;
         private CancellationTokenSource _cancelledTokenSource;
@@ -56,6 +56,8 @@ namespace GitCommands
         public Task Load(Action<CancellationToken> loadContent, Action onLoaded)
         {
             Cancel();
+            if (_cancelledTokenSource != null)
+                _cancelledTokenSource.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
             return Task.Factory.StartNew(() => loadContent(token), token)
@@ -125,6 +127,18 @@ namespace GitCommands
             var args = new AsyncErrorEventArgs(exception);
             LoadingError(this, args);
             return args.Handled;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_cancelledTokenSource != null)
+                _cancelledTokenSource.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 

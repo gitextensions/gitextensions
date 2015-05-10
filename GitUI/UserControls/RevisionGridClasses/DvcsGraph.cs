@@ -16,7 +16,15 @@ namespace GitUI.RevisionGridClasses
     {
         #region Delegates
 
-        public delegate void LoadingEventHandler(bool isLoading);
+        public class LoadingEventArgs : EventArgs
+        {
+            public LoadingEventArgs(bool isLoading)
+            {
+                IsLoading = isLoading;
+            }
+
+            public bool IsLoading { get; private set; }
+        }
 
         #endregion
 
@@ -179,6 +187,7 @@ namespace GitUI.RevisionGridClasses
             this.DateColumn.Visible = show;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         [DefaultValue(FilterType.None)]
         [Category("Behavior")]
         public FilterType FilterMode
@@ -280,6 +289,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         protected override void Dispose(bool disposing)
         {
             lock (_backgroundEvent)
@@ -312,7 +322,7 @@ namespace GitUI.RevisionGridClasses
 
         [Description("Loading Handler. NOTE: This will often happen on a background thread so UI operations may not be safe!")]
         [Category("Behavior")]
-        public event LoadingEventHandler Loading;
+        public event EventHandler<LoadingEventArgs> Loading;
 
         public void ShowRevisionGraph()
         {
@@ -348,6 +358,7 @@ namespace GitUI.RevisionGridClasses
             UpdateData();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         public void Clear()
         {
             lock (_backgroundThread)
@@ -462,6 +473,7 @@ namespace GitUI.RevisionGridClasses
             Invalidate(true);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void SetRowCount(int count)
         {
             if (InvokeRequired)
@@ -546,6 +558,7 @@ namespace GitUI.RevisionGridClasses
             UpdateColumnWidth();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void BackgroundThreadEntry()
         {
             while (_shouldRun)
@@ -582,6 +595,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void UpdateGraph(int curCount, int scrollTo)
         {
             while (curCount < scrollTo)
@@ -629,7 +643,7 @@ namespace GitUI.RevisionGridClasses
                 //rows that the user is viewing
                 if (Loading != null && _graphData.Count > RowCount)// && graphData.Count != RowCount)
                 {
-                    Loading(true);
+                    Loading(this, new LoadingEventArgs(true));
                 }
             }
             else
@@ -638,7 +652,7 @@ namespace GitUI.RevisionGridClasses
                 //animation that is shown. (the event Loading(bool) triggers this!)
                 if (Loading != null)
                 {
-                    Loading(false);
+                    Loading(this, new LoadingEventArgs(false));
                 }
             }
 

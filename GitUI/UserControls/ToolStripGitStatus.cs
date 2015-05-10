@@ -103,10 +103,11 @@ namespace GitUI
             _gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;            
         }
 
-        private void GitUICommandsChanged(IGitUICommandsSource source, GitUICommands oldCommands)
+        private void GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
-            if (oldCommands != null)
+            if (e != null)
             {
+                var oldCommands = e.OldCommands;
                 oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
                 oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;
                 oldCommands.PostCheckoutBranch -= GitUICommands_PostCheckout;

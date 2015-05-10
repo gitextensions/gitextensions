@@ -4,7 +4,15 @@ using System.Windows.Forms;
 
 namespace GitUI.Editor
 {
-    public delegate void SelectedLineChangedEventHandler(object sender, int selectedLine);
+    public class SelectedLineEventArgs : EventArgs
+    {
+        public SelectedLineEventArgs(int selectedLine)
+        {
+            SelectedLine = selectedLine;
+        }
+
+        public int SelectedLine { get; private set; }
+    }
 
     public interface IFileViewer
     {
@@ -13,7 +21,7 @@ namespace GitUI.Editor
         event EventHandler MouseLeave;
         event EventHandler TextChanged;
         event EventHandler ScrollPosChanged;
-        event SelectedLineChangedEventHandler SelectedLineChanged;
+        event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
         event KeyEventHandler KeyDown;
         event EventHandler DoubleClick;
 

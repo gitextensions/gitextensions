@@ -1,11 +1,10 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace ResourceManager
 {
     /// <summary>Provides translated text.</summary>
     [DebuggerDisplay("{Text}")]
-    public class TranslationString : Component
+    public class TranslationString
     {
         /// <summary>Creates a new <see cref="TranslationString"/> with the specified <paramref name="text"/>.</summary>
         public TranslationString(string text)

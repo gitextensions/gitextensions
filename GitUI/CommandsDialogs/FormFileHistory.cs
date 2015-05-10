@@ -424,5 +424,24 @@ namespace GitUI.CommandsDialogs
                 FileChanges.NavigateForward();
             }
         }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _asyncLoader.Cancel();
+                _asyncLoader.Dispose();
+                _filterRevisionsHelper.Dispose();
+                _filterBranchHelper.Dispose();
+
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

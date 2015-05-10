@@ -51,30 +51,34 @@ namespace GitCommands.Settings
             FileChanged();
         }
 
-        protected override void DisposeImpl()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "SaveTimer", Justification = "SaveTimer is disposed inside lambda but Code Analysis could not determine that")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_fileWatcher", Justification = "_fileWtcher is disposed inside lambda but Code Analysis could not determine that")]
+        protected override void Dispose(bool disposing)
         {
-            LockedAction(() =>
+            if (disposing)
             {
-                if (SaveTimer != null)
+                LockedAction(() =>
                 {
-
-                    SaveTimer.Dispose();
-                    SaveTimer = null;
-                    _fileWatcher.Changed -= _fileWatcher_Changed;
-                    _fileWatcher.Renamed -= _fileWatcher_Renamed;
-                    _fileWatcher.Created -= _fileWatcher_Created;
-
-                    if (_autoSave)
+                    if (SaveTimer != null)
                     {
-                        Save();
+
+                        SaveTimer.Dispose();
+                        SaveTimer = null;
+                        _fileWatcher.Changed -= _fileWatcher_Changed;
+                        _fileWatcher.Renamed -= _fileWatcher_Renamed;
+                        _fileWatcher.Created -= _fileWatcher_Created;
+
+                        if (_autoSave)
+                        {
+                            Save();
+                        }
+
+                        _fileWatcher.Dispose();
                     }
+                });
+            }
 
-                    _fileWatcher.Dispose();
-                }
-            });
-
-       
-            base.DisposeImpl();
+            base.Dispose(disposing);
         }
 
         public static T FromCache<T>(string aSettingsFilePath, Lazy<T> createSettingsCache)
