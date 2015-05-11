@@ -1,5 +1,8 @@
 ﻿Changelog
 =========
+### Version 2.48.05 (11 May 2015)
+* Fixed issue #2493: StartBrowseDialog failed after clone
+
 ### Version 2.48.04 (8 May 2015)
 * Fixed issue #1643: Do stage of 16506 files and GUI becomes Not Respoding
 * Fixed issue #2591: VSAddin solutionItem.ProjectItem == null when selected 'References' item in C# project
