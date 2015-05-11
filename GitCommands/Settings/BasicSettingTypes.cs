@@ -126,9 +126,8 @@ namespace GitCommands.Settings
         {
             return iss.GetValue<bool?>(name, null, x =>
             {
-                var val = x.ToString().ToLower();
-                if (val == "true") return true;
-                if (val == "false") return false;
+                if ("true".Equals(x, StringComparison.OrdinalIgnoreCase)) return true;
+                if ("false".Equals(x, StringComparison.OrdinalIgnoreCase)) return false;
                 return null;
             });
         }

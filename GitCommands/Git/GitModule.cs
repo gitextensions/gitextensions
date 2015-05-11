@@ -2402,7 +2402,7 @@ namespace GitCommands
             {
                 result.AuthenticationFail = true;
             }
-            else if (tree.ToLower().Contains("the server's host key is not cached in the registry"))
+            else if (tree.Contains("the server's host key is not cached in the registry", StringComparison.OrdinalIgnoreCase))
             {
                 result.HostKeyFail = true;
             }
@@ -2508,25 +2508,29 @@ namespace GitCommands
 
         private IList<GitRef> GetTreeRefs(string tree)
         {
-            var itemsStrings = tree.Split('\n');
-
             var gitRefs = new List<GitRef>();
             var defaultHeads = new Dictionary<string, GitRef>(); // remote -> HEAD
             var remotes = GetRemotes(false);
 
-            foreach (var itemsString in itemsStrings)
+            using (TextReader tr = new StringReader(tree))
             {
-                if (itemsString == null || itemsString.Length <= 42 || itemsString.StartsWith("error: "))
-                    continue;
+                string line = tr.ReadLine();
+                while (line != null)
+                {
+                    if (line == null || line.Length <= 42 || line.StartsWith("error: "))
+                        continue;
 
-                var completeName = itemsString.Substring(41).Trim();
-                var guid = itemsString.Substring(0, 40);
-                var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
-                var head = new GitRef(this, guid, completeName, remoteName);
-                if (DefaultHeadPattern.IsMatch(completeName))
-                    defaultHeads[remoteName] = head;
-                else
-                    gitRefs.Add(head);
+                    var completeName = line.Substring(41).Trim();
+                    var guid = line.Substring(0, 40);
+                    var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
+                    var head = new GitRef(this, guid, completeName, remoteName);
+                    if (DefaultHeadPattern.IsMatch(completeName))
+                        defaultHeads[remoteName] = head;
+                    else
+                        gitRefs.Add(head);
+
+                    line = tr.ReadLine();
+                }
             }
 
             // do not show default head if remote has a branch on the same commit

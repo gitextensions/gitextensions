@@ -241,7 +241,7 @@ namespace GitUI
         public string CurrentCheckout { get; private set; }
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public string FiltredFileName { get; set; }
+        public string FilteredFileName { get; set; }
         [Browsable(false)]
         public Task<SuperProjectInfo> SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
@@ -885,7 +885,7 @@ namespace GitUI
         [Browsable(false)]
         public Task<bool> StagedChanges { get; private set; }
 
-        private string _filtredCurrentCheckout;
+        private string _filteredCurrentCheckout;
 
         public void ForceRefreshRevisions()
         {
@@ -909,7 +909,7 @@ namespace GitUI
                     TaskScheduler.FromCurrentSynchronizationContext());
                 //Only check for tracked files. This usually makes more sense and it performs a lot
                 //better then checking for untracked files.
-                // TODO: Check FiltredFileName
+                // TODO: Check FilteredFileName
                 Task<bool> unstagedChanges =
                     Task.Factory.StartNew(() => Module.GetUnstagedFiles().Any());
                 Task<bool> stagedChanges =
@@ -929,7 +929,7 @@ namespace GitUI
 
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
-                _filtredCurrentCheckout = null;
+                _filteredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 SuperprojectCurrentCheckout = newSuperPrjectInfo;
                 UnstagedChanges = unstagedChanges;
@@ -1168,7 +1168,7 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            string filtredCurrentCheckout = _filtredCurrentCheckout;
+            string filteredCurrentCheckout = _filteredCurrentCheckout;
             if (LastSelectedRows != null)
             {
                 Revisions.SelectedIds = LastSelectedRows;
@@ -1184,16 +1184,16 @@ namespace GitUI
                 }
                 else
                 {
-                    SetSelectedRevision(filtredCurrentCheckout);
+                    SetSelectedRevision(filteredCurrentCheckout);
                 }
             }
 
-            if (string.IsNullOrEmpty(filtredCurrentCheckout))
+            if (string.IsNullOrEmpty(filteredCurrentCheckout))
                 return;
 
-            if (!Revisions.IsRevisionRelative(filtredCurrentCheckout))
+            if (!Revisions.IsRevisionRelative(filteredCurrentCheckout))
             {
-                HighlightBranch(filtredCurrentCheckout);
+                HighlightBranch(filteredCurrentCheckout);
             }
         }
 
@@ -2417,11 +2417,11 @@ namespace GitUI
                 return;
             }
 
-            if (_filtredCurrentCheckout == null)
+            if (_filteredCurrentCheckout == null)
             {
                 if (rev.Guid == CurrentCheckout)
                 {
-                    _filtredCurrentCheckout = CurrentCheckout;
+                    _filteredCurrentCheckout = CurrentCheckout;
                 }
                 else
                 {
@@ -2429,18 +2429,18 @@ namespace GitUI
                     {
                         _currentCheckoutParents = GetAllParents(CurrentCheckout);
                     }
-                    _filtredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == rev.Guid);
+                    _filteredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == rev.Guid);
                 }
             }
-            string filtredCurrentCheckout = _filtredCurrentCheckout;
+            string filteredCurrentCheckout = _filteredCurrentCheckout;
 
-            if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges())
+            if (filteredCurrentCheckout == rev.Guid && ShowUncommitedChanges())
             {
-                CheckUncommitedChanged( filtredCurrentCheckout );
+                CheckUncommitedChanged( filteredCurrentCheckout );
             }
 
             var dataType = DvcsGraph.DataType.Normal;
-            if (rev.Guid == filtredCurrentCheckout)
+            if (rev.Guid == filteredCurrentCheckout)
                 dataType = DvcsGraph.DataType.Active;
             else if (rev.Refs.Any())
                 dataType = DvcsGraph.DataType.Special;
@@ -2448,7 +2448,7 @@ namespace GitUI
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
         }
 
-        private void CheckUncommitedChanged(string filtredCurrentCheckout)
+        private void CheckUncommitedChanged(string filteredCurrentCheckout)
         {
             if (UnstagedChanges.Result)
             {
@@ -2459,7 +2459,7 @@ namespace GitUI
                     ParentGuids =
                         StagedChanges.Result
                             ? new[] { GitRevision.IndexGuid }
-                            : new[] { filtredCurrentCheckout }
+                            : new[] { filteredCurrentCheckout }
                 };
                 Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
             }
@@ -2470,7 +2470,7 @@ namespace GitUI
                 var index = new GitRevision(Module, GitRevision.IndexGuid)
                 {
                     Message = Strings.GetCurrentIndex(),
-                    ParentGuids = new[] { filtredCurrentCheckout }
+                    ParentGuids = new[] { filteredCurrentCheckout }
                 };
                 Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
             }

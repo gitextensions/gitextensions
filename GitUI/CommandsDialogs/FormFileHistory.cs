@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 FileChanges.FixedFilter = filter.Filter;
                 FileChanges.Rewriter = filter.Rewriter;
-                FileChanges.FiltredFileName = FileName;
+                FileChanges.FilteredFileName = FileName;
                 FileChanges.AllowGraphWithFilter = true;
                 FileChanges.Load();
             });

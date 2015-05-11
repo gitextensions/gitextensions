@@ -189,7 +189,7 @@ namespace GitStatistics
             if (_inCommentBlock && line.Contains("*/"))
                 _inCommentBlock = false;
 
-            if (File.Extension.ToLower() == ".pas" || File.Extension.ToLower() == ".inc")
+            if (File.Extension.Equals(".pas", StringComparison.OrdinalIgnoreCase) || File.Extension.Equals(".inc", StringComparison.OrdinalIgnoreCase))
             {
                 if (line.Contains("*)") || line.Contains("}"))
                     _inCommentBlock = false;

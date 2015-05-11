@@ -5485,7 +5485,7 @@ Is the mergeconflict solved?</source>
         <source>deleted</source>
         <target />
       </trans-unit>
-      <trans-unit id="fileBinairyChooseLocalBaseRemote.Text">
+      <trans-unit id="fileBinaryChooseLocalBaseRemote.Text">
         <source>File ({0}) appears to be a binary file.
 Choose to keep the local({1}), remote({2}) or base file.</source>
         <target />

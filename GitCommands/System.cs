@@ -59,7 +59,6 @@ namespace System
             return string.IsNullOrEmpty(s);
         }
 
-
         public static string Combine(this string left, string sep, string right)
         {
             if (left.IsNullOrEmpty())
@@ -68,6 +67,11 @@ namespace System
                 return left;
             else
                 return left + sep + right;
+        }
+
+        public static bool Contains(this string s, string value, StringComparison comparisonType)
+        {
+            return s.IndexOf(value, comparisonType) >= 0;
         }
 
         /// <summary>
