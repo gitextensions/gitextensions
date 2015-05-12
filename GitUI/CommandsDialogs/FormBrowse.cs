@@ -839,11 +839,11 @@ namespace GitUI.CommandsDialogs
                 if (_rebase == null)
                 {
                     _rebase = new WarningToolStripItem
-                                  {
-                                      Text = Module.InTheMiddleOfRebase()
-                                                 ? _warningMiddleOfRebase.Text
-                                                 : _warningMiddleOfPatchApply.Text
-                                  };
+                    {
+                        Text = Module.InTheMiddleOfRebase()
+                                   ? _warningMiddleOfRebase.Text
+                                   : _warningMiddleOfPatchApply.Text
+                    };
                     _rebase.Click += RebaseClick;
                     statusStrip.Items.Add(_rebase);
                 }
@@ -1106,7 +1106,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillBuildReport()
         {
-            if(EnvUtils.IsMonoRuntime())
+            if (EnvUtils.IsMonoRuntime())
                 return;
 
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
@@ -1255,7 +1255,7 @@ namespace GitUI.CommandsDialogs
             openFileToolStripMenuItem.Enabled = enableItems;
             openFileWithToolStripMenuItem.Enabled = enableItems;
             openWithToolStripMenuItem.Enabled = enableItems;
-            copyFilenameToClipboardToolStripMenuItem.Enabled = FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
+            copyFilenameToClipboardToolStripMenuItem.Enabled = gitItem != null && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
             editCheckedOutFileToolStripMenuItem.Enabled = enableItems;
         }
 
@@ -2027,12 +2027,12 @@ namespace GitUI.CommandsDialogs
             var fullName = Path.Combine(Module.WorkingDir, item.FileName);
             using (var fileDialog =
                 new SaveFileDialog
-                    {
-                        InitialDirectory = Path.GetDirectoryName(fullName),
-                        FileName = Path.GetFileName(fullName),
-                        DefaultExt = GitCommandHelpers.GetFileExtension(fullName),
-                        AddExtension = true
-                    })
+                {
+                    InitialDirectory = Path.GetDirectoryName(fullName),
+                    FileName = Path.GetFileName(fullName),
+                    DefaultExt = GitCommandHelpers.GetFileExtension(fullName),
+                    AddExtension = true
+                })
             {
                 fileDialog.Filter =
                     _saveFileFilterCurrentFormat.Text + " (*." +
@@ -2738,10 +2738,10 @@ namespace GitUI.CommandsDialogs
                 string nameAsLower = name.ToLower();
 
                 return candidates.Where(item =>
-                    {
-                        return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
-                            || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
-                    }
+                {
+                    return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
+                        || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
+                }
                     ).ToList();
             };
 
@@ -3001,15 +3001,15 @@ namespace GitUI.CommandsDialogs
             }
             var token = _submodulesStatusImagesCTS.Token;
             return Task.Factory.StartNew(() =>
+            {
+                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(module, submodulePath);
+                if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                 {
-                    var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(module, submodulePath);
-                    if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
-                    {
-                        var submodule = submoduleStatus.GetSubmodule(module);
-                        submoduleStatus.CheckSubmoduleStatus(submodule);
-                    }
-                    return submoduleStatus;
-                }, token)
+                    var submodule = submoduleStatus.GetSubmodule(module);
+                    submoduleStatus.CheckSubmoduleStatus(submodule);
+                }
+                return submoduleStatus;
+            }, token)
                 .ContinueWith((task) =>
                 {
                     mi.Image = GetItemImage(task.Result);
@@ -3203,7 +3203,7 @@ namespace GitUI.CommandsDialogs
                 if (monoVersion != null)
                     issueData += ", Mono " + monoVersion;
             }
-            catch(Exception){}
+            catch (Exception) { }
 
             Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new?body=" + WebUtility.HtmlEncode(issueData));
         }
