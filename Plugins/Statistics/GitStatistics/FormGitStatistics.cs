@@ -158,32 +158,45 @@ namespace GitStatistics
         {
             LineCounter lineCounter = (LineCounter)sender;
 
-            //Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
-            var extensionValues = new Decimal[lineCounter.LinesOfCodePerExtension.Count];
-            var extensionLabels = new string[lineCounter.LinesOfCodePerExtension.Count];
+            List<KeyValuePair<string, int>> LinesOfCodePerExtension;
+            lock (lineCounter.LinesOfCodePerExtension)
+            {
+                //Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
+                LinesOfCodePerExtension = new List<KeyValuePair<string, int>>(lineCounter.LinesOfCodePerExtension);
+            }
 
-            List<KeyValuePair<string, int>> LinesOfCodePerExtension = new List<KeyValuePair<string, int>>(lineCounter.LinesOfCodePerExtension);
+            var extensionValues = new Decimal[LinesOfCodePerExtension.Count];
+            var extensionLabels = new string[LinesOfCodePerExtension.Count];
             LinesOfCodePerExtension.Sort((first, next) => -first.Value.CompareTo(next.Value));
 
             var n = 0;
-            string linesOfCodePerLanguageText = "";
+            var linesOfCodePerLanguageText = new StringBuilder(1024);
             foreach (var keyValuePair in LinesOfCodePerExtension)
             {
                 string percent = ((double)keyValuePair.Value / lineCounter.NumberCodeLines).ToString("P1");
-                linesOfCodePerLanguageText += keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files (" + percent + ")" + Environment.NewLine;
+                linesOfCodePerLanguageText.Append(keyValuePair.Value);
+                if (lineCounter.Counting)
+                {
+                    linesOfCodePerLanguageText.Append('+');
+                }
+
+                linesOfCodePerLanguageText.Append(" Lines of code in ").Append(keyValuePair.Key);
+                linesOfCodePerLanguageText.Append(" files (").Append(percent).AppendLine(")");
                 extensionValues[n] = keyValuePair.Value;
                 extensionLabels[n] = keyValuePair.Value + " Lines of code in " + keyValuePair.Key + " files (" + percent + ")";
                 n++;
             }
 
             //Sync rest to UI thread
-            syncContext.Post(o => UpdateUI(lineCounter, linesOfCodePerLanguageText, extensionValues, extensionLabels), null);
+            syncContext.Post(o => UpdateUI(lineCounter, linesOfCodePerLanguageText.ToString(), extensionValues, extensionLabels), null);
         }
 
         private void UpdateUI(LineCounter lineCounter, string linesOfCodePerLanguageText, decimal[] extensionValues,
                               string[] extensionLabels)
         {
-            TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
+            TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines +
+                                        (lineCounter.Counting ? "+" : "") +
+                                        " Lines of test code";
 
             TestCodePie.SetValues(new Decimal[]
                 {
@@ -238,7 +251,9 @@ namespace GitStatistics
             LinesOfCodeExtensionPie.SetValues(extensionValues);
             LinesOfCodeExtensionPie.ToolTips = extensionLabels;
 
-            TotalLinesOfCode2.Text = TotalLinesOfCode.Text = lineCounter.NumberCodeLines + " Lines of code";
+            TotalLinesOfCode2.Text = TotalLinesOfCode.Text = lineCounter.NumberCodeLines +
+                                                             (lineCounter.Counting ? "+" : "") +
+                                                             " Lines of code";
         }
 
         private void FormGitStatisticsShown(object sender, EventArgs e)
@@ -261,6 +276,7 @@ namespace GitStatistics
 
         private void FormGitStatistics_FormClosing(object sender, FormClosingEventArgs e)
         {
+            lineCounter.Cancel = true;
             lineCounter.LinesOfCodeUpdated -= lineCounter_LinesOfCodeUpdated;
         }
     }

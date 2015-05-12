@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GitStatistics
 {
@@ -9,6 +12,7 @@ namespace GitStatistics
         public event EventHandler LinesOfCodeUpdated;
 
         private readonly DirectoryInfo _directory;
+        private int _updatingUI = 0;
 
         public LineCounter(DirectoryInfo directory)
         {
@@ -22,91 +26,114 @@ namespace GitStatistics
         public int NumberTestCodeLines { get; private set; }
         public int NumberBlankLines { get; private set; }
         public int NumberCodeLines { get; private set; }
+        public bool Counting { get; private set; }
+        public bool Cancel { get; set; }
 
         public Dictionary<string, int> LinesOfCodePerExtension { get; private set; }
 
-        private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
+        private static bool DirectoryIsFiltered(string path, IEnumerable<string> directoryFilters)
         {
             foreach (var directoryFilter in directoryFilters)
             {
-                if (dir.FullName.EndsWith(directoryFilter, StringComparison.InvariantCultureIgnoreCase))
+                if (path.EndsWith(directoryFilter, StringComparison.InvariantCultureIgnoreCase))
                     return true;
             }
             return false;
         }
 
-        private IEnumerable<FileInfo> GetFiles(DirectoryInfo startDirectory, string filter)
+        private IEnumerable<string> GetFiles(IEnumerable<string> dirs, string filter)
         {
-            Queue<DirectoryInfo> queue = new Queue<DirectoryInfo>();
-            queue.Enqueue(startDirectory);
-            while(queue.Count != 0)
+            foreach (var directory in dirs)
             {
-                DirectoryInfo directory = queue.Dequeue();
-                FileInfo[] files = null;
+                IEnumerable<string> efs = null;
                 try
                 {
-                    files = directory.GetFiles(filter);
-                    DirectoryInfo[] directories = directory.GetDirectories();
-                    foreach (var dir in directories)
-                        queue.Enqueue(dir);
+                    efs = Directory.EnumerateFileSystemEntries(directory, filter);
                 }
-                catch (System.UnauthorizedAccessException)
+                catch (System.Exception)
                 {
+                    // Mostly permission and unmapped drive errors.
+                    // But we also skip anything else as unimportant.
+                    continue;
                 }
-                if (files != null)
+
+                foreach (var entry in efs)
                 {
-                    foreach (var file in files)
-                        yield return file;
+                    yield return entry;
                 }
             }
         }
 
         public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore)
         {
-            NumberLines = 0;
-            NumberBlankLines = 0;
-            NumberLinesInDesignerFiles = 0;
-            NumberCommentsLines = 0;
-            NumberCodeLines = 0;
-            NumberTestCodeLines = 0;
-
-            var filters = filePattern.Split(';');
-            var directoryFilter = directoriesToIgnore.Split(';');
-            var lastUpdate = DateTime.Now;
-            var timer = new TimeSpan(0,0,0,0,500);
-
-            foreach (var filter in filters)
+            try
             {
-                foreach (var file in GetFiles(_directory, filter.Trim()))
-                {
-                    if (DirectoryIsFiltered(file.Directory, directoryFilter))
-                        continue;
+                Counting = true;
+                NumberLines = 0;
+                NumberBlankLines = 0;
+                NumberLinesInDesignerFiles = 0;
+                NumberCommentsLines = 0;
+                NumberCodeLines = 0;
+                NumberTestCodeLines = 0;
 
-                    var codeFile = new CodeFile(file.FullName);
-                    codeFile.CountLines();
-
-                    CalculateSums(codeFile);
-
-                    if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer)
+                var timer = new TimeSpan(0, 0, 0, 0, 500);
+                var directoryFilter = directoriesToIgnore.Split(';');
+                string root = _directory.FullName;
+                var dirs = new ConcurrentBag<string>();
+                dirs.Add(root);
+                Parallel.ForEach(Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories),
+                    (dir) =>
                     {
-                        lastUpdate = DateTime.Now;
-                        LinesOfCodeUpdated(this, EventArgs.Empty);
-                    }
-                }
-            }
+                        if (dir.IndexOf(".git", root.Length, StringComparison.InvariantCultureIgnoreCase) < 0 &&
+                            !DirectoryIsFiltered(dir, directoryFilter))
+                        {
+                            dirs.Add(dir);
+                        }
+                    });
 
-            //Send 'changed' event when done
-            if (LinesOfCodeUpdated != null)
-                LinesOfCodeUpdated(this, EventArgs.Empty);
+                // Setup the parallel foreach.
+                ParallelOptions po = new ParallelOptions();
+                CancellationTokenSource cts = new CancellationTokenSource();
+                po.CancellationToken = cts.Token;
+                po.MaxDegreeOfParallelism = System.Environment.ProcessorCount;
+
+                var lastUpdate = DateTime.Now;
+                Parallel.ForEach(filePattern.Split(';'), po,
+                    (filter) =>
+                    {
+                        Parallel.ForEach(GetFiles(dirs, filter.Trim()), po,
+                            (file) =>
+                            {
+                                var codeFile = new CodeFile(file);
+                                codeFile.CountLines();
+                                CalculateSums(codeFile);
+                                if (Cancel)
+                                {
+                                    cts.Cancel();
+                                }
+
+                                if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer &&
+                                    Interlocked.Exchange(ref _updatingUI, 1) == 0)
+                                {
+                                    LinesOfCodeUpdated(this, EventArgs.Empty);
+                                    lastUpdate = DateTime.Now;
+                                    Interlocked.Exchange(ref _updatingUI, 0);
+                                }
+                            });
+                    });
+            }
+            finally
+            {
+                Counting = false;
+
+                //Send 'changed' event when done
+                if (LinesOfCodeUpdated != null && !Cancel)
+                    LinesOfCodeUpdated(this, EventArgs.Empty);
+            }
         }
 
         private void CalculateSums(CodeFile codeFile)
         {
-            NumberLines += codeFile.NumberLines;
-            NumberBlankLines += codeFile.NumberBlankLines;
-            NumberCommentsLines += codeFile.NumberCommentsLines;
-            NumberLinesInDesignerFiles += codeFile.NumberLinesInDesignerFiles;
-
             var codeLines =
                 codeFile.NumberLines -
                 codeFile.NumberBlankLines -
@@ -114,19 +141,28 @@ namespace GitStatistics
                 codeFile.NumberLinesInDesignerFiles;
 
             var extension = codeFile.File.Extension.ToLower();
+            var isTestFile = codeFile.IsTestFile ||
+                             codeFile.File.Directory.FullName.IndexOf("test",
+                                     StringComparison.OrdinalIgnoreCase) >= 0;
 
-            if (!LinesOfCodePerExtension.ContainsKey(extension))
-                LinesOfCodePerExtension.Add(extension, 0);
-
-            LinesOfCodePerExtension[extension] += codeLines;
-            NumberCodeLines += codeLines;
-
-            if (codeFile.IsTestFile || codeFile.File.Directory.FullName.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
+            lock (LinesOfCodePerExtension)
             {
-                NumberTestCodeLines += codeLines;
+                NumberLines += codeFile.NumberLines;
+                NumberBlankLines += codeFile.NumberBlankLines;
+                NumberCommentsLines += codeFile.NumberCommentsLines;
+                NumberLinesInDesignerFiles += codeFile.NumberLinesInDesignerFiles;
+
+                if (!LinesOfCodePerExtension.ContainsKey(extension))
+                    LinesOfCodePerExtension.Add(extension, 0);
+
+                LinesOfCodePerExtension[extension] += codeLines;
+                NumberCodeLines += codeLines;
+
+                if (isTestFile)
+                {
+                    NumberTestCodeLines += codeLines;
+                }
             }
-
-
         }
     }
 }
