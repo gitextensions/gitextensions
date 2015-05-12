@@ -1,7 +1,9 @@
 ﻿Changelog
 =========
-### Version 2.48.05 (11 May 2015)
+### Version 2.48.05 (13 May 2015)
 * Fixed issue #2493: StartBrowseDialog failed after clone
+* Fixed issue #2783: Fixed crash when right click on blank line in 'File Tree'
+* Enter/Return in file tree acts as double click
 
 ### Version 2.48.04 (8 May 2015)
 * Fixed issue #1643: Do stage of 16506 files and GUI becomes Not Respoding
