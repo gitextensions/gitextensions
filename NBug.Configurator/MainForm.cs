@@ -86,11 +86,6 @@ namespace NBug.Configurator
 			}
 		}
 
-		private void DiscussionForumToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Process.Start(this.discussionForumToolStripMenuItem.Tag.ToString());
-		}
-
 		private void EmbeddedToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.createFileDialog.FileName = "app.config";
@@ -222,11 +217,6 @@ namespace NBug.Configurator
 		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			this.SaveChangesWarning();
-		}
-
-		private void OnlineDocumentationToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Process.Start(this.onlineDocumentationToolStripMenuItem.Tag.ToString());
 		}
 
 		private void OpenButton_Click(object sender, EventArgs e)

@@ -60,6 +60,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
@@ -73,6 +74,18 @@
     <Compile Include="Core\Submission\IProtocol.cs" />
     <Compile Include="Core\Submission\IProtocolFactory.cs" />
     <Compile Include="Core\Submission\Tracker\BugNet.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\AccountData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\AttachmentData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\CustomFieldValueForIssueData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\IMantisConnectService.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\IssueData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\IssueNoteData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\Mantis.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\MantisConnectService.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\ObjectRef.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\ProjectVersionData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\RelationshipData.cs" />
+    <Compile Include="Core\Submission\Tracker\Mantis\UserData.cs" />
     <Compile Include="Core\UI\Custom\CustomUI.cs" />
     <Compile Include="Core\UI\Developer\InternalExceptionViewer.cs">
       <SubType>Form</SubType>
@@ -103,6 +116,27 @@
     <Compile Include="Enums\UIProvider.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Handler.cs" />
+    <Compile Include="Helpers\EmailDestinationBuilder.cs" />
+    <Compile Include="Properties\Localization.de.Designer.cs">
+      <DependentUpon>Localization.de.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\Localization.es-MX.Designer.cs">
+      <DependentUpon>Localization.es-MX.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\Localization.fi-FI.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.fi-FI.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Localization.hr.Designer.cs">
+      <DependentUpon>Localization.hr.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Properties\Localization.ja.Designer.cs">
       <DependentUpon>Localization.ja.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -117,6 +151,11 @@
       <DependentUpon>Localization.pt-BR.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\Localization.ru-RU.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.ru-RU.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Localization.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -223,6 +262,24 @@
     <EmbeddedResource Include="Core\UI\WinForms\Panels\ExceptionDetails.resx">
       <DependentUpon>ExceptionDetails.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.es-MX.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.es-MX.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.fi-FI.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.fi-FI.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.hr.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.hr.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Localization.ko-KR.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Localization.ko-KR.Designer.cs</LastGenOutput>
@@ -234,6 +291,10 @@
     <EmbeddedResource Include="Properties\Localization.pt-BR.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Localization.pt-BR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Localization.ru-RU.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.ru-RU.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Localization.resx">
       <Generator>ResXFileCodeGenerator</Generator>

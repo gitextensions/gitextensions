@@ -153,6 +153,9 @@
   <data name="UI_Dialog_Minimal_Message" xml:space="preserve">
     <value>이 프로그램은 충돌이 발생하였으며 종료됩니다. 버그 레포트가 개발자에게 보내졌습니다. 불편을 끼쳐드려 죄송합니다.</value>
   </data>
+  <data name="UI_Dialog_Minimal_Title" xml:space="preserve">
+    <value>오류</value>
+  </data>
   <data name="UI_Dialog_Normal_Continue_Button" xml:space="preserve">
     <value>계속(&amp;C)</value>
   </data>
