@@ -1268,6 +1268,7 @@ namespace GitUI.CommandsDialogs
             var gitItem = (GitTree.SelectedNode != null) ? GitTree.SelectedNode.Tag as GitItem : null;
             var enableItems = gitItem != null && gitItem.IsBlob;
 
+            openSubmoduleMenuItem.Enabled = gitItem != null && gitItem.IsCommit;
             saveAsToolStripMenuItem.Enabled = enableItems;
             openFileToolStripMenuItem.Enabled = enableItems;
             openFileWithToolStripMenuItem.Enabled = enableItems;
@@ -1364,6 +1365,11 @@ namespace GitUI.CommandsDialogs
 
         private void GitTreeDoubleClick(object sender, EventArgs e)
         {
+            OnItemActivated();
+        }
+
+        private void OnItemActivated()
+        {
             if (GitTree.SelectedNode == null || !(GitTree.SelectedNode.Tag is IGitItem))
                 return;
 
@@ -1377,12 +1383,17 @@ namespace GitUI.CommandsDialogs
             }
             else if (item.IsCommit)
             {
-                Process process = new Process();
-                process.StartInfo.FileName = Application.ExecutablePath;
-                process.StartInfo.Arguments = "browse";
-                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName.EnsureTrailingPathSeparator());
-                process.Start();
+                SpawnCommitBrowser(item);
             }
+        }
+
+        private void SpawnCommitBrowser(GitItem item)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = Application.ExecutablePath;
+            process.StartInfo.Arguments = "browse";
+            process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.FileName.EnsureTrailingPathSeparator());
+            process.Start();
         }
 
         private void CloneToolStripMenuItemClick(object sender, EventArgs e)
@@ -2025,6 +2036,16 @@ namespace GitUI.CommandsDialogs
         {
             // TODO: Replace with a status page?
             CommitToolStripMenuItemClick(sender, e);
+        }
+
+        public void OpenSubmoduleMenuItemOnClick(object sender, EventArgs e)
+        {
+            var item = GitTree.SelectedNode.Tag as GitItem;
+
+            if (item.IsCommit)
+	        {
+                SpawnCommitBrowser(item);
+	        }
         }
 
         public void SaveAsOnClick(object sender, EventArgs e)
@@ -3321,6 +3342,21 @@ namespace GitUI.CommandsDialogs
         private void cherryPickSelectedDiffFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DiffText.CherryPickAllChanges();
+        }
+
+        private void GitTreeKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            {
+                // Trigger a mouse double click event for the current item
+                var node = GitTree.SelectedNode;
+
+                if (node != null)
+                {
+                    OnItemActivated();
+                    e.Handled = true;
+                }
+            }
         }
     }
 }
