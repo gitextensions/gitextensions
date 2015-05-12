@@ -1364,6 +1364,11 @@ namespace GitUI.CommandsDialogs
 
         private void GitTreeDoubleClick(object sender, EventArgs e)
         {
+            OnItemActivated();
+        }
+
+        private void OnItemActivated()
+        {
             if (GitTree.SelectedNode == null || !(GitTree.SelectedNode.Tag is IGitItem))
                 return;
 
@@ -3321,6 +3326,18 @@ namespace GitUI.CommandsDialogs
         private void cherryPickSelectedDiffFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DiffText.CherryPickAllChanges();
+        }
+
+        private void GitTreeKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            {
+                if (GitTree.SelectedNode != null)
+                {
+                    OnItemActivated();
+                    e.Handled = true;
+                }
+            }
         }
     }
 }
