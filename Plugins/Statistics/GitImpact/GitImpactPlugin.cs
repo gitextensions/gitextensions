@@ -19,8 +19,8 @@ namespace GitImpact
             if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
                 return false;
 
-            using (FormImpact form = new FormImpact(gitUIEventArgs.GitModule))
-                form.ShowDialog(gitUIEventArgs.OwnerForm as IWin32Window);
+            using (var form = new FormImpact(gitUIEventArgs.GitModule))
+                form.ShowDialog(gitUIEventArgs.OwnerForm);
             return false;
         }
 

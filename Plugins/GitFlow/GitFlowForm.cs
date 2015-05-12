@@ -1,27 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitFlow.Properties;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitFlow
 {
-    public partial class GitFlowForm : ResourceManager.GitExtensionsFormBase
+    public partial class GitFlowForm : GitExtensionsFormBase
     {
-        GitUIBaseEventArgs _gitUiCommands;
+        private readonly TranslationString _gitFlowTooltip = new TranslationString("A good branch model for your project with Git...");
+        private readonly TranslationString _loading = new TranslationString("Loading...");
+        private readonly TranslationString _noBranchExist = new TranslationString("No {0} branches exist.");
+
+        readonly GitUIBaseEventArgs _gitUiCommands;
 
         Dictionary<string,List<string>> Branches { get; set; }
 
         readonly AsyncLoader _task = new AsyncLoader();
 
         public bool IsRefreshNeeded { get; set; }
-        private const string refHeads = "refs/heads/";
+        private const string RefHeads = "refs/heads/";
 
         private string CurrentBranch { get; set; }
 
@@ -53,7 +56,7 @@ namespace GitFlow
             Branches = new Dictionary<string, List<string>>();
 
             lblPrefixManage.Text = string.Empty;
-            ttGitFlow.SetToolTip(lnkGitFlow, "A good branch model for your project with Git...");
+            ttGitFlow.SetToolTip(lnkGitFlow, _gitFlowTooltip.Text);
 
             if (_gitUiCommands != null)
                 Init();
@@ -109,7 +112,7 @@ namespace GitFlow
         private void LoadBranches(string branchType)
         {
             cbManageType.Enabled = false;
-            cbBranches.DataSource = new List<string> {"Loading..."};
+            cbBranches.DataSource = new List<string> {_loading.Text};
             if (!Branches.ContainsKey(branchType))
                 _task.Load(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchDatas(); });
             else
@@ -140,7 +143,7 @@ namespace GitFlow
             var isThereABranch = branches.Any();
 
             cbManageType.Enabled = true;
-            cbBranches.DataSource = isThereABranch ? branches : new List<string> { "No " + branchType + " branches exist." };
+            cbBranches.DataSource = isThereABranch ? branches : new List<string> { string.Format(_noBranchExist.Text, branchType) };
             cbBranches.Enabled = isThereABranch;
             if (isThereABranch && CurrentBranch != null)
             {
@@ -305,7 +308,7 @@ namespace GitFlow
         {
             var head = _gitUiCommands.GitModule.RunGitCmd("symbolic-ref HEAD").Trim('*', ' ', '\n', '\r');
             lblHead.Text = head;
-            var currentRef = head.StartsWith(refHeads) ? head.Substring(refHeads.Length) : head;
+            var currentRef = head.StartsWith(RefHeads) ? head.Substring(RefHeads.Length) : head;
 
             string branchTypes;
             string branchName;

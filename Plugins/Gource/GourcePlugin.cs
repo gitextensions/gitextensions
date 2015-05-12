@@ -13,6 +13,23 @@ namespace Gource
 {
     public class GourcePlugin : GitPluginBase, IGitPluginForRepository
     {
+        #region Translation
+        private readonly TranslationString _currentDirectoryIsNotValidGit = new TranslationString("The current directory is not a valid git repository.\n\n" +
+            "Gource can be only be started from a valid git repository.");
+        private readonly TranslationString _resetConfigPath = new TranslationString("Cannot find Gource in the configured path: {0}.\n\n." +
+            "Do you want to reset the configured path?");
+        private readonly TranslationString _gource = new TranslationString("Gource");
+        private readonly TranslationString _doYouWantDownloadGource = new TranslationString("There is no path to Gource configured.\n\n" +
+            "Do you want to automatically download Gource?");
+        private readonly TranslationString _download = new TranslationString("Download");
+        private readonly TranslationString _cannotFindGource = new TranslationString("Cannot find Gource.\n" +
+            "Please download Gource and set the path in the plugins settings dialog.");
+        private readonly TranslationString _bytesDownloaded = new TranslationString("{0} bytes downloaded.");
+        private readonly TranslationString _gourceDownloadedAndUnzipped = new TranslationString("Gource has been downloaded and unzipped.");
+        private readonly TranslationString _downloadingFailed = new TranslationString("Downloading failed.\n" +
+            "Please download Gource and set the path in the plugins settings dialog.");
+        #endregion
+
         public GourcePlugin()
         {
             Description = "Gource";
@@ -37,8 +54,7 @@ namespace Gource
             var ownerForm = eventArgs.OwnerForm as IWin32Window;
             if (!gitUiCommands.IsValidGitWorkingDir())
             {
-                MessageBox.Show(ownerForm, "The current directory is not a valid git repository." + Environment.NewLine +
-                                Environment.NewLine + "Gource can be only be started from a valid git repository.");
+                MessageBox.Show(ownerForm, _currentDirectoryIsNotValidGit.Text);
                 return false;
             }
 
@@ -49,8 +65,7 @@ namespace Gource
                 if (!File.Exists(pathToGource))
                 {
                     if (MessageBox.Show(ownerForm,
-                            "Cannot find Gource in the configured path: " + pathToGource +
-                            ".\n\n.Do you want to reset the configured path?", "Gource", MessageBoxButtons.YesNo) ==
+                            string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
                     {
                         Settings.SetValue<string>(GourcePath.Name, GourcePath.DefaultValue, s => s);
@@ -61,16 +76,14 @@ namespace Gource
 
             if (string.IsNullOrEmpty(pathToGource))
             {
-                if (MessageBox.Show(ownerForm,
-                        "There is no path to Gource configured.\n\nDo you want to automatically download Gource?",
-                        "Download", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(ownerForm, _doYouWantDownloadGource.Text, _download.Text,
+                    MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     var gourceUrl = SearchForGourceUrl();
 
                     if (string.IsNullOrEmpty(gourceUrl))
                     {
-                        MessageBox.Show(ownerForm,
-                            "Cannot find Gource.\nPlease download Gource and set the path in the plugins settings dialog.");
+                        MessageBox.Show(ownerForm, _cannotFindGource.Text);
                         return false;
                     }
                     var downloadDir = Path.GetTempPath();
@@ -78,21 +91,20 @@ namespace Gource
                     var downloadSize = DownloadFile(gourceUrl, fileName);
                     if (downloadSize > 0)
                     {
-                        MessageBox.Show(downloadSize + " bytes downloaded.");
+                        MessageBox.Show(string.Format(_bytesDownloaded.Text, downloadSize));
                         Directory.CreateDirectory(Path.Combine(downloadDir, "gource"));
                         UnZipFiles(fileName, Path.Combine(downloadDir, "gource"), true);
 
                         var newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
                         if (File.Exists(newGourcePath))
                         {
-                            MessageBox.Show(ownerForm, "Gource has been downloaded and unzipped.");
+                            MessageBox.Show(ownerForm, _gourceDownloadedAndUnzipped.Text);
                             pathToGource = newGourcePath;
                         }
                     }
                     else
                     {
-                        MessageBox.Show(ownerForm,
-                            "Downloading failed.\nPlease download Gource and set the path in the plugins settings dialog.");
+                        MessageBox.Show(ownerForm, _downloadingFailed.Text);
                     }
                 }
             }

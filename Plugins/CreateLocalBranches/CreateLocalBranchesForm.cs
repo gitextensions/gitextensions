@@ -34,8 +34,8 @@ namespace CreateLocalBranches
                 {
                     string branchName = reference.Trim('*', ' ', '\n', '\r');
 
-                    if (branchName.StartsWith("remotes/" + Remote.Text + "/"))
-                        m_gitUiCommands.GitModule.RunGitCmd(string.Concat("branch --track ", branchName.Replace("remotes/" + Remote.Text + "/", ""), " ", branchName));
+                    if (branchName.StartsWith("remotes/" + _NO_TRANSLATE_Remote.Text + "/"))
+                        m_gitUiCommands.GitModule.RunGitCmd(string.Concat("branch --track ", branchName.Replace("remotes/" + _NO_TRANSLATE_Remote.Text + "/", ""), " ", branchName));
                 }
                 catch
                 {
