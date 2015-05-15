@@ -3,8 +3,11 @@
 ### Version 2.49 (no due date)
 * Cherry pick selected file/selected lines.
 
-### Version 2.48.05 (11 May 2015)
+### Version 2.48.05 (16 May 2015)
 * Fixed issue #2493: StartBrowseDialog failed after clone
+* Fixed issue #2783: Fixed crash when right click on blank line in 'File Tree'
+* Enter/Return in file tree acts as double click
+* Support Git for Windows path for Linux tools
 
 ### Version 2.48.04 (8 May 2015)
 * Fixed issue #1643: Do stage of 16506 files and GUI becomes Not Respoding
