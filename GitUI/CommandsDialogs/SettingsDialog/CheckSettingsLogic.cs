@@ -63,33 +63,36 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 gitpath = possibleNewPath.Trim();
             }
 
-            gitpath = gitpath.Replace(@"\cmd\git.exe", @"\bin\")
-                .Replace(@"\cmd\git.cmd", @"\bin\")
-                .Replace(@"\bin\git.exe", @"\bin\");
-
-            if (Directory.Exists(gitpath))
+            foreach (var toolsPath in new[] { @"usr\bin\", @"bin\" })
             {
-                if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
+                gitpath = gitpath.Replace(@"\cmd\git.exe", @"\" + toolsPath)
+                    .Replace(@"\cmd\git.cmd", @"\" + toolsPath)
+                    .Replace(@"\bin\git.exe", @"\" + toolsPath);
+
+                if (Directory.Exists(gitpath))
                 {
-                    AppSettings.GitBinDir = gitpath;
+                    if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
+                    {
+                        AppSettings.GitBinDir = gitpath;
+                        return true;
+                    }
+                }
+
+                if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
+                {
+                    AppSettings.GitBinDir = "";
                     return true;
                 }
-            }
 
-            if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
-            {
-                AppSettings.GitBinDir = "";
-                return true;
-            }
-
-            foreach (var path in GetGitLocations())
-            {
-                if (Directory.Exists(path + @"bin\"))
+                foreach (var path in GetGitLocations())
                 {
-                    if (File.Exists(path + @"bin\sh.exe") || File.Exists(path + @"bin\sh"))
+                    if (Directory.Exists(path + toolsPath))
                     {
-                        AppSettings.GitBinDir = path + @"bin\";
-                        return true;
+                        if (File.Exists(path + toolsPath + "sh.exe") || File.Exists(path + toolsPath + "sh"))
+                        {
+                            AppSettings.GitBinDir = path + toolsPath;
+                            return true;
+                        }
                     }
                 }
             }
