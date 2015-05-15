@@ -61,13 +61,13 @@ namespace GitUI.UserControls
         protected class NativeMethods
         {
             [DllImport("user32", CharSet = CharSet.Auto)]
-            public static extern int SendMessage(HandleRef hWnd,
+            public static extern IntPtr SendMessage(HandleRef hWnd,
                                                    int msg,
                                                    IntPtr wParam,
                                                    ref LVHITTESTINFO lParam);
 
             [DllImport("user32", CharSet = CharSet.Auto)]
-            public static extern int SendMessage(HandleRef hWnd,
+            public static extern IntPtr SendMessage(HandleRef hWnd,
                                                    int msg,
                                                    IntPtr wParam,
                                                    ref LVGROUP lParam);
@@ -230,7 +230,7 @@ namespace GitUI.UserControls
 
                     //if the click is on the group header, exit, otherwise send message
                     var handleRef = new HandleRef(this, Handle);
-                    if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) != -1)
+                    if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) != new IntPtr(-1))
                         if ((info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) != 0)
                             return;
                     base.WndProc(ref m);

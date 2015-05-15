@@ -16,17 +16,12 @@ namespace GitCommands
 
         public void Dispose()
         {
-            DisposeImpl();
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void DisposeImpl()
+        protected virtual void Dispose(bool disposing)
         {
-        }
-
-        ~SettingsCache()
-        {
-            DisposeImpl();
         }
 
         public void LockedAction(Action action)

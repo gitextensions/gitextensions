@@ -89,8 +89,10 @@ namespace GitImpact
             Invalidate();
         }
 
-        void OnImpactUpdate(ImpactLoader.Commit commit)
+        void OnImpactUpdate(object sender, ImpactLoader.CommitEventArgs e)
         {
+            var commit = e.Commit;
+
             lock (_dataLock)
             {
                 // UPDATE IMPACT

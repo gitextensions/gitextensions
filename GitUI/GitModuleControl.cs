@@ -10,12 +10,14 @@ namespace GitUI
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleControl : GitExtensionsControl
     {
+        private readonly object _lock = new object();
+
         [Browsable(false)]
         public bool UICommandsSourceParentSearch { get; private set; }
 
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
-        public event GitUICommandsSourceSetEventHandler GitUICommandsSourceSet;
+        public event EventHandler<GitUICommandsSourceEventArgs> GitUICommandsSourceSet;
         private IGitUICommandsSource _uiCommandsSource;
 
 
@@ -99,7 +101,7 @@ namespace GitUI
             if (!UICommandsSourceParentSearch)
                 return;
 
-            lock (this)
+            lock (_lock)
             {
                 if (_uiCommandsSource != null)
                     return;
@@ -136,7 +138,7 @@ namespace GitUI
         {
             var handler = GitUICommandsSourceSet;
             if (handler != null)
-                handler(this, newSource);
+                handler(this, new GitUICommandsSourceEventArgs(newSource));
         }
     }
 }

@@ -89,12 +89,12 @@ namespace GitUI.Editor
             OnSelectedLineChanged(TextEditor.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y));
         }
 
-        public event SelectedLineChangedEventHandler SelectedLineChanged;
+        public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
 
         void OnSelectedLineChanged(int selectedLine)
         {
             if (SelectedLineChanged != null)
-                SelectedLineChanged(this, selectedLine);
+                SelectedLineChanged(this, new SelectedLineEventArgs(selectedLine));
         }
 
         void VScrollBar_ValueChanged(object sender, EventArgs e)

@@ -19,7 +19,15 @@ using SmartFormat;
 
 namespace GitCommands
 {
-    public delegate void GitModuleChangedEventHandler(GitModule module);
+    public class GitModuleEventArgs : EventArgs
+    {
+        public GitModuleEventArgs(GitModule gitModule)
+        {
+            GitModule = gitModule;
+        }
+
+        public GitModule GitModule { get; private set; }
+    }
 
     public enum SubmoduleStatus
     {

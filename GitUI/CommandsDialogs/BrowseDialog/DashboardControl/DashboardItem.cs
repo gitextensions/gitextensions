@@ -165,5 +165,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
                 OnClick(e);
         }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                CancelBranchNameLoad();
+                _branchNameLoader.Dispose();
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }
