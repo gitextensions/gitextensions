@@ -262,8 +262,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void repositoryRemoved(Repository repository)
         {
-            if (RepositoryRemoved != null)
-                RepositoryRemoved(this, new RepositoryEventArgs(repository));
+            var handler = RepositoryRemoved;
+            if (handler != null)
+                handler(this, new RepositoryEventArgs(repository));
         }
 
         public void AddItem(DashboardItem dashboardItem)
