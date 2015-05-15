@@ -2667,8 +2667,9 @@ namespace GitUI
 
         public void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
-            if (GitModuleChanged != null)
-                GitModuleChanged(this, e);
+            var handler = GitModuleChanged;
+            if (handler != null)
+                handler(this, e);
         }
 
         private void InitRepository_Click(object sender, EventArgs e)

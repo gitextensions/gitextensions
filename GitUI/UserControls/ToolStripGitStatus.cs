@@ -52,7 +52,7 @@ namespace GitUI
             {
                 _UICommandsSource = value;
                 _UICommandsSource.GitUICommandsChanged += GitUICommandsChanged;
-                GitUICommandsChanged(UICommandsSource, null);
+                GitUICommandsChanged(UICommandsSource, new GitUICommandsChangedEventArgs(oldCommands: null));
             }
         }
         
@@ -105,9 +105,10 @@ namespace GitUI
 
         private void GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
-            if (e != null)
+            var oldCommands = e.OldCommands;
+
+            if (oldCommands != null)
             {
-                var oldCommands = e.OldCommands;
                 oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
                 oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;
                 oldCommands.PostCheckoutBranch -= GitUICommands_PostCheckout;
