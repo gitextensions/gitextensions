@@ -89,9 +89,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranslationUtils.cs" />
     <Compile Include="Xliff\TranslationUtl.cs" />
-    <Compile Include="TranslationString.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="TranslationString.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="Xliff\TranslationFile.cs" />
     <Compile Include="Xliff\TranslationBody.cs" />

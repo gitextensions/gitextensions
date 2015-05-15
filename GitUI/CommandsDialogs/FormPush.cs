@@ -845,5 +845,21 @@ namespace GitUI.CommandsDialogs
         {
             RemoteBranch.Enabled = (_NO_TRANSLATE_Branch.Text != AllRefs);
         }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _remoteBranchesLoader.Cancel();
+                _remoteBranchesLoader.Dispose();
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

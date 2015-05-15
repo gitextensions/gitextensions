@@ -101,12 +101,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             GitCommandCache.CachedCommandsChanged += OnCachedCommandsLogChanged;
         }
 
-        private void OnCommandsLogChanged()
+        private void OnCommandsLogChanged(object sender, EventArgs e)
         {
             syncContext.Post(_ => RefreshLogItems(), null);
         }
 
-        private void OnCachedCommandsLogChanged()
+        private void OnCachedCommandsLogChanged(object sender, EventArgs e)
         {
             syncContext.Post(_ => RefreshCommandCacheItems(), null);
         }

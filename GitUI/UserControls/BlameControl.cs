@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommitInfo;
+using GitUI.Editor;
 using GitUI.HelperDialogs;
 
 namespace GitUI.Blame
@@ -134,8 +135,9 @@ namespace GitUI.Blame
             }
         }
 
-        void SelectedLineChanged(object sender, int selectedLine)
+        void SelectedLineChanged(object sender, SelectedLineEventArgs e)
         {
+            int selectedLine = e.SelectedLine;
             if (_blame == null || selectedLine >= _blame.Lines.Count)
                 return;
 
@@ -338,6 +340,22 @@ namespace GitUI.Blame
                 return;
             using (var frm = new FormCommitDiff(UICommands, commit))
                 frm.ShowDialog(this);
+        }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                    components.Dispose();
+
+                blameLoader.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }
