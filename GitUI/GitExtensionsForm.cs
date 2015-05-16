@@ -23,7 +23,7 @@ namespace GitUI
         internal static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
         /// <summary>indicates whether the <see cref="Form"/>'s position will be restored</summary>
-        bool _enablePositionRestore;
+        readonly bool _enablePositionRestore;
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         public GitExtensionsForm()

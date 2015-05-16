@@ -21,6 +21,36 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return "color,graph,diff,icon";
         }
 
+        private int GetIconStyleIndex(string text)
+        {
+            switch (text.ToLowerInvariant())
+            {
+                case "large":
+                    return 1;
+                case "small":
+                    return 2;
+                case "cow":
+                    return 3;
+                default:
+                    return 0;
+            }
+        }
+
+        private string GetIconStyleString(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    return "large";
+                case 2:
+                    return "small";
+                case 3:
+                    return "cow";
+                default:
+                    return "default";
+            }
+        }
+
         protected override void SettingsToPage()
         {
             MulticolorBranches.Checked = AppSettings.MulticolorBranches;
@@ -89,7 +119,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             YellowIcon.Checked = iconColor == "yellow";
             RandomIcon.Checked = iconColor == "random";
 
-            IconStyle.Text = AppSettings.IconStyle;
+            IconStyle.SelectedIndex = GetIconStyleIndex(AppSettings.IconStyle);
 
             ShowIconPreview();
         }
@@ -117,7 +147,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
             AppSettings.IconColor = GetSelectedApplicationIconColor();
-            AppSettings.IconStyle = IconStyle.Text;
+            AppSettings.IconStyle = GetIconStyleString(IconStyle.SelectedIndex);
         }
 
         private string GetSelectedApplicationIconColor()
@@ -171,25 +201,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ShowIconPreview()
         {
-            string color = IconStyle.Text.ToLowerInvariant();
-            Icon icon = null;
-            switch (color)
+            Icon icon;
+            switch (IconStyle.SelectedIndex)
             {
-                case "default":
+                case 0:
                     IconPreview.Image = (new Icon(GitExtensionsForm.GetApplicationIcon("Large", GetSelectedApplicationIconColor()), 32, 32)).ToBitmap();
                     IconPreviewSmall.Image = (new Icon(GitExtensionsForm.GetApplicationIcon("Small", GetSelectedApplicationIconColor()), 16, 16)).ToBitmap();
                     break;
-                case "small":
+                case 1:
                     icon = GitExtensionsForm.GetApplicationIcon("Small", GetSelectedApplicationIconColor());
                     IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
                     IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
-                case "large":
+                case 2:
                     icon = GitExtensionsForm.GetApplicationIcon("Large", GetSelectedApplicationIconColor());
                     IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
                     IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
                     break;
-                case "cow":
+                case 3:
                     icon = GitExtensionsForm.GetApplicationIcon("Cow", GetSelectedApplicationIconColor());
                     IconPreview.Image = (new Icon(icon, 32, 32)).ToBitmap();
                     IconPreviewSmall.Image = (new Icon(icon, 16, 16)).ToBitmap();
