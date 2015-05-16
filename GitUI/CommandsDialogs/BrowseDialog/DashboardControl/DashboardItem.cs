@@ -166,7 +166,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 OnClick(e);
         }
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -175,7 +175,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (disposing)
             {
                 CancelBranchNameLoad();
-                _branchNameLoader.Dispose();
+                if (_branchNameLoader != null)
+                    _branchNameLoader.Dispose();
                 if (components != null)
                     components.Dispose();
             }

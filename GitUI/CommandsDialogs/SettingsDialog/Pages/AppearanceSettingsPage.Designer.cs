@@ -126,10 +126,7 @@
             // Language
             // 
             this.Language.FormattingEnabled = true;
-            this.Language.Items.AddRange(new object[] {
-            "en-US",
-            "ja-JP",
-            "nl-NL"});
+            this.Language.Items.AddRange(new object[] {});
             this.Language.Location = new System.Drawing.Point(283, 18);
             this.Language.Name = "Language";
             this.Language.Size = new System.Drawing.Size(169, 24);

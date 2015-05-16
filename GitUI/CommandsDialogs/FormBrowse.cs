@@ -3353,14 +3353,20 @@ namespace GitUI.CommandsDialogs
             if (disposing)
             {
 #if !__MonoCS__
-                _commitButton.Dispose();
-                _pushButton.Dispose();
-                _pullButton.Dispose();
+                if (_commitButton != null)
+                    _commitButton.Dispose();
+                if (_pushButton != null)
+                    _pushButton.Dispose();
+                if (_pullButton != null)
+                    _pullButton.Dispose();
 #endif
                 _submodulesStatusImagesCTS.Dispose();
-                _formBrowseMenus.Dispose();
-                _filterRevisionsHelper.Dispose();
-                _filterBranchHelper.Dispose();
+                if (_formBrowseMenus != null)
+                    _formBrowseMenus.Dispose();
+                if (_filterRevisionsHelper != null)
+                    _filterRevisionsHelper.Dispose();
+                if (_filterBranchHelper != null)
+                    _filterBranchHelper.Dispose();
 
                 if (components != null)
                     components.Dispose();
