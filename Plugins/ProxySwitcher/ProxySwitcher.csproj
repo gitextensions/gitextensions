@@ -49,7 +49,6 @@
       <DependentUpon>ProxySwitcherForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ProxySwitcherPlugin.cs" />
-    <Compile Include="SettingsKey.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
@@ -60,7 +59,6 @@
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj">
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
       <Name>ResourceManager</Name>
-      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
