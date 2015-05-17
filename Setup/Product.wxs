@@ -270,10 +270,10 @@
                 <File Source="..\Plugins\BuildServerIntegration\TfsIntegration\bin\Release\TfsIntegration.dll" />
             </Component>
             <Component Id="TfsInterop.Vs2012.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TfsInterop\bin\Release\TfsInterop.Vs2012.dll" />
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2012\bin\Release\TfsInterop.Vs2012.dll" />
             </Component>
             <!-- Component Id="TfsInterop.Vs2013.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TfsInterop\bin\Release\TfsInterop.Vs2013.dll" />
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2013\bin\Release\TfsInterop.Vs2013.dll" />
             </Component -->
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
