@@ -233,6 +233,10 @@ This action will be performed without warning while checking out branch.</source
         <source>Build server integration</source>
         <target />
       </trans-unit>
+      <trans-unit id="_noneItem.Text">
+        <source>None</source>
+        <target />
+      </trans-unit>
       <trans-unit id="checkBoxEnableBuildServerIntegration.Text">
         <source>Enable build server integration</source>
         <target />
