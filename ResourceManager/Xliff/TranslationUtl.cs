@@ -151,13 +151,17 @@ namespace ResourceManager.Xliff
                         for (int index = 0; index < list.Count; index++)
                         {
                             propertyName = "Item" + index;
-                            var listValue = (string)list[index];
-                            Func<string> provideDefaultValue = () => listValue;
-                            string value = translation.TranslateItem(category, itemName, propertyName, provideDefaultValue);
-
-                            if (!string.IsNullOrEmpty(value))
+                            var listValue = list[index] as string;
+                            if (listValue != null)
                             {
-                                list[index] = value;
+                                Func<string> provideDefaultValue = () => listValue;
+                                string value = translation.TranslateItem(category, itemName, propertyName,
+                                    provideDefaultValue);
+
+                                if (!string.IsNullOrEmpty(value))
+                                {
+                                    list[index] = value;
+                                }
                             }
                         }
                     }
