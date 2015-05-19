@@ -20,7 +20,7 @@ The installer is build using WiX. You need to install WiX when you want to build
 ## How to create the installer
 
 * Download and install WiX [http://wixtoolset.org/](http://wixtoolset.org/)
-* Run Setup\\BuildInstallers.bat to build the installers
+* Run Setup\\BuildInstallers.VS2013.cmd or Setup\\BuildInstallers.VS2013.cmd to build the installers
 
 ## Installing Nuget in Monodevelop/Xamarin Studio
 
