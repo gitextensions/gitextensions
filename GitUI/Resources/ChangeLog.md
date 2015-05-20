@@ -795,7 +795,7 @@ where it is installed on their system
 * Fixed issue 81: when staging a file, all partially staged files are removed from unstaged list
 * Fixed issue 107: alt+f4 not working when revisiongrid has focus
 * Fixed issue 111: Annotated Tags Appear Twice in Push Dialog
-* Fixed issue 113: Statistics: "Lines of Code per type" and "Lines of testcode" fail in empty or non code repo
+* Fixed issue 113: Statistics: "Lines of Code per type" and "Lines of test code" fail in empty or non code repo
 * Fixed issue 114: Adding filter which results in no commits shows "empty repository" UI
 * Fixed issue 119: show files in FileHistory also prior to rename
 * Fixed issue 120: choose branch when adding new submodule doesn't work

@@ -21,7 +21,7 @@ namespace GitStatistics
         private readonly TranslationString _linesOfCode = new TranslationString("{0} Lines of code");
         private readonly TranslationString _linesOfCodeP = new TranslationString("{0} Lines of code ({1})");
         private readonly TranslationString _linesOfTestCode = new TranslationString("{0} Lines of test code");
-        private readonly TranslationString _linesOfTestCodeP = new TranslationString("{0} Lines of testcode ({1})");
+        private readonly TranslationString _linesOfTestCodeP = new TranslationString("{0} Lines of test code ({1})");
         private readonly TranslationString _linesOfProductionCodeP = new TranslationString("{0} Lines of production code ({1})");
         private readonly TranslationString _blankLinesP = new TranslationString("{0} Blank lines ({1})");
         private readonly TranslationString _commentLinesP = new TranslationString("{0} Comment lines ({1})");
