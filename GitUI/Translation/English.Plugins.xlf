@@ -535,7 +535,7 @@ defaultrebase=0</source>
         <target />
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
-        <source>{0} Lines of testcode ({1})</source>
+        <source>{0} Lines of test code ({1})</source>
         <target />
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -551,7 +551,7 @@ defaultrebase=0</source>
         <target />
       </trans-unit>
       <trans-unit id="tabPage4.Text">
-        <source>Lines of testcode</source>
+        <source>Lines of test code</source>
         <target />
       </trans-unit>
     </body>
@@ -998,8 +998,7 @@ Please download Gource and set the path in the plugins settings dialog.</source>
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
-which can be pasted to programs like MS Word or LibreOffice Writer.
-</source>
+which can be pasted to programs like MS Word or LibreOffice Writer.</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">

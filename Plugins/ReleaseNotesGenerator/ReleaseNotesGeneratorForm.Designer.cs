@@ -359,7 +359,7 @@
             this.label11.Size = new System.Drawing.Size(331, 26);
             this.label11.TabIndex = 4;
             this.label11.Text = "Clipboard will contain HTML code (plain text) and HTML format\r\nwhich can be paste" +
-    "d to programs like MS Word or LibreOffice Writer.\r\n";
+    "d to programs like MS Word or LibreOffice Writer.";
             // 
             // ReleaseNotesGeneratorForm
             // 
