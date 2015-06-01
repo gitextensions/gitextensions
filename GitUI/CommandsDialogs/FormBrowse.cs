@@ -1719,7 +1719,18 @@ namespace GitUI.CommandsDialogs
 
             IList<GitRevision> items = RevisionGrid.GetSelectedRevisions();
             if (items.Count() == 1)
+            {
                 items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
+
+                if (!string.IsNullOrWhiteSpace(DiffFiles.SelectedItemParent)
+                    && DiffFiles.SelectedItemParent == DiffFiles.CombinedDiff.Text)
+                {
+                    var diffOfConflict = Module.GetCombinedDiffContent(items.First(), DiffFiles.SelectedItem.Name);
+
+                    DiffText.ViewPatch(diffOfConflict);
+                    return;
+                }
+            }
             DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
 
@@ -2661,12 +2672,16 @@ namespace GitUI.CommandsDialogs
 
             // disable items that need exactly one selected item
             bool isExcactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            openWithDifftoolToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
-            saveAsToolStripMenuItem1.Enabled = isExcactlyOneItemSelected;
-            cherryPickSelectedDiffFileToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+            var isCombinedDiff = isExcactlyOneItemSelected &&
+                DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
+            var enabled = isExcactlyOneItemSelected && !isCombinedDiff;
+            openWithDifftoolToolStripMenuItem.Enabled = enabled;
+            saveAsToolStripMenuItem1.Enabled = enabled;
+            cherryPickSelectedDiffFileToolStripMenuItem.Enabled = enabled;
             diffShowInFileTreeToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
             fileHistoryDiffToolstripMenuItem.Enabled = isExcactlyOneItemSelected;
             blameToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+            resetFileToToolStripMenuItem.Enabled = !isCombinedDiff;
 
             // openContainingFolderToolStripMenuItem.Enabled or not
             {

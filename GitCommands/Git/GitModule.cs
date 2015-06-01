@@ -3199,5 +3199,49 @@ namespace GitCommands
             }
             return branchName;
         }
+
+        public IList<GitItemStatus> GetCombinedDiffFileList(string shaOfMergeCommit)
+        {
+            var fileList = RunGitCmd("diff-tree --name-only --cc --no-commit-id " + shaOfMergeCommit);
+
+            var ret = new List<GitItemStatus>();
+            if (string.IsNullOrWhiteSpace(fileList))
+            {
+                return ret;
+            }
+
+            var files = fileList.Split(new []{'\n'}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var file in files)
+            {
+                var item = new GitItemStatus
+                {
+                    IsChanged = true,
+                    IsConflict = true,
+                    IsTracked = true,
+                    IsDeleted = false,
+                    IsStaged = false,
+                    IsNew = false,
+                    Name = file,
+                };
+                ret.Add(item);
+            }
+            
+            return ret;
+        }
+
+        public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath)
+        {
+            if (!Path.IsPathRooted(filePath))
+            {
+                filePath = Path.Combine(WorkingDir, filePath);
+            }
+
+            var cmd = string.Format("diff-tree --cc --no-commit-id {0} {1} {2} -- {3}",
+                AppSettings.IgnoreWhitespaceChanges ? "--ignore-space-change" : "",
+                revisionOfMergeCommit.Guid,
+                AppSettings.UsePatienceDiffAlgorithm? "--patience" : "",
+                filePath);
+            return RunGitCmd(cmd);
+        }
     }
 }
