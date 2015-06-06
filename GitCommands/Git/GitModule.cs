@@ -1178,15 +1178,6 @@ namespace GitCommands
             return new ConfigFile(_workingDir + ".gitmodules", true);
         }
 
-        public string GetCurrentSubmoduleLocalPath()
-        {
-            if (SuperprojectModule == null)
-                return null;
-            string submodulePath = WorkingDir.Substring(SuperprojectModule.WorkingDir.Length);
-            submodulePath = PathUtil.GetDirectoryName(submodulePath.ToPosixPath());
-            return submodulePath;
-        }
-
         public string GetSubmoduleNameByPath(string localPath)
         {
             var configFile = GetSubmoduleConfigFile();
