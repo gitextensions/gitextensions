@@ -2709,8 +2709,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
         
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
-        <source>Merge</source>
-        <target>Sloučit</target>
+        <source>Pull - merge</source>
         
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -2779,8 +2778,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
         
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
-        <source>Pull</source>
-        <target>Stáhnout</target>
+        <source>Open pull dialog...</source>
         
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
@@ -2794,8 +2792,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
         
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
-        <source>Rebase</source>
-        <target>Přeskládat</target>
+        <source>Pull - rebase</source>
         
       </trans-unit>
       <trans-unit id="recentToolStripMenuItem.Text">

@@ -2701,8 +2701,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</target>
         
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
-        <source>Merge</source>
-        <target>Fusionner (Merge)</target>
+        <source>Pull - merge</source>
         
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -2771,8 +2770,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</target>
         
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
-        <source>Pull</source>
-        <target>Récupérer (Pull)</target>
+        <source>Open pull dialog...</source>
         
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
@@ -2786,8 +2784,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</target>
         
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
-        <source>Rebase</source>
-        <target>Rebaser (Rebase)</target>
+        <source>Pull - rebase</source>
         
       </trans-unit>
       <trans-unit id="recentToolStripMenuItem.Text">
