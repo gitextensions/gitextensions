@@ -2693,8 +2693,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
-        <source>Merge</source>
-        <target>Samenvoegen</target>
+        <source>Pull - merge</source>
         
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -2763,8 +2762,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
-        <source>Pull</source>
-        <target>Ophalen</target>
+        <source>Open pull dialog...</source>
         
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
@@ -2778,8 +2776,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
-        <source>Rebase</source>
-        <target>Rebase</target>
+        <source>Pull - rebase</source>
         
       </trans-unit>
       <trans-unit id="recentToolStripMenuItem.Text">
