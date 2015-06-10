@@ -457,7 +457,7 @@ namespace GitUI.CommandsDialogs
             this.mergeToolStripMenuItem.Image = global::GitUI.Properties.Resources.PullMerge;
             this.mergeToolStripMenuItem.Name = "mergeToolStripMenuItem";
             this.mergeToolStripMenuItem.Size = new System.Drawing.Size(206, 24);
-            this.mergeToolStripMenuItem.Text = "Merge";
+            this.mergeToolStripMenuItem.Text = "Pull - merge";
             this.mergeToolStripMenuItem.Click += new System.EventHandler(this.mergeToolStripMenuItem_Click);
             // 
             // rebaseToolStripMenuItem1
@@ -465,7 +465,7 @@ namespace GitUI.CommandsDialogs
             this.rebaseToolStripMenuItem1.Image = global::GitUI.Properties.Resources.PullRebase;
             this.rebaseToolStripMenuItem1.Name = "rebaseToolStripMenuItem1";
             this.rebaseToolStripMenuItem1.Size = new System.Drawing.Size(206, 24);
-            this.rebaseToolStripMenuItem1.Text = "Rebase";
+            this.rebaseToolStripMenuItem1.Text = "Pull - rebase";
             this.rebaseToolStripMenuItem1.Click += new System.EventHandler(this.rebaseToolStripMenuItem1_Click);
             // 
             // fetchToolStripMenuItem
@@ -486,7 +486,7 @@ namespace GitUI.CommandsDialogs
             this.pullToolStripMenuItem1.Image = global::GitUI.Properties.Resources.Icon_4;
             this.pullToolStripMenuItem1.Name = "pullToolStripMenuItem1";
             this.pullToolStripMenuItem1.Size = new System.Drawing.Size(206, 24);
-            this.pullToolStripMenuItem1.Text = "Pull";
+            this.pullToolStripMenuItem1.Text = "Open pull dialog...";
             this.pullToolStripMenuItem1.Click += new System.EventHandler(this.pullToolStripMenuItem1_Click);
             // 
             // fetchAllToolStripMenuItem
