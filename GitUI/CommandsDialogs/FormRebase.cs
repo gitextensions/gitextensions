@@ -81,8 +81,6 @@ namespace GitUI.CommandsDialogs
             // Honor the rebase.autosquash configuration.
             var autosquashSetting = Module.GetEffectiveSetting("rebase.autosquash");
             chkAutosquash.Checked = "true" == autosquashSetting.Trim().ToLower();
-
-            chkStash.Enabled = Module.IsDirtyDir();
         }
 
         private void EnableButtons()
@@ -94,6 +92,7 @@ namespace GitUI.CommandsDialogs
 
                 Branches.Enabled = false;
                 Ok.Enabled = false;
+                chkStash.Enabled = false;
 
                 AddFiles.Enabled = true;
                 Resolved.Enabled = !Module.InTheMiddleOfConflictedMerge();
@@ -110,6 +109,7 @@ namespace GitUI.CommandsDialogs
                 Mergetool.Enabled = false;
                 Skip.Enabled = false;
                 Abort.Enabled = false;
+                chkStash.Enabled = Module.IsDirtyDir(); ;
             }
 
             SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
