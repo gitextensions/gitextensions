@@ -231,11 +231,6 @@ namespace GitUI.CommandsDialogs
             MergetoolClick(sender, e);
         }
 
-        private void chkPreserveMerges_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void ShowOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ShowOptions.Visible = false;
