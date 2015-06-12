@@ -92,6 +92,7 @@ namespace GitUI.CommandsDialogs
 
                 Branches.Enabled = false;
                 Ok.Enabled = false;
+                chkStash.Enabled = false;
 
                 AddFiles.Enabled = true;
                 Resolved.Enabled = !Module.InTheMiddleOfConflictedMerge();
@@ -108,6 +109,7 @@ namespace GitUI.CommandsDialogs
                 Mergetool.Enabled = false;
                 Skip.Enabled = false;
                 Abort.Enabled = false;
+                chkStash.Enabled = Module.IsDirtyDir(); ;
             }
 
             SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
@@ -202,11 +204,13 @@ namespace GitUI.CommandsDialogs
             {
                 rebaseCmd = GitCommandHelpers.RebaseRangeCmd(txtFrom.Text, cboTo.Text, Branches.Text,
                                                              chkInteractive.Checked, chkPreserveMerges.Checked,
-                                                             chkAutosquash.Checked);
+                                                             chkAutosquash.Checked, chkStash.Checked);
             }
             else
             {
-                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked);
+                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, 
+                                                        chkPreserveMerges.Checked, chkAutosquash.Checked,
+                                                        chkStash.Checked);
             }
 
             var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
@@ -225,11 +229,6 @@ namespace GitUI.CommandsDialogs
         private void SolveMergeconflictsClick(object sender, EventArgs e)
         {
             MergetoolClick(sender, e);
-        }
-
-        private void chkPreserveMerges_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void ShowOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
