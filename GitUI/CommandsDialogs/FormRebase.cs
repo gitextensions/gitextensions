@@ -26,28 +26,6 @@ namespace GitUI.CommandsDialogs
         private readonly string _defaultBranch;
         private readonly string _defaultToBranch;
 
-        private bool _wasDirty;
-
-        private LocalChangesAction ChangesMode
-        {
-            get
-            {
-                if (rbReset.Checked)
-                    return LocalChangesAction.Reset;
-
-                if (rbStash.Checked)
-                    return LocalChangesAction.Stash;
-
-                return LocalChangesAction.DontChange;
-            }
-
-            set
-            {
-                rbReset.Checked = value == LocalChangesAction.Reset;
-                rbStash.Checked = value == LocalChangesAction.Stash;
-            }
-        }
-
         private FormRebase()
             : this(null)
         { }
@@ -79,7 +57,6 @@ namespace GitUI.CommandsDialogs
         private void FormRebaseLoad(object sender, EventArgs e)
         {
             var selectedHead = Module.GetSelectedBranch();
-            _wasDirty = Module.IsDirtyDir();
             Currentbranch.Text = selectedHead;
 
             Branches.DisplayMember = "Name";
@@ -104,6 +81,8 @@ namespace GitUI.CommandsDialogs
             // Honor the rebase.autosquash configuration.
             var autosquashSetting = Module.GetEffectiveSetting("rebase.autosquash");
             chkAutosquash.Checked = "true" == autosquashSetting.Trim().ToLower();
+
+            chkStash.Enabled = Module.IsDirtyDir();
         }
 
         private void EnableButtons()
@@ -116,11 +95,6 @@ namespace GitUI.CommandsDialogs
                 Branches.Enabled = false;
                 Ok.Enabled = false;
 
-                if (_wasDirty)
-                {
-                    localChangesGB.Enabled = false;
-                }
-
                 AddFiles.Enabled = true;
                 Resolved.Enabled = !Module.InTheMiddleOfConflictedMerge();
                 Mergetool.Enabled = Module.InTheMiddleOfConflictedMerge();
@@ -129,11 +103,6 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                if (_wasDirty)
-                {
-                    localChangesGB.Enabled = true;
-                }
-
                 Branches.Enabled = true;
                 Ok.Enabled = true;
                 AddFiles.Enabled = false;
@@ -188,9 +157,7 @@ namespace GitUI.CommandsDialogs
             FormProcess.ShowDialog(this, GitCommandHelpers.ContinueRebaseCmd());
 
             if (!Module.InTheMiddleOfRebase())
-            {
                 Close();
-            }
 
             EnableButtons();
             patchGrid1.Initialize();
@@ -203,9 +170,7 @@ namespace GitUI.CommandsDialogs
             FormProcess.ShowDialog(this, GitCommandHelpers.SkipRebaseCmd());
 
             if (!Module.InTheMiddleOfRebase())
-            {
                 Close();
-            }
 
             EnableButtons();
             patchGrid1.Initialize();
@@ -218,9 +183,7 @@ namespace GitUI.CommandsDialogs
             FormProcess.ShowDialog(this, GitCommandHelpers.AbortRebaseCmd());
 
             if (!Module.InTheMiddleOfRebase())
-            {
                 Close();
-            }
 
             EnableButtons();
             patchGrid1.Initialize();
@@ -236,41 +199,27 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var localChanges = ChangesMode;
-            if (localChanges == LocalChangesAction.Reset &&
-                Visible &&
-                Module.IsDirtyDir())
-            {
-                UICommands.GitCommand("reset --hard");
-            }
-
-            rbStash.Enabled = false;
-            rbReset.Enabled = false;
-
             string rebaseCmd;
-            var autoStash = localChanges == LocalChangesAction.Stash && _wasDirty;
             if (chkSpecificRange.Checked && !String.IsNullOrWhiteSpace(txtFrom.Text) && !String.IsNullOrWhiteSpace(cboTo.Text))
             {
                 rebaseCmd = GitCommandHelpers.RebaseRangeCmd(txtFrom.Text, cboTo.Text, Branches.Text,
                                                              chkInteractive.Checked, chkPreserveMerges.Checked,
-                                                             chkAutosquash.Checked, autoStash);
+                                                             chkAutosquash.Checked, chkStash.Checked);
             }
             else
             {
-                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked, autoStash);
+                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, 
+                                                        chkPreserveMerges.Checked, chkAutosquash.Checked,
+                                                        chkStash.Checked);
             }
 
             var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
             if (dialogResult.Trim() == "Current branch a is up to date.")
-            {
                 MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text);
-            }
 
             if (!Module.InTheMiddleOfAction() &&
                 !Module.InTheMiddleOfPatch())
-            {
                 Close();
-            }
 
             EnableButtons();
             patchGrid1.Initialize();
@@ -280,6 +229,11 @@ namespace GitUI.CommandsDialogs
         private void SolveMergeconflictsClick(object sender, EventArgs e)
         {
             MergetoolClick(sender, e);
+        }
+
+        private void chkPreserveMerges_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void ShowOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

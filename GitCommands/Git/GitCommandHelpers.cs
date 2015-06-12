@@ -666,74 +666,71 @@ namespace GitCommands
             return "bisect reset";
         }
 
-        private static IEnumerable<string> GetArgsRebaseCmdBase(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
+        public static string RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
         {
-            yield return "rebase";
+            StringBuilder sb = new StringBuilder("rebase ");
 
             if (interactive)
             {
-                yield return "-i";
-                yield return autosquash ? "--autosquash" : "--no-autosquash";
-            }
-
-            if (autostash)
-            {
-                yield return "--autostash";
+                sb.Append(" -i ");
+                sb.Append(autosquash ? "--autosquash " : "--no-autosquash ");
             }
 
             if (preserveMerges)
             {
-                yield return "--preserve-merges";
+                sb.Append("--preserve-merges ");
             }
-        }
 
-        private static string FormatArgs(IEnumerable<string> args)
-        {
-            return string.Join(" ", args);
-        }
-
-        public static string RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash)
-        {
-            return RebaseCmd(branch, interactive, preserveMerges, autosquash, false);
-        }
-
-        private static IEnumerable<string> GetArgsRebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
-        {
-            foreach (var arg in GetArgsRebaseCmdBase(branch, interactive, preserveMerges, autosquash, autostash))
+            if (autostash)
             {
-                yield return arg;
+                sb.Append("--autostash ");
             }
-            
-            yield return string.Format("\"{0}\"", branch);
+
+            sb.Append('"');
+            sb.Append(branch);
+            sb.Append('"');
+
+
+            return sb.ToString();
         }
 
-        public static string RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
-        {
-            return FormatArgs(GetArgsRebaseCmd(branch, interactive, preserveMerges, autosquash, autostash));
-        }
 
-        public static string RebaseRangeCmd(string from, string branch, string onto, bool interactive, bool preserveMerges, bool autosquash)
+        public static string RebaseRangeCmd(string from, string branch, string onto, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
         {
-            return RebaseRangeCmd(from, branch, onto, interactive, preserveMerges, autosquash, false);
-        }
+            StringBuilder sb = new StringBuilder("rebase ");
 
-        private static IEnumerable<string> GetArgsRebaseRangeCmd(string @from, string branch, string onto, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
-        {
-            foreach (var arg in GetArgsRebaseCmdBase(branch, interactive, preserveMerges, autosquash, autostash))
+            if (interactive)
             {
-                yield return arg;
+                sb.Append(" -i ");
+                sb.Append(autosquash ? "--autosquash " : "--no-autosquash ");
             }
 
-            yield return string.Format("\"{0}\"", @from);
-            yield return string.Format("\"{0}\"", branch);
-            yield return string.Format("--onto {0}", onto);
+            if (preserveMerges)
+            {
+                sb.Append("--preserve-merges ");
+            }
+
+            if (autostash)
+            {
+                sb.Append("--autostash ");
+            }
+
+            sb.Append('"')
+              .Append(from)
+              .Append("\" ");
+
+
+            sb.Append('"')
+              .Append(branch)
+              .Append("\"");
+
+
+            sb.Append(" --onto ")
+              .Append(onto);
+
+            return sb.ToString();
         }
 
-        public static string RebaseRangeCmd(string from, string branch, string onto, bool interactive,
-            bool preserveMerges, bool autosquash, bool autostash)
-        {
-            return FormatArgs(GetArgsRebaseRangeCmd(@from, branch, onto, interactive, preserveMerges, autosquash, autostash));
-        }
 
         public static string AbortRebaseCmd()
         {
