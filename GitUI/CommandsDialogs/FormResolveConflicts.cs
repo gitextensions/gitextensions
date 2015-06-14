@@ -11,6 +11,8 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
+    using System.Linq;
+
     public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
@@ -202,6 +204,10 @@ namespace GitUI.CommandsDialogs
             return (ConflictData)ConflictedFiles.SelectedRows[0].DataBoundItem;
         }
 
+        private ConflictData[] GetConflicts()
+        {
+            return (from DataGridViewRow selectedRow in ConflictedFiles.SelectedRows select (ConflictData)selectedRow.DataBoundItem).ToArray();
+        }
         private string GetFileName()
         {
             return GetConflict().Filename;
@@ -574,10 +580,12 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            var item = GetConflict();
-            if (CheckForBaseRevision(item))
+            foreach (var conflictItem in GetConflicts())
             {
-                ChooseBaseOnConflict(item.Base.Filename);
+                if (CheckForBaseRevision(conflictItem))
+                {
+                    ChooseBaseOnConflict(conflictItem.Base.Filename);
+                }
             }
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -592,11 +600,13 @@ namespace GitUI.CommandsDialogs
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            
-            var item = GetConflict();
-            if (CheckForLocalRevision(item))
+
+            foreach (var conflictItem in GetConflicts())
             {
-                ChooseLocalOnConflict(item.Filename);
+                if (CheckForLocalRevision(conflictItem))
+                {
+                    ChooseLocalOnConflict(conflictItem.Filename);
+                }
             }
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -612,11 +622,14 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            var item = GetConflict();
-            if (CheckForRemoteRevision(item))
+            foreach (var conflictItem in GetConflicts())
             {
-                ChooseRemoteOnConflict(item.Filename);
+                if (CheckForRemoteRevision(conflictItem))
+                {
+                    ChooseRemoteOnConflict(conflictItem.Filename);
+                }
             }
+
             Initialize();
 
             Cursor.Current = Cursors.Default;
