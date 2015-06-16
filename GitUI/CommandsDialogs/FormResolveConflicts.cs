@@ -138,7 +138,6 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            ConflictedFiles.MultiSelect = false;
             int oldSelectedRow = 0;
             if (ConflictedFiles.SelectedRows.Count > 0)
                 oldSelectedRow = ConflictedFiles.SelectedRows[0].Index;
