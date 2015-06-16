@@ -538,11 +538,50 @@ namespace GitUI.CommandsDialogs
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (ConflictedFiles.SelectedRows.Count != 1)
+            baseFileName.Text = localFileName.Text = remoteFileName.Text = "";
+            if (HasMultipleRowsSelected())
             {
-                baseFileName.Text = localFileName.Text = remoteFileName.Text = "";
-                return;
+                HandleMultipleSelect();
             }
+            else if (HasOneRowSelected())
+            {
+                HandleSingleSelect();
+            }
+        }
+
+        private bool HasOneRowSelected()
+        {
+            return ConflictedFiles.SelectedRows.Count == 1;
+        }
+
+        private bool HasMultipleRowsSelected()
+        {
+            return ConflictedFiles.SelectedRows.Count > 1;
+        }
+
+        private void HandleMultipleSelect(){
+            SetAvailableCommands(false);
+        }
+
+        private void SetAvailableCommands(bool enabled)
+        {
+            OpenMergetool.Enabled = enabled;
+            openMergeToolBtn.Enabled = enabled;
+            ContextOpenLocalWith.Enabled = enabled;
+            ContextOpenRemoteWith.Enabled = enabled;
+            ContextOpenBaseWith.Enabled = enabled;
+            ContextSaveLocalAs.Enabled = enabled;
+            ContextSaveRemoteAs.Enabled = enabled;
+            ContextSaveBaseAs.Enabled = enabled;
+            openToolStripMenuItem.Enabled = enabled;
+            openWithToolStripMenuItem.Enabled = enabled;
+            fileHistoryToolStripMenuItem.Enabled = enabled;
+        }
+
+        private void HandleSingleSelect()
+        {
+            SetAvailableCommands(true);
+
 
             var item = GetConflict();
 
@@ -782,12 +821,19 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Button == MouseButtons.Right)
             {
+                if (HasMultipleRowsSelected())
+                {
+                    // do nothing, choices are limited to supported ones only
+                    return;
+                }
+                
                 System.Drawing.Point pt = ConflictedFiles.PointToClient(Cursor.Position);
                 DataGridView.HitTestInfo hti = ConflictedFiles.HitTest(pt.X, pt.Y);
                 int LastRow = hti.RowIndex;
                 ConflictedFiles.ClearSelection();
                 if (LastRow >= 0 && ConflictedFiles.Rows.Count > LastRow)
                     ConflictedFiles.Rows[LastRow].Selected = true;
+                SetAvailableCommands(true);
             }
         }
 
@@ -853,25 +899,21 @@ namespace GitUI.CommandsDialogs
 
             if (ConflictedFilesContextMenu.Enabled)
             {
-                EnableAllEntriesInConflictedFilesContextMenu();
-                DisableInvalidEntriesInCoflictedFilesContextMenu(fileName);
+                if (HasMultipleRowsSelected())
+                {
+                    SetAvailableCommands(false);
+                }
+                else
+                {
+                    SetAvailableCommands(false);
+                    DisableInvalidEntriesInCoflictedFilesContextMenu(fileName);
+                }
             }
-        }
-
-        private void EnableAllEntriesInConflictedFilesContextMenu()
-        {
-            ContextOpenLocalWith.Enabled = true;
-            ContextSaveLocalAs.Enabled = true;
-
-            ContextOpenRemoteWith.Enabled = true;
-            ContextSaveRemoteAs.Enabled = true;
-
-            ContextOpenBaseWith.Enabled = true;
-            ContextSaveBaseAs.Enabled = true;
         }
 
         private void DisableInvalidEntriesInCoflictedFilesContextMenu(string fileName)
         {
+            
             var conflictedFileNames = Module.GetConflict(fileName);
             if (conflictedFileNames.Local.Filename.IsNullOrEmpty())
             {
