@@ -11,6 +11,8 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
+    using System.Linq;
+
     public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
@@ -136,7 +138,6 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            ConflictedFiles.MultiSelect = false;
             int oldSelectedRow = 0;
             if (ConflictedFiles.SelectedRows.Count > 0)
                 oldSelectedRow = ConflictedFiles.SelectedRows[0].Index;
@@ -202,6 +203,10 @@ namespace GitUI.CommandsDialogs
             return (ConflictData)ConflictedFiles.SelectedRows[0].DataBoundItem;
         }
 
+        private ConflictData[] GetConflicts()
+        {
+            return (from DataGridViewRow selectedRow in ConflictedFiles.SelectedRows select (ConflictData)selectedRow.DataBoundItem).ToArray();
+        }
         private string GetFileName()
         {
             return GetConflict().Filename;
@@ -333,29 +338,61 @@ namespace GitUI.CommandsDialogs
 
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
             if (ConflictedFiles.SelectedRows.Count != 1)
                 return;
 
             try
             {
-                var item = GetConflict();
-                var itemType = GetItemType(item.Filename);
-                if (itemType == ItemType.Submodule)
+                Cursor.Current = Cursors.WaitCursor;
+                var items = GetConflicts();
+
+                StartProgressBarWithMaxValue(items.Length);
+                foreach (var conflictData in items)
                 {
-                    var form = new FormMergeSubmodule(UICommands, item.Filename);
-                    if (form.ShowDialog() == DialogResult.OK)
-                        StageFile(item.Filename);
-                }
-                else if (itemType == ItemType.File)
-                {
-                    ResolveFilesConflict(item);
+                    IncrementProgressBarValue();
+                    ResolveItemConflict(conflictData);
                 }
             }
             finally
             {
                 Cursor.Current = Cursors.Default;
+                StopAndHideProgressBar();
                 Initialize();
+            }
+        }
+
+        private void StopAndHideProgressBar()
+        {
+            progressBar.Visible = false;
+        }
+
+        private void IncrementProgressBarValue()
+        {
+            progressBar.Value++;
+        }
+
+        private void StartProgressBarWithMaxValue(int maximum)
+        {
+            progressBar.Minimum = 0;
+            progressBar.Maximum = maximum;
+            progressBar.Value = 0;
+            progressBar.Visible = true;
+        }
+
+        private void ResolveItemConflict(ConflictData item)
+        {
+            var itemType = GetItemType(item.Filename);
+            if (itemType == ItemType.Submodule)
+            {
+                var form = new FormMergeSubmodule(UICommands, item.Filename);
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    StageFile(item.Filename);
+                }
+            }
+            else if (itemType == ItemType.File)
+            {
+                ResolveFilesConflict(item);
             }
         }
 
@@ -533,11 +570,50 @@ namespace GitUI.CommandsDialogs
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (ConflictedFiles.SelectedRows.Count != 1)
+            baseFileName.Text = localFileName.Text = remoteFileName.Text = "";
+            if (HasMultipleRowsSelected())
             {
-                baseFileName.Text = localFileName.Text = remoteFileName.Text = "";
-                return;
+                HandleMultipleSelect();
             }
+            else if (HasOneRowSelected())
+            {
+                HandleSingleSelect();
+            }
+        }
+
+        private bool HasOneRowSelected()
+        {
+            return ConflictedFiles.SelectedRows.Count == 1;
+        }
+
+        private bool HasMultipleRowsSelected()
+        {
+            return ConflictedFiles.SelectedRows.Count > 1;
+        }
+
+        private void HandleMultipleSelect(){
+            SetAvailableCommands(false);
+        }
+
+        private void SetAvailableCommands(bool enabled)
+        {
+            OpenMergetool.Enabled = enabled;
+            openMergeToolBtn.Enabled = enabled;
+            ContextOpenLocalWith.Enabled = enabled;
+            ContextOpenRemoteWith.Enabled = enabled;
+            ContextOpenBaseWith.Enabled = enabled;
+            ContextSaveLocalAs.Enabled = enabled;
+            ContextSaveRemoteAs.Enabled = enabled;
+            ContextSaveBaseAs.Enabled = enabled;
+            openToolStripMenuItem.Enabled = enabled;
+            openWithToolStripMenuItem.Enabled = enabled;
+            fileHistoryToolStripMenuItem.Enabled = enabled;
+        }
+
+        private void HandleSingleSelect()
+        {
+            SetAvailableCommands(true);
+
 
             var item = GetConflict();
 
@@ -574,11 +650,17 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            var item = GetConflict();
-            if (CheckForBaseRevision(item))
+            var conflictItems = GetConflicts();
+            StartProgressBarWithMaxValue(conflictItems.Length);
+            foreach (var conflictItem in conflictItems)
             {
-                ChooseBaseOnConflict(item.Base.Filename);
+                if (CheckForBaseRevision(conflictItem))
+                {
+                    ChooseBaseOnConflict(conflictItem.Base.Filename);
+                }
+                IncrementProgressBarValue();
             }
+            StopAndHideProgressBar();
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -592,12 +674,17 @@ namespace GitUI.CommandsDialogs
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            
-            var item = GetConflict();
-            if (CheckForLocalRevision(item))
+            var conflictItems = GetConflicts();
+            StartProgressBarWithMaxValue(conflictItems.Length);
+            foreach (var conflictItem in conflictItems)
             {
-                ChooseLocalOnConflict(item.Filename);
+                if (CheckForLocalRevision(conflictItem))
+                {
+                    ChooseLocalOnConflict(conflictItem.Filename);
+                }
+                IncrementProgressBarValue();
             }
+            StopAndHideProgressBar();
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -612,11 +699,17 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            var item = GetConflict();
-            if (CheckForRemoteRevision(item))
+            var conflictItems = GetConflicts();
+            StartProgressBarWithMaxValue(conflictItems.Length);
+            foreach (var conflictItem in conflictItems)
             {
-                ChooseRemoteOnConflict(item.Filename);
+                if (CheckForRemoteRevision(conflictItem))
+                {
+                    ChooseRemoteOnConflict(conflictItem.Filename);
+                }
+                IncrementProgressBarValue();
             }
+            StopAndHideProgressBar();
             Initialize();
 
             Cursor.Current = Cursors.Default;
@@ -770,12 +863,19 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Button == MouseButtons.Right)
             {
+                if (HasMultipleRowsSelected())
+                {
+                    // do nothing, choices are limited commands already
+                    return;
+                }
+                
                 System.Drawing.Point pt = ConflictedFiles.PointToClient(Cursor.Position);
                 DataGridView.HitTestInfo hti = ConflictedFiles.HitTest(pt.X, pt.Y);
                 int LastRow = hti.RowIndex;
                 ConflictedFiles.ClearSelection();
                 if (LastRow >= 0 && ConflictedFiles.Rows.Count > LastRow)
                     ConflictedFiles.Rows[LastRow].Selected = true;
+                SetAvailableCommands(true);
             }
         }
 
@@ -841,25 +941,21 @@ namespace GitUI.CommandsDialogs
 
             if (ConflictedFilesContextMenu.Enabled)
             {
-                EnableAllEntriesInConflictedFilesContextMenu();
-                DisableInvalidEntriesInCoflictedFilesContextMenu(fileName);
+                if (HasMultipleRowsSelected())
+                {
+                    SetAvailableCommands(false);
+                }
+                else
+                {
+                    SetAvailableCommands(false);
+                    DisableInvalidEntriesInCoflictedFilesContextMenu(fileName);
+                }
             }
-        }
-
-        private void EnableAllEntriesInConflictedFilesContextMenu()
-        {
-            ContextOpenLocalWith.Enabled = true;
-            ContextSaveLocalAs.Enabled = true;
-
-            ContextOpenRemoteWith.Enabled = true;
-            ContextSaveRemoteAs.Enabled = true;
-
-            ContextOpenBaseWith.Enabled = true;
-            ContextSaveBaseAs.Enabled = true;
         }
 
         private void DisableInvalidEntriesInCoflictedFilesContextMenu(string fileName)
         {
+            
             var conflictedFileNames = Module.GetConflict(fileName);
             if (conflictedFileNames.Local.Filename.IsNullOrEmpty())
             {
@@ -962,5 +1058,6 @@ namespace GitUI.CommandsDialogs
         }
 
         #endregion
+
     }
 }
