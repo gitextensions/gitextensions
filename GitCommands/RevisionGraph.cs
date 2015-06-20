@@ -186,12 +186,15 @@ namespace GitCommands
                 (BranchFilter.IndexOfAny(ShellGlobCharacters) >= 0))
                 branchFilter = "--branches=" + BranchFilter;
 
+            string revisionsToPathsSeparator = Filter.Contains(" -- ") ? string.Empty : " --"; // When there is a path filter it already contains the separator
+
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {2} --pretty=format:\"{1}\" {0} {3} --",
+                "log -z {2} --pretty=format:\"{1}\" {0} {3}{4}",
                 logParam,
                 formatString,
                 branchFilter,
-                Filter);
+                Filter,
+                revisionsToPathsSeparator);
 
             Encoding logOutputEncoding = _module.LogOutputEncoding;
 
