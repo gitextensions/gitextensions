@@ -820,6 +820,11 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <target>Показать метки, содержащие этот коммит</target>
         
       </trans-unit>
+      <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
+        <source>Show messages of annotated tags</source>
+        <target>Показать сообщения аннотированых меток</target>
+
+      </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
         <source>Related links:</source>
         <target>Ссылки по теме:</target>

@@ -815,6 +815,10 @@ Controleer of git (msysgit of cygwin) is geïnstalleerd of zet het juiste comman
         <target>Toon labels waar deze commit in voorkomt</target>
         
       </trans-unit>
+      <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
+        <source>Show messages of annotated tags</source>
+
+      </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
         <source>Related links:</source>
         <target>Gerelateerde links:</target>

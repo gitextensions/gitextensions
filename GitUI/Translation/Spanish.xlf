@@ -817,6 +817,10 @@ Por favor asegúrese que git (msysgit o cygwin) está instalado o configure el c
         <target>Mostrar las etiquetas que contengan este commit</target>
         
       </trans-unit>
+      <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
+        <source>Show messages of annotated tags</source>
+
+      </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
         <source>Related links:</source>
         <target>Enlaces relacionados:</target>

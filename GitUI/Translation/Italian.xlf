@@ -803,6 +803,10 @@ Per favore assicurati che git (msysgit o cygwin) sia installato o configura manu
         <target>Visualizza tag che contengono questo commit</target>
         
       </trans-unit>
+      <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
+        <source>Show messages of annotated tags</source>
+
+      </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
         <source>Related links:</source>
         

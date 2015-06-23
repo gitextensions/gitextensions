@@ -820,6 +820,10 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
         <target>Zobrazit značky obsahující toto odevzdání</target>
         
       </trans-unit>
+      <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
+        <source>Show messages of annotated tags</source>
+
+      </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
         <source>Related links:</source>
         <target>Příbuzné odkazy:</target>
