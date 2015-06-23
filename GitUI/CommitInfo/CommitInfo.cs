@@ -133,6 +133,7 @@ namespace GitUI.CommitInfo
             showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote;
             showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             showContainedInTagsToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInTags;
+            showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages;
 
             ResetTextAndImage();
 
@@ -518,6 +519,12 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
+        private void showMessagesOfAnnotatedTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.ShowAnnotatedTagsMessages = !AppSettings.ShowAnnotatedTagsMessages;
+            ReloadCommitInfo();
+        }
+
         private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Module.EditNotes(_revision.Guid);
@@ -543,5 +550,6 @@ namespace GitUI.CommitInfo
                 DoCommandClick("navigateforward", null);
             }
         }
+
     }
 }

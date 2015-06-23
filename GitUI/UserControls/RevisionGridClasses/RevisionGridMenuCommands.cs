@@ -378,20 +378,6 @@ namespace GitUI.UserControls.RevisionGridClasses
                 resultList.Add(menuCommand);
             }
 
-            {
-              var menuCommand = new MenuCommand( );
-              menuCommand.Name = "showAnnotatedTagsMessagesToolStripMenuItem";
-              menuCommand.Text = "Show messages of annotated tags";
-              menuCommand.ExecuteAction = ( ) =>
-              {
-                AppSettings.ShowAnnotatedTagsMessages = !AppSettings.ShowAnnotatedTagsMessages;
-                _revisionGrid.ForceRefreshRevisions( );
-              };
-              menuCommand.IsCheckedFunc = ( ) => AppSettings.ShowAnnotatedTagsMessages;
-
-              resultList.Add( menuCommand );
-            }
-
             resultList.Add(MenuCommand.CreateSeparator());
 
             {
