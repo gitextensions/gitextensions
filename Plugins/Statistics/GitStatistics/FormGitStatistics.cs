@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Statistics;
 using GitStatistics.PieChart;
 using GitUIPluginInterfaces;
@@ -28,6 +30,7 @@ namespace GitStatistics
         private readonly TranslationString _linesOfDesignerFilesP = new TranslationString("{0} Lines in designer files ({1})");
 
         private readonly string _codeFilePattern;
+        private readonly bool _countSubmodule;
 
         protected Color[] DecentColors =
             new[]
@@ -54,10 +57,11 @@ namespace GitStatistics
         private Task _loadThread;
         private readonly IGitModule _module;
 
-        public FormGitStatistics(IGitModule aModule, string codeFilePattern)
+        public FormGitStatistics(IGitModule aModule, string codeFilePattern, bool countSubmodule)
         {
             _module = aModule;
             _codeFilePattern = codeFilePattern;
+            _countSubmodule = countSubmodule;
             InitializeComponent();
             Translate();
 
@@ -164,7 +168,34 @@ namespace GitStatistics
 
         public void LoadLinesOfCode()
         {
-            _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore);
+            LoadLinesOfCodeForModule(_module);
+
+            if (_countSubmodule)
+            {
+                foreach (
+                    var module in
+                        _module.GetSubmodulesInfo()
+                            .Select(submodule => new GitModule(Path.Combine(_module.WorkingDir, submodule.LocalPath))))
+                {
+                    LoadLinesOfCodeForModule(module);
+                }
+            }
+
+            //Send 'changed' event when done
+            lineCounter_LinesOfCodeUpdated(_lineCounter, EventArgs.Empty);
+        }
+
+        private void LoadLinesOfCodeForModule(IGitModule module)
+        {
+            var result = module.RunGitCmd("ls-files");
+            var filesToCheck = new List<string>();
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                filesToCheck.AddRange(result.Split('\n')
+                    .Select(file => Path.Combine(module.WorkingDir, file)));
+            }
+
+            _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore, filesToCheck);
         }
 
         void lineCounter_LinesOfCodeUpdated(object sender, EventArgs e)

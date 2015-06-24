@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace GitStatistics
 {
@@ -35,69 +36,49 @@ namespace GitStatistics
             return false;
         }
 
-        private IEnumerable<FileInfo> GetFiles(DirectoryInfo startDirectory, string filter)
+        private IEnumerable<FileInfo> GetFiles(List<string> filesToCheck, string[] codeFilePatterns)
         {
-            Queue<DirectoryInfo> queue = new Queue<DirectoryInfo>();
-            queue.Enqueue(startDirectory);
-            while(queue.Count != 0)
+            foreach (var file in filesToCheck)
             {
-                DirectoryInfo directory = queue.Dequeue();
-                FileInfo[] files = null;
-                try
+                if (codeFilePatterns.Contains(Path.GetExtension(file), StringComparer.InvariantCultureIgnoreCase))
                 {
-                    files = directory.GetFiles(filter);
-                    DirectoryInfo[] directories = directory.GetDirectories();
-                    foreach (var dir in directories)
-                        queue.Enqueue(dir);
-                }
-                catch (System.UnauthorizedAccessException)
-                {
-                }
-                if (files != null)
-                {
-                    foreach (var file in files)
-                        yield return file;
+                    FileInfo fileInfo;
+                    try
+                    {
+                        fileInfo = new FileInfo(file);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        continue;
+                    }
+                    yield return fileInfo;
                 }
             }
         }
 
-        public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore)
+        public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore,
+            List<string> filesToCheck)
         {
-            NumberLines = 0;
-            NumberBlankLines = 0;
-            NumberLinesInDesignerFiles = 0;
-            NumberCommentsLines = 0;
-            NumberCodeLines = 0;
-            NumberTestCodeLines = 0;
-
-            var filters = filePattern.Split(';');
+            var filters = filePattern.Replace("*", "").Split(';');
             var directoryFilter = directoriesToIgnore.Split(';');
             var lastUpdate = DateTime.Now;
             var timer = new TimeSpan(0,0,0,0,500);
 
-            foreach (var filter in filters)
+            foreach (var file in GetFiles(filesToCheck, filters))
             {
-                foreach (var file in GetFiles(_directory, filter.Trim()))
+                if (DirectoryIsFiltered(file.Directory, directoryFilter))
+                    continue;
+                var codeFile = new CodeFile(file.FullName);
+                codeFile.CountLines();
+
+                CalculateSums(codeFile);
+
+                if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer)
                 {
-                    if (DirectoryIsFiltered(file.Directory, directoryFilter))
-                        continue;
-
-                    var codeFile = new CodeFile(file.FullName);
-                    codeFile.CountLines();
-
-                    CalculateSums(codeFile);
-
-                    if (LinesOfCodeUpdated != null && DateTime.Now - lastUpdate > timer)
-                    {
-                        lastUpdate = DateTime.Now;
-                        LinesOfCodeUpdated(this, EventArgs.Empty);
-                    }
+                    lastUpdate = DateTime.Now;
+                    LinesOfCodeUpdated(this, EventArgs.Empty);
                 }
             }
-
-            //Send 'changed' event when done
-            if (LinesOfCodeUpdated != null)
-                LinesOfCodeUpdated(this, EventArgs.Empty);
         }
 
         private void CalculateSums(CodeFile codeFile)
