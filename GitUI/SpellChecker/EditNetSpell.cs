@@ -662,9 +662,13 @@ namespace GitUI.SpellChecker
                     return;
                 }
                 // remove image data from clipboard
-                string text = Clipboard.GetText();
-                Clipboard.SetText(text);
-            }
+                var text = Clipboard.GetText();
+				// Clipboard.SetText throws exception when text is null or empty. See https://msdn.microsoft.com/en-us/library/ydby206k.aspx
+				if (!string.IsNullOrEmpty(text))
+				{
+					Clipboard.SetText(text);
+				}
+			}
             else if (e.Control && !e.Alt && e.KeyCode == Keys.Z)
             {
                 UndoHighlighting();
