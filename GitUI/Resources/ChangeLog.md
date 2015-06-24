@@ -1,7 +1,22 @@
 ﻿Changelog
 =========
-### Version 2.48.04 (no due date)
-* Fixed issue #1643: Do stage of 16506 files and GUI becomes Not Respoding  
+### Version 2.48.05 (16 May 2015)
+* Fixed issue #2493: StartBrowseDialog failed after clone
+* Fixed issue #2783: Fixed crash when right click on blank line in 'File Tree'
+* Enter/Return in file tree acts as double click
+* Support Git for Windows path for Linux tools
+
+### Version 2.48.04 (8 May 2015)
+* Fixed issue #1643: Do stage of 16506 files and GUI becomes Not Respoding
+* Fixed issue #2591: VSAddin solutionItem.ProjectItem == null when selected 'References' item in C# project
+* Fixed issue #2587, #2601: VSAddin fixed StackOverflowException
+* Fixed issue #2584: Escape the last backslash from paths before running GitExtensions to avoid escaping the double-quote
+* Fixed issue #2574: MSysGit updated to version 1.9.5-preview20141217
+* Fixed issue #2649: Refreshing the ignored files set every 10 minutes instead of every 500 miliseconds
+* Fixed issue #2525: Additional handling for strings passed to RichTextBox
+* Fixed issue #2700: Fix filtering by branch name
+* Fixed 'ArgumentOutOfRangeException is thrown when right clicking of the table header of 'Resolve merge conflicts' window'
+* Fix performance for RevisionGrid
 
 ### Version 2.48.03 (9 December 2014)
 * Fixed issue #2538: Fix crash happening when deleting a remote branch
