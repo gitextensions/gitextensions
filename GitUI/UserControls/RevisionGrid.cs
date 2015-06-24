@@ -77,7 +77,7 @@ namespace GitUI
 
         private RevisionGridLayout _layout;
         private int _rowHeigth;
-        public event GitModuleChangedEventHandler GitModuleChanged;
+        public event EventHandler<GitModuleEventArgs> GitModuleChanged;
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
 
         private readonly RevisionGridMenuCommands _revisionGridMenuCommands;
@@ -306,12 +306,12 @@ namespace GitUI
         }
 
         private bool _isLoading;
-        private void RevisionsLoading(bool isLoading)
+        private void RevisionsLoading(object sender, DvcsGraph.LoadingEventArgs e)
         {
             // Since this can happen on a background thread, we'll just set a
             // flag and deal with it next time we paint (a bit of a hack, but
             // it works)
-            _isLoading = isLoading;
+            _isLoading = e.IsLoading;
         }
 
         private void ShowQuickSearchString()
@@ -2665,10 +2665,11 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        public void OnModuleChanged(GitModule aModule)
+        public void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
-            if (GitModuleChanged != null)
-                GitModuleChanged(aModule);
+            var handler = GitModuleChanged;
+            if (handler != null)
+                handler(this, e);
         }
 
         private void InitRepository_Click(object sender, EventArgs e)

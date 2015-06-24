@@ -84,28 +84,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' == 'Windows_NT' ">copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-copy "$(SolutionDir)\bin\Git.hub.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-copy "$(SolutionDir)\bin\RestSharp.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-</PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' != 'Windows_NT' ">cp `echo "$(TargetPath)" | tr -s "//" "/"` "../../../../GitExtensions/bin/$(ConfigurationName)/"
-cp "../../../../Bin/Git.hub.dll" "../../../../GitExtensions/bin/$(ConfigurationName)/"
-cp "../../../../Bin/RestSharp.dll" "../../../../GitExtensions/bin/$(ConfigurationName)/"
-echo "dummy"
-</PostBuildEvent>
-  </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' == 'Windows_NT' ">copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-copy "$(SolutionDir)\Externals\Git.hub\Git.hub\bin\$(ConfigurationName)\Git.hub.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-    </PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' != 'Windows_NT' ">cp `echo "$(TargetPath)" | tr -s "//" "/"` "../../../../GitExtensions/bin/$(ConfigurationName)/"
-cp "../../../../Externals/Git.hub/Git.hub/bin/$(ConfigurationName)/Git.hub.dll" "../../../../GitExtensions/bin/$(ConfigurationName)\"
-echo "dummy"
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

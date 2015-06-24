@@ -3,6 +3,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
@@ -30,8 +31,18 @@ namespace GitUI
     ///   A Hashtable for storing WindowPosition objects with the ability to
     ///   serialize them to the user's settings.
     /// </summary>
+    [Serializable]
     public class WindowPositionList : Hashtable, IXmlSerializable
     {
+        public WindowPositionList()
+        {
+        }
+
+        protected WindowPositionList(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+
         #region IXmlSerializable Members
 
         public XmlSchema GetSchema()

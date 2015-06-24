@@ -1,9 +1,5 @@
 ﻿using NUnit.Framework;
 using ReleaseNotesGenerator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using FluentAssertions;
 
 namespace GitExtensionsTest.Plugins.ReleaseNotesGenerator
@@ -33,8 +29,7 @@ EndFragment:00000143
 </body></html>");
         }
 
-        [Test]
-        [Explicit("Modifies clipboard content / Thread need STA mode")]
+        [Test, RequiresSTA]
         public void CopyToClipboard()
         {
             HtmlFragment.CopyToClipboard("<p>Hallo</p>");

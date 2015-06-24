@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="2.49a1">
+<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.49a1">
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
     <body>
       <trans-unit id="Description.Text">
@@ -60,10 +60,6 @@
         <source>Create local tracking branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="Remote.Text">
-        <source>origin</source>
-        <target />
-      </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
         <target />
@@ -112,6 +108,56 @@
         <source>Search branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete {0} selected branches?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_branchesSelected.Text">
+        <source>{0}/{1} branches selected.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cancel.Text">
+        <source>Cancel</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_chooseBrancesToDelete.Text">
+        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_dangerousAction.Text">
+        <source>DANGEROUS ACTION!
+Branches will be deleted on the remote '{0}'. This can not be undone.
+Are you sure you want to continue?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deletingBranches.Text">
+        <source>Deleting branches...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deletingUnmergedBranches.Text">
+        <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pressToSearch.Text">
+        <source>Press '{0}' to search for branches to delete.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_searchBranches.Text">
+        <source>Search branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_selectBranchesToDelete.Text">
+        <source>Select branches to delete using checkboxes in '{0}' column.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
         <target />
@@ -142,10 +188,6 @@
       </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="remote.Text">
-        <source>origin</source>
         <target />
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
@@ -185,6 +227,14 @@
         <target />
       </trans-unit>
       <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete the selected files?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
         <target />
       </trans-unit>
@@ -444,6 +494,50 @@ defaultrebase=0</source>
         <source>Total lines of code</source>
         <target />
       </trans-unit>
+      <trans-unit id="_blankLinesP.Text">
+        <source>{0} Blank lines ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commentLinesP.Text">
+        <source>{0} Comment lines ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commits.Text">
+        <source>{0} Commits</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commitsBy.Text">
+        <source>{0} Commits by {1}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfCode.Text">
+        <source>{0} Lines of code</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfCodeInFiles.Text">
+        <source>{0} Lines of code in {1} files ({2})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfCodeP.Text">
+        <source>{0} Lines of code ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfDesignerFilesP.Text">
+        <source>{0} Lines in designer files ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfProductionCodeP.Text">
+        <source>{0} Lines of production code ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfTestCode.Text">
+        <source>{0} Lines of test code</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfTestCodeP.Text">
+        <source>{0} Lines of test code ({1})</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
         <target />
@@ -457,7 +551,7 @@ defaultrebase=0</source>
         <target />
       </trans-unit>
       <trans-unit id="tabPage4.Text">
-        <source>Lines of testcode</source>
+        <source>Lines of test code</source>
         <target />
       </trans-unit>
     </body>
@@ -466,6 +560,10 @@ defaultrebase=0</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_authorCommits.Text">
+        <source>{0} ({1} Commits, {2} Changed Lines)</source>
         <target />
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
@@ -564,6 +662,18 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitFlowTooltip.Text">
+        <source>A good branch model for your project with Git...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_noBranchExist.Text">
+        <source>No {0} branches exist.</source>
         <target />
       </trans-unit>
       <trans-unit id="btnClose.Text">
@@ -698,6 +808,50 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <source>Path to Gource</source>
         <target />
       </trans-unit>
+      <trans-unit id="_bytesDownloaded.Text">
+        <source>{0} bytes downloaded.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotFindGource.Text">
+        <source>Cannot find Gource.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_currentDirectoryIsNotValidGit.Text">
+        <source>The current directory is not a valid git repository.
+
+Gource can be only be started from a valid git repository.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_doYouWantDownloadGource.Text">
+        <source>There is no path to Gource configured.
+
+Do you want to automatically download Gource?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_download.Text">
+        <source>Download</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_downloadingFailed.Text">
+        <source>Downloading failed.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gource.Text">
+        <source>Gource</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gourceDownloadedAndUnzipped.Text">
+        <source>Gource has been downloaded and unzipped.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetConfigPath.Text">
+        <source>Cannot find Gource in the configured path: {0}.
+
+.Do you want to reset the configured path?</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GourceStart" source-language="en">
@@ -802,6 +956,10 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <source>Release Notes Generator</source>
         <target />
       </trans-unit>
+      <trans-unit id="_commitLogFrom.Text">
+        <source>Commit log from '{0}' to '{1}' ({2}):</source>
+        <target />
+      </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
         <target />
@@ -840,8 +998,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
-which can be pasted to programs like MS Word or LibreOffice Writer.
-</source>
+which can be pasted to programs like MS Word or LibreOffice Writer.</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -907,6 +1064,23 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="GridColumnName.HeaderText">
         <source>Name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commited.Text">
+        <source>{0} committed
+{1}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInStash.Text">
+        <source>Your repository is not hosted in Stash.</source>
         <target />
       </trans-unit>
       <trans-unit id="btnApprove.Text">

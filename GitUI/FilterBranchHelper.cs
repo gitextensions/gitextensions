@@ -6,7 +6,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public class FilterBranchHelper
+    public class FilterBranchHelper : IDisposable
     {
         private ToolStripComboBox _NO_TRANSLATE_toolStripBranches;
         private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton2;
@@ -162,6 +162,21 @@ namespace GitUI
         private void toolStripBranches_Leave(object sender, EventArgs e)
         {
             ApplyBranchFilter(true);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                localToolStripMenuItem.Dispose();
+                remoteToolStripMenuItem.Dispose();
+            }
         }
     }
 }

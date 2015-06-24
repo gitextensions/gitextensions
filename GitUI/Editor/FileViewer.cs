@@ -81,7 +81,7 @@ namespace GitUI.Editor
             contextMenu.Opening += ContextMenu_Opening;
         }
 
-        void FileViewer_GitUICommandsSourceSet(object sender, IGitUICommandsSource uiCommandsSource)
+        void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
         {
             UICommandsSource.GitUICommandsChanged += WorkingDirChanged;
             WorkingDirChanged(UICommandsSource, null);
@@ -161,7 +161,7 @@ namespace GitUI.Editor
             set { _internalFileViewer.ScrollPos = value; }
         }
 
-        private void WorkingDirChanged(IGitUICommandsSource source, GitUICommands old)
+        private void WorkingDirChanged(object sender, GitUICommandsChangedEventArgs e)
         {
             this.Encoding = null;
         }
@@ -195,13 +195,13 @@ namespace GitUI.Editor
             this.OnMouseLeave(e);
         }
 
-        void _internalFileViewer_SelectedLineChanged(object sender, int selectedLine)
+        void _internalFileViewer_SelectedLineChanged(object sender, SelectedLineEventArgs e)
         {
             if (SelectedLineChanged != null)
-                SelectedLineChanged(sender, selectedLine);
+                SelectedLineChanged(sender, e);
         }
 
-        public event SelectedLineChangedEventHandler SelectedLineChanged;
+        public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
 
         public event EventHandler ScrollPosChanged;
         public event EventHandler RequestDiffView;
@@ -1050,5 +1050,20 @@ namespace GitUI.Editor
             }
         }
 
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                GitUICommandsSourceSet -= FileViewer_GitUICommandsSourceSet;
+                _async.Dispose();
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

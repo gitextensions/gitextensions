@@ -3,8 +3,23 @@
 ### Version 2.49 (no due date)
 * Cherry pick selected file/selected lines.
 
-### Version 2.48.04 (no due date)
+### Version 2.48.05 (16 May 2015)
+* Fixed issue #2493: StartBrowseDialog failed after clone
+* Fixed issue #2783: Fixed crash when right click on blank line in 'File Tree'
+* Enter/Return in file tree acts as double click
+* Support Git for Windows path for Linux tools
+
+### Version 2.48.04 (8 May 2015)
 * Fixed issue #1643: Do stage of 16506 files and GUI becomes Not Respoding
+* Fixed issue #2591: VSAddin solutionItem.ProjectItem == null when selected 'References' item in C# project
+* Fixed issue #2587, #2601: VSAddin fixed StackOverflowException
+* Fixed issue #2584: Escape the last backslash from paths before running GitExtensions to avoid escaping the double-quote
+* Fixed issue #2574: MSysGit updated to version 1.9.5-preview20141217
+* Fixed issue #2649: Refreshing the ignored files set every 10 minutes instead of every 500 miliseconds
+* Fixed issue #2525: Additional handling for strings passed to RichTextBox
+* Fixed issue #2700: Fix filtering by branch name
+* Fixed 'ArgumentOutOfRangeException is thrown when right clicking of the table header of 'Resolve merge conflicts' window'
+* Fix performance for RevisionGrid
 
 ### Version 2.48.03 (9 December 2014)
 * Fixed issue #2538: Fix crash happening when deleting a remote branch
@@ -780,7 +795,7 @@ where it is installed on their system
 * Fixed issue 81: when staging a file, all partially staged files are removed from unstaged list
 * Fixed issue 107: alt+f4 not working when revisiongrid has focus
 * Fixed issue 111: Annotated Tags Appear Twice in Push Dialog
-* Fixed issue 113: Statistics: "Lines of Code per type" and "Lines of testcode" fail in empty or non code repo
+* Fixed issue 113: Statistics: "Lines of Code per type" and "Lines of test code" fail in empty or non code repo
 * Fixed issue 114: Adding filter which results in no commits shows "empty repository" UI
 * Fixed issue 119: show files in FileHistory also prior to rename
 * Fixed issue 120: choose branch when adding new submodule doesn't work

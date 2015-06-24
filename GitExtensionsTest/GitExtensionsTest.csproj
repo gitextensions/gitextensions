@@ -76,12 +76,16 @@
     <Compile Include="GitUI\StandardHtmlUserManualFixture.cs" />
     <Compile Include="Plugins\ReleaseNotesGenerator\MainFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="GitCommands\Git\GitBlameTest.cs" />
     <Compile Include="GitCommands\Git\GitBlameHeaderTest.cs" />
     <Compile Include="GitCommands\Git\GitCheckoutBranchCmdTest.cs" />
     <Compile Include="GitCommands\Git\GitCommandCacheTest.cs" />
     <Compile Include="Translation\TranslationTest.cs" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>

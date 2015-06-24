@@ -96,14 +96,19 @@ namespace GitCommands
             _module = module;
         }
 
-        ~RevisionGraph()
-        {
-            Dispose();
-        }
-
         public void Dispose()
         {
-            _backgroundLoader.Cancel();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _backgroundLoader.Cancel();
+                _backgroundLoader.Dispose();
+            }
         }
 
         public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
@@ -182,7 +187,7 @@ namespace GitCommands
                 branchFilter = "--branches=" + BranchFilter;
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {2} --pretty=format:\"{1}\" {0} {3}",
+                "log -z {2} --pretty=format:\"{1}\" {0} {3} --",
                 logParam,
                 formatString,
                 branchFilter,

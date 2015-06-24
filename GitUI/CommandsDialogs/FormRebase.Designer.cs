@@ -44,6 +44,7 @@ namespace GitUI.CommandsDialogs
             this.chkInteractive = new System.Windows.Forms.CheckBox();
             this.chkPreserveMerges = new System.Windows.Forms.CheckBox();
             this.chkAutosquash = new System.Windows.Forms.CheckBox();
+            this.chkStash = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.chkSpecificRange = new System.Windows.Forms.CheckBox();
             this.lblRangeFrom = new System.Windows.Forms.Label();
@@ -213,6 +214,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel4.Controls.Add(this.chkInteractive);
             this.flowLayoutPanel4.Controls.Add(this.chkPreserveMerges);
             this.flowLayoutPanel4.Controls.Add(this.chkAutosquash);
+            this.flowLayoutPanel4.Controls.Add(this.chkStash);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
@@ -242,7 +244,6 @@ namespace GitUI.CommandsDialogs
             this.chkPreserveMerges.TabIndex = 7;
             this.chkPreserveMerges.Text = "Preserve Merges";
             this.chkPreserveMerges.UseVisualStyleBackColor = true;
-            this.chkPreserveMerges.CheckedChanged += new System.EventHandler(this.chkPreserveMerges_CheckedChanged);
             this.chkPreserveMerges.Click += new System.EventHandler(this.InteractiveRebaseClick);
             // 
             // chkAutosquash
@@ -256,6 +257,18 @@ namespace GitUI.CommandsDialogs
             this.chkAutosquash.TabIndex = 7;
             this.chkAutosquash.Text = "Autosquash";
             this.chkAutosquash.UseVisualStyleBackColor = true;
+            // 
+            // chkStash
+            // 
+            this.chkStash.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkStash.AutoSize = true;
+            this.chkStash.Enabled = false;
+            this.chkStash.Location = new System.Drawing.Point(343, 3);
+            this.chkStash.Name = "chkStash";
+            this.chkStash.Size = new System.Drawing.Size(54, 19);
+            this.chkStash.TabIndex = 8;
+            this.chkStash.Text = "Auto stash";
+            this.chkStash.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel5
             // 
@@ -606,6 +619,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Label Currentbranch;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.FlowLayoutPanel rebasePanel;
-        private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;		
+        private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;
+        private System.Windows.Forms.CheckBox chkStash;		
     }
 }

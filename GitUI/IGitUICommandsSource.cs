@@ -1,16 +1,32 @@
-﻿namespace GitUI
+﻿using System;
+
+namespace GitUI
 {
-    /// <summary>Represents the method that handles the GitUICommandsChanged event of an <see cref="IGitUICommandsSource"/>.</summary>
-    public delegate void GitUICommandsChangedEventHandler(IGitUICommandsSource sender, GitUICommands oldCommands);
-    
-    /// <summary>Represents the method that handles the change of an <see cref="IGitUICommandsSource"/>.</summary>
-    public delegate void GitUICommandsSourceSetEventHandler(object sender, IGitUICommandsSource uiCommandsSource);
+    public class GitUICommandsChangedEventArgs : EventArgs
+    {
+        public GitUICommandsChangedEventArgs(GitUICommands oldCommands)
+        {
+            OldCommands = oldCommands;
+        }
+
+        public GitUICommands OldCommands { get; private set; }
+    }
+
+    public class GitUICommandsSourceEventArgs : EventArgs
+    {
+        public GitUICommandsSourceEventArgs(IGitUICommandsSource gitUiCommandsSource)
+        {
+            GitUICommandsSource = gitUiCommandsSource;
+        }
+
+        public IGitUICommandsSource GitUICommandsSource { get; private set; }
+    }
 
     /// <summary>Provides <see cref="GitUICommands"/> and a change notification.</summary>
     public interface IGitUICommandsSource
     {
         /// <summary>Raised after <see cref="UICommands"/> changes.</summary>
-        event GitUICommandsChangedEventHandler GitUICommandsChanged;
+        event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
         /// <summary>Gets the <see cref="GitUICommands"/> value.</summary>
         GitUICommands UICommands { get; }
     }

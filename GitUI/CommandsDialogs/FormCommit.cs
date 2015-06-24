@@ -564,6 +564,10 @@ namespace GitUI.CommandsDialogs
         {
             _initialized = true;
 
+            Task.Factory.StartNew(() => string.Format(_formTitle.Text, Module.GetSelectedBranch(),
+                                      Module.WorkingDir))
+                .ContinueWith(task => Text = task.Result, _taskScheduler);
+
             Cursor.Current = Cursors.WaitCursor;
 
             if (loadUnstaged)
@@ -1532,10 +1536,6 @@ namespace GitUI.CommandsDialogs
 
             if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
                 Message.Text = message;
-
-            Task.Factory.StartNew(() => string.Format(_formTitle.Text, Module.GetSelectedBranch(),
-                                      Module.WorkingDir))
-                .ContinueWith(task => Text = task.Result, _taskScheduler);
         }
 
         private void SetCommitMessageFromTextBox(string commitMessageText)
@@ -2432,6 +2432,29 @@ namespace GitUI.CommandsDialogs
         private void toolAuthor_Leave(object sender, EventArgs e)
         {
             updateAuthorInfo();
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _unstagedLoader.Cancel();
+                _unstagedLoader.Dispose();
+                if (_interactiveAddBashCloseWaitCts != null)
+                {
+                    _interactiveAddBashCloseWaitCts.Cancel();
+                    _interactiveAddBashCloseWaitCts.Dispose();
+                    _interactiveAddBashCloseWaitCts = null;
+                }
+
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 

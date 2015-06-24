@@ -3,11 +3,14 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands.Statistics;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitImpact
 {
-    public partial class FormImpact : ResourceManager.GitExtensionsFormBase
+    public partial class FormImpact : GitExtensionsFormBase
     {
+        private readonly TranslationString _authorCommits = new TranslationString("{0} ({1} Commits, {2} Changed Lines)");
+
         private readonly SynchronizationContext syncContext;
 
         public FormImpact(IGitModule Module)
@@ -44,7 +47,7 @@ namespace GitImpact
             if (lblAuthor.Visible)
             {
                 ImpactLoader.DataPoint data = Impact.GetAuthorInfo(author);
-                lblAuthor.Text = author + "(" + data.Commits + " Commits, " + data.ChangedLines + " Changed Lines)";
+                lblAuthor.Text = string.Format(_authorCommits.Text, author, data.Commits, data.ChangedLines);
                 pnlAuthorColor.BackColor = Impact.GetAuthorColor(author);
 
                 lblAuthor.Refresh();

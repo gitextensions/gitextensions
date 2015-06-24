@@ -347,7 +347,7 @@ namespace GitStatistics
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(743, 439);
             this.tabPage4.TabIndex = 0;
-            this.tabPage4.Text = "Lines of testcode";
+            this.tabPage4.Text = "Lines of test code";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // splitContainer7

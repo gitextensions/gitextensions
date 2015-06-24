@@ -426,5 +426,23 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + Environment.NewLine + ex.Message, _strError.Text);
             }
         }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                loader.Cancel();
+                loader.Dispose();
+
+                if (components != null)
+                    components.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
