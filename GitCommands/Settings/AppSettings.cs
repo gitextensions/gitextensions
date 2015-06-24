@@ -970,8 +970,23 @@ namespace GitCommands
 
         public static bool IgnoreWhitespaceChanges
         {
-            get { return GetBool("IgnoreWhitespaceChanges", false); }
-            set { SetBool("IgnoreWhitespaceChanges", value); }
+            get
+            {
+                return RememberIgnoreWhiteSpacePreference && GetBool("IgnoreWhitespaceChanges", false);
+            }
+            set
+            {
+                if (RememberIgnoreWhiteSpacePreference)
+                {
+                    SetBool("IgnoreWhitespaceChanges", value);
+                }
+            }
+        }
+
+        public static bool RememberIgnoreWhiteSpacePreference
+        {
+            get { return GetBool("rememberIgnoreWhiteSpacePreference", false); }
+            set { SetBool("rememberIgnoreWhiteSpacePreference", value); }
         }
 
         public static string GetDictionaryDir()
