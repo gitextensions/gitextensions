@@ -968,6 +968,12 @@ namespace GitCommands
             set { SetString("lastformatpatchdir", value); }
         }
 
+        public static bool IgnoreWhitespaceChanges
+        {
+            get { return GetBool("IgnoreWhitespaceChanges", false); }
+            set { SetBool("IgnoreWhitespaceChanges", value); }
+        }
+
         public static string GetDictionaryDir()
         {
             return Path.Combine(GetResourceDir(), "Dictionaries");

@@ -58,7 +58,8 @@ namespace GitUI.Editor
                         TextLoaded(this, null);
                 };
 
-            IgnoreWhitespaceChanges = false;
+            IgnoreWhitespaceChanges = AppSettings.IgnoreWhitespaceChanges;
+            ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
 
             IsReadOnly = true;
 
@@ -648,6 +649,8 @@ namespace GitUI.Editor
             IgnoreWhitespaceChanges = !IgnoreWhitespaceChanges;
             ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
             ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
+
+            AppSettings.IgnoreWhitespaceChanges = IgnoreWhitespaceChanges;
             OnExtraDiffArgumentsChanged();
         }
 
