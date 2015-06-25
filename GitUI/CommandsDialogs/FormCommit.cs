@@ -206,6 +206,8 @@ namespace GitUI.CommandsDialogs
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             stagedResetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             deleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
+            viewFileHistoryToolStripItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
+            toolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
         }
@@ -269,6 +271,7 @@ namespace GitUI.CommandsDialogs
             ResetSelectedFiles,
             StageSelectedFile,
             UnStageSelectedFile,
+            ShowHistory,
             ToggleSelectionFilter
         }
 
@@ -363,6 +366,23 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
+        private bool StartFileHistoryDialog()
+        {
+            if (Staged.Focused || Unstaged.Focused)
+            {
+                if (_currentFilesList.SelectedItem != null)
+                {
+                    if ((!_currentFilesList.SelectedItem.IsNew) && (!_currentFilesList.SelectedItem.IsRenamed))
+                    {
+                        UICommands.StartFileHistoryDialog(this, _currentFilesList.SelectedItem.Name, null);
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+
         private bool ToggleSelectionFilter()
         {
             selectionFilterToolStripMenuItem.Checked = !selectionFilterToolStripMenuItem.Checked;
@@ -383,7 +403,8 @@ namespace GitUI.CommandsDialogs
                 case Commands.ResetSelectedFiles: return ResetSelectedFiles();
                 case Commands.StageSelectedFile: return StageSelectedFile();
                 case Commands.UnStageSelectedFile: return UnStageSelectedFile();
-                case Commands.ToggleSelectionFilter: return ToggleSelectionFilter();
+                case Commands.ShowHistory: return StartFileHistoryDialog();
+                case Commands.ToggleSelectionFilter: return ToggleSelectionFilter();                   
                 default: return base.ExecuteCommand(cmd);
             }
         }

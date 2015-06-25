@@ -189,6 +189,7 @@ namespace GitUI.Hotkey
                     hk(FormCommit.Commands.ResetSelectedFiles, Keys.R),
                     hk(FormCommit.Commands.StageSelectedFile, Keys.S),
                     hk(FormCommit.Commands.UnStageSelectedFile, Keys.U),
+                    hk(FormCommit.Commands.ShowHistory, Keys.H),
                     hk(FormCommit.Commands.ToggleSelectionFilter, Keys.Control | Keys.F)),
                 new HotkeySettings(FormBrowse.HotkeySettingsName,
                     hk(FormBrowse.Commands.GitBash, Keys.Control | Keys.G),
