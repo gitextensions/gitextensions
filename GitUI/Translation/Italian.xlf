@@ -64,6 +64,10 @@ Questo programma è rilasciato nella speranza che possa essere utile, ma SENZA N
         <target>Non visualizzare le immagini di aiuto</target>
         
       </trans-unit>
+      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
+        <source>Remember the ignore-white-space preference</source>
+
+      </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen &quot;local changes&quot; action as default action.
 This action will be performed without warning while checking out branch.</source>
