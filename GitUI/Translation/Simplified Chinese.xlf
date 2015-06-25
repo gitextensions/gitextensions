@@ -817,10 +817,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <target>显示包含此提交的标签</target>
         
       </trans-unit>
-      <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
-        <source>Show messages of annotated tags</source>
-
-      </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
         <source>Related links:</source>
         <target>相关链接：</target>

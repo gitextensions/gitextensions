@@ -658,10 +658,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <source>Show tags containing this commit</source>
         
       </trans-unit>
-      <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
-        <source>Show messages of annotated tags</source>
-
-      </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
         <source>Related links:</source>
         

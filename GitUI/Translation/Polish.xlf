@@ -820,10 +820,6 @@ Upewnij się, czy jest zainstalowany git (msysgit lub cygwin) lub ustal komendę
         <target>Pokaż tagi zawierające to zatwierdzenie</target>
         
       </trans-unit>
-      <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
-        <source>Show messages of annotated tags</source>
-
-      </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
         <source>Related links:</source>
         <target>Powiązane odnośniki:</target>

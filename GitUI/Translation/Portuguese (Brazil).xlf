@@ -789,10 +789,6 @@ Favor confirmar que git (msysgit ou cygwin) está instalado ou configure o coman
         <target>Exibir tags que contêm este commit</target>
         
       </trans-unit>
-      <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
-        <source>Show messages of annotated tags</source>
-
-      </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
         <source>Related links:</source>
         <target>Links relacionados:</target>
