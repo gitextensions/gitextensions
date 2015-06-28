@@ -125,8 +125,9 @@ namespace GitUI
             showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
             BranchFilter = String.Empty;
             SetShowBranches();
-            Filter = "";
-            FixedFilter = "";
+            QuickRevisionFilter = "";
+            FixedRevisionFilter = "";
+            FixedPathFilter = "";
             InMemFilterIgnoreCase = true;
             InMemAuthorFilter = "";
             InMemCommitterFilter = "";
@@ -214,10 +215,13 @@ namespace GitUI
 
         [Category("Filter")]
         [DefaultValue("")]
-        public string Filter { get; set; }
+        public string QuickRevisionFilter { get; set; }
         [Category("Filter")]
         [DefaultValue("")]
-        public string FixedFilter { get; set; }
+        public string FixedRevisionFilter { get; set; }
+        [Category("Filter")]
+        [DefaultValue("")]
+        public string FixedPathFilter { get; set; }
         [Category("Filter")]
         [DefaultValue(true)]
         public bool InMemFilterIgnoreCase { get; set; }
@@ -991,8 +995,11 @@ namespace GitUI
                 else
                     revGraphIMF = filterBarIMF;
 
-                _revisionGraphCommand = new RevisionGraph(Module) { BranchFilter = BranchFilter,
-                    RefsOptions = _refsOptions, Filter = _revisionFilter.GetFilter() + Filter + FixedFilter
+                _revisionGraphCommand = new RevisionGraph(Module) {
+                    BranchFilter = BranchFilter,
+                    RefsOptions = _refsOptions,
+                    RevisionFilter = _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
+                    PathFilter = _revisionFilter.GetPathFilter() + FixedPathFilter,
                 };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
@@ -1097,7 +1104,7 @@ namespace GitUI
         internal bool FilterIsApplied(bool inclBranchFilter)
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
-                   !(string.IsNullOrEmpty(Filter) &&
+                   !(string.IsNullOrEmpty(QuickRevisionFilter) &&
                      !_revisionFilter.FilterEnabled() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
