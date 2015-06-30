@@ -69,19 +69,24 @@ namespace GitUI
 
             _NO_TRANSLATE_toolStripBranches.Items.Clear();
 
-            AsyncLoader.DoAsync(() => GetBranchAndTagRefs(local, tag, remote),
-                branches =>
-                {
-                    foreach (var branch in branches)
-                        _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
-
-                    var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
-                    if (!autoCompleteList.SequenceEqual(branches))
+            if (Module.IsValidGitWorkingDir())
+            {
+                AsyncLoader.DoAsync(() => GetBranchAndTagRefs(local, tag, remote),
+                    branches =>
                     {
-                        _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
-                        _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
-                    }
-                });
+                        foreach (var branch in branches)
+                            _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
+
+                        var autoCompleteList = _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Cast<string>();
+                        if (!autoCompleteList.SequenceEqual(branches))
+                        {
+                            _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
+                            _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
+                        }
+                    });
+            }
+
+            _NO_TRANSLATE_toolStripBranches.Enabled = Module.IsValidGitWorkingDir();
         }
 
         private List<string> GetBranchHeads(bool local, bool remote)
