@@ -60,7 +60,7 @@ namespace PatchApply
             if (isNewFile)
                 header = CorrectHeaderForNewFile(header);
 
-            string body = selectedChunks.ToStagePatch(staged);
+            string body = selectedChunks.ToStagePatch(staged, false);
 
             if (header == null || body == null)
                 return null;
@@ -117,7 +117,7 @@ namespace PatchApply
             if (selectedChunks == null)
                 return null;
 
-            string body = selectedChunks.ToStagePatch(false);
+            string body = selectedChunks.ToStagePatch(false, true);
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
             if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
@@ -193,6 +193,19 @@ namespace PatchApply
     {
         public string Text { get; set; }
         public bool Selected { get; set; }
+
+        public PatchLine Clone()
+        {
+            var c = new PatchLine();
+            c.Text = Text;
+            c.Selected = Selected;
+            return c;
+        }
+
+        public void SetOperation(string operationMark)
+        {
+            Text = operationMark + Text.Substring(1);
+        }
     }
 
     internal class SubChunk
@@ -205,7 +218,7 @@ namespace PatchApply
         public string IsNoNewLineAtTheEnd = null;
 
 
-        public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged)
+        public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
         {
             string diff = null;
             string removePart = null;
@@ -277,7 +290,7 @@ namespace PatchApply
             foreach (PatchLine line in PostContext)
                 diff = diff.Combine("\n", line.Text);
             //stage no new line at the end only if last +- line is selected
-            if (PostContext.Count == 0 && (selectedLastLine || staged))
+            if (PostContext.Count == 0 && (selectedLastLine || staged || isWholeFile))
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
             if (PostContext.Count > 0)
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
@@ -492,6 +505,20 @@ namespace PatchApply
                     {
                         result.CurrentSubChunk.IsNoNewLineAtTheEnd = "\\ No newline at end of file";
                         result.AddDiffLine(patchLine, reset);
+                        if (reset)
+                        {
+                            //if the last line is selected to be reset and there is no new line at the end of file
+                            //then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
+                            PatchLine lastNotSelectedLine = result.CurrentSubChunk.RemovedLines.LastOrDefault(aLine => !aLine.Selected);
+                            if (lastNotSelectedLine != null)
+                            {
+                                lastNotSelectedLine.Selected = true;
+                                PatchLine clonedLine = lastNotSelectedLine.Clone();
+                                clonedLine.SetOperation("+");
+                                result.CurrentSubChunk.AddedLines.Add(clonedLine);
+                            }
+                            result.CurrentSubChunk.WasNoNewLineAtTheEnd = "\\ No newline at end of file";
+                        }
                     }
                 }
                 else
@@ -585,11 +612,11 @@ namespace PatchApply
             return ToPatch(subChunkToPatch);
         }
 
-        public string ToStagePatch(bool staged)
+        public string ToStagePatch(bool staged, bool isWholeFile)
         {
             SubChunkToPatchFnc subChunkToPatch = (SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines) =>
             {
-                return subChunk.ToStagePatch(ref addedCount, ref removedCount, ref wereSelectedLines, staged);
+                return subChunk.ToStagePatch(ref addedCount, ref removedCount, ref wereSelectedLines, staged, isWholeFile);
             };
 
             return ToPatch(subChunkToPatch);
