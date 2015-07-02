@@ -114,13 +114,13 @@ namespace GitUI
                 return;
             }
 
-            if ((_NO_TRANSLATE_RevisionGrid.Filter == revListArgs) &&
+            if ((_NO_TRANSLATE_RevisionGrid.QuickRevisionFilter == revListArgs) &&
                 (_NO_TRANSLATE_RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
                 (_NO_TRANSLATE_RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
                 (_NO_TRANSLATE_RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
                 (_NO_TRANSLATE_RevisionGrid.InMemFilterIgnoreCase))
                 return;
-            _NO_TRANSLATE_RevisionGrid.Filter = revListArgs;
+            _NO_TRANSLATE_RevisionGrid.QuickRevisionFilter = revListArgs;
             _NO_TRANSLATE_RevisionGrid.InMemMessageFilter = inMemMessageFilter;
             _NO_TRANSLATE_RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
             _NO_TRANSLATE_RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;

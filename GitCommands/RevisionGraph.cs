@@ -112,7 +112,8 @@ namespace GitCommands
         }
 
         public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
-        public string Filter = String.Empty;
+        public string RevisionFilter = String.Empty;
+        public string PathFilter = String.Empty;
         public string BranchFilter = String.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
@@ -187,11 +188,12 @@ namespace GitCommands
                 branchFilter = "--branches=" + BranchFilter;
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {2} --pretty=format:\"{1}\" {0} {3}",
+                "log -z {2} --pretty=format:\"{1}\" {0} {3} -- {4}",
                 logParam,
                 formatString,
                 branchFilter,
-                Filter);
+                RevisionFilter,
+                PathFilter);
 
             Encoding logOutputEncoding = _module.LogOutputEncoding;
 
