@@ -586,6 +586,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <source>Reset Unstaged Changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkAddNewlineToCommitMessageWhenMissing.Text">
+        <source>Ensure the second line of commit message is empty</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkWriteCommitMessageInCommitWindow.Text">
         <source>Compose commit messages in Commit dialog
 (otherwise the message will be requested during commit)</source>

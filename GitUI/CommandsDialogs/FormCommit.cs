@@ -1558,6 +1558,8 @@ namespace GitUI.CommandsDialogs
 
             using (var textWriter = new StreamWriter(path, false, encoding))
             {
+                var addNewlineToCommitMessageWhenMissing = AppSettings.AddNewlineToCommitMessageWhenMissing;
+
                 var lineNumber = 0;
                 foreach (var line in commitMessageText.Split('\n'))
                 {
@@ -1566,8 +1568,11 @@ namespace GitUI.CommandsDialogs
                     if (!line.StartsWith("#") ||
                         string.IsNullOrEmpty(_commitTemplate))
                     {
-                        if (lineNumber == 1 && !String.IsNullOrEmpty(line))
-                            textWriter.WriteLine();
+                        if (addNewlineToCommitMessageWhenMissing)
+                        {
+                            if (lineNumber == 1 && !String.IsNullOrEmpty(line))
+                                textWriter.WriteLine();
+                        }
 
                         textWriter.WriteLine(line);
                     }
