@@ -241,6 +241,12 @@ namespace GitCommands
             set { SetBool("showerrorswhenstagingfiles", value); }
         }
 
+        public static bool AddNewlineToCommitMessageWhenMissing
+        {
+            get { return GetBool ("addnewlinetocommitmessagewhenmissing", true); }
+            set { SetBool ("addnewlinetocommitmessagewhenmissing", value); }
+        }
+
         public static string LastCommitMessage
         {
             get { return GetString("lastCommitMessage", ""); }
