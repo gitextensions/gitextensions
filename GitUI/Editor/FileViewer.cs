@@ -162,6 +162,9 @@ namespace GitUI.Editor
             set { _internalFileViewer.ScrollPos = value; }
         }
 
+        [Browsable(false)]
+        public byte[] FilePreabmle { get; private set; }
+
         private void WorkingDirChanged(object sender, GitUICommandsChangedEventArgs e)
         {
             this.Encoding = null;
@@ -471,6 +474,7 @@ namespace GitUI.Editor
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
         {
+            FilePreabmle = null;
             string fullPath = Path.GetFullPath(Path.Combine(Module.WorkingDir, fileName));
             if (fileName.EndsWith("/") || Directory.Exists(fullPath))
             {
@@ -587,7 +591,19 @@ namespace GitUI.Editor
             else
                 path = Path.Combine(Module.WorkingDir, fileName);
 
-            return !File.Exists(path) ? null : FileReader.ReadFileContent(path, Module.FilesEncoding);
+            if (File.Exists(path))
+            {
+                using (var reader = new StreamReader(path, Module.FilesEncoding))
+                {
+                    var content = reader.ReadToEnd();
+                    FilePreabmle = reader.CurrentEncoding.GetPreamble();
+                    return content;
+                }
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private void ResetForImage()

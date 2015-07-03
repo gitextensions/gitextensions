@@ -89,7 +89,7 @@ namespace PatchApply
             return sb.ToString();
         }
 
-        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset)
+        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] FilePreabmle)
         {
             StringBuilder sb = new StringBuilder();
             string fileMode = "100000";//given fake mode to satisfy patch format, git will override this
@@ -112,7 +112,7 @@ namespace PatchApply
 
             string header = sb.ToString();
 
-            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset);
+            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
 
             if (selectedChunks == null)
                 return null;
@@ -469,7 +469,7 @@ namespace PatchApply
             return result;
         }
 
-        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset)
+        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
         {
             Chunk result = new Chunk();
             result.StartLine = 0;
@@ -491,9 +491,10 @@ namespace PatchApply
             while (i < lines.Length)
             {
                 string line = lines[i];
+                string preamble = (i == 0 ? new string(fileContentEncoding.GetChars(FilePreabmle)) : string.Empty);
                 PatchLine patchLine = new PatchLine()
                 {
-                    Text = (reset ? "-" : "+") + line
+                    Text = (reset ? "-" : "+") + preamble + line
                 };
                 //do not refactor, there are no breakpoints condition in VS Experss
                 if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
@@ -505,7 +506,7 @@ namespace PatchApply
                     {
                         result.CurrentSubChunk.IsNoNewLineAtTheEnd = "\\ No newline at end of file";
                         result.AddDiffLine(patchLine, reset);
-                        if (reset)
+                        if (reset && patchLine.Selected)
                         {
                             //if the last line is selected to be reset and there is no new line at the end of file
                             //then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
@@ -594,9 +595,9 @@ namespace PatchApply
             return selectedChunks;
         }
 
-        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset)
+        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
         {
-            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset);
+            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
             ChunkList result = new ChunkList();
             result.Add(chunk);
             return result;
