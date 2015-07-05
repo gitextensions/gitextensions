@@ -365,7 +365,7 @@ namespace GitCommands
                     break;
 
                 case ReadStep.CommitMessage:
-                    _revision.Message = _module.ReEncodeCommitMessage(line, _revision.MessageEncoding);
+                    _revision.Subject = _module.ReEncodeCommitMessage(line, _revision.MessageEncoding);
 
                     break;
 
