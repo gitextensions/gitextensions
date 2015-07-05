@@ -829,14 +829,14 @@ namespace GitUI
             private static bool CheckCondition(string filter, Regex regex, string value)
             {
                 return string.IsNullOrEmpty(filter) ||
-                       ((regex != null) && regex.Match(value).Success);
+                       ((regex != null) && (value != null) && regex.Match(value).Success);
             }
 
             public override bool PassThru(GitRevision rev)
             {
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
-                       (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Subject) ||
+                       (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Body) ||
                         CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
             }
 
