@@ -53,7 +53,7 @@ namespace GitCommands.Config
         }
 
         public static readonly char[] CommentChars = new char[] { ';', '#' };
-        
+
         public void LoadFromString(string str)
         {
             ConfigFileParser parser = new ConfigFileParser(this);
@@ -307,7 +307,7 @@ namespace GitCommands.Config
 
             public ConfigFileParser(ConfigFile configFile)
             {
-                _configFile = configFile;                
+                _configFile = configFile;
             }
 
             public void Parse(string aFileContent = null)

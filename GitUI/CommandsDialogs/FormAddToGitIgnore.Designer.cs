@@ -13,6 +13,8 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            _ignoredFilesLoader.Cancel();
+
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -204,7 +206,7 @@
             this.MinimizeBox = false;
             this.Name = "FormAddToGitIgnore";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Add files(s) to .gitIgnore";
+            this.Text = "Add file(s) to .gitignore";
             this.groupBox1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

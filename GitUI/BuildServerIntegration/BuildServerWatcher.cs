@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
@@ -92,6 +93,7 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "http://stackoverflow.com/questions/1065168/does-disposing-streamreader-close-the-stream")]
         public IBuildServerCredentials GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting)
         {
             lock (buildServerCredentialsLock)
@@ -207,7 +209,7 @@ namespace GitUI.BuildServerIntegration
                 BuildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
             }
 
-            if (BuildStatusMessageColumnIndex == -1 && Module.Settings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault)
+            if (BuildStatusMessageColumnIndex == -1 && Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault)
             {
                 var buildMessageTextBoxColumn = new DataGridViewTextBoxColumn
                                                 {
@@ -227,8 +229,7 @@ namespace GitUI.BuildServerIntegration
 
             foreach (var commitHash in buildInfo.CommitHashList)
             {
-                string graphRevision;
-                int row = revisionGrid.TrySearchRevision(commitHash, out graphRevision);
+                int row = revisionGrid.TrySearchRevision(commitHash);
                 if (row >= 0)
                 {
                     var rowData = revisions.GetRowData(row);
@@ -248,35 +249,40 @@ namespace GitUI.BuildServerIntegration
 
         private IBuildServerAdapter GetBuildServerAdapter()
         {
-            if (Module.Settings.BuildServer.EnableIntegration.ValueOrDefault)
+            if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
+                return null;
+            var buildServerType = Module.EffectiveSettings.BuildServer.Type.Value;
+            if (string.IsNullOrEmpty(buildServerType))
+                return null;
+            try
             {
-                var buildServerType = Module.Settings.BuildServer.Type.Value;
-                if (!string.IsNullOrEmpty(buildServerType))
-                {
-                    var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-                    var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
+                var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
 
-                    if (export != null)
+                if (export != null)
+                {
+                    try
                     {
-                        try
+                        var canBeLoaded = export.Metadata.CanBeLoaded;
+                        if (!canBeLoaded.IsNullOrEmpty())
                         {
-                            var canBeLoaded = export.Metadata.CanBeLoaded;
-                            if (!canBeLoaded.IsNullOrEmpty())
-                            {
-                                System.Diagnostics.Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
-                                return null;
-                            }
-                            var buildServerAdapter = export.Value;
-                            buildServerAdapter.Initialize(this, Module.Settings.BuildServer.TypeSettings);
-                            return buildServerAdapter;
+                            System.Diagnostics.Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
+                            return null;
                         }
-                        catch (InvalidOperationException ex)
-                        {
-                            System.Diagnostics.Debug.Write(ex);
-                            // Invalid arguments, do not return a build server adapter
-                        }
+                        var buildServerAdapter = export.Value;
+                        buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings);
+                        return buildServerAdapter;
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        Debug.Write(ex);
+                        // Invalid arguments, do not return a build server adapter
                     }
                 }
+            }
+            catch (System.Reflection.ReflectionTypeLoadException)
+            {
+                Trace.WriteLine("GetExports() failed");
             }
             return null;
         }
@@ -294,7 +300,7 @@ namespace GitUI.BuildServerIntegration
                 revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
 
             if (BuildStatusMessageColumnIndex != -1)
-                revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible && Module.Settings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault;
+                revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible && Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault;
         }
 
         public void Dispose()

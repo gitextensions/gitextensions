@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
+using ResourceManager;
 
 namespace GitUI.Editor
 {
@@ -29,10 +30,10 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
         }
 
-        public new Font Font 
+        public new Font Font
         {
-            get { return TextEditor.Font; } 
-            set { TextEditor.Font = value; } 
+            get { return TextEditor.Font; }
+            set { TextEditor.Font = value; }
         }
 
         public new event MouseEventHandler MouseMove;
@@ -88,12 +89,12 @@ namespace GitUI.Editor
             OnSelectedLineChanged(TextEditor.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y));
         }
 
-        public event SelectedLineChangedEventHandler SelectedLineChanged;
+        public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
 
         void OnSelectedLineChanged(int selectedLine)
         {
             if (SelectedLineChanged != null)
-                SelectedLineChanged(this, selectedLine);
+                SelectedLineChanged(this, new SelectedLineEventArgs(selectedLine));
         }
 
         void VScrollBar_ValueChanged(object sender, EventArgs e)
@@ -194,11 +195,11 @@ namespace GitUI.Editor
         }
 
         private void MarkDifference(IDocument document, List<LineSegment> linesRemoved, List<LineSegment> linesAdded, int beginOffset)
-        {            
+        {
             int count = Math.Min(linesRemoved.Count, linesAdded.Count);
 
             for (int i = 0; i < count; i++)
-                MarkDifference(document, linesRemoved[i], linesAdded[i], beginOffset);        
+                MarkDifference(document, linesRemoved[i], linesAdded[i], beginOffset);
         }
 
         private void MarkDifference(IDocument document, LineSegment lineRemoved, LineSegment lineAdded, int beginOffset)
@@ -256,7 +257,7 @@ namespace GitUI.Editor
 
         private void AddExtraPatchHighlighting()
         {
-            var document = TextEditor.Document;      
+            var document = TextEditor.Document;
 
             var line = 0;
 
@@ -277,7 +278,7 @@ namespace GitUI.Editor
 
                 MarkDifference(document, linesRemoved, linesAdded, numberOfParents);
             }
-            
+
             numberOfParents = 1;
             while (line < document.TotalNumberOfLines)
             {
@@ -285,7 +286,7 @@ namespace GitUI.Editor
                 linesRemoved = GetLinesStartingWith(document, ref line, '-', ref found);
                 linesAdded = GetLinesStartingWith(document, ref line, '+', ref found);
 
-                MarkDifference(document, linesRemoved, linesAdded, numberOfParents);                
+                MarkDifference(document, linesRemoved, linesAdded, numberOfParents);
             }
         }
 
@@ -412,8 +413,8 @@ namespace GitUI.Editor
         public string GetLineText(int line)
         {
             if (line >= TextEditor.Document.TotalNumberOfLines)
-                return string.Empty; 
-            
+                return string.Empty;
+
             return TextEditor.Document.GetText(TextEditor.Document.GetLineSegment(line));
         }
 
@@ -433,7 +434,7 @@ namespace GitUI.Editor
         public void HighlightLine(int line, Color color)
         {
             if (line >= TextEditor.Document.TotalNumberOfLines)
-                return; 
+                return;
 
             var document = TextEditor.Document;
             var markerStrategy = document.MarkerStrategy;
@@ -474,7 +475,7 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.Select();
         }
 
-        public bool IsReadOnly 
+        public bool IsReadOnly
         {
             get
             {

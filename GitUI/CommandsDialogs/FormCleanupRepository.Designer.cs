@@ -43,9 +43,9 @@
             this.labelPathHint = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // Preview
-            // 
+            //
             this.Preview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Preview.Image = global::GitUI.Properties.Resources.IconPreview;
             this.Preview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -56,9 +56,9 @@
             this.Preview.Text = "Preview";
             this.Preview.UseVisualStyleBackColor = true;
             this.Preview.Click += new System.EventHandler(this.Preview_Click);
-            // 
+            //
             // Cleanup
-            // 
+            //
             this.Cleanup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Cleanup.Image = global::GitUI.Properties.Resources.IconCleanupRepo;
             this.Cleanup.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -69,9 +69,9 @@
             this.Cleanup.Text = "Cleanup";
             this.Cleanup.UseVisualStyleBackColor = true;
             this.Cleanup.Click += new System.EventHandler(this.Cleanup_Click);
-            // 
+            //
             // Cancel
-            // 
+            //
             this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Cancel.Location = new System.Drawing.Point(302, 278);
@@ -81,10 +81,10 @@
             this.Cancel.Text = "Cancel";
             this.Cancel.UseVisualStyleBackColor = true;
             this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
-            // 
+            //
             // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.RemoveIngnored);
             this.groupBox1.Controls.Add(this.RemoveNonIgnored);
@@ -95,9 +95,9 @@
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Remove untracked files from working directory";
-            // 
+            //
             // RemoveIngnored
-            // 
+            //
             this.RemoveIngnored.AutoSize = true;
             this.RemoveIngnored.Location = new System.Drawing.Point(7, 67);
             this.RemoveIngnored.Name = "RemoveIngnored";
@@ -105,9 +105,9 @@
             this.RemoveIngnored.TabIndex = 2;
             this.RemoveIngnored.Text = "Remove only ignored untracked files";
             this.RemoveIngnored.UseVisualStyleBackColor = true;
-            // 
+            //
             // RemoveNonIgnored
-            // 
+            //
             this.RemoveNonIgnored.AutoSize = true;
             this.RemoveNonIgnored.Location = new System.Drawing.Point(7, 43);
             this.RemoveNonIgnored.Name = "RemoveNonIgnored";
@@ -115,9 +115,9 @@
             this.RemoveNonIgnored.TabIndex = 1;
             this.RemoveNonIgnored.Text = "Remove only non-ignored untracked files";
             this.RemoveNonIgnored.UseVisualStyleBackColor = true;
-            // 
+            //
             // RemoveAll
-            // 
+            //
             this.RemoveAll.AutoSize = true;
             this.RemoveAll.Checked = true;
             this.RemoveAll.Location = new System.Drawing.Point(7, 20);
@@ -127,9 +127,9 @@
             this.RemoveAll.TabStop = true;
             this.RemoveAll.Text = "Remove all untracked files";
             this.RemoveAll.UseVisualStyleBackColor = true;
-            // 
+            //
             // RemoveDirectories
-            // 
+            //
             this.RemoveDirectories.AutoSize = true;
             this.RemoveDirectories.Checked = true;
             this.RemoveDirectories.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -139,11 +139,11 @@
             this.RemoveDirectories.TabIndex = 4;
             this.RemoveDirectories.Text = "Remove untracked directories";
             this.RemoveDirectories.UseVisualStyleBackColor = true;
-            // 
+            //
             // PreviewOutput
-            // 
-            this.PreviewOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.PreviewOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.PreviewOutput.Location = new System.Drawing.Point(12, 343);
             this.PreviewOutput.Multiline = true;
@@ -152,19 +152,19 @@
             this.PreviewOutput.Size = new System.Drawing.Size(410, 87);
             this.PreviewOutput.TabIndex = 5;
             this.PreviewOutput.WordWrap = false;
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(9, 325);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(30, 15);
             this.label1.TabIndex = 6;
             this.label1.Text = "Log:";
-            // 
+            //
             // textBoxPaths
-            // 
-            this.textBoxPaths.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.textBoxPaths.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxPaths.Location = new System.Drawing.Point(48, 169);
             this.textBoxPaths.Multiline = true;
@@ -172,9 +172,9 @@
             this.textBoxPaths.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxPaths.Size = new System.Drawing.Size(374, 63);
             this.textBoxPaths.TabIndex = 1;
-            // 
+            //
             // checkBoxPathFilter
-            // 
+            //
             this.checkBoxPathFilter.AutoSize = true;
             this.checkBoxPathFilter.Location = new System.Drawing.Point(19, 144);
             this.checkBoxPathFilter.Name = "checkBoxPathFilter";
@@ -183,18 +183,18 @@
             this.checkBoxPathFilter.Text = "Affect the following path(s) only:";
             this.checkBoxPathFilter.UseVisualStyleBackColor = true;
             this.checkBoxPathFilter.CheckedChanged += new System.EventHandler(this.checkBoxPathFilter_CheckedChanged);
-            // 
+            //
             // labelPathHint
-            // 
+            //
             this.labelPathHint.AutoSize = true;
             this.labelPathHint.Location = new System.Drawing.Point(50, 236);
             this.labelPathHint.Name = "labelPathHint";
             this.labelPathHint.Size = new System.Drawing.Size(104, 15);
             this.labelPathHint.TabIndex = 7;
-            this.labelPathHint.Text = "(one line per path)";
-            // 
+            this.labelPathHint.Text = "(one path per line)";
+            //
             // FormCleanupRepository
-            // 
+            //
             this.AcceptButton = this.Preview;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.Cancel;

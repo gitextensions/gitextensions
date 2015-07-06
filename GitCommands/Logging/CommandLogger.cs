@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GitCommands.Logging
 {
     public sealed class CommandLogger
     {
-        public delegate void CommandsChangedHandler();
-        private const int LogLimit = 100;
-        private readonly Queue<string> _logQueue = new Queue<string>(LogLimit);
+        private const int LogLimit = 500;
+        private readonly Queue<CommandLogEntry> _logQueue = new Queue<CommandLogEntry>(LogLimit);
 
-        public event CommandsChangedHandler CommandsChanged = delegate { };
+        public event EventHandler CommandsChanged;
 
-        public string[] GetCommands()
+        public CommandLogEntry[] GetCommands()
         {
             lock (_logQueue)
             {
@@ -19,21 +19,25 @@ namespace GitCommands.Logging
             }
         }
 
-        public void Log(string command)
+        public void Log(string command, DateTime executionStartTimestamp, DateTime executionEndTimestamp)
         {
             lock (_logQueue)
             {
                 if (_logQueue.Count >= LogLimit)
                     _logQueue.Dequeue();
 
-                _logQueue.Enqueue(command);
+                var commandLogEntry = new CommandLogEntry(command, executionStartTimestamp, executionEndTimestamp);
+                _logQueue.Enqueue(commandLogEntry);
             }
-            CommandsChanged();
+
+            var handler = CommandsChanged;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
 
         public override string ToString()
         {
-            return string.Join(Environment.NewLine, GetCommands());
+            return string.Join(Environment.NewLine, GetCommands().Select(cle => cle.ToString()));
         }
     }
 }

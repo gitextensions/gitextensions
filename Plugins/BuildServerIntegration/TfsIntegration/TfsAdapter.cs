@@ -32,7 +32,7 @@ namespace TfsIntegration
             {
                 if (EnvUtils.IsNet4FullOrHigher())
                     return null;
-                return ".Net 4 full freamwork required";
+                return ".Net 4 full framework required";
             }
         }
     }
@@ -130,11 +130,7 @@ namespace TfsIntegration
         {
             try
             {
-                var builds = _tfsHelper.QueryBuilds().AsQueryable();
-                if (sinceDate.HasValue)
-                    builds = builds.Where(b => b.StartDate > sinceDate.Value);
-                if (running.HasValue)
-                    builds = builds.Where(b => b.IsFinished != running.Value);
+                var builds = _tfsHelper.QueryBuilds(sinceDate, running);
 
                 Parallel.ForEach(builds, detail => { observer.OnNext(CreateBuildInfo(detail)); });
             }
@@ -167,6 +163,8 @@ namespace TfsIntegration
 
         public void Dispose()
         {
+            if (_tfsHelper != null)
+                _tfsHelper.Dispose();
             GC.SuppressFinalize(this);
         }
     }

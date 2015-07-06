@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -23,16 +24,16 @@ namespace GitCommands
     public static class AppSettings
     {
         //semi-constants
-        public static readonly string GitExtensionsVersionString;
         public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
+        public static string ProductVersion { get { return Application.ProductVersion; } }
         public const string SettingsFileName = "GitExtensions.settings";
 
         public static Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
-        private static SettingsContainer<RepoDistSettings, GitExtSettingsCache> _SettingsContainer;
-        public static SettingsContainer<RepoDistSettings, GitExtSettingsCache> SettingsContainer { get { return _SettingsContainer; } }
+        private static RepoDistSettings _SettingsContainer;
+        public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
 
         static AppSettings()
         {
@@ -50,12 +51,7 @@ namespace GitCommands
             }
             );
 
-            _SettingsContainer = new SettingsContainer<RepoDistSettings, GitExtSettingsCache>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
-            Version version = AppVersion;
-
-            GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
-            if (version.Build > 0)
-                GitExtensionsVersionString += '.' + version.Build.ToString();
+            _SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
             GitLog = new CommandLogger();
 
@@ -65,7 +61,7 @@ namespace GitCommands
             }
         }
 
-        public static void UsingContainer(SettingsContainer<RepoDistSettings, GitExtSettingsCache> aSettingsContainer, Action action)
+        public static void UsingContainer(RepoDistSettings aSettingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>
                 {
@@ -87,6 +83,17 @@ namespace GitCommands
 
         public static string GetInstallDir()
         {
+            if (IsPortable())
+                return GetGitExtensionsDirectory();
+
+            string dir = ReadStringRegValue("InstallDir", string.Empty);
+            if (String.IsNullOrEmpty(dir))
+                return GetGitExtensionsDirectory();
+            return dir;
+        }
+
+        public static string GetResourceDir()
+        {
 #if DEBUG
             string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
             string debugPath = @"GitExtensions\bin\Debug";
@@ -98,15 +105,7 @@ namespace GitCommands
                 return Path.Combine(projectPath, "Bin");
             }
 #endif
-
-            if (IsPortable())
-            {
-                return GetGitExtensionsDirectory();
-            }
-            else
-            {
-                return ReadStringRegValue("InstallDir", string.Empty);
-            }
+            return GetInstallDir();
         }
 
         //for repair only
@@ -242,6 +241,12 @@ namespace GitCommands
             set { SetBool("showerrorswhenstagingfiles", value); }
         }
 
+        public static bool AddNewlineToCommitMessageWhenMissing
+        {
+            get { return GetBool ("addnewlinetocommitmessagewhenmissing", true); }
+            set { SetBool ("addnewlinetocommitmessagewhenmissing", value); }
+        }
+
         public static string LastCommitMessage
         {
             get { return GetString("lastCommitMessage", ""); }
@@ -348,6 +353,44 @@ namespace GitCommands
             set { _currentTranslation = value; }
         }
 
+
+        private static readonly Dictionary<string, string> _languageCodes =
+            new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "English", "en" },
+            { "Czech", "cs" },
+            { "French", "fr" },
+            { "German", "de" },
+            { "Indonesian", "id" },
+            { "Italian", "it" },
+            { "Japanese", "ja" },
+            { "Korean", "ko" },
+            { "Polish", "pl" },
+            { "Russian", "ru" },
+            { "Portuguese (Brazil)", "pt_BR" },
+            { "Portuguese (Portugal)", "pt_PT" },
+            { "Romanian", "ro" },
+            { "Simplified Chinese", "zh_CN" },
+            { "Spanish", "es" },
+            { "Traditional Chinese", "zh_TW" }
+        };
+
+        public static string CurrentLanguageCode
+        {
+            get
+            {
+                string code;
+                if (_languageCodes.TryGetValue(CurrentTranslation, out code))
+                    return code;
+                return "en";
+            }
+        }
+
+        public static CultureInfo CurrentCultureInfo
+        {
+            get { return CultureInfo.GetCultureInfo(CurrentLanguageCode); }
+        }
+
         public static bool UserProfileHomeDir
         {
             get { return GetBool("userprofilehomedir", false); }
@@ -430,6 +473,12 @@ namespace GitCommands
         {
             get { return GetBool("followrenamesinfilehistory", true); }
             set { SetBool("followrenamesinfilehistory", value); }
+        }
+
+        public static bool FollowRenamesInFileHistoryExactOnly
+        {
+            get { return GetBool("followrenamesinfilehistoryexactonly", false); }
+            set { SetBool("followrenamesinfilehistoryexactonly", value); }
         }
 
         public static bool FullHistoryInFileHistory
@@ -626,8 +675,8 @@ namespace GitCommands
 
         public static string Dictionary
         {
-            get { return GetString("dictionary", "en-US"); }
-            set { SetString("dictionary", value); }
+            get { return SettingsContainer.Dictionary; }
+            set { SettingsContainer.Dictionary = value; }
         }
 
         public static bool ShowGitCommandLine
@@ -869,6 +918,12 @@ namespace GitCommands
             set { SetColor("diffaddedextracolor", value); }
         }
 
+        public static Color AuthoredRevisionsColor
+        {
+            get { return GetColor("authoredrevisionscolor", Color.LightYellow); }
+            set { SetColor("authoredrevisionscolor", value); }
+        }
+
         public static Font DiffFont
         {
             get { return GetFont("difffont", new Font("Courier New", 10)); }
@@ -907,15 +962,42 @@ namespace GitCommands
             set { SetBool("branchborders", value); }
         }
 
+        public static bool HighlightAuthoredRevisions
+        {
+            get { return GetBool("highlightauthoredrevisions", true); }
+            set { SetBool("highlightauthoredrevisions", value); }
+        }
+
         public static string LastFormatPatchDir
         {
             get { return GetString("lastformatpatchdir", ""); }
             set { SetString("lastformatpatchdir", value); }
         }
 
+        public static bool IgnoreWhitespaceChanges
+        {
+            get
+            {
+                return RememberIgnoreWhiteSpacePreference && GetBool("IgnoreWhitespaceChanges", false);
+            }
+            set
+            {
+                if (RememberIgnoreWhiteSpacePreference)
+                {
+                    SetBool("IgnoreWhitespaceChanges", value);
+                }
+            }
+        }
+
+        public static bool RememberIgnoreWhiteSpacePreference
+        {
+            get { return GetBool("rememberIgnoreWhiteSpacePreference", false); }
+            set { SetBool("rememberIgnoreWhiteSpacePreference", value); }
+        }
+
         public static string GetDictionaryDir()
         {
-            return Path.Combine(GetInstallDir(), "Dictionaries");
+            return Path.Combine(GetResourceDir(), "Dictionaries");
         }
 
         public static void SaveSettings()
@@ -1063,6 +1145,12 @@ namespace GitCommands
         {
             get { return GetDate("LastUpdateCheck", default(DateTime)); }
             set { SetDate("LastUpdateCheck", value); }
+        }
+
+        public static bool CheckForReleaseCandidates
+        {
+            get { return GetBool("CheckForReleaseCandidates", false); }
+            set { SetBool("CheckForReleaseCandidates", value); }
         }
 
         public static string GetGitExtensionsFullPath()

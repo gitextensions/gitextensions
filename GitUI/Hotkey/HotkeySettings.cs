@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
+using ResourceManager;
 
 namespace GitUI.Hotkey
 {

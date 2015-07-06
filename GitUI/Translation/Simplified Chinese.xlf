@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.48" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -54,10 +54,18 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <target>总是显示登出对话框</target>
         
       </trans-unit>
+      <trans-unit id="chkCheckForRCVersions.Text">
+        <source>Check for release candidate versions</source>
+        
+      </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
         <source>Don't show help images</source>
         <target>不显示帮助示图</target>
         
+      </trans-unit>
+      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
+        <source>Remember the ignore-white-space preference</source>
+
       </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen &quot;local changes&quot; action as default action.
@@ -331,11 +339,6 @@ This action will be performed without warning while checking out branch.</source
         <target>您应该配置合并工具，以解决合并冲突项（例如kdiff3）。</target>
         
       </trans-unit>
-      <trans-unit id="_credentialHelperInstalled.Text">
-        <source>Git credential helper is installed.</source>
-        <target>Git credential helper 已安装</target>
-        
-      </trans-unit>
       <trans-unit id="_customMergeToolXConfigured.Text">
         <source>There is a custom mergetool configured: {0}</source>
         <target>已配置自定义合并工具：{0}</target>
@@ -359,11 +362,6 @@ This action will be performed without warning while checking out branch.</source
       <trans-unit id="_gitCanBeRunCaption.Text">
         <source>Locate git</source>
         <target>查找Git</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitCredentialWinStoreHelperInstalled.Text">
-        <source>Git Credential Win Store is installed as credential helper.</source>
-        <target>Git Credential Win Store 已经作为 Git credential helper 安装</target>
         
       </trans-unit>
       <trans-unit id="_gitNotFound.Text">
@@ -438,16 +436,6 @@ Please make sure there are linux tools installed (through msysgit or cygwin) or 
       <trans-unit id="_mergeToolXConfiguredNeedsCmd.Text">
         <source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</source>
         <target>已配置合并工具{0} ，这是一个自定义的合并工具和需要通过自定义cmd进行配置。</target>
-        
-      </trans-unit>
-      <trans-unit id="_noCredentialsHelperInstalled.Text">
-        <source>No credential helper installed.</source>
-        <target>credential helper未安装。</target>
-        
-      </trans-unit>
-      <trans-unit id="_noCredentialsHelperInstalledTryGCS.Text">
-        <source>No credential helper could be installed. Try to install git-credential-winstore.exe.</source>
-        <target>credential helper未安装。尝试安装 git-credential-winstore.exe.</target>
         
       </trans-unit>
       <trans-unit id="_noDiffToolConfigured.Text">
@@ -566,11 +554,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <target>Git已定位，当版本 {0} 不支持，请更新到 {1} 或更高的版本</target>
         
       </trans-unit>
-      <trans-unit id="gitCredentialWinStore_Fix.Text">
-        <source>Repair</source>
-        <target>修复</target>
-        
-      </trans-unit>
       <trans-unit id="label11.Text">
         <source>The checklist below validates the basic settings needed for GitExtensions to work properly.</source>
         <target>下面的检查项是保证GitExtensions正常工作的必需条件。</target>
@@ -579,20 +562,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       <trans-unit id="translationConfig_Fix.Text">
         <source>Repair</source>
         <target>修复</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="CheckSettingsLogic" source-language="en">
-    <body>
-      <trans-unit id="MergeToolSuggestCaption.Text">
-        <source>Suggest mergetool cmd</source>
-        <target>建议的合并工具命令参数</target>
-        
-      </trans-unit>
-      <trans-unit id="ToolSuggestPathText.Text">
-        <source>Please enter the path to {0} and press suggest.</source>
-        <target>请输入 {0} 的路径，然后按建议按钮。</target>
         
       </trans-unit>
     </body>
@@ -632,6 +601,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       <trans-unit id="GreenIcon.Text">
         <source>Green</source>
         <target>绿色</target>
+        
+      </trans-unit>
+      <trans-unit id="HighlightAuthoredRevisions.Text">
+        <source>Highlight authored revisions</source>
         
       </trans-unit>
       <trans-unit id="LightblueIcon.Text">
@@ -682,6 +655,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       <trans-unit id="groupBox5.Text">
         <source>Application Icon</source>
         <target>应用程序图标</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Color authored revisions</source>
         
       </trans-unit>
       <trans-unit id="label25.Text">
@@ -1361,6 +1338,11 @@ Do you want to open it?</source>
         <target>减少可见的行数</target>
         
       </trans-unit>
+      <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
+        <source>Cherry pick selected lines</source>
+        <target>优化提交（Cherry pick）选择的行</target>
+        
+      </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
         <source>Copy new version</source>
         <target>复制新版本</target>
@@ -1562,6 +1544,15 @@ Do you want to open it?</source>
       <trans-unit id="lblReplaceWith.Text">
         <source>Re&amp;place with:</source>
         <target>替换为(&amp;p)：</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FolderBrowserButton" source-language="en">
+    <body>
+      <trans-unit id="buttonBrowse.Text">
+        <source>Browse...</source>
+        <target>浏览...</target>
         
       </trans-unit>
     </body>
@@ -1830,8 +1821,7 @@ You will have push access. {2}</source>
   <file datatype="plaintext" original="FormAddToGitIgnore" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Add files(s) to .gitIgnore</source>
-        <target>添加文件到.gitIgnore</target>
+        <source>Add file(s) to .gitignore</source>
         
       </trans-unit>
       <trans-unit id="AddToIngore.Text">
@@ -1842,6 +1832,10 @@ You will have push access. {2}</source>
       <trans-unit id="_matchingFilesString.Text">
         <source>{0} file(s) matched</source>
         <target>{0} 个文件符合</target>
+        
+      </trans-unit>
+      <trans-unit id="_updateStatusString.Text">
+        <source>Updating ...</source>
         
       </trans-unit>
       <trans-unit id="btnCancel.Text">
@@ -1910,6 +1904,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="PatchDirMode.Text">
         <source>Patch directory</source>
+        <target>补丁目录</target>
         
       </trans-unit>
       <trans-unit id="PatchFileMode.Text">
@@ -2171,6 +2166,26 @@ compare with first:</source>
         <target>创建推送请求...</target>
         
       </trans-unit>
+      <trans-unit id="_diffNoSelection.Text">
+        <source>Diff (no selection)</source>
+        <target>比较(无选择)</target>
+        
+      </trans-unit>
+      <trans-unit id="_diffNotSupported.Text">
+        <source>Diff (not supported)</source>
+        <target>比较(不支持)</target>
+        
+      </trans-unit>
+      <trans-unit id="_diffParentWithSelection.Text">
+        <source>Diff (A: parent --&gt; B: selection)</source>
+        <target>比较(A:上一级--&gt;B:选择的)</target>
+        
+      </trans-unit>
+      <trans-unit id="_diffTwoSelected.Text">
+        <source>Diff (A: first --&gt; B: second)</source>
+        <target>比较(A:第一个--&gt;B:第二个)</target>
+        
+      </trans-unit>
       <trans-unit id="_errorCaption.Text">
         <source>Error</source>
         <target>错误</target>
@@ -2226,9 +2241,42 @@ compare with first:</source>
         <target>未找到节点。文件树的选择没有改变。</target>
         
       </trans-unit>
+      <trans-unit id="_pullFetch.Text">
+        <source>Pull - fetch</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullFetchAll.Text">
+        <source>Pull - fetch all</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullMerge.Text">
+        <source>Pull - merge</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullOpenDialog.Text">
+        <source>Open pull dialog</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullRebase.Text">
+        <source>Pull - rebase</source>
+        
+      </trans-unit>
       <trans-unit id="_repositoryHostsToolStripMenuItem.Text">
         <source>(Repository hosts)</source>
         <target>(档案库主机)</target>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileCaption.Text">
+        <source>Reset</source>
+        <target>复位</target>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileError.Text">
+        <source>Exactly one revision must be selected. Abort.</source>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileText.Text">
+        <source>Are you sure you want to reset this file or directory?</source>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
@@ -2288,6 +2336,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="aLocalToolStripMenuItem.Text">
         <source>A &lt;--&gt; Working directory</source>
+        <target>A &lt;--&gt; 工作目录</target>
         
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
@@ -2312,6 +2361,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="bLocalToolStripMenuItem.Text">
         <source>B &lt;--&gt; Working directory</source>
+        <target>B &lt;--&gt; 工作目录</target>
         
       </trans-unit>
       <trans-unit id="bisectToolStripMenuItem.Text">
@@ -2359,6 +2409,10 @@ compare with first:</source>
         <target>登出版本...</target>
         
       </trans-unit>
+      <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
+        <source>Cherry pick file's changes</source>
+        
+      </trans-unit>
       <trans-unit id="cherryPickToolStripMenuItem.Text">
         <source>Cherry pick...</source>
         <target>选最好的...</target>
@@ -2366,6 +2420,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="cleanupToolStripMenuItem.Text">
         <source>Clean working directory...</source>
+        <target>清理工作目录</target>
         
       </trans-unit>
       <trans-unit id="cloneSVNToolStripMenuItem.Text">
@@ -2484,6 +2539,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
         <source>Edit working directory file</source>
+        <target>编辑工作目录的文件</target>
         
       </trans-unit>
       <trans-unit id="editLocalGitConfigToolStripMenuItem.Text">
@@ -2553,6 +2609,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
         <source>Clean working directory...</source>
+        <target>清理工作目录</target>
         
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
@@ -2641,8 +2698,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
-        <source>Merge</source>
-        <target>合并</target>
+        <source>Pull - merge</source>
         
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -2677,14 +2733,17 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
         <source>Open working directory file with...</source>
+        <target>用工具打开签出的文件</target>
         
       </trans-unit>
       <trans-unit id="parentOfALocalToolStripMenuItem.Text">
         <source>A's parent &lt;--&gt; Working directory</source>
+        <target>A的上层 &lt;--&gt; 工作目录</target>
         
       </trans-unit>
       <trans-unit id="parentOfBLocalToolStripMenuItem.Text">
         <source>B's parent &lt;--&gt; Working directory</source>
+        <target>B的上层 &lt;--&gt; 工作目录</target>
         
       </trans-unit>
       <trans-unit id="patchToolStripMenuItem.Text">
@@ -2708,8 +2767,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
-        <source>Pull</source>
-        <target>拉取</target>
+        <source>Open pull dialog...</source>
         
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
@@ -2723,8 +2781,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
-        <source>Rebase</source>
-        <target>衍合</target>
+        <source>Pull - rebase</source>
         
       </trans-unit>
       <trans-unit id="recentToolStripMenuItem.Text">
@@ -2762,14 +2819,21 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <target>档案库</target>
         
       </trans-unit>
-      <trans-unit id="resetFileToAToolStripMenuItem.Text">
-        <source>A</source>
-        <target>A</target>
+      <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
+        <source>First</source>
         
       </trans-unit>
-      <trans-unit id="resetFileToRemoteToolStripMenuItem.Text">
-        <source>B</source>
-        <target>B</target>
+      <trans-unit id="resetFileToParentToolStripMenuItem.Text">
+        <source>Parent</source>
+        
+      </trans-unit>
+      <trans-unit id="resetFileToSecondToolStripMenuItem.Text">
+        <source>Second</source>
+        
+      </trans-unit>
+      <trans-unit id="resetFileToSelectedToolStripMenuItem.Text">
+        <source>Selected</source>
+        <target>已选中</target>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
@@ -2845,6 +2909,11 @@ Do you want to abort and remove it from the recent repositories list?</source>
       <trans-unit id="tagToolStripMenuItem.Text">
         <source>Create tag...</source>
         <target>创建标签...</target>
+        
+      </trans-unit>
+      <trans-unit id="tagsToolStripMenuItem.Text">
+        <source>Tag</source>
+        <target>标签</target>
         
       </trans-unit>
       <trans-unit id="toggleSplitViewLayout.ToolTipText">
@@ -2962,6 +3031,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgain.Text">
         <source>Apply stashed items to working directory again?</source>
+        <target>要把缓冲区的对象再次应用到工作目录吗？</target>
         
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgainCaption.Text">
@@ -3191,6 +3261,7 @@ revision:</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Clean working directory</source>
+        <target>清理工作目录</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -3245,6 +3316,7 @@ revision:</source>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Remove untracked files from working directory</source>
+        <target>从工作目录移除未被跟踪的文件</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -3253,8 +3325,8 @@ revision:</source>
         
       </trans-unit>
       <trans-unit id="labelPathHint.Text">
-        <source>(one line per path)</source>
-        <target>(一行一个路径)</target>
+        <source>(one path per line)</source>
+        <target>(每行一个路径)</target>
         
       </trans-unit>
     </body>
@@ -3268,10 +3340,12 @@ revision:</source>
       </trans-unit>
       <trans-unit id="Central.Text">
         <source>Central repository, no working directory  (--bare --shared=all)</source>
+        <target>中央资料库，没有工作目录 (--bare --shared=all)</target>
         
       </trans-unit>
       <trans-unit id="CentralRepository.Text">
         <source>P&amp;ublic repository, no working directory  (--bare)</source>
+        <target>中央档案库，没有工作目录(--bare)</target>
         
       </trans-unit>
       <trans-unit id="FromBrowse.Text">
@@ -3450,12 +3524,12 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
-        <source>Author </source>
+        <source>Author</source>
         <target>作者</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterInfo.Text">
-        <source>Committer </source>
+        <source>Committer</source>
         <target>提交者</target>
         
       </trans-unit>
@@ -3884,6 +3958,11 @@ Do you want to continue?</source>
         <target>Sign-off提交</target>
         
       </trans-unit>
+      <trans-unit id="stagedResetChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>重置文件的更改</target>
+        
+      </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
         <source>Stash submodule changes</source>
         <target>暂存子模块的更改</target>
@@ -3986,6 +4065,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="workingToolStripMenuItem.Text">
         <source>Working directory changes</source>
+        <target>工作目录更改</target>
         
       </trans-unit>
     </body>
@@ -4140,6 +4220,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
         <source>Clear working directory and index</source>
+        <target>清空工作目录及其索引</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -4422,12 +4503,12 @@ Click on the &quot;Support this project&quot; button to get more information abo
         
       </trans-unit>
       <trans-unit id="_cannotOpenFile.Text">
-        <source>Cannot open file: </source>
+        <source>Cannot open file:</source>
         <target>不能打开文件：</target>
         
       </trans-unit>
       <trans-unit id="_cannotSaveFile.Text">
-        <source>Cannot save file: </source>
+        <source>Cannot save file:</source>
         <target>不能保存文件：</target>
         
       </trans-unit>
@@ -4492,6 +4573,10 @@ If you are not sure just close this window.</source>
       <trans-unit id="diffToolremotelocalStripMenuItem.Text">
         <source>Difftool selected &lt; - &gt; local</source>
         <target>Difftool 已选择的 &lt; - &gt; 本地</target>
+        
+      </trans-unit>
+      <trans-unit id="followFileHistoryRenamesToolStripMenuItem.Text">
+        <source>Detect and follow - exact renames and copies only</source>
         
       </trans-unit>
       <trans-unit id="followFileHistoryToolStripMenuItem.Text">
@@ -4755,148 +4840,6 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Change Submitted</source>
-        <target>更改已提交</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>关闭</target>
-        
-      </trans-unit>
-      <trans-unit id="labelSubmitted.Text">
-        <source>Your change has been submitted for review at the following location:</source>
-        <target>您的更改已在以下位置提交审查：</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Download Gerrit Change</source>
-        <target>下载Gerrit更改</target>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>管理远程</target>
-        
-      </trans-unit>
-      <trans-unit id="Download.Text">
-        <source>&amp;Download</source>
-        <target>下载(&amp;D)</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotGetChangeDetails.Text">
-        <source>Could not retrieve the change details</source>
-        <target>无法检索的变化细节</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadCaption.Text">
-        <source>Download change {0}</source>
-        <target>下载更改{0}</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadGerritChangeCaption.Text">
-        <source>Download Gerrit Change</source>
-        <target>下载Gerrit更改</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectChange.Text">
-        <source>Please enter a change</source>
-        <target>请输入一个更改</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        <target>请选择一个远程档案库</target>
-        
-      </trans-unit>
-      <trans-unit id="labelChange.Text">
-        <source>Change:</source>
-        <target>更改：</target>
-        
-      </trans-unit>
-      <trans-unit id="labelEnterChangeIdOrNumber.Text">
-        <source>Enter the Change-Id or the number from the Gerrit URL</source>
-        <target>输入Change-Id或Gerrit URL 编号</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        <target>远程：</target>
-        
-      </trans-unit>
-      <trans-unit id="labelTopicBranch.Text">
-        <source>Topic branch:</source>
-        <target>主题分支：</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Publish Gerrit Change</source>
-        <target>发布Gerrit更改</target>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>管理远程</target>
-        
-      </trans-unit>
-      <trans-unit id="Publish.Text">
-        <source>&amp;Publish</source>
-        <target>发布(&amp;P)</target>
-        
-      </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>提交审阅草稿</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishCaption.Text">
-        <source>Publish change</source>
-        <target>发布更改</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishGerritChangeCaption.Text">
-        <source>Publish Gerrit Change</source>
-        <target>发布Gerrit更改</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectBranch.Text">
-        <source>Please enter a branch</source>
-        <target>请输入分支名称</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        <target>请选择一个远程档案库</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBranch.Text">
-        <source>Branch:</source>
-        <target>分支：</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        <target>远程：</target>
-        
-      </trans-unit>
-      <trans-unit id="labelTopic.Text">
-        <source>Topic:</source>
-        <target>主题：</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormGitAttributes" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -4923,6 +4866,7 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_noWorkingDirCaption.Text">
         <source>No working directory</source>
+        <target>没有工作目录</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -4972,6 +4916,7 @@ weirdchars.txt text
       </trans-unit>
       <trans-unit id="noWorkingDir.Text">
         <source>.gitattributes is only supported when there is a working directory.</source>
+        <target>.gitattributes 只在工作目录下支持。</target>
         
       </trans-unit>
     </body>
@@ -5012,10 +4957,12 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_gitignoreOnlyInWorkingDirSupported.Text">
         <source>.gitignore is only supported when there is a working directory.</source>
+        <target>.gitignore只在工作目录下支持。</target>
         
       </trans-unit>
       <trans-unit id="_gitignoreOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
+        <target>没有工作目录</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -5032,9 +4979,9 @@ Check if file is accessible.</source>
         <source>Specify filepatterns you want git to ignore.
 
 Example:
-#ignore thumbnails created by windows
+#Ignore thumbnails created by Windows
 Thumbs.db
-#Ignore files build by Visual Studio
+#Ignore files built by Visual Studio
 *.user
 *.aps
 *.pch
@@ -5053,36 +5000,6 @@ Thumbs.db
 obj/
 [Rr]elease*/
 _ReSharper*/</source>
-        <target>指定你想让git忽略的文件模板。
-
-举例
-#忽略windows生成的缩略图文件
-Thunbs.db
-#忽略Visual Studio生成时的产生的文件
-*.obj
-*.exe
-*.pdb
-*.user
-*.aps
-*.pch
-*.vspscc
-*_i.c
-*_p.c
-*.ncb
-*.suo
-*.tlb
-*.tlh
-*.bak
-*.cache
-*.ilk
-*.log
-[Bb]in
-[Dd]ebug*/
-*.lib
-*.sbr
-obj/
-[Rr]elease*/
-_ReSharper*/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
@@ -5112,82 +5029,6 @@ _ReSharper*/</target>
       <trans-unit id="tabPageCommandLog.Text">
         <source>Command log</source>
         <target>命令日志</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Edit .gitreview</source>
-        <target>编辑 .gitreview</target>
-        
-      </trans-unit>
-      <trans-unit id="Save.Text">
-        <source>Save</source>
-        <target>保存</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreview.Text">
-        <source>Failed to save .gitreview.
-Check if file is accessible.</source>
-        <target>无法保存 .gitreview。
-检查该文件是否可读写。</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreviewCaption.Text">
-        <source>Failed to save .gitreview</source>
-        <target>无法保存 .gitreview</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
-        <source>.gitreview is only supported when there is a working directory.</source>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
-        <source>No working directory</source>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestion.Text">
-        <source>Save changes to .gitreview?</source>
-        <target>保存 .gitreview？</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestionCaption.Text">
-        <source>Save changes?</source>
-        <target>保存更改？</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Provide the configuration for
-.gitreview to setup Gerrit.
-
-Example configuration:
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</source>
-        <target>提供配置.gitreview示例
-来设置Gerrit。
-
-配置示例：
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitReviewHelp.Text">
-        <source>GitHub page for git-review</source>
-        <target>GitHub 的git-review网页</target>
         
       </trans-unit>
     </body>
@@ -5281,6 +5122,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="Central.Text">
         <source>Central repository, no working directory  (--bare --shared=all)</source>
+        <target>中央资料库，没有工作目录 (--bare --shared=all)</target>
         
       </trans-unit>
       <trans-unit id="Init.Text">
@@ -5357,10 +5199,12 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_mailmapOnlyInWorkingDirSupported.Text">
         <source>.mailmap is only supported when there is a working directory.</source>
+        <target>.mailmap 只在工作目录下支持。</target>
         
       </trans-unit>
       <trans-unit id="_mailmapOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
+        <target>没有工作目录</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -5443,21 +5287,20 @@ ignoring all changes from all other branches. It is meant to be used to supersed
 subtree 
 This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
 match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
-ancestor tree. </source>
-        <target>解析（resolve）
-使用三向合并算法，只能解决两头合并（比如当前分支和你“拉”操作的源分支）。
-此策略会小心的检测出交叉合并的二义性，总体来说是安全且快速的。
+ancestor tree.</source>
+        <target>解析(resolve)
+使用3方合并算法，只能解决两头合并(比如当前分支和你“拉”操作的源分支)。此策略会小心的检测出交叉合并的二义性，总体来说是安全且快速的。
 
-递归（recursive）
+递归(recursive)
 使用三向合并算法，只能解决两头合并。当两个分支至少有一个公共祖先能够使用三向合并的时候，此策略会为所有公共祖先建立一个合并树并且把这棵树当做三向合并的引用树。除此以外，此策略还可以检测和处理重命名的的合并。此策略是“拉”操作和合并单个分支的默认策略。
 
-章鱼（octopus）
+复合(octopus)
 此策略可以解决大于两头的合并，但是会拒绝需要手动解析的复杂合并。主要的作用是把几个主要的功用分支绑在一起。此策略是“拉”操作和合并多个分支的默认策略。
 
-排外（ours）
+排外(ours)
 此策略可以解决任意头合并，但是在合并的结果树中总是保持当前分支的头，对于忽略一切其他分支的改变的情况来说极其有效。此策略可以用来接替旧的开发历史中的副分支。
 
-子树（subtree）
+子树(subtree)
 此策略是修改的递归策略。当合并A树和B树时，如果B树对应A的一个子树，B首先会被调整到设和A树结构的位置，而不是进行同级别的对比。这种调整也会应用在公共祖先树上。</target>
         
       </trans-unit>
@@ -5513,6 +5356,11 @@ ancestor tree. </source>
       <trans-unit id="$this.Text">
         <source>Submodule conflict</source>
         <target>子模块冲突</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleted.Text">
+        <source>deleted</source>
+        <target>删除</target>
         
       </trans-unit>
       <trans-unit id="_stageFilename.Text">
@@ -5605,29 +5453,6 @@ ancestor tree. </source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Gerrit Plugin</source>
-        <target>Gerrit 插件</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>关闭</target>
-        
-      </trans-unit>
-      <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
-
-To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>Gerrit插件可GitExtensions的提供Gerrit操作。这个插件源自git-review命令。
-
-要使档案库启用Gerrit支持，.gitreview文件必须被创建。这是可以通过菜单“档案库|编辑.gitreview”选项。更多关于.gitreview文件和git-review信息，请参阅下面的链接。</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormPull" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -5636,7 +5461,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
-        <source>Manage</source>
+        <source>Manage remotes</source>
         <target>管理远程</target>
         
       </trans-unit>
@@ -5713,6 +5538,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgain.Text">
         <source>Apply stashed items to working directory again?</source>
+        <target>要把缓冲区的对象再次应用到工作目录吗？</target>
         
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgainCaption.Text">
@@ -5742,6 +5568,11 @@ Are you sure you want to rebase this merge?</source>
 If you want to fetch all remote branches, choose fetch.
 If you want to fetch and merge a branch, choose a specific branch.</source>
         <target>如果不使用合并(merge)或者衍合(rebase)，你只能把整个远程分支 (*)都提取过来。如果你想获取所有远程分支，那就选择提取。如果你想获取和合并某一个分支，那就选择这个特定的分支。</target>
+        
+      </trans-unit>
+      <trans-unit id="_hoverShowImageLabelText.Text">
+        <source>Hover to see scenario when fast forward is possible.</source>
+        <target>在可以快进时鼠标悬停显示缩略图</target>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranch.Text">
@@ -6234,6 +6065,11 @@ Nothing to rebase.</source>
         <target>继续衍合</target>
         
       </trans-unit>
+      <trans-unit id="_hoverShowImageLabelText.Text">
+        <source>Hover to see scenario when fast forward is possible.</source>
+        <target>在可以快进时鼠标悬停显示缩略图</target>
+        
+      </trans-unit>
       <trans-unit id="_noBranchSelectedText.Text">
         <source>Please select a branch</source>
         <target>请选择一个分支</target>
@@ -6681,10 +6517,13 @@ Value has been reset to empty value.</source>
       <trans-unit id="Hard.Text">
         <source>Hard: reset working directory and index
 (discard ALL local changes, even uncommitted changes)</source>
+        <target>硬模式：复位工作目录和索引
+(放弃所有的本地修改，甚至未提交的修改)</target>
         
       </trans-unit>
       <trans-unit id="Mixed.Text">
         <source>Mixed: leave working directory untouched, reset index</source>
+        <target>混合模式：不碰工作目录，只是复位索引</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -6694,6 +6533,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="Soft.Text">
         <source>Soft: leave working directory and index untouched</source>
+        <target>软模式：保持工作目录和索引均不变</target>
         
       </trans-unit>
       <trans-unit id="branchInfo.Text">
@@ -7447,6 +7287,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="currentWorkingDirChanges.Text">
         <source>Current working directory changes</source>
+        <target>当前工作目录改变了</target>
         
       </trans-unit>
       <trans-unit id="dontShowAgain.Text">
@@ -8056,80 +7897,145 @@ Context menu for additional operations</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en">
+  <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en">
     <body>
-      <trans-unit id="_downloadGerritChange.Text">
-        <source>Download Gerrit Change</source>
-        <target>下载Gerrit变更</target>
+      <trans-unit id="$this.Text">
+        <source>Git Config</source>
+        <target>全局设置</target>
         
       </trans-unit>
-      <trans-unit id="_editGitReview.Text">
-        <source>Edit .gitreview</source>
-        <target>编辑 .gitreview</target>
+      <trans-unit id="BrowseCommitTemplate.Text">
+        <source>Browse</source>
+        <target>浏览</target>
         
       </trans-unit>
-      <trans-unit id="_installCommitMsgHook.Text">
-        <source>Install Hook</source>
-        <target>安装钩子</target>
+      <trans-unit id="BrowseDiffTool.Text">
+        <source>Browse</source>
+        <target>浏览</target>
         
       </trans-unit>
-      <trans-unit id="_installCommitMsgHookFailed.Text">
-        <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>无法下载commit-msg文件。请安装手动commit-msg钩子。</target>
+      <trans-unit id="BrowseMergeTool.Text">
+        <source>Browse</source>
+        <target>浏览</target>
         
       </trans-unit>
-      <trans-unit id="_installCommitMsgHookMessage.Text">
-        <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>Gerrit需要安装commit-msg钩子。你要安装commit-msg钩子到您的档案库吗？</target>
+      <trans-unit id="DiffToolCmdSuggest.Text">
+        <source>Suggest</source>
+        <target>建议</target>
         
       </trans-unit>
-      <trans-unit id="_installCommitMsgHookShortText.Text">
-        <source>Install commit-msg hook</source>
-        <target>安装commit-msg钩子</target>
+      <trans-unit id="MergeToolCmdSuggest.Text">
+        <source>Suggest</source>
+        <target>建议</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Gerrit Code Review</source>
-        <target>Gerrit代码审查</target>
+      <trans-unit id="PathToKDiff3.Text">
+        <source>Path to mergetool</source>
+        <target>mergetool路径</target>
         
       </trans-unit>
-      <trans-unit id="_publishGerritChange.Text">
-        <source>Publish Gerrit Change</source>
-        <target>发布Gerrit变更</target>
+      <trans-unit id="_diffToolSuggestCaption.Text">
+        <source>Suggest difftool cmd</source>
+        <target>建议的差异比较命令</target>
         
       </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en">
-    <body>
-      <trans-unit id="_settingsError.Text">
-        <source>Error loading .gitreview file.</source>
-        <target>加载.gitreview失败。</target>
+      <trans-unit id="_mergeToolSuggestCaption.Text">
+        <source>Suggest mergetool cmd</source>
+        <target>建议的合并工具命令参数</target>
         
       </trans-unit>
-      <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
-        <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
-        <target>远程档案库 &quot;{0}&quot;指定了&quot;defaultremote&quot;设置,.gitreview文件没有找到与之匹配的远程档案库。创建远程档案库或者更改.gitreview文件来完善配置。</target>
+      <trans-unit id="_toolSuggestPathText.Text">
+        <source>Please enter the path to {0} and press suggest.</source>
+        <target>请输入 {0} 的路径，然后按建议按钮。</target>
         
       </trans-unit>
-      <trans-unit id="_settingsErrorFileNotFound.Text">
-        <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
-        <target>在工作目录找不到&quot;.gitreview&quot;。</target>
+      <trans-unit id="globalAutoCrlfFalse.Text">
+        <source>Checkout as-is, commit as-is (&quot;core.autocrlf&quot;  is set to &quot;false&quot;)</source>
+        <target>保持原样签出，保持原样提交（&quot;core.autocrlf&quot;设置为&quot;false&quot;）</target>
         
       </trans-unit>
-      <trans-unit id="_settingsErrorHostNotEntered.Text">
-        <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
-        <target>&quot;.gitreview&quot;设置中&quot;host&quot; 是必须的。</target>
+      <trans-unit id="globalAutoCrlfInput.Text">
+        <source>Checkout as-is, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;input&quot;)</source>
+        <target>保持原样签出，用Unix风格的换行符提交（&quot;core.autocrlf&quot;设置为&quot;input&quot;）</target>
         
       </trans-unit>
-      <trans-unit id="_settingsErrorPortNotNumeric.Text">
-        <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
-        <target>&quot;.gitreview&quot;设置中指定的端口只能为数字。</target>
+      <trans-unit id="globalAutoCrlfNotSet.Text">
+        <source>Not set</source>
+        <target>未设置</target>
         
       </trans-unit>
-      <trans-unit id="_settingsErrorProjectNotEntered.Text">
-        <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
-        <target>&quot;.gitreview&quot;设置中&quot;project&quot; 是必须的。</target>
+      <trans-unit id="globalAutoCrlfTrue.Text">
+        <source>Checkout Windows-style, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;true&quot;)</source>
+        <target>以windows风格签出，用Unix风格的换行符提交（&quot;core.autocrlf&quot;设置为&quot;true&quot;）
+</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxLineEndings.Text">
+        <source>Line endings</source>
+        <target>换行符</target>
+        
+      </trans-unit>
+      <trans-unit id="label19.Text">
+        <source>Mergetool command</source>
+        <target>Mergetool命令</target>
+        
+      </trans-unit>
+      <trans-unit id="label28.Text">
+        <source>Keep backup (.orig) after merge</source>
+        <target>合并后保留备份（.orig）</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>User name</source>
+        <target>用户名</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>User email</source>
+        <target>用户电子邮件</target>
+        
+      </trans-unit>
+      <trans-unit id="label41.Text">
+        <source>Difftool</source>
+        <target>Difftool</target>
+        
+      </trans-unit>
+      <trans-unit id="label42.Text">
+        <source>Path to difftool</source>
+        <target>路径difftool</target>
+        
+      </trans-unit>
+      <trans-unit id="label48.Text">
+        <source>Difftool command</source>
+        <target>Difftool命令</target>
+        
+      </trans-unit>
+      <trans-unit id="label57.Text">
+        <source>Path to commit template</source>
+        <target>提交模板的路径</target>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Editor</source>
+        <target>编辑</target>
+        
+      </trans-unit>
+      <trans-unit id="label60.Text">
+        <source>Files content encoding</source>
+        <target>文件内容的编码</target>
+        
+      </trans-unit>
+      <trans-unit id="label7.Text">
+        <source>Mergetool</source>
+        <target>合并工具</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>You need to set the correct path to 
+git before you can change
+global settings.
+</source>
+        <target>您需要设置git正确的路径，才能更改全局设置。</target>
         
       </trans-unit>
     </body>
@@ -8170,6 +8076,10 @@ Context menu for additional operations</source>
         <target>按照文件的历史重命名（实验）</target>
         
       </trans-unit>
+      <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
+        <source>Follow exact renames and copies only</source>
+        
+      </trans-unit>
       <trans-unit id="chkPlaySpecialStartupSound.Text">
         <source>Play Special Startup Sound</source>
         <target>播放指定的启动音乐</target>
@@ -8177,6 +8087,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
         <source>Show current working directory changes in revision graph (slow!)</source>
+        <target>在版本图里显示工作目录的改变(慢!)</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
@@ -8196,6 +8107,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="chkStartWithRecentWorkingDir.Text">
         <source>Open last working directory on startup</source>
+        <target>启动时显示上一次的工作目录</target>
         
       </trans-unit>
       <trans-unit id="chkStashUntrackedFiles.Text">
@@ -8327,134 +8239,6 @@ Context menu for additional operations</source>
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</source>
         <target>全局配置文件位于%HOME%的位置。默认设置下，如果%HOME%为空，%HOME%将被设置为%HOMEDRIVE%%HOMEPATH%。
 你应该只在遇到问题的时候才考虑改变默认设置。</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GlobalSettingsSettingsPage" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Git Config</source>
-        <target>全局设置</target>
-        
-      </trans-unit>
-      <trans-unit id="BrowseCommitTemplate.Text">
-        <source>Browse</source>
-        <target>浏览</target>
-        
-      </trans-unit>
-      <trans-unit id="BrowseDiffTool.Text">
-        <source>Browse</source>
-        <target>浏览</target>
-        
-      </trans-unit>
-      <trans-unit id="BrowseMergeTool.Text">
-        <source>Browse</source>
-        <target>浏览</target>
-        
-      </trans-unit>
-      <trans-unit id="DiffToolCmdSuggest.Text">
-        <source>Suggest command</source>
-        <target>建议命令</target>
-        
-      </trans-unit>
-      <trans-unit id="MergeToolCmdSuggest.Text">
-        <source>Suggest command</source>
-        <target>建议命令</target>
-        
-      </trans-unit>
-      <trans-unit id="PathToKDiff3.Text">
-        <source>Path to mergetool</source>
-        <target>mergetool路径</target>
-        
-      </trans-unit>
-      <trans-unit id="__diffToolSuggestCaption.Text">
-        <source>Suggest difftool cmd</source>
-        <target>建议的差异比较命令</target>
-        
-      </trans-unit>
-      <trans-unit id="globalAutoCrlfFalse.Text">
-        <source>Checkout as-is, commit as-is (&quot;core.autocrlf&quot;  is set to &quot;false&quot;)</source>
-        <target>保持原样签出，保持原样提交（&quot;core.autocrlf&quot;设置为&quot;false&quot;）</target>
-        
-      </trans-unit>
-      <trans-unit id="globalAutoCrlfInput.Text">
-        <source>Checkout as-is, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;input&quot;)</source>
-        <target>保持原样签出，用Unix风格的换行符提交（&quot;core.autocrlf&quot;设置为&quot;input&quot;）</target>
-        
-      </trans-unit>
-      <trans-unit id="globalAutoCrlfTrue.Text">
-        <source>Checkout Windows-style, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;true&quot;)</source>
-        <target>以windows风格签出，用Unix风格的换行符提交（&quot;core.autocrlf&quot;设置为&quot;true&quot;）
-</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox9.Text">
-        <source>Line endings</source>
-        <target>换行符</target>
-        
-      </trans-unit>
-      <trans-unit id="label19.Text">
-        <source>Mergetool command</source>
-        <target>Mergetool命令</target>
-        
-      </trans-unit>
-      <trans-unit id="label28.Text">
-        <source>Keep backup (.orig) after merge</source>
-        <target>合并后保留备份（.orig）</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>User name</source>
-        <target>用户名</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>User email</source>
-        <target>用户电子邮件</target>
-        
-      </trans-unit>
-      <trans-unit id="label41.Text">
-        <source>Difftool</source>
-        <target>Difftool</target>
-        
-      </trans-unit>
-      <trans-unit id="label42.Text">
-        <source>Path to difftool</source>
-        <target>路径difftool</target>
-        
-      </trans-unit>
-      <trans-unit id="label48.Text">
-        <source>Difftool command</source>
-        <target>Difftool命令</target>
-        
-      </trans-unit>
-      <trans-unit id="label57.Text">
-        <source>Path to commit template</source>
-        <target>提交模板的路径</target>
-        
-      </trans-unit>
-      <trans-unit id="label6.Text">
-        <source>Editor</source>
-        <target>编辑</target>
-        
-      </trans-unit>
-      <trans-unit id="label60.Text">
-        <source>Files content encoding</source>
-        <target>文件内容的编码</target>
-        
-      </trans-unit>
-      <trans-unit id="label7.Text">
-        <source>Mergetool</source>
-        <target>合并工具</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>You need to set the correct path to 
-git before you can change
-global settings.
-</source>
-        <target>您需要设置git正确的路径，才能更改全局设置。</target>
         
       </trans-unit>
     </body>
@@ -8729,50 +8513,6 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Proxy Switcher</source>
-        <target>代理切换</target>
-        
-      </trans-unit>
-      <trans-unit id="ApplyGlobally_CheckBox.Text">
-        <source>Apply globally</source>
-        <target>应用于全局</target>
-        
-      </trans-unit>
-      <trans-unit id="GlobalHttpProxy_Label.Text">
-        <source>Global http.proxy:</source>
-        <target>全局HTTP代理http.proxy:</target>
-        
-      </trans-unit>
-      <trans-unit id="LocalHttpProxy_Label.Text">
-        <source>Local http.proxy:</source>
-        <target>局部HTTP代理http.proxy:</target>
-        
-      </trans-unit>
-      <trans-unit id="SetProxy_Button.Text">
-        <source>Set proxy</source>
-        <target>设置代理</target>
-        
-      </trans-unit>
-      <trans-unit id="UnsetProxy_Button.Text">
-        <source>Unset proxy</source>
-        <target>取消代理</target>
-        
-      </trans-unit>
-      <trans-unit id="_pleaseSetProxy.Text">
-        <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>没有代理配置。请在插件设置中设置代理服务器。</target>
-        
-      </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Proxy Switcher</source>
-        <target>代理切换</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="RevisionGrid" source-language="en">
     <body>
       <trans-unit id="AuthorDataGridViewColumn.HeaderText">
@@ -8833,6 +8573,16 @@ This will just checkout on the submodule the commit determined by the superproje
       <trans-unit id="MessageDataGridViewColumn.HeaderText">
         <source>Message</source>
         <target>消息</target>
+        
+      </trans-unit>
+      <trans-unit id="NavigateBackward.Text">
+        <source>Navigate backward</source>
+        <target>向前</target>
+        
+      </trans-unit>
+      <trans-unit id="NavigateForward.Text">
+        <source>Navigate forward</source>
+        <target>向后</target>
         
       </trans-unit>
       <trans-unit id="NextQuickSearch.Text">
@@ -9009,10 +8759,17 @@ If this is a normal repository, these steps are recommended:
 
 If this is a central repository (bare repository without a working directory):
 - Push changes from another repository</source>
+        <target>此档案库中没有任何提交。
+如果此档案库是一个常规档案库，推荐以下步骤：
+- 确认档案库中.gitgnore文件正确
+- 用提交命令来提交
+如果此档案库是一个中央档案库(没有工作路径的裸档案库)：
+- 从其他档案库中“推”出更改</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>The current working directory is not a git repository.</source>
+        <target>当前的工作目录不是一个git档案库。</target>
         
       </trans-unit>
       <trans-unit id="manipulateCommitToolStripMenuItem.Text">
@@ -9160,8 +8917,8 @@ If this is a central repository (bare repository without a working directory):
         
       </trans-unit>
       <trans-unit id="LocalBranchChx.Text">
-        <source>Local branch</source>
-        <target>本地分支</target>
+        <source>Local branch name</source>
+        <target>本地分支名称</target>
         
       </trans-unit>
       <trans-unit id="MessageChx.Text">
@@ -9170,8 +8927,8 @@ If this is a central repository (bare repository without a working directory):
         
       </trans-unit>
       <trans-unit id="RemoteBranchChx.Text">
-        <source>Remote branch</source>
-        <target>远程分支</target>
+        <source>Remote branch name</source>
+        <target>远程分支名称</target>
         
       </trans-unit>
       <trans-unit id="Remove.Text">
@@ -9247,6 +9004,9 @@ If this is a central repository (bare repository without a working directory):
         <source>User Input:
 {UserInput}
 
+Selected Commits:
+{sHashes}
+
 Selected Branch:
 {sTag}
 {sBranch}
@@ -9276,38 +9036,6 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
-        <target>用户输入:
-{UserInput}
-
-所选择的分支:
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-当前分支:
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cHash}
-{cMessage}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="addScriptButton.Text">
@@ -9451,6 +9179,11 @@ when all items are shown:</source>
         <target>当远程端配置了私钥后，自动启动认证客户端</target>
         
       </trans-unit>
+      <trans-unit id="BrowseGitCred.Text">
+        <source>Browse</source>
+        <target>浏览</target>
+        
+      </trans-unit>
       <trans-unit id="OpenSSH.Text">
         <source>OpenSSH</source>
         <target>OpenSSH</target>
@@ -9486,6 +9219,11 @@ when all items are shown:</source>
         <target>浏览</target>
         
       </trans-unit>
+      <trans-unit id="SuggestGitCred.Text">
+        <source>Suggest</source>
+        <target>建议</target>
+        
+      </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Specify which ssh client to use</source>
         <target>指定SSH客户端</target>
@@ -9496,9 +9234,14 @@ when all items are shown:</source>
         <target>配置PuTTY</target>
         
       </trans-unit>
+      <trans-unit id="groupBox3.Text">
+        <source>Configure Git credential helper</source>
+        <target>配置 Git 凭据帮手</target>
+        
+      </trans-unit>
       <trans-unit id="label15.Text">
-        <source>Path to plink.exe</source>
-        <target>plink.exe路径</target>
+        <source>Path to plink</source>
+        <target>plink路径</target>
         
       </trans-unit>
       <trans-unit id="label16.Text">
@@ -9519,6 +9262,11 @@ When OpenSSH is used, command line dialogs are shown!
         <target>OpenSSH是一个命令行工具。 
 对于Windows用户来说，PuTTY用起来更方便，但需要在后台运行PuTTY验证客户端。
 当使用OpenSSH时，会显示命令行对话框！</target>
+        
+      </trans-unit>
+      <trans-unit id="label48.Text">
+        <source>Command</source>
+        <target>命令</target>
         
       </trans-unit>
     </body>

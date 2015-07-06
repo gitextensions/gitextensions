@@ -1,10 +1,14 @@
 ﻿using System.Windows.Forms;
 using GitUI.Hotkey;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public class TextboxHotkey : TextBox
     {
+        private readonly TranslationString _hotkeyNotSet =
+            new TranslationString("None");
+
         #region Key
         private Keys _KeyData;
         /// <summary>Gets or sets the KeyData</summary>
@@ -16,7 +20,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 _KeyData = value;
                 //TODO: do not change text color on already assigned keys, which occur only once
                 this.ForeColor = (HotkeySettingsManager.IsUniqueKey(_KeyData)) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
-                this.Text = value.ToText();
+                this.Text = value.ToText() ?? _hotkeyNotSet.Text;
             }
         }
         #endregion

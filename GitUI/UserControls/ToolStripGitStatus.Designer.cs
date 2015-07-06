@@ -40,7 +40,7 @@
             // 
             // ignoredFilesTimer
             // 
-            this.ignoredFilesTimer.Interval = 500;
+            this.ignoredFilesTimer.Interval = 600000;
             this.ignoredFilesTimer.Tick += new System.EventHandler(this.ignoredFilesTimer_Tick);
 
         }

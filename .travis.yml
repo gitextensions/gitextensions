@@ -1,0 +1,17 @@
+language: c
+
+os: linux
+
+before_install:
+  - sudo bash -c "echo deb http://badgerports.org precise main >> /etc/apt/sources.list"
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E1FAD0C
+  - sudo apt-get update -qq
+  - sudo apt-get install mono-complete -qq -y
+  - sudo mono --version
+
+install:
+  - mozroots --import --sync --quiet
+  - mono --runtime=v4.0 ./.nuget/NuGet.exe restore ./GitExtensionsMono.sln
+
+script:
+  - xbuild /p:TargetFrameworkProfile="" ./GitExtensionsMono.sln

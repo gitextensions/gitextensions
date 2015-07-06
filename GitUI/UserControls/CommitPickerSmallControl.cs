@@ -64,7 +64,7 @@ namespace GitUI.UserControls
             }
         }
 
-        private void textBoxCommitHash_TextChanged(object sender, EventArgs e)
+        private void textBoxCommitHash_TextLeave(object sender, EventArgs e)
         {
             SetSelectedCommitHash(textBoxCommitHash.Text.Trim());
         }

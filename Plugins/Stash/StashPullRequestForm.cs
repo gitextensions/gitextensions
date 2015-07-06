@@ -6,12 +6,17 @@ using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using System.Linq;
 using System.Threading;
-using System.Data;
+using ResourceManager;
 
 namespace Stash
 {
-    public partial class StashPullRequestForm : Form
+    public partial class StashPullRequestForm : GitExtensionsFormBase
     {
+        private readonly TranslationString _yourRepositoryIsNotInStash = new TranslationString("Your repository is not hosted in Stash.");
+        private readonly TranslationString _commited = new TranslationString("{0} committed\n{1}");
+        private readonly TranslationString _success = new TranslationString("Success");
+        private readonly TranslationString _error = new TranslationString("Error");
+
         private Settings _settings;
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private readonly ISettingsSource _settingsContainer;
@@ -23,6 +28,7 @@ namespace Stash
             ISettingsSource settings)
         {
             InitializeComponent();
+            Translate();
 
             _gitUiCommands = gitUiCommands;
             _settingsContainer = settings;
@@ -33,7 +39,7 @@ namespace Stash
             _settings = Settings.Parse(_gitUiCommands.GitModule, _settingsContainer);
             if (_settings == null)
             {
-                MessageBox.Show("Your repository is not hosted in Stash.");
+                MessageBox.Show(_yourRepositoryIsNotInStash.Text);
                 Close();
                 return;
             }
@@ -75,7 +81,7 @@ namespace Stash
                 catch(System.InvalidOperationException){
                     return;
                 }
-                
+
             });
         }
 
@@ -123,12 +129,12 @@ namespace Stash
             var response = pullRequest.Send();
             if (response.Success)
             {
-                MessageBox.Show("Success");
+                MessageBox.Show(_success.Text);
                 StashViewPullRequestFormLoad(null, null);
             }
             else
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private IEnumerable<StashUser> GetStashUsers()
@@ -233,8 +239,8 @@ namespace Stash
             if (commit == null)
                 label.Text = string.Empty;
             else
-                label.Text = string.Format("{0} committed{1}{2}",
-                    commit.AuthorName, Environment.NewLine, commit.Message);
+                label.Text = string.Format(_commited.Text,
+                    commit.AuthorName, commit.Message);
         }
 
         private void UpdatePullRequestDescription()
@@ -296,12 +302,12 @@ namespace Stash
             var response = mergeRequest.Send();
             if (response.Success)
             {
-                MessageBox.Show("Success");
+                MessageBox.Show(_success.Text);
                 StashViewPullRequestFormLoad(null, null);
             }
             else
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         private void BtnApproveClick(object sender, EventArgs e)
         {
@@ -319,12 +325,12 @@ namespace Stash
             var response = approveRequest.Send();
             if (response.Success)
             {
-                    MessageBox.Show("Success");
+                MessageBox.Show(_success.Text);
                     StashViewPullRequestFormLoad(null, null);
             }
             else
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

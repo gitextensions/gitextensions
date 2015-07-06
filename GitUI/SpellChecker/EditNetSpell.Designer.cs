@@ -7,19 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Component Designer generated code
 
         /// <summary> 
@@ -33,6 +20,10 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.SpellCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.TextBox = new System.Windows.Forms.RichTextBox();
+            this.AutoComplete = new System.Windows.Forms.ListBox();
+            this.AutoCompleteTimer = new System.Windows.Forms.Timer(this.components);
+            this.AutoCompleteToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.AutoCompleteToolTipTimer = new System.Windows.Forms.Timer(this.components);
             this.SpellCheckContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,9 +65,34 @@
             this.TextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyUp);
             this.TextBox.Leave += new System.EventHandler(this.TextBoxLeave);
             // 
+            // AutoComplete
+            // 
+            this.AutoComplete.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.AutoComplete.DisplayMember = "Word";
+            this.AutoComplete.FormattingEnabled = true;
+            this.AutoComplete.ItemHeight = 15;
+            this.AutoComplete.Location = new System.Drawing.Point(167, 243);
+            this.AutoComplete.Name = "AutoComplete";
+            this.AutoComplete.Size = new System.Drawing.Size(120, 92);
+            this.AutoComplete.Sorted = true;
+            this.AutoComplete.TabIndex = 2;
+            this.AutoComplete.Visible = false;
+            this.AutoComplete.Click += new System.EventHandler(this.AutoComplete_Click);
+            // 
+            // AutoCompleteTimer
+            // 
+            this.AutoCompleteTimer.Interval = 200;
+            this.AutoCompleteTimer.Tick += new System.EventHandler(this.AutoCompleteTimer_Tick);
+            // 
+            // AutoCompleteToolTipTimer
+            // 
+            this.AutoCompleteToolTipTimer.Interval = 2000;
+            this.AutoCompleteToolTipTimer.Tick += new System.EventHandler(this.AutoCompleteToolTipTimer_Tick);
+            // 
             // EditNetSpell
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.Controls.Add(this.AutoComplete);
             this.Controls.Add(this.TextBox);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "EditNetSpell";
@@ -93,5 +109,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Timer SpellCheckTimer;
         private System.Windows.Forms.RichTextBox TextBox;
+        private System.Windows.Forms.ListBox AutoComplete;
+        private System.Windows.Forms.Timer AutoCompleteTimer;
+        private System.Windows.Forms.ToolTip AutoCompleteToolTip;
+        private System.Windows.Forms.Timer AutoCompleteToolTipTimer;
     }
 }

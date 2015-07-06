@@ -56,8 +56,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Load += Dashboard_Load;
         }
 
-        void RecentRepositories_RepositoryRemoved(Repository repository)
+        void RecentRepositories_RepositoryRemoved(object sender, DashboardCategory.RepositoryEventArgs e)
         {
+            var repository = e.Repository;
             if (repository != null)
                 Repositories.RepositoryHistory.RemoveRepository(repository);
         }
@@ -170,12 +171,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
         }
 
-        public event GitModuleChangedEventHandler GitModuleChanged;
+        public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
-        public virtual void OnModuleChanged(GitModule aModule)
+        public virtual void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
-            if (GitModuleChanged != null)
-                GitModuleChanged(aModule);
+            var handler = GitModuleChanged;
+            if (handler != null)
+                handler(this, e);
         }
 
         private void AddDashboardEntry(RepositoryCategory entry)
@@ -384,14 +386,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
 
             Repositories.AddMostRecentRepository(module.WorkingDir);
-            OnModuleChanged(module);
+            OnModuleChanged(this, new GitModuleEventArgs(module));
         }
 
         private void openItem_Click(object sender, EventArgs e)
         {
             GitModule module = FormOpenDirectory.OpenModule(this);
             if (module != null)
-                OnModuleChanged(module);
+                OnModuleChanged(this, new GitModuleEventArgs(module));
         }
 
         private void cloneItem_Click(object sender, EventArgs e)
@@ -444,7 +446,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     }
 
                     Repositories.AddMostRecentRepository(module.WorkingDir);
-                    OnModuleChanged(module);
+                    OnModuleChanged(this, new GitModuleEventArgs(module));
                 }
                 return;
             }

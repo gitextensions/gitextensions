@@ -87,6 +87,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _pruneFromCaption = new TranslationString("Prune remote branches from {0}");
 
+        private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
         #endregion
 
         public bool ErrorOccurred { get; private set; }
@@ -105,6 +106,7 @@ namespace GitUI.CommandsDialogs
             Translate();
 
             helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
 
             if (aCommands != null)
                 Init(defaultRemote);
@@ -260,14 +262,14 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private void CheckMergeConflicts(IWin32Window owner)
+        private void CheckMergeConflictsOnError(IWin32Window owner)
         {
             // Rebase failed -> special 'rebase' merge conflict
             if (Rebase.Checked && Module.InTheMiddleOfRebase())
             {
                 UICommands.StartRebaseDialog(owner, null);
             }
-            else
+            else if (Module.InTheMiddleOfAction())
             {
                 MergeConflictHandler.HandleMergeConflicts(UICommands, owner);
             }
@@ -356,13 +358,13 @@ namespace GitUI.CommandsDialogs
                     bool aborted = process != null && process.DialogResult == DialogResult.Abort;
                     if (!aborted && !Fetch.Checked)
                     {
-                        if (!ErrorOccurred && !Module.InTheMiddleOfAction())
+                        if (!ErrorOccurred)
                         {
                             if (!InitModules())
                                 UICommands.UpdateSubmodules(owner);
                         }
                         else
-                            CheckMergeConflicts(owner);
+                            CheckMergeConflictsOnError(owner);
                     }
                 }
                 finally

@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs
                     return string.Empty;
                 }
 
-                File.WriteAllText(Module.GetGitDirectory() + "\\TAGMESSAGE", tagMessage.Text);
+                File.WriteAllText(Path.Combine(Module.GetGitDirectory(), "TAGMESSAGE"), tagMessage.Text);
             }
 
             var s = Module.Tag(textBoxTagName.Text, revision, annotate.Checked, ForceTag.Checked);

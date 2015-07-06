@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.48" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -54,10 +54,18 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
         <target>Checkout-Dialog immer anzeigen</target>
         
       </trans-unit>
+      <trans-unit id="chkCheckForRCVersions.Text">
+        <source>Check for release candidate versions</source>
+        
+      </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
         <source>Don't show help images</source>
         <target>Hilfe-Bilder nicht anzeigen</target>
         
+      </trans-unit>
+      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
+        <source>Remember the ignore-white-space preference</source>
+
       </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen &quot;local changes&quot; action as default action.
@@ -331,11 +339,6 @@ Diese Aktion wird dann ohne Warnung beim Auschecken eines Branch angewendet.</ta
         <target>Sie müssen ein merge Werkzeug konfigurieren, um Konflikte beim Zusammenführen aufzulösen (zum Beispiel KDiff3).</target>
         
       </trans-unit>
-      <trans-unit id="_credentialHelperInstalled.Text">
-        <source>Git credential helper is installed.</source>
-        <target>Git Passwortverwaltung ist installiert.</target>
-        
-      </trans-unit>
       <trans-unit id="_customMergeToolXConfigured.Text">
         <source>There is a custom mergetool configured: {0}</source>
         <target>Ein spezielles merge Werkzeug ist konfiguriert: {0}</target>
@@ -359,11 +362,6 @@ Diese Aktion wird dann ohne Warnung beim Auschecken eines Branch angewendet.</ta
       <trans-unit id="_gitCanBeRunCaption.Text">
         <source>Locate git</source>
         <target>git suchen</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitCredentialWinStoreHelperInstalled.Text">
-        <source>Git Credential Win Store is installed as credential helper.</source>
-        <target>Git Credential Win Store ist als Passwortverwaltung installiert.</target>
         
       </trans-unit>
       <trans-unit id="_gitNotFound.Text">
@@ -438,16 +436,6 @@ Stellen Sie sicher dass die Linux Tools installiert sind (z.B. durch mysysgit od
       <trans-unit id="_mergeToolXConfiguredNeedsCmd.Text">
         <source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</source>
         <target>{0} wurde als Mergeprogramm konfiguriert. Das ist ein benutzerdefiniertes Mergeprogramm und muss für einen bestimmten Befehlsaufruf konfiguriert werden.</target>
-        
-      </trans-unit>
-      <trans-unit id="_noCredentialsHelperInstalled.Text">
-        <source>No credential helper installed.</source>
-        <target>Keine Passwortverwaltung installiert.</target>
-        
-      </trans-unit>
-      <trans-unit id="_noCredentialsHelperInstalledTryGCS.Text">
-        <source>No credential helper could be installed. Try to install git-credential-winstore.exe.</source>
-        <target>Es konnte keine Passwortverwaltung installiert werden. Versuchen Sie git-credential-winstore.exe zu installieren.</target>
         
       </trans-unit>
       <trans-unit id="_noDiffToolConfigured.Text">
@@ -568,11 +556,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         <target>Git wurde gefunden aber Version {0} wird nicht unterstützt. Auf Version {1} oder höher updaten.</target>
         
       </trans-unit>
-      <trans-unit id="gitCredentialWinStore_Fix.Text">
-        <source>Repair</source>
-        <target>Reparieren</target>
-        
-      </trans-unit>
       <trans-unit id="label11.Text">
         <source>The checklist below validates the basic settings needed for GitExtensions to work properly.</source>
         <target>Die folgende Checkliste überprüft alle Grundeinstellungen, damit GitExtensions korrekt arbeitet.</target>
@@ -581,20 +564,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       <trans-unit id="translationConfig_Fix.Text">
         <source>Repair</source>
         <target>Reparieren</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="CheckSettingsLogic" source-language="en">
-    <body>
-      <trans-unit id="MergeToolSuggestCaption.Text">
-        <source>Suggest mergetool cmd</source>
-        <target>Mergetool Befehl Vorschlag</target>
-        
-      </trans-unit>
-      <trans-unit id="ToolSuggestPathText.Text">
-        <source>Please enter the path to {0} and press suggest.</source>
-        <target>Bitte Pfad zu {0} eingeben und vorschlagen drücken.</target>
         
       </trans-unit>
     </body>
@@ -634,6 +603,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       <trans-unit id="GreenIcon.Text">
         <source>Green</source>
         <target>Grün</target>
+        
+      </trans-unit>
+      <trans-unit id="HighlightAuthoredRevisions.Text">
+        <source>Highlight authored revisions</source>
         
       </trans-unit>
       <trans-unit id="LightblueIcon.Text">
@@ -684,6 +657,10 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       <trans-unit id="groupBox5.Text">
         <source>Application Icon</source>
         <target>Applikationicon</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Color authored revisions</source>
         
       </trans-unit>
       <trans-unit id="label25.Text">
@@ -1364,6 +1341,10 @@ Wollen Sie es trotzdem laden?</target>
         <target>Anzahl sichtbarer Zeilen verringern</target>
         
       </trans-unit>
+      <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
+        <source>Cherry pick selected lines</source>
+        
+      </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
         <source>Copy new version</source>
         <target>Neue Version kopieren</target>
@@ -1565,6 +1546,15 @@ Wollen Sie es trotzdem laden?</target>
       <trans-unit id="lblReplaceWith.Text">
         <source>Re&amp;place with:</source>
         <target>E&amp;rsetzen mit:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FolderBrowserButton" source-language="en">
+    <body>
+      <trans-unit id="buttonBrowse.Text">
+        <source>Browse...</source>
+        <target>Durchsuchen...</target>
         
       </trans-unit>
     </body>
@@ -1832,8 +1822,7 @@ You will have push access. {2}</source>
   <file datatype="plaintext" original="FormAddToGitIgnore" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Add files(s) to .gitIgnore</source>
-        <target>Datei(en) zu .gitignore hinzufügen</target>
+        <source>Add file(s) to .gitignore</source>
         
       </trans-unit>
       <trans-unit id="AddToIngore.Text">
@@ -1844,6 +1833,10 @@ You will have push access. {2}</source>
       <trans-unit id="_matchingFilesString.Text">
         <source>{0} file(s) matched</source>
         <target>{0} Datei(en) stimmen überein</target>
+        
+      </trans-unit>
+      <trans-unit id="_updateStatusString.Text">
+        <source>Updating ...</source>
         
       </trans-unit>
       <trans-unit id="btnCancel.Text">
@@ -1912,6 +1905,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="PatchDirMode.Text">
         <source>Patch directory</source>
+        <target>Patch-Verzeichnis</target>
         
       </trans-unit>
       <trans-unit id="PatchFileMode.Text">
@@ -2175,6 +2169,26 @@ compare with first:</source>
         <target>Pull Request erzeugen...</target>
         
       </trans-unit>
+      <trans-unit id="_diffNoSelection.Text">
+        <source>Diff (no selection)</source>
+        <target>Diff (nichts ausgewählt)</target>
+        
+      </trans-unit>
+      <trans-unit id="_diffNotSupported.Text">
+        <source>Diff (not supported)</source>
+        <target>Diff (nicht möglich)</target>
+        
+      </trans-unit>
+      <trans-unit id="_diffParentWithSelection.Text">
+        <source>Diff (A: parent --&gt; B: selection)</source>
+        <target>Diff (A: Vorgänger --&gt; B: Auswahl)</target>
+        
+      </trans-unit>
+      <trans-unit id="_diffTwoSelected.Text">
+        <source>Diff (A: first --&gt; B: second)</source>
+        <target>Diff (A: zuerst ausgewählt --&gt; B: danach ausgewählt)</target>
+        
+      </trans-unit>
       <trans-unit id="_errorCaption.Text">
         <source>Error</source>
         <target>Fehler</target>
@@ -2230,9 +2244,42 @@ compare with first:</source>
         <target>Knoten nicht gefunden. Dateibaum Auswahl wurde nicht verändert.</target>
         
       </trans-unit>
+      <trans-unit id="_pullFetch.Text">
+        <source>Pull - fetch</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullFetchAll.Text">
+        <source>Pull - fetch all</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullMerge.Text">
+        <source>Pull - merge</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullOpenDialog.Text">
+        <source>Open pull dialog</source>
+        
+      </trans-unit>
+      <trans-unit id="_pullRebase.Text">
+        <source>Pull - rebase</source>
+        
+      </trans-unit>
       <trans-unit id="_repositoryHostsToolStripMenuItem.Text">
         <source>(Repository hosts)</source>
         <target>(Repository Hosts)</target>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileCaption.Text">
+        <source>Reset</source>
+        <target>Zurücksetzen</target>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileError.Text">
+        <source>Exactly one revision must be selected. Abort.</source>
+        
+      </trans-unit>
+      <trans-unit id="_resetFileText.Text">
+        <source>Are you sure you want to reset this file or directory?</source>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
@@ -2292,6 +2339,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="aLocalToolStripMenuItem.Text">
         <source>A &lt;--&gt; Working directory</source>
+        <target>A &lt;--&gt; Arbeitsverzeichnis</target>
         
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
@@ -2316,6 +2364,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="bLocalToolStripMenuItem.Text">
         <source>B &lt;--&gt; Working directory</source>
+        <target>B &lt;--&gt; Arbeitsverzeichnis</target>
         
       </trans-unit>
       <trans-unit id="bisectToolStripMenuItem.Text">
@@ -2363,6 +2412,10 @@ compare with first:</source>
         <target>Revision auschecken...</target>
         
       </trans-unit>
+      <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
+        <source>Cherry pick file's changes</source>
+        
+      </trans-unit>
       <trans-unit id="cherryPickToolStripMenuItem.Text">
         <source>Cherry pick...</source>
         <target>Cherry Pick...</target>
@@ -2370,6 +2423,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="cleanupToolStripMenuItem.Text">
         <source>Clean working directory...</source>
+        <target>Arbeitsverzeichnis aufräumenn...</target>
         
       </trans-unit>
       <trans-unit id="cloneSVNToolStripMenuItem.Text">
@@ -2488,6 +2542,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
         <source>Edit working directory file</source>
+        <target>Ausgecheckte Datei bearbeiten</target>
         
       </trans-unit>
       <trans-unit id="editLocalGitConfigToolStripMenuItem.Text">
@@ -2557,6 +2612,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
       </trans-unit>
       <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
         <source>Clean working directory...</source>
+        <target>Arbeitsverzeichnis aufräumen...</target>
         
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
@@ -2645,8 +2701,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
-        <source>Merge</source>
-        <target>Merge</target>
+        <source>Pull - merge</source>
         
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -2681,14 +2736,17 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
         <source>Open working directory file with...</source>
+        <target>Ausgecheckte Datei öffnen mit...</target>
         
       </trans-unit>
       <trans-unit id="parentOfALocalToolStripMenuItem.Text">
         <source>A's parent &lt;--&gt; Working directory</source>
+        <target>Vorgänger von A &lt;--&gt; Arbeitsverzeichnis</target>
         
       </trans-unit>
       <trans-unit id="parentOfBLocalToolStripMenuItem.Text">
         <source>B's parent &lt;--&gt; Working directory</source>
+        <target>Vorgänger von B &lt;--&gt; Arbeitsverzeichnis</target>
         
       </trans-unit>
       <trans-unit id="patchToolStripMenuItem.Text">
@@ -2712,8 +2770,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
-        <source>Pull</source>
-        <target>Pull</target>
+        <source>Open pull dialog...</source>
         
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
@@ -2727,8 +2784,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
-        <source>Rebase</source>
-        <target>Rebase</target>
+        <source>Pull - rebase</source>
         
       </trans-unit>
       <trans-unit id="recentToolStripMenuItem.Text">
@@ -2766,14 +2822,20 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         <target>Repository</target>
         
       </trans-unit>
-      <trans-unit id="resetFileToAToolStripMenuItem.Text">
-        <source>A</source>
-        <target>A</target>
+      <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
+        <source>First</source>
         
       </trans-unit>
-      <trans-unit id="resetFileToRemoteToolStripMenuItem.Text">
-        <source>B</source>
-        <target>B</target>
+      <trans-unit id="resetFileToParentToolStripMenuItem.Text">
+        <source>Parent</source>
+        
+      </trans-unit>
+      <trans-unit id="resetFileToSecondToolStripMenuItem.Text">
+        <source>Second</source>
+        
+      </trans-unit>
+      <trans-unit id="resetFileToSelectedToolStripMenuItem.Text">
+        <source>Selected</source>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
@@ -2849,6 +2911,11 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
       <trans-unit id="tagToolStripMenuItem.Text">
         <source>Create tag...</source>
         <target>Tag erzeugen...</target>
+        
+      </trans-unit>
+      <trans-unit id="tagsToolStripMenuItem.Text">
+        <source>Tag</source>
+        <target>Tag</target>
         
       </trans-unit>
       <trans-unit id="toggleSplitViewLayout.ToolTipText">
@@ -2966,6 +3033,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgain.Text">
         <source>Apply stashed items to working directory again?</source>
+        <target>Gestashte Objekte wieder auf das Arbeitsverzeichnis anwenden?</target>
         
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgainCaption.Text">
@@ -3196,6 +3264,7 @@ auswählen</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Clean working directory</source>
+        <target>Arbeitsverzeichnis aufräumen</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -3250,6 +3319,7 @@ auswählen</target>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Remove untracked files from working directory</source>
+        <target>Entferne ungetrackte Dateien vom Arbeitsverzeichnis</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -3258,8 +3328,8 @@ auswählen</target>
         
       </trans-unit>
       <trans-unit id="labelPathHint.Text">
-        <source>(one line per path)</source>
-        <target>(eine Zeile pro Pfad)</target>
+        <source>(one path per line)</source>
+        <target>(ein Pfad pro Zeile)</target>
         
       </trans-unit>
     </body>
@@ -3273,10 +3343,12 @@ auswählen</target>
       </trans-unit>
       <trans-unit id="Central.Text">
         <source>Central repository, no working directory  (--bare --shared=all)</source>
+        <target>Zentrales Repository, kein Arbeitsverzeichnis (--bare --shared=all)</target>
         
       </trans-unit>
       <trans-unit id="CentralRepository.Text">
         <source>P&amp;ublic repository, no working directory  (--bare)</source>
+        <target>Öffentliches Repository, kein Arbeitsverzeichnis (--bare)</target>
         
       </trans-unit>
       <trans-unit id="FromBrowse.Text">
@@ -3457,13 +3529,13 @@ Möchten Sie den Vorgang fortsetzen?</target>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
-        <source>Author </source>
+        <source>Author</source>
         <target>Autor</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterInfo.Text">
-        <source>Committer </source>
-        <target>Comitter</target>
+        <source>Committer</source>
+        <target>Committer</target>
         
       </trans-unit>
       <trans-unit id="_commitCommitterToolTip.Text">
@@ -3902,6 +3974,11 @@ Möchten Sie trotzdem fortfahren?</target>
         <target>Sign-Off Commit</target>
         
       </trans-unit>
+      <trans-unit id="stagedResetChanges.Text">
+        <source>Reset file or directory changes</source>
+        <target>Datei- oder Ordneränderungen zurücksetzen</target>
+        
+      </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
         <source>Stash submodule changes</source>
         <target>Änderungen der Untermodule stashen</target>
@@ -4004,6 +4081,7 @@ Möchten Sie trotzdem fortfahren?</target>
       </trans-unit>
       <trans-unit id="workingToolStripMenuItem.Text">
         <source>Working directory changes</source>
+        <target>Änderungen im Arbeitsverzeichnis</target>
         
       </trans-unit>
     </body>
@@ -4158,6 +4236,7 @@ Möchten Sie trotzdem fortfahren?</target>
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
         <source>Clear working directory and index</source>
+        <target>Leere Arbeitsverzeichnis und Index</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -4444,12 +4523,12 @@ Klicken Sie auf die Schaltfläche &quot;Support this project&quot; um mehr Infor
         
       </trans-unit>
       <trans-unit id="_cannotOpenFile.Text">
-        <source>Cannot open file: </source>
+        <source>Cannot open file:</source>
         <target>Öffnen der Datei fehlgeschlagen:</target>
         
       </trans-unit>
       <trans-unit id="_cannotSaveFile.Text">
-        <source>Cannot save file: </source>
+        <source>Cannot save file:</source>
         <target>Speichern der Datei fehlgeschlagen:</target>
         
       </trans-unit>
@@ -4514,6 +4593,10 @@ Sollten Sie sich unsicher sein bitte dieses Fenster einfach schliessen.</target>
       <trans-unit id="diffToolremotelocalStripMenuItem.Text">
         <source>Difftool selected &lt; - &gt; local</source>
         <target>Ausgewählt vom difftool &lt; - &gt; Lokal</target>
+        
+      </trans-unit>
+      <trans-unit id="followFileHistoryRenamesToolStripMenuItem.Text">
+        <source>Detect and follow - exact renames and copies only</source>
         
       </trans-unit>
       <trans-unit id="followFileHistoryToolStripMenuItem.Text">
@@ -4778,148 +4861,6 @@ Standardmäßig wird %HOME% auf %HOMEDRIVE%%HOMEPATH% gesetzt, falls diese leer 
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Change Submitted</source>
-        <target>Änderung übermittelt</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Schließen</target>
-        
-      </trans-unit>
-      <trans-unit id="labelSubmitted.Text">
-        <source>Your change has been submitted for review at the following location:</source>
-        <target>Ihre Änderung wurde für eine Review an folgende Adresse geschickt:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Download Gerrit Change</source>
-        <target>Download von Gerrit Änderung</target>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>Remotes verwalten</target>
-        
-      </trans-unit>
-      <trans-unit id="Download.Text">
-        <source>&amp;Download</source>
-        <target>&amp;Downloaden</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotGetChangeDetails.Text">
-        <source>Could not retrieve the change details</source>
-        <target>Konnte die Details zur Änderung nicht abrufen</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadCaption.Text">
-        <source>Download change {0}</source>
-        <target>Download der Änderung {0}</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadGerritChangeCaption.Text">
-        <source>Download Gerrit Change</source>
-        <target>Download von Gerrit Änderung</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectChange.Text">
-        <source>Please enter a change</source>
-        <target>Bitte geben Sie eine Änderung an</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        <target>Bitte wählen Sie ein Remote Repository aus</target>
-        
-      </trans-unit>
-      <trans-unit id="labelChange.Text">
-        <source>Change:</source>
-        <target>Änderung:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelEnterChangeIdOrNumber.Text">
-        <source>Enter the Change-Id or the number from the Gerrit URL</source>
-        <target>Geben Sie die Change-Id oder die aktuelle Nummer aus der Gerrit URL an</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        <target>Remote:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelTopicBranch.Text">
-        <source>Topic branch:</source>
-        <target>Topic Branch:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Gerrit Änderung veröffentlichen</target>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>Remotes verwalten</target>
-        
-      </trans-unit>
-      <trans-unit id="Publish.Text">
-        <source>&amp;Publish</source>
-        <target>&amp;Veröffentlichen</target>
-        
-      </trans-unit>
-      <trans-unit id="PublishDraft.Text">
-        <source>Submit review as draft</source>
-        <target>Sende Review als Entwurf</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishCaption.Text">
-        <source>Publish change</source>
-        <target>Änderung veröffentlichen</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishGerritChangeCaption.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Gerrit Änderung veröffentlichen</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectBranch.Text">
-        <source>Please enter a branch</source>
-        <target>Bitte Branch angeben</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        <target>Bitte wählen Sie ein Remote Repository aus</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBranch.Text">
-        <source>Branch:</source>
-        <target>Branch:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        <target>Remote:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelTopic.Text">
-        <source>Topic:</source>
-        <target>Topic:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormGitAttributes" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -4946,6 +4887,7 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</target>
       </trans-unit>
       <trans-unit id="_noWorkingDirCaption.Text">
         <source>No working directory</source>
+        <target>Kein Arbeitsverzeichnis</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -4994,6 +4936,7 @@ Für weitere Informationen folgenden Befehl ausführen:
       </trans-unit>
       <trans-unit id="noWorkingDir.Text">
         <source>.gitattributes is only supported when there is a working directory.</source>
+        <target>.gitattributes wird nur unterstützt wenn ein Arbeitsverzeichnis vorhanden ist.</target>
         
       </trans-unit>
     </body>
@@ -5034,10 +4977,12 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</target>
       </trans-unit>
       <trans-unit id="_gitignoreOnlyInWorkingDirSupported.Text">
         <source>.gitignore is only supported when there is a working directory.</source>
+        <target>.gitignore wird nur unterstützt, wenn ein Arbeitsverzeichnis vorhanden ist.</target>
         
       </trans-unit>
       <trans-unit id="_gitignoreOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
+        <target>Kein Arbeitsverzeichnis</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -5054,9 +4999,9 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</target>
         <source>Specify filepatterns you want git to ignore.
 
 Example:
-#ignore thumbnails created by windows
+#Ignore thumbnails created by Windows
 Thumbs.db
-#Ignore files build by Visual Studio
+#Ignore files built by Visual Studio
 *.user
 *.aps
 *.pch
@@ -5075,38 +5020,6 @@ Thumbs.db
 obj/
 [Rr]elease*/
 _ReSharper*/</source>
-        <target>Geben Sie Dateimuster an,
-die Git ignorieren soll.
-
-Beispiel:
-#Windows Thumbnails ignorieren
-Thumbs.db
-
-#Visual Studio Dateien ignorieren
-*.obj
-*.exe
-*.pdb
-*.user
-*.aps
-*.pch
-*.vspscc
-*_i.c
-*_p.c
-*.ncb
-*.suo
-*.tlb
-*.tlh
-*.bak
-*.cache
-*.ilk
-*.log
-[Bb]in
-[Dd]ebug*/
-*.lib
-*.sbr
-obj/
-[Rr]elease*/
-_ReSharper*/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
@@ -5136,83 +5049,6 @@ _ReSharper*/</target>
       <trans-unit id="tabPageCommandLog.Text">
         <source>Command log</source>
         <target>Kommando Log</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Edit .gitreview</source>
-        <target>Editiere .gitreview</target>
-        
-      </trans-unit>
-      <trans-unit id="Save.Text">
-        <source>Save</source>
-        <target>Speichern</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreview.Text">
-        <source>Failed to save .gitreview.
-Check if file is accessible.</source>
-        <target>Fehler beim Speichern von .gitreview.
-Stellen Sie sicher dass Zugriff auf die Datei möglich ist.</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreviewCaption.Text">
-        <source>Failed to save .gitreview</source>
-        <target>Fehler beim Speichern von .gitreview.</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
-        <source>.gitreview is only supported when there is a working directory.</source>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
-        <source>No working directory</source>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestion.Text">
-        <source>Save changes to .gitreview?</source>
-        <target>Änderungen an .gitreview speichern?</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestionCaption.Text">
-        <source>Save changes?</source>
-        <target>Änderungen speichern?</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Provide the configuration for
-.gitreview to setup Gerrit.
-
-Example configuration:
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</source>
-        <target>Erstellen Sie die Konfiguration für 
-.gitreview, um Gerrit einzurichten.
-
-Beispiel Konfiguration:
-
-
-[gerrit]
-host=review.beispiel.de
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitReviewHelp.Text">
-        <source>GitHub page for git-review</source>
-        <target>GitHub Seite für git-review</target>
         
       </trans-unit>
     </body>
@@ -5307,6 +5143,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="Central.Text">
         <source>Central repository, no working directory  (--bare --shared=all)</source>
+        <target>Zentrales Repository, kein Arbeitsverzeichnis (--bare --shared=all)</target>
         
       </trans-unit>
       <trans-unit id="Init.Text">
@@ -5384,10 +5221,12 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</target>
       </trans-unit>
       <trans-unit id="_mailmapOnlyInWorkingDirSupported.Text">
         <source>.mailmap is only supported when there is a working directory.</source>
+        <target>.mailmap wird nur unterstützt, wenn ein Arbeitsverzeichnis vorhanden ist.</target>
         
       </trans-unit>
       <trans-unit id="_mailmapOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
+        <target>Kein Arbeitsverzeichnis</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -5470,7 +5309,7 @@ ignoring all changes from all other branches. It is meant to be used to supersed
 subtree 
 This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
 match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
-ancestor tree. </source>
+ancestor tree.</source>
         <target>resolve
 Diese Option kann nur zwei Branches (Nämlich der aktuelle Branch und der Branch von dem Sie gepullt haben) mit Hilfe eines 
 3-Wege-Merge-Verfahren auflösen. Mit dieser Option wird versucht Merge-Mehrdeutigkeiten zu erkennen. Die Option gilt 
@@ -5552,6 +5391,11 @@ auf den gemeinsamen Vorfahrenbaum angewendet.</target>
       <trans-unit id="$this.Text">
         <source>Submodule conflict</source>
         <target>Konflikt in Untermodul</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleted.Text">
+        <source>deleted</source>
+        <target>Gelöscht</target>
         
       </trans-unit>
       <trans-unit id="_stageFilename.Text">
@@ -5644,30 +5488,6 @@ auf den gemeinsamen Vorfahrenbaum angewendet.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Gerrit Plugin</source>
-        <target>Gerrit Plugin</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Schließen</target>
-        
-      </trans-unit>
-      <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
-
-To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>Das Gerrit Plugin für GitExtensions integriert Gerrit in GitExtensions. Dieses Plugin basiert auf dem git-review Tool.
-
-Um Gerrit Support für ein Repository zu aktivieren muss eine .gitreview Datei angelegt werden. Dies kann über die Option Einstellungen | Editiere .gitreview Menüoption ausgewählt werden.
-Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und dem git-review Befehl.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormPull" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -5676,7 +5496,7 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
-        <source>Manage</source>
+        <source>Manage remotes</source>
         <target>Remotes verwalten</target>
         
       </trans-unit>
@@ -5752,6 +5572,7 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgain.Text">
         <source>Apply stashed items to working directory again?</source>
+        <target>Gestashte Objekte wieder auf das Arbeitsverzeichnis anwenden?</target>
         
       </trans-unit>
       <trans-unit id="_applyShashedItemsAgainCaption.Text">
@@ -5782,6 +5603,11 @@ If you want to fetch and merge a branch, choose a specific branch.</source>
         <target>Sie können alle Remote Branches (*) nur holen aber keinen Merge- oder Rebase-Prozess durchführen.
 Wenn Sie alle Remote Branches holen wollen, wählen Sie die dritte Option (Änderungen vom Remote holen).
 Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Branch aus.</target>
+        
+      </trans-unit>
+      <trans-unit id="_hoverShowImageLabelText.Text">
+        <source>Hover to see scenario when fast forward is possible.</source>
+        <target>Fast-Forward Szenario Anzeige (Maus-Hover)</target>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranch.Text">
@@ -6277,6 +6103,11 @@ Kein Rebase möglich.</target>
         <target>&gt;Rebase fortsetzen&lt;</target>
         
       </trans-unit>
+      <trans-unit id="_hoverShowImageLabelText.Text">
+        <source>Hover to see scenario when fast forward is possible.</source>
+        <target>Fast-Forward Szenario Anzeige (Maus-Hover)</target>
+        
+      </trans-unit>
       <trans-unit id="_noBranchSelectedText.Text">
         <source>Please select a branch</source>
         <target>Bitte einen Branch auswählen</target>
@@ -6724,10 +6555,13 @@ Wert wurde mit leerem Wert ersetzt.</target>
       <trans-unit id="Hard.Text">
         <source>Hard: reset working directory and index
 (discard ALL local changes, even uncommitted changes)</source>
+        <target>Hart: Arbeitsverzeichnis und Index zurücksetzen 
+(ALLE - auch ungesicherte - Änderungen gehen verloren) </target>
         
       </trans-unit>
       <trans-unit id="Mixed.Text">
         <source>Mixed: leave working directory untouched, reset index</source>
+        <target>Mittel: Arbeitsverzeichnis unverändert belassen, Index zurücksetzen</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -6737,6 +6571,7 @@ Wert wurde mit leerem Wert ersetzt.</target>
       </trans-unit>
       <trans-unit id="Soft.Text">
         <source>Soft: leave working directory and index untouched</source>
+        <target>Soft: Arbeitsverzeichnis und Index unverändert belassen</target>
         
       </trans-unit>
       <trans-unit id="branchInfo.Text">
@@ -7500,6 +7335,7 @@ Abbrechen macht darum auf dieser Seite keine Änderungen rückgängig.</target>
       </trans-unit>
       <trans-unit id="currentWorkingDirChanges.Text">
         <source>Current working directory changes</source>
+        <target>Aktuelle Änderungen im Arbeitsverzeichnis</target>
         
       </trans-unit>
       <trans-unit id="dontShowAgain.Text">
@@ -8117,80 +7953,147 @@ Mehr Optionen im Kontextmenü</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en">
+  <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en">
     <body>
-      <trans-unit id="_downloadGerritChange.Text">
-        <source>Download Gerrit Change</source>
-        <target>Gerrit Änderung herunterladen</target>
+      <trans-unit id="$this.Text">
+        <source>Git Config</source>
+        <target>Git Konfiguration</target>
         
       </trans-unit>
-      <trans-unit id="_editGitReview.Text">
-        <source>Edit .gitreview</source>
-        <target>Editiere .gitreview</target>
+      <trans-unit id="BrowseCommitTemplate.Text">
+        <source>Browse</source>
+        <target>Durchsuchen</target>
         
       </trans-unit>
-      <trans-unit id="_installCommitMsgHook.Text">
-        <source>Install Hook</source>
-        <target>Hook installieren</target>
+      <trans-unit id="BrowseDiffTool.Text">
+        <source>Browse</source>
+        <target>Durchsuchen</target>
         
       </trans-unit>
-      <trans-unit id="_installCommitMsgHookFailed.Text">
-        <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>Konnte die commit-msg Datei nicht herunterladen. Bitte installieren Sie den commit-msg Hook manuell.</target>
+      <trans-unit id="BrowseMergeTool.Text">
+        <source>Browse</source>
+        <target>Durchsuchen</target>
         
       </trans-unit>
-      <trans-unit id="_installCommitMsgHookMessage.Text">
-        <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>Gerrit benötigt einen installierten commit-msg Hook. Wollen Sie den commit-msg Hook nun in Ihrem Repository installieren?</target>
+      <trans-unit id="DiffToolCmdSuggest.Text">
+        <source>Suggest</source>
+        <target>Vorschlagen</target>
         
       </trans-unit>
-      <trans-unit id="_installCommitMsgHookShortText.Text">
-        <source>Install commit-msg hook</source>
-        <target>commit-msg Hook installieren</target>
+      <trans-unit id="MergeToolCmdSuggest.Text">
+        <source>Suggest</source>
+        <target>Vorschlagen</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Gerrit Code Review</source>
-        <target>Gerrit Code Review</target>
+      <trans-unit id="PathToKDiff3.Text">
+        <source>Path to mergetool</source>
+        <target>Pfad zu Mergeprogramm</target>
         
       </trans-unit>
-      <trans-unit id="_publishGerritChange.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Gerrit Änderung veröffentlichen</target>
+      <trans-unit id="_diffToolSuggestCaption.Text">
+        <source>Suggest difftool cmd</source>
+        <target>Vergleichsprogramm Befehl vorschlagen</target>
         
       </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en">
-    <body>
-      <trans-unit id="_settingsError.Text">
-        <source>Error loading .gitreview file.</source>
-        <target>Fehler beim Laden der .gitreview Datei.</target>
+      <trans-unit id="_mergeToolSuggestCaption.Text">
+        <source>Suggest mergetool cmd</source>
+        <target>Mergeprogramm Befehl vorschlagen</target>
         
       </trans-unit>
-      <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
-        <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
-        <target>Die Rremote &quot;{0}&quot; die mit dem &quot;defaultremote&quot; Eintrag in der .gitreview Datei angegeben ist referenziert keine konfigurierte Remote. Erzeugen Sie diese Remote oder ändern Sie den Wert in der .gitreview Datei.</target>
+      <trans-unit id="_toolSuggestPathText.Text">
+        <source>Please enter the path to {0} and press suggest.</source>
+        <target>Bitte Pfad zu {0} eingeben und Vorschlagen drücken.</target>
         
       </trans-unit>
-      <trans-unit id="_settingsErrorFileNotFound.Text">
-        <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
-        <target>Kann die &quot;.gitreview&quot; im aktuellen Arbeitsverzeichnis nicht finden.</target>
+      <trans-unit id="globalAutoCrlfFalse.Text">
+        <source>Checkout as-is, commit as-is (&quot;core.autocrlf&quot;  is set to &quot;false&quot;)</source>
+        <target>Keine Änderung beim Auschecken und Commiten (&quot;core.autocrlf&quot; = false)</target>
         
       </trans-unit>
-      <trans-unit id="_settingsErrorHostNotEntered.Text">
-        <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
-        <target>Der &quot;host&quot; Eintrag in der .gitreview Datei fehlt wird aber benötigt.</target>
+      <trans-unit id="globalAutoCrlfInput.Text">
+        <source>Checkout as-is, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;input&quot;)</source>
+        <target>Keine Änderung beim Auschecken, Zeilenumbrüche im Unix-Format commmiten (&quot;core.autocrlf&quot; = input)</target>
         
       </trans-unit>
-      <trans-unit id="_settingsErrorPortNotNumeric.Text">
-        <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
-        <target>Der &quot;port&quot; in der .gitreview Datei darf nur aus Zahlen bestehen.</target>
+      <trans-unit id="globalAutoCrlfNotSet.Text">
+        <source>Not set</source>
+        <target>Nicht gesetzt</target>
         
       </trans-unit>
-      <trans-unit id="_settingsErrorProjectNotEntered.Text">
-        <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
-        <target>Der &quot;project&quot; Eintrag in der .gitreview Datei fehlt wird aber benötigt.</target>
+      <trans-unit id="globalAutoCrlfTrue.Text">
+        <source>Checkout Windows-style, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;true&quot;)</source>
+        <target>Zeilenumbrüche im Windows-Format auschecken, im Unix-Format commiten (&quot;core.autocrlf&quot; = true)</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxLineEndings.Text">
+        <source>Line endings</source>
+        <target>Zeilenumbrüche</target>
+        
+      </trans-unit>
+      <trans-unit id="label19.Text">
+        <source>Mergetool command</source>
+        <target>Mergeprogramm Befehl</target>
+        
+      </trans-unit>
+      <trans-unit id="label28.Text">
+        <source>Keep backup (.orig) after merge</source>
+        <target>Orginaldatei beibehalten nach Merge (.orig)</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>User name</source>
+        <target>Benutzername</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>User email</source>
+        <target>Benutzer E-Mail</target>
+        
+      </trans-unit>
+      <trans-unit id="label41.Text">
+        <source>Difftool</source>
+        <target>Vergleichsprogramm</target>
+        
+      </trans-unit>
+      <trans-unit id="label42.Text">
+        <source>Path to difftool</source>
+        <target>Pfad zu Vergleichswerkzeug</target>
+        
+      </trans-unit>
+      <trans-unit id="label48.Text">
+        <source>Difftool command</source>
+        <target>Vergleichswerkzeug Befehl</target>
+        
+      </trans-unit>
+      <trans-unit id="label57.Text">
+        <source>Path to commit template</source>
+        <target>Pfad zu Commit-Template</target>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Editor</source>
+        <target>Editor</target>
+        
+      </trans-unit>
+      <trans-unit id="label60.Text">
+        <source>Files content encoding</source>
+        <target>Datei Encoding</target>
+        
+      </trans-unit>
+      <trans-unit id="label7.Text">
+        <source>Mergetool</source>
+        <target>Mergeprogramm</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>You need to set the correct path to 
+git before you can change
+global settings.
+</source>
+        <target>Sie müssen den korrekten Pfad
+zu Git angeben bevor Sie die
+globalen Einstellungen ändern
+können.</target>
         
       </trans-unit>
     </body>
@@ -8231,6 +8134,10 @@ Mehr Optionen im Kontextmenü</target>
         <target>Verfolge Umbenennen in der Datei-Historie (Experimentell)</target>
         
       </trans-unit>
+      <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
+        <source>Follow exact renames and copies only</source>
+        
+      </trans-unit>
       <trans-unit id="chkPlaySpecialStartupSound.Text">
         <source>Play Special Startup Sound</source>
         <target>Speziellen Startsound abspielen</target>
@@ -8238,6 +8145,7 @@ Mehr Optionen im Kontextmenü</target>
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
         <source>Show current working directory changes in revision graph (slow!)</source>
+        <target>Änderungen im Arbeitsverzeichnis im Revisions-Graphen darstellen (langsam!)</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
@@ -8257,6 +8165,7 @@ Mehr Optionen im Kontextmenü</target>
       </trans-unit>
       <trans-unit id="chkStartWithRecentWorkingDir.Text">
         <source>Open last working directory on startup</source>
+        <target>Das zuletzt geöffnete Verzeichnis beim Start öffnen</target>
         
       </trans-unit>
       <trans-unit id="chkStashUntrackedFiles.Text">
@@ -8390,136 +8299,6 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         <target>Die globale Konfigurationsdatei ist im Verzeichnis %HOME% gespeichert. 
 Standardmäßig wird %HOME% auf %HOMEDRIVE%%HOMEPATH% gesetzt, wenn diese leer ist. 
 Ändern Sie das Standardverhalten nur, wenn Probleme bei der Benutzung auftreten.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GlobalSettingsSettingsPage" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Git Config</source>
-        <target>Git Konfiguration</target>
-        
-      </trans-unit>
-      <trans-unit id="BrowseCommitTemplate.Text">
-        <source>Browse</source>
-        <target>Durchsuchen</target>
-        
-      </trans-unit>
-      <trans-unit id="BrowseDiffTool.Text">
-        <source>Browse</source>
-        <target>Durchsuchen</target>
-        
-      </trans-unit>
-      <trans-unit id="BrowseMergeTool.Text">
-        <source>Browse</source>
-        <target>Durchsuchen</target>
-        
-      </trans-unit>
-      <trans-unit id="DiffToolCmdSuggest.Text">
-        <source>Suggest command</source>
-        <target>Vorschlagen</target>
-        
-      </trans-unit>
-      <trans-unit id="MergeToolCmdSuggest.Text">
-        <source>Suggest command</source>
-        <target>Vorschlagen</target>
-        
-      </trans-unit>
-      <trans-unit id="PathToKDiff3.Text">
-        <source>Path to mergetool</source>
-        <target>Pfad zu Mergeprogramm</target>
-        
-      </trans-unit>
-      <trans-unit id="__diffToolSuggestCaption.Text">
-        <source>Suggest difftool cmd</source>
-        <target>difftool cmd vorschlagen</target>
-        
-      </trans-unit>
-      <trans-unit id="globalAutoCrlfFalse.Text">
-        <source>Checkout as-is, commit as-is (&quot;core.autocrlf&quot;  is set to &quot;false&quot;)</source>
-        <target>Keine Änderung beim Auschecken und Commiten (&quot;core.autocrlf&quot; = false)</target>
-        
-      </trans-unit>
-      <trans-unit id="globalAutoCrlfInput.Text">
-        <source>Checkout as-is, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;input&quot;)</source>
-        <target>Keine Änderung beim Auschecken, Zeilenumbrüche im Unix-Format commmiten (&quot;core.autocrlf&quot; = input)</target>
-        
-      </trans-unit>
-      <trans-unit id="globalAutoCrlfTrue.Text">
-        <source>Checkout Windows-style, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;true&quot;)</source>
-        <target>Zeilenumbrüche im Windows-Format auschecken, im Unix-Format commiten (&quot;core.autocrlf&quot; = true)</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox9.Text">
-        <source>Line endings</source>
-        <target>Zeilenumbrüche</target>
-        
-      </trans-unit>
-      <trans-unit id="label19.Text">
-        <source>Mergetool command</source>
-        <target>Kommando</target>
-        
-      </trans-unit>
-      <trans-unit id="label28.Text">
-        <source>Keep backup (.orig) after merge</source>
-        <target>Orginaldatei beibehalten nach Merge (.orig)</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>User name</source>
-        <target>Benutzername</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>User email</source>
-        <target>Benutzer E-Mail</target>
-        
-      </trans-unit>
-      <trans-unit id="label41.Text">
-        <source>Difftool</source>
-        <target>Vergleichsprogramm</target>
-        
-      </trans-unit>
-      <trans-unit id="label42.Text">
-        <source>Path to difftool</source>
-        <target>Pfad zu Vergleichsprog.</target>
-        
-      </trans-unit>
-      <trans-unit id="label48.Text">
-        <source>Difftool command</source>
-        <target>Kommando</target>
-        
-      </trans-unit>
-      <trans-unit id="label57.Text">
-        <source>Path to commit template</source>
-        <target>Pfad zu Commit-Template</target>
-        
-      </trans-unit>
-      <trans-unit id="label6.Text">
-        <source>Editor</source>
-        <target>Editor</target>
-        
-      </trans-unit>
-      <trans-unit id="label60.Text">
-        <source>Files content encoding</source>
-        <target>Datei Encoding</target>
-        
-      </trans-unit>
-      <trans-unit id="label7.Text">
-        <source>Mergetool</source>
-        <target>Mergeprogramm</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>You need to set the correct path to 
-git before you can change
-global settings.
-</source>
-        <target>Sie müssen den korrekten Pfad
-zu Git angeben bevor Sie die
-globalen Einstellungen ändern
-können.</target>
         
       </trans-unit>
     </body>
@@ -8795,50 +8574,6 @@ Das wird nur das Untermodul auschecken das der Commit anhand des übergeordneten
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Proxy Switcher</source>
-        <target>Proxy Switcher</target>
-        
-      </trans-unit>
-      <trans-unit id="ApplyGlobally_CheckBox.Text">
-        <source>Apply globally</source>
-        <target>Global anwenden</target>
-        
-      </trans-unit>
-      <trans-unit id="GlobalHttpProxy_Label.Text">
-        <source>Global http.proxy:</source>
-        <target>Globaler HTTP Proxy:</target>
-        
-      </trans-unit>
-      <trans-unit id="LocalHttpProxy_Label.Text">
-        <source>Local http.proxy:</source>
-        <target>Lokaler HTTP Proxy:</target>
-        
-      </trans-unit>
-      <trans-unit id="SetProxy_Button.Text">
-        <source>Set proxy</source>
-        <target>Proxy setzen</target>
-        
-      </trans-unit>
-      <trans-unit id="UnsetProxy_Button.Text">
-        <source>Unset proxy</source>
-        <target>Proxy zurücksetzen</target>
-        
-      </trans-unit>
-      <trans-unit id="_pleaseSetProxy.Text">
-        <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>Es ist kein Proxy konfiguriert. Bitte setzen Sie den Proxy-Host in den Plugin Einstellungen.</target>
-        
-      </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Proxy Switcher</source>
-        <target>Proxy Wechsler</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="RevisionGrid" source-language="en">
     <body>
       <trans-unit id="AuthorDataGridViewColumn.HeaderText">
@@ -8899,6 +8634,16 @@ Das wird nur das Untermodul auschecken das der Commit anhand des übergeordneten
       <trans-unit id="MessageDataGridViewColumn.HeaderText">
         <source>Message</source>
         <target>Nachricht</target>
+        
+      </trans-unit>
+      <trans-unit id="NavigateBackward.Text">
+        <source>Navigate backward</source>
+        <target>Zurück navigieren</target>
+        
+      </trans-unit>
+      <trans-unit id="NavigateForward.Text">
+        <source>Navigate forward</source>
+        <target>Vorwärts navigieren</target>
         
       </trans-unit>
       <trans-unit id="NextQuickSearch.Text">
@@ -9075,10 +8820,19 @@ If this is a normal repository, these steps are recommended:
 
 If this is a central repository (bare repository without a working directory):
 - Push changes from another repository</source>
+        <target>Bei diesem Repository sind bisher keine Commits vorhanden.
+
+Wenn dies ein normales Repository ist, werden folgende Schritte empfohlen:
+- Stellen Sie sicher, dass sie eine gültige .gitignore Datei im Repository haben
+- Commiten Sie die Dateien mit dem Befehl Commiten
+
+Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
+- Pushen Sie Ihre Änderungen von einem anderen Repository aus</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>The current working directory is not a git repository.</source>
+        <target>Das aktuelle Arbeitsverzeichnis ist kein Git Repository.</target>
         
       </trans-unit>
       <trans-unit id="manipulateCommitToolStripMenuItem.Text">
@@ -9226,7 +8980,7 @@ If this is a central repository (bare repository without a working directory):
         
       </trans-unit>
       <trans-unit id="LocalBranchChx.Text">
-        <source>Local branch</source>
+        <source>Local branch name</source>
         <target>Lokaler Branch</target>
         
       </trans-unit>
@@ -9236,8 +8990,7 @@ If this is a central repository (bare repository without a working directory):
         
       </trans-unit>
       <trans-unit id="RemoteBranchChx.Text">
-        <source>Remote branch</source>
-        <target>Remote Branch</target>
+        <source>Remote branch name</source>
         
       </trans-unit>
       <trans-unit id="Remove.Text">
@@ -9313,6 +9066,9 @@ If this is a central repository (bare repository without a working directory):
         <source>User Input:
 {UserInput}
 
+Selected Commits:
+{sHashes}
+
 Selected Branch:
 {sTag}
 {sBranch}
@@ -9342,38 +9098,6 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
-        <target>Benutzereingabe:
-{UserInput}
-
-Ausgewählter Branch:
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-Aktueller Branch:
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cHash}
-{cMessage}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="addScriptButton.Text">
@@ -9517,6 +9241,11 @@ wenn alle Einträge angezeigt werden:</target>
         <target>Automatisch den Authentifizierungsclient starten wenn ein privater Schlüssel für einen Remote konfiguriert ist</target>
         
       </trans-unit>
+      <trans-unit id="BrowseGitCred.Text">
+        <source>Browse</source>
+        <target>Durchsuchen</target>
+        
+      </trans-unit>
       <trans-unit id="OpenSSH.Text">
         <source>OpenSSH</source>
         <target>OpenSSH</target>
@@ -9552,6 +9281,11 @@ wenn alle Einträge angezeigt werden:</target>
         <target>Durchsuchen</target>
         
       </trans-unit>
+      <trans-unit id="SuggestGitCred.Text">
+        <source>Suggest</source>
+        <target>Vorschlagen</target>
+        
+      </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Specify which ssh client to use</source>
         <target>SSH-Client</target>
@@ -9562,19 +9296,24 @@ wenn alle Einträge angezeigt werden:</target>
         <target>PuTTY konfigurieren</target>
         
       </trans-unit>
+      <trans-unit id="groupBox3.Text">
+        <source>Configure Git credential helper</source>
+        <target>Passwortverwaltung konfigurieren</target>
+        
+      </trans-unit>
       <trans-unit id="label15.Text">
-        <source>Path to plink.exe</source>
-        <target>Pfad zu plink.exe</target>
+        <source>Path to plink</source>
+        <target>Pfad zu plink</target>
         
       </trans-unit>
       <trans-unit id="label16.Text">
         <source>Path to puttygen</source>
-        <target>Pfad zu puttygen.exe</target>
+        <target>Pfad zu puttygen</target>
         
       </trans-unit>
       <trans-unit id="label17.Text">
         <source>Path to pageant</source>
-        <target>Pfad zu pageant.exe</target>
+        <target>Pfad zu pageant</target>
         
       </trans-unit>
       <trans-unit id="label18.Text">
@@ -9585,6 +9324,11 @@ When OpenSSH is used, command line dialogs are shown!
         <target>OpenSSH ist ein Kommandozeilenprogramm. PuTTY ist benutzerfreundlicher für Windows-Benutzer, 
 setzt aber voraus das PuTTY Pageant im Hintergrund läuft.
 Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</target>
+        
+      </trans-unit>
+      <trans-unit id="label48.Text">
+        <source>Command</source>
+        <target>Kommando</target>
         
       </trans-unit>
     </body>

@@ -8,9 +8,8 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=2.48
-set zipversion=%version:.=%
-set normal=GitExtensions%zipversion%Mono.zip
+set version=2.49a1
+set normal=GitExtensions-%version%-Mono.zip
 set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
 
 rd /q /s GitExtensions\
@@ -18,6 +17,8 @@ rd /q %normal%
 xcopy /y ..\GitExtensions\bin\Release\Git.hub.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\GitCommands.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitExtensions\bin\Release\GitExtUtils.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\GitExtensions.exe GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
@@ -29,13 +30,11 @@ xcopy /y ..\GitExtensions\bin\Release\GitUIPluginInterfaces.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\Gravatar.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http*.dll GitExtensions\Plugins\
+xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\ICSharpCode.SharpZipLib.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
@@ -99,46 +98,78 @@ xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll 
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\English.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Czech.gif GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Czech.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Czech.Plugins.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Dutch.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Dutch.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Dutch.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\French.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\French.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\French.Plugins.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\German.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\German.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\German.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y ..\GitUI\Translation\Italian.gif GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y ..\GitUI\Translation\Italian.xlf GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Italian.Plugins.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Japanese.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Japanese.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Korean.gif GitExtensions\Translation\
+xcopy /y ..\GitUI\Translation\Japanese.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Korean.xlf GitExtensions\Translation\
+REM xcopy /y ..\GitUI\Translation\Korean.gif GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Korean.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Korean.Plugins.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Polish.gif GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Polish.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Polish.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Russian.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Russian.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Russian.Plugins.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y "..\GitUI\Translation\Simplified Chinese.gif" GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y "..\GitUI\Translation\Simplified Chinese.xlf" GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y "..\GitUI\Translation\Simplified Chinese.Plugins.xlf" GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Spanish.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Spanish.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y ..\GitUI\Translation\TraditionalChinese.gif GitExtensions\Translation\
-REM IF ERRORLEVEL 1 EXIT /B 1
-REM xcopy /y ..\GitUI\Translation\TraditionalChinese.xlf GitExtensions\Translation\
-REM IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\Spanish.Plugins.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y "..\GitUI\Translation\Traditional Chinese.gif" GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y "..\GitUI\Translation\Traditional Chinese.xlf" GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y "..\GitUI\Translation\Traditional Chinese.Plugins.xlf" GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Dictionaries GitExtensions\Dictionaries\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Diff-Scripts\merge-* GitExtensions\Diff-Scripts\
@@ -154,8 +185,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\git-credential-winstore.exe GitExtensions\GitCredentialWinStore\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Logo\git-extensions-logo-final-256.ico GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\bin\GitExtensionsUserManual.pdf GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\gitext.sh GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1

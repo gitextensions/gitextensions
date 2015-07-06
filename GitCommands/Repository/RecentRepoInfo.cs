@@ -7,7 +7,6 @@ namespace GitCommands.Repository
 {
     public class RecentRepoInfo
     {
-
         public Repository Repo { get; set; }
         public string Caption { get; set; }
         public bool MostRecent { get; set; }
@@ -33,7 +32,7 @@ namespace GitCommands.Repository
                 ShortName = Repo.Title;
             else if (DirInfo != null)
                 ShortName = DirInfo.Name;
-            
+
 
             if (DirInfo != null)
                 DirInfo = DirInfo.Parent;
@@ -46,12 +45,10 @@ namespace GitCommands.Repository
             get { return DirInfo == null; }
         }
 
-
         public override string ToString()
         {
             return Repo.ToString();
         }
-
     }
 
     public class RecentRepoSplitter
@@ -60,18 +57,15 @@ namespace GitCommands.Repository
         public static readonly string ShorteningStrategy_MostSignDir = "MostSignDir";
         public static readonly string ShorteningStrategy_MiddleDots = "MiddleDots";
 
-
         public int MaxRecentRepositories { get; set; }
         public string ShorteningStrategy { get; set; }
         public bool SortMostRecentRepos { get; set; }
         public bool SortLessRecentRepos { get; set; }
         public int RecentReposComboMinWidth { get; set; }
         //need to be set before shortening using middleDots strategy
-        public Graphics graphics { get; set; }
-        public Font measureFont { get; set; }
+        public Graphics Graphics { get; set; }
+        public Font MeasureFont { get; set; }
 
-
-        
         public RecentRepoSplitter()
         {
             MaxRecentRepositories = AppSettings.MaxMostRecentRepositories;
@@ -79,10 +73,7 @@ namespace GitCommands.Repository
             SortMostRecentRepos = AppSettings.SortMostRecentRepos;
             SortLessRecentRepos = AppSettings.SortLessRecentRepos;
             RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth;
-        
         }
-
-
 
         public void SplitRecentRepos(ICollection<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList)
         {
@@ -94,7 +85,7 @@ namespace GitCommands.Repository
             bool signDir = ShorteningStrategy_MostSignDir.Equals(ShorteningStrategy);
 
             int n = Math.Min(MaxRecentRepositories, recentRepositories.Count);
-            //the maxRecentRepositories repositories will be added at begining
+            //the maxRecentRepositories repositories will be added at beginning
             //rest will be added in alphabetical order
             foreach (Repository repository in recentRepositories)
             {
@@ -123,7 +114,6 @@ namespace GitCommands.Repository
                     mostRecentRepos.RemoveAt(r);
                 }
             }
-
 
             Action<bool, List<RecentRepoInfo>> addSortedRepos = delegate(bool mostRecent, List<RecentRepoInfo> addToList)
             {
@@ -162,7 +152,7 @@ namespace GitCommands.Repository
             {
                 string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
                 if (!s.IsNullOrEmpty())
-                    s = Path.GetDirectoryName(s);
+                    s = s.Trim(Path.DirectorySeparatorChar);
                 //candidate for short name
                 repoInfo.Caption = repoInfo.ShortName;
                 if (!s.IsNullOrEmpty())
@@ -221,7 +211,15 @@ namespace GitCommands.Repository
                 dirInfo = null;
             }
 
-            if (dirInfo != null)
+            if (dirInfo == null)
+            {
+                repoInfo.Caption = repoInfo.Repo.Path;
+                if (repoInfo.Caption.IsNullOrEmpty())
+                {
+                    repoInfo.Caption = repoInfo.Repo.Title ?? string.Empty;
+                }
+            }
+            else
             {
 
                 string root = null;
@@ -314,7 +312,7 @@ namespace GitCommands.Repository
                 {
                     shortenPathWithCompany(0);
                 }
-                //else skip symbols beginning from the middle to both sides, 
+                //else skip symbols beginning from the middle to both sides,
                 //so we'll see "E:\Compa...toryName\WorkingDirName" and "E:\...\WorkingDirName" at the end.
                 else
                 {
@@ -325,7 +323,7 @@ namespace GitCommands.Repository
                     {
                         canShorten = shortenPath(skipCount);
                         skipCount++;
-                        captionSize = graphics.MeasureString(repoInfo.Caption, measureFont);
+                        captionSize = Graphics.MeasureString(repoInfo.Caption, MeasureFont);
                     }
                     while (captionSize.Width > RecentReposComboMinWidth - 10 && canShorten);
                 }
@@ -339,8 +337,7 @@ namespace GitCommands.Repository
                 orderedRepos.Add(repoInfo.Caption, list);
             }
             list.Add(repoInfo);
-
         }
-    
+
     }
 }

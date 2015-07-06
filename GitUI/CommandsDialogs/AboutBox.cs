@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using GitUI.Properties;
 using GitUI.CommandsDialogs.AboutBoxDialog;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -8,10 +10,32 @@ namespace GitUI.CommandsDialogs
     {
         public AboutBox()
         {
-            contributersList = string.Concat(coders, ", ", translators, ", ", designers, ", ", other).Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
+            _contributersList = string.Join(", ", new []{Coders, Translators,
+                Designers, Other})
+                .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 
-            InitializeComponent(); 
+            InitializeComponent();
             Translate();
+        }
+
+        private string Coders
+        {
+            get { return Resources.Coders.Replace(Environment.NewLine, " "); }
+        }
+
+        private string Translators
+        {
+            get { return Resources.Translators.Replace(Environment.NewLine, " "); }
+        }
+
+        private string Designers
+        {
+            get { return Resources.Designers.Replace(Environment.NewLine, " "); }
+        }
+
+        private string Other
+        {
+            get { return Resources.Other.Replace(Environment.NewLine, " "); }
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -45,48 +69,24 @@ namespace GitUI.CommandsDialogs
         {
             base.OnLoad(e);
 
-            _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1}", _NO_TRANSLATE_labelVersionInfo.Text, 
-                GitCommands.AppSettings.GitExtensionsVersionString);
+            _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1}", _NO_TRANSLATE_labelVersionInfo.Text,
+                GitCommands.AppSettings.ProductVersion);
         }
 
-        //Contributers list 
-        private const string coders = "Arkadiy Shapkin, Janusz Białobrzewski, Steffen Forkmann, Jacob Stanley, " +
-            "Nick Mayer, Kevin Moore, Davide, Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, " +
-            "Chris Meaney, Nathanael Schmied, Adrian Codrington, Troels Thomsen, Wilbert van Dolleweerd, " +
-            "Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick, Bjørn Moe, William Swanson, " +
-            "Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl, Emanuel Henrique do Prado, " +
-            "Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, mausch, xaro, Xharze, Kim Christensen, " +
-            "showell, Daniel Doubrovkine, mdk, Marc Murray, rferriz, Jacek Pasternak, miloja, Ed Starback, Alberto Chiesa, " +
-            "Charles Brossollet, Patrick Earl, ultonis, Michael Frenzel, Airat Salikhov, Max Malook, ikke, Simon Walker, " +
-            "Arnaud Fabre, Andy Lee, Joe Brown, Rodrigo, John Gietzen, Ralph Haußmann, Rodrigo Fraga, Michael West, " +
-            "David Vierra, Mark Pizzolato, Alexander Mueller, marcinmagier, Alexander Puzynia, ferow2k, lynxstv, nitoyon, " +
-            "iamxail, Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Phillip Cohen, Andy Royle, Masanori Tanaka, " +
-            "Alex Ford, Arne Janbu, Dan Rigby, pravic, Linquize, Clinton Daniel, Reto Schoening, mabako, Tal952, " +
-            "Aviad Pineles, Markus Stein, Marcus Bauer, Nay, Joe Phillips, Cameron Will, Donatas Mačiūnas, Jesse Bartley, " +
-            "Dave Brotherstone, Pieter van Ginkel, australiensun, Vincent Gravade, Hiroyuki Sato, Isaac Devine, " +
-            "Konstantin Tenzin, Stefan Laut, Jeromy Johnson, Kate von Roeder, Tor Arvid Lund, jberger, kunigaku, Jay Asbury, " +
-            "Philippe Miossec, Pedro Pombeiro, Vincent Meurisse, itori, Greg Sohl, Daniel Bradley, Robert Schroeder, " +
-            "Birunthan Mohanathas, Christopher Buxenstein, Gordon Tyler, Dean Herbert, Jacob Berger";
-        private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, " +
-            "xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio, australiensun, " +
-            "Airat Salikhov, Dave Brotherstone, diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh, " +
-            "Victor Shih, bygreencn, mrahn80";
-        private const string designers = "Andréj Telle, Oliver Friedrich";
-        private const string other = "";
-
-        private readonly string[] contributersList;
-        private readonly Random random = new Random();
+        private readonly string[] _contributersList;
+        private readonly Random _random = new Random();
 
         private void thanksTimer_Tick(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_thanksToTicker.Text = contributersList[random.Next(contributersList.Length - 1)].Trim();
+            _NO_TRANSLATE_thanksToTicker.Text = _contributersList[_random.Next(_contributersList.Length - 1)].Trim();
         }
 
         private void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)
         {
             using (FormContributors formContributors = new FormContributors())
             {
-                formContributors.LoadContributors(coders, translators, designers, other);
+                formContributors.LoadContributors(Coders, Translators,
+                    Designers, Other);
                 formContributors.ShowDialog(this);
             }
         }

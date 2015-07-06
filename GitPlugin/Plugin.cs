@@ -13,8 +13,9 @@ namespace GitPlugin.Commands
     public class Plugin
     {
         private const string GitCommandBarName = "GitExtensions";
-        private const string OldGitMainMenuName = "Git";
-        private const string GitMainMenuName = "&GitExt";
+        private const string OldGitMainMenuName = "&Git";
+        private const string OldGitExtMainMenuName = "&GitExt";
+        private const string GitMainMenuName = "G&itExt";
 
         private readonly AddIn _addIn;
         private readonly DTE2 _application;
@@ -23,6 +24,10 @@ namespace GitPlugin.Commands
         private readonly string _connectPath;
         private readonly OutputWindowPane _outputPane;
         private readonly Dictionary<string, Command> _visualStudioCommands = new Dictionary<string, Command>();
+
+        // specify if captions of commands can be updated
+        // On VS2013 (at least) update captions of command on hidden toolbar lead to create doubles of all commands on toolbar 2 commits, 4, 8, 16 ...
+        public static bool AllowCaptionUpdate;
 
         public Plugin(DTE2 application, AddIn addIn, string panelName, string connectPath)
         {
@@ -147,42 +152,49 @@ namespace GitPlugin.Commands
                 .Any(control => (control.Caption.Replace("&", "").Trim().Equals(caption.Replace("&", ""), StringComparison.CurrentCultureIgnoreCase) || (control.Caption.StartsWith("Commit") && caption.StartsWith("Commit"))));
         }
 
-        public static void ChangeCommandCaption(DTE2 application, string commandBarName, string tooltipText, string caption)
+        public static bool ChangeCommandCaption(DTE2 application, string commandBarName, string tooltipText, string caption)
         {
+            if (!AllowCaptionUpdate)
+                return false;
+
             try
             {
                 var cmdBars = (CommandBars)application.CommandBars;
                 CommandBar commandBar = cmdBars[commandBarName];
-                foreach (CommandBarControl control in commandBar.Controls)
+                var cbcc = commandBar.Controls.Cast<CommandBarButton>().ToArray();
+                foreach (var control in cbcc)
                 {
                     if (control.TooltipText.Trim().Equals(tooltipText.Trim(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         control.Caption = caption;
+                        control.Style = MsoButtonStyle.msoButtonIconAndCaption;
                     }
                 }
+                return true;
             }
             catch (Exception)
             {
                 //ignore!
+                return false;
             }
         }
 
-        public void DeleteGitCommandBar()
+        public void DeleteGitExtCommandBar()
         {
             CommandBar cb =
                 CommandBars.Cast<CommandBar>()
-                    .FirstOrDefault(c => c.accName == GitCommandBarName);
+                    .FirstOrDefault(c => c.Name == GitCommandBarName);
             if (cb != null)
             {
                 cb.Delete();
             }
         }
 
-        public CommandBar AddGitCommandBar(MsoBarPosition position)
+        public CommandBar AddGitExtCommandBar(MsoBarPosition position)
         {
             CommandBar bar =
                 CommandBars.Cast<CommandBar>()
-                    .FirstOrDefault(c => c.accName == GitCommandBarName);
+                    .FirstOrDefault(c => c.Name == GitCommandBarName);
             if (bar == null)
             {
                 bar = (CommandBar)_application.Commands.AddCommandBar(GitCommandBarName, vsCommandBarType.vsCommandBarTypeToolbar);
@@ -193,21 +205,29 @@ namespace GitPlugin.Commands
             return bar;
         }
 
-        public void DeleteOldGitMainMenuBar()
+        public void DeleteOldGitExtMainMenuBar()
         {
             try
             {
                 CommandBarControl control =
                     GetMenuBar()
                         .Controls.Cast<CommandBarControl>()
-                        .FirstOrDefault(c => c.accName == OldGitMainMenuName);
+                        .FirstOrDefault(c => c.Caption == OldGitMainMenuName);
+                if (control != null)
+                {
+                    control.Delete(false);
+                }
+                control =
+                    GetMenuBar()
+                        .Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.Caption == OldGitExtMainMenuName);
                 if (control != null)
                 {
                     control.Delete(false);
                 }
                 CommandBar cb =
                     CommandBars.Cast<CommandBar>()
-                        .FirstOrDefault(c => c.accName == OldGitMainMenuName);
+                        .FirstOrDefault(c => c.Name == OldGitMainMenuName);
                 if (cb != null && !cb.BuiltIn)
                 {
                     cb.Delete();
@@ -218,7 +238,7 @@ namespace GitPlugin.Commands
             }
         }
 
-        public void DeleteGitMainMenuBar()
+        public void DeleteGitExtMainMenuBar()
         {
             try
             {
@@ -235,7 +255,76 @@ namespace GitPlugin.Commands
             }
         }
 
-        public CommandBar AddGitMainMenuBar(string toolsMenuName)
+        public bool IsReinstallMenuRequired()
+        {
+            try
+            {
+                CommandBarControl control =
+                    GetMenuBar().Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.Caption == GitMainMenuName);
+                if (control == null)
+                {
+                    return true;
+                }
+
+                // menu from old versions
+                control =
+                    GetMenuBar()
+                        .Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.Caption == OldGitMainMenuName);
+                if (control != null)
+                {
+                    return true;
+                }
+                control =
+                    GetMenuBar()
+                        .Controls.Cast<CommandBarControl>()
+                        .FirstOrDefault(c => c.Caption == OldGitExtMainMenuName);
+                if (control != null)
+                {
+                    return true;
+                }
+                CommandBar cb =
+                    CommandBars.Cast<CommandBar>()
+                        .FirstOrDefault(c => c.Name == OldGitMainMenuName);
+                if (cb != null && !cb.BuiltIn)
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
+        public bool IsReinstallCommandBarRequired()
+        {
+            try
+            {
+                CommandBar cb =
+                    CommandBars.Cast<CommandBar>()
+                        .FirstOrDefault(c => c.Name == GitCommandBarName);
+                if (cb == null)
+                {
+                    return true;
+                }
+
+                cb =
+                    CommandBars.Cast<CommandBar>()
+                        .FirstOrDefault(c => c.Name == OldGitMainMenuName);
+                if (cb != null && !cb.BuiltIn)
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
+        public CommandBar AddGitExtMainMenuBar(string toolsMenuName)
         {
             CommandBar mainMenuBar = null;
             try
@@ -325,6 +414,23 @@ namespace GitPlugin.Commands
             }
         }
 
+        public void UpdateCommandBarStyles()
+        {
+            CommandBar cb =
+                CommandBars.Cast<CommandBar>()
+                    .FirstOrDefault(c => c.Name == GitCommandBarName);
+            if (cb != null)
+            {
+                foreach (CommandBarButton control in cb.Controls)
+                {
+                    if (control.Caption.StartsWith("Commit"))
+                        control.Style = MsoButtonStyle.msoButtonIconAndCaption;
+                    else
+                        control.Style = MsoButtonStyle.msoButtonIcon;
+                }
+            }
+        }
+
         private Command GetCommand(string commandName, string caption, string tooltip, int iconIndex,
             vsCommandStyle commandStyle, Commands2 commands)
         {
@@ -344,8 +450,7 @@ namespace GitPlugin.Commands
                         ref contextGUIDS,
                         (int) vsCommandStatus.vsCommandStatusSupported |
                         (int) vsCommandStatus.vsCommandStatusEnabled,
-                        (int) commandStyle,
-                        vsCommandControlType.vsCommandControlTypeButton);
+                        (int) commandStyle);
                 }
                 catch (Exception)
                 {
@@ -356,10 +461,9 @@ namespace GitPlugin.Commands
             {
                 command = commands.AddNamedCommand2(_addIn,
                     commandName, caption, tooltip, true, -1, ref contextGUIDS,
-                    (int) vsCommandStatus.vsCommandStatusSupported +
+                    (int) vsCommandStatus.vsCommandStatusSupported |
                     (int) vsCommandStatus.vsCommandStatusEnabled,
-                    (int) commandStyle,
-                    vsCommandControlType.vsCommandControlTypeButton);
+                    (int) commandStyle);
             }
 
             if (command != null)

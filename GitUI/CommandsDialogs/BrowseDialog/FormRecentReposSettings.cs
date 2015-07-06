@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -58,9 +59,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (RecentRepoSplitter.ShorteningStrategy_None.Equals(strategy))
                 dontShortenRB.Checked = true;
-            else if (RecentRepoSplitter.ShorteningStrategy_MostSignDir.Equals(strategy)) 
+            else if (RecentRepoSplitter.ShorteningStrategy_MostSignDir.Equals(strategy))
                 mostSigDirRB.Checked = true;
-            else if (RecentRepoSplitter.ShorteningStrategy_MiddleDots.Equals(strategy)) 
+            else if (RecentRepoSplitter.ShorteningStrategy_MiddleDots.Equals(strategy))
                 middleDotRB.Checked = true;
             else
                 throw new Exception("Unhandled shortening strategy: " + strategy);
@@ -80,15 +81,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             splitter.SortLessRecentRepos = sortLessRecentRepos.Checked;
             splitter.SortMostRecentRepos = sortMostRecentRepos.Checked;
             splitter.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
-            splitter.measureFont = MostRecentLB.Font;
-            splitter.graphics = MostRecentLB.CreateGraphics();
+            splitter.MeasureFont = MostRecentLB.Font;
+            splitter.Graphics = MostRecentLB.CreateGraphics();
             try
             {
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
             }
             finally
             {
-                splitter.graphics.Dispose();
+                splitter.Graphics.Dispose();
             }
 
             foreach (RecentRepoInfo repo in mostRecentRepos)
@@ -96,7 +97,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             foreach (RecentRepoInfo repo in lessRecentRepos)
                 LessRecentLB.Items.Add(repo);
-            
         }
 
         private void SetComboWidth()

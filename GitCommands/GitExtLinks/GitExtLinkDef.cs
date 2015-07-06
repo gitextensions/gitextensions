@@ -124,7 +124,7 @@ namespace GitCommands.GitExtLinks
 
         public IEnumerable<GitExtLink> ParsePart(string part, GitRevision revision)
         {
-            if (SearchPattern.IsNullOrEmpty() || SearchPatternRegex.Value == null)
+            if (SearchPattern.IsNullOrEmpty() || SearchPatternRegex.Value == null || part == null)
                 yield break;
 
             IList<Match> allMatches = new List<Match>();

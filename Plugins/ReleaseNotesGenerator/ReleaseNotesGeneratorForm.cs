@@ -5,23 +5,27 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace ReleaseNotesGenerator
 {
     /// <summary>
     /// Test on GE repository from "2.00" to "2.10". Should display 687 items.
     /// </summary>
-    public partial class ReleaseNotesGeneratorForm : Form
+    public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
     {
+        private readonly TranslationString _commitLogFrom = new TranslationString("Commit log from '{0}' to '{1}' ({2}):");
+
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private IEnumerable<LogLine> _lastGeneratedLogLines;
 
         public ReleaseNotesGeneratorForm(GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
+            Translate();
 
             _gitUiCommands = gitUiCommands;
-            Icon = _gitUiCommands.GitUICommands.FormIcon;
+            Icon = _gitUiCommands != null ? _gitUiCommands.GitUICommands.FormIcon : null;
         }
 
         private void ReleaseNotesGeneratorForm_Load(object sender, EventArgs e)
@@ -31,7 +35,7 @@ namespace ReleaseNotesGenerator
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
-            string logArgs = string.Format(textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text);
+            string logArgs = string.Format(_NO_TRANSLATE_textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text);
             string result = _gitUiCommands.GitModule.RunGitCmd("log " + logArgs);
 
             if (!result.Contains("\r\n"))
@@ -126,7 +130,7 @@ namespace ReleaseNotesGenerator
 
         private string CreateTextTable(IEnumerable<LogLine> logLines, bool suppressEmptyLines = true, bool separateColumnWithTabInsteadOfSpaces = true)
         {
-            string headerText = string.Format("Commit log from '{0}' to '{1}' ({2}):",
+            string headerText = string.Format(_commitLogFrom.Text,
                 textBoxRevFrom.Text, textBoxRevTo.Text, mostRecentHint);
 
             string colSeparatorFirstLine = separateColumnWithTabInsteadOfSpaces ? "\t" : " ";

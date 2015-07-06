@@ -1,4 +1,5 @@
 ﻿using System;
+using ResourceManager;
 
 namespace GitUI.Editor
 {
@@ -18,7 +19,7 @@ namespace GitUI.Editor
         public void SetMaxLineNumber(int maxLineNumber)
         {
             _NO_TRANSLATE_LineNumberUpDown.Maximum = maxLineNumber;
-            lineLabel.Text = lineLabel.Text + " (1 - " + maxLineNumber.ToString() + "):"; 
+            lineLabel.Text = lineLabel.Text + " (1 - " + maxLineNumber.ToString() + "):";
         }
 
         private void FormGoToLine_Load(object sender, EventArgs e)

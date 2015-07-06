@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ResourceManager;
 
 namespace GitUI.Editor
 {
@@ -47,12 +48,13 @@ namespace GitUI.Editor
                 MouseLeave(sender, e);
         }
 
-        public event SelectedLineChangedEventHandler SelectedLineChanged;
+        public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
 
         void OnSelectedLineChanged(int selectedLine)
         {
-            if (SelectedLineChanged != null)
-                SelectedLineChanged(this, selectedLine);
+            var handler = SelectedLineChanged;
+            if (handler != null)
+                handler(this, new SelectedLineEventArgs(selectedLine));
         }
 
         void TextEditor_MouseDown(object sender, MouseEventArgs e)
@@ -114,7 +116,7 @@ namespace GitUI.Editor
             return TextEditor.SelectionStart;
         }
 
-        public int GetSelectionLength() 
+        public int GetSelectionLength()
         {
             return TextEditor.SelectionLength;
         }
@@ -132,7 +134,7 @@ namespace GitUI.Editor
             }
             set
             {
-                //TextEditor.ScrollBars   
+                //TextEditor.ScrollBars
             }
         }
 
@@ -144,7 +146,7 @@ namespace GitUI.Editor
             }
             set
             {
-                
+
             }
         }
 
@@ -156,7 +158,7 @@ namespace GitUI.Editor
             }
             set
             {
-                
+
             }
         }
 
@@ -168,7 +170,7 @@ namespace GitUI.Editor
             }
             set
             {
-                
+
             }
         }
 
@@ -181,7 +183,7 @@ namespace GitUI.Editor
             }
             set
             {
-                
+
             }
         }
 
@@ -209,7 +211,7 @@ namespace GitUI.Editor
         public int LineAtCaret
         {
             get
-            {                
+            {
                 return TextEditor.GetLineFromCharIndex(TextEditor.SelectionStart + TextEditor.SelectionLength);
             }
         }
@@ -240,7 +242,7 @@ namespace GitUI.Editor
             {
                 result = 0;
                 for (int i = 0; i < lineNumber; i++)
-                    result += TextEditor.Lines[i].Length;                
+                    result += TextEditor.Lines[i].Length;
             }
             return result;
         }
@@ -265,7 +267,7 @@ namespace GitUI.Editor
 
         public void AddPatchHighlighting()
         {
-            //I modified the code below to add syntax highlighting to the RTFEditor. This 
+            //I modified the code below to add syntax highlighting to the RTFEditor. This
             //does work on Windows, but it doesn't work on Linux...:(
             /*
             TextEditor.SuspendLayout();

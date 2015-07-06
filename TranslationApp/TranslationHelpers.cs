@@ -1,124 +1,166 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ResourceManager;
 using ResourceManager.Xliff;
 using TranslationUtl = ResourceManager.Xliff.TranslationUtl;
-using Xliff = ResourceManager.Xliff;
 
 namespace TranslationApp
 {
     static class TranslationHelpers
     {
-        public static IList<TranslationItemWithCategory> LoadNeutralItems()
+        public static IDictionary<string, List<TranslationItemWithCategory>> LoadNeutralItems()
         {
-            Translation neutralTranslation = new Translation();
+            IDictionary<string, TranslationFile> neutralTranslation = new Dictionary<string, TranslationFile>();
             try
             {
                 //Set language to neutral to get neutral translations
                 GitCommands.AppSettings.CurrentTranslation = "";
 
-                List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
-                foreach (Type type in translatableTypes)
+                var translatableTypes = TranslationUtl.GetTranslatableTypes();
+                foreach (var types in translatableTypes)
                 {
-                    ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
-                    if (obj != null)
-                        obj.AddTranslationItems(neutralTranslation);
+                    var translation = new TranslationFile();
+                    try
+                    {
+                        foreach (Type type in types.Value)
+                        {
+                            ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
+                            if (obj != null)
+                                obj.AddTranslationItems(translation);
+                            IDisposable disposable = obj as IDisposable;
+                            if (disposable != null)
+                                disposable.Dispose();
+                        }
+                    }
+                    finally
+                    {
+                        translation.Sort();
+                        neutralTranslation[types.Key] = translation;
+                    }
                 }
             }
             finally
             {
-                neutralTranslation.Sort();
-
                 //Restore translation
                 GitCommands.AppSettings.CurrentTranslation = null;
             }
 
-            IList<TranslationItemWithCategory> neutralItems =
-                (from translationCategory in neutralTranslation.TranslationCategories
-                 from translationItem in translationCategory.Body.TranslationItems
-                 select new TranslationItemWithCategory(translationCategory.Name, translationItem)).ToList();
-            return neutralItems;
+            return GetItemsDictionary(neutralTranslation);
         }
 
-        public static List<TranslationItemWithCategory> LoadTranslation(Translation translation, IEnumerable<TranslationItemWithCategory> neutralItems)
+        public static IDictionary<string, List<TranslationItemWithCategory>> GetItemsDictionary(IDictionary<string, TranslationFile> translations)
         {
-            List<TranslationItemWithCategory> translateItems = new List<TranslationItemWithCategory>();
-
-            var oldTranslationItems =
-                (from translationCategory in translation.TranslationCategories
-                 from translationItem in translationCategory.Body.TranslationItems
-                 select new TranslationItemWithCategory(translationCategory.Name, translationItem)).ToList();
-
-            var dict = new Dictionary<string, string>();
-            foreach (var item in neutralItems)
+            var items = new Dictionary<string, List<TranslationItemWithCategory>>();
+            foreach (var pair in translations)
             {
-                var curItems = oldTranslationItems.Where(
+                var list = from item in pair.Value.TranslationCategories
+                           from translationItem in item.Body.TranslationItems
+                           select new TranslationItemWithCategory(item.Name, translationItem);
+                items.Add(pair.Key, list.ToList());
+            }
+            return items;
+        }
+
+        private static List<T> Find<T>(this IDictionary<string, List<T>> dictionary, string key)
+        {
+            List<T> list;
+            if (!dictionary.TryGetValue(key, out list))
+            {
+                list = new List<T>();
+                dictionary.Add(key, list);
+            }
+            return list;
+        }
+
+        public static IDictionary<string, List<TranslationItemWithCategory>> LoadTranslation(IDictionary<string, TranslationFile> translation, IDictionary<string, List<TranslationItemWithCategory>> neutralItems)
+        {
+            var translateItems = new Dictionary<string, List<TranslationItemWithCategory>>();
+
+            var oldTranslationItems = GetItemsDictionary(translation);
+
+            foreach (var pair in neutralItems)
+            {
+                var oldItems = oldTranslationItems.Find(pair.Key);
+                var transItems = translateItems.Find(pair.Key);
+                var dict = new Dictionary<string, string>();
+                foreach (var item in pair.Value)
+                {
+                    var curItems = oldItems.Where(
                         trItem => trItem.Category.TrimStart('_') == item.Category.TrimStart('_') &&
                                   trItem.Name.TrimStart('_') == item.Name.TrimStart('_') &&
                                   trItem.Property == item.Property);
-                var curItem = curItems.FirstOrDefault();
+                    var curItem = curItems.FirstOrDefault();
 
-                if (curItem == null)
-                {
-                    curItem = item.Clone();
-                    translateItems.Add(curItem);
-                    continue;
+                    if (curItem == null)
+                    {
+                        curItem = item.Clone();
+                        transItems.Add(curItem);
+                        continue;
+                    }
+
+                    oldItems.Remove(curItem);
+                    curItem.Category = item.Category;
+                    curItem.Name = item.Name;
+
+                    string source = curItem.NeutralValue ?? item.NeutralValue;
+                    if (!String.IsNullOrEmpty(curItem.TranslatedValue) && !dict.ContainsKey(source))
+                        dict.Add(source, curItem.TranslatedValue);
+
+                    // Source text changed
+                    if (!curItem.IsSourceEqual(item.NeutralValue) &&
+                        (!String.IsNullOrEmpty(curItem.TranslatedValue) && !curItem.IsSourceEqual(item.NeutralValue)))
+                    {
+                        curItem.TranslatedValue = "";
+                    }
+                    curItem.NeutralValue = item.NeutralValue;
+                    transItems.Add(curItem);
                 }
 
-                oldTranslationItems.Remove(curItem);
-                curItem.Category = item.Category;
-                curItem.Name = item.Name;
-
-                string source = curItem.NeutralValue ?? item.NeutralValue;
-                if (!String.IsNullOrEmpty(curItem.TranslatedValue) && !dict.ContainsKey(source))
-                    dict.Add(source, curItem.TranslatedValue);
-
-                // Source text changed
-                if (!curItem.IsSourceEqual(item.NeutralValue) &&
-                    (!String.IsNullOrEmpty(curItem.TranslatedValue) && !curItem.IsSourceEqual(item.NeutralValue)))
+                foreach (var item in oldItems)
                 {
-                    curItem.TranslatedValue = "";
+                    // Obsolete should be added only to dictionary
+                    if (!String.IsNullOrEmpty(item.TranslatedValue) &&
+                        item.NeutralValue != null && !dict.ContainsKey(item.NeutralValue))
+                    {
+                        dict.Add(item.NeutralValue, item.TranslatedValue);
+                    }
                 }
-                curItem.NeutralValue = item.NeutralValue;
-                translateItems.Add(curItem);
-            }
 
-            foreach (var item in oldTranslationItems)
-            {
-                // Obsolete should be added only to dictionary
-                if (!String.IsNullOrEmpty(item.TranslatedValue) && 
-                    item.NeutralValue != null && !dict.ContainsKey(item.NeutralValue))
+                // update untranslated items
+                var untranlatedItems =
+                    from trItem in transItems
+                    where (String.IsNullOrEmpty(trItem.TranslatedValue)) && dict.ContainsKey(trItem.NeutralValue)
+                    select trItem;
+
+                foreach (var untranlatedItem in untranlatedItems)
                 {
-                    dict.Add(item.NeutralValue, item.TranslatedValue);
+                    untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
                 }
-            }
-
-            // update untranslated items
-            var untranlatedItems = 
-                from trItem in translateItems
-                where (String.IsNullOrEmpty(trItem.TranslatedValue)) && dict.ContainsKey(trItem.NeutralValue)
-                select trItem;
-
-            foreach (var untranlatedItem in untranlatedItems)
-            {
-                untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
             }
             return translateItems;
         }
 
-        public static void SaveTranslation(string languageCode, IEnumerable<TranslationItemWithCategory> items, string filename)
+        public static void SaveTranslation(string languageCode,
+            IDictionary<string, List<TranslationItemWithCategory>> items, string filename)
         {
-            var foreignTranslation = new Translation(GitCommands.AppSettings.GitExtensionsVersionString, languageCode);
-            foreach (TranslationItemWithCategory translateItem in items)
+            var ext = Path.GetExtension(filename);
+            foreach (var pair in items)
             {
-                var item = translateItem.GetTranslationItem();
+                var foreignTranslation = new TranslationFile(GitCommands.AppSettings.ProductVersion, languageCode);
+                foreach (var translateItem in pair.Value)
+                {
+                    var item = translateItem.GetTranslationItem();
 
-                var ti = new TranslationItem(item.Name, item.Property, item.Source, item.Value);
-                ti.Value = ti.Value ?? String.Empty;
-                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).Body.AddTranslationItem(ti);
+                    var ti = new TranslationItem(item.Name, item.Property, item.Source, item.Value);
+                    ti.Value = ti.Value ?? String.Empty;
+                    foreignTranslation.FindOrAddTranslationCategory(translateItem.Category)
+                        .Body.AddTranslationItem(ti);
+                }
+                var newfilename = Path.ChangeExtension(filename, pair.Key + ext);
+                TranslationSerializer.Serialize(foreignTranslation, newfilename);
             }
-            TranslationSerializer.Serialize(foreignTranslation, filename);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace GitCommands.Git
         public string NewBranchName { get; set; }
         public bool Remote { get; set; }
         private LocalChangesAction _localChanges;
-        public LocalChangesAction LocalChanges 
+        public LocalChangesAction LocalChanges
         {
             get { return _localChanges; }
             set
@@ -49,14 +49,14 @@ namespace GitCommands.Git
                 yield return "--force";
 
             if (Remote)
-            { 
+            {
                 if (NewBranchAction == NewBranch.Create)
                     yield return "-b " + NewBranchName.Quote();
                 else if (NewBranchAction == NewBranch.Reset)
                     yield return "-B " + NewBranchName.Quote();
             }
 
-            yield return BranchName.Quote();
+            yield return BranchName.QuoteNE();
         }
 
         public override bool AccessesRemote()

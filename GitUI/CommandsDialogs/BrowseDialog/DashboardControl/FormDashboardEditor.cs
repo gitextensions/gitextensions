@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {

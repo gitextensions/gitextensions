@@ -51,6 +51,11 @@ namespace GitUI.CommandsDialogs
             {
                 var selectedBranches = Branches.GetSelectedBranches().ToArray();
 
+                if (!selectedBranches.Any())
+                {
+                    return;
+                }
+
                 if (_currentBranch != null && selectedBranches.Any(branch => branch.Name == _currentBranch))
                 {
                     MessageBox.Show(this, string.Format(_cannotDeleteCurrentBranchMessage.Text, _currentBranch), _deleteBranchCaption.Text);

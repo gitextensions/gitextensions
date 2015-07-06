@@ -48,6 +48,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine;
             chkUseFastChecks.Checked = AppSettings.UseFastChecks;
             cbDefaultCloneDestination.Text = AppSettings.DefaultCloneDestinationPath;
+            chkFollowRenamesInFileHistoryExact.Checked = AppSettings.FollowRenamesInFileHistoryExactOnly;
         }
 
         protected override void PageToSettings()
@@ -72,6 +73,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
             AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
             AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
+            AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
         }
 
         private void chkUseSSL_CheckedChanged(object sender, System.EventArgs e)

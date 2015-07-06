@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitUI.CommandsDialogs.FormatPatchDialog;
 using ResourceManager;
 
@@ -12,13 +13,13 @@ namespace GitUI.CommandsDialogs
     public partial class FormFormatPatch : GitModuleForm
     {
         private readonly TranslationString _currentBranchText = new TranslationString("Current branch:");
-        private readonly TranslationString _noOutputPathEnteredText = 
+        private readonly TranslationString _noOutputPathEnteredText =
             new TranslationString("You need to enter an output path.");
-        private readonly TranslationString _noEmailEnteredText = 
+        private readonly TranslationString _noEmailEnteredText =
             new TranslationString("You need to enter an email address.");
-        private readonly TranslationString _noSubjectEnteredText = 
+        private readonly TranslationString _noSubjectEnteredText =
             new TranslationString("You need to enter a mail subject.");
-        private readonly TranslationString _wrongSmtpSettingsText = 
+        private readonly TranslationString _wrongSmtpSettingsText =
             new TranslationString("You need to enter a valid smtp in the settings dialog.");
         private readonly TranslationString _twoRevisionsNeededText =
             new TranslationString("You need to select two revisions");
@@ -35,7 +36,7 @@ namespace GitUI.CommandsDialogs
 
         private FormFormatPatch()
             : this(null)
-        {         
+        {
         }
 
         public FormFormatPatch(GitUICommands aCommands)
@@ -44,7 +45,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             if (aCommands != null)
-                MailFrom.Text = Module.GetEffectiveSetting("user.email");
+                MailFrom.Text = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
         }
 
         private void Browse_Click(object sender, EventArgs e)
@@ -103,7 +104,7 @@ namespace GitUI.CommandsDialogs
 
             if (!SaveToDir.Checked)
             {
-                savePatchesToDir = Module.GetGitDirectory() + "\\PatchesToMail";
+                savePatchesToDir = Path.Combine(Module.GetGitDirectory(), "PatchesToMail");
                 if (Directory.Exists(savePatchesToDir))
                 {
                     foreach (string file in Directory.GetFiles(savePatchesToDir, "*.patch"))

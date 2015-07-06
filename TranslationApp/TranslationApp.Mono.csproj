@@ -44,6 +44,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,6 +53,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -63,9 +65,6 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="NBug">
-      <HintPath>..\packages\NBug.1.1.1\lib\net40-client\NBug.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -100,6 +99,10 @@
     <None Include="Properties\DataSources\FormTranslate.TranslationItemWithCategory.datasource" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
+      <Project>{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}</Project>
+      <Name>NBug</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
@@ -115,6 +118,10 @@
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
       <Name>ResourceManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
+      <Project>{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}</Project>
+      <Name>NBug</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

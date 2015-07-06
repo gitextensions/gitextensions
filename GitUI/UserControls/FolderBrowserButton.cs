@@ -1,14 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using ResourceManager;
 
 namespace GitUI.UserControls
 {
-    public partial class FolderBrowserButton : UserControl
+    public partial class FolderBrowserButton : GitExtensionsControl
     {
         public FolderBrowserButton()
         {
             InitializeComponent();
+            Translate();
         }
 
         /// <summary>
@@ -18,7 +20,7 @@ namespace GitUI.UserControls
         public Control PathShowingControl { get; set; }
 
         /// <summary>
-        /// Opens a a FolderBrowserDialog with the path in "getter" preselected and 
+        /// Opens a a FolderBrowserDialog with the path in "getter" preselected and
         /// if the DialogResult.OK is returned uses "setter" to set the path
         /// </summary>
         /// <param name="getter"></param>

@@ -155,7 +155,7 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </param>
         /// <param name="affixKey" type="string">
         ///     <para>
-        ///         Affix key to check 
+        ///         Affix key to check
         ///     </para>
         /// </param>
         /// <returns>
@@ -291,7 +291,7 @@ namespace NetSpell.SpellChecker.Dictionary
                     } // suffix word
                 } // prefix rule entry
             } // prefix rule
-            // word not found 
+            // word not found
             TraceWriter.TraceVerbose("Possible Base Words: {0}", _possibleBaseWords.Count);
             return false;
         }
@@ -428,7 +428,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                 // split line by white space
                                 partMatches = _spaceRegx.Matches(tempLine);
 
-                                // if 3 parts, then new rule  
+                                // if 3 parts, then new rule
                                 if (partMatches.Count == 3)
                                 {
                                     currentRule = new AffixRule();
@@ -606,7 +606,7 @@ namespace NetSpell.SpellChecker.Dictionary
             SaveUserFile();
         }
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         protected override void Dispose(bool disposing)
@@ -688,7 +688,7 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </remarks>
         [DefaultValue(true)]
         [Category("Options")]
-        [Description("Set this to true to automaticly create a user dictionary")]
+        [Description("Set this to true to automatically create a user dictionary")]
         [NotifyParentProperty(true)]
         public bool EnableUserFile
         {
@@ -785,7 +785,7 @@ namespace NetSpell.SpellChecker.Dictionary
         }
 
         /// <summary>
-        ///     List of text saved from when 'Contains' is called. 
+        ///     List of text saved from when 'Contains' is called.
         ///     This list is used to generate suggestions from if Contains
         ///     doesn't find a word.
         /// </summary>

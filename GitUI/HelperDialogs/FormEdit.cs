@@ -1,4 +1,6 @@
-﻿namespace GitUI.HelperDialogs
+﻿using ResourceManager;
+
+namespace GitUI.HelperDialogs
 {
     public partial class FormEdit : GitExtensionsForm
     {

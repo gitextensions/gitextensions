@@ -3,12 +3,13 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI
 {
     delegate void DataCallback(string text);
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="isError">if command finished with error</param>
     /// <param name="form">this form</param>
@@ -176,7 +177,7 @@ namespace GitUI
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="isError">if command finished with error</param>
         /// <returns>if handled</returns>
@@ -244,9 +245,9 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            // 
+            //
             // FormProcess
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(565, 326);

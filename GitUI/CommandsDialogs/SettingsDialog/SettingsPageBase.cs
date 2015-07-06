@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -16,7 +17,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             get
             {
                 if (_PageHost == null)
-                    throw new NullReferenceException("PageHost instance was not passed to page: " + GetType().FullName);
+                    throw new InvalidOperationException("PageHost instance was not passed to page: " + GetType().FullName);
 
                 return _PageHost;
             }
@@ -30,7 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected virtual void Init(ISettingsPageHost aPageHost)
         {
-            _PageHost = aPageHost;        
+            _PageHost = aPageHost;
         }
 
         public static T Create<T>(ISettingsPageHost aPageHost) where T : SettingsPageBase, new()
@@ -62,7 +63,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         /// <summary>
         /// True during execution of LoadSettings(). Usually derived classes
-        /// apply settings to GUI controls. Some of controls trigger events - 
+        /// apply settings to GUI controls. Some of controls trigger events -
         /// IsLoadingSettings can be used for example to not execute the event action.
         /// </summary>
         protected bool IsLoadingSettings
@@ -83,11 +84,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         protected virtual void SettingsToPage()
-        { 
+        {
         }
 
         protected virtual void PageToSettings()
-        { 
+        {
         }
 
         IList<string> childrenText;

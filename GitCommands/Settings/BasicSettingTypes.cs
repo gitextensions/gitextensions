@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
@@ -13,12 +10,12 @@ namespace GitCommands.Settings
     {
         public StringSetting(string aName, ISettingsSource settingsSource, string aDefaultValue)
             : base(aName, settingsSource, aDefaultValue)
-        {        
+        {
         }
 
         public override string Value
         {
-            get 
+            get
             {
                 return SettingsSource.GetString(Name, DefaultValue);
             }
@@ -56,7 +53,7 @@ namespace GitCommands.Settings
                 if (Value.HasValue)
                     return Value.Value;
 
-                return DefaultValue.Value;                
+                return DefaultValue.Value;
             }
         }
 
