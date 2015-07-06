@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Notifications;
 using GitUI.Properties;
+using ResourceManager;
 
 namespace GitUI.UserControls
 {

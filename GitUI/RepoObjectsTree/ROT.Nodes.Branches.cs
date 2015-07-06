@@ -7,6 +7,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces.Notifications;
+using ResourceManager;
 
 namespace GitUI.UserControls
 {
@@ -283,7 +284,7 @@ namespace GitUI.UserControls
                 uiCommands.GitUICommandsChanged += uiCommands_GitUICommandsChanged;
             }
 
-            void uiCommands_GitUICommandsChanged(IGitUICommandsSource sender, GitUICommands oldCommands)
+            private void uiCommands_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
             {
                 //select active branch after repo change
                 TreeViewNode.TreeView.SelectedNode = null;

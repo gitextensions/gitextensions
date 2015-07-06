@@ -95,7 +95,7 @@ namespace GitUI
             InitLayout();
             InitializeComponent();
 
-            _parentChildNavigationHistory = new ParentChildNavigationHistory(SetSelectedRevision);
+            _parentChildNavigationHistory = new ParentChildNavigationHistory((rev) => SetSelectedRevision(rev));
             _revisionHighlighting = new AuthorEmailBasedRevisionHighlighting();
 
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
