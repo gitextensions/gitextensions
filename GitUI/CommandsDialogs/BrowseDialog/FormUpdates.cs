@@ -126,7 +126,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 {
                     UpdateLabel.Text = _noUpdatesFound.Text;
                 }
-                Dispose();
             }, this);
         }
 
