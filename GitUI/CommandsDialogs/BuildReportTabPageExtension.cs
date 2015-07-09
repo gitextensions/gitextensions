@@ -159,7 +159,10 @@ namespace GitUI.CommandsDialogs
                     Text = "Build Report",
                     UseVisualStyleBackColor = true
                 };
-            SetBrowserFeatureControl();
+            if (GitCommands.Utils.EnvUtils.RunningOnWindows())
+            {
+                SetBrowserFeatureControl();
+            }
             this.buildReportWebBrowser = new WebBrowser
                 {
                     Dock = DockStyle.Fill
