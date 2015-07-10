@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using ResourceManager;
@@ -12,7 +13,7 @@ namespace GitUI.Editor
     public partial class FileViewerInternal : GitExtensionsControl, IFileViewer
     {
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
-        private readonly DiffHighlightService _diffHighlightService = new DiffHighlightService();
+        private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
 
         public FileViewerInternal()
         {
@@ -128,6 +129,7 @@ namespace GitUI.Editor
 
         public void SetText(string text)
         {
+            _diffHighlightService = DiffHighlightService.IsCombinedDiff(text) ? CombinedDiffHighlightService.Instance : DiffHighlightService.Instance;
             TextEditor.Text = text;
             TextEditor.Refresh();
         }

@@ -4,37 +4,25 @@ using System.Drawing;
 using GitCommands;
 using ICSharpCode.TextEditor.Document;
 
-namespace GitUI.Editor
+namespace GitUI.Editor.Diff
 {
     public class DiffHighlightService
     {
-        private static List<LineSegment> GetLinesStartingWith(IDocument document, ref int beginIndex, char startingChar, ref bool found)
+        readonly LinePrefixHelper _linePrefixHelper = new LinePrefixHelper(new LineSegmentGetter());
+        public static DiffHighlightService Instance = new DiffHighlightService();
+
+        protected DiffHighlightService()
         {
-            List<LineSegment> result = new List<LineSegment>();
-
-            while (beginIndex < document.TotalNumberOfLines)
-            {
-                var lineSegment = document.GetLineSegment(beginIndex);
-
-                if (lineSegment.Length > 0 && document.GetCharAt(lineSegment.Offset) == startingChar)
-                {
-                    found = true;
-                    result.Add(lineSegment);
-                    beginIndex++;
-                }
-                else
-                {
-                    if (found)
-                        break;
-                    else
-                        beginIndex++;
-                }
-            }
-
-            return result;
+            
         }
 
-        private void MarkDifference(IDocument document, List<LineSegment> linesRemoved, List<LineSegment> linesAdded, int beginOffset)
+        public static bool IsCombinedDiff(string diff)
+        {
+            return !string.IsNullOrWhiteSpace(diff) &&
+                                 (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
+        }
+
+        private static void MarkDifference(IDocument document, List<ISegment> linesRemoved, List<ISegment> linesAdded, int beginOffset)
         {
             int count = Math.Min(linesRemoved.Count, linesAdded.Count);
 
@@ -42,7 +30,8 @@ namespace GitUI.Editor
                 MarkDifference(document, linesRemoved[i], linesAdded[i], beginOffset);
         }
 
-        private void MarkDifference(IDocument document, LineSegment lineRemoved, LineSegment lineAdded, int beginOffset)
+        private static void MarkDifference(IDocument document, ISegment lineRemoved,
+            ISegment lineAdded, int beginOffset)
         {
             var lineRemovedEndOffset = lineRemoved.Length;
             var lineAddedEndOffset = lineAdded.Length;
@@ -99,9 +88,9 @@ namespace GitUI.Editor
             var line = 0;
 
             bool found = false;
-            int numberOfParents;
-            var linesRemoved = GetLinesStartingWith(document, ref line, '-', ref found);
-            var linesAdded = GetLinesStartingWith(document, ref line, '+', ref found);
+            int diffContentOffset;
+            var linesRemoved = GetRemovedLines(document, ref line, ref found);
+            var linesAdded = GetAddedLines(document, ref line, ref found);
             if (linesAdded.Count == 1 && linesRemoved.Count == 1)
             {
                 var lineA = linesRemoved[0];
@@ -109,31 +98,49 @@ namespace GitUI.Editor
                 if (lineA.Length > 4 && lineB.Length > 4 &&
                     document.GetCharAt(lineA.Offset + 4) == 'a' &&
                     document.GetCharAt(lineB.Offset + 4) == 'b')
-                    numberOfParents = 5;
+                    diffContentOffset = 5;
                 else
-                    numberOfParents = 4;
+                    diffContentOffset = 4;
 
-                MarkDifference(document, linesRemoved, linesAdded, numberOfParents);
+                MarkDifference(document, linesRemoved, linesAdded, diffContentOffset);
             }
 
-            numberOfParents = 1;
+            diffContentOffset = GetDiffContentOffset();
             while (line < document.TotalNumberOfLines)
             {
                 found = false;
-                linesRemoved = GetLinesStartingWith(document, ref line, '-', ref found);
-                linesAdded = GetLinesStartingWith(document, ref line, '+', ref found);
+                linesRemoved = GetRemovedLines(document, ref line, ref found);
+                linesAdded = GetAddedLines(document, ref line, ref found);
 
-                MarkDifference(document, linesRemoved, linesAdded, numberOfParents);
+                MarkDifference(document, linesRemoved, linesAdded, diffContentOffset);
             }
         }
 
-        private void ProcessLineSegment(IDocument document, ref int line, LineSegment lineSegment, char signChar, Color color)
+        protected virtual int GetDiffContentOffset()
         {
-            if (document.GetCharAt(lineSegment.Offset) == signChar)
+            return 1;
+        }
+
+        private List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
+        {
+            return _linePrefixHelper.GetLinesStartingWith(document, ref line, "+", ref found);
+        }
+
+        private List<ISegment> GetRemovedLines(IDocument document, ref int line, ref bool found)
+        {
+            return _linePrefixHelper.GetLinesStartingWith(document, ref line, "-", ref found);
+        }
+
+        protected void ProcessLineSegment(IDocument document, ref int line, 
+            LineSegment lineSegment, string prefixStr, Color color)
+        {
+            if (_linePrefixHelper.DoesLineStartWith(document, lineSegment.Offset, prefixStr))
             {
                 var endLine = document.GetLineSegment(line);
 
-                for (; line < document.TotalNumberOfLines && document.GetCharAt(endLine.Offset) == signChar; line++)
+                for (; line < document.TotalNumberOfLines 
+                    && _linePrefixHelper.DoesLineStartWith(document, endLine.Offset, prefixStr);
+                    line++)
                 {
                     endLine = document.GetLineSegment(line);
                 }
@@ -166,11 +173,18 @@ namespace GitUI.Editor
                 if (line == document.TotalNumberOfLines - 1)
                     forceAbort = true;
 
-                ProcessLineSegment(document, ref line, lineSegment, '+', AppSettings.DiffAddedColor);
-                ProcessLineSegment(document, ref line, lineSegment, '-', AppSettings.DiffRemovedColor);
-                ProcessLineSegment(document, ref line, lineSegment, '@', AppSettings.DiffSectionColor);
-                ProcessLineSegment(document, ref line, lineSegment, '\\', AppSettings.DiffSectionColor);
+                line = TryHighlightAddedAndDeletedLines(document, line, lineSegment);
+
+                ProcessLineSegment(document, ref line, lineSegment, "@", AppSettings.DiffSectionColor);
+                ProcessLineSegment(document, ref line, lineSegment, "\\", AppSettings.DiffSectionColor);
             }
+        }
+
+        protected virtual int TryHighlightAddedAndDeletedLines(IDocument document, int line, LineSegment lineSegment)
+        {
+            ProcessLineSegment(document, ref line, lineSegment, "+", AppSettings.DiffAddedColor);
+            ProcessLineSegment(document, ref line, lineSegment, "-", AppSettings.DiffRemovedColor);
+            return line;
         }
 
         public void HighlightLine(IDocument document, int line, Color color)
