@@ -13,6 +13,7 @@ using GitUI.Hotkey;
 using ICSharpCode.TextEditor.Util;
 using PatchApply;
 using GitCommands.Settings;
+using GitUI.Editor.Diff;
 using ResourceManager;
 
 namespace GitUI.Editor
@@ -792,8 +793,7 @@ namespace GitUI.Editor
             for (var line = firstVisibleLine + 1; line < totalNumberOfLines; line++)
             {
                 var lineContent = _internalFileViewer.GetLineText(line);
-                if (lineContent.StartsWithAny(new string[] { "+", "-" })
-                    && !lineContent.StartsWithAny(new string[] { "++", "--" }))
+                if (IsDiffLine(_internalFileViewer.GetText(), lineContent))
                 {
                     if (emptyLineCheck)
                     {
@@ -810,6 +810,13 @@ namespace GitUI.Editor
 
             //Do not go to the end of the file if no change is found
             //TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
+        }
+
+        private static bool IsDiffLine(string wholeText, string lineContent)
+        {
+            var isCombinedDiff = DiffHighlightService.IsCombinedDiff(wholeText);
+            return lineContent.StartsWithAny(isCombinedDiff ? new[] {"+", "-", " +", " -"} 
+                : new[] {"+", "-"});
         }
 
         private void PreviousChangeButtonClick(object sender, EventArgs e)

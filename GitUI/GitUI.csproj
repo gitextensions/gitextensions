@@ -168,7 +168,10 @@
       <DependentUpon>CommitDialogSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\EditorHelper.cs" />
-    <Compile Include="Editor\DiffHighlightService.cs" />
+    <Compile Include="Editor\Diff\CombinedDiffHighlightService.cs" />
+    <Compile Include="Editor\Diff\DiffHighlightService.cs" />
+    <Compile Include="Editor\Diff\LinePrefixHelper.cs" />
+    <Compile Include="Editor\Diff\LineSegmentGetter.cs" />
     <Compile Include="HelperDialogs\FormBuildServerCredentials.cs">
       <SubType>Form</SubType>
     </Compile>
