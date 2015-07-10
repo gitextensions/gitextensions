@@ -1727,6 +1727,11 @@ namespace GitUI.CommandsDialogs
                 {
                     var diffOfConflict = Module.GetCombinedDiffContent(items.First(), DiffFiles.SelectedItem.Name);
 
+                    if (string.IsNullOrWhiteSpace(diffOfConflict))
+                    {
+                        diffOfConflict = Strings.GetUninterestingDiffOmitted();
+                    }
+
                     DiffText.ViewPatch(diffOfConflict);
                     return;
                 }
