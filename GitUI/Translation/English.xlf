@@ -7676,6 +7676,10 @@ When OpenSSH is used, command line dialogs are shown!
         <source>Parent(s)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_uninterestingDiffOmitted.Text">
+        <source>Uninteresting diff hunks are omitted.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_secondsAgo.Text">
         <source>{0} {1:second|seconds} ago</source>
         <target />
