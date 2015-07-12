@@ -1141,6 +1141,18 @@ namespace GitCommands
             set { SetBool("UseFormCommitMessage", value); }
         }
 
+        public static bool CommitAutomaticallyAfterCherryPick
+        {
+            get { return GetBool("CommitAutomaticallyAfterCherryPick", false); }
+            set { SetBool("CommitAutomaticallyAfterCherryPick", value); }
+        }
+
+        public static bool AddCommitReferenceToCherryPick
+        {
+            get { return GetBool("AddCommitReferenceToCherryPick", false); }
+            set { SetBool("AddCommitReferenceToCherryPick", value); }
+        }
+
         public static DateTime LastUpdateCheck
         {
             get { return GetDate("LastUpdateCheck", default(DateTime)); }

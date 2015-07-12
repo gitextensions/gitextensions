@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using System.Windows.Forms;
+
+namespace GitUI.CommandsDialogs
 {
     partial class FormCherryPick
     {
@@ -286,7 +288,8 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Cherry pick commit";
-            this.Load += new System.EventHandler(this.FormCherryPickCommitSmall_Load);
+            this.Load += new System.EventHandler(this.Form_Load);
+            this.FormClosing += new FormClosingEventHandler(this.Form_Closing);
             this.mainTableLayoutPanel.ResumeLayout(false);
             this.mainTableLayoutPanel.PerformLayout();
             this.commitInformationPanel.ResumeLayout(false);
