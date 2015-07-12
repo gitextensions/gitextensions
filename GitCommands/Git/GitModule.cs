@@ -3231,11 +3231,6 @@ namespace GitCommands
 
         public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath)
         {
-            if (!Path.IsPathRooted(filePath))
-            {
-                filePath = Path.Combine(WorkingDir, filePath);
-            }
-
             var cmd = string.Format("diff-tree --cc --no-commit-id {0} {1} {2} -- {3}",
                 AppSettings.IgnoreWhitespaceChanges ? "--ignore-space-change" : "",
                 revisionOfMergeCommit.Guid,
