@@ -720,13 +720,28 @@ namespace GitUI.Editor
                             code = " " + code;
 
                     string[] lines = code.Split('\n');
-                    char[] specials = new char[] { ' ', '-', '+' };
-                    lines.Transform(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s.Substring(1) : s);
+                    lines.Transform(RemovePrefix);
                     code = string.Join("\n", lines);
                 }
             }
 
             Clipboard.SetText(DoAutoCRLF(code));
+        }
+
+        private string RemovePrefix(string line)
+        {
+            var isCombinedDiff = DiffHighlightService.IsCombinedDiff(_internalFileViewer.GetText());
+            var specials = isCombinedDiff ? new[]{"  ", "++", "+ ", " +", "--", "- ", " -"}
+                : new[]{ " ", "-", "+" };
+            if(string.IsNullOrWhiteSpace(line))
+            {
+                return line;
+            }
+            foreach (var special in specials.Where(line.StartsWith))
+            {
+                return line.Substring(special.Length);
+            }
+            return line;
         }
 
         private void CopyPatchToolStripMenuItemClick(object sender, EventArgs e)
