@@ -1939,8 +1939,14 @@ namespace GitUI.CommandsDialogs
 
         private void Message_TextChanged(object sender, EventArgs e)
         {
-            //always format from 0 to handle pasted text
-            FormatAllText(0);
+            // Format text, except when doing an undo, because
+            // this would itself introduce more steps that
+            // need to be undone.
+            if( !Message.IsUndoInProgress )
+            {
+                // always format from 0 to handle pasted text
+                FormatAllText(0);
+            }
         }
 
         private void Message_TextAssigned(object sender, EventArgs e)
