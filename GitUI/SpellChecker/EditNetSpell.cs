@@ -56,6 +56,7 @@ namespace GitUI.SpellChecker
         public Font TextBoxFont { get; set; }
 
         public EventHandler TextAssigned;
+        public bool IsUndoInProgress = false;
 
         public EditNetSpell()
         {
@@ -623,12 +624,14 @@ namespace GitUI.SpellChecker
             if (!skipSelectionUndo)
                 return;
 
+            IsUndoInProgress = true;
             while (TextBox.UndoActionName.Equals("Unknown"))
             {
                 TextBox.Undo();
             }
             TextBox.Undo();
             skipSelectionUndo = false;
+            IsUndoInProgress = false;
         }
 
 
