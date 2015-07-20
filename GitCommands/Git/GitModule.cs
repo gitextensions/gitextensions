@@ -426,14 +426,14 @@ namespace GitCommands
 
         public bool HasSubmodules()
         {
-            return GetSubmodulesLocalPathes(recursive: false).Any();
+            return GetSubmodulesLocalPaths(recursive: false).Any();
         }
 
         /// <summary>
         /// This is a faster function to get the names of all submodules then the
         /// GetSubmodules() function. The command @git submodule is very slow.
         /// </summary>
-        public IList<string> GetSubmodulesLocalPathes(bool recursive = true)
+        public IList<string> GetSubmodulesLocalPaths(bool recursive = true)
         {
             var configFile = GetSubmoduleConfigFile();
             var submodules = configFile.ConfigSections.Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
@@ -2160,7 +2160,7 @@ namespace GitCommands
                 }).ToList();
 
             // Doesn't work with removed submodules
-            var submodulesList = GetSubmodulesLocalPathes();
+            var submodulesList = GetSubmodulesLocalPaths();
             foreach (var item in list)
             {
                 if (submodulesList.Contains(item.Name))

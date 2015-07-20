@@ -3178,7 +3178,7 @@ namespace GitUI.CommandsDialogs
                 SubmoduleInfoResult result = new SubmoduleInfoResult();
 
                 // Add all submodules inside the current repository:
-                foreach (var submodule in threadModule.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName))
+                foreach (var submodule in threadModule.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName))
                 {
                     cancelToken.ThrowIfCancellationRequested();
                     var name = submodule;
@@ -3226,7 +3226,7 @@ namespace GitUI.CommandsDialogs
                         GetSubmoduleStatusAsync(result.Superproject, cancelToken);
                     }
 
-                    var submodules = supersuperproject.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName);
+                    var submodules = supersuperproject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName);
                     if (submodules.Any())
                     {
                         string localpath = threadModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);

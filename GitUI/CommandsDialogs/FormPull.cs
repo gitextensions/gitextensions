@@ -441,7 +441,7 @@ namespace GitUI.CommandsDialogs
         private bool IsSubmodulesInitialized()
         {
             // Fast submodules check
-            var submodules = Module.GetSubmodulesLocalPathes();
+            var submodules = Module.GetSubmodulesLocalPaths();
             foreach (var submoduleName in submodules)
             {
                 GitModule submodule = Module.GetSubmodule(submoduleName);
