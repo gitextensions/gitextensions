@@ -1932,6 +1932,14 @@ compare with first:</source>
         <source>stash</source>
         <target />
       </trans-unit>
+      <trans-unit id="_superprojectModuleFormat.Text">
+        <source>Superproject: {0}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_topProjectModuleFormat.Text">
+        <source>Top project: {0}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_updateCurrentSubmodule.Text">
         <source>Update current submodule</source>
         <target />

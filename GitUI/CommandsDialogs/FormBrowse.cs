@@ -57,6 +57,10 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _noSubmodulesPresent =
             new TranslationString("No submodules");
+        private readonly TranslationString _topProjectModuleFormat =
+            new TranslationString("Top project: {0}");
+        private readonly TranslationString _superprojectModuleFormat =
+            new TranslationString("Superproject: {0}");
 
         private readonly TranslationString _saveFileFilterCurrentFormat =
             new TranslationString("Current format");
@@ -3065,14 +3069,12 @@ namespace GitUI.CommandsDialogs
         private string GetModuleBranch(string path)
         {
             string branch = GitModule.GetSelectedBranchFast(path);
-            if (GitModule.IsDetachedHead(branch))
-                return "[no branch]";
-            return "[" + branch + "]";
+            return string.Format("[{0}]", GitModule.IsDetachedHead(branch) ? _noBranchTitle.Text : branch);
         }
 
-        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info)
+        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat)
         {
-            var spmenu = new ToolStripMenuItem(info.Text);
+            var spmenu = new ToolStripMenuItem(string.Format(textFormat, info.Text));
             spmenu.Click += SubmoduleToolStripButtonClick;
             spmenu.Width = 200;
             spmenu.Tag = info.Path;
@@ -3080,6 +3082,11 @@ namespace GitUI.CommandsDialogs
                 spmenu.Font = new Font(spmenu.Font, FontStyle.Bold);
             spmenu.Image = GetItemImage(info);
             return spmenu;
+        }
+
+        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info)
+        {
+            return CreateSubmoduleMenuItem(info, "{0}");
         }
 
         DateTime _previousUpdateTime;
@@ -3196,7 +3203,7 @@ namespace GitUI.CommandsDialogs
                     GitModule supersuperproject = threadModule.FindTopProjectModule();
                     if (threadModule.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
                     {
-                        var name = "Top project: " + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
+                        var name = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
                         string path = supersuperproject.WorkingDir;
                         if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                             name = name + " " + GetModuleBranch(path);
@@ -3206,7 +3213,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     {
-                        var name = "Superproject: ";
+                        string name;
                         GitModule parentModule = threadModule.SuperprojectModule;
                         string localpath = "";
                         if (threadModule.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
@@ -3214,10 +3221,10 @@ namespace GitUI.CommandsDialogs
                             parentModule = supersuperproject;
                             localpath = threadModule.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
                             localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
-                            name = name + localpath;
+                            name = localpath;
                         }
                         else
-                            name = name + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
+                            name = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
                         string path = threadModule.SuperprojectModule.WorkingDir;
                         if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                             name = name + " " + GetModuleBranch(path);
@@ -3272,8 +3279,8 @@ namespace GitUI.CommandsDialogs
                 {
                     newItems.Add(new ToolStripSeparator());
                     if (task.Result.TopProject != null)
-                        newItems.Add(CreateSubmoduleMenuItem(task.Result.TopProject));
-                    newItems.Add(CreateSubmoduleMenuItem(task.Result.Superproject));
+                        newItems.Add(CreateSubmoduleMenuItem(task.Result.TopProject, _topProjectModuleFormat.Text));
+                    newItems.Add(CreateSubmoduleMenuItem(task.Result.Superproject, _superprojectModuleFormat.Text));
                     task.Result.SuperSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
                 }
 
