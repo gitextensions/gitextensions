@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             string editor = CommonLogic.GetGlobalEditor();
             if (string.IsNullOrEmpty(editor))
             {
-                GlobalConfigFileSettings.SetPathValue("core.editor", "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor");
+                GlobalConfigFileSettings.SetPathValue("core.editor", "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor --syntax GitCommit");
             }
 
             return true;
