@@ -10,7 +10,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Hotkey;
-using ICSharpCode.TextEditor.Util;
 using PatchApply;
 using GitCommands.Settings;
 using GitUI.Editor.Diff;
@@ -25,6 +24,7 @@ namespace GitUI.Editor
         private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
         private readonly IFileViewer _internalFileViewer;
+        private string _highlightingSyntax;
 
         public FileViewer()
         {
@@ -420,6 +420,12 @@ namespace GitUI.Editor
             _async.Load(loadPatchText, ViewPatch);
         }
 
+        public void SetHighlighting(string highlightingSyntax)
+        {
+            _highlightingSyntax = highlightingSyntax;
+            _internalFileViewer.SetHighlighting(highlightingSyntax);
+        }
+
         public void ViewText(string fileName, string text)
         {
             ResetForText(fileName);
@@ -615,7 +621,9 @@ namespace GitUI.Editor
         {
             Reset(false, true);
 
-            if (fileName == null)
+            if (_highlightingSyntax != null)
+                _internalFileViewer.SetHighlighting(_highlightingSyntax);
+            else if (fileName == null)
                 _internalFileViewer.SetHighlighting("Default");
             else
                 _internalFileViewer.SetHighlightingForFile(fileName);
