@@ -1804,7 +1804,7 @@ namespace GitUI
 
         public void RunCommand(string[] args)
         {
-            var arguments = InitializeArguments(args);
+            var arguments = InitializeArguments(ref args);
 
             if (args.Length <= 1)
                 return;
@@ -2107,17 +2107,38 @@ namespace GitUI
                 StartResolveConflictsDialog();
         }
 
-        private static Dictionary<string, string> InitializeArguments(string[] args)
+        private static Dictionary<string, string> InitializeArguments(ref string[] args)
         {
             Dictionary<string, string> arguments = new Dictionary<string, string>();
 
-            for (int i = 2; i < args.Length; i++)
+            List<string> argsList = args.ToList();
+
+            for (int i = 2; i < argsList.Count; i++)
             {
-                if (args[i].StartsWith("--") && i + 1 < args.Length && !args[i + 1].StartsWith("--"))
-                    arguments.Add(args[i].TrimStart('-'), args[++i]);
-                else if (args[i].StartsWith("--"))
-                    arguments.Add(args[i].TrimStart('-'), null);
+                if (!argsList[i].StartsWith("--"))
+                    continue;
+
+                // we found argument: either flag or with value
+
+                if (i + 1 < argsList.Count && !argsList[i + 1].StartsWith("--"))
+                {
+                    arguments.Add(argsList[i].TrimStart('-'), argsList[i + 1]);
+                    argsList.RemoveRange(i, 2);
+                }
+                else
+                {
+                    arguments.Add(argsList[i].TrimStart('-'), null);
+                    argsList.RemoveAt(i);
+                }
+
+                // decrement i, so we examine Ith element again because of shift
+                i--;
             }
+
+            // return updated arguemnts list
+            if (argsList.Count != args.Length)
+                args = argsList.ToArray();
+
             return arguments;
         }
 
