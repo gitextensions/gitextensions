@@ -2146,16 +2146,23 @@ namespace GitCommands
             return list;
         }
 
-        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
+        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true, bool excludeAssumeUnchangedFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
             var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
+            List<GitItemStatus> result = GitCommandHelpers.GetAllChangedFilesFromString(this, status);
 
-            return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
+            if (!excludeAssumeUnchangedFiles)
+            {
+                string lsOutput = RunGitCmd("ls-files -v");
+                result.AddRange(GitCommandHelpers.GetAssumeUnchangedFilesFromString(this, lsOutput));
+            }
+
+            return result;
         }
 
-        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
+        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true, bool excludeAssumeUnchangedFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
-            var status = GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles);
+            var status = GetAllChangedFiles(excludeIgnoredFiles, excludeAssumeUnchangedFiles, untrackedFiles);
             GetCurrentSubmoduleStatus(status);
             return status;
         }

@@ -420,6 +420,7 @@ namespace GitUI.CommandsDialogs
         {
             Func<IList<GitItemStatus>> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
+                    !showAssumeUnchangedFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
 
             if (DoAsync)
@@ -1614,6 +1615,12 @@ namespace GitUI.CommandsDialogs
         private void ShowIgnoredFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
             showIgnoredFilesToolStripMenuItem.Checked = !showIgnoredFilesToolStripMenuItem.Checked;
+            RescanChanges();
+        }
+
+        private void ShowAssumeUnchangedFilesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            showAssumeUnchangedFilesToolStripMenuItem.Checked = !showAssumeUnchangedFilesToolStripMenuItem.Checked;
             RescanChanges();
         }
 
