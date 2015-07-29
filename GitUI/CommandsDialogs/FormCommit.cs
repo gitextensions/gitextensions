@@ -420,6 +420,7 @@ namespace GitUI.CommandsDialogs
         {
             Func<IList<GitItemStatus>> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
+                    !showAssumeUnchangedFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
 
             if (DoAsync)
@@ -1617,6 +1618,13 @@ namespace GitUI.CommandsDialogs
             RescanChanges();
         }
 
+        private void ShowAssumeUnchangedFilesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            showAssumeUnchangedFilesToolStripMenuItem.Checked = !showAssumeUnchangedFilesToolStripMenuItem.Checked;
+            doNotAssumeUnchangedToolStripMenuItem.Visible = showAssumeUnchangedFilesToolStripMenuItem.Checked;
+            RescanChanges();
+        }
+
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
             commitMessageToolStripMenuItem.DropDownItems.Clear();
@@ -1712,6 +1720,34 @@ namespace GitUI.CommandsDialogs
             var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
             if (UICommands.StartAddToGitIgnoreDialog(this, fileNames))
                 Initialize();
+        }
+
+        private void AssumeUnchangedToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (!Unstaged.SelectedItems.Any())
+                return;
+
+            SelectedDiff.Clear();
+            var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
+
+            bool wereErrors;
+            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), true, out wereErrors);
+
+            Initialize();
+        }
+
+        private void DoNotAssumeUnchangedToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (!Unstaged.SelectedItems.Any())
+                return;
+
+            SelectedDiff.Clear();
+            var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
+
+            bool wereErrors;
+            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), false, out wereErrors);
+
+            Initialize();
         }
 
         private void SelectedDiffExtraDiffArgumentsChanged(object sender, EventArgs e)
