@@ -1727,7 +1727,8 @@ namespace GitUI.CommandsDialogs
                 if (!string.IsNullOrWhiteSpace(DiffFiles.SelectedItemParent)
                     && DiffFiles.SelectedItemParent == DiffFiles.CombinedDiff.Text)
                 {
-                    var diffOfConflict = Module.GetCombinedDiffContent(items.First(), DiffFiles.SelectedItem.Name);
+                    var diffOfConflict = Module.GetCombinedDiffContent(items.First(), DiffFiles.SelectedItem.Name,
+                        DiffText.GetExtraDiffArguments(), DiffText.Encoding);
 
                     if (string.IsNullOrWhiteSpace(diffOfConflict))
                     {
