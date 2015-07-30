@@ -3229,14 +3229,17 @@ namespace GitCommands
             return ret;
         }
 
-        public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath)
+        public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath,
+            string extraArgs, Encoding encoding)
         {
             var cmd = string.Format("diff-tree --cc --no-commit-id {0} {1} {2} -- {3}",
-                AppSettings.IgnoreWhitespaceChanges ? "--ignore-space-change" : "",
+                extraArgs,
                 revisionOfMergeCommit.Guid,
                 AppSettings.UsePatienceDiffAlgorithm? "--patience" : "",
                 filePath);
-            return RunGitCmd(cmd);
+
+            var ret = RunGitCmd(cmd);
+            return ReEncodeStringFromLossless(ret, encoding);
         }
     }
 }
