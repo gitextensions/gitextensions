@@ -2,10 +2,10 @@
 
 cd /d "%~p0"
 
-set msbuild="%programfiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe"
-set project=..\GitExtensions.VS2013.sln
-set projectShellEx=..\GitExtensionsShellEx\GitExtensionsShellEx.VS2013.sln
-set projectSshAskPass=..\GitExtSshAskPass\GitExtSshAskPass.VS2013.sln
+set msbuild="%programfiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe"
+set project=..\GitExtensions.VS2015.sln
+set projectShellEx=..\GitExtensionsShellEx\GitExtensionsShellEx.VS2015.sln
+set projectSshAskPass=..\GitExtSshAskPass\GitExtSshAskPass.VS2015.sln
 set nuget=..\.nuget\nuget.exe
 set SkipShellExtRegistration=1
 set EnableNuGetPackageRestore=true
