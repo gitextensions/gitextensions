@@ -23,14 +23,14 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_From = new System.Windows.Forms.ComboBox();
-            this.Branches = new System.Windows.Forms.ComboBox();
             this.FromBrowse = new System.Windows.Forms.Button();
-            this.ToBrowse = new System.Windows.Forms.Button();
-            this.brachLabel = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_NewDirectory = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_To = new System.Windows.Forms.ComboBox();
+            this.ToBrowse = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_NewDirectory = new System.Windows.Forms.TextBox();
+            this.brachLabel = new System.Windows.Forms.Label();
+            this.Branches = new System.Windows.Forms.ComboBox();
             this.cbIntializeAllSubmodules = new System.Windows.Forms.CheckBox();
             this.Info = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs
             this.Central.Location = new System.Drawing.Point(6, 42);
             this.Central.Name = "Central";
             this.Central.Size = new System.Drawing.Size(274, 17);
-
+            this.Central.TabIndex = 0;
             this.Central.Text = "Central repository, no working directory  (--bare --shared=all)";
             this.Central.UseVisualStyleBackColor = true;
             // 
@@ -62,7 +62,7 @@ namespace GitUI.CommandsDialogs
             this.Personal.Location = new System.Drawing.Point(6, 19);
             this.Personal.Name = "Personal";
             this.Personal.Size = new System.Drawing.Size(114, 17);
-
+            this.Personal.TabIndex = 0;
             this.Personal.TabStop = true;
             this.Personal.Text = "Personal repository";
             this.Personal.UseVisualStyleBackColor = true;
@@ -73,7 +73,7 @@ namespace GitUI.CommandsDialogs
             this.Ok.Location = new System.Drawing.Point(488, 3);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(115, 25);
-
+            this.Ok.TabIndex = 0;
             this.Ok.Text = "Clone";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(610, 122);
-
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
             // label1
             // 
@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(112, 30);
-
+            this.label1.TabIndex = 0;
             this.label1.Text = "&Repository to clone:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -125,20 +125,9 @@ namespace GitUI.CommandsDialogs
             this._NO_TRANSLATE_From.Location = new System.Drawing.Point(135, 3);
             this._NO_TRANSLATE_From.Name = "_NO_TRANSLATE_From";
             this._NO_TRANSLATE_From.Size = new System.Drawing.Size(372, 23);
-
+            this._NO_TRANSLATE_From.TabIndex = 1;
             this._NO_TRANSLATE_From.SelectedIndexChanged += new System.EventHandler(this.FromSelectedIndexChanged);
             this._NO_TRANSLATE_From.TextUpdate += new System.EventHandler(this.FromTextUpdate);
-            // 
-            // Branches
-            // 
-            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(135, 93);
-            this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(372, 23);
-
-            this.Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
             // 
             // FromBrowse
             // 
@@ -146,42 +135,10 @@ namespace GitUI.CommandsDialogs
             this.FromBrowse.Location = new System.Drawing.Point(513, 3);
             this.FromBrowse.Name = "FromBrowse";
             this.FromBrowse.Size = new System.Drawing.Size(94, 24);
-
+            this.FromBrowse.TabIndex = 2;
             this.FromBrowse.Text = "&Browse";
             this.FromBrowse.UseVisualStyleBackColor = true;
             this.FromBrowse.Click += new System.EventHandler(this.FromBrowseClick);
-            // 
-            // ToBrowse
-            // 
-            this.ToBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ToBrowse.Location = new System.Drawing.Point(513, 33);
-            this.ToBrowse.Name = "ToBrowse";
-            this.ToBrowse.Size = new System.Drawing.Size(94, 24);
-
-            this.ToBrowse.Text = "B&rowse";
-            this.ToBrowse.UseVisualStyleBackColor = true;
-            this.ToBrowse.Click += new System.EventHandler(this.ToBrowseClick);
-            // 
-            // brachLabel
-            // 
-            this.brachLabel.AutoSize = true;
-            this.brachLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.brachLabel.Location = new System.Drawing.Point(3, 90);
-            this.brachLabel.Name = "brachLabel";
-            this.brachLabel.Size = new System.Drawing.Size(47, 32);
-
-            this.brachLabel.Text = "&Branch:";
-            this.brachLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _NO_TRANSLATE_NewDirectory
-            // 
-            this._NO_TRANSLATE_NewDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(135, 63);
-            this._NO_TRANSLATE_NewDirectory.Name = "_NO_TRANSLATE_NewDirectory";
-            this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(372, 23);
-
-            this._NO_TRANSLATE_NewDirectory.TextChanged += new System.EventHandler(this.NewDirectoryTextChanged);
             // 
             // label2
             // 
@@ -190,20 +147,9 @@ namespace GitUI.CommandsDialogs
             this.label2.Location = new System.Drawing.Point(3, 30);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(70, 30);
-
+            this.label2.TabIndex = 3;
             this.label2.Text = "&Destination:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label3.Location = new System.Drawing.Point(3, 60);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(126, 30);
-
-            this.label3.Text = "&Subdirectory to create:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_To
             // 
@@ -215,10 +161,64 @@ namespace GitUI.CommandsDialogs
             this._NO_TRANSLATE_To.Location = new System.Drawing.Point(135, 33);
             this._NO_TRANSLATE_To.Name = "_NO_TRANSLATE_To";
             this._NO_TRANSLATE_To.Size = new System.Drawing.Size(372, 23);
-
+            this._NO_TRANSLATE_To.TabIndex = 4;
             this._NO_TRANSLATE_To.DropDown += new System.EventHandler(this.ToDropDown);
             this._NO_TRANSLATE_To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
             this._NO_TRANSLATE_To.TextUpdate += new System.EventHandler(this.ToTextUpdate);
+            // 
+            // ToBrowse
+            // 
+            this.ToBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ToBrowse.Location = new System.Drawing.Point(513, 33);
+            this.ToBrowse.Name = "ToBrowse";
+            this.ToBrowse.Size = new System.Drawing.Size(94, 24);
+            this.ToBrowse.TabIndex = 5;
+            this.ToBrowse.Text = "B&rowse";
+            this.ToBrowse.UseVisualStyleBackColor = true;
+            this.ToBrowse.Click += new System.EventHandler(this.ToBrowseClick);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label3.Location = new System.Drawing.Point(3, 60);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(126, 30);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "&Subdirectory to create:";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // _NO_TRANSLATE_NewDirectory
+            // 
+            this._NO_TRANSLATE_NewDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(135, 63);
+            this._NO_TRANSLATE_NewDirectory.Name = "_NO_TRANSLATE_NewDirectory";
+            this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(372, 23);
+            this._NO_TRANSLATE_NewDirectory.TabIndex = 7;
+            this._NO_TRANSLATE_NewDirectory.TextChanged += new System.EventHandler(this.NewDirectoryTextChanged);
+            // 
+            // brachLabel
+            // 
+            this.brachLabel.AutoSize = true;
+            this.brachLabel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.brachLabel.Location = new System.Drawing.Point(3, 90);
+            this.brachLabel.Name = "brachLabel";
+            this.brachLabel.Size = new System.Drawing.Size(47, 32);
+            this.brachLabel.TabIndex = 8;
+            this.brachLabel.Text = "&Branch:";
+            this.brachLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // Branches
+            // 
+            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Branches.FormattingEnabled = true;
+            this.Branches.Location = new System.Drawing.Point(135, 93);
+            this.Branches.Name = "Branches";
+            this.Branches.Size = new System.Drawing.Size(372, 23);
+            this.Branches.TabIndex = 9;
+            this.Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
             // 
             // cbIntializeAllSubmodules
             // 
@@ -229,7 +229,7 @@ namespace GitUI.CommandsDialogs
             this.cbIntializeAllSubmodules.Margin = new System.Windows.Forms.Padding(15, 3, 9, 3);
             this.cbIntializeAllSubmodules.Name = "cbIntializeAllSubmodules";
             this.cbIntializeAllSubmodules.Size = new System.Drawing.Size(152, 19);
-
+            this.cbIntializeAllSubmodules.TabIndex = 3;
             this.cbIntializeAllSubmodules.Text = "Initialize all submodules";
             this.cbIntializeAllSubmodules.UseVisualStyleBackColor = true;
             // 
@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs
             this.Info.Margin = new System.Windows.Forms.Padding(9, 13, 9, 0);
             this.Info.Name = "Info";
             this.Info.Size = new System.Drawing.Size(598, 42);
-
+            this.Info.TabIndex = 1;
             this.Info.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // groupBox1
@@ -256,7 +256,7 @@ namespace GitUI.CommandsDialogs
             this.groupBox1.Margin = new System.Windows.Forms.Padding(9, 4, 9, 0);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(598, 68);
-
+            this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Repository type";
             // 
@@ -266,7 +266,7 @@ namespace GitUI.CommandsDialogs
             this.CentralRepository.Location = new System.Drawing.Point(6, 42);
             this.CentralRepository.Name = "CentralRepository";
             this.CentralRepository.Size = new System.Drawing.Size(277, 19);
-
+            this.CentralRepository.TabIndex = 0;
             this.CentralRepository.Text = "P&ublic repository, no working directory  (--bare)";
             this.CentralRepository.UseVisualStyleBackColor = true;
             // 
@@ -277,7 +277,7 @@ namespace GitUI.CommandsDialogs
             this.PersonalRepository.Location = new System.Drawing.Point(6, 19);
             this.PersonalRepository.Name = "PersonalRepository";
             this.PersonalRepository.Size = new System.Drawing.Size(126, 19);
-
+            this.PersonalRepository.TabIndex = 1;
             this.PersonalRepository.TabStop = true;
             this.PersonalRepository.Text = "&Personal repository";
             this.PersonalRepository.UseVisualStyleBackColor = true;
@@ -289,7 +289,7 @@ namespace GitUI.CommandsDialogs
             this.LoadSSHKey.Location = new System.Drawing.Point(3, 3);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(180, 25);
-
+            this.LoadSSHKey.TabIndex = 1;
             this.LoadSSHKey.Text = "&Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
@@ -313,7 +313,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(616, 321);
-
+            this.tableLayoutPanel2.TabIndex = 0;
             // 
             // tableLayoutPanel3
             // 
@@ -330,7 +330,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(606, 31);
-
+            this.tableLayoutPanel3.TabIndex = 4;
             // 
             // FormClone
             // 
