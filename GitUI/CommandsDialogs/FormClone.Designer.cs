@@ -248,7 +248,7 @@ namespace GitUI.CommandsDialogs
             this.cbDownloadFullHistory.TabIndex = 4;
             this.cbDownloadFullHistory.Text = "Download full &history";
             this.ttHints.SetToolTip(this.cbDownloadFullHistory, "The default Git behavior is to download all historical revisions.\nIf you turn thi" +
-        "s off, we\'ll only download the latest revision for all branches.\n\nActual command line: --depth 1 --no-single-branch");
+        "s off, we\'ll only download the latest revision for all branches.\n\nActual command line (if unchecked): --depth 1 --no-single-branch");
             // 
             // Info
             // 
