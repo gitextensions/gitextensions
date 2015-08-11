@@ -17,6 +17,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.Central = new System.Windows.Forms.RadioButton();
             this.Personal = new System.Windows.Forms.RadioButton();
             this.Ok = new System.Windows.Forms.Button();
@@ -32,6 +33,7 @@ namespace GitUI.CommandsDialogs
             this.brachLabel = new System.Windows.Forms.Label();
             this.Branches = new System.Windows.Forms.ComboBox();
             this.cbIntializeAllSubmodules = new System.Windows.Forms.CheckBox();
+            this.cbDownloadFullHistory = new System.Windows.Forms.CheckBox();
             this.Info = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.CentralRepository = new System.Windows.Forms.RadioButton();
@@ -39,6 +41,7 @@ namespace GitUI.CommandsDialogs
             this.LoadSSHKey = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.ttHints = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -225,13 +228,27 @@ namespace GitUI.CommandsDialogs
             this.cbIntializeAllSubmodules.AutoSize = true;
             this.cbIntializeAllSubmodules.Checked = true;
             this.cbIntializeAllSubmodules.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbIntializeAllSubmodules.Location = new System.Drawing.Point(15, 258);
+            this.cbIntializeAllSubmodules.Location = new System.Drawing.Point(15, 268);
             this.cbIntializeAllSubmodules.Margin = new System.Windows.Forms.Padding(15, 3, 9, 3);
             this.cbIntializeAllSubmodules.Name = "cbIntializeAllSubmodules";
             this.cbIntializeAllSubmodules.Size = new System.Drawing.Size(152, 19);
             this.cbIntializeAllSubmodules.TabIndex = 3;
             this.cbIntializeAllSubmodules.Text = "Initialize all submodules";
             this.cbIntializeAllSubmodules.UseVisualStyleBackColor = true;
+            // 
+            // cbDownloadFullHistory
+            // 
+            this.cbDownloadFullHistory.AutoSize = true;
+            this.cbDownloadFullHistory.Checked = true;
+            this.cbDownloadFullHistory.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbDownloadFullHistory.Location = new System.Drawing.Point(15, 293);
+            this.cbDownloadFullHistory.Margin = new System.Windows.Forms.Padding(15, 3, 9, 3);
+            this.cbDownloadFullHistory.Name = "cbDownloadFullHistory";
+            this.cbDownloadFullHistory.Size = new System.Drawing.Size(139, 19);
+            this.cbDownloadFullHistory.TabIndex = 4;
+            this.cbDownloadFullHistory.Text = "Download full &history";
+            this.ttHints.SetToolTip(this.cbDownloadFullHistory, "The default Git behavior is to download all historical revisions.\nIf you turn thi" +
+        "s off, we\'ll only download the latest revision for all branches.\n\nActual command line: --depth 1 --no-single-branch");
             // 
             // Info
             // 
@@ -302,6 +319,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel2.Controls.Add(this.Info);
             this.tableLayoutPanel2.Controls.Add(this.groupBox1);
             this.tableLayoutPanel2.Controls.Add(this.cbIntializeAllSubmodules);
+            this.tableLayoutPanel2.Controls.Add(this.cbDownloadFullHistory);
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
@@ -312,7 +330,8 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(616, 321);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(616, 356);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // tableLayoutPanel3
@@ -324,7 +343,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.Controls.Add(this.Ok, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.LoadSSHKey, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(5, 285);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(5, 320);
             this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(5);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
@@ -338,12 +357,12 @@ namespace GitUI.CommandsDialogs
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(616, 321);
+            this.ClientSize = new System.Drawing.Size(616, 356);
             this.Controls.Add(this.tableLayoutPanel2);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(933, 360);
+            this.MaximumSize = new System.Drawing.Size(933, 395);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(430, 360);
+            this.MinimumSize = new System.Drawing.Size(430, 395);
             this.Name = "FormClone";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Clone";
@@ -375,6 +394,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Label Info;
         private System.Windows.Forms.ComboBox Branches;
         private System.Windows.Forms.CheckBox cbIntializeAllSubmodules;
+        private System.Windows.Forms.CheckBox cbDownloadFullHistory;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_From;
@@ -383,5 +403,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private ToolTip ttHints;
     }
 }

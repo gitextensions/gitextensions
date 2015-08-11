@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs
                     Directory.CreateDirectory(dirTo);
 
                 var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
-                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, null);
+                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, (cbDownloadFullHistory.Checked ? default(int?) : 1));
                 using (var fromProcess = new FormRemoteProcess(Module, AppSettings.GitCommand, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
