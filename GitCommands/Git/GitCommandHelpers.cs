@@ -479,7 +479,7 @@ namespace GitCommands
             return CloneCmd(fromPath, toPath, false, false, string.Empty, null);
         }
 
-        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, string branch, int? depth)
+        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, string branch, int? depth, [Optional] bool? isSingleBranch)
         {
             var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
             var to = toPath.ToPosixPath();
@@ -490,6 +490,8 @@ namespace GitCommands
                 options.Add("--recurse-submodules");
             if (depth.HasValue)
                 options.Add("--depth " + depth);
+            if(isSingleBranch.HasValue)
+                options.Add(isSingleBranch.Value ? "--single-branch" : "--no-single-branch");
             options.Add("--progress");
             if (!string.IsNullOrEmpty(branch))
                 options.Add("--branch " + branch);
