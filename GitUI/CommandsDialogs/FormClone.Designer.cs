@@ -113,7 +113,7 @@ namespace GitUI.CommandsDialogs
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(112, 30);
             this.label1.TabIndex = 0;
-            this.label1.Text = "&Repository to clone:";
+            this.label1.Text = "Repository to &clone:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_From
