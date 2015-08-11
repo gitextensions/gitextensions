@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using System.Windows.Forms;
+
+namespace GitUI.CommandsDialogs
 {
     partial class FormClone
     {
@@ -36,12 +38,10 @@
             this.PersonalRepository = new System.Windows.Forms.RadioButton();
             this.LoadSSHKey = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -225,7 +225,8 @@
             this.cbIntializeAllSubmodules.AutoSize = true;
             this.cbIntializeAllSubmodules.Checked = true;
             this.cbIntializeAllSubmodules.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbIntializeAllSubmodules.Location = new System.Drawing.Point(15, 126);
+            this.cbIntializeAllSubmodules.Location = new System.Drawing.Point(15, 258);
+            this.cbIntializeAllSubmodules.Margin = new System.Windows.Forms.Padding(15, 3, 9, 3);
             this.cbIntializeAllSubmodules.Name = "cbIntializeAllSubmodules";
             this.cbIntializeAllSubmodules.Size = new System.Drawing.Size(152, 19);
             this.cbIntializeAllSubmodules.TabIndex = 25;
@@ -238,9 +239,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Info.BackColor = System.Drawing.SystemColors.Info;
             this.Info.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Info.Location = new System.Drawing.Point(6, 10);
+            this.Info.Location = new System.Drawing.Point(9, 141);
+            this.Info.Margin = new System.Windows.Forms.Padding(9, 13, 9, 0);
             this.Info.Name = "Info";
-            this.Info.Size = new System.Drawing.Size(597, 42);
+            this.Info.Size = new System.Drawing.Size(598, 42);
             this.Info.TabIndex = 10;
             this.Info.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -250,9 +252,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.CentralRepository);
             this.groupBox1.Controls.Add(this.PersonalRepository);
-            this.groupBox1.Location = new System.Drawing.Point(9, 55);
+            this.groupBox1.Location = new System.Drawing.Point(9, 187);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(9, 4, 9, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(594, 68);
+            this.groupBox1.Size = new System.Drawing.Size(598, 68);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Repository type";
@@ -262,7 +265,7 @@
             this.CentralRepository.AutoSize = true;
             this.CentralRepository.Location = new System.Drawing.Point(6, 42);
             this.CentralRepository.Name = "CentralRepository";
-            this.CentralRepository.Size = new System.Drawing.Size(244, 19);
+            this.CentralRepository.Size = new System.Drawing.Size(277, 19);
             this.CentralRepository.TabIndex = 1;
             this.CentralRepository.Text = "P&ublic repository, no working directory  (--bare)";
             this.CentralRepository.UseVisualStyleBackColor = true;
@@ -295,29 +298,22 @@
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.panel1, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel1);
+            this.tableLayoutPanel2.Controls.Add(this.Info);
+            this.tableLayoutPanel2.Controls.Add(this.groupBox1);
+            this.tableLayoutPanel2.Controls.Add(this.cbIntializeAllSubmodules);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(616, 322);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(616, 321);
             this.tableLayoutPanel2.TabIndex = 1;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.cbIntializeAllSubmodules);
-            this.panel1.Controls.Add(this.Info);
-            this.panel1.Controls.Add(this.groupBox1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 131);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(610, 147);
-            this.panel1.TabIndex = 27;
             // 
             // tableLayoutPanel3
             // 
@@ -328,7 +324,7 @@
             this.tableLayoutPanel3.Controls.Add(this.Ok, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.LoadSSHKey, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(5, 286);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(5, 285);
             this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(5);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
@@ -341,7 +337,8 @@
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(616, 322);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(616, 321);
             this.Controls.Add(this.tableLayoutPanel2);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(933, 360);
@@ -357,8 +354,6 @@
             this.groupBox1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -387,7 +382,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
     }
 }
