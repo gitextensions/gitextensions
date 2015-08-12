@@ -101,7 +101,8 @@ namespace GitUI.CommandsDialogs
             {
                 if (filter == null)
                     return;
-                FileChanges.FixedFilter = filter.Filter;
+                FileChanges.FixedRevisionFilter = filter.RevisionFilter;
+                FileChanges.FixedPathFilter = filter.PathFilter;
                 FileChanges.Rewriter = filter.Rewriter;
                 FileChanges.FiltredFileName = FileName;
                 FileChanges.AllowGraphWithFilter = true;
@@ -111,7 +112,8 @@ namespace GitUI.CommandsDialogs
 
         private class FixedFilterTuple
         {
-            public string Filter;
+            public string RevisionFilter;
+            public string PathFilter;
             public FollowParentRewriter Rewriter;
         }
 
@@ -162,30 +164,31 @@ namespace GitUI.CommandsDialogs
                 if (hrw.RewriteNecessary)
                 {
                     res.Rewriter = hrw;
-                    res.Filter = " " + GitCommandHelpers.FindRenamesAndCopiesOpts() + " --name-only --follow -- \"" + fileName + "\"";
+                    res.RevisionFilter = " " + GitCommandHelpers.FindRenamesAndCopiesOpts() + " --name-only --follow";
                 }
                 else
                 {
-                    res.Filter = " " + GitCommandHelpers.FindRenamesAndCopiesOpts() + " --name-only --parents -- \"" + fileName + "\"";
+                    res.RevisionFilter = " " + GitCommandHelpers.FindRenamesAndCopiesOpts() + " --name-only --parents";
                 }
-
             }
             else if (AppSettings.FollowRenamesInFileHistory)
             {
                 // history of a directory
                 // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                res.Filter = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents -- \"" + fileName + "\"";
+                res.RevisionFilter = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
             }
             else
             {
                 // rename following disabled
-                res.Filter = " --parents -- \"" + fileName + "\"";
+                res.RevisionFilter = " --parents";
             }
 
             if (AppSettings.FullHistoryInFileHistory)
             {
-                res.Filter = string.Concat(" --full-history --simplify-by-decoration ", res.Filter);
+                res.RevisionFilter = string.Concat(" --full-history --simplify-by-decoration ", res.RevisionFilter);
             }
+
+            res.PathFilter = " \"" + fileName + "\"";
 
             return res;
         }

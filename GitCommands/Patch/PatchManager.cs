@@ -60,7 +60,7 @@ namespace PatchApply
             if (isNewFile)
                 header = CorrectHeaderForNewFile(header);
 
-            string body = selectedChunks.ToStagePatch(staged);
+            string body = selectedChunks.ToStagePatch(staged, false);
 
             if (header == null || body == null)
                 return null;
@@ -89,7 +89,7 @@ namespace PatchApply
             return sb.ToString();
         }
 
-        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset)
+        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding, bool reset, byte[] FilePreabmle)
         {
             StringBuilder sb = new StringBuilder();
             string fileMode = "100000";//given fake mode to satisfy patch format, git will override this
@@ -112,12 +112,12 @@ namespace PatchApply
 
             string header = sb.ToString();
 
-            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset);
+            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
 
             if (selectedChunks == null)
                 return null;
 
-            string body = selectedChunks.ToStagePatch(false);
+            string body = selectedChunks.ToStagePatch(false, true);
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
             if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
@@ -193,6 +193,19 @@ namespace PatchApply
     {
         public string Text { get; set; }
         public bool Selected { get; set; }
+
+        public PatchLine Clone()
+        {
+            var c = new PatchLine();
+            c.Text = Text;
+            c.Selected = Selected;
+            return c;
+        }
+
+        public void SetOperation(string operationMark)
+        {
+            Text = operationMark + Text.Substring(1);
+        }
     }
 
     internal class SubChunk
@@ -205,7 +218,7 @@ namespace PatchApply
         public string IsNoNewLineAtTheEnd = null;
 
 
-        public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged)
+        public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
         {
             string diff = null;
             string removePart = null;
@@ -277,7 +290,7 @@ namespace PatchApply
             foreach (PatchLine line in PostContext)
                 diff = diff.Combine("\n", line.Text);
             //stage no new line at the end only if last +- line is selected
-            if (PostContext.Count == 0 && (selectedLastLine || staged))
+            if (PostContext.Count == 0 && (selectedLastLine || staged || isWholeFile))
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
             if (PostContext.Count > 0)
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
@@ -456,7 +469,7 @@ namespace PatchApply
             return result;
         }
 
-        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset)
+        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
         {
             Chunk result = new Chunk();
             result.StartLine = 0;
@@ -478,9 +491,10 @@ namespace PatchApply
             while (i < lines.Length)
             {
                 string line = lines[i];
+                string preamble = (i == 0 ? new string(fileContentEncoding.GetChars(FilePreabmle)) : string.Empty);
                 PatchLine patchLine = new PatchLine()
                 {
-                    Text = (reset ? "-" : "+") + line
+                    Text = (reset ? "-" : "+") + preamble + line
                 };
                 //do not refactor, there are no breakpoints condition in VS Experss
                 if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
@@ -492,6 +506,20 @@ namespace PatchApply
                     {
                         result.CurrentSubChunk.IsNoNewLineAtTheEnd = "\\ No newline at end of file";
                         result.AddDiffLine(patchLine, reset);
+                        if (reset && patchLine.Selected)
+                        {
+                            //if the last line is selected to be reset and there is no new line at the end of file
+                            //then we also have to remove the last not selected line in order to add it right again with the "No newline.." indicator
+                            PatchLine lastNotSelectedLine = result.CurrentSubChunk.RemovedLines.LastOrDefault(aLine => !aLine.Selected);
+                            if (lastNotSelectedLine != null)
+                            {
+                                lastNotSelectedLine.Selected = true;
+                                PatchLine clonedLine = lastNotSelectedLine.Clone();
+                                clonedLine.SetOperation("+");
+                                result.CurrentSubChunk.AddedLines.Add(clonedLine);
+                            }
+                            result.CurrentSubChunk.WasNoNewLineAtTheEnd = "\\ No newline at end of file";
+                        }
                     }
                 }
                 else
@@ -567,9 +595,9 @@ namespace PatchApply
             return selectedChunks;
         }
 
-        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset)
+        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength, bool reset, byte[] FilePreabmle, Encoding fileContentEncoding)
         {
-            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset);
+            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, FilePreabmle, fileContentEncoding);
             ChunkList result = new ChunkList();
             result.Add(chunk);
             return result;
@@ -585,11 +613,11 @@ namespace PatchApply
             return ToPatch(subChunkToPatch);
         }
 
-        public string ToStagePatch(bool staged)
+        public string ToStagePatch(bool staged, bool isWholeFile)
         {
             SubChunkToPatchFnc subChunkToPatch = (SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines) =>
             {
-                return subChunk.ToStagePatch(ref addedCount, ref removedCount, ref wereSelectedLines, staged);
+                return subChunk.ToStagePatch(ref addedCount, ref removedCount, ref wereSelectedLines, staged, isWholeFile);
             };
 
             return ToPatch(subChunkToPatch);

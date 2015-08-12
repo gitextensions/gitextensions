@@ -78,7 +78,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 this.InvokeSync((state) =>
                     {
-                        ExceptionUtils.ShowException(this, ex, string.Empty, true);
+                        if (Visible)
+                        {
+                            ExceptionUtils.ShowException(this, ex, string.Empty, true);
+                        }
                     }, null);
                 Done();
             }

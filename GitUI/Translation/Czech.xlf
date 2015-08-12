@@ -64,6 +64,10 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
         <target>Nezobrazovat obrázky nápovědy</target>
         
       </trans-unit>
+      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
+        <source>Remember the ignore-white-space preference</source>
+
+      </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen &quot;local changes&quot; action as default action.
 This action will be performed without warning while checking out branch.</source>

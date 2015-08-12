@@ -56,6 +56,7 @@ namespace GitUI.SpellChecker
         public Font TextBoxFont { get; set; }
 
         public EventHandler TextAssigned;
+        public bool IsUndoInProgress = false;
 
         public EditNetSpell()
         {
@@ -623,12 +624,14 @@ namespace GitUI.SpellChecker
             if (!skipSelectionUndo)
                 return;
 
+            IsUndoInProgress = true;
             while (TextBox.UndoActionName.Equals("Unknown"))
             {
                 TextBox.Undo();
             }
             TextBox.Undo();
             skipSelectionUndo = false;
+            IsUndoInProgress = false;
         }
 
 
@@ -662,8 +665,12 @@ namespace GitUI.SpellChecker
                     return;
                 }
                 // remove image data from clipboard
-                string text = Clipboard.GetText();
-                Clipboard.SetText(text);
+                var text = Clipboard.GetText();
+                // Clipboard.SetText throws exception when text is null or empty. See https://msdn.microsoft.com/en-us/library/ydby206k.aspx
+                if (!string.IsNullOrEmpty(text))
+                {
+                    Clipboard.SetText(text);
+                }
             }
             else if (e.Control && !e.Alt && e.KeyCode == Keys.Z)
             {

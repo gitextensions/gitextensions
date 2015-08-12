@@ -206,6 +206,8 @@ namespace GitUI.CommandsDialogs
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             stagedResetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             deleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
+            viewFileHistoryToolStripItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
+            toolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
         }
@@ -269,6 +271,7 @@ namespace GitUI.CommandsDialogs
             ResetSelectedFiles,
             StageSelectedFile,
             UnStageSelectedFile,
+            ShowHistory,
             ToggleSelectionFilter
         }
 
@@ -363,6 +366,23 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
+        private bool StartFileHistoryDialog()
+        {
+            if (Staged.Focused || Unstaged.Focused)
+            {
+                if (_currentFilesList.SelectedItem != null)
+                {
+                    if ((!_currentFilesList.SelectedItem.IsNew) && (!_currentFilesList.SelectedItem.IsRenamed))
+                    {
+                        UICommands.StartFileHistoryDialog(this, _currentFilesList.SelectedItem.Name, null);
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+
         private bool ToggleSelectionFilter()
         {
             selectionFilterToolStripMenuItem.Checked = !selectionFilterToolStripMenuItem.Checked;
@@ -383,7 +403,8 @@ namespace GitUI.CommandsDialogs
                 case Commands.ResetSelectedFiles: return ResetSelectedFiles();
                 case Commands.StageSelectedFile: return StageSelectedFile();
                 case Commands.UnStageSelectedFile: return UnStageSelectedFile();
-                case Commands.ToggleSelectionFilter: return ToggleSelectionFilter();
+                case Commands.ShowHistory: return StartFileHistoryDialog();
+                case Commands.ToggleSelectionFilter: return ToggleSelectionFilter();                   
                 default: return base.ExecuteCommand(cmd);
             }
         }
@@ -399,6 +420,7 @@ namespace GitUI.CommandsDialogs
         {
             Func<IList<GitItemStatus>> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
+                    !showAssumeUnchangedFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
 
             if (DoAsync)
@@ -449,7 +471,7 @@ namespace GitUI.CommandsDialogs
             if (!_currentItemStaged && _currentItem.IsNew)
                 patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name,
                     SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(),
-                    SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, false);
+                    SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, false, SelectedDiff.FilePreabmle);
             else
                 patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
@@ -529,7 +551,7 @@ namespace GitUI.CommandsDialogs
             else if (_currentItem.IsNew)
                 patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name,
                     SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
-                    SelectedDiff.Encoding, true);
+                    SelectedDiff.Encoding, true, SelectedDiff.FilePreabmle);
             else
                 patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
@@ -1555,6 +1577,8 @@ namespace GitUI.CommandsDialogs
 
             using (var textWriter = new StreamWriter(path, false, encoding))
             {
+                var addNewlineToCommitMessageWhenMissing = AppSettings.AddNewlineToCommitMessageWhenMissing;
+
                 var lineNumber = 0;
                 foreach (var line in commitMessageText.Split('\n'))
                 {
@@ -1563,8 +1587,11 @@ namespace GitUI.CommandsDialogs
                     if (!line.StartsWith("#") ||
                         string.IsNullOrEmpty(_commitTemplate))
                     {
-                        if (lineNumber == 1 && !String.IsNullOrEmpty(line))
-                            textWriter.WriteLine();
+                        if (addNewlineToCommitMessageWhenMissing)
+                        {
+                            if (lineNumber == 1 && !String.IsNullOrEmpty(line))
+                                textWriter.WriteLine();
+                        }
 
                         textWriter.WriteLine(line);
                     }
@@ -1588,6 +1615,13 @@ namespace GitUI.CommandsDialogs
         private void ShowIgnoredFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
             showIgnoredFilesToolStripMenuItem.Checked = !showIgnoredFilesToolStripMenuItem.Checked;
+            RescanChanges();
+        }
+
+        private void ShowAssumeUnchangedFilesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            showAssumeUnchangedFilesToolStripMenuItem.Checked = !showAssumeUnchangedFilesToolStripMenuItem.Checked;
+            doNotAssumeUnchangedToolStripMenuItem.Visible = showAssumeUnchangedFilesToolStripMenuItem.Checked;
             RescanChanges();
         }
 
@@ -1686,6 +1720,34 @@ namespace GitUI.CommandsDialogs
             var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
             if (UICommands.StartAddToGitIgnoreDialog(this, fileNames))
                 Initialize();
+        }
+
+        private void AssumeUnchangedToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (!Unstaged.SelectedItems.Any())
+                return;
+
+            SelectedDiff.Clear();
+            var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
+
+            bool wereErrors;
+            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), true, out wereErrors);
+
+            Initialize();
+        }
+
+        private void DoNotAssumeUnchangedToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (!Unstaged.SelectedItems.Any())
+                return;
+
+            SelectedDiff.Clear();
+            var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
+
+            bool wereErrors;
+            Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), false, out wereErrors);
+
+            Initialize();
         }
 
         private void SelectedDiffExtraDiffArgumentsChanged(object sender, EventArgs e)
@@ -1913,8 +1975,14 @@ namespace GitUI.CommandsDialogs
 
         private void Message_TextChanged(object sender, EventArgs e)
         {
-            //always format from 0 to handle pasted text
-            FormatAllText(0);
+            // Format text, except when doing an undo, because
+            // this would itself introduce more steps that
+            // need to be undone.
+            if( !Message.IsUndoInProgress )
+            {
+                // always format from 0 to handle pasted text
+                FormatAllText(0);
+            }
         }
 
         private void Message_TextAssigned(object sender, EventArgs e)

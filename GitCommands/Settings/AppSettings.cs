@@ -241,6 +241,12 @@ namespace GitCommands
             set { SetBool("showerrorswhenstagingfiles", value); }
         }
 
+        public static bool AddNewlineToCommitMessageWhenMissing
+        {
+            get { return GetBool ("addnewlinetocommitmessagewhenmissing", true); }
+            set { SetBool ("addnewlinetocommitmessagewhenmissing", value); }
+        }
+
         public static string LastCommitMessage
         {
             get { return GetString("lastCommitMessage", ""); }
@@ -974,6 +980,27 @@ namespace GitCommands
             set { SetString("lastformatpatchdir", value); }
         }
 
+        public static bool IgnoreWhitespaceChanges
+        {
+            get
+            {
+                return RememberIgnoreWhiteSpacePreference && GetBool("IgnoreWhitespaceChanges", false);
+            }
+            set
+            {
+                if (RememberIgnoreWhiteSpacePreference)
+                {
+                    SetBool("IgnoreWhitespaceChanges", value);
+                }
+            }
+        }
+
+        public static bool RememberIgnoreWhiteSpacePreference
+        {
+            get { return GetBool("rememberIgnoreWhiteSpacePreference", false); }
+            set { SetBool("rememberIgnoreWhiteSpacePreference", value); }
+        }
+
         public static string GetDictionaryDir()
         {
             return Path.Combine(GetResourceDir(), "Dictionaries");
@@ -1118,6 +1145,18 @@ namespace GitCommands
         {
             get { return GetBool("UseFormCommitMessage", true); }
             set { SetBool("UseFormCommitMessage", value); }
+        }
+
+        public static bool CommitAutomaticallyAfterCherryPick
+        {
+            get { return GetBool("CommitAutomaticallyAfterCherryPick", false); }
+            set { SetBool("CommitAutomaticallyAfterCherryPick", value); }
+        }
+
+        public static bool AddCommitReferenceToCherryPick
+        {
+            get { return GetBool("AddCommitReferenceToCherryPick", false); }
+            set { SetBool("AddCommitReferenceToCherryPick", value); }
         }
 
         public static DateTime LastUpdateCheck

@@ -43,6 +43,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>..\..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -53,6 +54,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>..\..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
