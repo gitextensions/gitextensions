@@ -23,7 +23,7 @@ namespace TfsInterop
 
     public class TfsHelper : ITfsHelper
     {
-        private IBuildDefinition _buildDefinition;
+        private IBuildDefinition[] _buildDefinitions;
         private string _hostname;
         private bool _isWebServer;
         private string _urlPrefix;
@@ -71,9 +71,9 @@ namespace TfsInterop
 
                 if (buildDefs.Length != 0)
                 {
-                    _buildDefinition = string.IsNullOrWhiteSpace(buildDefinitionName)
-                        ? buildDefs[0]
-                        : buildDefs.FirstOrDefault(b => string.Compare(b.Name, buildDefinitionName, StringComparison.InvariantCultureIgnoreCase) == 0);
+                    _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionName)
+                        ? buildDefs
+                        : new IBuildDefinition[]{buildDefs.FirstOrDefault(b => string.Compare(b.Name, buildDefinitionName, StringComparison.InvariantCultureIgnoreCase) == 0)};
                 }
             }
             catch (Exception ex)
@@ -84,15 +84,17 @@ namespace TfsInterop
 
         public IList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
         {
-            var buildSpec = _buildServer.CreateBuildDetailSpec(_buildDefinition);
-            buildSpec.InformationTypes = null;
-            if (sinceDate.HasValue)
-                buildSpec.MinFinishTime = sinceDate.Value;
+            var result=new List<IBuild>();
+            foreach (var _buildDefinition in _buildDefinitions)
+            {
+                var buildSpec = _buildServer.CreateBuildDetailSpec(_buildDefinition);
+                buildSpec.InformationTypes = null;
+                if (sinceDate.HasValue)
+                    buildSpec.MinFinishTime = sinceDate.Value;
 
-            if (running.HasValue && running.Value)
-                buildSpec.Status = Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress;
-
-            return _buildServer.QueryBuilds(buildSpec).Builds.Select(b =>
+                if (running.HasValue && running.Value)
+                    buildSpec.Status = Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress;
+                result.AddRange(_buildServer.QueryBuilds(buildSpec).Builds.Select(b =>
                 {
                     var id = b.Uri.AbsoluteUri.Substring(b.Uri.AbsoluteUri.LastIndexOf('/') + 1);
                     string duration = string.Empty;
@@ -119,7 +121,9 @@ namespace TfsInterop
                                       ? Uri.EscapeDataString(b.Uri.AbsoluteUri) + "&_a=summary"
                                       : id),
                         };
-                }).Cast<IBuild>().ToList();
+                }).Cast<IBuild>().ToList());
+            }
+            return result;
         }
 
         private static string GetStatus(IBuildDetail build)
@@ -192,7 +196,7 @@ namespace TfsInterop
             _buildServer = null;
             if (_tfsCollection != null)
                 _tfsCollection.Dispose();
-            _buildDefinition = null;
+            _buildDefinitions = null;
             GC.Collect();
         }
     }
