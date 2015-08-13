@@ -65,7 +65,7 @@ namespace GitUI.Editor
 
             this.encodingToolStripComboBox.Items.AddRange(new Object[]
                                                     {
-                                                        "Default (" + Encoding.Default.HeaderName + ")", "ASCII",
+                                                        "Default (" + Encoding.Default.HeaderName + ")","DOS852", "ASCII",
                                                         "Unicode", "UTF7", "UTF8", "UTF32"
                                                     });
             _internalFileViewer.MouseMove += TextAreaMouseMove;
@@ -271,6 +271,8 @@ namespace GitUI.Editor
                 this.encodingToolStripComboBox.Text = "UTF32";
             else if (this.Encoding == Encoding.Default)
                 this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
+            else if (this.Encoding == Encoding.GetEncoding("CP852"))
+                this.encodingToolStripComboBox.Text = "DOS852";
         }
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
@@ -946,6 +948,8 @@ namespace GitUI.Editor
                 encod = Module.FilesEncoding;
             else if (encodingToolStripComboBox.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
                 encod = Encoding.Default;
+            else if (encodingToolStripComboBox.Text.Equals("DOS852", StringComparison.CurrentCultureIgnoreCase))
+                encod = Encoding.GetEncoding("CP852");
             else if (encodingToolStripComboBox.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
                 encod = new ASCIIEncoding();
             else if (encodingToolStripComboBox.Text.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
