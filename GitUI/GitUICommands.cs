@@ -12,6 +12,9 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
+
+using JetBrains.Annotations;
+
 using Settings = GitCommands.AppSettings;
 
 namespace GitUI
@@ -153,6 +156,10 @@ namespace GitUI
 
         public event GitUIEventHandler PreBrowseInitialize;
         public event GitUIEventHandler PostBrowseInitialize;
+
+        public event GitUIEventHandler PreSparseWorkingCopy;
+        public event GitUIPostActionEventHandler PostSparseWorkingCopy;
+
         /// <summary>
         /// listeners for changes being made to repository
         /// </summary>
@@ -897,6 +904,24 @@ namespace GitUI
         public bool StartViewPatchDialog()
         {
             return StartViewPatchDialog(null, null);
+        }
+
+        public bool StartSparseWorkingCopyDialog()
+        {
+            return StartSparseWorkingCopyDialog(null);
+        }
+
+        public bool StartSparseWorkingCopyDialog([CanBeNull] IWin32Window owner)
+        {
+            Func<bool> action = () =>
+            {
+                using(var form = new FormSparseWorkingCopy(this))
+                    form.ShowDialog(owner);
+
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, false, PreSparseWorkingCopy, PostSparseWorkingCopy, action);
         }
 
         public bool StartFormatPatchDialog(IWin32Window owner)

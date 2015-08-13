@@ -3373,5 +3373,10 @@ namespace GitUI.CommandsDialogs
             }
             base.Dispose(disposing);
         }
+
+        private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
+        {
+            UICommands.StartSparseWorkingCopyDialog(this);
+        }
     }
 }

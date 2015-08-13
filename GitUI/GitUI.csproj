@@ -130,11 +130,15 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
+    <Compile Include="CommandsDialogs\FormSparseWorkingCopyViewModel.cs" />
     <Compile Include="CommandsDialogs\FormMergeSubmodule.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CommandsDialogs\FormMergeSubmodule.Designer.cs">
       <DependentUpon>FormMergeSubmodule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormSparseWorkingCopy.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
