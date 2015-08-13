@@ -6,6 +6,7 @@ using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Build.Client;
 using TfsInterop.Interface;
 using BuildStatus = TfsInterop.Interface.BuildStatus;
+using System.Text.RegularExpressions;
 
 namespace TfsInterop
 {
@@ -43,7 +44,7 @@ namespace TfsInterop
             }
         }
 
-        public void ConnectToTfsServer(string hostname, string teamCollection, string projectName, string buildDefinitionName = null)
+        public void ConnectToTfsServer(string hostname, string teamCollection, string projectName, Regex buildDefinitionNameFilter = null)
         {
             _hostname = hostname;
 
@@ -71,9 +72,9 @@ namespace TfsInterop
 
                 if (buildDefs.Length != 0)
                 {
-                    _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionName)
+                    _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
                         ? buildDefs
-                        : new IBuildDefinition[]{buildDefs.FirstOrDefault(b => string.Compare(b.Name, buildDefinitionName, StringComparison.InvariantCultureIgnoreCase) == 0)};
+                        : (buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name))).Cast<IBuildDefinition>().ToArray();
                 }
             }
             catch (Exception ex)
