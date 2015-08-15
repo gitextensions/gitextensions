@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 using GitCommands;
@@ -15,6 +17,7 @@ namespace GitUI.CommandsDialogs
 
         public static readonly string SettingCoreSparseCheckout = "core.sparseCheckout";
 
+        [NotNull]
         private readonly GitUICommands _gitcommands;
 
         private bool _isRefreshWorkingCopyOnSave = true /* on by default, otherwise index bitmap won't be updated */;
@@ -161,6 +164,9 @@ namespace GitUI.CommandsDialogs
         {
             // Don't abort if !IsWithUnsavedChanges because we have to run IsRefreshWorkingCopyOnSave in either case (e.g. if edited by hand or got outdated)
 
+            // Special case: turning off sparse for a repo — this won't just go smoothly, looks like git still reads the sparse checkout rules, so emptying or deleting them with turning off will just leave you with what you had before
+            SaveChangesTurningOffSparseSpecialCase();
+
             // Enabled state for the repo
             if(IsSparseCheckoutEnabled != _isSparseCheckoutEnabledAsSaved)
             {
@@ -193,8 +199,53 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
+        /// Fires for the view to show a confirmation msgbox on the matter.
+        /// </summary>
+        public event EventHandler<ComfirmAdjustingRulesOnDeactEventArgs> ComfirmAdjustingRulesOnDeactRequested = delegate { };
+
+        /// <summary>
         /// Fires on any prop change. Lightweight reactive.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        /// <summary>
+        /// Make sure WC gets unsparsed when turning off sparse.
+        /// </summary>
+        private void SaveChangesTurningOffSparseSpecialCase()
+        {
+            if((IsSparseCheckoutEnabled) || (IsSparseCheckoutEnabled == _isSparseCheckoutEnabledAsSaved))
+                return; // Not turning off
+
+            // Now check the rules, the well-known recommendation is to have the single "/*" rule active
+            List<string> rulelines = RulesText.SplitLines().Select(l => l.Trim()).Where(l => (!l.IsNullOrEmpty()) && (l[0] != '#')).ToList(); // All nonempty and non-comment lines
+            if(rulelines.All(l => l == "/*"))
+                return; // Rules OK for turning off
+
+            // Confirm
+            var args = new ComfirmAdjustingRulesOnDeactEventArgs(!rulelines.Any());
+            ComfirmAdjustingRulesOnDeactRequested(this, args);
+            if(args.Cancel)
+                return;
+
+            // Adjust the rules
+            // Comment out all existing nonempty lines, add the single “/*” line to make a total pass filter
+            RulesText = new[] {"/*"}.Concat(RulesText.SplitLines().Select(l => (string.IsNullOrWhiteSpace(l) || (l[0] == '#')) ? l : "#" + l)).Join(Environment.NewLine);
+        }
+
+        /// <summary>
+        /// For <see cref="ComfirmAdjustingRulesOnDeactRequested" />.
+        /// </summary>
+        public class ComfirmAdjustingRulesOnDeactEventArgs : CancelEventArgs
+        {
+            public ComfirmAdjustingRulesOnDeactEventArgs(bool isCurrentRuleSetEmpty)
+            {
+                IsCurrentRuleSetEmpty = isCurrentRuleSetEmpty;
+            }
+
+            /// <summary>
+            /// Empty rule set vs. got some stuff there
+            /// </summary>
+            public bool IsCurrentRuleSetEmpty { get; private set; }
+        }
     }
 }
