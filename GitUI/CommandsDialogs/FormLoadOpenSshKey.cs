@@ -336,17 +336,26 @@ namespace GitUI.CommandsDialogs
             if(serveruri.IsNullOrWhiteSpace())
                 return "";
 
+            // Parse as a valid URI
             Uri uri;
-            if(!Uri.TryCreate(serveruri, UriKind.Absolute, out uri))
-                return "";
-            if((uri.IsFile) || (uri.IsUnc))
-                return "";
+            if(Uri.TryCreate(serveruri, UriKind.Absolute, out uri))
+            {
+                if((uri.IsFile) || (uri.IsUnc))
+                    return "";
 
-            string host = uri.DnsSafeHost;
-            if(host.IsNullOrEmpty())
-                return "";
+                string host = uri.DnsSafeHost;
+                if(host.IsNullOrEmpty())
+                    return "";
 
-            return host;
+                return host;
+            }
+
+            // Special SSH/SCP format of user@host:localpath
+            Match match = Regex.Match(serveruri, @"^\s*(?<User>\S+?)@(?<Host>\S+?):.+$", RegexOptions.Singleline);
+            if(match.Success)
+                return match.Groups["Host"].Value;
+
+            return "";
         }
 
         private class Globalized : Translate
