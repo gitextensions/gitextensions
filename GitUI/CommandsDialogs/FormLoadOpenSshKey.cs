@@ -141,8 +141,6 @@ namespace GitUI.CommandsDialogs
                 sb.Append("Host ").Append(sServerMask);
                 sb.AppendLine();
                 sb.Append("\tIdentityFile ").Append(Path.GetFullPath(pathPrivateKey));
-                sb.AppendLine();
-                sb.Append("\tUser git"); // TODO: how to specify the user name? is it important for our case?
 
                 // Choose the insertion position in the config file
                 // Things to keep in mind:
