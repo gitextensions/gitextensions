@@ -11,6 +11,8 @@ using GitCommands;
 
 using JetBrains.Annotations;
 
+using ResourceManager;
+
 namespace GitUI.CommandsDialogs
 {
     /// <summary>
@@ -39,10 +41,10 @@ namespace GitUI.CommandsDialogs
             try
             {
                 if(pathPrivateKey.IsNullOrWhiteSpace())
-                    throw new ArgumentException("The path to the Private Key file must not be empty.");
+                    throw new ArgumentException(Globalized.Strings.ThePathToThePrivateKeyFileMustNotBeEmpty.Text);
                 var fiPrivate = new FileInfo(pathPrivateKey);
                 if(!fiPrivate.Exists)
-                    throw new ArgumentException(string.Format("The path to the Private Key file, “{0}”, does not point to an existing file.", pathPrivateKey));
+                    throw new ArgumentException(string.Format(Globalized.Strings.ThePathToThePrivateKeyFileDoesNotPointToAnExistingFile.Text, pathPrivateKey));
                 string pathTargetFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.Create), ".ssh"), "id_rsa");
                 if(File.Exists(pathTargetFile))
                 {
@@ -64,10 +66,10 @@ namespace GitUI.CommandsDialogs
                     }
                     if(isAlreadyThere)
                     {
-                        MessageBox.Show(this, "This OpenSSH Private Key has already been assigned to all servers.", "Private Key Already Assigned", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(this, Globalized.Strings.ThisOpensshPrivateKeyHasAlreadyBeenAssignedToAllServers.Text, Globalized.Strings.PrivateKeyAlreadyAssigned.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return true;
                     }
-                    if(MessageBox.Show(this, "The OpenSSH Private Key as assigned to all servers by copying to the %USERPROFILE%/.ssh/id_rsa file.\n\nA file already exists at this location.\nOverwriting this file might break authentication to other servers.\nAssign to specific server instead if not sure.\n\nOverwrite?", "Private Key Already Assigned", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                    if(MessageBox.Show(this, Globalized.Strings.IdRsaAlreadyExists.Text, Globalized.Strings.PrivateKeyAlreadyAssigned.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
                         return false;
                 }
 
@@ -76,12 +78,12 @@ namespace GitUI.CommandsDialogs
                 fiPrivate.CopyTo(pathTargetFile, true);
 
                 // Ack success
-                MessageBox.Show(this, "The OpenSSH Private Key has been assigned\nto be used with all servers by default\n(unless overridden for specific servers).", "Private Key Assigned", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, Globalized.Strings.IdRsaAssignedOk.Text, Globalized.Strings.PrivateKeyAssigned.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
             catch(Exception ex)
             {
-                MessageBox.Show(this, "Could not assign the OpenSSH Private Key to all servers." + "\n\n" + ex.Message, "Failed to Assign Private Key", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, Globalized.Strings.CouldNotAssignTheOpensshPrivateKeyToAllServers.Text + "\n\n" + ex.Message, Globalized.Strings.FailedToAssignPrivateKey.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
@@ -91,12 +93,12 @@ namespace GitUI.CommandsDialogs
             try
             {
                 if(pathPrivateKey.IsNullOrWhiteSpace())
-                    throw new ArgumentException("The path to the Private Key file must not be empty.");
+                    throw new ArgumentException(Globalized.Strings.ThePathToThePrivateKeyFileMustNotBeEmpty.Text);
                 var fiPrivate = new FileInfo(pathPrivateKey);
                 if(!fiPrivate.Exists)
-                    throw new ArgumentException(string.Format("The path to the Private Key file, “{0}”, does not point to an existing file.", pathPrivateKey));
+                    throw new ArgumentException(string.Format(Globalized.Strings.ThePathToThePrivateKeyFileDoesNotPointToAnExistingFile.Text, pathPrivateKey));
                 if(sServerMask.IsNullOrWhiteSpace())
-                    throw new ArgumentException("The specific server mask must not be empty.");
+                    throw new ArgumentException(Globalized.Strings.TheServerNameMustNotBeEmpty.Text);
 
                 // Load the server assignment file
                 string pathConfigFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.Create), ".ssh"), "config");
@@ -130,7 +132,7 @@ namespace GitUI.CommandsDialogs
                 }
                 if(isMatchingOurServer)
                 {
-                    if(MessageBox.Show(this, string.Format("The OpenSSH configuration file already has records that match the server you're trying to set up.\nIt is recommended that you edit the file manually at %USERPROFILE%/.ssh/config.\n\nWould you still like to add a new record for “{0}”?\n(It will have precedence over all existing records.)", sServerMask), "Record Already Exists", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                    if(MessageBox.Show(this, string.Format(Globalized.Strings.SshConfigAlreadyLists.Text, sServerMask), Globalized.Strings.RecordAlreadyExists.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
                         return false;
                 }
 
@@ -163,19 +165,19 @@ namespace GitUI.CommandsDialogs
                 EnsureDirectoryOfFile(pathConfigFile);
                 File.WriteAllBytes(pathConfigFile, Encoding.UTF8.GetBytes(textConfig)); // WriteAllText with encoding would add a BOM which OpenSSH cannot handle, and this way it's just the useful bytes
 
-                MessageBox.Show(this, string.Format("A record to assign the Private Key to server “{0}” has been successfully added to the OpenSSH Config.\n\nConfig file path:\n{1}\n\nRecord:\n{2}", sServerMask, pathConfigFile, sb), "Private Key Assigned", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, string.Format(Globalized.Strings.SshConfigAssignedOk.Text, sServerMask, pathConfigFile, sb), Globalized.Strings.PrivateKeyAssigned.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
             catch(Exception ex)
             {
-                MessageBox.Show(this, string.Format("Could not assign the OpenSSH Private Key to server “{0}”.", sServerMask) + "\n\n" + ex.Message, "Failed to Assign Private Key", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, string.Format(Globalized.Strings.CouldNotAssignTheOpensshPrivateKeyToServer.Text, sServerMask) + "\n\n" + ex.Message, Globalized.Strings.FailedToAssignPrivateKey.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
 
         private void CreateView([CanBeNull] string serveruri)
         {
-            Text = "OpenSSH Keys";
+            Text = Globalized.Strings.FormTitle.Text;
             Padding = new Padding(10);
             MinimizeBox = false;
             MaximizeBox = false;
@@ -185,16 +187,16 @@ namespace GitUI.CommandsDialogs
             var grid = new TableLayoutPanel() {AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Dock = DockStyle.Fill, Margin = new Padding(10)};
 
             // Intro
-            grid.Controls.Add(new Label() {Text = "OpenSSH uses a pair of matching keys for authentication: a Public Key and a Private Key.\n    The Public Key is manually uploaded to Git servers and makes servers know that it's you trying to connect with its pair.\n    The Private Key is secret, you only give it to OpenSSH to set up your end of the connection.", AutoSize = true});
+            grid.Controls.Add(new Label() {Text = Globalized.Strings.Welcome.Text, AutoSize = true});
 
             Padding marginHeader = DefaultMargin + new Padding(0, 15, 0, 5);
 
             // New key pair
             Label labelHeaderNew;
-            grid.Controls.Add(labelHeaderNew = new Label() {Text = "Don't have a key pair yet?", AutoSize = true, Margin = marginHeader /*, FlatStyle = FlatStyle.System*/});
+            grid.Controls.Add(labelHeaderNew = new Label() {Text = Globalized.Strings.DonTHaveAKeyPairYet.Text, AutoSize = true, Margin = marginHeader /*, FlatStyle = FlatStyle.System*/});
             labelHeaderNew.Font = new Font(labelHeaderNew.Font, FontStyle.Bold);
             Button btnShowToMake;
-            grid.Controls.Add(btnShowToMake = new Button() {Text = "Make a &New Key Pair >>", AutoSize = true, MinimumSize = new Size(75 * 2, 23)});
+            grid.Controls.Add(btnShowToMake = new Button() {Text = Globalized.Strings.MakeANewKeyPair.Text, AutoSize = true, MinimumSize = new Size(75 * 2, 23)});
             IList<Control> controlsShowToMake = new List<Control>();
             btnShowToMake.Click += delegate
             {
@@ -202,36 +204,36 @@ namespace GitUI.CommandsDialogs
                 btnShowToMake.Enabled = false;
             };
             Label labelPuttyGenHowTo;
-            grid.Controls.Add(labelPuttyGenHowTo = new Label() {Text = "This will open the PuTTY Key Generator to produce a new pair of keys.\n    1) Use “Generate” button to make the new key pair.\n    2) Use “Save public key” button to get the Public Key file which you upload to the Git server, or you can just copypaste its text.\n    3) Use “Menu | Conversions | Export OpenSSH key” to save the Private Key to a file in a format suitable for OpenSSH. The button won't do.\n    4) Done with the PuTTY Key Generator, proceed with this dialog to browse for the newly-saved Private Key file.", AutoSize = true, Visible = false});
+            grid.Controls.Add(labelPuttyGenHowTo = new Label() {Text = Globalized.Strings.PuttyGenInstructions.Text, AutoSize = true, Visible = false});
             controlsShowToMake.Add(labelPuttyGenHowTo);
             Button btnOpenPuttyGen;
-            grid.Controls.Add(btnOpenPuttyGen = new Button() {Text = "Open PuTTY Key &Generator…", AutoSize = true, Visible = false, MinimumSize = new Size(75 * 2, 23)});
+            grid.Controls.Add(btnOpenPuttyGen = new Button() {Text = Globalized.Strings.OpenPuttyKeyGenerator.Text, AutoSize = true, Visible = false, MinimumSize = new Size(75 * 2, 23)});
             btnOpenPuttyGen.Click += delegate { Module.RunExternalCmdDetached(AppSettings.Puttygen, ""); };
             controlsShowToMake.Add(btnOpenPuttyGen);
 
             /////////////////////////
             // Browse
             Label labelHeaderBrowse;
-            grid.Controls.Add(labelHeaderBrowse = new Label() {Text = "Browse for the Private Key File", AutoSize = true, Margin = marginHeader});
+            grid.Controls.Add(labelHeaderBrowse = new Label() {Text = Globalized.Strings.BrowseForThePrivateKeyFile.Text, AutoSize = true, Margin = marginHeader});
             labelHeaderBrowse.Font = new Font(labelHeaderBrowse.Font, FontStyle.Bold);
-            grid.Controls.Add(new Label() {Text = "OpenSSH needs the Private Key which matches the Public Key you've told to the server.\nIt's generally OK to use the same key pair for more than one server, just keep the Private Key safe.", AutoSize = true, Margin = DefaultMargin + new Padding(0, 0, 0, 5)});
+            grid.Controls.Add(new Label() {Text = Globalized.Strings.PrivateKeyLabel.Text, AutoSize = true, Margin = DefaultMargin + new Padding(0, 0, 0, 5)});
 
             TableLayoutPanel gridBrowsePrivateKey;
             grid.Controls.Add(gridBrowsePrivateKey = new TableLayoutPanel() {AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Dock = DockStyle.Fill, Margin = Padding.Empty, Padding = Padding.Empty, ColumnCount = 3, ColumnStyles = {new ColumnStyle(), new ColumnStyle(SizeType.Percent, 100), new ColumnStyle()}});
-            gridBrowsePrivateKey.Controls.Add(new Label() {Text = "&Path:", AutoSize = true, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft});
+            gridBrowsePrivateKey.Controls.Add(new Label() {Text = Globalized.Strings.PathLabel.Text, AutoSize = true, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft});
 
             TextBox editPrivateKeyPath;
             gridBrowsePrivateKey.Controls.Add(editPrivateKeyPath = new TextBox() {Dock = DockStyle.Fill, AutoSize = true, Text = _mruPrivateKeyPath ?? ""});
             editPrivateKeyPath.TextChanged += delegate { _mruPrivateKeyPath = editPrivateKeyPath.Text; };
 
             Button btnBrowsePrivateKey;
-            gridBrowsePrivateKey.Controls.Add(btnBrowsePrivateKey = new Button() {Text = "&Browse…", AutoSize = true, MinimumSize = new Size(75 * 1, 23)});
+            gridBrowsePrivateKey.Controls.Add(btnBrowsePrivateKey = new Button() {Text = Globalized.Strings.Browse.Text, AutoSize = true, MinimumSize = new Size(75 * 1, 23)});
             btnBrowsePrivateKey.Click += delegate
             {
                 using(var openpk = new OpenFileDialog())
                 {
-                    openpk.Title = "Browse for Private Key";
-                    openpk.Filter = "All Files (*.*)|*.*";
+                    openpk.Title = Globalized.Strings.BrowseForPrivateKey.Text;
+                    openpk.Filter = string.Format("{0} (*.*)|*.*", Globalized.Strings.AllFiles.Text);
                     if(!editPrivateKeyPath.Text.IsNullOrWhiteSpace())
                         openpk.FileName = editPrivateKeyPath.Text;
                     if(openpk.ShowDialog(this) == DialogResult.OK)
@@ -246,16 +248,16 @@ namespace GitUI.CommandsDialogs
             grid.Controls.Add(gridAssign = new TableLayoutPanel() {AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Dock = DockStyle.Fill, Margin = Padding.Empty, Padding = Padding.Empty, ColumnCount = 3, ColumnStyles = {new ColumnStyle(SizeType.Percent, 50), new ColumnStyle(), new ColumnStyle(SizeType.Percent, 50)}, RowCount = 3});
 
             Label labelHeaderAssignAll;
-            gridAssign.Controls.Add(labelHeaderAssignAll = new Label() {Text = "Assign Private Key: All Servers", AutoSize = true, Margin = marginHeader}, 0, 0);
+            gridAssign.Controls.Add(labelHeaderAssignAll = new Label() {Text = Globalized.Strings.AssignPrivateKeyAllServers.Text, AutoSize = true, Margin = marginHeader}, 0, 0);
             labelHeaderAssignAll.Font = new Font(labelHeaderAssignAll.Font, FontStyle.Bold);
             Label labelHeaderAssignThis;
-            gridAssign.Controls.Add(labelHeaderAssignThis = new Label() {Text = "Assign Private Key: This Server", AutoSize = true, Margin = marginHeader}, 2, 0);
+            gridAssign.Controls.Add(labelHeaderAssignThis = new Label() {Text = Globalized.Strings.AssignPrivateKeyThisServer.Text, AutoSize = true, Margin = marginHeader}, 2, 0);
             labelHeaderAssignThis.Font = new Font(labelHeaderAssignThis.Font, FontStyle.Bold);
 
             // Assign::All
-            gridAssign.Controls.Add(new Label() {Text = "Writes the private key into the id_rsa file,\nwhich OpenSSH uses by default.\n(OpenSSH config might override for select servers)\n\nThe original private key will be no longer needed,\nand can be deleted.", AutoSize = true}, 0, 1);
+            gridAssign.Controls.Add(new Label() {Text = Globalized.Strings.AssignAllInfo.Text, AutoSize = true}, 0, 1);
             Button btnAssignAll;
-            gridAssign.Controls.Add(btnAssignAll = new Button() {Text = "Assign to &All Servers", AutoSize = true, MinimumSize = new Size(75 * 2, 23)}, 0, 2);
+            gridAssign.Controls.Add(btnAssignAll = new Button() {Text = Globalized.Strings.AssignToAllServers.Text, AutoSize = true, MinimumSize = new Size(75 * 2, 23)}, 0, 2);
             btnAssignAll.Click += delegate
             {
                 if(AssignAll(editPrivateKeyPath.Text))
@@ -268,12 +270,12 @@ namespace GitUI.CommandsDialogs
             // Assign::This
             TableLayoutPanel gridAssignThisLabels;
             gridAssign.Controls.Add(gridAssignThisLabels = new TableLayoutPanel() {AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Dock = DockStyle.Fill, Margin = Padding.Empty, Padding = Padding.Empty}, 2, 1);
-            gridAssignThisLabels.Controls.Add(new Label() {Text = "Edits the OpenSSH config file to specify\nthe Private Key file path for the given server.\nDo not delete the key file, it's required for operation.\n\n&Server name (might contain wildcards):", AutoSize = true});
+            gridAssignThisLabels.Controls.Add(new Label() {Text = Globalized.Strings.AssignSpecificInfo.Text, AutoSize = true});
             TextBox editServerMask;
             gridAssignThisLabels.Controls.Add(editServerMask = new TextBox() {Text = TryGetServerNameFromUri(serveruri), AutoSize = true, Dock = DockStyle.Top});
 
             Button btnAssignSpecific;
-            gridAssign.Controls.Add(btnAssignSpecific = new Button() {Text = "Assign to &This Server", AutoSize = true, MinimumSize = new Size(75 * 2, 23)}, 2, 2);
+            gridAssign.Controls.Add(btnAssignSpecific = new Button() {Text = Globalized.Strings.AssignToThisServer.Text, AutoSize = true, MinimumSize = new Size(75 * 2, 23)}, 2, 2);
             btnAssignSpecific.Click += delegate
             {
                 if(AssignSpecific(editPrivateKeyPath.Text, editServerMask.Text))
@@ -310,7 +312,7 @@ namespace GitUI.CommandsDialogs
             // Ensure directory
             string dir = Path.GetDirectoryName(pathTargetFile);
             if(dir == null)
-                throw new InvalidOperationException(string.Format("Unexpected: could not determine the directory of the file “{0}”.", pathTargetFile));
+                throw new InvalidOperationException(string.Format(Globalized.Strings.UnexpectedCouldNotDetermineTheDirectoryOfTheFile.Text, pathTargetFile));
             if(Directory.Exists(dir))
                 return;
 
@@ -320,7 +322,7 @@ namespace GitUI.CommandsDialogs
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException(string.Format("Failed to write the file “{0}” because its directory “{1}” does not exist and it could not be created. {2}", pathTargetFile, dir, ex.Message));
+                throw new InvalidOperationException(string.Format(Globalized.Strings.CantCreateDir.Text, pathTargetFile, dir, ex.Message));
             }
         }
 
@@ -345,6 +347,84 @@ namespace GitUI.CommandsDialogs
                 return "";
 
             return host;
+        }
+
+        private class Globalized : Translate
+        {
+            public static readonly Globalized Strings = new Globalized();
+
+            private Globalized()
+            {
+                Translator.Translate(this, AppSettings.CurrentTranslation);
+            }
+
+            public readonly TranslationString AllFiles = new TranslationString("All Files");
+
+            public readonly TranslationString AssignAllInfo = new TranslationString("Writes the private key into the id_rsa file,\nwhich OpenSSH uses by default.\n(OpenSSH config might override for select servers)\n\nThe original private key will be no longer needed,\nand can be deleted.");
+
+            public readonly TranslationString AssignPrivateKeyAllServers = new TranslationString("Assign Private Key: All Servers");
+
+            public readonly TranslationString AssignPrivateKeyThisServer = new TranslationString("Assign Private Key: This Server");
+
+            public readonly TranslationString AssignSpecificInfo = new TranslationString("Edits the OpenSSH config file to specify\nthe Private Key file path for the given server.\nDo not delete the key file, it's required for operation.\n\n&Server name (might contain wildcards):");
+
+            public readonly TranslationString AssignToAllServers = new TranslationString("Assign to &All Servers");
+
+            public readonly TranslationString AssignToThisServer = new TranslationString("Assign to &This Server");
+
+            public readonly TranslationString Browse = new TranslationString("&Browse…");
+
+            public readonly TranslationString BrowseForPrivateKey = new TranslationString("Browse for Private Key");
+
+            public readonly TranslationString BrowseForThePrivateKeyFile = new TranslationString("Browse for the Private Key File");
+
+            public readonly TranslationString CantCreateDir = new TranslationString("Failed to write the file “{0}” because its directory “{1}” does not exist and it could not be created. {2}");
+
+            public readonly TranslationString CouldNotAssignTheOpensshPrivateKeyToAllServers = new TranslationString("Could not assign the OpenSSH Private Key to all servers.");
+
+            public readonly TranslationString CouldNotAssignTheOpensshPrivateKeyToServer = new TranslationString("Could not assign the OpenSSH Private Key to server “{0}”.");
+
+            public readonly TranslationString DonTHaveAKeyPairYet = new TranslationString("Don't have a key pair yet?");
+
+            public readonly TranslationString FailedToAssignPrivateKey = new TranslationString("Failed to Assign Private Key");
+
+            public readonly TranslationString FormTitle = new TranslationString("OpenSSH Keys");
+
+            public readonly TranslationString IdRsaAlreadyExists = new TranslationString("The OpenSSH Private Key as assigned to all servers by copying to the %USERPROFILE%/.ssh/id_rsa file.\n\nA file already exists at this location.\nOverwriting this file might break authentication to other servers.\nAssign to specific server instead if not sure.\n\nOverwrite?");
+
+            public readonly TranslationString IdRsaAssignedOk = new TranslationString("The OpenSSH Private Key has been assigned\nto be used with all servers by default\n(unless overridden for specific servers).");
+
+            public readonly TranslationString MakeANewKeyPair = new TranslationString("Make a &New Key Pair >>");
+
+            public readonly TranslationString OpenPuttyKeyGenerator = new TranslationString("Open PuTTY Key &Generator…");
+
+            public readonly TranslationString PathLabel = new TranslationString("&Path:");
+
+            public readonly TranslationString PrivateKeyAlreadyAssigned = new TranslationString("Private Key Already Assigned");
+
+            public readonly TranslationString PrivateKeyAssigned = new TranslationString("Private Key Assigned");
+
+            public readonly TranslationString PrivateKeyLabel = new TranslationString("OpenSSH needs the Private Key which matches the Public Key you've told to the server.\nIt's generally OK to use the same key pair for more than one server, just keep the Private Key safe.");
+
+            public readonly TranslationString PuttyGenInstructions = new TranslationString("This will open the PuTTY Key Generator to produce a new pair of keys.\n    1) Use “Generate” button to make the new key pair.\n    2) Use “Save public key” button to get the Public Key file which you upload to the Git server, or you can just copypaste its text.\n    3) Use “Menu | Conversions | Export OpenSSH key” to save the Private Key to a file in a format suitable for OpenSSH. The button won't do.\n    4) Done with the PuTTY Key Generator, proceed with this dialog to browse for the newly-saved Private Key file.");
+
+            public readonly TranslationString RecordAlreadyExists = new TranslationString("Record Already Exists");
+
+            public readonly TranslationString SshConfigAlreadyLists = new TranslationString("The OpenSSH configuration file already has records that match the server you're trying to set up.\nIt is recommended that you edit the file manually at %USERPROFILE%/.ssh/config.\n\nWould you still like to add a new record for “{0}”?\n(It will have precedence over all existing records.)");
+
+            public readonly TranslationString SshConfigAssignedOk = new TranslationString("A record to assign the Private Key to server “{0}” has been successfully added to the OpenSSH Config.\n\nConfig file path:\n{1}\n\nRecord:\n{2}");
+
+            public readonly TranslationString ThePathToThePrivateKeyFileDoesNotPointToAnExistingFile = new TranslationString("The path to the Private Key file, “{0}”, does not point to an existing file.");
+
+            public readonly TranslationString ThePathToThePrivateKeyFileMustNotBeEmpty = new TranslationString("The path to the Private Key file must not be empty.");
+
+            public readonly TranslationString TheServerNameMustNotBeEmpty = new TranslationString("The server name must not be empty.");
+
+            public readonly TranslationString ThisOpensshPrivateKeyHasAlreadyBeenAssignedToAllServers = new TranslationString("This OpenSSH Private Key has already been assigned to all servers.");
+
+            public readonly TranslationString UnexpectedCouldNotDetermineTheDirectoryOfTheFile = new TranslationString("Unexpected: could not determine the directory of the file “{0}”.");
+
+            public readonly TranslationString Welcome = new TranslationString("OpenSSH uses a pair of matching keys for authentication: a Public Key and a Private Key.\n    The Public Key is manually uploaded to Git servers and makes servers know that it's you trying to connect with its pair.\n    The Private Key is secret, you only give it to OpenSSH to set up your end of the connection.");
         }
     }
 }
