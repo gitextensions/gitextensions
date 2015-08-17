@@ -72,7 +72,7 @@ Ce program est distribué dans l'espoir d'être utile, mais SANS AUCUNE GARANTIE
         <source>Use last chosen &quot;local changes&quot; action as default action.
 This action will be performed without warning while checking out branch.</source>
         <target>Utiliser la dernière action &quot;modifications locales&quot; comme action par défaut.
-Cette action sera effectuée sans avertissment durant le chargement d'une branche.</target>
+Cette action sera effectuée sans avertissement durant le chargement d'une branche.</target>
         
       </trans-unit>
     </body>
@@ -9202,7 +9202,7 @@ when all items are shown:</source>
       <trans-unit id="lblMenuEntries.Text">
         <source>Select items to be shown in the cascaded context menu.
 (Unchecked items will be shown top level for direct access.)</source>
-        <target>Sélectionneé les items à afficher dans
+        <target>Sélectionnée les items à afficher dans
 le menu contextuel en cascade :</target>
         
       </trans-unit>
