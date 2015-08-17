@@ -14,13 +14,19 @@ namespace GitUI.CommandsDialogs
 {
     public sealed class FormLoadOpenSshKey : GitModuleForm
     {
-        public FormLoadOpenSshKey([CanBeNull] GitUICommands aCommands)
+        /// <summary>
+        /// Saved only in-memory for the case when you reopen the dialog, not exposed in settings.
+        /// </summary>
+        [CanBeNull]
+        private static string _mruPrivateKeyPath;
+
+        public FormLoadOpenSshKey([CanBeNull] GitUICommands aCommands, [CanBeNull] string serveruri)
             : base(aCommands)
         {
             if(aCommands == null)
                 return; // Tests
 
-            CreateView();
+            CreateView(serveruri);
             Translate();
         }
 
@@ -29,10 +35,10 @@ namespace GitUI.CommandsDialogs
             try
             {
                 if(pathPrivateKey.IsNullOrWhiteSpace())
-                    throw new ArgumentNullException("pathPrivateKey", "The path to the Private Key file must not be empty.");
+                    throw new ArgumentException("The path to the Private Key file must not be empty.");
                 var fiPrivate = new FileInfo(pathPrivateKey);
                 if(!fiPrivate.Exists)
-                    throw new ArgumentOutOfRangeException("pathPrivateKey", pathPrivateKey, string.Format("The path to the Private Key file, “{0}”, does not point to an existing file.", pathPrivateKey));
+                    throw new ArgumentException(string.Format("The path to the Private Key file, “{0}”, does not point to an existing file.", pathPrivateKey));
                 string pathTargetFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.Create), ".ssh"), "id_rsa");
                 if(File.Exists(pathTargetFile))
                 {
@@ -60,8 +66,13 @@ namespace GitUI.CommandsDialogs
                     if(MessageBox.Show(this, "The OpenSSH Private Key as assigned to all servers by copying to the %USERPROFILE%/.ssh/id_rsa file.\n\nA file already exists at this location.\nOverwriting this file might break authentication to other servers.\nAssign to specific server instead if not sure.\n\nOverwrite?", "Private Key Already Assigned", MessageBoxButtons.YesNo, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
                         return;
                 }
+
+                // Plant the file
+                EnsureDirectoryOfFile(pathTargetFile);
                 fiPrivate.CopyTo(pathTargetFile, true);
-                MessageBox.Show(this, "The OpenSSH Private Key has been assigned to be used with all servers by default\n(unless there's another key assigned to a specific server).", "Private Key Assigned", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Ack success
+                MessageBox.Show(this, "The OpenSSH Private Key has been assigned\nto be used with all servers by default\n(unless overridden for specific servers).", "Private Key Assigned", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch(Exception ex)
             {
@@ -74,12 +85,12 @@ namespace GitUI.CommandsDialogs
             try
             {
                 if(pathPrivateKey.IsNullOrWhiteSpace())
-                    throw new ArgumentNullException("pathPrivateKey", "The path to the Private Key file must not be empty.");
+                    throw new ArgumentException("The path to the Private Key file must not be empty.");
                 var fiPrivate = new FileInfo(pathPrivateKey);
                 if(!fiPrivate.Exists)
-                    throw new ArgumentOutOfRangeException("pathPrivateKey", pathPrivateKey, string.Format("The path to the Private Key file, “{0}”, does not point to an existing file.", pathPrivateKey));
+                    throw new ArgumentException(string.Format("The path to the Private Key file, “{0}”, does not point to an existing file.", pathPrivateKey));
                 if(sServerMask.IsNullOrWhiteSpace())
-                    throw new ArgumentNullException("sServerMask", "The specific server mask must not be empty.");
+                    throw new ArgumentException("The specific server mask must not be empty.");
 
                 // Load the server assignment file
                 string pathConfigFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.Create), ".ssh"), "config");
@@ -88,12 +99,12 @@ namespace GitUI.CommandsDialogs
                     textConfig = File.ReadAllText(pathConfigFile, Encoding.UTF8);
 
                 // A bit parsing on the file, to (1) see if looks like got already a record for this host, (2) find a place to insert, before the first host but after all non-hosted stuff
-                var regexHost = new Regex(@"(?<PreNL>^|[\r\n]+)[\f\t\v\x85\p{Z}]*Host(?<Patterns>[^\f\t\v\x85\p{Z}]*)($|[\r\n])", RegexOptions.Singleline); // Match all newlines before host, for correct insertion
+                var regexHost = new Regex(@"(^|[\r\n]+)[\f\t\v\x85\p{Z}]*Host\b(?<Patterns>[^\r\n]*)($|[\r\n])", RegexOptions.Singleline); // Match all newlines before host, for correct insertion
                 MatchCollection matchesHosts = regexHost.Matches(textConfig);
 
                 // Look for our host, confirm if to proceed
                 var regexPattern = new Regex("(?<P>\\S+)", RegexOptions.Singleline);
-                var regexOurHost = new Regex("\b" + Regex.Escape(sServerMask).Replace("*", ".+").Replace('?', '.') + "\b", RegexOptions.Singleline);
+                var regexOurHost = new Regex("\\b" + Regex.Escape(sServerMask).Replace("\\*", ".+").Replace("\\?", ".") + "\\b", RegexOptions.Singleline);
                 bool isMatchingOurServer = false;
                 var wildcardchars = new[] {'?', '*'};
                 foreach(string pattern in matchesHosts.OfType<Match>().SelectMany(m => regexPattern.Matches(m.Groups["Patterns"].Value).OfType<Match>()).Select(m => m.Groups["P"].Value))
@@ -105,7 +116,7 @@ namespace GitUI.CommandsDialogs
                         break;
                     }
                     // If the host in the file is a pattern itself, and it matches our server name
-                    if((pattern.IndexOfAny(wildcardchars) >= 0) && (Regex.IsMatch(sServerMask, Regex.Escape(pattern).Replace("*", ".+").Replace('?', '.'), RegexOptions.Singleline)))
+                    if((pattern.IndexOfAny(wildcardchars) >= 0) && (Regex.IsMatch(sServerMask, Regex.Escape(pattern).Replace("\\*", ".+").Replace("\\?", "."), RegexOptions.Singleline)))
                     {
                         isMatchingOurServer = true;
                         break;
@@ -143,9 +154,10 @@ namespace GitUI.CommandsDialogs
                 textConfig = textConfig.Insert(nInsertAt, (nInsertAt > 0 ? Environment.NewLine + Environment.NewLine : "") + sb);
 
                 // Save
-                File.WriteAllText(pathConfigFile, textConfig, Encoding.UTF8);
+                EnsureDirectoryOfFile(pathConfigFile);
+                File.WriteAllBytes(pathConfigFile, Encoding.UTF8.GetBytes(textConfig)); // WriteAllText with encoding would add a BOM which OpenSSH cannot handle, and this way it's just the useful bytes
 
-                MessageBox.Show(this, string.Format("A record to assign the Private Key to server “{0}” has been successfully added to the OpenSSH Config.\n\nConfig file path:\n{1}\n\nRecord:\n{2}", sServerMask, pathConfigFile, sb));
+                MessageBox.Show(this, string.Format("A record to assign the Private Key to server “{0}” has been successfully added to the OpenSSH Config.\n\nConfig file path:\n{1}\n\nRecord:\n{2}", sServerMask, pathConfigFile, sb), "Private Key Assigned", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch(Exception ex)
             {
@@ -153,7 +165,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void CreateView()
+        private void CreateView([CanBeNull] string serveruri)
         {
             Text = "OpenSSH Keys";
 
@@ -183,7 +195,8 @@ namespace GitUI.CommandsDialogs
             // Browse
             grid.Controls.Add(new Label() {Text = "OpenSSH needs the Private Key which matches the Public Key you've told to the server.\nIt's generally safe to use the same key pair for more than one server, just keep the Private Key safe.", AutoSize = true});
             TextBox editPrivateKeyPath;
-            grid.Controls.Add(editPrivateKeyPath = new TextBox() {Dock = DockStyle.Top, AutoSize = true});
+            grid.Controls.Add(editPrivateKeyPath = new TextBox() {Dock = DockStyle.Top, AutoSize = true, Text = _mruPrivateKeyPath ?? ""});
+            editPrivateKeyPath.TextChanged += delegate { _mruPrivateKeyPath = editPrivateKeyPath.Text; };
             Button btnBrowsePrivateKey;
             grid.Controls.Add(btnBrowsePrivateKey = new Button() {Text = "Browse for Private Key…", AutoSize = true});
             btnBrowsePrivateKey.Click += delegate
@@ -192,6 +205,8 @@ namespace GitUI.CommandsDialogs
                 {
                     openpk.Title = "Browse for Private Key";
                     openpk.Filter = "All Files (*.*)|*.*";
+                    if(!editPrivateKeyPath.Text.IsNullOrWhiteSpace())
+                        openpk.FileName = editPrivateKeyPath.Text;
                     if(openpk.ShowDialog(this) == DialogResult.OK)
                         editPrivateKeyPath.Text = openpk.FileName;
                 }
@@ -206,7 +221,7 @@ namespace GitUI.CommandsDialogs
             Button btnAssignSpecific;
             grid.Controls.Add(btnAssignSpecific = new Button() {Text = "Assign to This Server", AutoSize = true});
             TextBox editServerMask;
-            grid.Controls.Add(editServerMask = new TextBox() {Text = "<servername>", AutoSize = true, Dock = DockStyle.Top});
+            grid.Controls.Add(editServerMask = new TextBox() {Text = TryGetServerNameFromUri(serveruri), AutoSize = true, Dock = DockStyle.Top});
             btnAssignSpecific.Click += delegate { AssignSpecific(editPrivateKeyPath.Text, editServerMask.Text); };
 
             // Close
@@ -218,6 +233,51 @@ namespace GitUI.CommandsDialogs
             Controls.Add(grid);
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        }
+
+        private static void EnsureDirectoryOfFile([NotNull] string pathTargetFile)
+        {
+            if(pathTargetFile == null)
+                throw new ArgumentNullException("pathTargetFile");
+
+            // Ensure directory
+            string dir = Path.GetDirectoryName(pathTargetFile);
+            if(dir == null)
+                throw new InvalidOperationException(string.Format("Unexpected: could not determine the directory of the file “{0}”.", pathTargetFile));
+            if(Directory.Exists(dir))
+                return;
+
+            try
+            {
+                Directory.CreateDirectory(dir);
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException(string.Format("Failed to write the file “{0}” because its directory “{1}” does not exist and it could not be created. {2}", pathTargetFile, dir, ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// We use the “from” field of the Clone dialog to get the default for the remote server name.
+        /// Might be either a valid remote URI, or a local abs/rel path, or an UNC path, or not yet entered at all, or some garbage. Only extract valid server names.
+        /// </summary>
+        [NotNull]
+        private static string TryGetServerNameFromUri([CanBeNull] string serveruri)
+        {
+            if(serveruri.IsNullOrWhiteSpace())
+                return "";
+
+            Uri uri;
+            if(!Uri.TryCreate(serveruri, UriKind.Absolute, out uri))
+                return "";
+            if((uri.IsFile) || (uri.IsUnc))
+                return "";
+
+            string host = uri.DnsSafeHost;
+            if(host.IsNullOrEmpty())
+                return "";
+
+            return host;
         }
     }
 }

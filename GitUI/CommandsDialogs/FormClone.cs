@@ -238,7 +238,7 @@ namespace GitUI.CommandsDialogs
                 BrowseForPrivateKey.BrowseAndLoad(this);
             else
             {
-                using(var dialog = new FormLoadOpenSshKey(UICommands))
+                using(var dialog = new FormLoadOpenSshKey(UICommands, _NO_TRANSLATE_From.Text))
                     dialog.ShowDialog();
             }
         }
