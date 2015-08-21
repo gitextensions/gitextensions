@@ -3232,11 +3232,12 @@ namespace GitCommands
         public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath,
             string extraArgs, Encoding encoding)
         {
-            var cmd = string.Format("diff-tree --cc --no-commit-id {0} {1} {2} -- {3}",
+            var cmd = string.Format("diff-tree {4} --no-commit-id {0} {1} {2} -- {3}",
                 extraArgs,
                 revisionOfMergeCommit.Guid,
                 AppSettings.UsePatienceDiffAlgorithm ? "--patience" : "",
-                filePath);
+                filePath,
+                AppSettings.OmitUninterestingDiff? "--cc" : "-c -p");
 
             var patchManager = new PatchManager();
             var patch = RunCacheableCmd(AppSettings.GitCommand, cmd, LosslessEncoding);
