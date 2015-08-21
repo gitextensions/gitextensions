@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using GitCommands;
 using ICSharpCode.TextEditor.Document;
+using PatchApply;
 
 namespace GitUI.Editor.Diff
 {
@@ -13,13 +14,12 @@ namespace GitUI.Editor.Diff
 
         protected DiffHighlightService()
         {
-            
+
         }
 
         public static bool IsCombinedDiff(string diff)
         {
-            return !string.IsNullOrWhiteSpace(diff) &&
-                                 (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
+            return PatchProcessor.IsCombinedDiff(diff);
         }
 
         private static void MarkDifference(IDocument document, List<ISegment> linesRemoved, List<ISegment> linesAdded, int beginOffset)
@@ -131,14 +131,14 @@ namespace GitUI.Editor.Diff
             return _linePrefixHelper.GetLinesStartingWith(document, ref line, "-", ref found);
         }
 
-        protected void ProcessLineSegment(IDocument document, ref int line, 
+        protected void ProcessLineSegment(IDocument document, ref int line,
             LineSegment lineSegment, string prefixStr, Color color)
         {
             if (_linePrefixHelper.DoesLineStartWith(document, lineSegment.Offset, prefixStr))
             {
                 var endLine = document.GetLineSegment(line);
 
-                for (; line < document.TotalNumberOfLines 
+                for (; line < document.TotalNumberOfLines
                     && _linePrefixHelper.DoesLineStartWith(document, endLine.Offset, prefixStr);
                     line++)
                 {
