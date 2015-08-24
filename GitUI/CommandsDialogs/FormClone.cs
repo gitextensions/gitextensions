@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs
             this.openedFromProtocolHandler = openedFromProtocolHandler;
             this.url = url;
             _defaultBranchItems = new[] {_branchDefaultRemoteHead.Text, _branchNone.Text};
-            Branches.DataSource = _defaultBranchItems;
+            _NO_TRANSLATE_Branches.DataSource = _defaultBranchItems;
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
@@ -161,7 +161,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // Branch name param
-                string branch = Branches.Text;
+                string branch = _NO_TRANSLATE_Branches.Text;
                 if(branch == _branchDefaultRemoteHead.Text)
                     branch = "";
                 else if(branch == _branchNone.Text)
@@ -279,8 +279,8 @@ namespace GitUI.CommandsDialogs
             if (path.Contains("\\") || path.Contains("/"))
                 _NO_TRANSLATE_NewDirectory.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
 
-            Branches.DataSource = _defaultBranchItems;
-            Branches.Select(0,0);   // Kill full selection on the default branch text
+            _NO_TRANSLATE_Branches.DataSource = _defaultBranchItems;
+            _NO_TRANSLATE_Branches.Select(0,0);   // Kill full selection on the default branch text
 
             ToTextUpdate(sender, e);
         }
@@ -363,12 +363,12 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                string text = Branches.Text;
+                string text = _NO_TRANSLATE_Branches.Text;
                 List<string> branchlist = _defaultBranchItems.Concat(branchList.Result.Select(o => o.LocalName)).ToList();
-                Branches.DataSource = branchlist;
+                _NO_TRANSLATE_Branches.DataSource = branchlist;
                 if (branchlist.Any(a => a == text))
                 {
-                    Branches.Text = text;
+                    _NO_TRANSLATE_Branches.Text = text;
                 }
             }
         }
