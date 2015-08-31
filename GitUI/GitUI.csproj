@@ -168,6 +168,7 @@
       <DependentUpon>CommitDialogSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\EditorHelper.cs" />
+    <Compile Include="Editor\GitExtensionsResourceSyntaxModeProvider.cs" />
     <Compile Include="HelperDialogs\FormBuildServerCredentials.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1503,6 +1504,7 @@
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
     <None Include="Resources\Icons\User.PNG" />
+    <EmbeddedResource Include="Resources\SyntaxHighlightings\GitCommit-SyntaxMode.xshd" />
     <None Include="Translation\Czech.Plugins.xlf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

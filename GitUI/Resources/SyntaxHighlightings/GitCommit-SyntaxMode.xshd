@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="GitCommit" extensions="">
+    <RuleSets>
+        <RuleSet>
+
+            <Span name="LineComment" color="Green" stopateol="true">
+                <Begin>#</Begin>
+            </Span>
+
+        </RuleSet>
+    </RuleSets>
+</SyntaxDefinition>
