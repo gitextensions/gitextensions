@@ -54,6 +54,17 @@ namespace GitUI
             }
         }
 
+        public static new bool ShowDialog(IWin32Window owner, GitModule module, string arguments,
+            HandleOnExit handleOnExit)
+        {
+            using (var formRemoteProcess = new FormRemoteProcess(module, arguments))
+            {
+                formRemoteProcess.HandleOnExitCallback = handleOnExit;
+                formRemoteProcess.ShowDialog(owner);
+                return !formRemoteProcess.ErrorOccurred();
+            }
+        }
+
         private string UrlTryingToConnect = string.Empty;
         /// <summary>
         /// When cloning a remote using putty, sometimes an error occurs that the fingerprint is not known.

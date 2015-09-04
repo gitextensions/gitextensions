@@ -244,12 +244,18 @@ namespace GitUI
 
         public bool StartCommandLineProcessDialog(GitCommand cmd, IWin32Window parentForm)
         {
+            return StartCommandLineProcessDialog(cmd, parentForm, (ref bool isError, FormProcess form) => false);
+        }
+
+        public bool StartCommandLineProcessDialog(GitCommand cmd, IWin32Window parentForm, 
+            HandleOnExit handleOnExit)
+        {
             bool executed;
 
             if (cmd.AccessesRemote())
-                executed = FormRemoteProcess.ShowDialog(parentForm, Module, cmd.ToLine());
+                executed = FormRemoteProcess.ShowDialog(parentForm, Module, cmd.ToLine(), handleOnExit);
             else
-                executed = FormProcess.ShowDialog(parentForm, Module, cmd.ToLine());
+                executed = FormProcess.ShowDialog(parentForm, Module, cmd.ToLine(), handleOnExit);
 
             if (executed && cmd.ChangesRepoState())
                 RepoChangedNotifier.Notify();
