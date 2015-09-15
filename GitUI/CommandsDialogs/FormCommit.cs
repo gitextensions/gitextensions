@@ -1029,6 +1029,7 @@ namespace GitUI.CommandsDialogs
             {
                 toolRefreshItem.Enabled = false;
                 Initialize();
+                Message.InitializeAutoCompleteWordsTask();
                 toolRefreshItem.Enabled = true;
             }
         }

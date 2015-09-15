@@ -38,7 +38,7 @@ namespace GitUI.SpellChecker
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
 
-        private readonly CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource();
         private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new List<IAutoCompleteProvider>();
         private Task<IEnumerable<AutoCompleteWord>> _autoCompleteListTask;
         private bool _autoCompleteWasUserActivated;
@@ -805,8 +805,10 @@ namespace GitUI.SpellChecker
             }
         }
 
-        private void InitializeAutoCompleteWordsTask ()
+        public void InitializeAutoCompleteWordsTask ()
         {
+            CancelAutoComplete();
+            _autoCompleteCancellationTokenSource = new CancellationTokenSource();
             _autoCompleteListTask = new Task<IEnumerable<AutoCompleteWord>>(
                     () =>
                     {
@@ -832,7 +834,7 @@ namespace GitUI.SpellChecker
                         }
 
                         return subTasks.SelectMany(t => t.Result).Distinct().ToList();
-                    });
+                    }, _autoCompleteCancellationTokenSource.Token);
         }
 
         public void AddAutoCompleteProvider (IAutoCompleteProvider autoCompleteProvider)
