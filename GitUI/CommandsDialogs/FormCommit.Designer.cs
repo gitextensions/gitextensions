@@ -11,30 +11,6 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _unstagedLoader.Cancel();
-            }
-
-            if (disposing && _interactiveAddBashCloseWaitCts != null)
-            {
-                _interactiveAddBashCloseWaitCts.Cancel();
-                _interactiveAddBashCloseWaitCts = null;
-            }
-
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -61,6 +37,8 @@ namespace GitUI.CommandsDialogs
             this.deleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.addFileTogitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.assumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.doNotAssumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.interactiveAddtoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileTooltip = new System.Windows.Forms.ToolTip(this.components);
@@ -103,6 +81,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.workingToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.showIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAssumeUnchangedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -217,6 +196,8 @@ namespace GitUI.CommandsDialogs
             this.deleteFileToolStripMenuItem,
             this.toolStripSeparator5,
             this.addFileTogitignoreToolStripMenuItem,
+            this.assumeUnchangedToolStripMenuItem,
+            this.doNotAssumeUnchangedToolStripMenuItem,
             this.toolStripSeparator4,
             this.interactiveAddtoolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
@@ -331,6 +312,21 @@ namespace GitUI.CommandsDialogs
             this.addFileTogitignoreToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.addFileTogitignoreToolStripMenuItem.Text = "Add file to .gitignore";
             this.addFileTogitignoreToolStripMenuItem.Click += new System.EventHandler(this.AddFileTogitignoreToolStripMenuItemClick);
+            // 
+            // assumeUnchangedToolStripMenuItem
+            // 
+            this.assumeUnchangedToolStripMenuItem.Name = "assumeUnchangedToolStripMenuItem";
+            this.assumeUnchangedToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.assumeUnchangedToolStripMenuItem.Text = "Assume unchanged";
+            this.assumeUnchangedToolStripMenuItem.Click += new System.EventHandler(this.AssumeUnchangedToolStripMenuItemClick);
+            // 
+            // doNotAssumeUnchangedToolStripMenuItem
+            // 
+            this.doNotAssumeUnchangedToolStripMenuItem.Name = "doNotAssumeUnchangedToolStripMenuItem";
+            this.doNotAssumeUnchangedToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.doNotAssumeUnchangedToolStripMenuItem.Text = "Do not assume unchanged";
+            this.doNotAssumeUnchangedToolStripMenuItem.Visible = false;
+            this.doNotAssumeUnchangedToolStripMenuItem.Click += new System.EventHandler(this.DoNotAssumeUnchangedToolStripMenuItemClick);
             // 
             // toolStripSeparator4
             // 
@@ -703,6 +699,7 @@ namespace GitUI.CommandsDialogs
             this.workingToolStripMenuItem.AutoToolTip = false;
             this.workingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showIgnoredFilesToolStripMenuItem,
+            this.showAssumeUnchangedFilesToolStripMenuItem,
             this.showUntrackedFilesToolStripMenuItem,
             this.toolStripSeparator3,
             this.deleteSelectedFilesToolStripMenuItem,
@@ -725,6 +722,13 @@ namespace GitUI.CommandsDialogs
             this.showIgnoredFilesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.showIgnoredFilesToolStripMenuItem.Text = "Show ignored files";
             this.showIgnoredFilesToolStripMenuItem.Click += new System.EventHandler(this.ShowIgnoredFilesToolStripMenuItemClick);
+            // 
+            // showAssumeUnchangedFilesToolStripMenuItem
+            // 
+            this.showAssumeUnchangedFilesToolStripMenuItem.Name = "showAssumeUnchangedFilesToolStripMenuItem";
+            this.showAssumeUnchangedFilesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.showAssumeUnchangedFilesToolStripMenuItem.Text = "Show assume unchanged files";
+            this.showAssumeUnchangedFilesToolStripMenuItem.Click += new System.EventHandler(this.ShowAssumeUnchangedFilesToolStripMenuItemClick);
             // 
             // showUntrackedFilesToolStripMenuItem
             // 
@@ -1395,6 +1399,8 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Button SolveMergeconflicts;
         private FileViewer SelectedDiff;
         private System.Windows.Forms.ToolStripMenuItem addFileTogitignoreToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem assumeUnchangedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem doNotAssumeUnchangedToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openWithToolStripMenuItem;
@@ -1417,6 +1423,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripProgressBar toolStripProgressBar1;
         private ToolStripDropDownButton workingToolStripMenuItem;
         private ToolStripMenuItem showIgnoredFilesToolStripMenuItem;
+        private ToolStripMenuItem showAssumeUnchangedFilesToolStripMenuItem;
         private ToolStripMenuItem showUntrackedFilesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem deleteSelectedFilesToolStripMenuItem;

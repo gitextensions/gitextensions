@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Text;
 using System.Threading;
@@ -11,7 +11,7 @@ namespace GitCommands
 
         public static void ShowException(Exception e)
         {
-            ShowException(e, true);      
+            ShowException(e, true);
         }
 
         public static void ShowException(Exception e, bool canIgnore)

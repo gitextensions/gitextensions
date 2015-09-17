@@ -2,6 +2,7 @@
 using System.Drawing;
 using GitUI.Properties;
 using GitUI.CommandsDialogs.AboutBoxDialog;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {

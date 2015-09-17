@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace GitUI
 {
-    public class FilterRevisionsHelper 
+    public class FilterRevisionsHelper : IDisposable
     {
         private ToolStripTextBox _NO_TRANSLATE_toolStripTextBoxFilter;
         private ToolStripDropDownButton _NO_TRANSLATE_toolStripDropDownButton1;
@@ -114,13 +114,13 @@ namespace GitUI
                 return;
             }
 
-            if ((_NO_TRANSLATE_RevisionGrid.Filter == revListArgs) &&
+            if ((_NO_TRANSLATE_RevisionGrid.QuickRevisionFilter == revListArgs) &&
                 (_NO_TRANSLATE_RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
                 (_NO_TRANSLATE_RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
                 (_NO_TRANSLATE_RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
                 (_NO_TRANSLATE_RevisionGrid.InMemFilterIgnoreCase))
                 return;
-            _NO_TRANSLATE_RevisionGrid.Filter = revListArgs;
+            _NO_TRANSLATE_RevisionGrid.QuickRevisionFilter = revListArgs;
             _NO_TRANSLATE_RevisionGrid.InMemMessageFilter = inMemMessageFilter;
             _NO_TRANSLATE_RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
             _NO_TRANSLATE_RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
@@ -160,6 +160,24 @@ namespace GitUI
 
         public void SetLimit(int limit) {
             _NO_TRANSLATE_RevisionGrid.SetLimit(limit);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                commitToolStripMenuItem1.Dispose();
+                committerToolStripMenuItem.Dispose();
+                authorToolStripMenuItem.Dispose();
+                diffContainsToolStripMenuItem.Dispose();
+                hashToolStripMenuItem.Dispose();
+            }
         }
     }
 }

@@ -211,7 +211,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(538, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Reset local changes before deleting files. Choose files delete. Force push for re" +
+            this.label1.Text = "Reset local changes before deleting files. Choose files to delete. Force push for re" +
     "placing data on remote repository.";
             // 
             // branchBindingSource

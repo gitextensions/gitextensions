@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager;
@@ -27,7 +26,7 @@ namespace GitUI.CommandsDialogs
                 commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
         }
 
-        private void FormCreateBranch_Load(object sender, EventArgs e)
+        private void FormCreateBranch_Shown(object sender, EventArgs e)
         {
             BranchNameTextBox.Focus();
         }

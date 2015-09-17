@@ -85,6 +85,7 @@ namespace GitUI.Script
             string argument = scriptInfo.Arguments;
 
             string command = OverrideCommandWhenNecessary(originalCommand);
+            var allSelectedRevisions = new List<GitRevision>();
 
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
@@ -104,9 +105,9 @@ namespace GitUI.Script
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
                     continue;
-                if (option.StartsWith("{c") || selectedRevision != null)
+                if (option.StartsWith("{c") && currentRevision == null)
                 {
-                    currentRevision = GetCurrentRevision(aModule, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision, option);
+                    currentRevision = GetCurrentRevision(aModule, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision);
 
                     if (currentLocalBranches.Count == 1)
                         currentRemote = aModule.GetSetting(string.Format("branch.{0}.remote", currentLocalBranches[0].Name));
@@ -118,8 +119,10 @@ namespace GitUI.Script
                                 askToSpecify(currentLocalBranches, "Current Revision Branch")));
                     }
                 }
-                else if (revisionGrid != null)
+                else if (option.StartsWith("{s") && selectedRevision == null && revisionGrid != null)
                 {
+                    allSelectedRevisions = revisionGrid.GetSelectedRevisions();
+                    allSelectedRevisions.Reverse(); // Put first clicked revisions first
                     selectedRevision = CalculateSelectedRevision(revisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                 }
 
@@ -127,6 +130,10 @@ namespace GitUI.Script
                 string url;
                 switch (option)
                 {
+                    case "{sHashes}":
+                        argument = argument.Replace(option,
+                            string.Join(" ", allSelectedRevisions.Select(revision => revision.Guid).ToArray()));
+                        break;
                     case "{sTag}":
                         if (selectedTags.Count == 1)
                             argument = argument.Replace(option, selectedTags[0].Name);
@@ -308,8 +315,12 @@ namespace GitUI.Script
                             argument = argument.Replace(option, Prompt.UserInput);
                         }
                         break;
+                    case "{WorkingDir}":
+                        argument = argument.Replace(option, aModule.WorkingDir);
+                        break;
                 }
             }
+            command = ExpandCommandVariables(command,aModule);
 
             if (!scriptInfo.RunInBackground)
                 FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
@@ -323,11 +334,17 @@ namespace GitUI.Script
             return !scriptInfo.RunInBackground;
         }
 
+        private static string ExpandCommandVariables(string originalCommand, GitModule aModule)
+        {
+            return originalCommand.Replace("{WorkingDir}", aModule.WorkingDir);
+           
+        }
+
         private static GitRevision CalculateSelectedRevision(RevisionGrid revisionGrid, List<GitRef> selectedRemoteBranches,
                                                              List<string> selectedRemotes, List<GitRef> selectedLocalBranches,
                                                              List<GitRef> selectedBranches, List<GitRef> selectedTags)
         {
-            GitRevision selectedRevision = revisionGrid.GetRevision(revisionGrid.LastRow);
+            GitRevision selectedRevision = revisionGrid.GetRevision(revisionGrid.LastRowIndex);
             foreach (GitRef head in selectedRevision.Refs)
             {
                 if (head.IsTag)
@@ -351,9 +368,9 @@ namespace GitUI.Script
 
         private static GitRevision GetCurrentRevision(GitModule aModule, RevisionGrid RevisionGrid, List<GitRef> currentTags, List<GitRef> currentLocalBranches,
                                                       List<GitRef> currentRemoteBranches, List<GitRef> currentBranches,
-                                                      GitRevision currentRevision, string option)
+                                                      GitRevision currentRevision)
         {
-            if (option.StartsWith("{c") && currentRevision == null)
+            if (currentRevision == null)
             {
                 IList<GitRef> refs;
 
@@ -391,6 +408,7 @@ namespace GitUI.Script
             {
                 string[] options =
                     {
+                        "{sHashes}",
                         "{sTag}",
                         "{sBranch}",
                         "{sLocalBranch}",
@@ -417,7 +435,8 @@ namespace GitUI.Script
                         "{cDefaultRemote}",
                         "{cDefaultRemoteUrl}",
                         "{cDefaultRemotePathFromUrl}",
-                        "{UserInput}"
+                        "{UserInput}",
+                        "{WorkingDir}"
                     };
                 return options;
             }

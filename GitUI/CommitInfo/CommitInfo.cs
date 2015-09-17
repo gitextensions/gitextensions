@@ -36,7 +36,7 @@ namespace GitUI.CommitInfo
 
         [DefaultValue(false)]
         public bool ShowBranchesAsLinks { get; set; }
-        
+
         public event EventHandler<CommandEventArgs> CommandClick;
 
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
@@ -137,7 +137,7 @@ namespace GitUI.CommitInfo
             if (string.IsNullOrEmpty(_revision.Guid))
                 return; //is it regular case or should throw an exception
 
-            _RevisionHeader.SelectionTabs = GetRevisionHeaderTabStops(); 
+            _RevisionHeader.SelectionTabs = GetRevisionHeaderTabStops();
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
 
@@ -170,13 +170,28 @@ namespace GitUI.CommitInfo
                 ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
         }
 
+        /// <summary>
+        /// Returns an array of strings contains titles of fields field returned by GetHeader.
+        /// Used to calculate layout in advance
+        /// </summary>
+        /// <returns></returns>
+        private static string[] GetPossibleHeaders()
+        {
+            return new string[]
+                   {
+                       Strings.GetAuthorText(), Strings.GetAuthorDateText(), Strings.GetCommitterText(),
+                       Strings.GetCommitDateText(), Strings.GetCommitHashText(), Strings.GetChildrenText(),
+                       Strings.GetParentsText()
+                   };
+        }
+
         private int[] _revisionHeaderTabStops;
         private int[] GetRevisionHeaderTabStops()
         {
             if (_revisionHeaderTabStops != null)
                 return _revisionHeaderTabStops;
             int tabStop = 0;
-            foreach (string s in CommitData.GetPossibleHeaders())
+            foreach (string s in GetPossibleHeaders())
             {
                 tabStop = Math.Max(tabStop, TextRenderer.MeasureText(s + "  ", _RevisionHeader.Font).Width);
             }
@@ -313,7 +328,7 @@ namespace GitUI.CommitInfo
             var links = new List<string>();
             bool allowLocal = AppSettings.CommitInfoShowContainedInBranchesLocal;
             bool allowRemote = getRemote;
-            
+
             foreach (var branch in branches)
             {
                 string noPrefixBranch = branch;
@@ -338,7 +353,7 @@ namespace GitUI.CommitInfo
                     string branchText;
                     if (showBranchesAsLinks)
                         branchText = LinkFactory.CreateBranchLink(noPrefixBranch);
-                    else 
+                    else
                         branchText = WebUtility.HtmlEncode(noPrefixBranch);
                     links.Add(branchText);
                 }
@@ -368,7 +383,7 @@ namespace GitUI.CommitInfo
             var linksString = string.Empty;
 
             foreach (var link in links)
-            { 
+            {
                linksString = linksString.Combine(", ", LinkFactory.CreateLink(link.Caption, link.URI));
             }
 

@@ -42,7 +42,7 @@ namespace GitUI
 
         public IEnumerable<GitRef> GetSelectedBranches()
         {
-            foreach (string branch in branches.Text.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string branch in branches.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 GitRef gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
                 if (gitHead == null)

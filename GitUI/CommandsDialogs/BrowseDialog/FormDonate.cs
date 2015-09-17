@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

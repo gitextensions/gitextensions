@@ -159,6 +159,7 @@ namespace GitStatistics
             // splitContainer4.Panel1
             // 
             this.splitContainer4.Panel1.Controls.Add(this.CommitStatistics);
+            this.splitContainer4.Panel1MinSize = 250;
             // 
             // splitContainer4.Panel2
             // 
@@ -170,7 +171,7 @@ namespace GitStatistics
             // CommitStatistics
             // 
             this.CommitStatistics.AutoSize = true;
-            this.CommitStatistics.Location = new System.Drawing.Point(5, 0);
+            this.CommitStatistics.Location = new System.Drawing.Point(9, 4);
             this.CommitStatistics.Name = "CommitStatistics";
             this.CommitStatistics.Size = new System.Drawing.Size(51, 13);
             this.CommitStatistics.TabIndex = 0;
@@ -178,8 +179,8 @@ namespace GitStatistics
             // 
             // CommitCountPie
             // 
-            this.CommitCountPie.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommitCountPie.InitialAngle = 0F;
+            this.CommitCountPie.Dock = System.Windows.Forms.DockStyle.None;
+            this.CommitCountPie.InitialAngle = -30;
             this.CommitCountPie.Location = new System.Drawing.Point(0, 0);
             this.CommitCountPie.Name = "CommitCountPie";
             this.CommitCountPie.Size = new System.Drawing.Size(447, 400);
@@ -213,7 +214,7 @@ namespace GitStatistics
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
             this.splitContainer2.Size = new System.Drawing.Size(737, 433);
-            this.splitContainer2.SplitterDistance = 25;
+            this.splitContainer2.SplitterDistance = 29;
             this.splitContainer2.TabIndex = 2;
             // 
             // TotalLinesOfCode
@@ -234,18 +235,19 @@ namespace GitStatistics
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.LinesOfCodePerLanguageText);
+            this.splitContainer1.Panel1MinSize = 250;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.LinesOfCodeExtensionPie);
-            this.splitContainer1.Size = new System.Drawing.Size(737, 404);
-            this.splitContainer1.SplitterDistance = 253;
+            this.splitContainer1.Size = new System.Drawing.Size(737, 400);
+            this.splitContainer1.SplitterDistance = 286;
             this.splitContainer1.TabIndex = 1;
             // 
             // LinesOfCodePerLanguageText
             // 
             this.LinesOfCodePerLanguageText.AutoSize = true;
-            this.LinesOfCodePerLanguageText.Location = new System.Drawing.Point(6, 3);
+            this.LinesOfCodePerLanguageText.Location = new System.Drawing.Point(9, 4);
             this.LinesOfCodePerLanguageText.Name = "LinesOfCodePerLanguageText";
             this.LinesOfCodePerLanguageText.Size = new System.Drawing.Size(54, 13);
             this.LinesOfCodePerLanguageText.TabIndex = 1;
@@ -253,11 +255,11 @@ namespace GitStatistics
             // 
             // LinesOfCodeExtensionPie
             // 
-            this.LinesOfCodeExtensionPie.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LinesOfCodeExtensionPie.InitialAngle = 0F;
+            this.LinesOfCodeExtensionPie.Dock = System.Windows.Forms.DockStyle.None;
+            this.LinesOfCodeExtensionPie.InitialAngle = -30;
             this.LinesOfCodeExtensionPie.Location = new System.Drawing.Point(0, 0);
             this.LinesOfCodeExtensionPie.Name = "LinesOfCodeExtensionPie";
-            this.LinesOfCodeExtensionPie.Size = new System.Drawing.Size(480, 404);
+            this.LinesOfCodeExtensionPie.Size = new System.Drawing.Size(447, 400);
             this.LinesOfCodeExtensionPie.TabIndex = 0;
             this.LinesOfCodeExtensionPie.ToolTips = null;
             // 
@@ -266,6 +268,7 @@ namespace GitStatistics
             this.tabPage3.Controls.Add(this.splitContainer5);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(743, 439);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Lines of code per type";
@@ -275,7 +278,7 @@ namespace GitStatistics
             // 
             this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer5.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer5.Location = new System.Drawing.Point(3, 3);
             this.splitContainer5.Name = "splitContainer5";
             this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -286,14 +289,14 @@ namespace GitStatistics
             // splitContainer5.Panel2
             // 
             this.splitContainer5.Panel2.Controls.Add(this.splitContainer6);
-            this.splitContainer5.Size = new System.Drawing.Size(743, 439);
-            this.splitContainer5.SplitterDistance = 32;
+            this.splitContainer5.Size = new System.Drawing.Size(737, 433);
+            this.splitContainer5.SplitterDistance = 29;
             this.splitContainer5.TabIndex = 0;
             // 
             // TotalLinesOfCode2
             // 
             this.TotalLinesOfCode2.AutoSize = true;
-            this.TotalLinesOfCode2.Location = new System.Drawing.Point(8, 5);
+            this.TotalLinesOfCode2.Location = new System.Drawing.Point(5, 2);
             this.TotalLinesOfCode2.Name = "TotalLinesOfCode2";
             this.TotalLinesOfCode2.Size = new System.Drawing.Size(94, 13);
             this.TotalLinesOfCode2.TabIndex = 1;
@@ -308,12 +311,13 @@ namespace GitStatistics
             // splitContainer6.Panel1
             // 
             this.splitContainer6.Panel1.Controls.Add(this.LinesOfCodePerTypeText);
+            this.splitContainer6.Panel1MinSize = 250;
             // 
             // splitContainer6.Panel2
             // 
             this.splitContainer6.Panel2.Controls.Add(this.LinesOfCodePie);
-            this.splitContainer6.Size = new System.Drawing.Size(743, 403);
-            this.splitContainer6.SplitterDistance = 269;
+            this.splitContainer6.Size = new System.Drawing.Size(737, 400);
+            this.splitContainer6.SplitterDistance = 286;
             this.splitContainer6.TabIndex = 0;
             // 
             // LinesOfCodePerTypeText
@@ -327,11 +331,11 @@ namespace GitStatistics
             // 
             // LinesOfCodePie
             // 
-            this.LinesOfCodePie.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LinesOfCodePie.InitialAngle = 0F;
+            this.LinesOfCodePie.Dock = System.Windows.Forms.DockStyle.None;
+            this.LinesOfCodePie.InitialAngle = -30;
             this.LinesOfCodePie.Location = new System.Drawing.Point(0, 0);
             this.LinesOfCodePie.Name = "LinesOfCodePie";
-            this.LinesOfCodePie.Size = new System.Drawing.Size(470, 403);
+            this.LinesOfCodePie.Size = new System.Drawing.Size(447, 400);
             this.LinesOfCodePie.TabIndex = 0;
             this.LinesOfCodePie.ToolTips = null;
             // 
@@ -340,16 +344,17 @@ namespace GitStatistics
             this.tabPage4.Controls.Add(this.splitContainer7);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(743, 439);
             this.tabPage4.TabIndex = 0;
-            this.tabPage4.Text = "Lines of testcode";
+            this.tabPage4.Text = "Lines of test code";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // splitContainer7
             // 
             this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer7.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer7.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer7.Location = new System.Drawing.Point(3, 3);
             this.splitContainer7.Name = "splitContainer7";
             this.splitContainer7.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -360,14 +365,14 @@ namespace GitStatistics
             // splitContainer7.Panel2
             // 
             this.splitContainer7.Panel2.Controls.Add(this.splitContainer8);
-            this.splitContainer7.Size = new System.Drawing.Size(743, 439);
-            this.splitContainer7.SplitterDistance = 28;
+            this.splitContainer7.Size = new System.Drawing.Size(737, 433);
+            this.splitContainer7.SplitterDistance = 29;
             this.splitContainer7.TabIndex = 0;
             // 
             // TotalLinesOfTestCode
             // 
             this.TotalLinesOfTestCode.AutoSize = true;
-            this.TotalLinesOfTestCode.Location = new System.Drawing.Point(8, 5);
+            this.TotalLinesOfTestCode.Location = new System.Drawing.Point(5, 2);
             this.TotalLinesOfTestCode.Name = "TotalLinesOfTestCode";
             this.TotalLinesOfTestCode.Size = new System.Drawing.Size(94, 13);
             this.TotalLinesOfTestCode.TabIndex = 2;
@@ -382,18 +387,19 @@ namespace GitStatistics
             // splitContainer8.Panel1
             // 
             this.splitContainer8.Panel1.Controls.Add(this.TestCodeText);
+            this.splitContainer8.Panel1MinSize = 250;
             // 
             // splitContainer8.Panel2
             // 
             this.splitContainer8.Panel2.Controls.Add(this.TestCodePie);
-            this.splitContainer8.Size = new System.Drawing.Size(743, 407);
-            this.splitContainer8.SplitterDistance = 260;
+            this.splitContainer8.Size = new System.Drawing.Size(737, 400);
+            this.splitContainer8.SplitterDistance = 286;
             this.splitContainer8.TabIndex = 0;
             // 
             // TestCodeText
             // 
             this.TestCodeText.AutoSize = true;
-            this.TestCodeText.Location = new System.Drawing.Point(8, 4);
+            this.TestCodeText.Location = new System.Drawing.Point(9, 4);
             this.TestCodeText.Name = "TestCodeText";
             this.TestCodeText.Size = new System.Drawing.Size(54, 13);
             this.TestCodeText.TabIndex = 0;
@@ -401,11 +407,11 @@ namespace GitStatistics
             // 
             // TestCodePie
             // 
-            this.TestCodePie.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TestCodePie.InitialAngle = 0F;
+            this.TestCodePie.Dock = System.Windows.Forms.DockStyle.None;
+            this.TestCodePie.InitialAngle = -30;
             this.TestCodePie.Location = new System.Drawing.Point(0, 0);
             this.TestCodePie.Name = "TestCodePie";
-            this.TestCodePie.Size = new System.Drawing.Size(479, 407);
+            this.TestCodePie.Size = new System.Drawing.Size(447, 400);
             this.TestCodePie.TabIndex = 0;
             this.TestCodePie.ToolTips = null;
             // 
@@ -426,6 +432,7 @@ namespace GitStatistics
             this.Controls.Add(this.LoadingLabel);
             this.Controls.Add(this.Tabs);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(350, 250);
             this.Name = "FormGitStatistics";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Statistics";

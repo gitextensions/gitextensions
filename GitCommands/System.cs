@@ -179,7 +179,7 @@ namespace System
         /// <summary>Split a string, delimited by line-breaks, excluding empty entries.</summary>
         public static string[] SplitLines(this string value)
         {
-            return value.Split(NewLineSeparator);
+            return value.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
         }
 
         /// <summary>Split a string, delimited by line-breaks, excluding empty entries; then trim whitespace.</summary>

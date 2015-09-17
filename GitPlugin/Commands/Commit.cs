@@ -9,6 +9,7 @@ namespace GitPlugin.Commands
         private static DateTime lastBranchCheck;
         private static string lastFile;
         private static bool showCurrentBranch;
+        private static string _lastUpdatedCaption;
 
         public Commit()
         {
@@ -25,6 +26,7 @@ namespace GitPlugin.Commands
 
             if (showCurrentBranch && (fileName != lastFile || DateTime.Now - lastBranchCheck > new TimeSpan(0, 0, 0, 1, 0)))
             {
+                string newCaption = "Commit";
                 if (enabled)
                 {
                     string head = GitCommands.GetCurrentBranch(fileName);
@@ -35,16 +37,20 @@ namespace GitPlugin.Commands
                             headShort = "..." + head.Substring(head.Length - 23);
                         else
                             headShort = head;
-                        Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", "Commit (" + headShort + ")");
-                    }
-                    else
-                    {
-                        Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", "Commit");
+
+                        newCaption = "Commit (" + headShort + ")";
                     }
                 }
-                else
+
+                // This guard required not only for perfromance, but also for prevent StackOverflowException.
+                // IDE.QueryStatus -> Commit.IsEnabled -> Plugin.UpdateCaption -> IDE.QueryStatus ...
+                if (_lastUpdatedCaption != newCaption)
                 {
-                    Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", "Commit");
+                    _lastUpdatedCaption = newCaption;
+
+                    // try apply new caption (operation can fail)
+                    if (!Plugin.ChangeCommandCaption(application, "GitExtensions", "Commit changes", newCaption))
+                        _lastUpdatedCaption = null;
                 }
 
                 lastBranchCheck = DateTime.Now;
@@ -67,7 +73,7 @@ namespace GitPlugin.Commands
 
         protected override CommandTarget SupportedTargets
         {
-            get { return CommandTarget.SolutionExplorerFileItem; }
+            get { return CommandTarget.Any; }
         }
 
         private static string GetSelectedFile(EnvDTE80.DTE2 application)

@@ -3,11 +3,14 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands.Statistics;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace GitImpact
 {
-    public partial class FormImpact : Form
+    public partial class FormImpact : GitExtensionsFormBase
     {
+        private readonly TranslationString _authorCommits = new TranslationString("{0} ({1} Commits, {2} Changed Lines)");
+
         private readonly SynchronizationContext syncContext;
 
         public FormImpact(IGitModule Module)
@@ -15,10 +18,14 @@ namespace GitImpact
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+            Translate();
             UpdateAuthorInfo("");
-            Impact.Init(Module);
-            Impact.UpdateData();
-            Impact.Invalidated += Impact_Invalidated;
+            if (Module != null)
+            {
+                Impact.Init(Module);
+                Impact.UpdateData();
+                Impact.Invalidated += Impact_Invalidated;
+            }
         }
 
         protected override void OnClosed(EventArgs e)
@@ -40,7 +47,7 @@ namespace GitImpact
             if (lblAuthor.Visible)
             {
                 ImpactLoader.DataPoint data = Impact.GetAuthorInfo(author);
-                lblAuthor.Text = author + "(" + data.Commits + " Commits, " + data.ChangedLines + " Changed Lines)";
+                lblAuthor.Text = string.Format(_authorCommits.Text, author, data.Commits, data.ChangedLines);
                 pnlAuthorColor.BackColor = Impact.GetAuthorColor(author);
 
                 lblAuthor.Refresh();
@@ -58,7 +65,7 @@ namespace GitImpact
                 // -> Draw it above all others
                 Impact.SelectAuthor(author);
                 Impact.Invalidate();
-            }            
+            }
         }
 
         private void cbShowSubmodules_CheckedChanged(object sender, EventArgs e)

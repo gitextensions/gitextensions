@@ -2,19 +2,22 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI
 {
-    /// <summary>Base class for a <see cref="UserControl"/> requiring 
+    /// <summary>Base class for a <see cref="UserControl"/> requiring
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleControl : GitExtensionsControl
     {
+        private readonly object _lock = new object();
+
         [Browsable(false)]
         public bool UICommandsSourceParentSearch { get; private set; }
 
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
-        public event GitUICommandsSourceSetEventHandler GitUICommandsSourceSet;
+        public event EventHandler<GitUICommandsSourceEventArgs> GitUICommandsSourceSet;
         private IGitUICommandsSource _uiCommandsSource;
 
 
@@ -98,7 +101,7 @@ namespace GitUI
             if (!UICommandsSourceParentSearch)
                 return;
 
-            lock (this)
+            lock (_lock)
             {
                 if (_uiCommandsSource != null)
                     return;
@@ -123,7 +126,7 @@ namespace GitUI
                 || base.ExecuteCommand(command);
         }
 
-        /// <summary>Tries to run scripts identified by a <paramref name="command"/> 
+        /// <summary>Tries to run scripts identified by a <paramref name="command"/>
         /// and returns true if any executed.</summary>
         protected bool ExecuteScriptCommand(int command)
         {
@@ -135,7 +138,7 @@ namespace GitUI
         {
             var handler = GitUICommandsSourceSet;
             if (handler != null)
-                handler(this, newSource);
+                handler(this, new GitUICommandsSourceEventArgs(newSource));
         }
     }
 }

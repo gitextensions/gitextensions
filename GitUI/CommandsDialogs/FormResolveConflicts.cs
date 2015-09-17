@@ -831,7 +831,12 @@ namespace GitUI.CommandsDialogs
 
         private void ConflictedFilesContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            var fileName = GetFileName();
+            if (ConflictedFiles.SelectedRows.Count == 0)
+            {
+                e.Cancel = true;
+                return;
+            }
+            string fileName = GetFileName();
             ConflictedFilesContextMenu.Enabled = !string.IsNullOrEmpty(fileName);
 
             if (ConflictedFilesContextMenu.Enabled)

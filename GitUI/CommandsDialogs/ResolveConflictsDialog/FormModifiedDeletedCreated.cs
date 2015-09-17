@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.ResolveConflictsDialog
 {
@@ -20,7 +21,7 @@ namespace GitUI.CommandsDialogs.ResolveConflictsDialog
             Base.Text = baseText;
             Label.Text = description;
 
-            questionImage.BackgroundImage = SystemIcons.Warning.ToBitmap(); 
+            questionImage.BackgroundImage = SystemIcons.Warning.ToBitmap();
         }
 
         public bool Aborted { get; set; }

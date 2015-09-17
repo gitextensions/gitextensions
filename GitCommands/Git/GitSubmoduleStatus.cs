@@ -1,11 +1,10 @@
-﻿
-namespace GitCommands
+﻿namespace GitCommands
 {
     public class GitSubmoduleStatus
     {
         public GitSubmoduleStatus()
         {
-            Status = SubmoduleStatus.Unknown; 
+            Status = SubmoduleStatus.Unknown;
         }
 
         public string Name { get; set; }
@@ -16,7 +15,7 @@ namespace GitCommands
         public SubmoduleStatus Status { get; set; }
         public int? AddedCommits { get; set; }
         public int? RemovedCommits { get; set; }
-        
+
         public GitModule GetSubmodule(GitModule module)
         {
             return module.GetSubmodule(Name);

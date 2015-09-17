@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 
 namespace GitCommands
 {
-    public class AsyncLoader
+    public class AsyncLoader : IDisposable
     {
         private readonly TaskScheduler _taskScheduler;
         private CancellationTokenSource _cancelledTokenSource;
+        public int Delay { get; set; }
 
         public AsyncLoader()
             : this(TaskScheduler.FromCurrentSynchronizationContext())
@@ -17,6 +18,7 @@ namespace GitCommands
         public AsyncLoader(TaskScheduler taskScheduler)
         {
             _taskScheduler = taskScheduler;
+            Delay = 0;
         }
 
         public event EventHandler<AsyncErrorEventArgs> LoadingError = delegate { };
@@ -56,28 +58,43 @@ namespace GitCommands
         public Task Load(Action<CancellationToken> loadContent, Action onLoaded)
         {
             Cancel();
+            if (_cancelledTokenSource != null)
+                _cancelledTokenSource.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Factory.StartNew(() => loadContent(token), token)
+            return Task.Factory.StartNew(() =>
+                {
+                    if (Delay > 0)
+                    {
+                        Thread.Sleep(Delay);
+                    }
+                    if (!token.IsCancellationRequested)
+                    {
+                        loadContent(token);
+                    }
+                }, token)
                 .ContinueWith((task) =>
-            {
-                if (task.IsFaulted)
-                {
-                    foreach (var e in task.Exception.InnerExceptions)
-                        if (!OnLoadingError(e))
-                            throw e;
-                    return;
-                }
-                try
-                {
-                    onLoaded();
-                }
-                catch (Exception exception)
-                {
-                    if (!OnLoadingError(exception))
-                        throw;
-                }
-            }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _taskScheduler);
+                    {
+                        if (task.IsFaulted)
+                        {
+                            foreach (var e in task.Exception.InnerExceptions)
+                                if (!OnLoadingError(e))
+                                    throw e;
+                            return;
+                        }
+                        try
+                        {
+                            if (!token.IsCancellationRequested)
+                            {
+                                onLoaded();
+                            }
+                        }
+                        catch (Exception exception)
+                        {
+                            if (!OnLoadingError(exception))
+                                throw;
+                        }
+                    }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _taskScheduler);
         }
 
         public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded)
@@ -90,7 +107,19 @@ namespace GitCommands
             Cancel();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            return Task.Factory.StartNew(() => loadContent(token), token)
+            return Task.Factory.StartNew(() => 
+                {
+                    if (Delay > 0)
+                    {
+                        Thread.Sleep(Delay);
+                    }
+                    if (token.IsCancellationRequested)
+                    {
+                        return default(T);
+                    }
+                    return loadContent(token);
+
+                }, token)
                 .ContinueWith((task) =>
             {
                 if (task.IsFaulted)
@@ -102,7 +131,10 @@ namespace GitCommands
                 }
                 try
                 {
-                    onLoaded(task.Result);
+                    if (!token.IsCancellationRequested)
+                    {
+                        onLoaded(task.Result);
+                    }
                     return task.Result;
                 }
                 catch (Exception exception)
@@ -125,6 +157,18 @@ namespace GitCommands
             var args = new AsyncErrorEventArgs(exception);
             LoadingError(this, args);
             return args.Handled;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_cancelledTokenSource != null)
+                _cancelledTokenSource.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 

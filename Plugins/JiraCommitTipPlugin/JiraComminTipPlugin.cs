@@ -7,6 +7,7 @@ using Atlassian.Jira;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
 using JiraCommitPlugin;
+using ResourceManager;
 
 namespace JiraComminTipPlugin
 {
@@ -21,9 +22,9 @@ namespace JiraComminTipPlugin
         private readonly StringSetting filterName = new StringSetting("Filter name", "[Filter should be in your favorites]");
         private FormCommit commitForm;
 
-        public override string Description
+        public JiraComminPlugin()
         {
-            get { return description; }
+            Description = description;
         }
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)

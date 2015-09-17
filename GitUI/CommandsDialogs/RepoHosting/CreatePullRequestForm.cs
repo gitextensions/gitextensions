@@ -191,5 +191,23 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _remoteLoader.Cancel();
+                _remoteLoader.Dispose();
+
+                if (components != null)
+                    components.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

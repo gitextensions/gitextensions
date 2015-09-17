@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI.Help
 {
@@ -57,7 +58,7 @@ namespace GitUI.Help
                      */
 
                     SaveIsExpandedValueInSettings(value);
-                }                
+                }
             }
         }
 

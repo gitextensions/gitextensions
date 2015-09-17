@@ -46,8 +46,8 @@
             this.chkShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.chkShowCurrentBranchInVisualStudio = new System.Windows.Forms.CheckBox();
             this.chkEnableAutoScale = new System.Windows.Forms.CheckBox();
-            this.truncatePathMethod = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_truncatePathMethod = new System.Windows.Forms.ComboBox();
+            this.truncateLongFilenames = new System.Windows.Forms.Label();
+            this.truncatePathMethod = new System.Windows.Forms.ComboBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.AuthorImageSize = new System.Windows.Forms.ComboBox();
             this.NoImageService = new System.Windows.Forms.ComboBox();
@@ -126,10 +126,7 @@
             // Language
             // 
             this.Language.FormattingEnabled = true;
-            this.Language.Items.AddRange(new object[] {
-            "en-US",
-            "ja-JP",
-            "nl-NL"});
+            this.Language.Items.AddRange(new object[] {});
             this.Language.Location = new System.Drawing.Point(283, 18);
             this.Language.Name = "Language";
             this.Language.Size = new System.Drawing.Size(169, 24);
@@ -233,8 +230,8 @@
             this.groupBox14.Controls.Add(this.chkShowRelativeDate);
             this.groupBox14.Controls.Add(this.chkShowCurrentBranchInVisualStudio);
             this.groupBox14.Controls.Add(this.chkEnableAutoScale);
+            this.groupBox14.Controls.Add(this.truncateLongFilenames);
             this.groupBox14.Controls.Add(this.truncatePathMethod);
-            this.groupBox14.Controls.Add(this._NO_TRANSLATE_truncatePathMethod);
             this.groupBox14.Location = new System.Drawing.Point(3, 3);
             this.groupBox14.Name = "groupBox14";
             this.groupBox14.Size = new System.Drawing.Size(594, 136);
@@ -275,25 +272,25 @@
             // 
             // truncatePathMethod
             // 
-            this.truncatePathMethod.AutoSize = true;
-            this.truncatePathMethod.Location = new System.Drawing.Point(10, 104);
-            this.truncatePathMethod.Name = "truncatePathMethod";
-            this.truncatePathMethod.Size = new System.Drawing.Size(146, 16);
-            this.truncatePathMethod.TabIndex = 5;
-            this.truncatePathMethod.Text = "Truncate long filenames";
+            this.truncateLongFilenames.AutoSize = true;
+            this.truncateLongFilenames.Location = new System.Drawing.Point(10, 104);
+            this.truncateLongFilenames.Name = "truncateLongFilenames";
+            this.truncateLongFilenames.Size = new System.Drawing.Size(146, 16);
+            this.truncateLongFilenames.TabIndex = 5;
+            this.truncateLongFilenames.Text = "Truncate long filenames";
             // 
             // _NO_TRANSLATE_truncatePathMethod
             // 
-            this._NO_TRANSLATE_truncatePathMethod.FormattingEnabled = true;
-            this._NO_TRANSLATE_truncatePathMethod.Items.AddRange(new object[] {
-            "none",
-            "compact",
-            "trimstart",
-            "fileNameOnly"});
-            this._NO_TRANSLATE_truncatePathMethod.Location = new System.Drawing.Point(221, 101);
-            this._NO_TRANSLATE_truncatePathMethod.Name = "_NO_TRANSLATE_truncatePathMethod";
-            this._NO_TRANSLATE_truncatePathMethod.Size = new System.Drawing.Size(242, 24);
-            this._NO_TRANSLATE_truncatePathMethod.TabIndex = 6;
+            this.truncatePathMethod.FormattingEnabled = true;
+            this.truncatePathMethod.Items.AddRange(new object[] {
+            "None",
+            "Compact",
+            "Trim start",
+            "Filename only"});
+            this.truncatePathMethod.Location = new System.Drawing.Point(221, 101);
+            this.truncatePathMethod.Name = "truncatePathMethod";
+            this.truncatePathMethod.Size = new System.Drawing.Size(242, 24);
+            this.truncatePathMethod.TabIndex = 6;
             // 
             // groupBox6
             // 
@@ -465,8 +462,8 @@
         private System.Windows.Forms.CheckBox chkShowRelativeDate;
         private System.Windows.Forms.CheckBox chkShowCurrentBranchInVisualStudio;
         private System.Windows.Forms.CheckBox chkEnableAutoScale;
-        private System.Windows.Forms.Label truncatePathMethod;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_truncatePathMethod;
+        private System.Windows.Forms.Label truncateLongFilenames;
+        private System.Windows.Forms.ComboBox truncatePathMethod;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.ComboBox NoImageService;
         private System.Windows.Forms.Label label53;

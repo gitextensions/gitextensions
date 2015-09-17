@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -9,7 +10,7 @@ using GitCommands.Utils;
 
 namespace GitUI.SpellChecker
 {
-    public class SpellCheckEditControl : NativeWindow
+    public class SpellCheckEditControl : NativeWindow, IDisposable
     {
         public bool IsImeStartingComposition { get; private set; }
 
@@ -24,7 +25,7 @@ namespace GitUI.SpellChecker
         public SpellCheckEditControl(RichTextBox richTextBox)
         {
             _richTextBox = richTextBox;
-            // Start receiving messages (make sure you call ReleaseHandle on Dispose):   
+            // Start receiving messages (make sure you call ReleaseHandle on Dispose):
             AssignHandle(richTextBox.Handle);
         }
 
@@ -35,12 +36,12 @@ namespace GitUI.SpellChecker
 
             switch (m.Msg)
             {
-                case 15: // this is the WM_PAINT message   
+                case 15: // this is the WM_PAINT message
                     // invalidate the TextBox so that it gets refreshed properly
                     _richTextBox.Invalidate();
-                    // call the default win32 Paint method for the TextBox first   
+                    // call the default win32 Paint method for the TextBox first
                     base.WndProc(ref m);
-                    // now use our code to draw extra stuff over the TextBox   
+                    // now use our code to draw extra stuff over the TextBox
                     CustomPaint();
 
                     break;
@@ -73,10 +74,10 @@ namespace GitUI.SpellChecker
                 _textBoxGraphics = Graphics.FromHwnd(_richTextBox.Handle);
             }
 
-            // clear the graphics buffer   
+            // clear the graphics buffer
             _bufferGraphics.Clear(Color.Transparent);
 
-            // * Here’s where the magic happens   
+            // * Here’s where the magic happens
 
             //Mark ill formed parts of commit message
             DrawLines(IllFormedLines, DrawType.Mark);
@@ -92,8 +93,8 @@ namespace GitUI.SpellChecker
 
             //Mark misspelled words
             DrawLines(Lines, DrawType.Wave);
-            // Now we just draw our internal buffer on top of the TextBox.   
-            // Everything should be at the right place.   
+            // Now we just draw our internal buffer on top of the TextBox.
+            // Everything should be at the right place.
             _textBoxGraphics.DrawImageUnscaled(_bitmap, 0, 0);
         }
 
@@ -104,9 +105,9 @@ namespace GitUI.SpellChecker
                 var start = _richTextBox.GetPositionFromCharIndex(textPos.Start);
                 var end = _richTextBox.GetPositionFromCharIndex(textPos.End);
 
-                // The position above now points to the top left corner of the character.   
-                // We need to account for the character height so the underlines go   
-                // to the right place.   
+                // The position above now points to the top left corner of the character.
+                // We need to account for the character height so the underlines go
+                // to the right place.
                 end.X += 1;
                 start.Y += TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, textPos.Start);
                 end.Y += TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, textPos.End);
@@ -197,5 +198,23 @@ namespace GitUI.SpellChecker
         };
 
         #endregion
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+                return;
+            if (_bitmap != null)
+                _bitmap.Dispose();
+            if (_bufferGraphics != null)
+                _bufferGraphics.Dispose();
+            if (_textBoxGraphics != null)
+                _textBoxGraphics.Dispose();
+        }
     }
 }

@@ -33,7 +33,7 @@
             this.textBoxRevTo = new System.Windows.Forms.TextBox();
             this.textBoxRevFrom = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBoxGitLogArguments = new System.Windows.Forms.TextBox();
+            this._NO_TRANSLATE_textBoxGitLogArguments = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -108,15 +108,15 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "git log arguments:";
             // 
-            // textBoxGitLogArguments
+            // _NO_TRANSLATE_textBoxGitLogArguments
             // 
-            this.textBoxGitLogArguments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this._NO_TRANSLATE_textBoxGitLogArguments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxGitLogArguments.Location = new System.Drawing.Point(118, 73);
-            this.textBoxGitLogArguments.Name = "textBoxGitLogArguments";
-            this.textBoxGitLogArguments.Size = new System.Drawing.Size(366, 20);
-            this.textBoxGitLogArguments.TabIndex = 2;
-            this.textBoxGitLogArguments.Text = "--pretty=\"format:%h@%s%b\" --abbrev-commit {0}..{1}";
+            this._NO_TRANSLATE_textBoxGitLogArguments.Location = new System.Drawing.Point(118, 73);
+            this._NO_TRANSLATE_textBoxGitLogArguments.Name = "_NO_TRANSLATE_textBoxGitLogArguments";
+            this._NO_TRANSLATE_textBoxGitLogArguments.Size = new System.Drawing.Size(366, 20);
+            this._NO_TRANSLATE_textBoxGitLogArguments.TabIndex = 2;
+            this._NO_TRANSLATE_textBoxGitLogArguments.Text = "--pretty=\"format:%h@%s%b\" --abbrev-commit {0}..{1}";
             // 
             // label4
             // 
@@ -359,7 +359,7 @@
             this.label11.Size = new System.Drawing.Size(331, 26);
             this.label11.TabIndex = 4;
             this.label11.Text = "Clipboard will contain HTML code (plain text) and HTML format\r\nwhich can be paste" +
-    "d to programs like MS Word or LibreOffice Writer.\r\n";
+    "d to programs like MS Word or LibreOffice Writer.";
             // 
             // ReleaseNotesGeneratorForm
             // 
@@ -371,7 +371,7 @@
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.textBoxGitLogArguments);
+            this.Controls.Add(this._NO_TRANSLATE_textBoxGitLogArguments);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxRevFrom);
             this.Controls.Add(this.textBoxRevTo);
@@ -408,7 +408,7 @@
         private System.Windows.Forms.TextBox textBoxRevTo;
         private System.Windows.Forms.TextBox textBoxRevFrom;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBoxGitLogArguments;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_textBoxGitLogArguments;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox textBoxResult;

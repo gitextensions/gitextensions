@@ -19,7 +19,15 @@ using SmartFormat;
 
 namespace GitCommands
 {
-    public delegate void GitModuleChangedEventHandler(GitModule module);
+    public class GitModuleEventArgs : EventArgs
+    {
+        public GitModuleEventArgs(GitModule gitModule)
+        {
+            GitModule = gitModule;
+        }
+
+        public GitModule GitModule { get; private set; }
+    }
 
     public enum SubmoduleStatus
     {
@@ -63,7 +71,7 @@ namespace GitCommands
         }
     }
 
-    /// <summary>Provides manipulation with git module. 
+    /// <summary>Provides manipulation with git module.
     /// <remarks>Several instances may be created for submodules.</remarks></summary>
     [DebuggerDisplay("GitModule ( {_workingDir} )")]
     public sealed class GitModule : IGitModule
@@ -275,11 +283,11 @@ namespace GitCommands
 
         //Encoding that let us read all bytes without replacing any char
         //It is using to read output of commands, which may consist of:
-        //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
+        //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of
         //   pretty parameter (pretty=raw - recoded, pretty=format - not recoded)
         //2) file content encoded in its original encoding
         //3) file path (file name is encoded in system default encoding),
-        //   when core.quotepath is on, every non ASCII character is escaped 
+        //   when core.quotepath is on, every non ASCII character is escaped
         //   with \ followed by its code as a three digit octal number
         //4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
@@ -422,7 +430,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// This is a faster function to get the names of all submodules then the 
+        /// This is a faster function to get the names of all submodules then the
         /// GetSubmodules() function. The command @git submodule is very slow.
         /// </summary>
         public IList<string> GetSubmodulesLocalPathes(bool recursive = true)
@@ -1489,7 +1497,7 @@ namespace GitCommands
         {
             remote = remote.ToPosixPath();
 
-            //Remove spaces... 
+            //Remove spaces...
             if (remoteBranch != null)
                 remoteBranch = remoteBranch.Replace(" ", "");
             if (localBranch != null)
@@ -1536,7 +1544,7 @@ namespace GitCommands
 
         /// <summary>Creates a 'git push' command using the specified parameters.</summary>
         /// <param name="remote">Remote repository that is the destination of the push operation.</param>
-        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it.
         /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
         /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
         /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
@@ -1571,7 +1579,7 @@ namespace GitCommands
         /// <param name="remote">Remote repository that is the destination of the push operation.</param>
         /// <param name="fromBranch">Name of the branch to push.</param>
         /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
-        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it.
         /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
         /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
         /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
@@ -1646,43 +1654,64 @@ namespace GitCommands
             }
         }
 
+        public string AssumeUnchangedFiles(IList<GitItemStatus> files, bool assumeUnchanged, out bool wereErrors)
+        {
+            var output = "";
+            string error = "";
+            wereErrors = false;
+            var startInfo = CreateGitStartInfo("update-index --" + (assumeUnchanged ? "" : "no-") + "assume-unchanged --stdin");
+            var processReader = new Lazy<SynchronizedProcessReader>(() => new SynchronizedProcessReader(Process.Start(startInfo)));
+
+            foreach (var file in files.Where(file => file.IsAssumeUnchanged != assumeUnchanged))
+            {
+                UpdateIndex(processReader, file.Name);
+            }
+            if (processReader.IsValueCreated)
+            {
+                processReader.Value.Process.StandardInput.Close();
+                processReader.Value.WaitForExit();
+                wereErrors = processReader.Value.Process.ExitCode != 0;
+                output = processReader.Value.OutputString(SystemEncoding);
+                error = processReader.Value.ErrorString(SystemEncoding);
+            }
+
+            return output.Combine(Environment.NewLine, error);
+        }
+
         public string StageFiles(IList<GitItemStatus> files, out bool wereErrors)
         {
             var output = "";
             string error = "";
             wereErrors = false;
             var startInfo = CreateGitStartInfo("update-index --add --stdin");
-            var process = new Lazy<Process>(() => Process.Start(startInfo));
+            var processReader = new Lazy<SynchronizedProcessReader>(() => new SynchronizedProcessReader(Process.Start(startInfo)));
+
             foreach (var file in files.Where(file => !file.IsDeleted))
             {
-                UpdateIndex(process, file.Name);
+                UpdateIndex(processReader, file.Name);
             }
-            if (process.IsValueCreated)
+            if (processReader.IsValueCreated)
             {
-                process.Value.StandardInput.Close();
-                string stdOutput, stdError;
-                SynchronizedProcessReader.Read(process.Value, out stdOutput, out stdError);
-                output = stdOutput;
-                error = stdError;
-                process.Value.WaitForExit();
-                wereErrors = process.Value.ExitCode != 0;
+                processReader.Value.Process.StandardInput.Close();
+                processReader.Value.WaitForExit();
+                wereErrors = processReader.Value.Process.ExitCode != 0;
+                output = processReader.Value.OutputString(SystemEncoding);
+                error = processReader.Value.ErrorString(SystemEncoding);
             }
 
             startInfo.Arguments = "update-index --remove --stdin";
-            process = new Lazy<Process>(() => Process.Start(startInfo));
+            processReader = new Lazy<SynchronizedProcessReader>(() => new SynchronizedProcessReader(Process.Start(startInfo)));
             foreach (var file in files.Where(file => file.IsDeleted))
             {
-                UpdateIndex(process, file.Name);
+                UpdateIndex(processReader, file.Name);
             }
-            if (process.IsValueCreated)
+            if (processReader.IsValueCreated)
             {
-                process.Value.StandardInput.Close();
-                string stdOutput, stdError;
-                SynchronizedProcessReader.Read(process.Value, out stdOutput, out stdError);
-                output = output.Combine(Environment.NewLine, stdOutput);
-                error = error.Combine(Environment.NewLine, stdError);
-                process.Value.WaitForExit();
-                wereErrors = wereErrors || process.Value.ExitCode != 0;
+                processReader.Value.Process.StandardInput.Close();
+                processReader.Value.WaitForExit();
+                output = output.Combine(Environment.NewLine, processReader.Value.OutputString(SystemEncoding));
+                error = error.Combine(Environment.NewLine, processReader.Value.ErrorString(SystemEncoding));
+                wereErrors = wereErrors || processReader.Value.Process.ExitCode != 0;
             }
 
             return output.Combine(Environment.NewLine, error);
@@ -1691,44 +1720,44 @@ namespace GitCommands
         public string UnstageFiles(IList<GitItemStatus> files)
         {
             var output = "";
+            string error = "";
             var startInfo = CreateGitStartInfo("update-index --info-only --index-info");
-            var process = new Lazy<Process>(() => Process.Start(startInfo));
+            var processReader = new Lazy<SynchronizedProcessReader>(() => new SynchronizedProcessReader(Process.Start(startInfo)));
             foreach (var file in files.Where(file => !file.IsNew))
             {
-                process.Value.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + file.Name.ToPosixPath() + "\"");
+                processReader.Value.Process.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + file.Name.ToPosixPath() + "\"");
             }
-            if (process.IsValueCreated)
+            if (processReader.IsValueCreated)
             {
-                process.Value.StandardInput.Close();
-                process.Value.WaitForExit();
-                output = process.Value.StandardOutput.ReadToEnd().Trim();
+                processReader.Value.Process.StandardInput.Close();
+                processReader.Value.WaitForExit();
+                output = processReader.Value.OutputString(SystemEncoding);
+                error = processReader.Value.ErrorString(SystemEncoding);
             }
 
             startInfo.Arguments = "update-index --force-remove --stdin";
-            process = new Lazy<Process>(() => Process.Start(startInfo));
+            processReader = new Lazy<SynchronizedProcessReader>(() => new SynchronizedProcessReader(Process.Start(startInfo)));
             foreach (var file in files.Where(file => file.IsNew))
             {
-                UpdateIndex(process, file.Name);
+                UpdateIndex(processReader, file.Name);
             }
-            if (process.IsValueCreated)
+            if (processReader.IsValueCreated)
             {
-                process.Value.StandardInput.Close();
-                process.Value.WaitForExit();
-
-                if (!string.IsNullOrEmpty(output))
-                    output += Environment.NewLine;
-                output += process.Value.StandardOutput.ReadToEnd().Trim();
+                processReader.Value.Process.StandardInput.Close();
+                processReader.Value.WaitForExit();
+                output = output.Combine(Environment.NewLine, processReader.Value.OutputString(SystemEncoding));
+                error = error.Combine(Environment.NewLine, processReader.Value.ErrorString(SystemEncoding));
             }
 
-            return output;
+            return output.Combine(Environment.NewLine, error);
         }
 
-        private static void UpdateIndex(Lazy<Process> process, string filename)
+        private void UpdateIndex(Lazy<SynchronizedProcessReader> processReader, string filename)
         {
             //process.StandardInput.WriteLine("\"" + ToPosixPath(file.Name) + "\"");
             byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
-                                                      "\"" + filename.ToPosixPath() + "\"" + process.Value.StandardInput.NewLine);
-            process.Value.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
+                                                      "\"" + filename.ToPosixPath() + "\"" + processReader.Value.Process.StandardInput.NewLine);
+            processReader.Value.Process.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
         }
 
         public bool InTheMiddleOfBisect()
@@ -1771,7 +1800,7 @@ namespace GitCommands
 
         private static string DecodeString(string str)
         {
-            // decode QuotedPrintable text using .NET internal decoder 
+            // decode QuotedPrintable text using .NET internal decoder
             Attachment attachment = Attachment.CreateAttachmentFromString("", str);
             return attachment.Name;
         }
@@ -2012,7 +2041,7 @@ namespace GitCommands
             for (int i = 0; i < list.Length; i++)
             {
                 string stashString = list[i];
-                if (stashString.IndexOf(':') > 0)
+                if (stashString.IndexOf(':') > 0 && ! stashString.StartsWith("fatal: "))
                 {
                     stashes.Add(new GitStash(stashString, i));
                 }
@@ -2141,16 +2170,23 @@ namespace GitCommands
             return list;
         }
 
-        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
+        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true, bool excludeAssumeUnchangedFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
             var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
+            List<GitItemStatus> result = GitCommandHelpers.GetAllChangedFilesFromString(this, status);
 
-            return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
+            if (!excludeAssumeUnchangedFiles)
+            {
+                string lsOutput = RunGitCmd("ls-files -v");
+                result.AddRange(GitCommandHelpers.GetAssumeUnchangedFilesFromString(this, lsOutput));
+            }
+
+            return result;
         }
 
-        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
+        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true, bool excludeAssumeUnchangedFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
-            var status = GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles);
+            var status = GetAllChangedFiles(excludeIgnoredFiles, excludeAssumeUnchangedFiles, untrackedFiles);
             GetCurrentSubmoduleStatus(status);
             return status;
         }
@@ -2400,7 +2436,7 @@ namespace GitCommands
 
             var tree = GetTreeFromRemoteRefs(remote, tags, branches);
 
-            // If the authentication failed because of a missing key, ask the user to supply one. 
+            // If the authentication failed because of a missing key, ask the user to supply one.
             if (tree.Contains("FATAL ERROR") && tree.Contains("authentication"))
             {
                 result.AuthenticationFail = true;
@@ -2441,7 +2477,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="option">Ordery by date is slower.</param>
         /// <returns></returns>
@@ -2519,7 +2555,7 @@ namespace GitCommands
 
             foreach (var itemsString in itemsStrings)
             {
-                if (itemsString == null || itemsString.Length <= 42)
+                if (itemsString == null || itemsString.Length <= 42 || itemsString.StartsWith("error: "))
                     continue;
 
                 var completeName = itemsString.Substring(41).Trim();
@@ -2612,7 +2648,7 @@ namespace GitCommands
                     notEmptyPatterns
                     .Select(pattern => "-x " + pattern.Quote())
                     .Join(" ");
-                // filter duplicates out of the result because options -c and -m may return 
+                // filter duplicates out of the result because options -c and -m may return
                 // same files at times
                 return RunGitCmd("ls-files -z -o -m -c -i " + excludeParams)
                     .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)

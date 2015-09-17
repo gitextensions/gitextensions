@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager;
@@ -12,20 +13,19 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormAddToGitIgnore : GitModuleForm
     {
         private readonly TranslationString _matchingFilesString = new TranslationString("{0} file(s) matched");
+        private readonly TranslationString _updateStatusString = new TranslationString("Updating ...");
+
+        private readonly AsyncLoader _ignoredFilesLoader;
 
         public FormAddToGitIgnore(GitUICommands aCommands, params string[] filePatterns)
             : base(aCommands)
         {
             InitializeComponent();
+            _ignoredFilesLoader = new AsyncLoader();
             Translate();
+
             if (filePatterns != null)
                 FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
-        }
-
-        protected override void OnRuntimeLoad(EventArgs e)
-        {
-            base.OnRuntimeLoad(e);
-            UpdatePreviewPanel();
         }
 
         private void AddToIngoreClick(object sender, EventArgs e)
@@ -67,10 +67,11 @@ namespace GitUI.CommandsDialogs
             Close();
         }
 
-        private void UpdatePreviewPanel()
+        private void UpdatePreviewPanel(IList<string> ignoredFiles)
         {
-            _NO_TRANSLATE_Preview.DataSource = Module.GetIgnoredFiles(GetCurrentPatterns());
+            _NO_TRANSLATE_Preview.DataSource = ignoredFiles;
             _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.Items.Count);
+            _NO_TRANSLATE_Preview.Enabled = true;
             noMatchPanel.Visible = _NO_TRANSLATE_Preview.Items.Count == 0;
         }
 
@@ -81,7 +82,16 @@ namespace GitUI.CommandsDialogs
 
         private void FilePattern_TextChanged(object sender, EventArgs e)
         {
-            UpdatePreviewPanel();
+            _ignoredFilesLoader.Cancel();
+            if (_NO_TRANSLATE_Preview.Enabled)
+            {
+                _ignoredFilesLoader.Delay = 300;           
+                _NO_TRANSLATE_filesWillBeIgnored.Text = _updateStatusString.Text;
+                _NO_TRANSLATE_Preview.DataSource = new List<string> { _updateStatusString.Text };
+                _NO_TRANSLATE_Preview.Enabled = false;
+            }
+
+            _ignoredFilesLoader.Load(() => Module.GetIgnoredFiles(GetCurrentPatterns()), UpdatePreviewPanel);
         }
 
 

@@ -93,6 +93,7 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "http://stackoverflow.com/questions/1065168/does-disposing-streamreader-close-the-stream")]
         public IBuildServerCredentials GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting)
         {
             lock (buildServerCredentialsLock)
@@ -228,8 +229,7 @@ namespace GitUI.BuildServerIntegration
 
             foreach (var commitHash in buildInfo.CommitHashList)
             {
-                string graphRevision;
-                int row = revisionGrid.TrySearchRevision(commitHash, out graphRevision);
+                int row = revisionGrid.TrySearchRevision(commitHash);
                 if (row >= 0)
                 {
                     var rowData = revisions.GetRowData(row);

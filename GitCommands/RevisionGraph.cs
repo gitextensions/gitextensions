@@ -29,14 +29,14 @@ namespace GitCommands
     public sealed class RevisionGraph : IDisposable
     {
         public event EventHandler Exited;
-        public event EventHandler<AsyncErrorEventArgs> Error 
+        public event EventHandler<AsyncErrorEventArgs> Error
         {
-            add 
+            add
             {
                 _backgroundLoader.LoadingError += value;
             }
-            
-            remove 
+
+            remove
             {
                 _backgroundLoader.LoadingError -= value;
             }
@@ -55,7 +55,6 @@ namespace GitCommands
             public readonly GitRevision Revision;
         }
 
-        public bool BackgroundThread { get; set; }
         public bool ShaOnly { get; set; }
 
         private readonly char[] _splitChars = " \t\n".ToCharArray();
@@ -94,22 +93,27 @@ namespace GitCommands
 
         public RevisionGraph(GitModule module)
         {
-            BackgroundThread = true;
             _module = module;
-        }
-
-        ~RevisionGraph()
-        {
-            Dispose();
         }
 
         public void Dispose()
         {
-            _backgroundLoader.Cancel();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _backgroundLoader.Cancel();
+                _backgroundLoader.Dispose();
+            }
         }
 
         public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
-        public string Filter = String.Empty;
+        public string RevisionFilter = String.Empty;
+        public string PathFilter = String.Empty;
         public string BranchFilter = String.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
@@ -117,20 +121,14 @@ namespace GitCommands
 
         public void Execute()
         {
-            if (BackgroundThread)
-            {
-                _backgroundLoader.Load(ProccessGitLog, ProccessGitLogExecuted);
-            }
-            else
-            {
-                ProccessGitLog(new CancellationToken(false));
-                ProccessGitLogExecuted();
-            }
+            _backgroundLoader.Load(ProccessGitLog, ProccessGitLogExecuted);
         }
 
         private void ProccessGitLog(CancellationToken taskState)
         {
             RevisionCount = 0;
+            if (Updated != null)
+                Updated(this, new RevisionGraphUpdatedEventArgs(null));
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
             string formatString =
@@ -185,16 +183,17 @@ namespace GitCommands
                 logParam += " --no-merges";
 
             string branchFilter = BranchFilter;
-            if ((!string.IsNullOrWhiteSpace(BranchFilter)) && 
+            if ((!string.IsNullOrWhiteSpace(BranchFilter)) &&
                 (BranchFilter.IndexOfAny(ShellGlobCharacters) >= 0))
                 branchFilter = "--branches=" + BranchFilter;
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {2} --pretty=format:\"{1}\" {0} {3}",
+                "log -z {2} --pretty=format:\"{1}\" {0} {3} -- {4}",
                 logParam,
                 formatString,
                 branchFilter,
-                Filter);
+                RevisionFilter,
+                PathFilter);
 
             Encoding logOutputEncoding = _module.LogOutputEncoding;
 
@@ -225,13 +224,14 @@ namespace GitCommands
             } while (line != null && !taskState.IsCancellationRequested);
         }
 
+
         private void ProccessGitLogExecuted()
         {
             FinishRevision();
             _previousFileName = null;
 
             if (Exited != null)
-                Exited(this, EventArgs.Empty);            
+                Exited(this, EventArgs.Empty);
         }
 
         private IList<GitRef> GetRefs()
@@ -267,17 +267,15 @@ namespace GitCommands
                 _revision = null;
             if (_revision != null)
             {
-                if (_revision.Name == null)                
+                if (_revision.Name == null)
                     _revision.Name = _previousFileName;
                 else
                     _previousFileName = _revision.Name;
-            }
-            if (_revision == null || _revision.Guid.Trim(_hexChars).Length == 0)
-            {
-                if (_revision == null || InMemFilter == null || InMemFilter.PassThru(_revision))
+
+                if (_revision.Guid.Trim(_hexChars).Length == 0 &&
+                    (InMemFilter == null || InMemFilter.PassThru(_revision)))
                 {
-                    if (_revision != null)
-                        RevisionCount++;
+                    RevisionCount++;
                     if (Updated != null)
                         Updated(this, new RevisionGraphUpdatedEventArgs(_revision));
                 }
@@ -319,7 +317,7 @@ namespace GitCommands
                     List<GitRef> gitRefs;
                     if (_refs.TryGetValue(_revision.Guid, out gitRefs))
                         _revision.Refs.AddRange(gitRefs);
-                    
+
                     break;
 
                 case ReadStep.Parents:
@@ -365,7 +363,7 @@ namespace GitCommands
                 case ReadStep.CommitMessageEncoding:
                     _revision.MessageEncoding = line;
                     break;
-                
+
                 case ReadStep.CommitMessage:
                     _revision.Message = _module.ReEncodeCommitMessage(line, _revision.MessageEncoding);
 

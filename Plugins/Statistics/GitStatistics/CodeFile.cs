@@ -1,9 +1,12 @@
-﻿using System.IO;
+using System;
+using System.Globalization;
+using System.IO;
 
 namespace GitStatistics
 {
     /// <summary>
-    ///   Represents a .NET file containing code: a .vb, .cs, .cpp, or .h file here.
+    ///   Represents a file containing code; See GitStatisticsPlugin.CodeFiles for possible
+    ///   matches.
     /// </summary>
     public class CodeFile
     {
@@ -37,8 +40,7 @@ namespace GitStatistics
         {
             return
                 IsWebReferenceFile() ||
-                File.Name.Contains(".Designer.") ||
-                File.Name.Contains(".designer.");
+                (CultureInfo.CurrentCulture.CompareInfo.IndexOf(File.Name, ".Designer.", CompareOptions.IgnoreCase) != -1);
         }
 
         private bool IsWebReferenceFile()
@@ -59,7 +61,7 @@ namespace GitStatistics
                 {
                     var line = sr.ReadLine();
                     if (line != null)
-                        IncrementLineCountsFromLine(line.Trim());
+                        IncrementLineCountsFromLine(line.TrimStart());
                 }
             }
         }
@@ -86,19 +88,22 @@ namespace GitStatistics
             SetCodeBlockFlags(line);
 
             NumberLines++;
+
             if (_inCodeGeneratedRegion || _isDesignerFile)
                 NumberLinesInDesignerFiles++;
-            else if (line == "")
+            else if (string.IsNullOrEmpty(line))
                 NumberBlankLines++;
             else if (_inCommentBlock || line.StartsWith("'") || line.StartsWith(@"//"))
                 NumberCommentsLines++;
-            else if (File.Extension.ToLower() == ".py" && line.StartsWith("#"))
+            else if (File.Extension.Equals(".py", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
                 NumberCommentsLines++;
-            else if (File.Extension.ToLower() == ".rb" && line.StartsWith("#"))
+            else if (File.Extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
                 NumberCommentsLines++;
-            else if (File.Extension.ToLower() == ".pl" && line.StartsWith("#"))
+            else if (File.Extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
                 NumberCommentsLines++;
-            else if (File.Extension.ToLower() == ".lua" && line.StartsWith("--"))
+            else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.StartsWith("--"))
+                NumberCommentsLines++;
+            else if (File.Extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) && (line.Contains("@*") && line.Contains("*@")))
                 NumberCommentsLines++;
 
             if (!_skipResetFlag)
@@ -124,7 +129,7 @@ namespace GitStatistics
             if (line.StartsWith("/*"))
                 _inCommentBlock = true;
 
-            if (File.Extension.ToLower() == ".pas" || File.Extension.ToLower() == ".inc")
+            if (File.Extension.Equals(".pas", StringComparison.OrdinalIgnoreCase) || File.Extension.Equals(".inc", StringComparison.OrdinalIgnoreCase))
             {
                 if (line.StartsWith("(*") && !line.StartsWith("(*$"))
                     _inCommentBlock = true;
@@ -132,14 +137,36 @@ namespace GitStatistics
                     _inCommentBlock = true;
             }
 
-            if (File.Extension.ToLower() == ".rb" && line.StartsWith("=begin"))
+            if (File.Extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.StartsWith("=begin"))
                 _inCommentBlock = true;
-            else if (File.Extension.ToLower() == ".pl" && line.StartsWith("=begin"))
+            else if (File.Extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.StartsWith("=begin"))
                 _inCommentBlock = true;
-            else if (File.Extension.ToLower() == ".lua" && line.StartsWith("--[["))
+            else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.StartsWith("--[["))
                 _inCommentBlock = true;
 
-            if (File.Extension.ToLower() == ".py" && !_inCommentBlock)
+            // If we're not in a code-generated region, we should still check for normal
+            // comments. This should help improve accuracy on resx files
+            if (File.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
+                (File.Extension.Equals(".resx", StringComparison.OrdinalIgnoreCase) && !_inCodeGeneratedRegion) ||
+                File.Extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
+                File.Extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) ||
+                File.Extension.Equals(".htm", StringComparison.OrdinalIgnoreCase))
+            {
+                if(line.Contains("<!--"))
+                {
+                    _inCommentBlock = true;
+                }
+            }
+
+            if (File.Extension.Equals(".aspx", StringComparison.OrdinalIgnoreCase))
+            {
+                if (line.Contains("<%--"))
+                {
+                    _inCommentBlock = true;
+                }
+            }
+
+            if (File.Extension.Equals(".py", StringComparison.OrdinalIgnoreCase) && !_inCommentBlock)
             {
                 if (line.StartsWith("'''") || line.StartsWith("\"\"\""))
                 {
@@ -168,14 +195,34 @@ namespace GitStatistics
                     _inCommentBlock = false;
             }
 
-            if (File.Extension.ToLower() == ".rb" && line.Contains("=end"))
+            if (File.Extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.Contains("=end"))
                 _inCommentBlock = false;
-            else if (File.Extension.ToLower() == ".pl" && line.Contains("=end"))
+            else if (File.Extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.Contains("=end"))
                 _inCommentBlock = false;
-           else if (File.Extension.ToLower() == ".lua" && line.Contains("]]"))
+            else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.Contains("]]"))
                 _inCommentBlock = false;
 
-            if (File.Extension.ToLower() == ".py")
+            if (File.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
+                (File.Extension.Equals(".resx", StringComparison.OrdinalIgnoreCase) && !_inCodeGeneratedRegion) ||
+                File.Extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
+                File.Extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) ||
+                File.Extension.Equals(".htm", StringComparison.OrdinalIgnoreCase))
+            {
+                if (line.Contains("-->"))
+                {
+                    _inCommentBlock = false;
+                }
+            }
+
+            if (File.Extension.Equals(".aspx", StringComparison.OrdinalIgnoreCase))
+            {
+                if (line.Contains("--%>"))
+                {
+                    _inCommentBlock = false;
+                }
+            }
+
+            if (File.Extension.Equals(".py", StringComparison.OrdinalIgnoreCase))
             {
                 if (line.Contains("'''") || line.Contains("\"\"\""))
                     _inCommentBlock = false;
