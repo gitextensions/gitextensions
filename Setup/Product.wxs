@@ -833,7 +833,7 @@
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
         <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-64bit-Setup_0.9.98-2.exe" />
         <CustomAction Id="InstallKDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
-        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.9.5-preview20141217.exe" />
+        <Binary Id="MsysGit" SourceFile="..\Bin\Git-2.5.3-64-bit.exe" />
         <CustomAction Id="InstallMsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
         <CustomAction Id="InstallGitCredentialWinStore" FileKey="GitExtensions.exe" ExeCommand="installcredhelper" Return="asyncWait" />
         <InstallExecuteSequence>
