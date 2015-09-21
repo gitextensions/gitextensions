@@ -41,7 +41,7 @@ namespace GitUIPluginInterfaces.Settings
 
             public override TextBox CreateControl()
             {
-                return new TextBox { PasswordChar = '*' };
+                return new TextBox { UseSystemPasswordChar = true };
             }
 
             public override void LoadSetting(ISettingsSource settings, TextBox control)
@@ -59,12 +59,7 @@ namespace GitUIPluginInterfaces.Settings
         {
             get
             {
-                return settings.GetValue(Name, string.Empty, s =>
-                {
-                    if (string.IsNullOrEmpty(s))
-                        return string.Empty;
-                    return s;
-                });
+                return settings.GetValue(Name, string.Empty, s => s ?? string.Empty);
             }
 
             private set

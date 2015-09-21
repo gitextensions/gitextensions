@@ -2525,13 +2525,16 @@ namespace GitUI.CommandsDialogs
             base.Dispose(disposing);
         }
 
-        public void AppendToMessage(string message)
+        public void AddInfoButton(string title, Func<string> addingText)
         {
-            Message.Text += message;
-        }
-
-        public void AddInfoButton(ToolStripItem button)
-        {
+            var button = new ToolStripButton
+            {
+                ImageAlign = ContentAlignment.MiddleLeft,
+                Margin = new Padding(1, 3, 3, 3),
+                Size = new Size(171, 26),
+                Text = title
+            };
+            button.Click += (sender, args) => { Message.Text += addingText(); };
             toolbarCommit.Items.Add(button);
         }
     }

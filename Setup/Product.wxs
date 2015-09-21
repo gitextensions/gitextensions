@@ -237,6 +237,12 @@
             <Component Id="Newtonsoft.Json.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\Newtonsoft.Json.dll" />
             </Component>
+            <Component Id="JiraCommitTipPlugin.dll" Guid="*">
+                <File Source="..\Plugins\JiraCommitTipPlugin\bin\Release\JiraComminTipPlugin.dll" />
+            </Component>
+            <Component Id="Atlassian.Jira.dll" Guid="*">
+                <File Source="..\Plugins\JiraCommitTipPlugin\bin\Release\Atlassian.Jira.dll" />
+            </Component>
             <!--Remove unused dll, installed in versions <= 2.31-->
             <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
                 <RemoveFile Name="Github.dll" Id="Github.dll" On="both" />
@@ -689,6 +695,10 @@
                     <ComponentRef Id="TfsIntegration.dll" />
                     <ComponentRef Id="TfsInterop.Vs2012.dll" />
                     <!-- ComponentRef Id="TfsInterop.Vs2013.dll" /-->
+                </Feature>
+                <Feature Id="JiraCommitTipPlugin" Title="Jira Commit Tip Plugin" Level="1">
+                    <ComponentRef Id="JiraCommitTipPlugin.dll" />
+                    <ComponentRef Id="Atlassian.Jira.dll" />
                 </Feature>
             </Feature>
             <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">

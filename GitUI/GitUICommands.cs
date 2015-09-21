@@ -421,7 +421,7 @@ namespace GitUI
         /// </summary>
         /// <param name="requiresValidWorkingDir">If action requires valid working directory</param>
         /// <param name="owner">Owner window</param>
-        /// <param name="changesRepo">if successfuly done action changes repo state</param>
+        /// <param name="changesRepo">if successfully done action changes repo state</param>
         /// <param name="preEvent">Event invoked before performing action</param>
         /// <param name="postEvent">Event invoked after performing action</param>
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
@@ -668,20 +668,25 @@ namespace GitUI
             return DoActionOnRepo(action);
         }
 
+        private FormCommit formCommit;
+
         public bool StartCommitDialog(IWin32Window owner, bool showOnlyWhenChanges)
         {
-            var form = new FormCommit(this);
+            formCommit = new FormCommit(this);
             Func<bool> action = () =>
             {
-                if (showOnlyWhenChanges)
-                    form.ShowDialogWhenChanges(owner);
-                else
-                    form.ShowDialog(owner);
-                form.Dispose();
+                {
+                    if (showOnlyWhenChanges)
+                        formCommit.ShowDialogWhenChanges(owner);
+                    else
+                        formCommit.ShowDialog(owner);
+                }
+                formCommit.Dispose();
+                formCommit = null;
                 return true;
             };
 
-            return DoActionOnRepo(form, true, false, PreCommit, PostCommit, action);
+            return DoActionOnRepo(owner, true, false, PreCommit, PostCommit, action);
         }
 
         public bool StartCommitDialog(IWin32Window owner)
@@ -896,6 +901,13 @@ namespace GitUI
         public bool StartViewPatchDialog()
         {
             return StartViewPatchDialog(null, null);
+        }
+
+        public void AddFormCommitInfoButton(string title, Func<string> addingText)
+        {
+         if (formCommit == null )
+             return;
+         formCommit.AddInfoButton(title, addingText);
         }
 
         public bool StartFormatPatchDialog(IWin32Window owner)
