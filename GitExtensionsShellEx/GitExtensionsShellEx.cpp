@@ -714,23 +714,26 @@ CString CGitExtensionsShellEx::GetRegistryValue(HKEY hOpenKey, LPCTSTR szKey, LP
         return "";
     }
 
-    CString result = "";
     TCHAR tempStr[512];
-    unsigned long taille = sizeof(tempStr);
-    unsigned long type;
-    if (RegQueryValueEx(key, path, 0, &type, (BYTE*)&tempStr[0], &taille) != ERROR_SUCCESS)
+    // RegQueryValueEx doesn't promise to add a trailing NULL.
+    DWORD bufsize = sizeof(tempStr) - sizeof(TCHAR);
+    ZeroMemory(&tempStr[0], sizeof(tempStr));
+    DWORD type;
+    if (RegQueryValueEx(key, path, 0, &type, (BYTE*)&tempStr[0], &bufsize) != ERROR_SUCCESS)
     {
         RegCloseKey(key);
         return "";
     }
 
-    tempStr[taille] = 0;
-
-    result = tempStr;
+    // Verify returned type
+    if (type != REG_SZ && type != REG_EXPAND_SZ)
+    {
+        RegCloseKey(key);
+        return "";
+    }
 
     RegCloseKey(key);
-
-    return result;
+    return tempStr;
 }
 
 bool CGitExtensionsShellEx::GetRegistryBoolValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path)
