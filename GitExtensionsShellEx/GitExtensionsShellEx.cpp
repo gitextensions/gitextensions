@@ -408,6 +408,12 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
         }
     }
 
+    // Check that enough menu item IDs are available
+    if (uidLastCmd - uidFirstCmd < 50) { // one for every menu item below, plus more room to grow.
+        DBG_TRACE(L"Not enough menu IDs available");
+        return E_FAIL;
+    }
+
     CString szCascadeShellMenuItems = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"CascadeShellMenuItems");
     if (szCascadeShellMenuItems.IsEmpty())
         szCascadeShellMenuItems = "110111000111111111";
@@ -417,7 +423,12 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
 
     HMENU popupMenu = NULL;
     if (cascadeContextMenu)
+    {
         popupMenu = CreateMenu();
+        if (!popupMenu) {
+            return HRESULT_FROM_WIN32(GetLastError());
+        }
+    }
 
     bool isValidDir = true;
     bool isFolder = true;
@@ -520,23 +531,25 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
     cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Settings", IDI_ICONSETTINGS, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
     commandsId[cmdid]=gcSettings;
 
-    ++id;
-
     if (cascadeContextMenu)
     {
         MENUITEMINFO info;
         info.cbSize = sizeof(MENUITEMINFO);
         info.fMask = MIIM_STRING | MIIM_ID | MIIM_BITMAP | MIIM_SUBMENU;
-        info.wID = uidFirstCmd + 1;
+        ++id;
+        info.wID = uidFirstCmd + id;
         info.hbmpItem = BufferedPaintAvailable ? IconToBitmapPARGB32(IDI_GITEXTENSIONS) : HBMMENU_CALLBACK;
-        myIDMap[1] = IDI_GITEXTENSIONS;
-        myIDMap[uidFirstCmd + 1] = IDI_GITEXTENSIONS;
+        myIDMap[uidFirstCmd + id] = IDI_GITEXTENSIONS;
         info.dwTypeData = _T("Git Extensions");
         info.hSubMenu = popupMenu;
-        InsertMenuItem(hMenu, menuIndex, true, &info);
+        if (!InsertMenuItem(hMenu, menuIndex, true, &info)) {
+            DestroyMenu(popupMenu);
+        }
     }
 
-    return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id);
+    // Returned HRESULT must have offset of last ID that was assigned, plus one.
+    ++id; // Plus one...
+    return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, id);
 }
 
 UINT CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPTSTR text, int resource, UINT uidFirstCmd, UINT id, UINT position, bool isSubMenu)
@@ -549,7 +562,6 @@ UINT CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPTSTR text, int resource, 
     {
         mii.fMask |= MIIM_BITMAP;
         mii.hbmpItem = BufferedPaintAvailable ? IconToBitmapPARGB32(resource) : HBMMENU_CALLBACK;
-        myIDMap[id] = resource;
         myIDMap[uidFirstCmd + id] = resource;
     }
     mii.wID = uidFirstCmd + id;
