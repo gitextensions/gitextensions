@@ -53,6 +53,18 @@ const wchar_t* const gitExCommandNames[] =
 
 C_ASSERT(gcMaxValue == _countof(gitExCommandNames));
 
+// Forward declaration of functions not declared in the header
+static CString GetRegistryValue (HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path);
+static bool GetRegistryBoolValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path);
+static bool DisplayInSubmenu(CString settings, int id);
+
+static HRESULT Create32BitHBITMAP(HDC hdc, const SIZE* psize, __deref_opt_out void** ppvBits, __out HBITMAP* phBmp);
+static bool HasAlpha(__in ARGB* pargb, SIZE& sizImage, int cxRow);
+static HRESULT ConvertToPARGB32(HDC hdc, __inout ARGB* pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow);
+
+static bool ValidWorkingDir(const std::wstring& dir);
+static bool IsValidGitDir(TCHAR m_szFile[]);
+
 /////////////////////////////////////////////////////////////////////////////
 // CGitExtensionsShellEx
 
@@ -196,7 +208,7 @@ HBITMAP CGitExtensionsShellEx::IconToBitmapPARGB32(UINT uIcon)
     return hBmp;
 }
 
-HRESULT CGitExtensionsShellEx::Create32BitHBITMAP(HDC hdc, const SIZE* psize, __deref_opt_out void** ppvBits, __out HBITMAP* phBmp)
+static HRESULT Create32BitHBITMAP(HDC hdc, const SIZE* psize, __deref_opt_out void** ppvBits, __out HBITMAP* phBmp)
 {
     *phBmp = NULL;
 
@@ -249,7 +261,7 @@ HRESULT CGitExtensionsShellEx::ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer,
     return hr;
 }
 
-bool CGitExtensionsShellEx::HasAlpha(__in ARGB* pargb, SIZE& sizImage, int cxRow)
+static bool HasAlpha(__in ARGB* pargb, SIZE& sizImage, int cxRow)
 {
     ULONG cxDelta = cxRow - sizImage.cx;
     for (ULONG y = sizImage.cy; y; --y)
@@ -268,7 +280,7 @@ bool CGitExtensionsShellEx::HasAlpha(__in ARGB* pargb, SIZE& sizImage, int cxRow
     return false;
 }
 
-HRESULT CGitExtensionsShellEx::ConvertToPARGB32(HDC hdc, __inout ARGB* pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow)
+static HRESULT ConvertToPARGB32(HDC hdc, __inout ARGB* pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow)
 {
     BITMAPINFO bmi;
     ZeroMemory(&bmi, sizeof(bmi));
@@ -333,7 +345,7 @@ bool IsFileExists(LPCWSTR str)
     return (dwAttrib != INVALID_FILE_ATTRIBUTES) && ((dwAttrib & FILE_ATTRIBUTE_DIRECTORY) == 0);
 }
 
-bool CGitExtensionsShellEx::ValidWorkingDir(const std::wstring& dir)
+static bool ValidWorkingDir(const std::wstring& dir)
 {
     if (dir.empty())
         return false;
@@ -346,7 +358,7 @@ bool CGitExtensionsShellEx::ValidWorkingDir(const std::wstring& dir)
         IsExists(dir + L"\\refs\\");
 }
 
-bool CGitExtensionsShellEx::IsValidGitDir(TCHAR m_szFile[])
+static bool IsValidGitDir(TCHAR m_szFile[])
 {
     if (m_szFile[0] == '\0')
         return false;
@@ -561,7 +573,7 @@ UINT CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPTSTR text, int resource, 
     return id;
 }
 
-bool CGitExtensionsShellEx::DisplayInSubmenu(CString settings, int id)
+static bool DisplayInSubmenu(CString settings, int id)
 {
     if (settings.GetLength() < id)
     {
@@ -705,7 +717,7 @@ STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPA
     return S_OK;
 }
 
-CString CGitExtensionsShellEx::GetRegistryValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path)
+static CString GetRegistryValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path)
 {
     HKEY key;
     long res = RegOpenKeyEx(hOpenKey,szKey, 0, KEY_READ | KEY_WOW64_32KEY, &key);
@@ -736,7 +748,7 @@ CString CGitExtensionsShellEx::GetRegistryValue(HKEY hOpenKey, LPCTSTR szKey, LP
     return tempStr;
 }
 
-bool CGitExtensionsShellEx::GetRegistryBoolValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path)
+static bool GetRegistryBoolValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path)
 {
     CString value = GetRegistryValue(hOpenKey, szKey, path);
     if (value.IsEmpty())
