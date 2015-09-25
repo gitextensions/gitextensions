@@ -110,7 +110,10 @@ STDMETHODIMP CGitExtensionsShellEx::Initialize(LPCITEMIDLIST pidlFolder, LPDATAO
 
     // Make sure it worked.
     if (NULL == hDrop)
+    {
+        ReleaseStgMedium(&stg);
         return E_INVALIDARG;
+    }
 
     // Sanity check - make sure there is at least one filename.
     UINT uNumFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
