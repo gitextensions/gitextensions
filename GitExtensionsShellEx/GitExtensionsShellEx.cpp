@@ -15,7 +15,7 @@ void XTrace(LPCTSTR lpszFormat, ...)
     va_start(args, lpszFormat);
     int nBuf;
     TCHAR szBuffer[512]; // get rid of this hard-coded buffer
-    nBuf = _vsntprintf(szBuffer, 511, lpszFormat, args);
+    nBuf = _vsntprintf_s(szBuffer, 512, 511, lpszFormat, args);
     ::OutputDebugString(szBuffer);
     va_end(args);
 }
