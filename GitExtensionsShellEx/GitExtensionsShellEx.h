@@ -48,6 +48,7 @@ class ATL_NO_VTABLE CGitExtensionsShellEx :
 {
 public:
     CGitExtensionsShellEx();
+    virtual ~CGitExtensionsShellEx();
 
     DECLARE_REGISTRY_RESOURCEID(IDR_GITEXTENSIONSSHELLEX)
 
@@ -83,9 +84,11 @@ private:
     std::map<UINT, HBITMAP> bitmaps;
     std::map<int, int> commandsId;
 
+    HMODULE hUxTheme;
     FN_GetBufferedPaintBits pfnGetBufferedPaintBits;
     FN_BeginBufferedPaint pfnBeginBufferedPaint;
     FN_EndBufferedPaint pfnEndBufferedPaint;
+    bool BufferedPaintAvailable;
 
     HBITMAP IconToBitmapPARGB32(UINT uIcon);
     HRESULT ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer, HDC hdc, HICON hicon, SIZE& sizIcon);

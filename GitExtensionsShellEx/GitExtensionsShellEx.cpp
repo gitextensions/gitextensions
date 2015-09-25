@@ -68,31 +68,25 @@ static bool IsValidGitDir(TCHAR m_szFile[]);
 /////////////////////////////////////////////////////////////////////////////
 // CGitExtensionsShellEx
 
-bool IsVistaOrLater()
+CGitExtensionsShellEx::CGitExtensionsShellEx()
+    : BufferedPaintAvailable(false), hUxTheme(NULL),
+    pfnGetBufferedPaintBits(NULL), pfnBeginBufferedPaint(NULL), pfnEndBufferedPaint(NULL)
 {
-    static int version = -1;
-    if (version == -1)
+    if (::GetModuleHandleEx(0, _T("UXTHEME.DLL"), &hUxTheme))
     {
-        OSVERSIONINFOEX inf;
-        SecureZeroMemory(&inf, sizeof(OSVERSIONINFOEX));
-        inf.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-        GetVersionEx((OSVERSIONINFO*)&inf);
-        version = MAKEWORD(inf.dwMinorVersion, inf.dwMajorVersion);
+        pfnGetBufferedPaintBits = reinterpret_cast<FN_GetBufferedPaintBits>(::GetProcAddress(hUxTheme, "GetBufferedPaintBits"));
+        pfnBeginBufferedPaint = reinterpret_cast<FN_BeginBufferedPaint>(::GetProcAddress(hUxTheme, "BeginBufferedPaint"));
+        pfnEndBufferedPaint = reinterpret_cast<FN_EndBufferedPaint>(::GetProcAddress(hUxTheme, "EndBufferedPaint"));
+        BufferedPaintAvailable = pfnGetBufferedPaintBits && pfnBeginBufferedPaint && pfnEndBufferedPaint;
     }
 
-    return version >= 0x0600;
+    ZeroMemory(m_szFile, sizeof(m_szFile));
 }
 
-CGitExtensionsShellEx::CGitExtensionsShellEx()
+CGitExtensionsShellEx::~CGitExtensionsShellEx()
 {
-    if (IsVistaOrLater())
-    {
-        HMODULE hUxTheme = ::GetModuleHandle(_T("UXTHEME.DLL"));
-
-        pfnGetBufferedPaintBits = (FN_GetBufferedPaintBits)::GetProcAddress(hUxTheme, "GetBufferedPaintBits");
-        pfnBeginBufferedPaint = (FN_BeginBufferedPaint)::GetProcAddress(hUxTheme, "BeginBufferedPaint");
-        pfnEndBufferedPaint = (FN_EndBufferedPaint)::GetProcAddress(hUxTheme, "EndBufferedPaint");
-    }
+    if (hUxTheme)
+        ::FreeLibrary(hUxTheme);
 }
 
 STDMETHODIMP CGitExtensionsShellEx::Initialize(LPCITEMIDLIST pidlFolder, LPDATAOBJECT pDataObj, HKEY hProgID)
@@ -155,7 +149,7 @@ HBITMAP CGitExtensionsShellEx::IconToBitmapPARGB32(UINT uIcon)
     if (!hIcon)
         return NULL;
 
-    if (pfnBeginBufferedPaint == NULL || pfnEndBufferedPaint == NULL || pfnGetBufferedPaintBits == NULL)
+    if (!BufferedPaintAvailable)
         return NULL;
 
     SIZE sizIcon;
@@ -534,7 +528,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
         info.cbSize = sizeof(MENUITEMINFO);
         info.fMask = MIIM_STRING | MIIM_ID | MIIM_BITMAP | MIIM_SUBMENU;
         info.wID = uidFirstCmd + 1;
-        info.hbmpItem = IsVistaOrLater() ? IconToBitmapPARGB32(IDI_GITEXTENSIONS) : HBMMENU_CALLBACK;
+        info.hbmpItem = BufferedPaintAvailable ? IconToBitmapPARGB32(IDI_GITEXTENSIONS) : HBMMENU_CALLBACK;
         myIDMap[1] = IDI_GITEXTENSIONS;
         myIDMap[uidFirstCmd + 1] = IDI_GITEXTENSIONS;
         info.dwTypeData = _T("Git Extensions");
@@ -554,7 +548,7 @@ UINT CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPTSTR text, int resource, 
     if (resource)
     {
         mii.fMask |= MIIM_BITMAP;
-        mii.hbmpItem = IsVistaOrLater() ? IconToBitmapPARGB32(resource) : HBMMENU_CALLBACK;
+        mii.hbmpItem = BufferedPaintAvailable ? IconToBitmapPARGB32(resource) : HBMMENU_CALLBACK;
         myIDMap[id] = resource;
         myIDMap[uidFirstCmd + id] = resource;
     }
