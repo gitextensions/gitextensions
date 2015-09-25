@@ -69,15 +69,20 @@ static bool IsValidGitDir(TCHAR m_szFile[]);
 // CGitExtensionsShellEx
 
 CGitExtensionsShellEx::CGitExtensionsShellEx()
-    : BufferedPaintAvailable(false), hUxTheme(NULL),
+    : BufferedPaintAvailable(false), BufferedPaintInitialized(false), hUxTheme(NULL),
     pfnGetBufferedPaintBits(NULL), pfnBeginBufferedPaint(NULL), pfnEndBufferedPaint(NULL)
 {
     if (::GetModuleHandleEx(0, _T("UXTHEME.DLL"), &hUxTheme))
     {
+        pfnBufferedPaintInit = reinterpret_cast<FN_BufferedPaintInit>(::GetProcAddress(hUxTheme, "BufferedPaintInit"));
+        pfnBufferedPaintUnInit = reinterpret_cast<FN_BufferedPaintInit>(::GetProcAddress(hUxTheme, "BufferedPaintUnInit"));
         pfnGetBufferedPaintBits = reinterpret_cast<FN_GetBufferedPaintBits>(::GetProcAddress(hUxTheme, "GetBufferedPaintBits"));
         pfnBeginBufferedPaint = reinterpret_cast<FN_BeginBufferedPaint>(::GetProcAddress(hUxTheme, "BeginBufferedPaint"));
         pfnEndBufferedPaint = reinterpret_cast<FN_EndBufferedPaint>(::GetProcAddress(hUxTheme, "EndBufferedPaint"));
-        BufferedPaintAvailable = pfnGetBufferedPaintBits && pfnBeginBufferedPaint && pfnEndBufferedPaint;
+        BufferedPaintAvailable = pfnBufferedPaintInit && pfnBufferedPaintUnInit &&
+            pfnGetBufferedPaintBits && pfnBeginBufferedPaint && pfnEndBufferedPaint;
+        if (BufferedPaintAvailable && SUCCEEDED(pfnBufferedPaintInit()))
+            BufferedPaintInitialized = true;
     }
 
     ZeroMemory(m_szFile, sizeof(m_szFile));
@@ -85,6 +90,8 @@ CGitExtensionsShellEx::CGitExtensionsShellEx()
 
 CGitExtensionsShellEx::~CGitExtensionsShellEx()
 {
+    if (BufferedPaintInitialized)
+        pfnBufferedPaintUnInit();
     if (hUxTheme)
         ::FreeLibrary(hUxTheme);
 }

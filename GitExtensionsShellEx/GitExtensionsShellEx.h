@@ -9,6 +9,8 @@
 
 typedef DWORD ARGB;
 
+typedef HRESULT (WINAPI *FN_BufferedPaintInit) (void);
+typedef HRESULT (WINAPI *FN_BufferedPaintUnInit) (void);
 typedef HRESULT (WINAPI *FN_GetBufferedPaintBits) (HPAINTBUFFER hBufferedPaint, RGBQUAD **ppbBuffer, int *pcxRow);
 typedef HPAINTBUFFER (WINAPI *FN_BeginBufferedPaint) (HDC hdcTarget, const RECT *prcTarget, BP_BUFFERFORMAT dwFormat, BP_PAINTPARAMS *pPaintParams, HDC *phdc);
 typedef HRESULT (WINAPI *FN_EndBufferedPaint) (HPAINTBUFFER hBufferedPaint, BOOL fUpdateTarget);
@@ -85,10 +87,13 @@ private:
     std::map<int, int> commandsId;
 
     HMODULE hUxTheme;
+    FN_BufferedPaintInit pfnBufferedPaintInit;
+    FN_BufferedPaintUnInit pfnBufferedPaintUnInit;
     FN_GetBufferedPaintBits pfnGetBufferedPaintBits;
     FN_BeginBufferedPaint pfnBeginBufferedPaint;
     FN_EndBufferedPaint pfnEndBufferedPaint;
     bool BufferedPaintAvailable;
+    bool BufferedPaintInitialized;
 
     HBITMAP IconToBitmapPARGB32(UINT uIcon);
     HRESULT ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer, HDC hdc, HICON hicon, SIZE& sizIcon);
