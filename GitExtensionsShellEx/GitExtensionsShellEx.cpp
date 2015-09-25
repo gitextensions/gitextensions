@@ -676,7 +676,7 @@ void CGitExtensionsShellEx::RunGitEx(const TCHAR* command)
 STDMETHODIMP CGitExtensionsShellEx::InvokeCommand(LPCMINVOKECOMMANDINFO pCmdInfo)
 {
     // If lpVerb really points to a string, ignore this function call and bail out.
-    if (pCmdInfo == NULL || 0 != HIWORD(pCmdInfo->lpVerb))
+    if (pCmdInfo == NULL || !IS_INTRESOURCE(pCmdInfo->lpVerb))
         return E_INVALIDARG;
 
     int invokeId = LOWORD(pCmdInfo->lpVerb);
