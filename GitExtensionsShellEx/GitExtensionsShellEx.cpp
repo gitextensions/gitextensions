@@ -90,6 +90,15 @@ CGitExtensionsShellEx::CGitExtensionsShellEx()
 
 CGitExtensionsShellEx::~CGitExtensionsShellEx()
 {
+    // Free any bitmaps we allocated; note that when the shell destroys the
+    // menu, presumably via DestroyMenu, it won't free the bitmaps otherwise,
+    // which would result in a resource leak.
+    for (auto it = bitmaps.begin(); it != bitmaps.end(); ++it)
+    {
+        if (it->second)
+            DeleteObject(it->second);
+    }
+
     if (BufferedPaintInitialized)
         pfnBufferedPaintUnInit();
     if (hUxTheme)
@@ -152,11 +161,11 @@ HBITMAP CGitExtensionsShellEx::IconToBitmapPARGB32(UINT uIcon)
     if (bitmap_it != bitmaps.end() && bitmap_it->first == uIcon)
         return bitmap_it->second;
 
-    HICON hIcon = (HICON)LoadImage(_Module.GetModuleInstance(), MAKEINTRESOURCE(uIcon), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-    if (!hIcon)
+    if (!BufferedPaintAvailable)
         return NULL;
 
-    if (!BufferedPaintAvailable)
+    HICON hIcon = (HICON)LoadImage(_Module.GetModuleInstance(), MAKEINTRESOURCE(uIcon), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+    if (!hIcon)
         return NULL;
 
     SIZE sizIcon;
@@ -242,6 +251,7 @@ HRESULT CGitExtensionsShellEx::ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer,
     HRESULT hr = pfnGetBufferedPaintBits(hPaintBuffer, &prgbQuad, &cxRow);
     if (SUCCEEDED(hr))
     {
+        hr = E_FAIL; // assume failure until subsequent ConvertToPARGB32 call
         ARGB* pargb = reinterpret_cast<ARGB*>(prgbQuad);
         if (!HasAlpha(pargb, sizIcon, cxRow))
         {
@@ -295,6 +305,8 @@ static HRESULT ConvertToPARGB32(HDC hdc, __inout ARGB* pargb, HBITMAP hbmp, SIZE
 
     HRESULT hr = E_OUTOFMEMORY;
     HANDLE hHeap = GetProcessHeap();
+    if (!hHeap)
+        return HRESULT_FROM_WIN32(GetLastError());
     void* pvBits = HeapAlloc(hHeap, 0, bmi.bmiHeader.biWidth * 4 * bmi.bmiHeader.biHeight);
     if (pvBits)
     {
