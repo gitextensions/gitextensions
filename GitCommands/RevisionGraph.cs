@@ -239,7 +239,10 @@ namespace GitCommands
                 incompleteBlock.Append(dataBlocks[lastDataBlockIndex]);
             }
 
-            yield return incompleteBlock.ToString();
+            if (incompleteBlock.Length > 0)
+            {
+                yield return incompleteBlock.ToString();
+            }
         }
 
         private void ProccessGitLogExecuted()
