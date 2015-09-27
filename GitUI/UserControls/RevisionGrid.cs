@@ -2094,6 +2094,7 @@ namespace GitUI
             bisectSkipRevisionToolStripMenuItem.Visible = inTheMiddleOfBisect;
             stopBisectToolStripMenuItem.Visible = inTheMiddleOfBisect;
             bisectSeparator.Visible = inTheMiddleOfBisect;
+            compareWithCurrentBranchToolStripMenuItem.Visible = Module.GetSelectedBranch().IsNotNullOrWhitespace();
 
             var revision = GetRevision(LastRowIndex);
 
@@ -3056,5 +3057,34 @@ namespace GitUI
         }
 
         internal RevisionGridMenuCommands MenuCommands { get { return _revisionGridMenuCommands; } }
+
+        private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedCommit = this.GetSelectedRevisions().First();
+            using (var form = new FormCompareToBranch(UICommands, selectedCommit.Guid))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    var branchRevision = Module.RevParse(form.BranchName);
+                    using (var diffForm = new FormDiff(UICommands, this, branchRevision, selectedCommit.Guid,
+                        form.BranchName, selectedCommit.Message))
+                    {
+                        diffForm.ShowDialog(this);
+                    }
+                }
+            }
+        }
+
+        private void CompareWithCurrentBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedCommit = this.GetSelectedRevisions().First();
+            var currentBranch = Module.GetSelectedBranch();
+            var rightRevision = Module.RevParse(currentBranch);
+            using (var diffForm = new FormDiff(UICommands, this, selectedCommit.Guid, rightRevision,
+                selectedCommit.Message, currentBranch))
+            {
+                diffForm.ShowDialog(this);
+            }
+        }
     }
 }

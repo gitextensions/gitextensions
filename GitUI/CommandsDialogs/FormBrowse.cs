@@ -2130,18 +2130,23 @@ namespace GitUI.CommandsDialogs
 
         private void copyFilenameToClipboardToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (!DiffFiles.SelectedItems.Any())
+            CopyFullPathToClipboard(DiffFiles, Module);
+        }
+
+        public static void CopyFullPathToClipboard(FileStatusList diffFiles, GitModule module)
+        {
+            if (!diffFiles.SelectedItems.Any())
                 return;
 
             var fileNames = new StringBuilder();
-            foreach (var item in DiffFiles.SelectedItems)
+            foreach (var item in diffFiles.SelectedItems)
             {
                 //Only use append line when multiple items are selected.
                 //This to make it easier to use the text from clipboard when 1 file is selected.
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append(Path.Combine(Module.WorkingDir, item.Name).ToNativePath());
+                fileNames.Append(Path.Combine(module.WorkingDir, item.Name).ToNativePath());
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -2528,12 +2533,17 @@ namespace GitUI.CommandsDialogs
         //
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!DiffFiles.SelectedItems.Any())
+            OpenContainingFolder(DiffFiles, Module);
+        }
+
+        public static void OpenContainingFolder(FileStatusList diffFiles, GitModule module)
+        {
+            if (!diffFiles.SelectedItems.Any())
                 return;
 
-            foreach (var item in DiffFiles.SelectedItems)
+            foreach (var item in diffFiles.SelectedItems)
             {
-                string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(Module, item);
+                string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(module, item);
                 FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
             }
         }

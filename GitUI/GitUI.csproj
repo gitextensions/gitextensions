@@ -130,6 +130,18 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
+    <Compile Include="CommandsDialogs\FormCompareToBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormCompareToBranch.Designer.cs">
+      <DependentUpon>FormCompareToBranch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormDiff.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormDiff.Designer.cs">
+      <DependentUpon>FormDiff.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\FormMergeSubmodule.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -998,6 +1010,12 @@
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormUpdates.resx">
       <DependentUpon>FormUpdates.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\FormCompareToBranch.resx">
+      <DependentUpon>FormCompareToBranch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\FormDiff.resx">
+      <DependentUpon>FormDiff.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormMergeSubmodule.resx">
       <DependentUpon>FormMergeSubmodule.cs</DependentUpon>
