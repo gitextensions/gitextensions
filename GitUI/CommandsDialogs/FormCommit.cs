@@ -2312,7 +2312,7 @@ namespace GitUI.CommandsDialogs
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
                 GitUICommands uiCmds = new GitUICommands(Module.GetSubmodule(item.Name));
-                uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
+                uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInAutoStash);
             }
 
             Initialize();

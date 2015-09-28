@@ -1786,7 +1786,7 @@ namespace GitUI.CommandsDialogs
 
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
+            UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInAutoStash);
         }
 
         private void StashPopToolStripMenuItemClick(object sender, EventArgs e)
