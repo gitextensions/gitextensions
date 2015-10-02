@@ -404,17 +404,11 @@
     <Compile Include="CommandsDialogs\FormBlame.Designer.cs">
       <DependentUpon>FormBlame.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editor\FileViewerWindows.cs">
+    <Compile Include="Editor\FileViewerInternal.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Editor\FileViewerWindows.Designer.cs">
-      <DependentUpon>FileViewerWindows.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editor\FileViewerMono.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editor\FileViewerMono.Designer.cs">
-      <DependentUpon>FileViewerMono.cs</DependentUpon>
+    <Compile Include="Editor\FileViewerInternal.Designer.cs">
+      <DependentUpon>FileViewerInternal.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\IFileViewer.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormBisect.cs">
@@ -1093,12 +1087,8 @@
       <DependentUpon>FormBlame.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editor\FileViewerWindows.resx">
-      <DependentUpon>FileViewerWindows.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editor\FileViewerMono.resx">
-      <DependentUpon>FileViewerMono.cs</DependentUpon>
+    <EmbeddedResource Include="Editor\FileViewerInternal.resx">
+      <DependentUpon>FileViewerInternal.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormBisect.resx">
