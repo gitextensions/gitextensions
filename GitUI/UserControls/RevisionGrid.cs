@@ -2112,6 +2112,11 @@ namespace GitUI
                 toolStripItem.Tag = head.Name;
                 toolStripItem.Click += ToolStripItemClickDeleteTag;
                 deleteTagDropDown.Items.Add(toolStripItem);
+
+                toolStripItem = new ToolStripMenuItem(head.Name);
+                toolStripItem.Tag = head.CompleteName;
+                toolStripItem.Click += ToolStripItemClickMergeBranch;
+                mergeBranchDropDown.Items.Add(toolStripItem);
             }
 
             //For now there is no action that could be done on currentBranch
