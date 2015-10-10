@@ -139,7 +139,7 @@ namespace GitUI.Editor
             set { TextEditor.ShowLineNumbers = value; }
         }
 
-        public void SetText(string text)
+        public void SetText(string text, bool isDiff = false)
         {
             _diffHighlightService = DiffHighlightService.IsCombinedDiff(text) ? CombinedDiffHighlightService.Instance : DiffHighlightService.Instance;
 
@@ -148,13 +148,16 @@ namespace GitUI.Editor
             TextEditor.Text = text;
             TextEditor.Refresh();
 
-            _diffLineNumAnalyzer.StartAsync(text, () =>
+            if (isDiff)
             {
-                if (TextEditor != null && !TextEditor.Disposing && TextEditor.Visible)
+                _diffLineNumAnalyzer.StartAsync(text, () =>
                 {
-                    TextEditor.ActiveTextAreaControl.TextArea.Refresh();
-                }
-            });
+                    if (TextEditor != null && !TextEditor.Disposing && TextEditor.Visible)
+                    {
+                        TextEditor.ActiveTextAreaControl.TextArea.Refresh();
+                    }
+                });
+            }
         }
 
         public void SetHighlighting(string syntax)

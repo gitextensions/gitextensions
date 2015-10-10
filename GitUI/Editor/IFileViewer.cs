@@ -29,7 +29,7 @@ namespace GitUI.Editor
         void Find();
 
         string GetText();
-        void SetText(string text);
+        void SetText(string text, bool isDiff = false);
         void SetHighlighting(string syntax);
         void SetHighlightingForFile(string filename);
         void HighlightLine(int line, Color color);

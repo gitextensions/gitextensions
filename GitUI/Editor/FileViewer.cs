@@ -403,7 +403,7 @@ namespace GitUI.Editor
         public void ViewPatch(string text)
         {
             ResetForDiff();
-            _internalFileViewer.SetText(text);
+            _internalFileViewer.SetText(text, isDiff: true);
             if (TextLoaded != null)
                 TextLoaded(this, null);
             RestoreCurrentScrollPos();
@@ -830,7 +830,7 @@ namespace GitUI.Editor
         private static bool IsDiffLine(string wholeText, string lineContent)
         {
             var isCombinedDiff = DiffHighlightService.IsCombinedDiff(wholeText);
-            return lineContent.StartsWithAny(isCombinedDiff ? new[] {"+", "-", " +", " -"} 
+            return lineContent.StartsWithAny(isCombinedDiff ? new[] {"+", "-", " +", " -"}
                 : new[] {"+", "-"});
         }
 
@@ -1091,7 +1091,7 @@ namespace GitUI.Editor
             }
         }
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
