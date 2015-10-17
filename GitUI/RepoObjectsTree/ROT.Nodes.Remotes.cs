@@ -122,46 +122,83 @@ namespace GitUI.UserControls
             public RemoteNode(RemoteInfo remote, GitUICommands uiCommands)
                 : base(uiCommands, remote, remote.RemoteTrackingBranches.Select(b => new RemoteBranchNode(uiCommands, b))) { }
         }
+        */
 
-        /// <summary><see cref="Node"/> for a branch on a remote repo.</summary>
-        sealed class RemoteBranchNode : Node<RemoteInfo.RemoteTrackingBranch>
+        private class RemoteBranchTree : Tree
         {
-            public RemoteBranchNode(GitUICommands uiCommands,
-                 RemoteInfo.RemoteTrackingBranch trackingBranch)
-                : base(trackingBranch, uiCommands)
+            public RemoteBranchTree(TreeNode aTreeNode, IGitUICommandsSource uiCommands) : base(aTreeNode, uiCommands)
             {
-                IsDraggable = true;
+                uiCommands.GitUICommandsChanged += uiCommands_GitUICommandsChanged;
+            }
+
+            private void uiCommands_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+            {
+                TreeViewNode.TreeView.SelectedNode = null;
+            }
+
+            protected override void LoadNodes(CancellationToken token)
+            {
+                var nodes = new Dictionary<string, BaseBranchNode>();
+
+                var branches = Module.GetRefs(true, true)
+                    .Where(branch => branch.IsRemote && !branch.IsTag)
+                    .Select(branch => branch.Name);
+                foreach (var branchPath in branches)
+                {
+                    var remoteBranchNode = new RemoteBranchNode(this, branchPath);
+                    var parent = remoteBranchNode.CreateRootNode(nodes,
+                        (tree, parentPath) => new RemoteBranchPathNode(tree, parentPath));
+                    if (parent != null)
+                        Nodes.AddNode(parent);
+                }
+            }
+
+            protected override void FillTreeViewNode()
+            {
+                base.FillTreeViewNode();
+                TreeViewNode.ExpandAll();
+            }
+        }
+
+        /// <summary>for a branch on a remote repo.</summary>
+        sealed class RemoteBranchNode : BaseBranchNode
+        {
+
+            public RemoteBranchNode(Tree aTree, string aFullPath) : base(aTree, aFullPath)
+            {
+                IsDraggable = false;
             }
 
             protected override IEnumerable<DragDropAction> CreateDragDropActions()
             {
+                throw new NotImplementedException();
                 // (local) Branch onto this RemoteBranch -> push
-                var dropLocalBranch = new DragDropAction<BranchNode>(
-                    branch => Value.PushConfig != null && Equals(Value.PushConfig.LocalBranch, branch.FullPath),
-                    branch =>
-                    {
-                        GitPush push = Value.CreatePush(branch.FullPath);
+                //var dropLocalBranch = new DragDropAction<BranchNode>(
+                //    branch => Value.PushConfig != null && Equals(Value.PushConfig.LocalBranch, branch.FullPath),
+                //    branch =>
+                //    {
+                //        GitPush push = Value.CreatePush(branch.FullPath);
 
-                        if (Module.CompareCommits(branch.FullPath, Value.FullPath).State == BranchCompareStatus.AheadPublishable)
-                        {
-                            // local is ahead and publishable (remote has NOT diverged)
-                            Module.Push(push);
-                            throw new NotImplementedException("tell user about fail or success.");
-                            // if fail because remote diverged since Git.CompareCommits conditional (unlikely) -> tell user to fetch/merge or pull
-                        }
-                        else
-                        {
-                            throw new NotImplementedException("tell user to fetch/merge or pull");
-                        }
-                    });
+                //        if (Module.CompareCommits(branch.FullPath, Value.FullPath).State == BranchCompareStatus.AheadPublishable)
+                //        {
+                //            // local is ahead and publishable (remote has NOT diverged)
+                //            Module.Push(push);
+                //            throw new NotImplementedException("tell user about fail or success.");
+                //            // if fail because remote diverged since Git.CompareCommits conditional (unlikely) -> tell user to fetch/merge or pull
+                //        }
+                //        else
+                //        {
+                //            throw new NotImplementedException("tell user to fetch/merge or pull");
+                //        }
+                //    });
 
-                return new[] { dropLocalBranch, };
+                //return new[] { dropLocalBranch, };
             }
 
             internal override void OnSelected()
             {
                 base.OnSelected();
-                UICommands.BrowseRepo.GoToRef(Value.FullPath, true);
+                UICommands.BrowseRepo.GoToRef(FullPath, true);
             }
 
             /// <summary>Download updates from the remote branch.</summary>
@@ -179,27 +216,29 @@ namespace GitUI.UserControls
             /// <summary>Create a local branch from the remote branch.</summary>
             public void CreateBranch()
             {
-                if (Value.Status == RemoteInfo.RemoteTrackingBranch.State.New)
-                {
-                    Fetch();
-                }
+                throw new NotImplementedException();
+                //if (Value.Status == RemoteInfo.RemoteTrackingBranch.State.New)
+                //{
+                //    Fetch();
+                //}
 
-                throw new NotImplementedException("be able to specify source branch");
+                //throw new NotImplementedException("be able to specify source branch");
                 //UiCommands.StartCreateBranchDialog(Value.FullPath);
             }
 
             /// <summary>Un-track the remote branch and remove the local copy.</summary>
             public void UnTrack()
             {
-                string error = Module.RemoteCmd(GitRemote.UnTrack(Value.Remote, Value));
-                GC.KeepAlive(error);
-                bool isSuccess = true;
-                if (isSuccess)
-                {
-                    TreeNode.Parent.Nodes.Remove(TreeNode);
-                    Value.Remote.UnTrack(Value);
-                }
-                throw new NotImplementedException("this one actually works, but need to change UI state and more testing");
+                throw new NotImplementedException();
+                //string error = Module.RemoteCmd(GitRemote.UnTrack(Value.Remote, Value));
+                //GC.KeepAlive(error);
+                //bool isSuccess = true;
+                //if (isSuccess)
+                //{
+                //    TreeNode.Parent.Nodes.Remove(TreeNode);
+                //    Value.Remote.UnTrack(Value);
+                //}
+                //throw new NotImplementedException("this one actually works, but need to change UI state and more testing");
             }
 
             /// <summary>Delete the branch on the remote repository.</summary>
@@ -210,11 +249,7 @@ namespace GitUI.UserControls
                 //GitPush pushDelete = Value.RemoteBranch.Delete();
 
                 throw new NotImplementedException("show warning; implement GitPush RemoteBranch.Delete()");
-            }
-
-
+            } 
         }
-         */
-
     }
 }

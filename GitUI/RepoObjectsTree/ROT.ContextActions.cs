@@ -30,13 +30,13 @@ namespace GitUI.UserControls
         }
 
         /// <summary>Hooks an action onto the Click event of a <see cref="ToolStripMenuItem"/>.</summary>
-        void RegisterClick<T>(ToolStripMenuItem item, Action<T> onClick) where T: Node           
+        void RegisterClick<T>(ToolStripMenuItem item, Action<T> onClick) where T: Node
         {
             item.Click += (o, e) => Node.OnNode<T>(rightClickNode, onClick);
         }
 
         /// <summary>Registers the context menu actions.</summary>
-        void RegisterContextActions()
+        private void RegisterContextActions()
         {
             RegisterClick(mnubtnCollapseAll, () => treeMain.CollapseAll());
             RegisterClick(mnubtnExpandAll, () => treeMain.ExpandAll());
@@ -50,11 +50,11 @@ namespace GitUI.UserControls
             RegisterClick<BranchNode>(mnubtnBranchCheckout, branch => branch.Checkout());
             RegisterClick<BranchNode>(mnubtnBranchDelete, branch => branch.Delete());
             RegisterClick<BranchNode>(mnubtnBranchDeleteForce, branch => branch.DeleteForce());
-            Node.RegisterContextMenu(typeof(BranchNode), menuBranch);
+            Node.RegisterContextMenu(typeof (BranchNode), menuBranch);
 
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranchesForce, branchPath => branchPath.DeleteAllForce());
-            Node.RegisterContextMenu(typeof(BranchPathNode), menuBranchPath);
+            Node.RegisterContextMenu(typeof (BranchPathNode), menuBranchPath);
 
             //RegisterClick<RootNode>(mnubtnStashSave, stashes => stashes.UICommands.StartStashDialog());
             /*
@@ -63,13 +63,13 @@ RegisterClick<StashNode>(mnubtnStashPop, stash => stash.Pop());
 RegisterClick<StashNode>(mnubtnStashApply, stash => stash.Apply());
 RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
 
-RegisterClick<RemoteBranchNode>(mnubtnTrackedFetch, remoteBranch => remoteBranch.Fetch());
-RegisterClick<RemoteBranchNode>(mnubtnTrackedPull, remoteBranch => remoteBranch.Pull());
-RegisterClick<RemoteBranchNode>(mnubtnTrackedCreateBranch, remoteBranch => remoteBranch.CreateBranch());
-RegisterClick<RemoteBranchNode>(mnubtnTrackedUnTrack, remoteBranch => remoteBranch.UnTrack());
-RegisterClick<RemoteBranchNode>(mnubtnTrackedDelete, remoteBranch => remoteBranch.Delete());
-*/
-            // TODO: context actions for RemoteBranchNode depending on its current state 
+            RegisterClick<RemoteBranchNode>(mnubtnTrackedFetch, remoteBranch => remoteBranch.Fetch());
+            RegisterClick<RemoteBranchNode>(mnubtnTrackedPull, remoteBranch => remoteBranch.Pull());
+            RegisterClick<RemoteBranchNode>(mnubtnTrackedCreateBranch, remoteBranch => remoteBranch.CreateBranch());
+            RegisterClick<RemoteBranchNode>(mnubtnTrackedUnTrack, remoteBranch => remoteBranch.UnTrack());
+            RegisterClick<RemoteBranchNode>(mnubtnTrackedDelete, remoteBranch => remoteBranch.Delete());
+            */
+            // TODO: context actions for RemoteBranchNode depending on its current state
             // can either create additional remote branch Node classes OR use method overloads
 
             //RegisterClick<RemoteBranchUnTrackedNode>(mnubtnUntrackedFetch, remoteBranch => remoteBranch.Fetch());
@@ -77,11 +77,9 @@ RegisterClick<RemoteBranchNode>(mnubtnTrackedDelete, remoteBranch => remoteBranc
 
             //RegisterClick<RemoteBranchStaleNode>(mnubtnStaleRemove, remoteBranch => remoteBranch.Remove());
 
-            //RegisterClick<RemoteBranchNode>(mnubtnNewFetch, remoteBranch => remoteBranch.Fetch());
-            //RegisterClick<RemoteBranchNode>(mnubtnNewCreateBranch, remoteBranch => remoteBranch.CreateBranch());
-     
+            RegisterClick<RemoteBranchNode>(mnubtnRemoteFetch, remoteBranch => remoteBranch.Fetch());
+            RegisterClick<RemoteBranchNode>(mnubtnNewCreateBranch, remoteBranch => remoteBranch.CreateBranch());
+            Node.RegisterContextMenu(typeof(RemoteBranchNode), menuRemote);
         }
-
-
     }
 }

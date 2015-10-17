@@ -49,17 +49,7 @@ namespace GitUI.UserControls
                            OnReloadStashes,
                            OnAddStash
                         );*/
-            /*
-            AddTreeSet(new TreeNode(Strings.remotes.Text)
-                {
-                    ContextMenuStrip = menuRemotes,
-                    ImageKey = remotesKey
-                },
-                () => Module.GetRemotesInfo().Select(remote => new RemoteNode(remote, UICommands)).ToList(),
-                OnReloadRemotes,
-                OnAddRemote
-            );
-            */
+            AddTree(new RemoteBranchTree(new TreeNode(Strings.remotes.Text), newSource));
         }
 
         void AddTree(Tree aTree)
