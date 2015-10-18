@@ -144,9 +144,15 @@ namespace GitUI.UserControls
                 var branches = Module.GetRefs(true, true)
                     .Where(branch => branch.IsRemote && !branch.IsTag)
                     .Select(branch => branch.Name);
+
+                var remotes = Module.GetRemotes(allowEmpty: false);
                 foreach (var branchPath in branches)
                 {
                     var remote = branchPath.Split('/').First();
+                    if (!remotes.Contains(remote))
+                    {
+                        continue;
+                    }
                     var remoteBranchNode = new RemoteBranchNode(this, branchPath);
                     var parent = remoteBranchNode.CreateRootNode(nodes,
                         (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
@@ -175,7 +181,6 @@ namespace GitUI.UserControls
         /// <summary>for a branch on a remote repo.</summary>
         sealed class RemoteBranchNode : BaseBranchNode
         {
-
             public RemoteBranchNode(Tree aTree, string aFullPath) : base(aTree, aFullPath)
             {
                 IsDraggable = false;
