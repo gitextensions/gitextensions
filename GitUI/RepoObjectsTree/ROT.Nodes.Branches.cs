@@ -67,7 +67,9 @@ namespace GitUI.UserControls
                 ParentPath = dirs.Take(dirs.Length - 1).Join(PathSeparator);
             }
 
-            internal BaseBranchNode CreateRootNode(IDictionary<string, BaseBranchNode> nodes)
+            internal BaseBranchNode CreateRootNode(IDictionary<string, BaseBranchNode> nodes,
+                Func<Tree, string, BaseBranchNode> createPathNode)
+
             {
                 if (ParentPath.IsNullOrEmpty())
                     return this;
@@ -81,9 +83,9 @@ namespace GitUI.UserControls
                 }
                 else
                 {
-                    parent = new BranchPathNode(Tree, ParentPath);
+                    parent = createPathNode(Tree, ParentPath);
                     nodes.Add(ParentPath, parent);
-                    result = parent.CreateRootNode(nodes);
+                    result = parent.CreateRootNode(nodes, createPathNode);
                 }
 
                 parent.Nodes.AddNode(this);
@@ -339,7 +341,8 @@ namespace GitUI.UserControls
                 foreach (string branch in branches)
                 {
                     BranchNode branchNode = new BranchNode(this, branch);
-                    BaseBranchNode parent = branchNode.CreateRootNode(nodes);
+                    BaseBranchNode parent = branchNode.CreateRootNode(nodes,
+                        (tree, parentPath) => new BranchPathNode(tree, parentPath));
                     if (parent != null)
                         Nodes.AddNode(parent);
                 }

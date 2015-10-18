@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitUI.CommandsDialogs;
 
 namespace GitUI.UserControls
 {
@@ -145,12 +146,23 @@ namespace GitUI.UserControls
                     .Select(branch => branch.Name);
                 foreach (var branchPath in branches)
                 {
+                    var remote = branchPath.Split('/').First();
                     var remoteBranchNode = new RemoteBranchNode(this, branchPath);
                     var parent = remoteBranchNode.CreateRootNode(nodes,
-                        (tree, parentPath) => new RemoteBranchPathNode(tree, parentPath));
+                        (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
                     if (parent != null)
                         Nodes.AddNode(parent);
                 }
+            }
+
+            private static BaseBranchNode CreateRemoteBranchPathNode(Tree tree,  
+                string parentPath, string remoteName)
+            {
+                if (parentPath == remoteName)
+                {
+                    return new RemoteRepoNode(tree, parentPath);
+                }
+                return new RemoteBranchPathNode(tree, parentPath);
             }
 
             protected override void FillTreeViewNode()
@@ -204,26 +216,42 @@ namespace GitUI.UserControls
             /// <summary>Download updates from the remote branch.</summary>
             public void Fetch()
             {
-                //Value.Fetch();
-                throw new NotImplementedException("create a GitFetch command (similar to GitPush class)");
+                var remoteBranchInfo = GetRemoteBranchInfo();
+                using (FormProcess process = new FormRemoteProcess(Module,
+                    Module.FetchCmd(remoteBranchInfo.Remote, remoteBranchInfo.BranchName,
+                    null, null)))
+                {
+                    process.ShowDialog(this.TreeViewNode.TreeView);
+                }
+            }
+
+            private struct RemoteBranchInfo
+            {
+                public string Remote { get; set; }
+
+                public string BranchName { get; set; }
+            }
+
+            private RemoteBranchInfo GetRemoteBranchInfo()
+            {
+                var remote = FullPath.Split('/').First();
+                var branch = FullPath.Substring(remote.Length + 1);
+                return new RemoteBranchInfo {Remote = remote, BranchName = branch};
             }
 
             public void Pull()
             {
-                throw new NotImplementedException();
+                bool pullCompleted = false;
+                var remoteBranchInfo = GetRemoteBranchInfo();
+                UICommands.StartPullDialog(this.TreeViewNode.TreeView, pullOnShow: false, 
+                    remoteBranch: remoteBranchInfo.BranchName, remote: remoteBranchInfo.Remote, 
+                    pullCompleted: out pullCompleted, fetchAll: false);
             }
 
             /// <summary>Create a local branch from the remote branch.</summary>
             public void CreateBranch()
             {
-                throw new NotImplementedException();
-                //if (Value.Status == RemoteInfo.RemoteTrackingBranch.State.New)
-                //{
-                //    Fetch();
-                //}
-
-                //throw new NotImplementedException("be able to specify source branch");
-                //UiCommands.StartCreateBranchDialog(Value.FullPath);
+                UICommands.StartCreateBranchDialog(this.TreeViewNode.TreeView, new GitRevision(Module, FullPath));
             }
 
             /// <summary>Un-track the remote branch and remove the local copy.</summary>
@@ -244,12 +272,45 @@ namespace GitUI.UserControls
             /// <summary>Delete the branch on the remote repository.</summary>
             public void Delete()
             {
-                // needs BIG WARNING
+                var remoteBranchInfo = GetRemoteBranchInfo();
+                var cmd = new GitDeleteRemoteBranchCmd(remoteBranchInfo.Remote, remoteBranchInfo.BranchName);
+                UICommands.StartCommandLineProcessDialog(cmd, null);
+            }
 
-                //GitPush pushDelete = Value.RemoteBranch.Delete();
+            public void Checkout()
+            {
+                using (var form = new FormCheckoutBranch(UICommands, FullPath, remote: true))
+                {
+                    form.ShowDialog(TreeViewNode.TreeView);
+                }
+            }
+        }
+        
+        sealed class RemoteBranchPathNode : BaseBranchNode
+        {
+            public RemoteBranchPathNode(Tree aTree, string aFullPath) : base(aTree, aFullPath)
+            {
+            }
+        }
 
-                throw new NotImplementedException("show warning; implement GitPush RemoteBranch.Delete()");
-            } 
+        sealed class RemoteRepoNode : BaseBranchNode
+        {
+            public RemoteRepoNode(Tree aTree, string aFullPath) : base(aTree, aFullPath)
+            {
+            }
+
+            public void Fetch()
+            {
+                using (FormProcess process = new FormRemoteProcess(Module,
+                    Module.FetchCmd(FullPath, null,null, null)))
+                {
+                    var ret = process.ShowDialog(this.TreeViewNode.TreeView);
+                    if (ret == DialogResult.OK)
+                    {
+                        UICommands.RepoChangedNotifier.Notify(); 
+                    }
+                }
+            }
         }
     }
 }

@@ -75,11 +75,15 @@ RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
             //RegisterClick<RemoteBranchUnTrackedNode>(mnubtnUntrackedFetch, remoteBranch => remoteBranch.Fetch());
             //RegisterClick<RemoteBranchUnTrackedNode>(mnubtnUntrackedTrack, remoteBranch => remoteBranch.Track());
 
-            //RegisterClick<RemoteBranchStaleNode>(mnubtnStaleRemove, remoteBranch => remoteBranch.Remove());
-
-            RegisterClick<RemoteBranchNode>(mnubtnRemoteFetch, remoteBranch => remoteBranch.Fetch());
+            RegisterClick<RemoteBranchNode>(mnubtnRemoteRemove, remoteBranch => remoteBranch.Delete());
+            RegisterClick<RemoteBranchNode>(mnubtnBranchCheckout, branch => branch.Checkout());
+            RegisterClick<RemoteBranchNode>(mnubtnNewFetch, remoteBranch => remoteBranch.Fetch());
+            RegisterClick<RemoteBranchNode>(toolbtnRemotePull, remoteBranch => remoteBranch.Pull());
             RegisterClick<RemoteBranchNode>(mnubtnNewCreateBranch, remoteBranch => remoteBranch.CreateBranch());
             Node.RegisterContextMenu(typeof(RemoteBranchNode), menuRemote);
+
+            RegisterClick<RemoteRepoNode>(mnubtnRemoteFetch, remoteBranch => remoteBranch.Fetch());
+            Node.RegisterContextMenu(typeof(RemoteRepoNode), menuRemoteRepoNode);
         }
     }
 }
