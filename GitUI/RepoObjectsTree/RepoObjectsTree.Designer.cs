@@ -82,6 +82,7 @@ namespace GitUI.UserControls
             this.mnubtnUntrackedTrack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnUntrackedFetch = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRemoteRepoNode = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuBtnCheckoutLocal = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuStashes.SuspendLayout();
@@ -149,16 +150,17 @@ namespace GitUI.UserControls
             // menuBranch
             // 
             this.menuBranch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuBtnCheckoutLocal,
             this.mnubtnBranchDelete,
             this.mnubtnBranchDeleteForce});
             this.menuBranch.Name = "contextmenuBranch";
-            this.menuBranch.Size = new System.Drawing.Size(140, 48);
+            this.menuBranch.Size = new System.Drawing.Size(153, 92);
             // 
             // mnubtnBranchDelete
             // 
             this.mnubtnBranchDelete.Image = global::GitUI.Properties.Resources.IconBranchDelete;
             this.mnubtnBranchDelete.Name = "mnubtnBranchDelete";
-            this.mnubtnBranchDelete.Size = new System.Drawing.Size(139, 22);
+            this.mnubtnBranchDelete.Size = new System.Drawing.Size(152, 22);
             this.mnubtnBranchDelete.Text = "Delete";
             this.mnubtnBranchDelete.ToolTipText = "Delete the branch, which must be fully merged in its upstream branch or in HEAD";
             // 
@@ -166,7 +168,7 @@ namespace GitUI.UserControls
             // 
             this.mnubtnBranchDeleteForce.Image = global::GitUI.Properties.Resources.DeleteRed;
             this.mnubtnBranchDeleteForce.Name = "mnubtnBranchDeleteForce";
-            this.mnubtnBranchDeleteForce.Size = new System.Drawing.Size(139, 22);
+            this.mnubtnBranchDeleteForce.Size = new System.Drawing.Size(152, 22);
             this.mnubtnBranchDeleteForce.Text = "Force Delete";
             this.mnubtnBranchDeleteForce.ToolTipText = "Delete the branch, regardless of its merged status";
             // 
@@ -467,6 +469,14 @@ namespace GitUI.UserControls
             this.menuRemoteRepoNode.Name = "contextmenuRemote";
             this.menuRemoteRepoNode.Size = new System.Drawing.Size(104, 26);
             // 
+            // mnuBtnCheckoutLocal
+            // 
+            this.mnuBtnCheckoutLocal.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
+            this.mnuBtnCheckoutLocal.Name = "mnuBtnCheckoutLocal";
+            this.mnuBtnCheckoutLocal.Size = new System.Drawing.Size(152, 22);
+            this.mnuBtnCheckoutLocal.Text = "Checkout";
+            this.mnuBtnCheckoutLocal.ToolTipText = "Checkout this branch";
+            // 
             // RepoObjectsTree
             // 
             this.Controls.Add(this.treeMain);
@@ -537,5 +547,6 @@ namespace GitUI.UserControls
         private ContextMenuStrip menuRemoteRepoNode;
         private ToolStripMenuItem mnubtnNewCreateBranch;
         private ToolStripMenuItem mnubtnNewFetch;
+        private ToolStripMenuItem mnuBtnCheckoutLocal;
     }
 }

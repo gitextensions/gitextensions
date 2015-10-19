@@ -47,7 +47,7 @@ namespace GitUI.UserControls
             //RegisterClick<BranchesNode>(mnubtnNewBranch, branches => branches.CreateBranch());
 
 
-            RegisterClick<BranchNode>(mnubtnBranchCheckout, branch => branch.Checkout());
+            RegisterClick<BranchNode>(mnuBtnCheckoutLocal, branch => branch.Checkout());
             RegisterClick<BranchNode>(mnubtnBranchDelete, branch => branch.Delete());
             RegisterClick<BranchNode>(mnubtnBranchDeleteForce, branch => branch.DeleteForce());
             Node.RegisterContextMenu(typeof (BranchNode), menuBranch);
