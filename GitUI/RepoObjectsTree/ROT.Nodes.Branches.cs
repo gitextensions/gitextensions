@@ -106,8 +106,8 @@ namespace GitUI.UserControls
             public BranchNode(Tree aTree, string aFullPath)
                 : base(aTree, aFullPath.TrimStart(GitModule.ActiveBranchIndicator))
             {
-                IsDraggable = true;
-                AllowDrop = true;
+                IsDraggable = false;
+                AllowDrop = false;
                 IsActive = aFullPath.StartsWith(GitModule.ActiveBranchIndicator.ToString());
             }
 
