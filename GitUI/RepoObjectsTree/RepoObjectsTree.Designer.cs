@@ -34,6 +34,7 @@ namespace GitUI.UserControls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RepoObjectsTree));
             this.treeMain = new System.Windows.Forms.TreeView();
             this.menuMain = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +42,7 @@ namespace GitUI.UserControls
             this.mnubtnReload = new System.Windows.Forms.ToolStripMenuItem();
             this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.menuBranch = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuBtnCheckoutLocal = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnBranchDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnBranchDeleteForce = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnBranchCheckout = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,7 +84,6 @@ namespace GitUI.UserControls
             this.mnubtnUntrackedTrack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnUntrackedFetch = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRemoteRepoNode = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnuBtnCheckoutLocal = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuStashes.SuspendLayout();
@@ -101,8 +102,11 @@ namespace GitUI.UserControls
             this.treeMain.ContextMenuStrip = this.menuMain;
             this.treeMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeMain.FullRowSelect = true;
+            this.treeMain.ImageIndex = 0;
+            this.treeMain.ImageList = this.imgList;
             this.treeMain.Location = new System.Drawing.Point(0, 0);
             this.treeMain.Name = "treeMain";
+            this.treeMain.SelectedImageIndex = 0;
             this.treeMain.ShowNodeToolTips = true;
             this.treeMain.Size = new System.Drawing.Size(200, 350);
             this.treeMain.TabIndex = 3;
@@ -143,9 +147,12 @@ namespace GitUI.UserControls
             // 
             // imgList
             // 
-            this.imgList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imgList.ImageSize = new System.Drawing.Size(16, 16);
+            this.imgList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgList.ImageStream")));
             this.imgList.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgList.Images.SetKeyName(0, "Branch.png");
+            this.imgList.Images.SetKeyName(1, "RemoteRepo.png");
+            this.imgList.Images.SetKeyName(2, "RemoteMirror.png");
+            this.imgList.Images.SetKeyName(3, "folder.png");
             // 
             // menuBranch
             // 
@@ -154,13 +161,21 @@ namespace GitUI.UserControls
             this.mnubtnBranchDelete,
             this.mnubtnBranchDeleteForce});
             this.menuBranch.Name = "contextmenuBranch";
-            this.menuBranch.Size = new System.Drawing.Size(153, 92);
+            this.menuBranch.Size = new System.Drawing.Size(140, 70);
+            // 
+            // mnuBtnCheckoutLocal
+            // 
+            this.mnuBtnCheckoutLocal.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
+            this.mnuBtnCheckoutLocal.Name = "mnuBtnCheckoutLocal";
+            this.mnuBtnCheckoutLocal.Size = new System.Drawing.Size(139, 22);
+            this.mnuBtnCheckoutLocal.Text = "Checkout";
+            this.mnuBtnCheckoutLocal.ToolTipText = "Checkout this branch";
             // 
             // mnubtnBranchDelete
             // 
             this.mnubtnBranchDelete.Image = global::GitUI.Properties.Resources.IconBranchDelete;
             this.mnubtnBranchDelete.Name = "mnubtnBranchDelete";
-            this.mnubtnBranchDelete.Size = new System.Drawing.Size(152, 22);
+            this.mnubtnBranchDelete.Size = new System.Drawing.Size(139, 22);
             this.mnubtnBranchDelete.Text = "Delete";
             this.mnubtnBranchDelete.ToolTipText = "Delete the branch, which must be fully merged in its upstream branch or in HEAD";
             // 
@@ -168,7 +183,7 @@ namespace GitUI.UserControls
             // 
             this.mnubtnBranchDeleteForce.Image = global::GitUI.Properties.Resources.DeleteRed;
             this.mnubtnBranchDeleteForce.Name = "mnubtnBranchDeleteForce";
-            this.mnubtnBranchDeleteForce.Size = new System.Drawing.Size(152, 22);
+            this.mnubtnBranchDeleteForce.Size = new System.Drawing.Size(139, 22);
             this.mnubtnBranchDeleteForce.Text = "Force Delete";
             this.mnubtnBranchDeleteForce.ToolTipText = "Delete the branch, regardless of its merged status";
             // 
@@ -468,14 +483,6 @@ namespace GitUI.UserControls
             this.mnubtnRemoteFetch});
             this.menuRemoteRepoNode.Name = "contextmenuRemote";
             this.menuRemoteRepoNode.Size = new System.Drawing.Size(104, 26);
-            // 
-            // mnuBtnCheckoutLocal
-            // 
-            this.mnuBtnCheckoutLocal.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
-            this.mnuBtnCheckoutLocal.Name = "mnuBtnCheckoutLocal";
-            this.mnuBtnCheckoutLocal.Size = new System.Drawing.Size(152, 22);
-            this.mnuBtnCheckoutLocal.Text = "Checkout";
-            this.mnuBtnCheckoutLocal.ToolTipText = "Checkout this branch";
             // 
             // RepoObjectsTree
             // 

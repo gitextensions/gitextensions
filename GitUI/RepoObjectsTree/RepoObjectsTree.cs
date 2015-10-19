@@ -38,7 +38,12 @@ namespace GitUI.UserControls
 
             DragDrops();
 
-            AddTree(new BranchTree(new TreeNode(Strings.branches.Text), newSource));
+            var localBranchesRootNode = new TreeNode(Strings.branches.Text)
+            {
+                ImageKey = "RemoteRepo.png",
+            };
+            localBranchesRootNode.SelectedImageKey = localBranchesRootNode.ImageKey;
+            AddTree(new BranchTree(localBranchesRootNode, newSource));
 
             /*            AddTreeSet(new TreeNode(Strings.stashes.Text)
                             {
@@ -49,7 +54,13 @@ namespace GitUI.UserControls
                            OnReloadStashes,
                            OnAddStash
                         );*/
-            AddTree(new RemoteBranchTree(new TreeNode(Strings.remotes.Text), newSource));
+
+            var remoteBranchesRootNode = new TreeNode(Strings.remotes.Text)
+            {
+                ImageKey = "RemoteMirror.png",
+            };
+            remoteBranchesRootNode.SelectedImageKey = remoteBranchesRootNode.ImageKey;
+            AddTree(new RemoteBranchTree(remoteBranchesRootNode, newSource));
         }
 
         void AddTree(Tree aTree)

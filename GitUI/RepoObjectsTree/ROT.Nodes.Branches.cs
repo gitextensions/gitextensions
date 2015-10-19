@@ -239,6 +239,7 @@ namespace GitUI.UserControls
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "folder.png";
             }
 
             public void DeleteAll()

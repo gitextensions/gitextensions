@@ -301,6 +301,12 @@ namespace GitUI.UserControls
             public RemoteBranchPathNode(Tree aTree, string aFullPath) : base(aTree, aFullPath)
             {
             }
+
+            protected override void ApplyStyle()
+            {
+                base.ApplyStyle();
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "folder.png";
+            }
         }
 
         sealed class RemoteRepoNode : BaseBranchNode
@@ -320,6 +326,12 @@ namespace GitUI.UserControls
                         UICommands.RepoChangedNotifier.Notify();
                     }
                 }
+            }
+
+            protected override void ApplyStyle()
+            {
+                base.ApplyStyle();
+                this.TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "RemoteMirror.png";
             }
         }
     }
