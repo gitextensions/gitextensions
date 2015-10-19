@@ -161,7 +161,7 @@ namespace GitUI.UserControls
                 }
             }
 
-            private static BaseBranchNode CreateRemoteBranchPathNode(Tree tree,  
+            private static BaseBranchNode CreateRemoteBranchPathNode(Tree tree,
                 string parentPath, string remoteName)
             {
                 if (parentPath == remoteName)
@@ -248,8 +248,8 @@ namespace GitUI.UserControls
             {
                 bool pullCompleted = false;
                 var remoteBranchInfo = GetRemoteBranchInfo();
-                UICommands.StartPullDialog(this.TreeViewNode.TreeView, pullOnShow: false, 
-                    remoteBranch: remoteBranchInfo.BranchName, remote: remoteBranchInfo.Remote, 
+                UICommands.StartPullDialog(this.TreeViewNode.TreeView, pullOnShow: false,
+                    remoteBranch: remoteBranchInfo.BranchName, remote: remoteBranchInfo.Remote,
                     pullCompleted: out pullCompleted, fetchAll: false);
             }
 
@@ -289,8 +289,13 @@ namespace GitUI.UserControls
                     form.ShowDialog(TreeViewNode.TreeView);
                 }
             }
+
+            internal override void OnDoubleClick()
+            {
+                Checkout();
+            }
         }
-        
+
         sealed class RemoteBranchPathNode : BaseBranchNode
         {
             public RemoteBranchPathNode(Tree aTree, string aFullPath) : base(aTree, aFullPath)
@@ -312,7 +317,7 @@ namespace GitUI.UserControls
                     var ret = process.ShowDialog(this.TreeViewNode.TreeView);
                     if (ret == DialogResult.OK)
                     {
-                        UICommands.RepoChangedNotifier.Notify(); 
+                        UICommands.RepoChangedNotifier.Notify();
                     }
                 }
             }
