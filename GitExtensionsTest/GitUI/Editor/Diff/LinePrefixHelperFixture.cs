@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using GitUI.Editor;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor.Document;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GitExtensionsTest.GitUI
+namespace GitExtensionsTest.GitUI.Editor.Diff
 {
     [TestFixture]
     class LinePrefixHelperFixture

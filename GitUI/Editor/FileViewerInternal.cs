@@ -7,6 +7,8 @@ using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using ResourceManager;
+using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace GitUI.Editor
 {
@@ -14,6 +16,8 @@ namespace GitUI.Editor
     {
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
+        private readonly DiffViewerLineNumberCtrl _lineNumbersControl;
+        private readonly DiffLineNumAnalyzer _diffLineNumAnalyzer = new DiffLineNumAnalyzer();
 
         public FileViewerInternal()
         {
@@ -30,6 +34,14 @@ namespace GitUI.Editor
             TextEditor.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
+
+            TextEditor.ShowLineNumbers = false;
+            _lineNumbersControl = new DiffViewerLineNumberCtrl(TextEditor.ActiveTextAreaControl.TextArea);
+            TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _lineNumbersControl);
+            _diffLineNumAnalyzer.OnLineNumAnalyzed += line =>
+            {
+                _lineNumbersControl.AddDiffLineNum(line);
+            };
         }
 
         public new Font Font
@@ -130,8 +142,19 @@ namespace GitUI.Editor
         public void SetText(string text)
         {
             _diffHighlightService = DiffHighlightService.IsCombinedDiff(text) ? CombinedDiffHighlightService.Instance : DiffHighlightService.Instance;
+
+            _lineNumbersControl.Clear();
+
             TextEditor.Text = text;
             TextEditor.Refresh();
+
+            _diffLineNumAnalyzer.StartAsync(text, () =>
+            {
+                if (TextEditor != null && !TextEditor.Disposing && TextEditor.Visible)
+                {
+                    TextEditor.ActiveTextAreaControl.TextArea.Refresh();
+                }
+            });
         }
 
         public void SetHighlighting(string syntax)

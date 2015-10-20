@@ -95,7 +95,8 @@
     <Compile Include="GitCommands\Patch\PatchManagerTest.cs" />
     <Compile Include="GitCommands\Patch\PatchTest.cs" />
     <Compile Include="GitUI\AuthorEmailBasedRevisionHighlightingFixture.cs" />
-    <Compile Include="GitUI\LinePrefixHelperFixture.cs" />
+    <Compile Include="GitUI\Editor\Diff\DiffLineNumAnalyzerFixture.cs" />
+    <Compile Include="GitUI\Editor\Diff\LinePrefixHelperFixture.cs" />
     <Compile Include="GitUI\FollowParentRewriterFixture.cs" />
     <Compile Include="GitUI\FormUpdateFixture.cs" />
     <Compile Include="GitUI\HotkeySettingsManagerFixture.cs" />
@@ -147,6 +148,12 @@
     </None>
     <None Include="GitCommands\Patch\testdata\rebase.diff">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="GitUI\Editor\Diff\SampleCombined.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="GitUI\Editor\Diff\Sample.diff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
