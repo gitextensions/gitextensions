@@ -84,6 +84,10 @@ RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
 
             RegisterClick<RemoteRepoNode>(mnubtnRemoteFetch, remoteBranch => remoteBranch.Fetch());
             Node.RegisterContextMenu(typeof(RemoteRepoNode), menuRemoteRepoNode);
+
+            RegisterClick<TagNode>(mnubtnCreateBranchForTag, tag => tag.CreateBranch());
+            RegisterClick<TagNode>(mnubtnDeleteTag, tag => tag.Delete());
+            Node.RegisterContextMenu(typeof(TagNode), menuTag);
         }
     }
 }

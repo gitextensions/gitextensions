@@ -45,22 +45,16 @@ namespace GitUI.UserControls
             localBranchesRootNode.SelectedImageKey = localBranchesRootNode.ImageKey;
             AddTree(new BranchTree(localBranchesRootNode, newSource));
 
-            /*            AddTreeSet(new TreeNode(Strings.stashes.Text)
-                            {
-                                ContextMenuStrip = menuStashes,
-                                ImageKey = stashesKey
-                            },
-                           () => Module.GetStashes().Select(stash => new StashNode(stash, UICommands)).ToList(),
-                           OnReloadStashes,
-                           OnAddStash
-                        );*/
-
             var remoteBranchesRootNode = new TreeNode(Strings.remotes.Text)
             {
                 ImageKey = "RemoteMirror.png",
             };
             remoteBranchesRootNode.SelectedImageKey = remoteBranchesRootNode.ImageKey;
             AddTree(new RemoteBranchTree(remoteBranchesRootNode, newSource));
+
+            var tagTreeRootNode = new TreeNode(Strings.tags.Text) {ImageKey = "tags.png"};
+            tagTreeRootNode.SelectedImageKey = tagTreeRootNode.ImageKey;
+            AddTree(new TagTree(tagTreeRootNode, newSource));
         }
 
         void AddTree(Tree aTree)

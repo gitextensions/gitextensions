@@ -222,8 +222,21 @@ namespace GitUI.UserControls
             }
         }
 
+        private class BasePathNode : BaseBranchNode
+        {
+            public BasePathNode(Tree aTree, string aFullPath) : base(aTree, aFullPath)
+            {
+            }
+
+            protected override void ApplyStyle()
+            {
+                base.ApplyStyle();
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "folder.png";
+            }
+        }
+
         /// <summary>Part of a path leading to local branch(es)</summary>
-        private class BranchPathNode : BaseBranchNode
+        private class BranchPathNode : BasePathNode
         {
             /// <summary>Creates a new <see cref="BranchPathNode"/>.</summary>
             public BranchPathNode(Tree aTree, string aFullPath)
@@ -234,12 +247,6 @@ namespace GitUI.UserControls
             public override string ToString()
             {
                 return string.Format("{0}{1}", Name, PathSeparator);
-            }
-
-            protected override void ApplyStyle()
-            {
-                base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "folder.png";
             }
 
             public void DeleteAll()

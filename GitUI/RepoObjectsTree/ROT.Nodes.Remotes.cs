@@ -168,7 +168,7 @@ namespace GitUI.UserControls
                 {
                     return new RemoteRepoNode(tree, parentPath);
                 }
-                return new RemoteBranchPathNode(tree, parentPath);
+                return new BasePathNode(tree, parentPath);
             }
 
             protected override void FillTreeViewNode()
@@ -296,19 +296,6 @@ namespace GitUI.UserControls
             internal override void OnDoubleClick()
             {
                 Checkout();
-            }
-        }
-
-        sealed class RemoteBranchPathNode : BaseBranchNode
-        {
-            public RemoteBranchPathNode(Tree aTree, string aFullPath) : base(aTree, aFullPath)
-            {
-            }
-
-            protected override void ApplyStyle()
-            {
-                base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "folder.png";
             }
         }
 
