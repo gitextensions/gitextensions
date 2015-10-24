@@ -133,6 +133,14 @@ namespace GitUI.UserControls
                         }
                         finally
                         {
+                            if (TreeViewNode.TreeView.SelectedNode != null)
+                            {
+                                TreeViewNode.TreeView.SelectedNode.EnsureVisible();
+                            }
+                            else if(TreeViewNode.TreeView.Nodes.Count > 0)
+                            {
+                                TreeViewNode.TreeView.Nodes[0].EnsureVisible();
+                            }
                             TreeViewNode.TreeView.EndUpdate();
                         }
                     };
