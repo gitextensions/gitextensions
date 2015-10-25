@@ -1092,7 +1092,7 @@ namespace GitCommands
             return string.Empty;
         }
 
-        public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy)
+        public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, string message, int? log)
         {
             StringBuilder command = new StringBuilder("merge");
 
@@ -1107,6 +1107,12 @@ namespace GitCommands
                 command.Append(" --squash");
             if (noCommit)
                 command.Append(" --no-commit");
+
+            if (!string.IsNullOrEmpty(message))
+                command.AppendFormat(" -m {0}", message);
+
+            if (log.HasValue)
+                command.AppendFormat(" --log={0}", log.Value);
 
             command.Append(" ");
             command.Append(branch);
