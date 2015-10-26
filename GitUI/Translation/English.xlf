@@ -4370,6 +4370,14 @@ ancestor tree.</source>
         <source>Help</source>
         <target />
       </trans-unit>
+      <trans-unit id="addLogMessages.Text">
+        <source>Add log messages</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="addMergeMessage.Text">
+        <source>Specify merge message</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormMergeSubmodule" source-language="en">

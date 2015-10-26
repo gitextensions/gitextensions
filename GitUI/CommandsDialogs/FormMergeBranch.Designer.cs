@@ -33,6 +33,7 @@
             this.Ok = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.addMergeMessage = new System.Windows.Forms.CheckBox();
             this.mergeMessage = new System.Windows.Forms.TextBox();
             this.nbMessages = new System.Windows.Forms.NumericUpDown();
             this.addLogMessages = new System.Windows.Forms.CheckBox();
@@ -50,7 +51,6 @@
             this.Currentbranch = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.helpImageDisplayUserControl1 = new GitUI.Help.HelpImageDisplayUserControl();
-            this.addMergeMessage = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbMessages)).BeginInit();
@@ -120,6 +120,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
             // 
+            // addMergeMessage
+            // 
+            this.addMergeMessage.AutoSize = true;
+            this.addMergeMessage.Location = new System.Drawing.Point(13, 213);
+            this.addMergeMessage.Name = "addMergeMessage";
+            this.addMergeMessage.Size = new System.Drawing.Size(150, 19);
+            this.addMergeMessage.TabIndex = 14;
+            this.addMergeMessage.Text = "Specify merge message";
+            this.addMergeMessage.UseVisualStyleBackColor = true;
+            this.addMergeMessage.CheckedChanged += new System.EventHandler(this.addMergeMessage_CheckedChanged);
+            // 
             // mergeMessage
             // 
             this.mergeMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -135,7 +146,7 @@
             // nbMessages
             // 
             this.nbMessages.Enabled = false;
-            this.nbMessages.Location = new System.Drawing.Point(141, 187);
+            this.nbMessages.Location = new System.Drawing.Point(195, 187);
             this.nbMessages.Name = "nbMessages";
             this.nbMessages.Size = new System.Drawing.Size(41, 23);
             this.nbMessages.TabIndex = 11;
@@ -324,17 +335,6 @@
             this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(289, 454);
             this.helpImageDisplayUserControl1.TabIndex = 18;
             this.helpImageDisplayUserControl1.UniqueIsExpandedSettingsId = "MergeBranches";
-            // 
-            // addMergeMessage
-            // 
-            this.addMergeMessage.AutoSize = true;
-            this.addMergeMessage.Location = new System.Drawing.Point(13, 213);
-            this.addMergeMessage.Name = "addMergeMessage";
-            this.addMergeMessage.Size = new System.Drawing.Size(150, 19);
-            this.addMergeMessage.TabIndex = 14;
-            this.addMergeMessage.Text = "Specify merge message";
-            this.addMergeMessage.UseVisualStyleBackColor = true;
-            this.addMergeMessage.CheckedChanged += new System.EventHandler(this.addMergeMessage_CheckedChanged);
             // 
             // FormMergeBranch
             // 

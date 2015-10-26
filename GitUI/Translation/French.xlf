@@ -5373,6 +5373,14 @@ Cet ajustement est également fait à l'arbre de l'ancêtre commun.  </target>
         <target>Aide</target>
         
       </trans-unit>
+      <trans-unit id="addLogMessages.Text">
+        <source>Add log messages</source>
+        <target>Ajouter les messages de log</target>
+      </trans-unit>
+      <trans-unit id="addMergeMessage.Text">
+        <source>Specify merge message</source>
+        <target>Spécifier le message de fusion</target>
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormMergeSubmodule" source-language="en">
