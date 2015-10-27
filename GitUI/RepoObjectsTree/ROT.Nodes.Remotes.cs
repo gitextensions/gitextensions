@@ -279,7 +279,10 @@ namespace GitUI.UserControls
             {
                 var remoteBranchInfo = GetRemoteBranchInfo();
                 var cmd = new GitDeleteRemoteBranchCmd(remoteBranchInfo.Remote, remoteBranchInfo.BranchName);
-                UICommands.StartCommandLineProcessDialog(cmd, null);
+                if (MessageBoxes.ConfirmDeleteRemoteBranch(TreeViewNode.TreeView, remoteBranchInfo.BranchName, remoteBranchInfo.Remote))
+                {
+                    UICommands.StartCommandLineProcessDialog(cmd, null);
+                }
             }
 
             public void Checkout()

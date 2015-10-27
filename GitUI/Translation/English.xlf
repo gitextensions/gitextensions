@@ -6786,6 +6786,10 @@ help</source>
   </file>
   <file datatype="plaintext" original="MessageBoxes" source-language="en">
     <body>
+      <trans-unit id="_confirmDeleteRemoteBranch.Text">
+        <source>Do you want to delete the branch {0} from {1}?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
         <target />

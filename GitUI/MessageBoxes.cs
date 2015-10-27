@@ -25,11 +25,12 @@ namespace GitUI
 
         private readonly TranslationString _serverHostkeyNotCachedText =
             new TranslationString("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?");
- 
+
         private readonly TranslationString _updateSubmodules = new TranslationString("Update submodules");
         private readonly TranslationString _theRepositorySubmodules = new TranslationString("Update submodules on checkout?");
         private readonly TranslationString _updateSubmodulesToo = new TranslationString("Since this repository has submodules, it's necessary to update them on every checkout.\r\n\r\nThis will just checkout on the submodule the commit determined by the superproject.");
         private readonly TranslationString _rememberChoice = new TranslationString("Remember choice");
+        private readonly TranslationString _confirmDeleteRemoteBranch = new TranslationString("Do you want to delete the branch {0} from {1}?");
 
         // internal for FormTranslate
         internal MessageBoxes()
@@ -50,7 +51,7 @@ namespace GitUI
                 return instance;
             }
         }
-        
+
         public static void NotValidGitDirectory(IWin32Window owner)
         {
             MessageBox.Show(owner, Instance._notValidGitDirectory.Text, Instance._error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -111,6 +112,12 @@ namespace GitUI
                 AppSettings.UpdateSubmodulesOnCheckout = result;
 
             return result;
+        }
+
+        public static bool ConfirmDeleteRemoteBranch(IWin32Window owner, string branchName, string remote)
+        {
+            return MessageBox.Show(owner, string.Format(Instance._confirmDeleteRemoteBranch.Text, branchName, remote),
+                "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         }
     }
 }
