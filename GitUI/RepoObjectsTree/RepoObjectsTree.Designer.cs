@@ -94,6 +94,11 @@ namespace GitUI.UserControls
             this.btnSettings = new System.Windows.Forms.Button();
             this.menuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnubtnMergeBranch = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnRebase = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnReset = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuStashes.SuspendLayout();
@@ -270,13 +275,18 @@ namespace GitUI.UserControls
             // menuRemote
             // 
             this.menuRemote.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnubtnMergeBranch,
+            this.mnubtnRebase,
+            this.mnubtnReset,
+            this.toolStripSeparator1,
             this.mnubtnBranchCheckout,
             this.mnubtnNewCreateBranch,
+            this.toolStripSeparator2,
             this.mnubtnNewFetch,
             this.toolbtnRemotePull,
             this.mnubtnRemoteRemove});
             this.menuRemote.Name = "contextmenuRemote";
-            this.menuRemote.Size = new System.Drawing.Size(158, 114);
+            this.menuRemote.Size = new System.Drawing.Size(158, 214);
             // 
             // mnubtnNewCreateBranch
             // 
@@ -612,6 +622,40 @@ namespace GitUI.UserControls
             this.showTagsToolStripMenuItem.Text = "Show tags";
             this.showTagsToolStripMenuItem.Click += new System.EventHandler(this.showTagsToolStripMenuItem_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(154, 6);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(154, 6);
+            // 
+            // mnubtnMergeBranch
+            // 
+            this.mnubtnMergeBranch.Image = global::GitUI.Properties.Resources.IconMerge;
+            this.mnubtnMergeBranch.Name = "mnubtnMergeBranch";
+            this.mnubtnMergeBranch.Size = new System.Drawing.Size(157, 22);
+            this.mnubtnMergeBranch.Text = "Merge";
+            this.mnubtnMergeBranch.ToolTipText = "Merge remote branch into current branch";
+            // 
+            // mnubtnRebase
+            // 
+            this.mnubtnRebase.Image = global::GitUI.Properties.Resources.IconRebase;
+            this.mnubtnRebase.Name = "mnubtnRebase";
+            this.mnubtnRebase.Size = new System.Drawing.Size(157, 22);
+            this.mnubtnRebase.Text = "Rebase";
+            this.mnubtnRebase.ToolTipText = "Rebase current branch to this branch";
+            // 
+            // mnubtnReset
+            // 
+            this.mnubtnReset.Image = global::GitUI.Properties.Resources.IconResetCurrentBranchToHere;
+            this.mnubtnReset.Name = "mnubtnReset";
+            this.mnubtnReset.Size = new System.Drawing.Size(157, 22);
+            this.mnubtnReset.Text = "Reset";
+            this.mnubtnReset.ToolTipText = "Reset current branch to here";
+            // 
             // RepoObjectsTree
             // 
             this.Controls.Add(this.repoTreePanel);
@@ -700,5 +744,10 @@ namespace GitUI.UserControls
         private Button btnSettings;
         private ContextMenuStrip menuSettings;
         private ToolStripMenuItem showTagsToolStripMenuItem;
+        private ToolStripMenuItem mnubtnMergeBranch;
+        private ToolStripMenuItem mnubtnRebase;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem mnubtnReset;
     }
 }

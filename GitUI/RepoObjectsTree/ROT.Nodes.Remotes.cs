@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;
+using GitUI.HelperDialogs;
 
 namespace GitUI.UserControls
 {
@@ -296,6 +297,30 @@ namespace GitUI.UserControls
             internal override void OnDoubleClick()
             {
                 Checkout();
+            }
+
+            public void Merge()
+            {
+                using (var form = new FormMergeBranch(UICommands, FullPath))
+                {
+                    form.ShowDialog(TreeViewNode.TreeView);
+                }
+            }
+
+            public void Rebase()
+            {
+                using (var form = new FormRebase(UICommands, FullPath))
+                {
+                    form.ShowDialog(TreeViewNode.TreeView);
+                }
+            }
+
+            public void Reset()
+            {
+                using (var form = new FormResetCurrentBranch(UICommands, new GitRevision(Module, FullPath)))
+                {
+                    form.ShowDialog(TreeViewNode.TreeView);
+                }
             }
         }
 
