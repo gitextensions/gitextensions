@@ -98,6 +98,17 @@ namespace GitUI.UserControls
                 return Name;
             }
 
+            protected void SelectRevision()
+            {
+                TreeViewNode.TreeView.BeginInvoke(new Action(() =>
+                {
+                    UICommands.BrowseGoToRef(FullPath, showNoRevisionMsg: true);
+                    if (TreeViewNode.TreeView != null)
+                    {
+                        TreeViewNode.TreeView.Focus();
+                    }
+                }));
+            }
         }
 
         /// <summary>Local branch node.</summary>
@@ -156,7 +167,8 @@ namespace GitUI.UserControls
             internal override void OnSelected()
             {
                 base.OnSelected();
-                UICommands.BrowseGoToRef(FullPath, true);
+
+                SelectRevision();
             }
 
             protected override IEnumerable<DragDropAction> CreateDragDropActions()

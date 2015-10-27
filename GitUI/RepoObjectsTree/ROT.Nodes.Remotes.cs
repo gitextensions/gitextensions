@@ -215,7 +215,7 @@ namespace GitUI.UserControls
             internal override void OnSelected()
             {
                 base.OnSelected();
-                UICommands.BrowseRepo.GoToRef(FullPath, true);
+                SelectRevision();
             }
 
             /// <summary>Download updates from the remote branch.</summary>

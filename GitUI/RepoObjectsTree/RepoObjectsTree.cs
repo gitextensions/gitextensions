@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.Notifications;
-using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.UserControls
@@ -21,7 +20,10 @@ namespace GitUI.UserControls
         public RepoObjectsTree()
         {
             InitializeComponent();
-
+            treeMain.PreviewKeyDown += OnPreviewKeyDown;
+            txtBranchFilter.PreviewKeyDown += OnPreviewKeyDown;
+            btnSearch.PreviewKeyDown += OnPreviewKeyDown;
+            PreviewKeyDown += OnPreviewKeyDown;
             Translate();
 
             RegisterContextActions();
@@ -30,6 +32,14 @@ namespace GitUI.UserControls
             treeMain.HideSelection = false;
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
+        }
+
+        private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.F3)
+            {
+                OnBtnSearchClicked(null, null);
+            }
         }
 
         protected override void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
@@ -52,9 +62,10 @@ namespace GitUI.UserControls
             remoteBranchesRootNode.SelectedImageKey = remoteBranchesRootNode.ImageKey;
             AddTree(new RemoteBranchTree(remoteBranchesRootNode, newSource));
 
-            var tagTreeRootNode = new TreeNode(Strings.tags.Text) {ImageKey = "tags.png"};
-            tagTreeRootNode.SelectedImageKey = tagTreeRootNode.ImageKey;
-            AddTree(new TagTree(tagTreeRootNode, newSource));
+            if (showTagsToolStripMenuItem.Checked)
+            {
+                AddTags();
+            }
         }
 
         void AddTree(Tree aTree)
@@ -66,6 +77,11 @@ namespace GitUI.UserControls
         }
 
         private CancellationTokenSource _cancelledTokenSource;
+        private TreeNode _tagTreeRootNode;
+        private TagTree _tagTree;
+        private List<TreeNode> _searchResult;
+        private bool _searchCriteriaChanged = false;
+
         private void Cancel()
         {
             if (_cancelledTokenSource != null)
@@ -94,6 +110,109 @@ namespace GitUI.UserControls
                 {
                     previousTask.ContinueWith((t) => task.Start(Task.Factory.Scheduler));
                 }
+            }
+        }
+
+        private void OnBtnSettingsClicked(object sender, EventArgs e)
+        {
+            btnSettings.ContextMenuStrip.Show(btnSettings, 0, btnSettings.Height);
+        }
+
+        private void showTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _searchResult = null;
+            if (showTagsToolStripMenuItem.Checked)
+            {
+                AddTags();
+                var task = rootNodes.Last().ReloadTask(_cancelledTokenSource.Token);
+                task.Start(TaskScheduler.Default);
+            }
+            else
+            {
+                rootNodes.Remove(_tagTree);
+                treeMain.Nodes.Remove(_tagTreeRootNode);
+            }
+        }
+
+        private void AddTags()
+        {
+            _tagTreeRootNode = new TreeNode(Strings.tags.Text) {ImageKey = "tags.png"};
+            _tagTreeRootNode.SelectedImageKey = _tagTreeRootNode.ImageKey;
+            _tagTree = new TagTree(_tagTreeRootNode, UICommandsSource);
+            AddTree(_tagTree);
+            _searchResult = null;
+        }
+
+        private void OnBtnSearchClicked(object sender, EventArgs e)
+        {
+            if (_searchCriteriaChanged && _searchResult != null && _searchResult.Any())
+            {
+                _searchCriteriaChanged = false;
+                foreach (var coloredNode in _searchResult)
+                {
+                    coloredNode.BackColor = SystemColors.Window;
+                }
+                _searchResult = null;
+                if (txtBranchFilter.Text.IsNullOrWhiteSpace())
+                {
+                    txtBranchFilter.Focus();
+                    return;
+                }
+            }
+            if (_searchResult == null || !_searchResult.Any())
+            {
+                if (txtBranchFilter.Text.IsNotNullOrWhitespace())
+                {
+                    _searchResult = SearchTree(txtBranchFilter.Text, treeMain.Nodes);
+                }
+            }
+            var node = GetNextSearchResult();
+            if (node != null)
+            {
+                node.EnsureVisible();
+                treeMain.SelectedNode = node;
+            }
+        }
+
+        private static List<TreeNode> SearchTree(string text, TreeNodeCollection nodes)
+        {
+            var ret = new List<TreeNode>();
+            foreach (TreeNode node in nodes)
+            {
+                if (node.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                {
+                    node.BackColor = Color.LightYellow;
+                    ret.Add(node);
+                }
+                ret.AddRange(SearchTree(text, node.Nodes));
+            }
+            return ret;
+        }
+
+        private TreeNode GetNextSearchResult()
+        {
+            if (_searchResult == null || !_searchResult.Any())
+            {
+                return null;
+            }
+
+            var node = _searchResult.First();
+            _searchResult.RemoveAt(0);
+            _searchResult.Add(node);
+            return node;
+        }
+
+        private void OnBranchFilterChanged(object sender, EventArgs e)
+        {
+            _searchCriteriaChanged = true;
+        }
+
+        private void txtBranchFilter_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                OnBtnSearchClicked(null, null);
+                e.Handled = true;
             }
         }
     }

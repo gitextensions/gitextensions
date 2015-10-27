@@ -86,6 +86,14 @@ namespace GitUI.UserControls
             this.mnubtnUntrackedTrack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnUntrackedFetch = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRemoteRepoNode = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.repoTreePanel = new System.Windows.Forms.TableLayoutPanel();
+            this.branchFilterPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblSearchBranch = new System.Windows.Forms.Label();
+            this.txtBranchFilter = new System.Windows.Forms.TextBox();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.btnSettings = new System.Windows.Forms.Button();
+            this.menuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuStashes.SuspendLayout();
@@ -98,6 +106,9 @@ namespace GitUI.UserControls
             this.menuRemoteBranchStale.SuspendLayout();
             this.menuRemoteBranchUnTracked.SuspendLayout();
             this.menuRemoteRepoNode.SuspendLayout();
+            this.repoTreePanel.SuspendLayout();
+            this.branchFilterPanel.SuspendLayout();
+            this.menuSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeMain
@@ -107,11 +118,11 @@ namespace GitUI.UserControls
             this.treeMain.FullRowSelect = true;
             this.treeMain.ImageIndex = 0;
             this.treeMain.ImageList = this.imgList;
-            this.treeMain.Location = new System.Drawing.Point(0, 0);
+            this.treeMain.Location = new System.Drawing.Point(3, 41);
             this.treeMain.Name = "treeMain";
             this.treeMain.SelectedImageIndex = 0;
             this.treeMain.ShowNodeToolTips = true;
-            this.treeMain.Size = new System.Drawing.Size(200, 350);
+            this.treeMain.Size = new System.Drawing.Size(294, 350);
             this.treeMain.TabIndex = 3;
             this.treeMain.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnNodeSelected);
             // 
@@ -508,11 +519,105 @@ namespace GitUI.UserControls
             this.menuRemoteRepoNode.Name = "contextmenuRemote";
             this.menuRemoteRepoNode.Size = new System.Drawing.Size(104, 26);
             // 
+            // repoTreePanel
+            // 
+            this.repoTreePanel.ColumnCount = 1;
+            this.repoTreePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.repoTreePanel.Controls.Add(this.treeMain, 0, 1);
+            this.repoTreePanel.Controls.Add(this.branchFilterPanel, 0, 0);
+            this.repoTreePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.repoTreePanel.Location = new System.Drawing.Point(0, 0);
+            this.repoTreePanel.Name = "repoTreePanel";
+            this.repoTreePanel.RowCount = 2;
+            this.repoTreePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.repoTreePanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.repoTreePanel.Size = new System.Drawing.Size(300, 350);
+            this.repoTreePanel.TabIndex = 4;
+            // 
+            // branchFilterPanel
+            // 
+            this.branchFilterPanel.AutoSize = true;
+            this.branchFilterPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.branchFilterPanel.Controls.Add(this.lblSearchBranch);
+            this.branchFilterPanel.Controls.Add(this.txtBranchFilter);
+            this.branchFilterPanel.Controls.Add(this.btnSearch);
+            this.branchFilterPanel.Controls.Add(this.btnSettings);
+            this.branchFilterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.branchFilterPanel.Location = new System.Drawing.Point(3, 3);
+            this.branchFilterPanel.Name = "branchFilterPanel";
+            this.branchFilterPanel.Size = new System.Drawing.Size(294, 32);
+            this.branchFilterPanel.TabIndex = 4;
+            // 
+            // lblSearchBranch
+            // 
+            this.lblSearchBranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblSearchBranch.AutoSize = true;
+            this.lblSearchBranch.Location = new System.Drawing.Point(3, 8);
+            this.lblSearchBranch.Name = "lblSearchBranch";
+            this.lblSearchBranch.Size = new System.Drawing.Size(45, 15);
+            this.lblSearchBranch.TabIndex = 0;
+            this.lblSearchBranch.Text = "Search:";
+            // 
+            // txtBranchFilter
+            // 
+            this.txtBranchFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtBranchFilter.Location = new System.Drawing.Point(54, 4);
+            this.txtBranchFilter.MinimumSize = new System.Drawing.Size(170, 0);
+            this.txtBranchFilter.Name = "txtBranchFilter";
+            this.txtBranchFilter.Size = new System.Drawing.Size(170, 23);
+            this.txtBranchFilter.TabIndex = 1;
+            this.txtBranchFilter.TextChanged += new System.EventHandler(this.OnBranchFilterChanged);
+            this.txtBranchFilter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBranchFilter_KeyDown);
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnSearch.AutoSize = true;
+            this.btnSearch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnSearch.Image = global::GitUI.Properties.Resources.IconFind;
+            this.btnSearch.Location = new System.Drawing.Point(230, 3);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Padding = new System.Windows.Forms.Padding(2);
+            this.btnSearch.Size = new System.Drawing.Size(26, 26);
+            this.btnSearch.TabIndex = 2;
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.OnBtnSearchClicked);
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.AutoSize = true;
+            this.btnSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnSettings.ContextMenuStrip = this.menuSettings;
+            this.btnSettings.Image = global::GitUI.Properties.Resources.Icon_77;
+            this.btnSettings.Location = new System.Drawing.Point(262, 3);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Padding = new System.Windows.Forms.Padding(2);
+            this.btnSettings.Size = new System.Drawing.Size(26, 26);
+            this.btnSettings.TabIndex = 3;
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.OnBtnSettingsClicked);
+            // 
+            // menuSettings
+            // 
+            this.menuSettings.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showTagsToolStripMenuItem});
+            this.menuSettings.Name = "menuSettings";
+            this.menuSettings.Size = new System.Drawing.Size(129, 26);
+            // 
+            // showTagsToolStripMenuItem
+            // 
+            this.showTagsToolStripMenuItem.CheckOnClick = true;
+            this.showTagsToolStripMenuItem.Name = "showTagsToolStripMenuItem";
+            this.showTagsToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.showTagsToolStripMenuItem.Text = "Show tags";
+            this.showTagsToolStripMenuItem.Click += new System.EventHandler(this.showTagsToolStripMenuItem_Click);
+            // 
             // RepoObjectsTree
             // 
-            this.Controls.Add(this.treeMain);
+            this.Controls.Add(this.repoTreePanel);
+            this.MinimumSize = new System.Drawing.Size(300, 0);
             this.Name = "RepoObjectsTree";
-            this.Size = new System.Drawing.Size(200, 350);
+            this.Size = new System.Drawing.Size(300, 350);
             this.menuMain.ResumeLayout(false);
             this.menuBranch.ResumeLayout(false);
             this.menuStashes.ResumeLayout(false);
@@ -525,6 +630,11 @@ namespace GitUI.UserControls
             this.menuRemoteBranchStale.ResumeLayout(false);
             this.menuRemoteBranchUnTracked.ResumeLayout(false);
             this.menuRemoteRepoNode.ResumeLayout(false);
+            this.repoTreePanel.ResumeLayout(false);
+            this.repoTreePanel.PerformLayout();
+            this.branchFilterPanel.ResumeLayout(false);
+            this.branchFilterPanel.PerformLayout();
+            this.menuSettings.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -582,5 +692,13 @@ namespace GitUI.UserControls
         private ToolStripMenuItem mnuBtnCheckoutLocal;
         private ToolStripMenuItem mnubtnCreateBranchForTag;
         private ToolStripMenuItem mnubtnDeleteTag;
+        private TableLayoutPanel repoTreePanel;
+        private FlowLayoutPanel branchFilterPanel;
+        private Label lblSearchBranch;
+        private TextBox txtBranchFilter;
+        private Button btnSearch;
+        private Button btnSettings;
+        private ContextMenuStrip menuSettings;
+        private ToolStripMenuItem showTagsToolStripMenuItem;
     }
 }

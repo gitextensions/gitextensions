@@ -24,7 +24,7 @@ namespace GitUI.UserControls
             internal override void OnSelected()
             {
                 base.OnSelected();
-                UICommands.BrowseRepo.GoToRef(FullPath, true);
+                SelectRevision();
             }
 
             internal override void OnDoubleClick()
@@ -60,6 +60,10 @@ namespace GitUI.UserControls
 
             private void uiCommands_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
             {
+                if (TreeViewNode == null || TreeViewNode.TreeView == null)
+                {
+                    return;
+                }
                 //select active branch after repo change
                 TreeViewNode.TreeView.SelectedNode = null;
             }
