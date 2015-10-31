@@ -1378,7 +1378,7 @@ namespace GitCommands
             );
         }
 
-        /// <summary>Remove a single stashed state from the stash list. 
+        /// <summary>Remove a single stashed state from the stash list.
         /// <remarks>When no stash is given, removes the latest one.</remarks></summary>
         public GitCommandResult StashDelete(string stash = null)
         {
@@ -2024,7 +2024,7 @@ namespace GitCommands
             return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        /// <summary>Gets a key/value collection of branches with configured upstream branches. 
+        /// <summary>Gets a key/value collection of branches with configured upstream branches.
         /// Key: Local Branch; Value: (Upstream) Remote Branch</summary>
         public IDictionary<string, string> GetConfiguredUpstreamBranches()
         {
@@ -2540,6 +2540,24 @@ namespace GitCommands
         public static bool IsDetachedHead(string branch)
         {
             return DetachedPrefixes.Any(a => branch.StartsWith(a, StringComparison.Ordinal));
+        }
+
+        private static Regex detachedHeadRegex = new Regex(@"^\(.* (?<sha1>.*)\)$");
+
+        public static bool TryParseDetachedHead(string text, out string sha1)
+        {
+            sha1 = null;
+            if (!IsDetachedHead(text))
+                return false;
+
+            var sha1Match = detachedHeadRegex.Match(text);
+            if (!sha1Match.Success)
+            {
+                return false;
+            }
+
+            sha1 = sha1Match.Groups["sha1"].Value;
+            return true;
         }
 
         /// <summary>Gets the remote of the current branch; or "origin" if no remote is configured.</summary>

@@ -3020,6 +3020,12 @@ namespace GitUI
 
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
+            string sha1;
+            if (GitModule.TryParseDetachedHead(refName, out sha1))
+            {
+                refName = sha1;
+            }
+
             string revisionGuid = Module.RevParse(refName);
             if (!string.IsNullOrEmpty(revisionGuid))
             {
