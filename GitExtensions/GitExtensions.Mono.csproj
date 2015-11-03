@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -72,9 +72,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +103,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="AutoCompleteRegexes.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
@@ -186,10 +185,6 @@
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
       <Name>ResourceManager</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
-      <Project>{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}</Project>
-      <Name>NBug</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
