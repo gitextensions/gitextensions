@@ -175,7 +175,7 @@ namespace GitUI.UserControls
             protected override void FillTreeViewNode()
             {
                 base.FillTreeViewNode();
-                TreeViewNode.ExpandAll();
+                TreeViewNode.Expand();
             }
         }
 
