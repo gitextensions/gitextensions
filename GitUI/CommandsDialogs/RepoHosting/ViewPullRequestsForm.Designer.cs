@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this._diffViewer = new GitUI.Editor.FileViewer();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this._discussionWB = new System.Windows.Forms.WebBrowser();
+            this._discussionWB = new GitUI.UserControls.WebBrowserCtrl();
             this._postCommentText = new GitUI.SpellChecker.EditNetSpell();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this._refreshCommentsBtn = new System.Windows.Forms.Button();
@@ -431,7 +431,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private Editor.FileViewer _diffViewer;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.WebBrowser _discussionWB;
+        private GitUI.UserControls.WebBrowserCtrl _discussionWB;
         private SpellChecker.EditNetSpell _postCommentText;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button _refreshCommentsBtn;

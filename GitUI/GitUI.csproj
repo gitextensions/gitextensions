@@ -249,6 +249,9 @@
     <Compile Include="UserControls\RevisionGridClasses\NavigationHistory.cs" />
     <Compile Include="UserControls\RevisionGridClasses\ParentChildNavigationHistory.cs" />
     <Compile Include="UserControls\AuthorEmailBasedRevisionHighlighting.cs" />
+    <Compile Include="UserControls\WebBrowserCtrl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UserManual\UserManual.cs" />
     <Compile Include="UserManual\SingleHtmlUserManual.cs" />
     <Compile Include="UserManual\StandardHtmlUserManual.cs" />
