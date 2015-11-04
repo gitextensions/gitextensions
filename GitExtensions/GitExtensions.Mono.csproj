@@ -105,6 +105,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="AutoCompleteRegexes.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
