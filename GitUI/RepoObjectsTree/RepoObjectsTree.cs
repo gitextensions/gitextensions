@@ -60,7 +60,11 @@ namespace GitUI.UserControls
                 ImageKey = "RemoteMirror.png",
             };
             remoteBranchesRootNode.SelectedImageKey = remoteBranchesRootNode.ImageKey;
-            AddTree(new RemoteBranchTree(remoteBranchesRootNode, newSource));
+            var remoteTree = new RemoteBranchTree(remoteBranchesRootNode, newSource)
+            {
+                TreeViewNode = {ContextMenuStrip = menuRemotes}
+            };
+            AddTree(remoteTree);
 
             if (showTagsToolStripMenuItem.Checked)
             {

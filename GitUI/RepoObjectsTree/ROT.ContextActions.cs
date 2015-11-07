@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using GitUI.CommandsDialogs;
 
 namespace GitUI.UserControls
 {
@@ -86,11 +87,22 @@ RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
             Node.RegisterContextMenu(typeof(RemoteBranchNode), menuRemote);
 
             RegisterClick<RemoteRepoNode>(mnubtnRemoteFetch, remoteBranch => remoteBranch.Fetch());
+            RegisterClick<RemoteRepoNode>(mnubtnManageRemotes, remoteBranch => PopupManageRemotesForm());
             Node.RegisterContextMenu(typeof(RemoteRepoNode), menuRemoteRepoNode);
 
             RegisterClick<TagNode>(mnubtnCreateBranchForTag, tag => tag.CreateBranch());
             RegisterClick<TagNode>(mnubtnDeleteTag, tag => tag.Delete());
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
+
+            RegisterClick(mnuBtnManageRemotesFromRootNode, PopupManageRemotesForm);
+        }
+
+        private void PopupManageRemotesForm()
+        {
+            using (var form = new FormRemotes(UICommands))
+            {
+                form.ShowDialog(this);
+            }
         }
     }
 }
