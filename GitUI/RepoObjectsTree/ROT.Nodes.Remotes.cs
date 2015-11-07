@@ -223,11 +223,12 @@ namespace GitUI.UserControls
             public void Fetch()
             {
                 var remoteBranchInfo = GetRemoteBranchInfo();
-                using (FormProcess process = new FormRemoteProcess(Module,
-                    Module.FetchCmd(remoteBranchInfo.Remote, remoteBranchInfo.BranchName,
-                    null, null)))
+                var cmd = Module.FetchCmd(remoteBranchInfo.Remote, remoteBranchInfo.BranchName,
+                    null, null);
+                var ret = FormRemoteProcess.ShowDialog(TreeViewNode.TreeView, Module, cmd);
+                if (ret)
                 {
-                    process.ShowDialog(this.TreeViewNode.TreeView);
+                    UICommands.RepoChangedNotifier.Notify();
                 }
             }
 
@@ -332,14 +333,11 @@ namespace GitUI.UserControls
 
             public void Fetch()
             {
-                using (FormProcess process = new FormRemoteProcess(Module,
-                    Module.FetchCmd(FullPath, null,null, null)))
+                var cmd = Module.FetchCmd(FullPath, null, null, null);
+                var ret = FormRemoteProcess.ShowDialog(TreeViewNode.TreeView, Module, cmd);
+                if (ret)
                 {
-                    var ret = process.ShowDialog(this.TreeViewNode.TreeView);
-                    if (ret == DialogResult.OK)
-                    {
-                        UICommands.RepoChangedNotifier.Notify();
-                    }
+                    UICommands.RepoChangedNotifier.Notify();
                 }
             }
 
