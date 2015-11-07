@@ -177,6 +177,60 @@ namespace GitUI.UserControls
                 base.FillTreeViewNode();
                 TreeViewNode.Expand();
             }
+
+            public void RenameOrAddRemote(string orgName, string newName)
+            {
+                var treeNode = FindRemoteRepoTreeNodeByName(orgName);
+                if (treeNode == null)
+                {
+                    AddRemote(newName);
+                    return;
+                }
+
+                treeNode.Text = newName;
+                var remoteRepoNode = FindRemoteRepoNodeByName(orgName);
+                remoteRepoNode.ChangeName(newName);
+            }
+
+            private RemoteRepoNode FindRemoteRepoNodeByName(string remoteName)
+            {
+                foreach (var node in Nodes)
+                {
+                    if (node.DisplayText() != remoteName)
+                    {
+                        continue;
+                    }
+                    var remoteRepoNode = node as RemoteRepoNode;
+                    if (remoteRepoNode != null)
+                    {
+                        return remoteRepoNode;
+                    }
+                }
+                return null;
+            }
+
+            private TreeNode FindRemoteRepoTreeNodeByName(string remoteName)
+            {
+                return TreeViewNode.Nodes.Cast<TreeNode>().FirstOrDefault(treeNode => treeNode.Text == remoteName);
+            }
+
+            public void DeleteRemote(string remoteName)
+            {
+                var treeNode = FindRemoteRepoTreeNodeByName(remoteName);
+                if (treeNode == null)
+                {
+                    return;
+                }
+                TreeViewNode.Nodes.Remove(treeNode);
+                var repoNode = FindRemoteRepoNodeByName(remoteName);
+                Nodes.Remove(repoNode);
+            }
+
+            public void AddRemote(string remoteName)
+            {
+                Nodes.AddNode(new RemoteRepoNode(this, remoteName));
+                Nodes.FillTreeViewNode(this.TreeViewNode);
+            }
         }
 
         /// <summary>for a branch on a remote repo.</summary>
@@ -345,6 +399,11 @@ namespace GitUI.UserControls
             {
                 base.ApplyStyle();
                 this.TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "RemoteMirror.png";
+            }
+
+            public void ChangeName(string newName)
+            {
+                Name = newName;
             }
         }
     }

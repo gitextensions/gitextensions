@@ -60,11 +60,11 @@ namespace GitUI.UserControls
                 ImageKey = "RemoteMirror.png",
             };
             remoteBranchesRootNode.SelectedImageKey = remoteBranchesRootNode.ImageKey;
-            var remoteTree = new RemoteBranchTree(remoteBranchesRootNode, newSource)
+            _remoteTree = new RemoteBranchTree(remoteBranchesRootNode, newSource)
             {
                 TreeViewNode = {ContextMenuStrip = menuRemotes}
             };
-            AddTree(remoteTree);
+            AddTree(_remoteTree);
 
             if (showTagsToolStripMenuItem.Checked)
             {
@@ -83,6 +83,7 @@ namespace GitUI.UserControls
         private CancellationTokenSource _cancelledTokenSource;
         private TreeNode _tagTreeRootNode;
         private TagTree _tagTree;
+        private RemoteBranchTree _remoteTree;
         private List<TreeNode> _searchResult;
         private bool _searchCriteriaChanged = false;
 

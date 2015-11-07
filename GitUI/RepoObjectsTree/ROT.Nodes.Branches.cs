@@ -23,7 +23,7 @@ namespace GitUI.UserControls
             protected readonly char PathSeparator = '/';
 
             /// <summary>Short name of the branch/branch path. <example>"issue1344"</example></summary>
-            public string Name { get; private set; }
+            public string Name { get; protected set; }
 
             public string ParentPath { get; private set; }
 

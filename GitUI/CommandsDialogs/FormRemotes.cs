@@ -51,6 +51,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _labelUrlAsFetchPush =
             new TranslationString("Url");
 
+        public delegate void EventRemoteChange(string remoteName);
+        public delegate void EventRemoteRenamed(string orgName, string newName);
+
+        public EventRemoteChange OnRemoteDeleted;
+        public EventRemoteRenamed OnRemoteRenamedOrAdded;
+
         public FormRemotes(GitUICommands aCommands)
             : base(aCommands)
         {
@@ -130,6 +136,10 @@ namespace GitUI.CommandsDialogs
                 }
 
                 output = Module.AddRemote(RemoteName.Text, Url.Text);
+                if (output.IsNullOrWhiteSpace() && OnRemoteRenamedOrAdded != null)
+                {
+                    OnRemoteRenamedOrAdded(RemoteName.Text, RemoteName.Text);
+                }
 
                 if (checkBoxSepPushUrl.Checked)
                 {
@@ -157,6 +167,13 @@ namespace GitUI.CommandsDialogs
                 if (RemoteName.Text != _remote)
                 {
                     output = Module.RenameRemote(_remote, RemoteName.Text);
+                    if (output.IsNullOrWhiteSpace())
+                    {
+                        if (OnRemoteRenamedOrAdded != null)
+                        {
+                            OnRemoteRenamedOrAdded(_remote, RemoteName.Text);
+                        }
+                    }
                 }
 
                 Module.SetPathSetting(string.Format(SettingKeyString.RemoteUrl, RemoteName.Text), Url.Text);
@@ -226,6 +243,13 @@ namespace GitUI.CommandsDialogs
                 if (!string.IsNullOrEmpty(output))
                 {
                     MessageBox.Show(this, output, _hintDelete.Text);
+                }
+                else
+                {
+                    if (OnRemoteDeleted != null)
+                    {
+                        OnRemoteDeleted(_remote);
+                    }
                 }
             }
 

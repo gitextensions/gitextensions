@@ -38,6 +38,11 @@ namespace GitUI.UserControls
                 NodesList.Clear();
             }
 
+            public void Remove(Node aNode)
+            {
+                NodesList.Remove(aNode);
+            }
+
             public IEnumerator<Node> GetEnumerator()
             {
                 var e = NodesList.GetEnumerator();
