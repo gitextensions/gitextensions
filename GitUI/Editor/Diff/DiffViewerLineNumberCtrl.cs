@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using GitCommands;
+using GitCommands.Utils;
 using ICSharpCode.TextEditor;
 
 namespace GitUI.Editor.Diff
@@ -29,8 +30,9 @@ namespace GitUI.Editor.Diff
                 }
 
                 var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);
-
-                return new Size((int)size.Width * 2 + TextHorizontalMargin, 0);
+                // Workaround that right most numbers get clipped when using mono.
+                var monoTextWidthAdjustment = EnvUtils.IsMonoRuntime()? 10 : 0;
+                return new Size((int)size.Width * 2 + TextHorizontalMargin + monoTextWidthAdjustment, 0);
             }
         }
 
