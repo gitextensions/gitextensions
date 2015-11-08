@@ -32,6 +32,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <source>Checkout</source>
         <target />
       </trans-unit>
+      <trans-unit id="DiffViewerGB.Text">
+        <source>Diff Viewer</source>
+        <target />
+      </trans-unit>
       <trans-unit id="GeneralGB.Text">
         <source>General</source>
         <target />
@@ -51,6 +55,12 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       <trans-unit id="chkDontSHowHelpImages.Text">
         <source>Don't show help images</source>
         <target />
+      </trans-unit>
+      <trans-unit id="chkOmitUninterestingDiff.Text">
+        <source>Omit uninteresting changes from combined diff</source>
+      </trans-unit>
+      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
+        <source>Remember the ignore-white-space preference</source>
       </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen "local changes" action as default action.
@@ -1134,6 +1144,10 @@ Do you want to open it?</source>
       <trans-unit id="columnHeader1.Text">
         <source>Files</source>
         <target />
+      </trans-unit>
+      <trans-unit id="CombinedDiff.Text">
+        <source>Combined Diff</source>
+
       </trans-unit>
     </body>
   </file>
@@ -7670,6 +7684,10 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_parentsText.Text">
         <source>Parent(s)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_uninterestingDiffOmitted.Text">
+        <source>Uninteresting diff hunks are omitted.</source>
         <target />
       </trans-unit>
       <trans-unit id="_secondsAgo.Text">

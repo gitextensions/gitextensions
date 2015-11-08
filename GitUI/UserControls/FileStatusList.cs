@@ -25,6 +25,8 @@ namespace GitUI
             new TranslationString("Operation not supported");
         private readonly TranslationString _DiffWithParent =
             new TranslationString("Diff with parent");
+        public readonly TranslationString CombinedDiff =
+            new TranslationString("Combined Diff");
 
         private readonly IDisposable selectedIndexChangeSubscription;
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
@@ -557,8 +559,18 @@ namespace GitUI
                     ListViewGroup group = null;
                     if (!String.IsNullOrEmpty(pair.Key))
                     {
-                        string shortHash = pair.Key.Length > 8 ? pair.Key.Substring(0, 8) : pair.Key;
-                        group = new ListViewGroup(_DiffWithParent.Text + " " + shortHash);
+                        var groupName = "";
+                        if (pair.Key == CombinedDiff.Text)
+                        {
+                            groupName = CombinedDiff.Text;
+                        }
+                        else
+                        {
+                            string shortHash = pair.Key.Length > 8 ? pair.Key.Substring(0, 8) : pair.Key;
+                            groupName = _DiffWithParent.Text + " " + shortHash;
+                        }
+
+                        group = new ListViewGroup(groupName);
                         group.Tag = pair.Key;
                         FileStatusListView.Groups.Add(group);
                     }
@@ -753,6 +765,15 @@ namespace GitUI
                 else
                 {
                     GitItemsWithParents dictionary = new Dictionary<string, IList<GitItemStatus>>();
+                    var isMergeCommit = revision.ParentGuids.Count() == 2;
+                    if (isMergeCommit)
+                    {
+                        var conflicts = Module.GetCombinedDiffFileList(revision.Guid);
+                        if (conflicts.Any())
+                        {
+                            dictionary.Add(CombinedDiff.Text, conflicts);
+                        }
+                    }
                     foreach (var parentRev in revision.ParentGuids)
                     {
                         dictionary.Add(parentRev, Module.GetDiffFilesWithSubmodulesStatus(revision.Guid, parentRev));

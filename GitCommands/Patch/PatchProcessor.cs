@@ -23,7 +23,7 @@ namespace PatchApply
         }
 
         /// <summary>
-        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding) 
+        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding)
         /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
         /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
@@ -159,7 +159,7 @@ namespace PatchApply
         }
 
         /// <summary>
-        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding) 
+        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding)
         /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
         /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
@@ -187,6 +187,12 @@ namespace PatchApply
         private static bool IsIndexLine(string input)
         {
             return input.StartsWith("index ");
+        }
+
+        public static bool IsCombinedDiff(string diff)
+        {
+            return !string.IsNullOrWhiteSpace(diff) &&
+                                 (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
         }
 
         private void ValidateHeader(ref string input, Patch patch)
@@ -225,7 +231,7 @@ namespace PatchApply
                     patch.FileNameB = regexMatch.Groups[1].Value.Trim();
                 else
                     throw new FormatException("New filename not parsed correct: " + input);
-            }             
+            }
         }
 
         private static bool IsChunkHeader(string input)
@@ -279,7 +285,7 @@ namespace PatchApply
 
         private static bool IsStartOfANewPatch(string input, out bool combinedDiff)
         {
-            combinedDiff = input.StartsWith("diff --cc ");
+            combinedDiff = IsCombinedDiff(input);
             return input.StartsWith("diff --git ") || combinedDiff;
         }
 

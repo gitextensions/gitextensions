@@ -1166,6 +1166,12 @@ namespace GitCommands
             set { SetBool("CheckForReleaseCandidates", value); }
         }
 
+        public static bool OmitUninterestingDiff
+        {
+            get { return GetBool("OmitUninterestingDiff", false); }
+            set { SetBool("OmitUninterestingDiff", value); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return Application.ExecutablePath;
