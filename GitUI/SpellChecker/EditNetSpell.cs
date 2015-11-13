@@ -1032,6 +1032,8 @@ namespace GitUI.SpellChecker
         {
             if (disposing)
             {
+                CancelAutoComplete();
+                SpellCheckTimer.Stop();
                 _autoCompleteCancellationTokenSource.Dispose();
                 _customUnderlines.Dispose();
                 if (components != null)
