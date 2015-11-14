@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.HelperDialogs;
 
 namespace GitUI.CommandsDialogs
 {
@@ -201,6 +202,19 @@ namespace GitUI.CommandsDialogs
         private void ckCompareToMergeBase_CheckedChanged(object sender, EventArgs e)
         {
             PopulateDiffFiles();
+        }
+
+        private void btnAnotherCommit_Click(object sender, EventArgs e)
+        {
+            using (var form = new FormChooseCommit(UICommands, preselectCommit: null))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _leftRevision = form.SelectedRevision;
+                    _leftDisplayStr = form.SelectedRevision.Message;
+                    PopulateDiffFiles();
+                }
+            }
         }
     }
 }

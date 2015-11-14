@@ -29,18 +29,19 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.mainLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffText = new GitUI.Editor.FileViewer();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.settingsLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.btnSwap = new System.Windows.Forms.Button();
+            this.btnPickAnotherBranch = new System.Windows.Forms.Button();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.labelComparing = new System.Windows.Forms.Label();
             this.lblLeftCommit = new System.Windows.Forms.Label();
             this.labelAnd = new System.Windows.Forms.Label();
             this.lblRightCommit = new System.Windows.Forms.Label();
-            this.btnSwap = new System.Windows.Forms.Button();
-            this.btnPickAnotherBranch = new System.Windows.Forms.Button();
+            this.btnAnotherCommit = new System.Windows.Forms.Button();
             this.ckCompareToMergeBase = new System.Windows.Forms.CheckBox();
             this.diffShowInFileTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -57,36 +58,36 @@
             this.fileHistoryDiffToolstripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findInDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.mainLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.settingsLayoutPanel.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.DiffContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // mainLayoutPanel
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.splitContainer1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1042, 523);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.mainLayoutPanel.ColumnCount = 1;
+            this.mainLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.mainLayoutPanel.Controls.Add(this.splitContainer1, 0, 1);
+            this.mainLayoutPanel.Controls.Add(this.settingsLayoutPanel, 0, 0);
+            this.mainLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.mainLayoutPanel.Name = "mainLayoutPanel";
+            this.mainLayoutPanel.RowCount = 2;
+            this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.mainLayoutPanel.Size = new System.Drawing.Size(1042, 523);
+            this.mainLayoutPanel.TabIndex = 0;
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 40);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 61);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -119,37 +120,72 @@
             this.DiffText.Size = new System.Drawing.Size(687, 496);
             this.DiffText.TabIndex = 0;
             // 
-            // tableLayoutPanel2
+            // settingsLayoutPanel
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel2.ColumnCount = 4;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel2, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.btnSwap, 2, 0);
-            this.tableLayoutPanel2.Controls.Add(this.btnPickAnotherBranch, 3, 0);
-            this.tableLayoutPanel2.Controls.Add(this.ckCompareToMergeBase, 1, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1036, 31);
-            this.tableLayoutPanel2.TabIndex = 3;
+            this.settingsLayoutPanel.AutoSize = true;
+            this.settingsLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.settingsLayoutPanel.ColumnCount = 5;
+            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.settingsLayoutPanel.Controls.Add(this.btnSwap, 2, 1);
+            this.settingsLayoutPanel.Controls.Add(this.btnPickAnotherBranch, 3, 1);
+            this.settingsLayoutPanel.Controls.Add(this.flowLayoutPanel2, 0, 0);
+            this.settingsLayoutPanel.Controls.Add(this.btnAnotherCommit, 4, 1);
+            this.settingsLayoutPanel.Controls.Add(this.ckCompareToMergeBase, 0, 1);
+            this.settingsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsLayoutPanel.Location = new System.Drawing.Point(3, 3);
+            this.settingsLayoutPanel.Name = "settingsLayoutPanel";
+            this.settingsLayoutPanel.RowCount = 2;
+            this.settingsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.settingsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.settingsLayoutPanel.Size = new System.Drawing.Size(1036, 52);
+            this.settingsLayoutPanel.TabIndex = 3;
+            // 
+            // btnSwap
+            // 
+            this.btnSwap.AutoSize = true;
+            this.btnSwap.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnSwap.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnSwap.Image = global::GitUI.Properties.Resources.Renamed;
+            this.btnSwap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSwap.Location = new System.Drawing.Point(235, 24);
+            this.btnSwap.Name = "btnSwap";
+            this.btnSwap.Size = new System.Drawing.Size(61, 25);
+            this.btnSwap.TabIndex = 6;
+            this.btnSwap.Text = "Swap";
+            this.btnSwap.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSwap.UseVisualStyleBackColor = true;
+            this.btnSwap.Click += new System.EventHandler(this.btnSwap_Click);
+            // 
+            // btnPickAnotherBranch
+            // 
+            this.btnPickAnotherBranch.AutoSize = true;
+            this.btnPickAnotherBranch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnPickAnotherBranch.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnPickAnotherBranch.Image = global::GitUI.Properties.Resources.IconFind;
+            this.btnPickAnotherBranch.Location = new System.Drawing.Point(302, 24);
+            this.btnPickAnotherBranch.Name = "btnPickAnotherBranch";
+            this.btnPickAnotherBranch.Size = new System.Drawing.Size(116, 25);
+            this.btnPickAnotherBranch.TabIndex = 7;
+            this.btnPickAnotherBranch.Text = "Another Branch";
+            this.btnPickAnotherBranch.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnPickAnotherBranch.UseVisualStyleBackColor = true;
+            this.btnPickAnotherBranch.Click += new System.EventHandler(this.btnPickAnotherBranch_Click);
             // 
             // flowLayoutPanel2
             // 
             this.flowLayoutPanel2.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.flowLayoutPanel2.AutoSize = true;
             this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.settingsLayoutPanel.SetColumnSpan(this.flowLayoutPanel2, 5);
             this.flowLayoutPanel2.Controls.Add(this.labelComparing);
             this.flowLayoutPanel2.Controls.Add(this.lblLeftCommit);
             this.flowLayoutPanel2.Controls.Add(this.labelAnd);
             this.flowLayoutPanel2.Controls.Add(this.lblRightCommit);
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 8);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(158, 15);
             this.flowLayoutPanel2.TabIndex = 0;
@@ -196,43 +232,26 @@
             this.lblRightCommit.TabIndex = 1;
             this.lblRightCommit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnSwap
+            // btnAnotherCommit
             // 
-            this.btnSwap.AutoSize = true;
-            this.btnSwap.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnSwap.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnSwap.Image = global::GitUI.Properties.Resources.Renamed;
-            this.btnSwap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSwap.Location = new System.Drawing.Point(399, 3);
-            this.btnSwap.Name = "btnSwap";
-            this.btnSwap.Size = new System.Drawing.Size(61, 25);
-            this.btnSwap.TabIndex = 6;
-            this.btnSwap.Text = "Swap";
-            this.btnSwap.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnSwap.UseVisualStyleBackColor = true;
-            this.btnSwap.Click += new System.EventHandler(this.btnSwap_Click);
-            // 
-            // btnPickAnotherBranch
-            // 
-            this.btnPickAnotherBranch.AutoSize = true;
-            this.btnPickAnotherBranch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnPickAnotherBranch.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnPickAnotherBranch.Image = global::GitUI.Properties.Resources.IconFind;
-            this.btnPickAnotherBranch.Location = new System.Drawing.Point(466, 3);
-            this.btnPickAnotherBranch.Name = "btnPickAnotherBranch";
-            this.btnPickAnotherBranch.Size = new System.Drawing.Size(116, 25);
-            this.btnPickAnotherBranch.TabIndex = 7;
-            this.btnPickAnotherBranch.Text = "Another Branch";
-            this.btnPickAnotherBranch.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnPickAnotherBranch.UseVisualStyleBackColor = true;
-            this.btnPickAnotherBranch.Click += new System.EventHandler(this.btnPickAnotherBranch_Click);
+            this.btnAnotherCommit.AutoSize = true;
+            this.btnAnotherCommit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnAnotherCommit.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnAnotherCommit.Image = global::GitUI.Properties.Resources.IconFind;
+            this.btnAnotherCommit.Location = new System.Drawing.Point(424, 24);
+            this.btnAnotherCommit.Name = "btnAnotherCommit";
+            this.btnAnotherCommit.Size = new System.Drawing.Size(123, 25);
+            this.btnAnotherCommit.TabIndex = 9;
+            this.btnAnotherCommit.Text = "Another Commit";
+            this.btnAnotherCommit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnAnotherCommit.UseVisualStyleBackColor = true;
+            this.btnAnotherCommit.Click += new System.EventHandler(this.btnAnotherCommit_Click);
             // 
             // ckCompareToMergeBase
             // 
-            this.ckCompareToMergeBase.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.ckCompareToMergeBase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.ckCompareToMergeBase.AutoSize = true;
-            this.ckCompareToMergeBase.Location = new System.Drawing.Point(167, 3);
+            this.ckCompareToMergeBase.Location = new System.Drawing.Point(3, 24);
             this.ckCompareToMergeBase.Name = "ckCompareToMergeBase";
             this.ckCompareToMergeBase.Size = new System.Drawing.Size(226, 25);
             this.ckCompareToMergeBase.TabIndex = 8;
@@ -360,17 +379,17 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1042, 523);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.mainLayoutPanel);
             this.Name = "FormDiff";
             this.Text = "Diff";
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.mainLayoutPanel.ResumeLayout(false);
+            this.mainLayoutPanel.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.settingsLayoutPanel.ResumeLayout(false);
+            this.settingsLayoutPanel.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             this.DiffContextMenu.ResumeLayout(false);
@@ -380,11 +399,11 @@
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel mainLayoutPanel;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private FileStatusList DiffFiles;
         private Editor.FileViewer DiffText;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel settingsLayoutPanel;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.Label labelComparing;
         private System.Windows.Forms.Label lblLeftCommit;
@@ -408,5 +427,6 @@
         private System.Windows.Forms.ToolStripMenuItem blameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findInDiffToolStripMenuItem;
         private System.Windows.Forms.CheckBox ckCompareToMergeBase;
+        private System.Windows.Forms.Button btnAnotherCommit;
     }
 }
