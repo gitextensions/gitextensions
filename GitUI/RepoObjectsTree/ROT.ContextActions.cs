@@ -84,6 +84,11 @@ RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
             RegisterClick<RemoteBranchNode>(mnubtnMergeBranch, remoteBranch => remoteBranch.Merge());
             RegisterClick<RemoteBranchNode>(mnubtnRebase, remoteBranch => remoteBranch.Rebase());
             RegisterClick<RemoteBranchNode>(mnubtnReset, remoteBranch => remoteBranch.Reset());
+            RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchFetchAndCheckout, b =>
+            {
+                b.Fetch();
+                b.Checkout();
+            });
             Node.RegisterContextMenu(typeof(RemoteBranchNode), menuRemote);
 
             RegisterClick<RemoteRepoNode>(mnubtnRemoteFetch, remoteBranch => remoteBranch.Fetch());
