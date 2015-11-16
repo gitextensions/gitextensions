@@ -35,14 +35,17 @@
             this.DiffText = new GitUI.Editor.FileViewer();
             this.settingsLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.btnSwap = new System.Windows.Forms.Button();
-            this.btnPickAnotherBranch = new System.Windows.Forms.Button();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.labelComparing = new System.Windows.Forms.Label();
-            this.lblLeftCommit = new System.Windows.Forms.Label();
-            this.labelAnd = new System.Windows.Forms.Label();
-            this.lblRightCommit = new System.Windows.Forms.Label();
-            this.btnAnotherCommit = new System.Windows.Forms.Button();
             this.ckCompareToMergeBase = new System.Windows.Forms.CheckBox();
+            this.baseCommitGroup = new System.Windows.Forms.GroupBox();
+            this.baseCommitPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblLeftCommit = new System.Windows.Forms.Label();
+            this.btnAnotherBaseBranch = new System.Windows.Forms.Button();
+            this.btnAnotherBaseCommit = new System.Windows.Forms.Button();
+            this.headCommitGroup = new System.Windows.Forms.GroupBox();
+            this.headCommitPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblRightCommit = new System.Windows.Forms.Label();
+            this.btnAnotherHeadBranch = new System.Windows.Forms.Button();
+            this.btnAnotherHeadCommit = new System.Windows.Forms.Button();
             this.diffShowInFileTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,7 +67,10 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.settingsLayoutPanel.SuspendLayout();
-            this.flowLayoutPanel2.SuspendLayout();
+            this.baseCommitGroup.SuspendLayout();
+            this.baseCommitPanel.SuspendLayout();
+            this.headCommitGroup.SuspendLayout();
+            this.headCommitPanel.SuspendLayout();
             this.DiffContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -81,13 +87,13 @@
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.mainLayoutPanel.Size = new System.Drawing.Size(1042, 523);
+            this.mainLayoutPanel.Size = new System.Drawing.Size(1042, 685);
             this.mainLayoutPanel.TabIndex = 0;
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 61);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 84);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -97,7 +103,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.DiffText);
-            this.splitContainer1.Size = new System.Drawing.Size(1036, 496);
+            this.splitContainer1.Size = new System.Drawing.Size(1036, 598);
             this.splitContainer1.SplitterDistance = 345;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -107,7 +113,7 @@
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(345, 496);
+            this.DiffFiles.Size = new System.Drawing.Size(345, 598);
             this.DiffFiles.TabIndex = 0;
             // 
             // DiffText
@@ -117,147 +123,190 @@
             this.DiffText.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.DiffText.Name = "DiffText";
             this.DiffText.ShowLineNumbers = false;
-            this.DiffText.Size = new System.Drawing.Size(687, 496);
+            this.DiffText.Size = new System.Drawing.Size(687, 598);
             this.DiffText.TabIndex = 0;
             // 
             // settingsLayoutPanel
             // 
             this.settingsLayoutPanel.AutoSize = true;
             this.settingsLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.settingsLayoutPanel.ColumnCount = 5;
+            this.settingsLayoutPanel.ColumnCount = 3;
+            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.settingsLayoutPanel.Controls.Add(this.btnSwap, 2, 1);
-            this.settingsLayoutPanel.Controls.Add(this.btnPickAnotherBranch, 3, 1);
-            this.settingsLayoutPanel.Controls.Add(this.flowLayoutPanel2, 0, 0);
-            this.settingsLayoutPanel.Controls.Add(this.btnAnotherCommit, 4, 1);
+            this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.settingsLayoutPanel.Controls.Add(this.btnSwap, 1, 0);
             this.settingsLayoutPanel.Controls.Add(this.ckCompareToMergeBase, 0, 1);
+            this.settingsLayoutPanel.Controls.Add(this.baseCommitGroup, 0, 0);
+            this.settingsLayoutPanel.Controls.Add(this.headCommitGroup, 2, 0);
             this.settingsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.settingsLayoutPanel.Location = new System.Drawing.Point(3, 3);
             this.settingsLayoutPanel.Name = "settingsLayoutPanel";
             this.settingsLayoutPanel.RowCount = 2;
             this.settingsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.settingsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.settingsLayoutPanel.Size = new System.Drawing.Size(1036, 52);
+            this.settingsLayoutPanel.Size = new System.Drawing.Size(1036, 75);
             this.settingsLayoutPanel.TabIndex = 3;
             // 
             // btnSwap
             // 
+            this.btnSwap.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnSwap.AutoSize = true;
             this.btnSwap.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnSwap.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnSwap.Image = global::GitUI.Properties.Resources.Renamed;
             this.btnSwap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSwap.Location = new System.Drawing.Point(235, 24);
+            this.btnSwap.Location = new System.Drawing.Point(507, 21);
+            this.btnSwap.Margin = new System.Windows.Forms.Padding(10, 15, 10, 0);
             this.btnSwap.Name = "btnSwap";
-            this.btnSwap.Size = new System.Drawing.Size(61, 25);
+            this.btnSwap.Size = new System.Drawing.Size(22, 22);
             this.btnSwap.TabIndex = 6;
-            this.btnSwap.Text = "Swap";
             this.btnSwap.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSwap.UseVisualStyleBackColor = true;
             this.btnSwap.Click += new System.EventHandler(this.btnSwap_Click);
             // 
-            // btnPickAnotherBranch
+            // ckCompareToMergeBase
             // 
-            this.btnPickAnotherBranch.AutoSize = true;
-            this.btnPickAnotherBranch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnPickAnotherBranch.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnPickAnotherBranch.Image = global::GitUI.Properties.Resources.IconFind;
-            this.btnPickAnotherBranch.Location = new System.Drawing.Point(302, 24);
-            this.btnPickAnotherBranch.Name = "btnPickAnotherBranch";
-            this.btnPickAnotherBranch.Size = new System.Drawing.Size(116, 25);
-            this.btnPickAnotherBranch.TabIndex = 7;
-            this.btnPickAnotherBranch.Text = "Another Branch";
-            this.btnPickAnotherBranch.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnPickAnotherBranch.UseVisualStyleBackColor = true;
-            this.btnPickAnotherBranch.Click += new System.EventHandler(this.btnPickAnotherBranch_Click);
+            this.ckCompareToMergeBase.AutoSize = true;
+            this.ckCompareToMergeBase.Location = new System.Drawing.Point(3, 53);
+            this.ckCompareToMergeBase.Name = "ckCompareToMergeBase";
+            this.ckCompareToMergeBase.Size = new System.Drawing.Size(232, 19);
+            this.ckCompareToMergeBase.TabIndex = 8;
+            this.ckCompareToMergeBase.Text = "Compare HEAD commit to merge base";
+            this.ckCompareToMergeBase.UseVisualStyleBackColor = true;
+            this.ckCompareToMergeBase.CheckedChanged += new System.EventHandler(this.ckCompareToMergeBase_CheckedChanged);
             // 
-            // flowLayoutPanel2
+            // baseCommitGroup
             // 
-            this.flowLayoutPanel2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.flowLayoutPanel2.AutoSize = true;
-            this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.settingsLayoutPanel.SetColumnSpan(this.flowLayoutPanel2, 5);
-            this.flowLayoutPanel2.Controls.Add(this.labelComparing);
-            this.flowLayoutPanel2.Controls.Add(this.lblLeftCommit);
-            this.flowLayoutPanel2.Controls.Add(this.labelAnd);
-            this.flowLayoutPanel2.Controls.Add(this.lblRightCommit);
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(158, 15);
-            this.flowLayoutPanel2.TabIndex = 0;
+            this.baseCommitGroup.AutoSize = true;
+            this.baseCommitGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.baseCommitGroup.Controls.Add(this.baseCommitPanel);
+            this.baseCommitGroup.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.baseCommitGroup.Location = new System.Drawing.Point(0, 0);
+            this.baseCommitGroup.Margin = new System.Windows.Forms.Padding(0);
+            this.baseCommitGroup.Name = "baseCommitGroup";
+            this.baseCommitGroup.Size = new System.Drawing.Size(497, 50);
+            this.baseCommitGroup.TabIndex = 16;
+            this.baseCommitGroup.TabStop = false;
+            this.baseCommitGroup.Text = "BASE";
             // 
-            // labelComparing
+            // baseCommitPanel
             // 
-            this.labelComparing.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.labelComparing.AutoSize = true;
-            this.labelComparing.Location = new System.Drawing.Point(3, 0);
-            this.labelComparing.Name = "labelComparing";
-            this.labelComparing.Size = new System.Drawing.Size(67, 15);
-            this.labelComparing.TabIndex = 0;
-            this.labelComparing.Text = "Comparing";
-            this.labelComparing.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.baseCommitPanel.AutoSize = true;
+            this.baseCommitPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.baseCommitPanel.Controls.Add(this.lblLeftCommit);
+            this.baseCommitPanel.Controls.Add(this.btnAnotherBaseBranch);
+            this.baseCommitPanel.Controls.Add(this.btnAnotherBaseCommit);
+            this.baseCommitPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.baseCommitPanel.Location = new System.Drawing.Point(3, 19);
+            this.baseCommitPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.baseCommitPanel.Name = "baseCommitPanel";
+            this.baseCommitPanel.Size = new System.Drawing.Size(491, 28);
+            this.baseCommitPanel.TabIndex = 14;
             // 
             // lblLeftCommit
             // 
+            this.lblLeftCommit.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblLeftCommit.AutoSize = true;
-            this.lblLeftCommit.Location = new System.Drawing.Point(76, 0);
-            this.lblLeftCommit.MinimumSize = new System.Drawing.Size(20, 0);
+            this.lblLeftCommit.Location = new System.Drawing.Point(3, 6);
+            this.lblLeftCommit.MinimumSize = new System.Drawing.Size(200, 0);
             this.lblLeftCommit.Name = "lblLeftCommit";
-            this.lblLeftCommit.Size = new System.Drawing.Size(20, 15);
-            this.lblLeftCommit.TabIndex = 1;
-            this.lblLeftCommit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblLeftCommit.Size = new System.Drawing.Size(200, 15);
+            this.lblLeftCommit.TabIndex = 14;
+            this.lblLeftCommit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // labelAnd
+            // btnAnotherBaseBranch
             // 
-            this.labelAnd.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.labelAnd.AutoSize = true;
-            this.labelAnd.Location = new System.Drawing.Point(102, 0);
-            this.labelAnd.Name = "labelAnd";
-            this.labelAnd.Size = new System.Drawing.Size(27, 15);
-            this.labelAnd.TabIndex = 0;
-            this.labelAnd.Text = "and";
-            this.labelAnd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnAnotherBaseBranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnAnotherBaseBranch.AutoSize = true;
+            this.btnAnotherBaseBranch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnAnotherBaseBranch.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
+            this.btnAnotherBaseBranch.Location = new System.Drawing.Point(209, 3);
+            this.btnAnotherBaseBranch.Name = "btnAnotherBaseBranch";
+            this.btnAnotherBaseBranch.Size = new System.Drawing.Size(22, 22);
+            this.btnAnotherBaseBranch.TabIndex = 7;
+            this.btnAnotherBaseBranch.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnAnotherBaseBranch.UseVisualStyleBackColor = true;
+            this.btnAnotherBaseBranch.Click += new System.EventHandler(this.btnPickAnotherBranch_Click);
+            // 
+            // btnAnotherBaseCommit
+            // 
+            this.btnAnotherBaseCommit.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnAnotherBaseCommit.AutoSize = true;
+            this.btnAnotherBaseCommit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnAnotherBaseCommit.Image = global::GitUI.Properties.Resources.IconSelectRevision;
+            this.btnAnotherBaseCommit.Location = new System.Drawing.Point(237, 3);
+            this.btnAnotherBaseCommit.Name = "btnAnotherBaseCommit";
+            this.btnAnotherBaseCommit.Size = new System.Drawing.Size(22, 22);
+            this.btnAnotherBaseCommit.TabIndex = 9;
+            this.btnAnotherBaseCommit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnAnotherBaseCommit.UseVisualStyleBackColor = true;
+            this.btnAnotherBaseCommit.Click += new System.EventHandler(this.btnAnotherCommit_Click);
+            // 
+            // headCommitGroup
+            // 
+            this.headCommitGroup.AutoSize = true;
+            this.headCommitGroup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.headCommitGroup.Controls.Add(this.headCommitPanel);
+            this.headCommitGroup.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.headCommitGroup.Location = new System.Drawing.Point(539, 0);
+            this.headCommitGroup.Margin = new System.Windows.Forms.Padding(0);
+            this.headCommitGroup.Name = "headCommitGroup";
+            this.headCommitGroup.Size = new System.Drawing.Size(497, 50);
+            this.headCommitGroup.TabIndex = 17;
+            this.headCommitGroup.TabStop = false;
+            this.headCommitGroup.Text = "HEAD";
+            // 
+            // headCommitPanel
+            // 
+            this.headCommitPanel.AutoSize = true;
+            this.headCommitPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.headCommitPanel.Controls.Add(this.lblRightCommit);
+            this.headCommitPanel.Controls.Add(this.btnAnotherHeadBranch);
+            this.headCommitPanel.Controls.Add(this.btnAnotherHeadCommit);
+            this.headCommitPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.headCommitPanel.Location = new System.Drawing.Point(3, 19);
+            this.headCommitPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.headCommitPanel.Name = "headCommitPanel";
+            this.headCommitPanel.Size = new System.Drawing.Size(491, 28);
+            this.headCommitPanel.TabIndex = 15;
             // 
             // lblRightCommit
             // 
+            this.lblRightCommit.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblRightCommit.AutoSize = true;
-            this.lblRightCommit.Location = new System.Drawing.Point(135, 0);
-            this.lblRightCommit.MinimumSize = new System.Drawing.Size(20, 0);
+            this.lblRightCommit.Location = new System.Drawing.Point(3, 6);
+            this.lblRightCommit.MinimumSize = new System.Drawing.Size(200, 0);
             this.lblRightCommit.Name = "lblRightCommit";
-            this.lblRightCommit.Size = new System.Drawing.Size(20, 15);
+            this.lblRightCommit.Size = new System.Drawing.Size(200, 15);
             this.lblRightCommit.TabIndex = 1;
-            this.lblRightCommit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblRightCommit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btnAnotherCommit
+            // btnAnotherHeadBranch
             // 
-            this.btnAnotherCommit.AutoSize = true;
-            this.btnAnotherCommit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnAnotherCommit.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnAnotherCommit.Image = global::GitUI.Properties.Resources.IconFind;
-            this.btnAnotherCommit.Location = new System.Drawing.Point(424, 24);
-            this.btnAnotherCommit.Name = "btnAnotherCommit";
-            this.btnAnotherCommit.Size = new System.Drawing.Size(123, 25);
-            this.btnAnotherCommit.TabIndex = 9;
-            this.btnAnotherCommit.Text = "Another Commit";
-            this.btnAnotherCommit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnAnotherCommit.UseVisualStyleBackColor = true;
-            this.btnAnotherCommit.Click += new System.EventHandler(this.btnAnotherCommit_Click);
+            this.btnAnotherHeadBranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnAnotherHeadBranch.AutoSize = true;
+            this.btnAnotherHeadBranch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnAnotherHeadBranch.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
+            this.btnAnotherHeadBranch.Location = new System.Drawing.Point(209, 3);
+            this.btnAnotherHeadBranch.Name = "btnAnotherHeadBranch";
+            this.btnAnotherHeadBranch.Size = new System.Drawing.Size(22, 22);
+            this.btnAnotherHeadBranch.TabIndex = 16;
+            this.btnAnotherHeadBranch.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnAnotherHeadBranch.UseVisualStyleBackColor = true;
+            this.btnAnotherHeadBranch.Click += new System.EventHandler(this.btnAnotherHeadBranch_Click);
             // 
-            // ckCompareToMergeBase
+            // btnAnotherHeadCommit
             // 
-            this.ckCompareToMergeBase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.ckCompareToMergeBase.AutoSize = true;
-            this.ckCompareToMergeBase.Location = new System.Drawing.Point(3, 24);
-            this.ckCompareToMergeBase.Name = "ckCompareToMergeBase";
-            this.ckCompareToMergeBase.Size = new System.Drawing.Size(226, 25);
-            this.ckCompareToMergeBase.TabIndex = 8;
-            this.ckCompareToMergeBase.Text = "Compare right commit to merge base";
-            this.ckCompareToMergeBase.UseVisualStyleBackColor = true;
-            this.ckCompareToMergeBase.CheckedChanged += new System.EventHandler(this.ckCompareToMergeBase_CheckedChanged);
+            this.btnAnotherHeadCommit.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnAnotherHeadCommit.AutoSize = true;
+            this.btnAnotherHeadCommit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnAnotherHeadCommit.Image = global::GitUI.Properties.Resources.IconSelectRevision;
+            this.btnAnotherHeadCommit.Location = new System.Drawing.Point(237, 3);
+            this.btnAnotherHeadCommit.Name = "btnAnotherHeadCommit";
+            this.btnAnotherHeadCommit.Size = new System.Drawing.Size(22, 22);
+            this.btnAnotherHeadCommit.TabIndex = 17;
+            this.btnAnotherHeadCommit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnAnotherHeadCommit.UseVisualStyleBackColor = true;
+            this.btnAnotherHeadCommit.Click += new System.EventHandler(this.btnAnotherHeadCommit_Click);
             // 
             // diffShowInFileTreeToolStripMenuItem
             // 
@@ -378,8 +427,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1042, 523);
+            this.ClientSize = new System.Drawing.Size(1042, 685);
             this.Controls.Add(this.mainLayoutPanel);
+            this.DoubleBuffered = true;
             this.Name = "FormDiff";
             this.Text = "Diff";
             this.mainLayoutPanel.ResumeLayout(false);
@@ -390,8 +440,14 @@
             this.splitContainer1.ResumeLayout(false);
             this.settingsLayoutPanel.ResumeLayout(false);
             this.settingsLayoutPanel.PerformLayout();
-            this.flowLayoutPanel2.ResumeLayout(false);
-            this.flowLayoutPanel2.PerformLayout();
+            this.baseCommitGroup.ResumeLayout(false);
+            this.baseCommitGroup.PerformLayout();
+            this.baseCommitPanel.ResumeLayout(false);
+            this.baseCommitPanel.PerformLayout();
+            this.headCommitGroup.ResumeLayout(false);
+            this.headCommitGroup.PerformLayout();
+            this.headCommitPanel.ResumeLayout(false);
+            this.headCommitPanel.PerformLayout();
             this.DiffContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -404,13 +460,9 @@
         private FileStatusList DiffFiles;
         private Editor.FileViewer DiffText;
         private System.Windows.Forms.TableLayoutPanel settingsLayoutPanel;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private System.Windows.Forms.Label labelComparing;
-        private System.Windows.Forms.Label lblLeftCommit;
-        private System.Windows.Forms.Label labelAnd;
         private System.Windows.Forms.Label lblRightCommit;
         private System.Windows.Forms.Button btnSwap;
-        private System.Windows.Forms.Button btnPickAnotherBranch;
+        private System.Windows.Forms.Button btnAnotherBaseBranch;
         private System.Windows.Forms.ToolStripMenuItem diffShowInFileTreeToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
@@ -426,7 +478,14 @@
         private System.Windows.Forms.ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem blameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findInDiffToolStripMenuItem;
+        private System.Windows.Forms.Button btnAnotherBaseCommit;
+        private System.Windows.Forms.FlowLayoutPanel baseCommitPanel;
+        private System.Windows.Forms.Label lblLeftCommit;
+        private System.Windows.Forms.FlowLayoutPanel headCommitPanel;
+        private System.Windows.Forms.Button btnAnotherHeadBranch;
+        private System.Windows.Forms.Button btnAnotherHeadCommit;
         private System.Windows.Forms.CheckBox ckCompareToMergeBase;
-        private System.Windows.Forms.Button btnAnotherCommit;
+        private System.Windows.Forms.GroupBox baseCommitGroup;
+        private System.Windows.Forms.GroupBox headCommitGroup;
     }
 }

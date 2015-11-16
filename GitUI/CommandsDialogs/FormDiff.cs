@@ -86,19 +86,6 @@ namespace GitUI.CommandsDialogs
             PopulateDiffFiles();
         }
 
-        private void btnPickAnotherBranch_Click(object sender, EventArgs e)
-        {
-            using (var form = new FormCompareToBranch(UICommands, _leftRevision.Guid))
-            {
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    _leftDisplayStr = form.BranchName;
-                    _leftRevision = new GitRevision(Module, Module.RevParse(form.BranchName));
-                    PopulateDiffFiles();
-                }
-            }
-        }
-
         private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (DiffFiles.SelectedItem == null)
@@ -204,14 +191,46 @@ namespace GitUI.CommandsDialogs
             PopulateDiffFiles();
         }
 
+        private void btnPickAnotherBranch_Click(object sender, EventArgs e)
+        {
+            PickAnotherBranch(_leftRevision, ref _leftDisplayStr, ref _leftRevision);
+        }
         private void btnAnotherCommit_Click(object sender, EventArgs e)
         {
-            using (var form = new FormChooseCommit(UICommands, preselectCommit: null))
+            PickAnotherCommit(_leftRevision, ref _leftDisplayStr, ref _leftRevision);
+        }
+
+        private void btnAnotherHeadBranch_Click(object sender, EventArgs e)
+        {
+            PickAnotherBranch(_rightRevision, ref _rightDisplayStr, ref _rightRevision);
+        }
+
+        private void btnAnotherHeadCommit_Click(object sender, EventArgs e)
+        {
+            PickAnotherCommit(_rightRevision, ref _rightDisplayStr, ref _rightRevision);
+        }
+
+        private void PickAnotherBranch(GitRevision preSelectCommit, ref string displayStr, ref GitRevision revision)
+        {
+            using (var form = new FormCompareToBranch(UICommands, preSelectCommit.Guid))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    _leftRevision = form.SelectedRevision;
-                    _leftDisplayStr = form.SelectedRevision.Message;
+                    displayStr = form.BranchName;
+                    revision = new GitRevision(Module, Module.RevParse(form.BranchName));
+                    PopulateDiffFiles();
+                }
+            }
+        }
+
+        private void PickAnotherCommit(GitRevision preSelect, ref string displayStr, ref GitRevision revision)
+        {
+            using (var form = new FormChooseCommit(UICommands, preselectCommit: preSelect.Guid))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    revision = form.SelectedRevision;
+                    displayStr = form.SelectedRevision.Message;
                     PopulateDiffFiles();
                 }
             }
