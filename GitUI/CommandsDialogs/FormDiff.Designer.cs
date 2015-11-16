@@ -38,12 +38,12 @@
             this.ckCompareToMergeBase = new System.Windows.Forms.CheckBox();
             this.baseCommitGroup = new System.Windows.Forms.GroupBox();
             this.baseCommitPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblLeftCommit = new System.Windows.Forms.Label();
+            this.lblBaseCommit = new System.Windows.Forms.Label();
             this.btnAnotherBaseBranch = new System.Windows.Forms.Button();
             this.btnAnotherBaseCommit = new System.Windows.Forms.Button();
             this.headCommitGroup = new System.Windows.Forms.GroupBox();
             this.headCommitPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblRightCommit = new System.Windows.Forms.Label();
+            this.lblHeadCommit = new System.Windows.Forms.Label();
             this.btnAnotherHeadBranch = new System.Windows.Forms.Button();
             this.btnAnotherHeadCommit = new System.Windows.Forms.Button();
             this.diffShowInFileTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -192,7 +192,7 @@
             // 
             this.baseCommitPanel.AutoSize = true;
             this.baseCommitPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.baseCommitPanel.Controls.Add(this.lblLeftCommit);
+            this.baseCommitPanel.Controls.Add(this.lblBaseCommit);
             this.baseCommitPanel.Controls.Add(this.btnAnotherBaseBranch);
             this.baseCommitPanel.Controls.Add(this.btnAnotherBaseCommit);
             this.baseCommitPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -204,14 +204,14 @@
             // 
             // lblLeftCommit
             // 
-            this.lblLeftCommit.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblLeftCommit.AutoSize = true;
-            this.lblLeftCommit.Location = new System.Drawing.Point(3, 6);
-            this.lblLeftCommit.MinimumSize = new System.Drawing.Size(200, 0);
-            this.lblLeftCommit.Name = "lblLeftCommit";
-            this.lblLeftCommit.Size = new System.Drawing.Size(200, 15);
-            this.lblLeftCommit.TabIndex = 14;
-            this.lblLeftCommit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblBaseCommit.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblBaseCommit.AutoSize = true;
+            this.lblBaseCommit.Location = new System.Drawing.Point(3, 6);
+            this.lblBaseCommit.MinimumSize = new System.Drawing.Size(200, 0);
+            this.lblBaseCommit.Name = "lblBaseCommit";
+            this.lblBaseCommit.Size = new System.Drawing.Size(200, 15);
+            this.lblBaseCommit.TabIndex = 14;
+            this.lblBaseCommit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnAnotherBaseBranch
             // 
@@ -259,7 +259,7 @@
             // 
             this.headCommitPanel.AutoSize = true;
             this.headCommitPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.headCommitPanel.Controls.Add(this.lblRightCommit);
+            this.headCommitPanel.Controls.Add(this.lblHeadCommit);
             this.headCommitPanel.Controls.Add(this.btnAnotherHeadBranch);
             this.headCommitPanel.Controls.Add(this.btnAnotherHeadCommit);
             this.headCommitPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -271,14 +271,14 @@
             // 
             // lblRightCommit
             // 
-            this.lblRightCommit.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblRightCommit.AutoSize = true;
-            this.lblRightCommit.Location = new System.Drawing.Point(3, 6);
-            this.lblRightCommit.MinimumSize = new System.Drawing.Size(200, 0);
-            this.lblRightCommit.Name = "lblRightCommit";
-            this.lblRightCommit.Size = new System.Drawing.Size(200, 15);
-            this.lblRightCommit.TabIndex = 1;
-            this.lblRightCommit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblHeadCommit.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblHeadCommit.AutoSize = true;
+            this.lblHeadCommit.Location = new System.Drawing.Point(3, 6);
+            this.lblHeadCommit.MinimumSize = new System.Drawing.Size(200, 0);
+            this.lblHeadCommit.Name = "lblHeadCommit";
+            this.lblHeadCommit.Size = new System.Drawing.Size(200, 15);
+            this.lblHeadCommit.TabIndex = 1;
+            this.lblHeadCommit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnAnotherHeadBranch
             // 
@@ -460,7 +460,7 @@
         private FileStatusList DiffFiles;
         private Editor.FileViewer DiffText;
         private System.Windows.Forms.TableLayoutPanel settingsLayoutPanel;
-        private System.Windows.Forms.Label lblRightCommit;
+        private System.Windows.Forms.Label lblHeadCommit;
         private System.Windows.Forms.Button btnSwap;
         private System.Windows.Forms.Button btnAnotherBaseBranch;
         private System.Windows.Forms.ToolStripMenuItem diffShowInFileTreeToolStripMenuItem;
@@ -480,7 +480,7 @@
         private System.Windows.Forms.ToolStripMenuItem findInDiffToolStripMenuItem;
         private System.Windows.Forms.Button btnAnotherBaseCommit;
         private System.Windows.Forms.FlowLayoutPanel baseCommitPanel;
-        private System.Windows.Forms.Label lblLeftCommit;
+        private System.Windows.Forms.Label lblBaseCommit;
         private System.Windows.Forms.FlowLayoutPanel headCommitPanel;
         private System.Windows.Forms.Button btnAnotherHeadBranch;
         private System.Windows.Forms.Button btnAnotherHeadCommit;

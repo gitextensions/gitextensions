@@ -11,28 +11,28 @@ namespace GitUI.CommandsDialogs
     public partial class FormDiff : GitModuleForm
     {
         private readonly RevisionGrid RevisionGrid;
-        private string _leftDisplayStr;
-        private string _rightDisplayStr;
-        private GitRevision _leftRevision;
-        private GitRevision _rightRevision;
+        private string _baseCommitDisplayStr;
+        private string _headCommitDisplayStr;
+        private GitRevision _baseRevision;
+        private GitRevision _headRevision;
         private readonly GitRevision _mergeBase;
 
-        public FormDiff(GitUICommands aCommands, RevisionGrid revisionGrid, string leftCommitSha,
-            string rightCommitSha, string leftDisplayStr, string rightDisplayStr) : base(aCommands)
+        public FormDiff(GitUICommands aCommands, RevisionGrid revisionGrid, string baseCommitSha,
+            string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(aCommands)
         {
             RevisionGrid = revisionGrid;
-            _leftDisplayStr = leftDisplayStr;
-            _rightDisplayStr = rightDisplayStr;
+            _baseCommitDisplayStr = baseCommitDisplayStr;
+            _headCommitDisplayStr = headCommitDisplayStr;
 
             InitializeComponent();
             Translate();
 
-            _leftRevision = new GitRevision(Module, leftCommitSha);
-            _rightRevision = new GitRevision(Module, rightCommitSha);
-            _mergeBase = new GitRevision(Module, Module.GetMergeBase(_leftRevision.Guid, _rightRevision.Guid));
+            _baseRevision = new GitRevision(Module, baseCommitSha);
+            _headRevision = new GitRevision(Module, headCommitSha);
+            _mergeBase = new GitRevision(Module, Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid));
 
-            lblLeftCommit.BackColor = AppSettings.DiffRemovedColor;
-            lblRightCommit.BackColor = AppSettings.DiffAddedColor;
+            lblBaseCommit.BackColor = AppSettings.DiffRemovedColor;
+            lblHeadCommit.BackColor = AppSettings.DiffAddedColor;
 
             DiffFiles.SelectedIndexChanged += DiffFiles_SelectedIndexChanged;
 
@@ -43,16 +43,16 @@ namespace GitUI.CommandsDialogs
 
         private void PopulateDiffFiles()
         {
-            lblLeftCommit.Text = _leftDisplayStr;
-            lblRightCommit.Text = _rightDisplayStr;
+            lblBaseCommit.Text = _baseCommitDisplayStr;
+            lblHeadCommit.Text = _headCommitDisplayStr;
 
             if (ckCompareToMergeBase.Checked)
             {
-                DiffFiles.SetDiffs(new List<GitRevision> {_rightRevision, _mergeBase});
+                DiffFiles.SetDiffs(new List<GitRevision> {_headRevision, _mergeBase});
             }
             else
             {
-                DiffFiles.SetDiffs(new List<GitRevision> {_rightRevision, _leftRevision});
+                DiffFiles.SetDiffs(new List<GitRevision> {_headRevision, _baseRevision});
             }
         }
 
@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            IList<GitRevision> items = new List<GitRevision> { _rightRevision, _leftRevision };
+            IList<GitRevision> items = new List<GitRevision> { _headRevision, _baseRevision };
             if (items.Count() == 1)
                 items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
             DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
@@ -76,13 +76,13 @@ namespace GitUI.CommandsDialogs
 
         private void btnSwap_Click(object sender, EventArgs e)
         {
-            var orgLeftRev = _leftRevision;
-            _leftRevision = _rightRevision;
-            _rightRevision = orgLeftRev;
+            var orgBaseRev = _baseRevision;
+            _baseRevision = _headRevision;
+            _headRevision = orgBaseRev;
 
-            var orgLeftStr = _leftDisplayStr;
-            _leftDisplayStr = _rightDisplayStr;
-            _rightDisplayStr = orgLeftStr;
+            var orgBaseStr = _baseCommitDisplayStr;
+            _baseCommitDisplayStr = _headCommitDisplayStr;
+            _headCommitDisplayStr = orgBaseStr;
             PopulateDiffFiles();
         }
 
@@ -193,21 +193,21 @@ namespace GitUI.CommandsDialogs
 
         private void btnPickAnotherBranch_Click(object sender, EventArgs e)
         {
-            PickAnotherBranch(_leftRevision, ref _leftDisplayStr, ref _leftRevision);
+            PickAnotherBranch(_baseRevision, ref _baseCommitDisplayStr, ref _baseRevision);
         }
         private void btnAnotherCommit_Click(object sender, EventArgs e)
         {
-            PickAnotherCommit(_leftRevision, ref _leftDisplayStr, ref _leftRevision);
+            PickAnotherCommit(_baseRevision, ref _baseCommitDisplayStr, ref _baseRevision);
         }
 
         private void btnAnotherHeadBranch_Click(object sender, EventArgs e)
         {
-            PickAnotherBranch(_rightRevision, ref _rightDisplayStr, ref _rightRevision);
+            PickAnotherBranch(_headRevision, ref _headCommitDisplayStr, ref _headRevision);
         }
 
         private void btnAnotherHeadCommit_Click(object sender, EventArgs e)
         {
-            PickAnotherCommit(_rightRevision, ref _rightDisplayStr, ref _rightRevision);
+            PickAnotherCommit(_headRevision, ref _headCommitDisplayStr, ref _headRevision);
         }
 
         private void PickAnotherBranch(GitRevision preSelectCommit, ref string displayStr, ref GitRevision revision)
