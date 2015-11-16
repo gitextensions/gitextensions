@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.CommandsDialogs;
 using ResourceManager;
 
 namespace GitUI.UserControls
@@ -47,6 +48,15 @@ namespace GitUI.UserControls
             {
                 base.ApplyStyle();
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = ImageKey;
+            }
+
+            public void Checkout()
+            {
+                using (var form = new FormCheckoutRevision(UICommands))
+                {
+                    form.SetRevision(FullPath);
+                    form.ShowDialog(TreeViewNode.TreeView);
+                }
             }
         }
 

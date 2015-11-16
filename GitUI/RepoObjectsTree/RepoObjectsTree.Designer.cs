@@ -100,6 +100,7 @@ namespace GitUI.UserControls
             this.btnSettings = new System.Windows.Forms.Button();
             this.menuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBtnCheckTag = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuStashes.SuspendLayout();
@@ -418,16 +419,17 @@ namespace GitUI.UserControls
             // 
             this.menuTag.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnubtnCreateBranchForTag,
+            this.mnuBtnCheckTag,
             this.mnubtnDeleteTag});
             this.menuTag.Name = "contextmenuTag";
-            this.menuTag.Size = new System.Drawing.Size(158, 48);
+            this.menuTag.Size = new System.Drawing.Size(158, 92);
             // 
             // mnubtnCreateBranchForTag
             // 
             this.mnubtnCreateBranchForTag.Image = global::GitUI.Properties.Resources.BranchFrom;
             this.mnubtnCreateBranchForTag.Name = "mnubtnCreateBranchForTag";
             this.mnubtnCreateBranchForTag.Size = new System.Drawing.Size(157, 22);
-            this.mnubtnCreateBranchForTag.Text = "&Create Branch...";
+            this.mnubtnCreateBranchForTag.Text = "Create &Branch...";
             this.mnubtnCreateBranchForTag.ToolTipText = "Fetch then create a local branch from the remote branch";
             // 
             // mnubtnDeleteTag
@@ -666,6 +668,14 @@ namespace GitUI.UserControls
             this.showTagsToolStripMenuItem.Text = "Show &tags";
             this.showTagsToolStripMenuItem.Click += new System.EventHandler(this.showTagsToolStripMenuItem_Click);
             // 
+            // mnuBtnCheckTag
+            // 
+            this.mnuBtnCheckTag.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
+            this.mnuBtnCheckTag.Name = "mnuBtnCheckTag";
+            this.mnuBtnCheckTag.Size = new System.Drawing.Size(157, 22);
+            this.mnuBtnCheckTag.Text = "&Checkout";
+            this.mnuBtnCheckTag.ToolTipText = "Checkout this branch";
+            // 
             // RepoObjectsTree
             // 
             this.Controls.Add(this.repoTreePanel);
@@ -760,5 +770,6 @@ namespace GitUI.UserControls
         private ToolStripMenuItem mnubtnManageRemotes;
         private ToolStripMenuItem mnuBtnManageRemotesFromRootNode;
         private ToolStripMenuItem mnubtnRemoteBranchFetchAndCheckout;
+        private ToolStripMenuItem mnuBtnCheckTag;
     }
 }

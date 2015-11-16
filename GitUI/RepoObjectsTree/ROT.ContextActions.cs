@@ -97,6 +97,7 @@ RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
 
             RegisterClick<TagNode>(mnubtnCreateBranchForTag, tag => tag.CreateBranch());
             RegisterClick<TagNode>(mnubtnDeleteTag, tag => tag.Delete());
+            RegisterClick<TagNode>(mnuBtnCheckTag, tag => tag.Checkout());
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
 
             RegisterClick(mnuBtnManageRemotesFromRootNode, PopupManageRemotesForm);
