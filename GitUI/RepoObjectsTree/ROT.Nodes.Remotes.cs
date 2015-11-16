@@ -146,7 +146,7 @@ namespace GitUI.UserControls
                     .Where(branch => branch.IsRemote && !branch.IsTag)
                     .Select(branch => branch.Name);
 
-                var remotes = Module.GetRemotes(allowEmpty: false);
+                var remotes = Module.GetRemotes(allowEmpty: true);
                 foreach (var branchPath in branches)
                 {
                     var remote = branchPath.Split('/').First();
