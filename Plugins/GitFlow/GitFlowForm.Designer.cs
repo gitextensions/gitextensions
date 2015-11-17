@@ -107,7 +107,7 @@
             // 
             this.cbBranches.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbBranches.FormattingEnabled = true;
-            this.cbBranches.Location = new System.Drawing.Point(151, 8);
+            this.cbBranches.Location = new System.Drawing.Point(188, 8);
             this.cbBranches.Name = "cbBranches";
             this.cbBranches.Size = new System.Drawing.Size(374, 21);
             this.cbBranches.TabIndex = 3;
@@ -236,9 +236,9 @@
             // 
             this.cbManageType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbManageType.FormattingEnabled = true;
-            this.cbManageType.Location = new System.Drawing.Point(139, 0);
+            this.cbManageType.Location = new System.Drawing.Point(197, 0);
             this.cbManageType.Name = "cbManageType";
-            this.cbManageType.Size = new System.Drawing.Size(128, 21);
+            this.cbManageType.Size = new System.Drawing.Size(181, 21);
             this.cbManageType.TabIndex = 3;
             this.cbManageType.SelectedValueChanged += new System.EventHandler(this.cbManageType_SelectedValueChanged);
             // 
@@ -256,9 +256,9 @@
             // 
             this.cbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbType.FormattingEnabled = true;
-            this.cbType.Location = new System.Drawing.Point(74, 0);
+            this.cbType.Location = new System.Drawing.Point(118, 0);
             this.cbType.Name = "cbType";
-            this.cbType.Size = new System.Drawing.Size(128, 21);
+            this.cbType.Size = new System.Drawing.Size(181, 21);
             this.cbType.TabIndex = 3;
             this.cbType.SelectedValueChanged += new System.EventHandler(this.cbType_SelectedValueChanged);
             // 
@@ -276,7 +276,7 @@
             this.lblPrefixName.AutoSize = true;
             this.lblPrefixName.Location = new System.Drawing.Point(119, 28);
             this.lblPrefixName.Name = "lblPrefixName";
-            this.lblPrefixName.Size = new System.Drawing.Size(43, 13);
+            this.lblPrefixName.Size = new System.Drawing.Size(49, 13);
             this.lblPrefixName.TabIndex = 1;
             this.lblPrefixName.Text = "[prefix]/";
             this.lblPrefixName.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -309,7 +309,7 @@
             // 
             this.cbBaseBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbBaseBranch.FormattingEnabled = true;
-            this.cbBaseBranch.Location = new System.Drawing.Point(78, 8);
+            this.cbBaseBranch.Location = new System.Drawing.Point(125, 8);
             this.cbBaseBranch.Name = "cbBaseBranch";
             this.cbBaseBranch.Size = new System.Drawing.Size(340, 21);
             this.cbBaseBranch.TabIndex = 3;
