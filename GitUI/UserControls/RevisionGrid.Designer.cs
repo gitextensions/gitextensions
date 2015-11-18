@@ -102,6 +102,8 @@ namespace GitUI
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.compareToBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compareWithCurrentBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compareToBaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectAsBaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.createTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -266,6 +268,8 @@ namespace GitUI
             this.toolStripSeparator4,
             this.compareToBranchToolStripMenuItem,
             this.compareWithCurrentBranchToolStripMenuItem,
+            this.selectAsBaseToolStripMenuItem,
+            this.compareToBaseToolStripMenuItem,
             this.toolStripSeparator5,
             this.createTagToolStripMenuItem,
             this.deleteTagToolStripMenuItem,
@@ -464,6 +468,20 @@ namespace GitUI
             this.compareWithCurrentBranchToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.compareWithCurrentBranchToolStripMenuItem.Text = "Compare with current branch";
             this.compareWithCurrentBranchToolStripMenuItem.Click += new System.EventHandler(this.CompareWithCurrentBranchToolStripMenuItem_Click);
+            // 
+            // selectAsBaseToolStripMenuItem
+            // 
+            this.selectAsBaseToolStripMenuItem.Name = "selectAsBaseToolStripMenuItem";
+            this.selectAsBaseToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.selectAsBaseToolStripMenuItem.Text = "Select as BASE to compare";
+            this.selectAsBaseToolStripMenuItem.Click += new System.EventHandler(this.selectAsBaseToolStripMenuItem_Click);
+            // 
+            // selectAsBaseToolStripMenuItem
+            // 
+            this.compareToBaseToolStripMenuItem.Name = "compareToBaseToolStripMenuItem";
+            this.compareToBaseToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.compareToBaseToolStripMenuItem.Text = "Compare to BASE";
+            this.compareToBaseToolStripMenuItem.Click += new System.EventHandler(this.compareToBaseToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -807,5 +825,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem compareToBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compareWithCurrentBranchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compareToBaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectAsBaseToolStripMenuItem;
     }
 }
