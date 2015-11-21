@@ -3063,14 +3063,14 @@ namespace GitUI
 
         private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedCommit = this.GetSelectedRevisions().First();
-            using (var form = new FormCompareToBranch(UICommands, selectedCommit.Guid))
+            var headCommit = this.GetSelectedRevisions().First();
+            using (var form = new FormCompareToBranch(UICommands, headCommit.Guid))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    var branchRevision = Module.RevParse(form.BranchName);
-                    using (var diffForm = new FormDiff(UICommands, this, branchRevision, selectedCommit.Guid,
-                        form.BranchName, selectedCommit.Message))
+                    var baseCommit = Module.RevParse(form.BranchName);
+                    using (var diffForm = new FormDiff(UICommands, this, baseCommit, headCommit.Guid,
+                        form.BranchName, headCommit.Message))
                     {
                         diffForm.ShowDialog(this);
                     }
@@ -3080,11 +3080,11 @@ namespace GitUI
 
         private void CompareWithCurrentBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedCommit = this.GetSelectedRevisions().First();
-            var currentBranch = Module.GetSelectedBranch();
-            var rightRevision = Module.RevParse(currentBranch);
-            using (var diffForm = new FormDiff(UICommands, this, selectedCommit.Guid, rightRevision,
-                selectedCommit.Message, currentBranch))
+            var baseCommit = this.GetSelectedRevisions().First();
+            var headBranch = Module.GetSelectedBranch();
+            var headBranchName = Module.RevParse(headBranch);
+            using (var diffForm = new FormDiff(UICommands, this, baseCommit.Guid, headBranchName,
+                baseCommit.Message, headBranch))
             {
                 diffForm.ShowDialog(this);
             }
@@ -3098,9 +3098,9 @@ namespace GitUI
 
         private void compareToBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedCommit = GetSelectedRevisions().First();
-            using (var diffForm = new FormDiff(UICommands, this, _baseCommitToCompare.Guid, selectedCommit.Guid,
-                _baseCommitToCompare.Message, selectedCommit.Message))
+            var headCommit = GetSelectedRevisions().First();
+            using (var diffForm = new FormDiff(UICommands, this, _baseCommitToCompare.Guid, headCommit.Guid,
+                _baseCommitToCompare.Message, headCommit.Message))
             {
                 diffForm.ShowDialog(this);
             }
