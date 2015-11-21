@@ -3670,6 +3670,30 @@ When you want to delete a not-fully merged branch, you can override this using t
         <source>Diff</source>
         <target />
       </trans-unit>
+      <trans-unit id="anotherBranchTooltip.Text">
+        <source>Select another branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="anotherCommitTooltip.Text">
+        <source>Select another commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="baseCommitGroup.Text">
+        <source>BASE</source>
+        <target />
+      </trans-unit>      
+      <trans-unit id="btnSwapTooltip.Text">
+        <source>Swap BASE and HEAD</source>
+        <target />
+      </trans-unit>      
+      <trans-unit id="ckCompareToMergeBase.Text">
+        <source>Compare HEAD commit to merge base</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="headCommitGroup.Text">
+        <source>HEAD</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormDonate" source-language="en">

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -17,6 +18,15 @@ namespace GitUI.CommandsDialogs
         private GitRevision _headRevision;
         private readonly GitRevision _mergeBase;
 
+        ToolTip _toolTipControl = new ToolTip();
+
+        private readonly TranslationString anotherBranchTooltip =
+            new TranslationString("Select another branch");
+        private readonly TranslationString anotherCommitTooltip =
+            new TranslationString("Select another commit");
+        private readonly TranslationString btnSwapTooltip =
+            new TranslationString("Swap BASE and HEAD");
+
         public FormDiff(GitUICommands aCommands, RevisionGrid revisionGrid, string baseCommitSha,
             string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(aCommands)
         {
@@ -26,6 +36,12 @@ namespace GitUI.CommandsDialogs
 
             InitializeComponent();
             Translate();
+
+            _toolTipControl.SetToolTip(btnAnotherBaseBranch, anotherBranchTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherHeadBranch, anotherBranchTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherBaseCommit, anotherCommitTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherHeadCommit, anotherCommitTooltip.Text);
+            _toolTipControl.SetToolTip(btnSwap, btnSwapTooltip.Text);
 
             _baseRevision = new GitRevision(Module, baseCommitSha);
             _headRevision = new GitRevision(Module, headCommitSha);
