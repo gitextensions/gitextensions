@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString anotherCommitTooltip =
             new TranslationString("Select another commit");
         private readonly TranslationString btnSwapTooltip =
-            new TranslationString("Swap BASE and HEAD");
+            new TranslationString("Swap BASE and Compare commits");
 
         public FormDiff(GitUICommands aCommands, RevisionGrid revisionGrid, string baseCommitSha,
             string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(aCommands)

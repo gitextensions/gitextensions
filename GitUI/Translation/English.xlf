@@ -3683,15 +3683,15 @@ When you want to delete a not-fully merged branch, you can override this using t
         <target />
       </trans-unit>      
       <trans-unit id="btnSwapTooltip.Text">
-        <source>Swap BASE and HEAD</source>
+        <source>Swap BASE and Compare commits</source>
         <target />
       </trans-unit>      
       <trans-unit id="ckCompareToMergeBase.Text">
-        <source>Compare HEAD commit to merge base</source>
+        <source>Compare to merge base</source>
         <target />
       </trans-unit>
       <trans-unit id="headCommitGroup.Text">
-        <source>HEAD</source>
+        <source>Compare</source>
         <target />
       </trans-unit>
     </body>

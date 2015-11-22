@@ -168,9 +168,9 @@
             this.ckCompareToMergeBase.AutoSize = true;
             this.ckCompareToMergeBase.Location = new System.Drawing.Point(3, 53);
             this.ckCompareToMergeBase.Name = "ckCompareToMergeBase";
-            this.ckCompareToMergeBase.Size = new System.Drawing.Size(232, 19);
+            this.ckCompareToMergeBase.Size = new System.Drawing.Size(153, 19);
             this.ckCompareToMergeBase.TabIndex = 8;
-            this.ckCompareToMergeBase.Text = "Compare HEAD commit to merge base";
+            this.ckCompareToMergeBase.Text = "Compare to merge base";
             this.ckCompareToMergeBase.UseVisualStyleBackColor = true;
             this.ckCompareToMergeBase.CheckedChanged += new System.EventHandler(this.ckCompareToMergeBase_CheckedChanged);
             // 
@@ -253,7 +253,7 @@
             this.headCommitGroup.Size = new System.Drawing.Size(497, 50);
             this.headCommitGroup.TabIndex = 17;
             this.headCommitGroup.TabStop = false;
-            this.headCommitGroup.Text = "HEAD";
+            this.headCommitGroup.Text = "Compare";
             // 
             // headCommitPanel
             // 
