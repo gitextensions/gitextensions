@@ -83,8 +83,9 @@ namespace GitUI.CommandsDialogs
                 DiffText.ViewPatch("");
                 return;
             }
+            var baseCommit = ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision;
 
-            IList<GitRevision> items = new List<GitRevision> { _headRevision, _baseRevision };
+            IList<GitRevision> items = new List<GitRevision> { _headRevision, baseCommit };
             if (items.Count() == 1)
                 items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
             DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
