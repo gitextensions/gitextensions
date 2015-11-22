@@ -2893,7 +2893,9 @@ namespace GitUI
             SelectCurrentRevision,
             GoToCommit,
             NavigateBackward,
-            NavigateForward
+            NavigateForward,
+            SelectAsBaseToCompare,
+            CompareToBase
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2921,6 +2923,8 @@ namespace GitUI
                 case Commands.PrevQuickSearch: NextQuickSearch(false); break;
                 case Commands.NavigateBackward: NavigateBackward(); break;
                 case Commands.NavigateForward: NavigateForward(); break;
+                case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
+                case Commands.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
                 default:
                     {
                         bool result = base.ExecuteCommand(cmd);

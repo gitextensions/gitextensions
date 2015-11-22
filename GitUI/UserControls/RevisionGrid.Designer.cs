@@ -473,6 +473,7 @@ namespace GitUI
             this.selectAsBaseToolStripMenuItem.Name = "selectAsBaseToolStripMenuItem";
             this.selectAsBaseToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.selectAsBaseToolStripMenuItem.Text = "Select as BASE to compare";
+            this.selectAsBaseToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.L;
             this.selectAsBaseToolStripMenuItem.Click += new System.EventHandler(this.selectAsBaseToolStripMenuItem_Click);
             // 
             // selectAsBaseToolStripMenuItem
@@ -480,6 +481,7 @@ namespace GitUI
             this.compareToBaseToolStripMenuItem.Name = "compareToBaseToolStripMenuItem";
             this.compareToBaseToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.compareToBaseToolStripMenuItem.Text = "Compare to BASE";
+            this.compareToBaseToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.R;
             this.compareToBaseToolStripMenuItem.Click += new System.EventHandler(this.compareToBaseToolStripMenuItem_Click);
             // 
             // compareToolStripMenuItem
