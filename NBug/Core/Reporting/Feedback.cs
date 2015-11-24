@@ -13,14 +13,12 @@ namespace NBug.Core.Reporting
 
 	internal class Feedback
 	{
-		private Report report;
-
 		internal Feedback()
 		{
 			try
 			{
 				// ToDo: Wrap and submit the feedback using Submit.Dispatcher()
-				this.report = new Report(null);
+				new Report(null);
 			}
 			catch (Exception exception)
 			{

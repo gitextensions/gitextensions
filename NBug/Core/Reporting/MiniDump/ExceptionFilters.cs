@@ -70,7 +70,7 @@ namespace NBug.Core.Reporting.MiniDump
 		internal static void FailFast(Action body)
 		{
 			Filter(
-				body, 
+				body,
 				e =>
 					{
 						Debugger.Log(10, "ExceptionFilter", "Saw unexpected exception: " + e.ToString());
@@ -93,7 +93,7 @@ namespace NBug.Core.Reporting.MiniDump
 						}
 
 						return false; // should never be reached
-					}, 
+					},
 				null);
 		}
 
@@ -129,12 +129,12 @@ namespace NBug.Core.Reporting.MiniDump
 		internal static void Filter(Action body, Action<Exception> filter)
 		{
 			Filter(
-				body, 
+				body,
 				e =>
 					{
 						filter(e);
 						return false;
-					}, 
+					},
 				null);
 		}
 
@@ -215,7 +215,7 @@ namespace NBug.Core.Reporting.MiniDump
 #endif
 
 			Filter(
-				body, 
+				body,
 				e =>
 					{
 						// If the thrown exception is a sub-type (including the same time) of at least one of the provided types then
@@ -229,7 +229,7 @@ namespace NBug.Core.Reporting.MiniDump
 						}
 
 						return false;
-					}, 
+					},
 				e => handler((TExceptionBase)e));
 		}
 
@@ -290,15 +290,15 @@ namespace NBug.Core.Reporting.MiniDump
 			// (so the cast to Exception in the code will always succeed).  C# and VB always do this, C++/CLI doesn't.
 			assembly.SetCustomAttribute(
 				new CustomAttributeBuilder(
-					typeof(RuntimeCompatibilityAttribute).GetConstructor(new Type[] { }), 
-					new object[] { }, 
-					new[] { typeof(RuntimeCompatibilityAttribute).GetProperty("WrapNonExceptionThrows") }, 
+					typeof(RuntimeCompatibilityAttribute).GetConstructor(new Type[] { }),
+					new object[] { },
+					new[] { typeof(RuntimeCompatibilityAttribute).GetProperty("WrapNonExceptionThrows") },
 					new object[] { true }));
 
 			// Add an assembly attribute that tells the CLR not to attempt to load PDBs when compiling this assembly
 			assembly.SetCustomAttribute(
 				new CustomAttributeBuilder(
-					typeof(DebuggableAttribute).GetConstructor(new[] { typeof(DebuggableAttribute.DebuggingModes) }), 
+					typeof(DebuggableAttribute).GetConstructor(new[] { typeof(DebuggableAttribute.DebuggingModes) }),
 					new object[] { DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints }));
 
 			// Create the type and method which will contain the filter
@@ -307,7 +307,6 @@ namespace NBug.Core.Reporting.MiniDump
 			var meth = type.DefineMethod("InvokeWithFilter", MethodAttributes.Public | MethodAttributes.Static, typeof(void), argTypes);
 
 			var il = meth.GetILGenerator();
-			var exLoc = il.DeclareLocal(typeof(Exception));
 
 			// Invoke the body delegate inside the try
 			il.BeginExceptionBlock();
