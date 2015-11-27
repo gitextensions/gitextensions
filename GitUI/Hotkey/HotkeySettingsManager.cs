@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using ResourceManager;
 
 namespace GitUI.Hotkey
 {
@@ -29,7 +30,7 @@ namespace GitUI.Hotkey
         private static List<Keys> UsedKeys = new List<Keys>();
 
         /// <summary>
-        /// Returns wheter the hotkey is already assigned.
+        /// Returns whether the hotkey is already assigned.
         /// </summary>
         /// <param name="keyData"></param>
         /// <returns></returns>
@@ -93,8 +94,8 @@ namespace GitUI.Hotkey
                 for (int i = 0; i < hs.Commands.Length; i++)
                 {
                     HotkeyCommand hotkeyCommand = hs.Commands[i];
-                    
-                    if (hotkeyCommand != null && !UsedKeys.Contains(hotkeyCommand.KeyData)) 
+
+                    if (hotkeyCommand != null && !UsedKeys.Contains(hotkeyCommand.KeyData))
                         UsedKeys.Add(hotkeyCommand.KeyData);
                 }
             }
@@ -172,13 +173,13 @@ namespace GitUI.Hotkey
             Func<object, Keys, HotkeyCommand> hk = (en, k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
 
             HotkeyCommand[] j = LoadScriptHotkeys();
-            
-            
+
+
             return new[]
               {
-                  
+
                 // FormCommit
-                new HotkeySettings(FormCommit.HotkeySettingsName, 
+                new HotkeySettings(FormCommit.HotkeySettingsName,
                     hk(FormCommit.Commands.AddToGitIgnore, Keys.None),
                     hk(FormCommit.Commands.DeleteSelectedFiles, Keys.Delete),
                     hk(FormCommit.Commands.FocusUnstagedFiles, Keys.Control | Keys.D1),
@@ -188,6 +189,7 @@ namespace GitUI.Hotkey
                     hk(FormCommit.Commands.ResetSelectedFiles, Keys.R),
                     hk(FormCommit.Commands.StageSelectedFile, Keys.S),
                     hk(FormCommit.Commands.UnStageSelectedFile, Keys.U),
+                    hk(FormCommit.Commands.ShowHistory, Keys.H),
                     hk(FormCommit.Commands.ToggleSelectionFilter, Keys.Control | Keys.F)),
                 new HotkeySettings(FormBrowse.HotkeySettingsName,
                     hk(FormBrowse.Commands.GitBash, Keys.Control | Keys.G),
@@ -250,7 +252,7 @@ namespace GitUI.Hotkey
 
             HotkeyCommand[] scriptKeys = new HotkeyCommand[curScripts.Count];
             /* define unusable int for identifying a shortcut for a custom script is pressed
-             * all integers above 9000 represent a scripthotkey 
+             * all integers above 9000 represent a scripthotkey
              * these integers are never matched in the 'switch' routine on a form and
              * therefore execute the 'default' action
              */

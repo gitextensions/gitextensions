@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands.Repository;
 using GitUI.Properties;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
@@ -163,6 +164,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
                 OnClick(e);
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                CancelBranchNameLoad();
+                if (_branchNameLoader != null)
+                    _branchNameLoader.Dispose();
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

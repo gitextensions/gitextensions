@@ -33,7 +33,7 @@ namespace JenkinsIntegration
             {
                 if (EnvUtils.IsNet4FullOrHigher())
                     return null;
-                return ".Net 4 full freamwork required";
+                return ".Net 4 full framework required";
             }
         }
     }
@@ -65,11 +65,9 @@ namespace JenkinsIntegration
                                      ? new Uri(hostName, UriKind.Absolute)
                                      : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
 
-                _httpClient = new HttpClient
-                    {
-                        Timeout = TimeSpan.FromMinutes(2),
-                        BaseAddress = baseAdress
-                    };
+                _httpClient = new HttpClient(new HttpClientHandler(){ UseDefaultCredentials = true});
+                _httpClient.Timeout = TimeSpan.FromMinutes(2);
+                _httpClient.BaseAddress = baseAdress;
 
                 var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
 

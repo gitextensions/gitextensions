@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using ResourceManager;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
@@ -70,7 +71,7 @@ namespace GitUI
                 {
                     int index = text.IndexOf('%');
                     int progressValue;
-                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue))
+                    if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue) && progressValue >= 0)
                     {
                         if (ProgressBar.Style != ProgressBarStyle.Blocks)
                             ProgressBar.Style = ProgressBarStyle.Blocks;
@@ -98,7 +99,7 @@ namespace GitUI
         public void AppendMessageCrossThread(string text)
         {
             if (syncContext == SynchronizationContext.Current)
-                AppendMessage(text); 
+                AppendMessage(text);
             else
                 syncContext.Post(o => AppendMessage(text), this);
         }
@@ -118,7 +119,7 @@ namespace GitUI
             if (outpuTimer != null)
                 outpuTimer.Append(text);
         }
-        
+
         private void AppendMessage(string text)
         {
             //if not disposed
@@ -136,7 +137,7 @@ namespace GitUI
         {
             if (outpuTimer != null)
                 outpuTimer.Stop(true);
-            AppendMessage("Done");
+            AppendMessageCrossThread("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
             Ok.Focus();

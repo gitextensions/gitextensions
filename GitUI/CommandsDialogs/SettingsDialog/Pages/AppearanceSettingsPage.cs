@@ -12,6 +12,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AppearanceSettingsPage : SettingsPageWithHeader
     {
+        private readonly TranslationString _noDictFile =
+            new TranslationString("None");
         private readonly TranslationString _noDictFilesFound =
             new TranslationString("No dictionary files found in: {0}");
 
@@ -33,15 +35,35 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return "graph,visual studio,author,image,font,lang,language,spell,spelling";
         }
 
-        // TODO: needed?
-        ////protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        ////{
-        ////    if (!e.Cancel)
-        ////    {
-        ////        diffFontDialog.Dispose();
-        ////        applicationDialog.Dispose();
-        ////    }
-        ////}
+        private int GetTruncatePathMethodIndex(string text)
+        {
+            switch (text.ToLowerInvariant())
+            {
+                case "compact":
+                    return 1;
+                case "trimstart":
+                    return 2;
+                case "fileNameOnly":
+                    return 3;
+                default:
+                    return 0;
+            }
+        }
+
+        private string GetTruncatePathMethodString(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    return "compact";
+                case 2:
+                    return "trimstart";
+                case 3:
+                    return "fileNameOnly";
+                default:
+                    return "none";
+            }
+        }
 
         protected override void SettingsToPage()
         {
@@ -65,9 +87,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Language.Items.AddRange(Translator.GetAllTranslations());
             Language.Text = AppSettings.Translation;
 
-            _NO_TRANSLATE_truncatePathMethod.Text = AppSettings.TruncatePathMethod;
+            truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
 
-            Dictionary.Text = AppSettings.Dictionary;
+            if (AppSettings.Dictionary.Equals("none", StringComparison.InvariantCultureIgnoreCase))
+                Dictionary.SelectedIndex = 0;
+            else
+                Dictionary.Text = AppSettings.Dictionary;
 
             chkShowRelativeDate.Checked = AppSettings.RelativeDate;
 
@@ -80,7 +105,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
-            AppSettings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
+            AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
             AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
 
             int authorImageSize;
@@ -115,7 +140,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.RelativeDate = chkShowRelativeDate.Checked;
 
-            AppSettings.Dictionary = Dictionary.Text;
+            AppSettings.Dictionary = Dictionary.SelectedIndex == 0 ? "none" : Dictionary.Text;
 
             AppSettings.DiffFont = _diffFont;
             AppSettings.Font = _applicationFont;
@@ -127,7 +152,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             try
             {
                 Dictionary.Items.Clear();
-                Dictionary.Items.Add("None");
+                Dictionary.Items.Add(_noDictFile.Text);
                 foreach (
                     string fileName in
                         Directory.GetFiles(AppSettings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))

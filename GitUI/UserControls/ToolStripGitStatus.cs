@@ -52,7 +52,7 @@ namespace GitUI
             {
                 _UICommandsSource = value;
                 _UICommandsSource.GitUICommandsChanged += GitUICommandsChanged;
-                GitUICommandsChanged(UICommandsSource, null);
+                GitUICommandsChanged(UICommandsSource, new GitUICommandsChangedEventArgs(oldCommands: null));
             }
         }
         
@@ -103,8 +103,10 @@ namespace GitUI
             _gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;            
         }
 
-        private void GitUICommandsChanged(IGitUICommandsSource source, GitUICommands oldCommands)
+        private void GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
+            var oldCommands = e.OldCommands;
+
             if (oldCommands != null)
             {
                 oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
@@ -250,7 +252,13 @@ namespace GitUI
             {
                 // If the previous status call hasn't exited yet, we'll wait until it is
                 // so we don't queue up a bunch of commands
-                if (_commandIsRunning || UICommands.RepoChangedNotifier.IsLocked || Module.IsRunningGitProcess())
+                if (_commandIsRunning ||
+                    //don't update status while repository is being modyfied by GitExt
+                    //or while any git process is running, mostly repository status will change
+                    //after these actions. Moreover, calling git status while other git command is performed
+                    //can cause repository crash
+                    UICommands.RepoChangedNotifier.IsLocked ||
+                    GitCommandHelpers.VersionInUse.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess())
                 {
                     _statusIsUpToDate = false;//tell that computed status isn't up to date
                     return;

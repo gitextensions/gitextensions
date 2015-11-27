@@ -45,6 +45,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
@@ -59,6 +60,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="copy_plugins.sh  ${SolutionDir} ${ProjectConfigName}" workingdir="${TargetDir}" />
@@ -74,9 +76,6 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="NBug">
-      <HintPath>..\packages\NBug.1.1.1\lib\net40-client\NBug.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -108,6 +107,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
+      <Project>{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}</Project>
+      <Name>NBug</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitUI\GitUI.csproj">
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
@@ -184,6 +187,10 @@
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
       <Name>ResourceManager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
+      <Project>{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}</Project>
+      <Name>NBug</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -217,8 +224,8 @@
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
     <PostBuildEvent>$(ProjectDir)copy_plugins.cmd $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">                                                                                                                                            
-      <PostBuildEvent>$(ProjectDir)copy_plugins.sh $(SolutionDir) $(ConfigurationName)</PostBuildEvent>
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <PostBuildEvent>$(ProjectDir)copy_plugins.sh $(SolutionDir) $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

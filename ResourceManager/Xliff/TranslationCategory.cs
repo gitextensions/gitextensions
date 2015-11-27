@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace ResourceManager.Xliff
 {
-    [DebuggerDisplay("{name}")]
+    [DebuggerDisplay("{_name}")]
     public class TranslationCategory : IComparable<TranslationCategory>
     {
         public TranslationCategory()
@@ -61,7 +61,7 @@ namespace ResourceManager.Xliff
 
         private TranslationBody _body = new TranslationBody();
         [XmlElement(ElementName = "body")]
-        public TranslationBody Body 
+        public TranslationBody Body
         {
             get
             {

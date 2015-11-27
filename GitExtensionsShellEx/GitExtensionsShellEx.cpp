@@ -29,7 +29,7 @@ void XTrace(LPCTSTR lpszFormat, ...)
 #define MIIM_STRING      0x00000040
 #define MIIM_BITMAP      0x00000080
 
-const wchar_t* const gitExCommandNames[] = 
+const wchar_t* const gitExCommandNames[] =
 {
     L"addfiles",
     L"applypatch",
@@ -49,7 +49,7 @@ const wchar_t* const gitExCommandNames[] =
     L"settings",
     L"stash",
     L"viewdiff"
-}; 
+};
 
 C_ASSERT(gcMaxValue == _countof(gitExCommandNames));
 
@@ -383,7 +383,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
     //by our shell extension when the folder menu is inserted.
     TCHAR menubuf[MAX_PATH];
     int count = GetMenuItemCount(hMenu);
-    for (int i=0; i<count; ++i)
+    for (int i = 0; i < count; ++i)
     {
         MENUITEMINFO miif;
         SecureZeroMemory(&miif, sizeof(MENUITEMINFO));
@@ -392,7 +392,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
         miif.dwTypeData = menubuf;
         miif.cch = _countof(menubuf);
         GetMenuItemInfo(hMenu, i, TRUE, &miif);
-        if (miif.dwItemData == (ULONG_PTR)_Module.GetModuleInstance())
+        if (miif.dwItemData == (ULONG_PTR) _Module.GetModuleInstance())
         {
             DBG_TRACE(L"Menu already added");
             return S_OK;
@@ -403,7 +403,8 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
     if (szCascadeShellMenuItems.IsEmpty())
         szCascadeShellMenuItems = "110111000111111111";
     bool cascadeContextMenu = szCascadeShellMenuItems.Find('1') != -1;
-    bool alwaysShowAllCommands = GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"AlwaysShowAllCommands");
+    SHORT keyState = GetKeyState(VK_SHIFT);
+    bool alwaysShowAllCommands = (keyState & 0x8000) || GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"AlwaysShowAllCommands");
 
     HMENU popupMenu = NULL;
     if (cascadeContextMenu)
@@ -608,9 +609,16 @@ void CGitExtensionsShellEx::RunGitEx(const TCHAR* command)
     CString szCommandName = command;
     CString args;
 
+    if (szFile.GetLength() > 1 && szFile[szFile.GetLength() - 1] == '\\')
+    {
+        // Escape the final backslash to avoid escaping the quote.
+        // This is a problem for drive roots on Windows, such as "C:\".
+        szFile += '\\';
+    }
+
     args += command;
     args += " \"";
-    args += m_szFile;
+    args += szFile;
     args += "\"";
 
     CString dir = "";

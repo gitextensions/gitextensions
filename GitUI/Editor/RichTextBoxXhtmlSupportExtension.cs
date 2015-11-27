@@ -30,10 +30,10 @@ namespace GitUI.Editor.RichTextBoxExtension
         /// control so that no events are sent.
         /// </para>
         /// </remarks>
-        private static int BeginUpdate(HandleRef handleRef)
+        private static IntPtr BeginUpdate(HandleRef handleRef)
         {
             // Prevent the control from raising any events.
-            int oldEventMask = NativeMethods.SendMessage(handleRef,
+            IntPtr oldEventMask = NativeMethods.SendMessage(handleRef,
                 NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, IntPtr.Zero);
 
             // Prevent the control from redrawing itself.
@@ -43,7 +43,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             return oldEventMask;
         }
 
-        public static int BeginUpdate(this RichTextBox rtb)
+        public static IntPtr BeginUpdate(this RichTextBox rtb)
         {
             var handleRef = new HandleRef(rtb, rtb.Handle);
             return BeginUpdate(handleRef);
@@ -57,7 +57,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         /// made to BeginUpdate. It resets the event mask to it's
         /// original value and enables redrawing of the control.
         /// </remarks>
-        private static void EndUpdate(HandleRef handleRef, int oldEventMask)
+        private static void EndUpdate(HandleRef handleRef, IntPtr oldEventMask)
         {
             // Allow the control to redraw itself.
             NativeMethods.SendMessage(handleRef,
@@ -65,10 +65,10 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             // Allow the control to raise event messages.
             NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, (IntPtr)oldEventMask);
+                NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, oldEventMask);
         }
 
-        public static void EndUpdate(this RichTextBox rtb, int oldEventMask)
+        public static void EndUpdate(this RichTextBox rtb, IntPtr oldEventMask)
         {
             var handleRef = new HandleRef(rtb, rtb.Handle);
             EndUpdate(handleRef, oldEventMask);
@@ -330,25 +330,25 @@ namespace GitUI.Editor.RichTextBoxExtension
             internal const int LF_FACESIZE = 32;
 
             [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern int SendMessage(HandleRef hWnd,
+            internal static extern IntPtr SendMessage(HandleRef hWnd,
                 int msg,
                 IntPtr wParam,
                 IntPtr lParam);
 
             [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern int SendMessage(HandleRef hWnd,
+            internal static extern IntPtr SendMessage(HandleRef hWnd,
                 int msg,
                 IntPtr wParam,
                 ref Point lParam);
 
             [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern int SendMessage(HandleRef hWnd,
+            internal static extern IntPtr SendMessage(HandleRef hWnd,
                 int msg,
                 IntPtr wParam,
                 ref PARAFORMAT lp);
 
             [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern int SendMessage(HandleRef hWnd,
+            internal static extern IntPtr SendMessage(HandleRef hWnd,
                 int msg,
                 IntPtr wParam,
                 ref CHARFORMAT lp);
@@ -682,7 +682,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             StringBuilder strHTML = new StringBuilder();
 
             rtb.HideSelection = true;
-            int oldMask = rtb.BeginUpdate();
+            IntPtr oldMask = rtb.BeginUpdate();
 
             int nStart = rtb.SelectionStart;
             int nEnd = rtb.SelectionLength;
@@ -1039,7 +1039,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         public static string GetPlaintText(this RichTextBox rtb)
         {
             //rtb.HideSelection = true;
-            int oldMask = rtb.BeginUpdate();
+            IntPtr oldMask = rtb.BeginUpdate();
 
             int nStart = rtb.SelectionStart;
             int nEnd = rtb.SelectionLength;
@@ -1076,6 +1076,34 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
 
             return text.ToString();
+        }
+
+        /// <summary>
+        /// Returns input text with characters disallowed by XML spec (e.g. most control codes in 0x00-0x20 range)
+        /// replaced with equivalent character references or question marks if there is an unrecoverable error.
+        /// Although they are disallowed even when escaped, this step seems necessary to make them acceptable
+        /// by XmlReader with CheckCharacters disabled.
+        /// </summary>
+        private static string EscapeNonXMLChars(string input)
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (char ch in input)
+            {
+                if (XmlConvert.IsXmlChar(ch))
+                {
+                    result.Append(ch);
+                }
+                else
+                    try
+                    {
+                        result.Append("&#" + (int)ch + ';');
+                    }
+                    catch (ArgumentException)
+                    {
+                        result.Append('?');
+                    }
+            }
+            return result.ToString();
         }
 
         private class RTFCurrentState
@@ -1117,15 +1145,16 @@ namespace GitUI.Editor.RichTextBoxExtension
             cs.cf = GetDefaultCharFormat(handleRef); // to apply character formatting
             cs.pf = GetDefaultParaFormat(handleRef); // to apply paragraph formatting
 
-            int oldMask = BeginUpdate(handleRef);
+            IntPtr oldMask = BeginUpdate(handleRef);
             SetHideSelectionInternal(handleRef, true);
 
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.ConformanceLevel = ConformanceLevel.Fragment;
+            settings.CheckCharacters = false;
 
             try
             {
-                using (StringReader stringreader = new StringReader(xhtmlText))
+                using (StringReader stringreader = new StringReader(EscapeNonXMLChars(xhtmlText)))
                 {
                     XmlReader reader = XmlReader.Create(stringreader, settings);
                     while (reader.Read())

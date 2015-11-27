@@ -46,6 +46,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,10 +55,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SmartFormat">
-      <HintPath>..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll</HintPath>
+    <Reference Include="SmartFormat, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SmartFormat.NET.1.6.1.0\lib\net40-Client\SmartFormat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -80,6 +83,8 @@
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="Git\AuthorEmailEqualityComparer.cs" />
+    <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="RemoteActionResult.cs" />
     <Compile Include="Settings\BasicSettingTypes.cs" />
     <Compile Include="Settings\CommonSettingsTypes.cs" />
@@ -100,7 +105,7 @@
     <Compile Include="Git\GitBisectOption.cs" />
     <Compile Include="Git\GitCheckoutBranchCmd.cs" />
     <Compile Include="Git\GitCommand.cs" />
-    <Compile Include="Git\EncodingHelper.cs" />
+    <Compile Include="Utils\EncodingHelper.cs" />
     <Compile Include="Git\GitCommandResult.cs" />
     <Compile Include="Git\GitConvert.cs" />
     <Compile Include="Git\GitDeleteBranchCmd.cs" />
@@ -113,12 +118,9 @@
     <Compile Include="Git\GitSvnCommandHelpers.cs" />
     <Compile Include="Git\GitCommandsInstance.cs" />
     <Compile Include="Git\RemoteInfo.cs" />
-    <Compile Include="LinkFactory.cs" />
-    <Compile Include="LinqExtensions.cs" />
     <Compile Include="LockableNotifier.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
     <Compile Include="CommitHelper.cs" />
-    <Compile Include="CommitInformation.cs" />
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\ConfigSection.cs" />
     <Compile Include="Git\GitCommandCache.cs" />
@@ -153,11 +155,11 @@
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
     <Compile Include="Statistics\ImpactLoader.cs" />
-    <Compile Include="Strings.cs" />
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="SynchronizedProcessReader.cs" />
     <Compile Include="System.cs" />
     <Compile Include="Utils\JsonSerializer.cs" />
+    <Compile Include="Utils\RFC2047Decoder.cs" />
     <Compile Include="Utils\WeakRefCache.cs" />
     <Compile Include="XmlSerializableDictionary.cs" />
   </ItemGroup>
@@ -172,13 +174,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj">
+      <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
+      <Name>GitExtUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
-      <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
-      <Name>ResourceManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

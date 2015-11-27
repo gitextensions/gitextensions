@@ -35,7 +35,7 @@ namespace Github3
                     if (repo.Organization != null)
                         return null;
 
-                    repo = Github3.github.getRepository(Owner, Name);
+                    repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
                 return repo.Parent == null ? null : repo.Parent.GitUrl;
             }
@@ -53,7 +53,7 @@ namespace Github3
                     if (repo.Organization != null)
                         return null;
 
-                    repo = Github3.github.getRepository(Owner, Name);
+                    repo = Github3Plugin.github.getRepository(Owner, Name);
                 }
 
                 return repo.Parent == null ? null : repo.Parent.Owner.Login;

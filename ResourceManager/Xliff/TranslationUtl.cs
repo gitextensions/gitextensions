@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace ResourceManager.Xliff
             return text.Any(Char.IsLetter);
         }
 
-        public static IEnumerable<Tuple<string, object>> GetObjProperties(object obj, string objName)
+        public static IEnumerable<Tuple<string, object>> GetObjFields(object obj, string objName)
         {
             if (objName != null)
                 yield return new Tuple<string, object>(objName, obj);
@@ -32,78 +33,183 @@ namespace ResourceManager.Xliff
             }
         }
 
+        public static void AddTranslationItem(string category, object obj, string propName, ITranslation translation)
+        {
+            if (obj == null)
+                return;
+
+            var propertyInfo = obj.GetType().GetProperty(propName,
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
+                BindingFlags.NonPublic | BindingFlags.SetProperty);
+            if (propertyInfo == null)
+            {
+                return;
+            }
+            var value = propertyInfo.GetValue(obj, null) as string;
+            if (value != null && AllowTranslateProperty(value))
+            {
+                translation.AddTranslationItem(category, propName, "Text", value);
+            }
+        }
+
         public static void AddTranslationItemsFromFields(string category, object obj, ITranslation translation)
         {
             if (obj == null)
                 return;
 
-            AddTranslationItemsFromList(category, translation, GetObjProperties(obj, "$this"));
+            AddTranslationItemsFromList(category, translation, GetObjFields(obj, "$this"));
+        }
+
+        private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(Tuple<string, object> item)
+        {
+            object itemObj = item.Item2;
+            if (itemObj == null)
+                yield break;
+
+            //Skip controls with a name started with "_NO_TRANSLATE_"
+            //this is a naming convention, these are not translated
+            string itemName = item.Item1;
+            if (itemName.StartsWith("_NO_TRANSLATE_"))
+                yield break;
+
+            Func<PropertyInfo, bool> isTranslatableItem;
+            if (itemObj is DataGridViewColumn)
+            {
+                var c = itemObj as DataGridViewColumn;
+
+                isTranslatableItem = propertyInfo => IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
+            }
+            else if (itemObj is ComboBox || itemObj is ListBox)
+            {
+                isTranslatableItem = propertyInfo => IsTranslatableItemInBox(propertyInfo, itemObj);
+            }
+            else
+            {
+                isTranslatableItem = IsTranslatableItemInComponent;
+            }
+
+            foreach (var propertyInfo in itemObj.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
+                               BindingFlags.NonPublic | BindingFlags.SetProperty)
+                .Where(isTranslatableItem))
+            {
+                yield return propertyInfo;
+            }
         }
 
         public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items)
         {
-            Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
+            foreach (var item in items)
             {
-                var value = (string)propertyInfo.GetValue(itemObj, null);
-                if (AllowTranslateProperty(value))
+                var itemName = item.Item1;
+                var itemObj = item.Item2;
+                foreach (var property in GetItemPropertiesEnumerator(item))
                 {
-                    translation.AddTranslationItem(category, item, propertyInfo.Name, value);
+                    var value = property.GetValue(itemObj, null);
+                    if (value == null)
+                        continue;
+                    var valueStr = value as string;
+                    if (valueStr != null)
+                    {
+                        if (AllowTranslateProperty(valueStr))
+                        {
+                            translation.AddTranslationItem(category, itemName, property.Name, valueStr);
+                        }
+                        continue;
+                    }
+
+                    var listItems = value as IList;
+                    if (listItems != null)
+                    {
+                        for (int index = 0; index < listItems.Count; index++)
+                        {
+                            var listItem = listItems[index] as string;
+                            if (AllowTranslateProperty(listItem))
+                            {
+                                translation.AddTranslationItem(category, itemName, "Item" + index, listItem);
+                            }
+                        }
+                    }
                 }
-            };
-            ForEachItem(items, action);
+            }
         }
 
-        public static void ForEachItem(IEnumerable<Tuple<string, object>> items, Action<string, object, PropertyInfo> action)
+        public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items)
         {
             foreach (var item in items)
             {
                 string itemName = item.Item1;
                 object itemObj = item.Item2;
 
-                //Skip controls with a name started with "_NO_TRANSLATE_"
-                //this is a naming convention, these are not translated
-                if (itemName.StartsWith("_NO_TRANSLATE_"))
-                    continue;
-
-                Func<PropertyInfo, bool> isTranslatableItem;
-                if (itemObj is DataGridViewColumn)
+                foreach (var propertyInfo in GetItemPropertiesEnumerator(item))
                 {
-                    var c = itemObj as DataGridViewColumn;
+                    var property = propertyInfo; // copy for lambda
+                    string propertyName = property.Name;
+                    if (propertyName == "Items" && typeof(IList).IsAssignableFrom(property.PropertyType))
+                    {
+                        var list = (IList) property.GetValue(itemObj, null);
+                        for (int index = 0; index < list.Count; index++)
+                        {
+                            propertyName = "Item" + index;
+                            var listValue = list[index] as string;
+                            if (listValue != null)
+                            {
+                                Func<string> provideDefaultValue = () => listValue;
+                                string value = translation.TranslateItem(category, itemName, propertyName,
+                                    provideDefaultValue);
 
-                    isTranslatableItem = propertyInfo => IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
+                                if (!string.IsNullOrEmpty(value))
+                                {
+                                    list[index] = value;
+                                }
+                            }
+                        }
+                    }
+                    else if (property.PropertyType.IsEquivalentTo(typeof(string)))
+                    {
+                        Func<string> provideDefaultValue = () => (string)property.GetValue(itemObj, null);
+                        string value = translation.TranslateItem(category, itemName, propertyName, provideDefaultValue);
+
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            if (property.CanWrite)
+                                property.SetValue(itemObj, value, null);
+                        }
+                        else if (property.Name == "ToolTipText" &&
+                                 !string.IsNullOrEmpty((string)property.GetValue(itemObj, null)))
+                        {
+                            value = translation.TranslateItem(category, itemName, "Text", provideDefaultValue);
+                            if (!string.IsNullOrEmpty(value))
+                            {
+                                if (property.CanWrite)
+                                    property.SetValue(itemObj, value, null);
+                            }
+                        }
+                    }
                 }
-                else
-                {
-                    isTranslatableItem = IsTranslatableItemInComponent;
-                }
-
-                Action<PropertyInfo> paction = propertyInfo => action(itemName, itemObj, propertyInfo);
-
-                ForEachProperty(itemObj, paction, isTranslatableItem);
             }
         }
 
-        public static void TranslateItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items) 
+        public static void TranslateProperty(string category, object obj, string propName, ITranslation translation)
         {
-            Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
+            if (obj == null)
+                return;
+
+            var propertyInfo = obj.GetType().GetProperty(propName,
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
+                BindingFlags.NonPublic | BindingFlags.SetProperty);
+            if (propertyInfo == null)
             {
-                string value = translation.TranslateItem(category, item, propertyInfo.Name, null);
-                if (!String.IsNullOrEmpty(value))
-                {
-                    if (propertyInfo.CanWrite)
-                        propertyInfo.SetValue(itemObj, value, null);
-                }
-                else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
-                {
-                    value = translation.TranslateItem(category, item, "Text", null);
-                    if (!String.IsNullOrEmpty(value))
-                    {
-                        if (propertyInfo.CanWrite)
-                            propertyInfo.SetValue(itemObj, value, null);
-                    }
-                }
-            };
-            ForEachItem(items, action);
+                return;
+            }
+
+            Func<string> provideDefaultValue = () => "";
+            string value = translation.TranslateItem(category, propName, "Text", provideDefaultValue);
+            if (!String.IsNullOrEmpty(value))
+            {
+                if (propertyInfo.CanWrite)
+                    propertyInfo.SetValue(obj, value, null);
+            }
         }
 
         public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
@@ -111,24 +217,30 @@ namespace ResourceManager.Xliff
             if (obj == null)
                 return;
 
-            TranslateItemsFromList(category, translation, GetObjProperties(obj, "$this"));
+            TranslateItemsFromList(category, translation, GetObjFields(obj, "$this"));
         }
 
-        public static void ForEachProperty(object obj, Action<PropertyInfo> action, Func<PropertyInfo, bool> IsTranslatableItem)
+        private static bool IsTranslatableItemInDataGridViewColumn(PropertyInfo propertyInfo, DataGridViewColumn viewCol)
         {
-            if (obj == null)
-                return;
-
-            foreach (var propertyInfo in obj.GetType()
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
-                               BindingFlags.NonPublic | BindingFlags.SetProperty)
-                .Where(IsTranslatableItem))
-            {
-                action(propertyInfo);
-            }
+            return propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCulture) && viewCol.Visible;
         }
 
-        public static bool IsTranslatableItemInComponent(PropertyInfo propertyInfo)
+        private static bool IsTranslatableItemInBox(PropertyInfo propertyInfo, object itemObj)
+        {
+            if (IsTranslatableItemInComponent(propertyInfo))
+                return true;
+            if (propertyInfo.Name.Equals("Items", StringComparison.CurrentCulture))
+            {
+                var items = propertyInfo.GetValue(itemObj, null) as IList;
+                if (items != null && items.Count != 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool IsTranslatableItemInComponent(PropertyInfo propertyInfo)
         {
             if (propertyInfo.PropertyType != typeof(string))
                 return false;
@@ -141,11 +253,6 @@ namespace ResourceManager.Xliff
             if (propertyInfo.Name.Equals("Title", StringComparison.CurrentCulture))
                 return true;
             return false;
-        }
-
-        public static bool IsTranslatableItemInDataGridViewColumn(PropertyInfo propertyInfo, DataGridViewColumn viewCol)
-        {
-            return propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCulture) && viewCol.Visible;
         }
 
         static readonly string[] UnTranslatableDLLs =
@@ -162,7 +269,7 @@ namespace ResourceManager.Xliff
         };
 
         /// <summary>true if the specified <see cref="Assembly"/> may be translatable.</summary>
-        public static bool IsTranslatable(this Assembly assembly)
+        private static bool IsTranslatable(this Assembly assembly)
         {
             bool isInvalid = UnTranslatableDLLs.Any(
                 asm => assembly.FullName.StartsWith(asm, StringComparison.OrdinalIgnoreCase));
@@ -170,20 +277,35 @@ namespace ResourceManager.Xliff
             return !isInvalid;
         }
 
-        public static List<Type> GetTranslatableTypes()
+        /// <summary>true if the specified <see cref="Assembly"/> may be translatable.</summary>
+        private static bool IsPlugin(this Assembly assembly)
         {
-            var list = new List<Type>();
+            return assembly.CodeBase.IndexOf("Plugins/", StringComparison.OrdinalIgnoreCase) > 0;
+        }
+
+        public static Dictionary<string, List<Type>> GetTranslatableTypes()
+        {
+            var dictionary = new Dictionary<string, List<Type>>();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (!assembly.IsTranslatable())
                     continue;
                 foreach (var type in assembly.GetTypes())
                 {
-                    if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
+                    if (type.IsClass && typeof (ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
+                    {
+                        var val = !assembly.IsPlugin() ? "" : ".Plugins";
+                        List<Type> list;
+                        if (!dictionary.TryGetValue(val, out list))
+                        {
+                            list = new List<Type>();
+                            dictionary.Add(val, list);
+                        }
                         list.Add(type);
+                    }
                 }
             }
-            return list;
+            return dictionary;
         }
 
         public static object CreateInstanceOfClass(Type type)

@@ -45,9 +45,9 @@
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.regexFilter = new System.Windows.Forms.TextBox();
             this.IncludeRemoteBranches = new System.Windows.Forms.CheckBox();
-            this.remote = new System.Windows.Forms.TextBox();
+            this._NO_TRANSLATE_Remote = new System.Windows.Forms.TextBox();
             this.useRegexFilter = new System.Windows.Forms.CheckBox();
-            this.Refresh = new System.Windows.Forms.Button();
+            this.RefreshBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.mergedIntoBranch = new System.Windows.Forms.TextBox();
@@ -273,9 +273,9 @@
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.Controls.Add(this.regexFilter, 1, 3);
             this.tableLayoutPanel3.Controls.Add(this.IncludeRemoteBranches, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.remote, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_Remote, 1, 2);
             this.tableLayoutPanel3.Controls.Add(this.useRegexFilter, 0, 3);
-            this.tableLayoutPanel3.Controls.Add(this.Refresh, 1, 5);
+            this.tableLayoutPanel3.Controls.Add(this.RefreshBtn, 1, 5);
             this.tableLayoutPanel3.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.mergedIntoBranch, 1, 1);
@@ -317,12 +317,12 @@
             // 
             // remote
             // 
-            this.remote.Location = new System.Drawing.Point(380, 63);
-            this.remote.Name = "remote";
-            this.remote.Size = new System.Drawing.Size(218, 20);
-            this.remote.TabIndex = 4;
-            this.remote.Text = "origin";
-            this.remote.TextChanged += new System.EventHandler(this.remote_TextChanged);
+            this._NO_TRANSLATE_Remote.Location = new System.Drawing.Point(380, 63);
+            this._NO_TRANSLATE_Remote.Name = "remote";
+            this._NO_TRANSLATE_Remote.Size = new System.Drawing.Size(218, 20);
+            this._NO_TRANSLATE_Remote.TabIndex = 4;
+            this._NO_TRANSLATE_Remote.Text = "origin";
+            this._NO_TRANSLATE_Remote.TextChanged += new System.EventHandler(this.remote_TextChanged);
             // 
             // useRegexFilter
             // 
@@ -337,13 +337,13 @@
             // 
             // Refresh
             // 
-            this.Refresh.Location = new System.Drawing.Point(380, 153);
-            this.Refresh.Name = "Refresh";
-            this.Refresh.Size = new System.Drawing.Size(124, 23);
-            this.Refresh.TabIndex = 7;
-            this.Refresh.Text = "Search branches";
-            this.Refresh.UseVisualStyleBackColor = true;
-            this.Refresh.Click += new System.EventHandler(this.Refresh_Click);
+            this.RefreshBtn.Location = new System.Drawing.Point(380, 153);
+            this.RefreshBtn.Name = "Refresh";
+            this.RefreshBtn.Size = new System.Drawing.Size(124, 23);
+            this.RefreshBtn.TabIndex = 7;
+            this.RefreshBtn.Text = "Search branches";
+            this.RefreshBtn.UseVisualStyleBackColor = true;
+            this.RefreshBtn.Click += new System.EventHandler(this.Refresh_Click);
             // 
             // label1
             // 
@@ -438,11 +438,11 @@
         private System.Windows.Forms.Button Delete;
         private System.Windows.Forms.Button buttonSettings;
         private System.Windows.Forms.CheckBox IncludeRemoteBranches;
-        private System.Windows.Forms.TextBox remote;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_Remote;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.TextBox regexFilter;
         private System.Windows.Forms.CheckBox useRegexFilter;
-        private System.Windows.Forms.Button Refresh;
+        private System.Windows.Forms.Button RefreshBtn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox mergedIntoBranch;

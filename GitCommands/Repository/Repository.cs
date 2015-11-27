@@ -27,7 +27,18 @@ namespace GitCommands.Repository
         }
 
         public string Title { get; set; }
-        public string Path { get; set; }
+        private string _path;
+        public string Path
+        {
+            get
+            {
+                return _path ?? string.Empty;
+            }
+            set
+            {
+                _path = value;
+            }
+        }
         public string Description { get; set; }
         public RepositoryAnchor Anchor { get; set; }
 

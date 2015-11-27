@@ -275,5 +275,22 @@ namespace GitUI.CommandsDialogs
 
             return new GitRevision(Module, currentItem.Hash);
         }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                selectedItemsHeader.Detach();
+                selectedItemsHeader.Dispose();
+
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

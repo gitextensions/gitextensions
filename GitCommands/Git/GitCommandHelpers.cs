@@ -147,10 +147,19 @@ namespace GitCommands
             string quotedCmd = fileName;
             if (quotedCmd.IndexOf(' ') != -1)
                 quotedCmd = quotedCmd.Quote();
-            AppSettings.GitLog.Log(quotedCmd + " " + arguments);
+
+            var executionStartTimestamp = DateTime.Now;
 
             var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
-            return Process.Start(startInfo);
+            var startProcess = Process.Start(startInfo);
+
+            startProcess.Exited += (sender, args) =>
+            {
+                var executionEndTimestamp = DateTime.Now;
+                AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+            };
+
+            return startProcess;
         }
 
         internal static bool UseSsh(string arguments)
@@ -170,6 +179,31 @@ namespace GitCommands
                    (arguments.Contains("remote")) ||
                    (arguments.Contains("fetch")) ||
                    (arguments.Contains("pull"));
+        }
+
+        /// <summary>
+        /// Transforms the given input Url to make it compatible with Plink, if necessary
+        /// </summary>
+        public static string GetPlinkCompatibleUrl(string inputUrl)
+        {
+            // We don't need putty for http:// links and git@... urls are already usable.
+            // But ssh:// urls can cause problems
+            if (!inputUrl.StartsWith("ssh") || !Uri.IsWellFormedUriString(inputUrl, UriKind.Absolute))
+                return "\"" + inputUrl + "\"";
+
+            // Turn ssh://user@host/path into user@host:path, which works better
+            Uri uri = new Uri(inputUrl, UriKind.Absolute);
+            string fixedUrl = "";
+            if (!uri.IsDefaultPort)
+                fixedUrl += "-P " + uri.Port + " ";
+            fixedUrl += "\"";
+
+            if (!String.IsNullOrEmpty(uri.UserInfo))
+                fixedUrl += uri.UserInfo + "@";
+            fixedUrl += uri.Host;
+            fixedUrl += ":" + uri.LocalPath.Substring(1) + "\"";
+
+            return fixedUrl;
         }
 
         private static IEnumerable<string> StartProcessAndReadLines(string arguments, string cmd, string workDir, string stdInput)
@@ -307,7 +341,8 @@ namespace GitCommands
         }
 
         private static GitVersion _versionInUse;
-        private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
+        private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
+            ?? Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
         public static GitVersion VersionInUse
         {
@@ -339,10 +374,16 @@ namespace GitCommands
 
         public static string GetFullBranchName(string branch)
         {
+            if (branch == null)
+                return null;
+
+            branch = branch.Trim();
+
             if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
                 return branch;
 
             // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
+            // NOTE: We can use `String.IsNullOrEmpty(Module.RevParse(srcRev))` instead
             if (IsCommitHash(branch))
             {
                 return branch;
@@ -440,7 +481,7 @@ namespace GitCommands
 
         public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, string branch, int? depth)
         {
-            var from = fromPath.ToPosixPath();
+            var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
             var to = toPath.ToPosixPath();
             var options = new List<string> { "-v" };
             if (central)
@@ -537,81 +578,6 @@ namespace GitCommands
             return ssh ?? "";
         }
 
-        /// <summary>Creates a 'git push' command using the specified parameters, pushing from HEAD.</summary>
-        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
-        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
-        /// <param name="all">All refs under 'refs/heads/' will be pushed.</param>
-        /// <returns>'git push' command with the specified parameters.</returns>
-        public static string PushCmd(string remote, string toBranch, bool all)
-        {
-            return PushCmd(remote, null, toBranch, all, false, true, 0);
-        }
-
-        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
-        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
-        /// <param name="fromBranch">Name of the branch to push.</param>
-        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
-        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
-        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
-        /// <returns>'git push' command with the specified parameters.</returns>
-        public static string PushCmd(string remote, string fromBranch, string toBranch, bool force = false)
-        {
-            return PushCmd(remote, fromBranch, toBranch, false, force, false, 0);
-        }
-
-        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
-        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
-        /// <param name="fromBranch">Name of the branch to push.</param>
-        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
-        /// <param name="all">All refs under 'refs/heads/' will be pushed.</param>
-        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
-        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
-        /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
-        /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
-        /// <returns>'git push' command with the specified parameters.</returns>
-        public static string PushCmd(string remote, string fromBranch, string toBranch,
-            bool all, bool force, bool track, int recursiveSubmodules)
-        {
-            remote = remote.ToPosixPath();
-
-            // This method is for pushing to remote branches, so fully qualify the
-            // remote branch name with refs/heads/.
-            fromBranch = GetFullBranchName(fromBranch);
-            toBranch = GetFullBranchName(toBranch);
-
-            if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
-                fromBranch = "HEAD";
-
-            if (toBranch != null) toBranch = toBranch.Replace(" ", "");
-
-            var sforce = "";
-            if (force)
-                sforce = "-f ";
-
-            var strack = "";
-            if (track)
-                strack = "-u ";
-
-            var srecursiveSubmodules = "";
-            if (recursiveSubmodules == 1)
-                srecursiveSubmodules = "--recurse-submodules=check ";
-            if (recursiveSubmodules == 2)
-                srecursiveSubmodules = "--recurse-submodules=on-demand ";
-
-            var sprogressOption = "";
-            if (VersionInUse.PushCanAskForProgress)
-                sprogressOption = "--progress ";
-
-            var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
-            if (all)
-                return string.Format("push {0}--all \"{1}\"", options, remote.Trim());
-
-            if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}\"{1}\" {2}:{3}", options, remote.Trim(), fromBranch, toBranch);
-
-            return string.Format("push {0}\"{1}\" {2}", options, remote.Trim(), fromBranch);
-        }
-
         /// <summary>Pushes multiple sets of local branches to remote branches.</summary>
         public static string PushMultipleCmd(string remote, IEnumerable<GitPushAction> pushActions)
         {
@@ -701,7 +667,7 @@ namespace GitCommands
             return "bisect reset";
         }
 
-        public static string RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash)
+        public static string RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
         {
             StringBuilder sb = new StringBuilder("rebase ");
 
@@ -716,6 +682,10 @@ namespace GitCommands
                 sb.Append("--preserve-merges ");
             }
 
+            if (autostash)
+            {
+                sb.Append("--autostash ");
+            }
 
             sb.Append('"');
             sb.Append(branch);
@@ -726,7 +696,7 @@ namespace GitCommands
         }
 
 
-        public static string RebaseRangeCmd(string from, string branch, string onto, bool interactive, bool preserveMerges, bool autosquash)
+        public static string RebaseRangeCmd(string from, string branch, string onto, bool interactive, bool preserveMerges, bool autosquash, bool autostash)
         {
             StringBuilder sb = new StringBuilder("rebase ");
 
@@ -739,6 +709,11 @@ namespace GitCommands
             if (preserveMerges)
             {
                 sb.Append("--preserve-merges ");
+            }
+
+            if (autostash)
+            {
+                sb.Append("--autostash ");
             }
 
             sb.Append('"')
@@ -906,7 +881,7 @@ namespace GitCommands
                         {
                             status.Name = match.Groups[1].Value;
                             status.OldName = match.Groups[1].Value;
-                        } 
+                        }
                     }
                 }
 
@@ -949,7 +924,7 @@ namespace GitCommands
         /*
                source: C:\Program Files\msysgit\doc\git\html\git-status.html
         */
-        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff  = false)
+        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff = false)
         {
             var diffFiles = new List<GitItemStatus>();
 
@@ -1085,162 +1060,6 @@ namespace GitCommands
             return gitItemStatus;
         }
 
-        public static string GetSubmoduleText(GitModule superproject, string name, string hash)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Submodule " + name);
-            sb.AppendLine();
-            GitModule module = superproject.GetSubmodule(name);
-            if (module.IsValidGitWorkingDir())
-            {
-                string error = "";
-                CommitData data = CommitData.GetCommitData(module, hash, ref error);
-                if (data == null)
-                {
-                    sb.AppendLine("Commit hash:\t" + hash);
-                    return sb.ToString();
-                }
-
-                string header = data.GetHeaderPlain();
-                string body = "\n" + data.Body.Trim();
-                sb.AppendLine(header);
-                sb.Append(body);
-            }
-            else
-                sb.AppendLine("Commit hash:\t" + hash);
-            return sb.ToString();
-        }
-
-        public static string ProcessSubmodulePatch(GitModule module, string fileName, PatchApply.Patch patch)
-        {
-            string text = patch != null ? patch.Text : null;
-            var status = GetSubmoduleStatus(text, module, fileName);
-            if (status == null)
-                return "";
-            return ProcessSubmoduleStatus(module, status);
-        }
-
-        public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
-        {
-            if (module == null)
-                throw new ArgumentNullException("module");
-            if (status == null)
-                throw new ArgumentNullException("status");
-            GitModule gitmodule = module.GetSubmodule(status.Name);
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Submodule " + status.Name + " Change");
-
-            sb.AppendLine();
-            sb.AppendLine("From:\t" + (status.OldCommit ?? "null"));
-            CommitData oldCommitData = null;
-            if (gitmodule.IsValidGitWorkingDir())
-            {
-                string error = "";
-                if (status.OldCommit != null)
-                    oldCommitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
-                if (oldCommitData != null)
-                {
-                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(oldCommitData.CommitDate) + ")");
-                    var delim = new char[] { '\n', '\r' };
-                    var lines = oldCommitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
-                    foreach (var curline in lines)
-                        sb.AppendLine("\t\t" + curline);
-                }
-            }
-            else
-                sb.AppendLine();
-
-            sb.AppendLine();
-            string dirty = !status.IsDirty ? "" : " (dirty)";
-            sb.AppendLine("To:\t\t" + (status.Commit ?? "null") + dirty);
-            CommitData commitData = null;
-            if (gitmodule.IsValidGitWorkingDir())
-            {
-                string error = "";
-                if (status.Commit != null)
-                    commitData = CommitData.GetCommitData(gitmodule, status.Commit, ref error);
-                if (commitData != null)
-                {
-                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(commitData.CommitDate) + ")");
-                    var delim = new char[] { '\n', '\r' };
-                    var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
-                    foreach (var curline in lines)
-                        sb.AppendLine("\t\t" + curline);
-                }
-            }
-            else
-                sb.AppendLine();
-
-            sb.AppendLine();
-            var submoduleStatus = gitmodule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData);
-            sb.Append("Type: ");
-            switch (submoduleStatus)
-            {
-                case SubmoduleStatus.NewSubmodule:
-                    sb.AppendLine("New submodule");
-                    break;
-                case SubmoduleStatus.FastForward:
-                    sb.AppendLine("Fast Forward");
-                    break;
-                case SubmoduleStatus.Rewind:
-                    sb.AppendLine("Rewind");
-                    break;
-                case SubmoduleStatus.NewerTime:
-                    sb.AppendLine("Newer commit time");
-                    break;
-                case SubmoduleStatus.OlderTime:
-                    sb.AppendLine("Older commit time");
-                    break;
-                case SubmoduleStatus.SameTime:
-                    sb.AppendLine("Same commit time");
-                    break;
-                default:
-                    sb.AppendLine("Unknown");
-                    break;
-            }
-
-            if (status.AddedCommits != null && status.RemovedCommits != null &&
-                (status.AddedCommits != 0 || status.RemovedCommits != 0))
-            {
-                sb.Append("\nCommits: ");
-
-                if (status.RemovedCommits > 0)
-                {
-                    sb.Append(status.RemovedCommits + " removed");
-
-                    if (status.AddedCommits > 0)
-                        sb.Append(", ");
-                }
-
-                if (status.AddedCommits > 0)
-                    sb.Append(status.AddedCommits + " added");
-
-                sb.AppendLine();
-            }
-
-            if (status.Commit != null && status.OldCommit != null)
-            {
-                if (status.IsDirty)
-                {
-                    string statusText = gitmodule.GetStatusText(false);
-                    if (!String.IsNullOrEmpty(statusText))
-                    {
-                        sb.AppendLine("\nStatus:");
-                        sb.Append(statusText);
-                    }
-                }
-
-                string diffs = gitmodule.GetDiffFilesText(status.OldCommit, status.Commit);
-                if (!String.IsNullOrEmpty(diffs))
-                {
-                    sb.AppendLine("\nDifferences:");
-                    sb.Append(diffs);
-                }
-            }
-
-            return sb.ToString();
-        }
-
         public static string GetRemoteName(string completeName, IEnumerable<string> remotes)
         {
             string trimmedName = completeName.StartsWith("refs/remotes/") ? completeName.Substring(13) : completeName;
@@ -1283,64 +1102,6 @@ namespace GitCommands
             return null;
         }
 
-        private static DateTime RoundDateTime(DateTime dateTime)
-        {
-            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
-        }
-
-        /// <summary>
-        /// Takes a date/time which and determines a friendly string for time from now to be displayed for the relative time from the date.
-        /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted
-        /// to the local timezone before passing it in.
-        /// </summary>
-        /// <param name="originDate">Current date.</param>
-        /// <param name="previousDate">The date to get relative time string for.</param>
-        /// <param name="displayWeeks">Indicates whether to display weeks.</param>
-        /// <returns>The human readable string for relative date.</returns>
-        /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
-        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks = true)
-        {
-            var ts = new TimeSpan(RoundDateTime(originDate).Ticks - RoundDateTime(previousDate).Ticks);
-            double delta = Math.Abs(ts.TotalSeconds);
-
-            if (delta < 60)
-            {
-                return Strings.GetNSecondsAgoText(ts.Seconds);
-            }
-            if (delta < 45 * 60)
-            {
-                return Strings.GetNMinutesAgoText(ts.Minutes);
-            }
-            if (delta < 24 * 60 * 60)
-            {
-                int hours = delta < 60 * 60 ? Math.Sign(ts.Minutes) * 1 : ts.Hours;
-                return Strings.GetNHoursAgoText(hours);
-            }
-            // 30.417 = 365 days / 12 months - note that the if statement only bothers with 30 days for "1 month ago" because ts.Days is int
-            if (delta < (displayWeeks ? 7 : 30) * 24 * 60 * 60)
-            {
-                return Strings.GetNDaysAgoText(ts.Days);
-            }
-            if (displayWeeks && delta < 30 * 24 * 60 * 60)
-            {
-                int weeks = Convert.ToInt32(ts.Days / 7.0);
-                return Strings.GetNWeeksAgoText(weeks);
-            }
-            if (delta < 365 * 24 * 60 * 60)
-            {
-                int months = Convert.ToInt32(ts.Days / 30.0);
-                return Strings.GetNMonthsAgoText(months);
-            }
-            int years = Convert.ToInt32(ts.Days / 365.0);
-            return Strings.GetNYearsAgoText(years);
-        }
-
-        public static string GetFullDateString(DateTimeOffset datetime)
-        {
-            // previous format "ddd MMM dd HH':'mm':'ss yyyy"
-            return datetime.LocalDateTime.ToString("G");
-        }
-
         // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)
         // only looks at start, as all we want is to tell from automail format
         // returns false on any problem, never throws
@@ -1358,6 +1119,28 @@ namespace GitCommands
             {
                 return false;
             }
+        }
+
+        // returns " --find-renames=..." according to app settings
+        public static string FindRenamesOpt()
+        {
+            string result = " --find-renames";
+            if (AppSettings.FollowRenamesInFileHistoryExactOnly)
+            {
+                result += "=\"100%\"";
+            }
+            return result;
+        }
+
+        // returns " --find-renames=... --find-copies=..." according to app settings
+        public static string FindRenamesAndCopiesOpts()
+        {
+            string findCopies = " --find-copies";
+            if (AppSettings.FollowRenamesInFileHistoryExactOnly)
+            {
+                findCopies += "=\"100%\"";
+            }
+            return FindRenamesOpt() + findCopies;
         }
 
 #if !__MonoCS__

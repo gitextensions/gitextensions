@@ -17,15 +17,23 @@ namespace GitPlugin.Commands
             {
                 var activeDocument = application.ActiveDocument;
 
-                if ((activeDocument == null || activeDocument.ProjectItem == null) && IsTargetSupported(CommandTarget.Empty))
+                if (activeDocument == null || activeDocument.ProjectItem == null)
                 {
-                    OnExecute(null, null, pane);
+                    // no active document - try solution target
+                    if (application.Solution.IsOpen && IsTargetSupported(CommandTarget.Solution))
+                        OnExecute(null, application.Solution.FullName, pane);
+                    // solution (or not supported) - try empty target
+                    else if (IsTargetSupported(CommandTarget.Empty))
+                        OnExecute(null, null, pane);
+
                     return;
                 }
 
                 var fileName = activeDocument.ProjectItem.get_FileNames(1);
 
-                SelectedItem selectedItem = application.SelectedItems.Cast<SelectedItem>().FirstOrDefault(solutionItem => solutionItem.ProjectItem.get_FileNames(1) == fileName);
+                SelectedItem selectedItem = application.SelectedItems
+                    .Cast<SelectedItem>()
+                    .FirstOrDefault(solutionItem => solutionItem.ProjectItem != null && solutionItem.ProjectItem.get_FileNames(1) == fileName);
 
                 OnExecute(selectedItem, fileName, pane);
                 return;

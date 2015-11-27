@@ -1,8 +1,6 @@
 ﻿using GitCommands.Config;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GitCommands.Settings
 {
@@ -75,10 +73,19 @@ namespace GitCommands.Settings
 
         public IList<string> GetValues(string key)
         {
-            return LockedAction<IList<string>>(() =>
+            return LockedAction(() =>
             {
                 EnsureSettingsAreUpToDate();
                 return _configFile.Value.GetValues(key);
+            });
+        }
+
+        public IList<ConfigSection> GetConfigSections()
+        {
+            return LockedAction(() =>
+            {
+                EnsureSettingsAreUpToDate();
+                return _configFile.Value.ConfigSections;
             });
         }
 

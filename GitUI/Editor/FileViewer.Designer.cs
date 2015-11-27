@@ -7,21 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            GitUICommandsSourceSet -= FileViewer_GitUICommandsSourceSet;
-
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Component Designer generated code
 
         /// <summary> 
@@ -33,7 +18,10 @@
             this.components = new System.ComponentModel.Container();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cherrypickSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyNewVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyOldVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ignoreWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,8 +44,6 @@
             this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.PictureBox = new System.Windows.Forms.PictureBox();
-            this.copyNewVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyOldVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
@@ -67,6 +53,7 @@
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyToolStripMenuItem,
+            this.cherrypickSelectedLinesToolStripMenuItem,
             this.copyPatchToolStripMenuItem,
             this.copyNewVersionToolStripMenuItem,
             this.copyOldVersionToolStripMenuItem,
@@ -81,7 +68,7 @@
             this.showNonprintableCharactersToolStripMenuItem,
             this.goToLineToolStripMenuItem});
             this.contextMenu.Name = "ContextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(244, 302);
+            this.contextMenu.Size = new System.Drawing.Size(244, 324);
             // 
             // copyToolStripMenuItem
             // 
@@ -91,12 +78,34 @@
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItemClick);
             // 
+            // cherrypickSelectedLinesToolStripMenuItem
+            // 
+            this.cherrypickSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCherryPick;
+            this.cherrypickSelectedLinesToolStripMenuItem.Name = "cherrypickSelectedLinesToolStripMenuItem";
+            this.cherrypickSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.cherrypickSelectedLinesToolStripMenuItem.Text = "Cherry pick selected lines";
+            this.cherrypickSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.cherrypickSelectedLinesToolStripMenuItem_Click);
+            // 
             // copyPatchToolStripMenuItem
             // 
             this.copyPatchToolStripMenuItem.Name = "copyPatchToolStripMenuItem";
             this.copyPatchToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.copyPatchToolStripMenuItem.Text = "Copy patch";
             this.copyPatchToolStripMenuItem.Click += new System.EventHandler(this.CopyPatchToolStripMenuItemClick);
+            // 
+            // copyNewVersionToolStripMenuItem
+            // 
+            this.copyNewVersionToolStripMenuItem.Name = "copyNewVersionToolStripMenuItem";
+            this.copyNewVersionToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.copyNewVersionToolStripMenuItem.Text = "Copy new version";
+            this.copyNewVersionToolStripMenuItem.Click += new System.EventHandler(this.copyNewVersionToolStripMenuItem_Click);
+            // 
+            // copyOldVersionToolStripMenuItem
+            // 
+            this.copyOldVersionToolStripMenuItem.Name = "copyOldVersionToolStripMenuItem";
+            this.copyOldVersionToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.copyOldVersionToolStripMenuItem.Text = "Copy old version";
+            this.copyOldVersionToolStripMenuItem.Click += new System.EventHandler(this.copyOldVersionToolStripMenuItem_Click);
             // 
             // findToolStripMenuItem
             // 
@@ -289,20 +298,6 @@
             this.PictureBox.TabStop = false;
             this.PictureBox.Visible = false;
             // 
-            // copyNewVersionToolStripMenuItem
-            // 
-            this.copyNewVersionToolStripMenuItem.Name = "copyNewVersionToolStripMenuItem";
-            this.copyNewVersionToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.copyNewVersionToolStripMenuItem.Text = "Copy new version";
-            this.copyNewVersionToolStripMenuItem.Click += new System.EventHandler(this.copyNewVersionToolStripMenuItem_Click);
-            // 
-            // copyOldVersionToolStripMenuItem
-            // 
-            this.copyOldVersionToolStripMenuItem.Name = "copyOldVersionToolStripMenuItem";
-            this.copyOldVersionToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.copyOldVersionToolStripMenuItem.Text = "Copy old version";
-            this.copyOldVersionToolStripMenuItem.Click += new System.EventHandler(this.copyOldVersionToolStripMenuItem_Click);
-            // 
             // FileViewer
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -349,5 +344,6 @@
         private System.Windows.Forms.ToolStripMenuItem goToLineToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyNewVersionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyOldVersionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cherrypickSelectedLinesToolStripMenuItem;
     }
 }

@@ -23,8 +23,8 @@
             <Directory Id="ProgramFilesFolder">
                 <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
                     <Directory Id="PuttyDir" Name="PuTTY" />
-                    <Directory Id="GitCredentialWinStoreDir" Name="GitCredentialWinStore" />
                     <Directory Id="PluginsDir" Name="Plugins" />
+                    <Directory Id="GitCredentialWinStoreDir" Name="GitCredentialWinStore" />
                     <Directory Id="InstallerDir" Name="Installer" />
                     <Directory Id="DictionariesDir" Name="Dictionaries" />
                     <Directory Id="TranslationsDir" Name="Translation" />
@@ -49,8 +49,8 @@
         </Directory>
         <?define VsVersions = 2005;2008;2010;2012;2013?>
         <?foreach VsVersion in $(var.VsVersions)?>
-        <Property Id="VS$(var.VsVersion)">
-            <DirectorySearch Id="VS$(var.VsVersion)" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
+        <Property Id="VS$(var.VsVersion)INSTFOLDER">
+            <DirectorySearch Id="VS$(var.VsVersion)DirSearchId" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
         </Property>
         <?endforeach ?>
         <DirectoryRef Id="INSTALLDIR">
@@ -59,9 +59,6 @@
             </Component>
             <Component Id="gitex.cmd" Guid="*">
                 <File Source="..\bin\gitex.cmd" />
-            </Component>
-            <Component Id="GitExtensionsUserManual.pdf" Guid="*">
-                <File Source="..\bin\GitExtensionsUserManual.pdf" />
             </Component>
             <Component Id="GitExtensions.exe" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\GitExtensions.exe">
@@ -88,6 +85,9 @@
             <Component Id="GitCommands.dll" Guid="*">
                 <File Source="..\GitCommands\bin\Release\GitCommands.dll" />
             </Component>
+            <Component Id="GitExtUtils.dll" Guid="*">
+                <File Source="..\GitExtUtils\bin\Release\GitExtUtils.dll" />
+            </Component>
             <Component Id="GitUI.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\GitUI.dll" />
             </Component>
@@ -113,7 +113,7 @@
                 <File Source="..\bin\PSTaskDialog.dll" />
             </Component>
             <Component Id="RestSharp.dll" Guid="*">
-                <File Source="..\packages\RestSharp.104.2.0\lib\net4-client\RestSharp.dll" />
+                <File Source="..\GitExtensions\bin\Release\RestSharp.dll" />
             </Component>
             <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.dll" />
@@ -125,7 +125,7 @@
                 <File Source="..\Externals\NBug\NBug\bin\Release\NBug.dll" />
             </Component>
             <Component Id="SmartFormat.dll" Guid="*">
-                <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
+                <File Source="..\GitExtensions\bin\Release\SmartFormat.dll" />
             </Component>
             <Component Id="System.Reactive.Core.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll" />
@@ -195,6 +195,11 @@
                 </RegistryKey>
             </Component>
         </DirectoryRef>
+        <DirectoryRef Id="GitCredentialWinStoreDir">
+            <Component Id="GitCredentialWinStore.exe" Guid="*">
+                <File Source="..\bin\git-credential-winstore.exe" />
+            </Component>
+        </DirectoryRef>
         <DirectoryRef Id="PluginsDir">
             <Component Id="DeleteUnusedBranches.dll" Guid="*">
                 <File Source="..\Plugins\DeleteUnusedBranches\bin\Release\DeleteUnusedBranches.dll" />
@@ -220,6 +225,9 @@
             <Component Id="Github3.dll" Guid="*">
                 <File Source="..\Plugins\Github3\bin\Release\Github3.dll" />
             </Component>
+            <Component Id="GitFlow.dll" Guid="*">
+                <File Source="..\Plugins\GitFlow\bin\Release\GitFlow.dll" />
+            </Component>
             <Component Id="Gerrit.dll" Guid="*">
                 <File Source="..\Plugins\Gerrit\bin\Release\Gerrit.dll" />
             </Component>
@@ -227,7 +235,7 @@
                 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll" />
             </Component>
             <Component Id="Newtonsoft.Json.dll" Guid="*">
-                <File Source="..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll" />
+                <File Source="..\GitExtensions\bin\Release\Newtonsoft.Json.dll" />
             </Component>
             <!--Remove unused dll, installed in versions <= 2.31-->
             <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
@@ -249,17 +257,8 @@
             <Component Id="System.Net.Http.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll" />
             </Component>
-            <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.WebRequest.dll" />
-            </Component>
             <Component Id="System.Net.Http.Primitives.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll" />
-            </Component>
-            <Component Id="System.Runtime.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll" />
-            </Component>
-            <Component Id="System.Threading.Tasks.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll" />
             </Component>
             <Component Id="TeamCityIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
@@ -271,10 +270,10 @@
                 <File Source="..\Plugins\BuildServerIntegration\TfsIntegration\bin\Release\TfsIntegration.dll" />
             </Component>
             <Component Id="TfsInterop.Vs2012.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TfsInterop\bin\Release\TfsInterop.Vs2012.dll" />
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2012\bin\Release\TfsInterop.Vs2012.dll" />
             </Component>
             <!-- Component Id="TfsInterop.Vs2013.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TfsInterop\bin\Release\TfsInterop.Vs2013.dll" />
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2013\bin\Release\TfsInterop.Vs2013.dll" />
             </Component -->
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
@@ -339,13 +338,28 @@
             <Component Id="ruRU.dic" Guid="*">
                 <File Source="..\Bin\Dictionaries\ru-RU.dic" />
             </Component>
+            <Component Id="plPL.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\pl-PL.dic" />
+            </Component>
         </DirectoryRef>
         <DirectoryRef Id="TranslationsDir">
             <Component Id="English.gif" Guid="*">
                 <File Source="..\GitUI\Translation\English.gif" />
             </Component>
+            <Component Id="Czech.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Czech.xlf" />
+            </Component>
+            <Component Id="Czech.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Czech.Plugins.xlf" />
+            </Component>
+            <Component Id="Czech.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Czech.gif" />
+            </Component>
             <Component Id="Dutch.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Dutch.xlf" />
+            </Component>
+            <Component Id="Dutch.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Dutch.Plugins.xlf" />
             </Component>
             <Component Id="Dutch.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Dutch.gif" />
@@ -353,11 +367,17 @@
             <Component Id="French.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\French.xlf" />
             </Component>
+            <Component Id="French.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\French.Plugins.xlf" />
+            </Component>
             <Component Id="French.gif" Guid="*">
                 <File Source="..\GitUI\Translation\French.gif" />
             </Component>
             <Component Id="German.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\German.xlf" />
+            </Component>
+            <Component Id="German.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\German.Plugins.xlf" />
             </Component>
             <Component Id="German.gif" Guid="*">
                 <File Source="..\GitUI\Translation\German.gif" />
@@ -365,23 +385,44 @@
             <!--Component Id="Italian.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Italian.xlf" />
             </Component>
+            <Component Id="Italian.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Italian.Plugins.xlf" />
+            </Component>
             <Component Id="Italian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Italian.gif" />
             </Component-->
             <Component Id="Japanese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.xlf" />
             </Component>
+            <Component Id="Japanese.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Japanese.Plugins.xlf" />
+            </Component>
             <Component Id="Japanese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.gif" />
             </Component>
-            <Component Id="Korean.xlf" Guid="*">
+            <!--Component Id="Korean.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.xlf" />
+            </Component>
+            <Component Id="Korean.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Korean.Plugins.xlf" />
             </Component>
             <Component Id="Korean.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.gif" />
+            </Component-->
+            <Component Id="Polish.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Polish.xlf" />
+            </Component>
+            <Component Id="Polish.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Polish.Plugins.xlf" />
+            </Component>
+            <Component Id="Polish.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Polish.gif" />
             </Component>
             <Component Id="Russian.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.xlf" />
+            </Component>
+            <Component Id="Russian.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Russian.Plugins.xlf" />
             </Component>
             <Component Id="Russian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.gif" />
@@ -389,25 +430,29 @@
             <Component Id="SimplifiedChinese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.xlf" />
             </Component>
+            <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Simplified Chinese.Plugins.xlf" />
+            </Component>
             <Component Id="SimplifiedChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
             </Component>
             <Component Id="Spanish.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Spanish.xlf" />
             </Component>
+            <Component Id="Spanish.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Spanish.Plugins.xlf" />
+            </Component>
             <Component Id="Spanish.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Spanish.gif" />
             </Component>
-            <!--Component Id="TraditionalChinese.xlf" Guid="*">
+            <Component Id="TraditionalChinese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Traditional Chinese.xlf" />
+            </Component>
+            <Component Id="TraditionalChinese.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Traditional Chinese.Plugins.xlf" />
             </Component>
             <Component Id="TraditionalChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Traditional Chinese.gif" />
-            </Component-->
-        </DirectoryRef>
-        <DirectoryRef Id="GitCredentialWinStoreDir">
-            <Component Id="gitcredentialwinstore.exe" Guid="*">
-                <File Source="..\Bin\git-credential-winstore.exe" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="PuttyDir">
@@ -460,6 +505,67 @@
             </Directory>
         </DirectoryRef>
         <?endforeach ?>
+
+        <!-- http://www.mztools.com/articles/2011/MZ2011020.aspx -->
+        <Binary Id="BinRemoveVSAddInCommands" SourceFile="RemoveVSAddInCommands.vbs"/>
+        <CustomAction Id='RemoveVS2005AddInCommands'
+            BinaryKey="BinRemoveVSAddInCommands"
+            VBScriptCall="RemoveVS2005AddInCommands"
+            Return="check"/>
+        <CustomAction Id='RemoveVS2008AddInCommands'
+            BinaryKey="BinRemoveVSAddInCommands"
+            VBScriptCall="RemoveVS2008AddInCommands"
+            Return="check"/>
+        <CustomAction Id='RemoveVS2010AddInCommands'
+            BinaryKey="BinRemoveVSAddInCommands"
+            VBScriptCall="RemoveVS2010AddInCommands"
+            Return="check"/>
+        <CustomAction Id='RemoveVS2012AddInCommands'
+            BinaryKey="BinRemoveVSAddInCommands"
+            VBScriptCall="RemoveVS2012AddInCommands"
+            Return="check"/>
+        <CustomAction Id='RemoveVS2013AddInCommands'
+            BinaryKey="BinRemoveVSAddInCommands"
+            VBScriptCall="RemoveVS2013AddInCommands"
+            Return="check"/>
+        <CustomAction Id="UninstallGitExtensions"
+            FileKey="GitExtensions.exe"
+            ExeCommand="uninstall"
+            Return="asyncWait" />
+
+        <InstallExecuteSequence>
+            <!-- Execute the defined custom actions to remove the add-in commands from Visual Studio. They must execute when
+              all the following conditions are true:
+              - The setup has already been run
+              - It is not an upgrade
+              - Visual Studio is installed
+              - The add-in feature state (!feature-state) for the Visual Studio version is installed (3 = INSTALLSTATE_LOCAL). See:
+                Conditional Statement Syntax (http://msdn.microsoft.com/en-us/library/aa368012.aspx)
+            -->
+            <Custom Action="RemoveVS2005AddInCommands"
+                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2005INSTFOLDER
+                                     AND !VS2005FeatureId=3</Custom>
+
+            <Custom Action="RemoveVS2008AddInCommands"
+                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2008INSTFOLDER
+                                     AND !VS2008FeatureId=3</Custom>
+
+            <Custom Action="RemoveVS2010AddInCommands"
+                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2010INSTFOLDER
+                                     AND !VS2010FeatureId=3</Custom>
+
+            <Custom Action="RemoveVS2012AddInCommands"
+                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2012INSTFOLDER
+                                     AND !VS2012FeatureId=3</Custom>
+
+            <Custom Action="RemoveVS2013AddInCommands"
+                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2013INSTFOLDER
+                                     AND !VS2013FeatureId=3</Custom>
+
+            <Custom Action="UninstallGitExtensions"
+                After="InstallInitialize">(REMOVE="ALL") AND (NOT UPGRADINGPRODUCTCODE)</Custom>
+        </InstallExecuteSequence>
+
         <DirectoryRef Id="ProgramMenuFolder">
             <Component Id="GitExtensions.newstartmenu" Guid="*">
                 <Shortcut Id="GitExtensions.newstartmenu" Name="$(var.ProductName)" Description="$(var.ProductName)" Icon="gitextensions.ico" Target="[INSTALLDIR]GitExtensions.exe" WorkingDirectory="INSTALLDIR" />
@@ -482,18 +588,22 @@
         <Feature Id="GitExtensions" Title="Git Extensions" Level="1" Display="expand">
             <ComponentRef Id="gitextensions.ico" />
             <ComponentRef Id="gitex.cmd" />
-            <ComponentRef Id="GitExtensionsUserManual.pdf" />
             <ComponentRef Id="GitExtensions.exe" />
             <ComponentRef Id="GitExtensions.exe.config" />
             <ComponentRef Id="TranslationApp.exe" />
             <ComponentRef Id="TranslationApp.exe.config" />
             <ComponentRef Id="Gravatar.dll" />
             <ComponentRef Id="GitCommands.dll" />
+            <ComponentRef Id="GitExtUtils.dll" />
             <ComponentRef Id="GitUI.dll" />
             <ComponentRef Id="ICSharpCode.TextEditor.dll" />
             <ComponentRef Id="PSTaskDialog.dll" />
             <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
             <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
+            <ComponentRef Id="System.Reactive.Core.dll" />
+            <ComponentRef Id="System.Reactive.Interfaces.dll" />
+            <ComponentRef Id="System.Reactive.Linq.dll" />
+            <ComponentRef Id="System.Reactive.PlatformServices.dll" />
             <ComponentRef Id="NBug.dll" />
             <ComponentRef Id="SmartFormat.dll" />
             <ComponentRef Id="NetSpell.SpellChecker.dll" />
@@ -509,8 +619,8 @@
             <ComponentRef Id="pageant.reg" />
             <ComponentRef Id="puttygen.exe" />
             <ComponentRef Id="puttygen.reg" />
-            <ComponentRef Id="gitcredentialwinstore.exe" />
             <ComponentRef Id="GitExtSshAskPass.exe" />
+            <ComponentRef Id="GitCredentialWinStore.exe" />
             <ComponentRef Id="GitExtensions.newstartmenu" />
             <ComponentRef Id="GitExtensions.startmenu" />
             <ComponentRef Id="English.gif" />
@@ -526,10 +636,6 @@
                 </Feature>
                 <Feature Id="BackgroundFetch" Title="Periodic background fetch" Level="1">
                     <ComponentRef Id="BackgroundFetch.dll" />
-                    <ComponentRef Id="System.Reactive.Core.dll" />
-                    <ComponentRef Id="System.Reactive.Interfaces.dll" />
-                    <ComponentRef Id="System.Reactive.Linq.dll" />
-                    <ComponentRef Id="System.Reactive.PlatformServices.dll" />
                 </Feature>
                 <Feature Id="CreateLocalBranches" Title="Create local branches" Level="1">
                     <ComponentRef Id="CreateLocalBranches.dll" />
@@ -546,6 +652,9 @@
                 </Feature>
                 <Feature Id="Github" Title="Github integration" Level="1">
                     <ComponentRef Id="Github3.dll" />
+                </Feature>
+                <Feature Id="GitFlow" Title="GitFlow" Level="1">
+                    <ComponentRef Id="GitFlow.dll" />
                 </Feature>
                 <Feature Id="Gource" Title="Gource visualization" Level="1">
                     <ComponentRef Id="Gource.dll" />
@@ -568,23 +677,15 @@
                 </Feature>
                 <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
                     <ComponentRef Id="System.Net.Http.dll" />
-                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
                     <ComponentRef Id="System.Net.Http.Primitives.dll" />
-                    <ComponentRef Id="System.Runtime.dll" />
-                    <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="TeamCityIntegration.dll" />
                 </Feature>
                 <Feature Id="JenkinsIntegration" Title="Jenkins integration" Level="1">
                     <ComponentRef Id="System.Net.Http.dll" />
-                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
                     <ComponentRef Id="System.Net.Http.Primitives.dll" />
-                    <ComponentRef Id="System.Runtime.dll" />
-                    <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="JenkinsIntegration.dll" />
                 </Feature>
                 <Feature Id="TfsIntegration" Title="Tfs integration" Level="1">
-                    <ComponentRef Id="System.Runtime.dll" />
-                    <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="TfsIntegration.dll" />
                     <ComponentRef Id="TfsInterop.Vs2012.dll" />
                     <!-- ComponentRef Id="TfsInterop.Vs2013.dll" /-->
@@ -639,48 +740,71 @@
                 <Feature Id="ruRU" Title="ru-RU" Level="1">
                     <ComponentRef Id="ruRU.dic" />
                 </Feature>
+                <Feature Id="plPL" Title="pl-PL" Level="1">
+                    <ComponentRef Id="plPL.dic" />
+                </Feature>
             </Feature>
             <Feature Id="Translation" Title="Translations" Level="1">
+                <Feature Id="Czech" Title="Czech" Level="1">
+                    <ComponentRef Id="Czech.xlf" />
+                    <ComponentRef Id="Czech.Plugins.xlf" />
+                    <ComponentRef Id="Czech.gif" />
+                </Feature>
                 <Feature Id="Dutch" Title="Dutch" Level="1">
                     <ComponentRef Id="Dutch.xlf" />
+                    <ComponentRef Id="Dutch.Plugins.xlf" />
                     <ComponentRef Id="Dutch.gif" />
                 </Feature>
                 <Feature Id="French" Title="French" Level="1">
                     <ComponentRef Id="French.xlf" />
+                    <ComponentRef Id="French.Plugins.xlf" />
                     <ComponentRef Id="French.gif" />
                 </Feature>
                 <Feature Id="German" Title="German" Level="1">
                     <ComponentRef Id="German.xlf" />
+                    <ComponentRef Id="German.Plugins.xlf" />
                     <ComponentRef Id="German.gif" />
                 </Feature>
                 <!--Feature Id="Italian" Title="Italian" Level="1">
                     <ComponentRef Id="Italian.xlf" />
+                    <ComponentRef Id="Italian.Plugins.xlf" />
                     <ComponentRef Id="Italian.gif" />
                 </Feature-->
                 <Feature Id="Japanese" Title="Japanese" Level="1">
                     <ComponentRef Id="Japanese.xlf" />
+                    <ComponentRef Id="Japanese.Plugins.xlf" />
                     <ComponentRef Id="Japanese.gif" />
                 </Feature>
-                <Feature Id="Korean" Title="Korean" Level="1">
+                <!--<Feature Id="Korean" Title="Korean" Level="1">
                     <ComponentRef Id="Korean.xlf" />
+                    <ComponentRef Id="Korean.Plugins.xlf" />
                     <ComponentRef Id="Korean.gif" />
+                </Feature-->
+                <Feature Id="Polish" Title="Polish" Level="1">
+                    <ComponentRef Id="Polish.xlf" />
+                    <ComponentRef Id="Polish.Plugins.xlf" />
+                    <ComponentRef Id="Polish.gif" />
                 </Feature>
                 <Feature Id="Russian" Title="Russian" Level="1">
                     <ComponentRef Id="Russian.xlf" />
+                    <ComponentRef Id="Russian.Plugins.xlf" />
                     <ComponentRef Id="Russian.gif" />
                 </Feature>
                 <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
                     <ComponentRef Id="SimplifiedChinese.xlf" />
+                    <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
                     <ComponentRef Id="SimplifiedChinese.gif" />
                 </Feature>
                 <Feature Id="Spanish" Title="Spanish" Level="1">
                     <ComponentRef Id="Spanish.xlf" />
+                    <ComponentRef Id="Spanish.Plugins.xlf" />
                     <ComponentRef Id="Spanish.gif" />
                 </Feature>
-                <!--Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
+                <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
                     <ComponentRef Id="TraditionalChinese.xlf" />
+                    <ComponentRef Id="TraditionalChinese.Plugins.xlf" />
                     <ComponentRef Id="TraditionalChinese.gif" />
-                </Feature-->
+                </Feature>
             </Feature>
             <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
                 <ComponentRef Id="GitExtensionsShellEx32.dll" />
@@ -691,8 +815,8 @@
             </Feature>
             <Feature Id="VSExtension" Title="Visual Studio extension" Level="1">
                 <?foreach VsVersion in $(var.VsVersions)?>
-                <Feature Id="VS$(var.VsVersion)" Title="Visual Studio $(var.VsVersion) integration" Level="1">
-                    <Condition Level="2">NOT VS$(var.VsVersion)</Condition>
+                <Feature Id="VS$(var.VsVersion)FeatureId" Title="Visual Studio $(var.VsVersion) integration" Level="1">
+                    <Condition Level="2">NOT VS$(var.VsVersion)INSTFOLDER</Condition>
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
@@ -707,13 +831,15 @@
             </Feature>
         </Feature>
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
-        <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe" />
-        <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
-        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.9.2-preview20140411.exe" />
-        <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore" />
+        <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-64bit-Setup_0.9.98-2.exe" />
+        <CustomAction Id="InstallKDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
+        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.9.5-preview20141217.exe" />
+        <CustomAction Id="InstallMsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
+        <CustomAction Id="InstallGitCredentialWinStore" FileKey="GitExtensions.exe" ExeCommand="installcredhelper" Return="asyncWait" />
         <InstallExecuteSequence>
-            <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
-            <Custom Action="MsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
+            <Custom Action="InstallKDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
+            <Custom Action="InstallMsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
+            <Custom Action="InstallGitCredentialWinStore" After="InstallFinalize"><![CDATA[INSTALLGITCREDENTIALWINSTORE=1]]></Custom>
         </InstallExecuteSequence>
         <?endif ?>
         <UI />

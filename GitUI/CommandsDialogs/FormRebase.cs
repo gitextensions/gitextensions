@@ -21,6 +21,8 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.");
         private readonly TranslationString _branchUpToDateCaption = new TranslationString("Rebase");
 
+        private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
+
         private readonly string _defaultBranch;
         private readonly string _defaultToBranch;
 
@@ -34,6 +36,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
             if (AppSettings.AlwaysShowAdvOpt)
                 ShowOptions_LinkClicked(null, null);
         }
@@ -89,6 +92,7 @@ namespace GitUI.CommandsDialogs
 
                 Branches.Enabled = false;
                 Ok.Enabled = false;
+                chkStash.Enabled = false;
 
                 AddFiles.Enabled = true;
                 Resolved.Enabled = !Module.InTheMiddleOfConflictedMerge();
@@ -105,6 +109,7 @@ namespace GitUI.CommandsDialogs
                 Mergetool.Enabled = false;
                 Skip.Enabled = false;
                 Abort.Enabled = false;
+                chkStash.Enabled = Module.IsDirtyDir(); ;
             }
 
             SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
@@ -199,11 +204,13 @@ namespace GitUI.CommandsDialogs
             {
                 rebaseCmd = GitCommandHelpers.RebaseRangeCmd(txtFrom.Text, cboTo.Text, Branches.Text,
                                                              chkInteractive.Checked, chkPreserveMerges.Checked,
-                                                             chkAutosquash.Checked);
+                                                             chkAutosquash.Checked, chkStash.Checked);
             }
             else
             {
-                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, chkPreserveMerges.Checked, chkAutosquash.Checked);
+                rebaseCmd = GitCommandHelpers.RebaseCmd(Branches.Text, chkInteractive.Checked, 
+                                                        chkPreserveMerges.Checked, chkAutosquash.Checked,
+                                                        chkStash.Checked);
             }
 
             var dialogResult = FormProcess.ReadDialog(this, rebaseCmd);
@@ -224,11 +231,6 @@ namespace GitUI.CommandsDialogs
             MergetoolClick(sender, e);
         }
 
-        private void chkPreserveMerges_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void ShowOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ShowOptions.Visible = false;
@@ -244,7 +246,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnChooseFromRevision_Click(object sender, EventArgs e)
         {
-            using(var chooseForm = new FormChooseCommit(UICommands, txtFrom.Text))
+            using (var chooseForm = new FormChooseCommit(UICommands, txtFrom.Text))
             {
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {

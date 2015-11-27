@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Utils;
 using Microsoft.Win32;
 using ResourceManager;
@@ -85,18 +86,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private readonly TranslationString _emailSet =
             new TranslationString("A username and an email address are configured.");
-
-        private readonly TranslationString _credentialHelperInstalled =
-            new TranslationString("Git credential helper is installed.");
-
-        private readonly TranslationString _noCredentialsHelperInstalled =
-            new TranslationString("No credential helper installed.");
-
-        private readonly TranslationString _gitCredentialWinStoreHelperInstalled =
-            new TranslationString("Git Credential Win Store is installed as credential helper.");
-
-        private readonly TranslationString _noCredentialsHelperInstalledTryGCS =
-            new TranslationString("No credential helper could be installed. Try to install git-credential-winstore.exe.");
 
         private readonly TranslationString _mergeToolXConfiguredNeedsCmd =
             new TranslationString("{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.");
@@ -215,20 +204,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CommonLogic.ConfigFileSettingsSet.GlobalSettings.SetPathValue(settingName, value);
         }
 
-        private void gitCredentialWinStore_Fix_Click(object sender, EventArgs e)
-        {
-            if (CheckSettingsLogic.SolveGitCredentialStore())
-            {
-                MessageBox.Show(this, _gitCredentialWinStoreHelperInstalled.Text);
-            }
-            else
-            {
-                MessageBox.Show(this, _noCredentialsHelperInstalledTryGCS.Text);
-            }
-
-            CheckSettings();
-        }
-
         private void translationConfig_Click(object sender, EventArgs e)
         {
             using (var frm = new FormChooseTranslation())
@@ -254,15 +229,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     PageHost.GotoPage(SshSettingsPage.GetPageReference());
                 }
             }
-
-            // original
-////            if (Putty.Checked)
-////            {
-////                if (AutoFindPuttyPaths())
-////                    MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
-////                else
-////                    tabControl1.SelectTab(tpSsh);
-////            }
         }
 
         private void GitExtensionsInstall_Click(object sender, EventArgs e)
@@ -465,7 +431,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     bValid = CheckGitExtensionRegistrySettings() && bValid;
                     bValid = CheckGitExe() && bValid;
                     bValid = CheckSSHSettings() && bValid;
-                    bValid = CheckGitCredentialStore() && bValid;
                 }
             }
             catch (Exception ex)
@@ -574,28 +539,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return true;
         }
 
-        public bool CheckGitCredentialStore()
-        {
-            gitCredentialWinStore.Visible = true;
-
-            bool isValid = CheckSettingsLogic.CheckGitCredentialStore();
-
-            if (isValid)
-            {
-                gitCredentialWinStore.BackColor = Color.LightGreen;
-                gitCredentialWinStore.Text = _credentialHelperInstalled.Text;
-                gitCredentialWinStore_Fix.Visible = false;
-            }
-            else
-            {
-                gitCredentialWinStore.BackColor = Color.LightSalmon;
-                gitCredentialWinStore.Text = _noCredentialsHelperInstalled.Text;
-                gitCredentialWinStore_Fix.Visible = true;
-            }
-
-            return isValid;
-        }
-
         private bool CheckDiffToolConfiguration()
         {
             DiffTool.Visible = true;
@@ -685,8 +628,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckGlobalUserSettingsValid()
         {
             UserNameSet.Visible = true;
-            if (string.IsNullOrEmpty(GetGlobalSetting("user.name")) ||
-                string.IsNullOrEmpty(GetGlobalSetting("user.email")))
+            if (string.IsNullOrEmpty(GetGlobalSetting(SettingKeyString.UserName)) ||
+                string.IsNullOrEmpty(GetGlobalSetting(SettingKeyString.UserEmail)))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
                 UserNameSet.Text = _noEmailSet.Text;
@@ -706,8 +649,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             ShellExtensionsRegistered.Visible = true;
 
-            if (string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.LocalMachine,
-                                                      "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved",
+            if (string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.LocalMachine, "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved",
                                                       "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
                 string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
                                                       "*\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||

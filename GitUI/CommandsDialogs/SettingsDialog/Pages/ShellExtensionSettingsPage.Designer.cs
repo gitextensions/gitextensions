@@ -50,24 +50,24 @@
             this.chlMenuEntries.CheckOnClick = true;
             this.chlMenuEntries.FormattingEnabled = true;
             this.chlMenuEntries.Items.AddRange(new object[] {
-            "Add files",
-            "Apply patch",
+            "Add files...",
+            "Apply patch...",
             "Browse",
-            "Create branch",
-            "Checkout branch",
-            "Checkout revision",
-            "Clone",
-            "Commit",
-            "Create new repository",
+            "Create branch...",
+            "Checkout branch...",
+            "Checkout revision...",
+            "Clone...",
+            "Commit...",
+            "Create new repository...",
             "Open with difftool",
             "File history",
-            "Pull",
-            "Push",
-            "Reset file changes",
+            "Pull...",
+            "Push...",
+            "Reset file changes..",
             "Revert",
             "Settings",
             "View stash",
-            "View diff"});
+            "View changes"});
             this.chlMenuEntries.Location = new System.Drawing.Point(5, 60);
             this.chlMenuEntries.Name = "chlMenuEntries";
             this.chlMenuEntries.Size = new System.Drawing.Size(282, 382);

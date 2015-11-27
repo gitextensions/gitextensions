@@ -5,7 +5,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    /// <summary>Base class for a <see cref="Form"/> requiring 
+    /// <summary>Base class for a <see cref="Form"/> requiring
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
@@ -17,7 +17,7 @@ namespace GitUI
             get
             {
                 if (_uiCommands == null)
-                    throw new NullReferenceException("Commands");
+                    throw new InvalidOperationException("UICommands is null");
 
                 return _uiCommands;
             }
@@ -27,7 +27,7 @@ namespace GitUI
                 GitUICommands oldCommands = _uiCommands;
                 _uiCommands = value;
                 if (GitUICommandsChanged != null)
-                    GitUICommandsChanged(this, oldCommands);
+                    GitUICommandsChanged(this, new GitUICommandsChangedEventArgs(oldCommands));
             }
         }
 
@@ -42,16 +42,17 @@ namespace GitUI
 
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
-        public GitModule Module { get { return UICommands.Module; } }
-        public event GitUICommandsChangedEventHandler GitUICommandsChanged;
+        public GitModule Module { get { return _uiCommands != null ? _uiCommands.Module : null; } }
+
+        public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
 
         protected GitModuleForm()
-        {            
+        {
         }
 
         public GitModuleForm(GitUICommands aCommands)
             : this(true, aCommands)
-        {         
+        {
         }
 
         public GitModuleForm(bool enablePositionRestore, GitUICommands aCommands)

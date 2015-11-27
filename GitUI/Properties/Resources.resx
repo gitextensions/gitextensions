@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -726,5 +726,40 @@
   </data>
   <data name="IconSubmoduleRevisionSemiUpDirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\IconSubmoduleRevisionSemiUpDirty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Coders" xml:space="preserve">
+    <value>Arkady Shapkin, Janusz Białobrzewski, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
+Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington,
+Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick,
+Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl,
+Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, mausch, xaro,
+Xharze, Kim Christensen, showell, Daniel Doubrovkine, mdk, Marc Murray, rferriz, Jacek Pasternak, miloja,
+Ed Starback, Alberto Chiesa, Charles Brossollet, Patrick Earl, ultonis, Michael Frenzel, Airat Salikhov, Max Malook,
+ikke, Simon Walker, Arnaud Fabre, Andy Lee, Joe Brown, Rodrigo, John Gietzen, Ralph Haußmann, Rodrigo Fraga,
+Michael West, David Vierra, Mark Pizzolato, Alexander Mueller, marcinmagier, Alexander Puzynia, ferow2k, lynxstv,
+nitoyon, iamxail, Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Phillip Cohen, Andy Royle, Masanori Tanaka,
+Alex Ford, Arne Janbu, Dan Rigby, pravic, Linquize, Clinton Daniel, Reto Schoening, mabako, Tal952, Aviad Pineles,
+Markus Stein, Marcus Bauer, Nay, Joe Phillips, Cameron Will, Donatas Mačiūnas, Jesse Bartley, Dave Brotherstone,
+Pieter van Ginkel, australiensun, Vincent Gravade, Hiroyuki Sato, Isaac Devine, Konstantin Tenzin, Stefan Laut,
+Jeromy Johnson, Kate von Roeder, Tor Arvid Lund, jberger, kunigaku, Jay Asbury, Philippe Miossec, Pedro Pombeiro,
+Vincent Meurisse, itori, Greg Sohl, Daniel Bradley, Robert Schroeder, Birunthan Mohanathas, Christopher Buxenstein,
+Gordon Tyler, Dean Herbert, Jacob Berger, slaut, Gorbach Alexey, Michael Naumov, Zbigniew Lis, Desterly, gor,
+Kyle Nicholls, Olmo del Corral, TheGeoist, Cahyadi Hendrawan, Christian Schuster, Christopher R. Wedman, Dandalf,
+Daniel Sack, Dominik Rauch, Henrik Torstensson, Irina Erofeeva, Joan Charmant, Matthew Malkin, Philip Daniels,
+Sam Kelleher, Sui, Tom Rathbone, Ulrich Buchgraber, Alexander Ulitin, Bill Yang, bookman25, dedale, jeffqc,
+lanfeust69, ulatekh, vitaly, jtacoma, forbjok, Sergey Azarkevich, Joshua Tacoma, Klas Mellbourn, Erik Peters,
+Dmitry Oksenchuk, Andrew Orlov, BinSys, careri</value>
+  </data>
+  <data name="Designers" xml:space="preserve">
+    <value>Andréj Telle, Oliver Friedrich</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Translators" xml:space="preserve">
+    <value>Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, xaro, bleis-tift, Ralph Haußmann,
+Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio, australiensun, Airat Salikhov, Dave Brotherstone,
+diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh, Victor Shih, bygreencn, mrahn80,
+Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   </data>
 </root>

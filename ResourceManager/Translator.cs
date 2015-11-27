@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using ResourceManager.Xliff;
 
@@ -7,19 +8,28 @@ namespace ResourceManager
 {
     public static class Translator
     {
+        private static readonly string EnglishTranslationName = "English";
         //Try to cache the translation as long as possible
-        private static ITranslation _translation;
+        private static IDictionary<string, TranslationFile> _translation = new Dictionary<string, TranslationFile>();
         private static string _name;
 
-        public static ITranslation GetTranslation(string translationName)
+        public static IDictionary<string, TranslationFile> GetTranslation(string translationName)
         {
             if (string.IsNullOrEmpty(translationName))
             {
-                _translation = null;
+                _translation = new Dictionary<string, TranslationFile>();
             }
             else if (!translationName.Equals(_name))
             {
-                 _translation = TranslationSerializer.Deserialize(Path.Combine(GetTranslationDir(), translationName + ".xlf"));               
+                _translation = new Dictionary<string, TranslationFile>();
+                var result = Directory.EnumerateFiles(GetTranslationDir(), translationName + "*.xlf");
+                foreach (var file in result)
+                {
+                    var name = Path.GetFileNameWithoutExtension(file).Substring(translationName.Length);
+                    var t = TranslationSerializer.Deserialize(file) ??
+                            new TranslationFile();
+                    _translation[name] = t;
+                }
             }
             _name = translationName;
             return _translation;
@@ -44,23 +54,28 @@ namespace ResourceManager
                 foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))
                 {
                     var name = Path.GetFileNameWithoutExtension(fileName);
-                    if (String.Compare("English", name, StringComparison.CurrentCultureIgnoreCase) == 0)
+                    if (name.IndexOf(".") > 0)
+                        continue;
+                    if (String.Compare(EnglishTranslationName, name, StringComparison.CurrentCultureIgnoreCase) == 0)
                         continue;
                     translations.Add(name);
                 }
             } catch
             {
-                
+
             }
             return translations.ToArray();
         }
 
         public static void Translate(ITranslate obj, string translationName)
         {
-            ITranslation translation = GetTranslation(translationName);
-            if (translation == null)
+            var translation = GetTranslation(translationName);
+            if (translation.Count == 0)
                 return;
-            obj.TranslateItems(translation);
+            foreach (var pair in translation)
+            {
+                obj.TranslateItems(pair.Value);
+            }
         }
     }
 }

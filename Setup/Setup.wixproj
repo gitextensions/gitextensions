@@ -28,6 +28,19 @@
     <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
     <DefineConstants>Version=$(Version);NumericVersion=$(NumericVersion);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;Version=$(Version);NumericVersion=$(NumericVersion);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
+    <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
+    <DefineConstants>Version=$(Version);NumericVersion=$(NumericVersion);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
     <Compile Include="UI\CancelDlg.wxs" />

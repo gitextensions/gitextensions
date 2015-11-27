@@ -88,6 +88,11 @@ namespace GitCommands.Settings
             SetValue(setting, ConfigSection.FixPath(value));
         }
 
+        public IList<ConfigSection> GetConfigSections()
+        {
+            return SettingsCache.GetConfigSections();
+        }
+
         public void RemoveConfigSection(string configSectionName)
         {
             SettingsCache.RemoveConfigSection(configSectionName);
@@ -143,7 +148,8 @@ namespace GitCommands.Settings
                 }
                 catch (ArgumentException)
                 {
-                    Debug.WriteLine(string.Format("Unsupported encoding set in git config file: {0}\nPlease check the setting {1} in config file.", encodingName, settingName));
+                    Debug.WriteLine("Unsupported encoding set in git config file: {0}\n" +
+                        "Please check the setting {1} in config file.", encodingName, settingName);
                     result = null;
                 }
             }

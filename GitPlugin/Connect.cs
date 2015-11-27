@@ -85,7 +85,7 @@ namespace GitPlugin
                 case ext_ConnectMode.ext_cm_AfterStartup:
                     // The add-in was loaded by hand after startup using the Add-In Manager
                     // Initialize it in the same way that when is loaded on startup
-                    GitPluginInit();
+                    GitPluginUIUpdate();
                     break;
             }
         }
@@ -107,27 +107,18 @@ namespace GitPlugin
             }
         }
 
-        bool IsVS2008OrUpper
-        {
-            get
-            {
-                var ver = new Version(_gitPlugin.Application.Version.Split(new[] { ' ' })[0]);
-                return ver.Major >= 9;
-            }
-        }
-
         private void GitPluginUISetupMainMenu()
         {
             // Try to delete the commandbar if it exists from a previous execution,
             // because the /resetaddin command-line switch of VS 2005 (or higher) add-in
             // projects only resets commands and buttons, not commandbars
-            _gitPlugin.DeleteOldGitMainMenuBar();
-            _gitPlugin.DeleteGitMainMenuBar();
+            _gitPlugin.DeleteOldGitExtMainMenuBar();
+            _gitPlugin.DeleteGitExtMainMenuBar();
 
             try
             {
                 // Add a new commandbar popup
-                CommandBar mainMenuBar = _gitPlugin.AddGitMainMenuBar(GetToolsMenuName());
+                CommandBar mainMenuBar = _gitPlugin.AddGitExtMainMenuBar(GetToolsMenuName());
                 CommandBarPopup mainMenuPopup = (CommandBarPopup)mainMenuBar.Parent;
 
                 var n = 1;
@@ -187,11 +178,11 @@ namespace GitPlugin
             // Try to delete the commandbar if it exists from a previous execution,
             // because the /resetaddin command-line switch of VS 2005 (or higher) add-in
             // projects only resets commands and buttons, not commandbars
-            _gitPlugin.DeleteGitCommandBar();
+            _gitPlugin.DeleteGitExtCommandBar();
 
             try
             {
-                CommandBar commandBar = _gitPlugin.AddGitCommandBar(MsoBarPosition.msoBarTop);
+                CommandBar commandBar = _gitPlugin.AddGitExtCommandBar(MsoBarPosition.msoBarTop);
 
                 _gitPlugin.AddToolbarCommandWithText(commandBar, "Commit", "Commit", "Commit changes", 7, 1);
                 _gitPlugin.AddToolbarCommand(commandBar, "Browse", "Browse", "Browse repository", 12, 2);
@@ -255,6 +246,52 @@ namespace GitPlugin
             catch (Exception ex)
             {
                 this._gitPlugin.OutputPane.OutputString("Error loading plugin: " + ex);
+            }
+        }
+
+        private void GitPluginUIUpdate()
+        {
+            if (_gitPlugin == null) return;
+
+            GitPluginInit();
+            GitPluginUIUpdateMenu();
+            GitPluginUIUpdateCommandBar();
+
+            // enable update captions after initialization
+            Plugin.AllowCaptionUpdate = true;
+        }
+
+        private void GitPluginUIUpdateMenu()
+        {
+            try
+            {
+                if (_gitPlugin.IsReinstallMenuRequired())
+                {
+                    GitPluginUISetupMainMenu();
+                    GitPluginUISetupContextMenu();
+                }
+            }
+            catch (Exception ex)
+            {
+                this._gitPlugin.OutputPane.OutputString("Error installing GitExt menu: " + ex);
+            }
+        }
+
+        private void GitPluginUIUpdateCommandBar()
+        {
+            try
+            {
+                if (_gitPlugin.IsReinstallCommandBarRequired())
+                {
+                    GitPluginUISetupCommandBar();
+                }
+                else
+                {
+                    _gitPlugin.UpdateCommandBarStyles();
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -350,7 +387,7 @@ namespace GitPlugin
 
         public void OnStartupComplete(ref Array custom)
         {
-            this.GitPluginInit();
+            GitPluginUIUpdate();
         }
 
         public void OnBeginShutdown(ref Array custom)

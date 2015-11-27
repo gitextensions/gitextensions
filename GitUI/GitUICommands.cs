@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
@@ -399,7 +400,7 @@ namespace GitUI
 
         }
 
-        public void ShowModelessForm(IWin32Window owner, bool requiresValidWorkingDir, 
+        public void ShowModelessForm(IWin32Window owner, bool requiresValidWorkingDir,
             GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<Form> provideForm)
         {
             if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
@@ -428,7 +429,7 @@ namespace GitUI
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="requiresValidWorkingDir">If action requires valid working directory</param>
         /// <param name="owner">Owner window</param>
@@ -437,10 +438,10 @@ namespace GitUI
         /// <param name="postEvent">Event invoked after performing action</param>
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
         /// <returns>true if action was successfully done, false otherwise</returns>
-        public bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo, 
+        public bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo,
             GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<bool> action)
         {
-            bool actionDone = false;            
+            bool actionDone = false;
             RepoChangedNotifier.Lock();
             try
             {
@@ -466,7 +467,7 @@ namespace GitUI
             return actionDone;
         }
 
-        public void DoActionOnRepo(Action action) 
+        public void DoActionOnRepo(Action action)
         {
             Func<bool> fnc = () =>
                 {
@@ -588,7 +589,7 @@ namespace GitUI
             return StartCreateBranchDialog(null, null);
         }
 
-        public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler, GitModuleChangedEventHandler GitModuleChanged)
+        public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> GitModuleChanged)
         {
             Func<bool> action = () =>
             {
@@ -600,7 +601,7 @@ namespace GitUI
             return DoActionOnRepo(owner, false, false, PreClone, PostClone, action);
         }
 
-        public bool StartCloneDialog(IWin32Window owner, string url, GitModuleChangedEventHandler GitModuleChanged)
+        public bool StartCloneDialog(IWin32Window owner, string url, EventHandler<GitModuleEventArgs> GitModuleChanged)
         {
             return StartCloneDialog(owner, url, false, GitModuleChanged);
         }
@@ -625,7 +626,7 @@ namespace GitUI
             return StartCloneDialog(null, null, false, null);
         }
 
-        public bool StartSvnCloneDialog(IWin32Window owner, GitModuleChangedEventHandler GitModuleChanged)
+        public bool StartSvnCloneDialog(IWin32Window owner, EventHandler<GitModuleEventArgs> GitModuleChanged)
         {
             Func<bool> action = () =>
             {
@@ -763,7 +764,7 @@ namespace GitUI
             return StartSvnFetchDialog(null);
         }
 
-        public bool StartInitializeDialog(IWin32Window owner, GitModuleChangedEventHandler GitModuleChanged)
+        public bool StartInitializeDialog(IWin32Window owner, EventHandler<GitModuleEventArgs> GitModuleChanged)
         {
             return StartInitializeDialog(owner, null, GitModuleChanged);
         }
@@ -773,7 +774,7 @@ namespace GitUI
             return StartInitializeDialog((IWin32Window)null, null);
         }
 
-        public bool StartInitializeDialog(IWin32Window owner, string dir, GitModuleChangedEventHandler GitModuleChanged)
+        public bool StartInitializeDialog(IWin32Window owner, string dir, EventHandler<GitModuleEventArgs> GitModuleChanged)
         {
             Func<bool> action = () =>
             {
@@ -1078,6 +1079,7 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, action);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "It seems that all prevForm variable values are different so there is not a double dispose here. However the logic is better to be rewritten")]
         public bool StartCherryPickDialog(IWin32Window owner, IEnumerable<GitRevision> revisions)
         {
             if (revisions == null)
@@ -1304,7 +1306,7 @@ namespace GitUI
             {
                 using (var form = new FormVerify(this))
                     form.ShowDialog(owner);
-                
+
                 return true;
             };
 
@@ -1318,7 +1320,7 @@ namespace GitUI
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="owner"></param>
         /// <param name="preselectRemote">makes the FormRemotes initialially select the given remote</param>
@@ -1471,12 +1473,18 @@ namespace GitUI
         {
             if (!InvokeEvent(owner, PreBrowse))
                 return false;
-
             var form = new FormBrowse(this, filter);
-            Application.Run(form);
+
+            if (Application.MessageLoop)
+            {
+                form.Show();
+            }
+            else
+            {
+                Application.Run(form);
+            }
 
             InvokeEvent(owner, PostBrowse);
-
             return true;
         }
 
@@ -1548,7 +1556,7 @@ namespace GitUI
                         pushed = !form.ErrorOccurred;
 
                     return dlgResult == DialogResult.OK;
-                }                
+                }
             };
 
             bool done = DoActionOnRepo(owner, true, true, PrePush, PostPush, action);
@@ -1579,7 +1587,7 @@ namespace GitUI
                             form.SetPatchDir(patchFile);
                         else
                             form.SetPatchFile(patchFile);
-                        
+
                         form.ShowDialog(owner);
 
                         return true;
@@ -1715,7 +1723,7 @@ namespace GitUI
             }
         }
 
-        public void StartCloneForkFromHoster(IWin32Window owner, IRepositoryHostPlugin gitHoster, GitModuleChangedEventHandler GitModuleChanged)
+        public void StartCloneForkFromHoster(IWin32Window owner, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs> GitModuleChanged)
         {
             WrapRepoHostingCall("View pull requests", gitHoster, gh =>
             {
@@ -1788,27 +1796,28 @@ namespace GitUI
             if (args.Length <= 1)
                 return;
 
-            if (args[1].Equals("blame") && args.Length <= 2)
+            var command = args[1];
+            if (command.Equals("blame") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open blame, there is no file selected.", "Blame");
                 return;
             }
-            if (args[1].Equals("difftool") && args.Length <= 2)
+            if (command.Equals("difftool") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open difftool, there is no file selected.", "Difftool");
                 return;
             }
-            if (args[1].Equals("filehistory") && args.Length <= 2)
+            if (command.Equals("filehistory") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open file history, there is no file selected.", "File history");
                 return;
             }
-            if (args[1].Equals("fileeditor") && args.Length <= 2)
+            if (command.Equals("fileeditor") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open file editor, there is no file selected.", "File editor");
                 return;
             }
-            if (args[1].Equals("revert") && args.Length <= 2)
+            if (command.Equals("revert") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open revert, there is no file selected.", "Revert");
                 return;
@@ -1868,7 +1877,7 @@ namespace GitUI
                     Module.OpenWithDifftool(args[2]);
                     return;
                 case "filehistory": // filename
-                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]))
+                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule != null)
                         Module = Module.SuperprojectModule;
                     RunFileHistoryCommand(args);
                     return;
@@ -1884,6 +1893,9 @@ namespace GitUI
                     return;
                 case "gitignore":
                     StartEditGitIgnoreDialog();
+                    return;
+                case "installcredhelper":
+                    InstallCredHelper();
                     return;
                 case "init":        // [path]
                     RunInitCommand(args);
@@ -1935,6 +1947,9 @@ namespace GitUI
                 case "viewpatch":   // [filename]
                     StartViewPatchDialog(args.Length == 3 ? args[2] : "");
                     return;
+                case "uninstall":
+                    Uninstall();
+                    return;
                 default:
                     if (args[1].StartsWith("git://") || args[1].StartsWith("http://") || args[1].StartsWith("https://"))
                     {
@@ -1951,6 +1966,37 @@ namespace GitUI
             var frmCmdLine = new FormCommandlineHelp();
             frmCmdLine.StartPosition = FormStartPosition.CenterScreen;
             Application.Run(frmCmdLine);
+        }
+
+        private void InstallCredHelper()
+        {
+            string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
+            if (!File.Exists(gcsFileName))
+            {
+                return;
+            }
+
+            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
+            configFileGlobalSettings.SetValue("credential.helper", "!\"" + gcsFileName + "\"");
+            configFileGlobalSettings.Save();
+        }
+
+        private void Uninstall()
+        {
+            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
+
+            var coreEditor = configFileGlobalSettings.GetValue("core.editor");
+            if (coreEditor.ToLowerInvariant().Contains(AppSettings.GetInstallDir().ToPosixPath().ToLowerInvariant()))
+            {
+                configFileGlobalSettings.SetValue("core.editor", "");
+            }
+
+            var credentialHelper = configFileGlobalSettings.GetValue("credential.helper");
+            if (credentialHelper.ToLowerInvariant().Contains(AppSettings.GetInstallDir().ToLowerInvariant()))
+            {
+                configFileGlobalSettings.SetValue("credential.helper", "");
+            }
+            configFileGlobalSettings.Save();
         }
 
         private void RunMergeCommand(Dictionary<string, string> arguments)

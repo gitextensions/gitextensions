@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.AboutBoxDialog
+﻿using ResourceManager;
+
+namespace GitUI.CommandsDialogs.AboutBoxDialog
 {
     public partial class FormContributors : GitExtensionsForm
     {

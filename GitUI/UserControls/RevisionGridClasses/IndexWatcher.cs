@@ -4,12 +4,19 @@ using GitCommands;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    [Serializable]
-    public delegate void IndexChangedEventHandler(bool indexChanged);
+    public class IndexChangedEventArgs : EventArgs
+    {
+        public IndexChangedEventArgs(bool isIndexChanged)
+        {
+            IsIndexChanged = isIndexChanged;
+        }
+
+        public bool IsIndexChanged { get; private set; }
+    }
 
     public sealed class IndexWatcher : IDisposable
     {
-        public event IndexChangedEventHandler Changed;
+        public event EventHandler<IndexChangedEventArgs> Changed;
 
         private readonly IGitUICommandsSource UICommandsSource;
 
@@ -36,7 +43,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             RefsWatcher.Changed += fileSystemWatcher_Changed;
         }
 
-        void UICommandsSource_GitUICommandsChanged(IGitUICommandsSource sender, GitUICommands oldCommands)
+        void UICommandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
             Clear();
         }
@@ -80,7 +87,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 if (!enabled)
                     return true;
 
-                if (!Module.IsBareRepository())
+                if (Path != Module.GetGitDirectory())
                     return true;
 
                 return indexChanged;
@@ -91,7 +98,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 GitIndexWatcher.EnableRaisingEvents = !IndexChanged;
 
                 if (Changed != null)
-                    Changed(IndexChanged);
+                    Changed(this, new IndexChangedEventArgs(IndexChanged));
             }
         }
 
@@ -119,7 +126,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private void RefreshWatcher()
         {
-            if (!Module.IsBareRepository() ||
+            if (Path != Module.GetGitDirectory() ||
                 enabled != GitCommands.AppSettings.UseFastChecks)
                 SetFileSystemWatcher();
         }

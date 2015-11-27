@@ -24,9 +24,9 @@ namespace GitUI.Notifications
         }
 
         /// <summary>Subscribes to a git UI commands source's notifications.</summary>
-        void OnGitUICommandsChanged(IGitUICommandsSource sender, GitUICommands oldcommands)
+        private void OnGitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
-            Subscribe(sender);
+            Subscribe(sender as IGitUICommandsSource);
         }
 
         /// <summary>Subscribes to a git UI commands source's notifications.</summary>
@@ -110,6 +110,7 @@ namespace GitUI.Notifications
         /// <summary>Adds a notification to the status feed.</summary>
         void Add(Notification notification)
         {
+            nNotifications++;
             Update();
         }
     }

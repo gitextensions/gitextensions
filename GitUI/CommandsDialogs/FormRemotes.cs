@@ -257,24 +257,11 @@ namespace GitUI.CommandsDialogs
 
         private void TestConnectionClick(object sender, EventArgs e)
         {
-            System.Uri uri;
-            string sshURL = "";
-            if (System.Uri.TryCreate(Url.Text, UriKind.RelativeOrAbsolute, out uri) &&
-                uri.IsAbsoluteUri && uri.Scheme == "ssh")
-            {
-                if (!string.IsNullOrEmpty(uri.UserInfo))
-                    sshURL = uri.UserInfo + "@";
-                sshURL += uri.Authority;
-                if (uri.IsDefaultPort)
-                    sshURL += ":" + uri.LocalPath.Substring(1);
-                else
-                    sshURL += uri.LocalPath;
-            }
-            else
-                sshURL = Url.Text;
+            string url = GitCommandHelpers.GetPlinkCompatibleUrl(Url.Text);
+
             Module.RunExternalCmdDetachedShowConsole(
                 "cmd.exe",
-                string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, sshURL));
+                string.Format("/k \"\"{0}\" -T {1}\"", AppSettings.Plink, url));
         }
 
         private void PruneClick(object sender, EventArgs e)

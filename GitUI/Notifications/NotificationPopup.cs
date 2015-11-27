@@ -18,10 +18,11 @@ namespace GitUI.Notifications
     {
         TranslationString _of = new TranslationString("of");
 
-        NotificationsForm notificationsForm;
+        private NotificationsForm notificationsForm;
 
         public NotificationPopup()
         {
+            notificationsForm = new NotificationsForm(notificationList);
             InitializeComponent();
 
             Opacity = 0;
@@ -186,7 +187,7 @@ namespace GitUI.Notifications
             }
         }
 
-        NotificationList notificationList;
+        NotificationList notificationList = new NotificationList();
 
         void Upate()
         {

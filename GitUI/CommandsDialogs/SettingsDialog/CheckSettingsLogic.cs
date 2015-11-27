@@ -31,7 +31,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             valid = SolveDiffToolForKDiff() && valid;
             valid = SolveGitExtensionsDir() && valid;
             valid = SolveEditor() && valid;
-            valid = SolveGitCredentialStore() && valid;
 
             CommonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
             CommonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
@@ -50,40 +49,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return true;
         }
 
-        public bool SolveGitCredentialStore()
-        {
-            if (!CheckGitCredentialStore())
-            {
-                string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
-                if (File.Exists(gcsFileName))
-                {
-                    var config = GlobalConfigFileSettings;
-                    if (EnvUtils.RunningOnWindows())
-                        config.SetPathValue("credential.helper", "!\"" + gcsFileName + "\"");
-                    else if (EnvUtils.RunningOnMacOSX())
-                        config.SetValue("credential.helper", "osxkeychain");
-                    else
-                        config.SetValue("credential.helper", "cache --timeout=300"); // 5 min
-                    
-                    return true;
-                }
-                return false;
-            }
-            return true;
-        }
-
-        public bool CheckGitCredentialStore()
-        {
-            string value = GlobalConfigFileSettings.GetValue("credential.helper");
-            bool isValid;
-            if (EnvUtils.RunningOnWindows())
-                isValid = value.Contains("git-credential-winstore.exe");
-            else
-                isValid = !string.IsNullOrEmpty(value);
-
-            return isValid;
-        }
-
         public bool SolveLinuxToolsDir(string possibleNewPath = null)
         {
             if (!EnvUtils.RunningOnWindows())
@@ -98,33 +63,36 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 gitpath = possibleNewPath.Trim();
             }
 
-            gitpath = gitpath.Replace(@"\cmd\git.exe", @"\bin\")
-                .Replace(@"\cmd\git.cmd", @"\bin\")
-                .Replace(@"\bin\git.exe", @"\bin\");
-
-            if (Directory.Exists(gitpath))
+            foreach (var toolsPath in new[] { @"usr\bin\", @"bin\" })
             {
-                if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
+                gitpath = gitpath.Replace(@"\cmd\git.exe", @"\" + toolsPath)
+                    .Replace(@"\cmd\git.cmd", @"\" + toolsPath)
+                    .Replace(@"\bin\git.exe", @"\" + toolsPath);
+
+                if (Directory.Exists(gitpath))
                 {
-                    AppSettings.GitBinDir = gitpath;
+                    if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
+                    {
+                        AppSettings.GitBinDir = gitpath;
+                        return true;
+                    }
+                }
+
+                if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
+                {
+                    AppSettings.GitBinDir = "";
                     return true;
                 }
-            }
 
-            if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
-            {
-                AppSettings.GitBinDir = "";
-                return true;
-            }
-
-            foreach (var path in GetGitLocations())
-            {
-                if (Directory.Exists(path + @"bin\"))
+                foreach (var path in GetGitLocations())
                 {
-                    if (File.Exists(path + @"bin\sh.exe") || File.Exists(path + @"bin\sh"))
+                    if (Directory.Exists(path + toolsPath))
                     {
-                        AppSettings.GitBinDir = path + @"bin\";
-                        return true;
+                        if (File.Exists(path + toolsPath + "sh.exe") || File.Exists(path + toolsPath + "sh"))
+                        {
+                            AppSettings.GitBinDir = path + toolsPath;
+                            return true;
+                        }
                     }
                 }
             }
@@ -133,6 +101,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private IEnumerable<string> GetGitLocations()
         {
+            string envVariable = Environment.GetEnvironmentVariable("GITEXT_GIT");
+            if (!String.IsNullOrEmpty(envVariable)) yield return envVariable;
             yield return
                 CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
@@ -210,8 +180,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static bool CheckIfFileIsInPath(string fileName)
         {
-            string path = string.Concat(Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.User), ";",
-                                        Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine));
+            string path = Environment.GetEnvironmentVariable("PATH");
 
             return path.Split(';').Any(dir => File.Exists(dir + " \\" + fileName) || File.Exists(Path.Combine(dir, fileName)));
         }

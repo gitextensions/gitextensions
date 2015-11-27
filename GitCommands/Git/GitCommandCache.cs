@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GitCommands
 {
@@ -25,9 +26,7 @@ namespace GitCommands
         //Cache limit
         private const int CacheLimit = 40;
 
-        public delegate void CachedCommandsChangedHandler();
-
-        public static event CachedCommandsChangedHandler CachedCommandsChanged = delegate { };
+        public static event EventHandler CachedCommandsChanged = delegate { };
 
         /// <summary>
         /// Simple dictionary to store cmd/output pairs
@@ -89,7 +88,7 @@ namespace GitCommands
                 if (queue.Count >= CacheLimit)
                     commandCache.Remove(queue.Dequeue());
             }
-            CachedCommandsChanged();
+            CachedCommandsChanged(typeof(GitCommandCache), EventArgs.Empty);
         }
 
         public static void CleanCache()
@@ -99,7 +98,7 @@ namespace GitCommands
                 if (queue != null)
                     queue.Clear();
             }
-            CachedCommandsChanged();
+            CachedCommandsChanged(typeof(GitCommandCache), EventArgs.Empty);
         }
     }
 }

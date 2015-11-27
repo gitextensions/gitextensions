@@ -1,17 +1,16 @@
-﻿using System;
-using System.ComponentModel;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitUI.Properties;
+using ResourceManager;
+using Settings = GitCommands.AppSettings;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
-using ResourceManager;
-using Settings = GitCommands.AppSettings;
-using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -19,38 +18,39 @@ namespace GitUI
     /// <remarks>
     /// Includes support for font, hotkey, icon, translation, and position restore.
     /// </remarks></summary>
-    public class GitExtensionsForm : Form, ITranslate
+    public class GitExtensionsForm : GitExtensionsFormBase
     {
         internal static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
-        /// <summary>indicates whether the <see cref="Form"/> has been translated</summary>
-        bool _translated;
         /// <summary>indicates whether the <see cref="Form"/>'s position will be restored</summary>
-        bool _enablePositionRestore;
+        readonly bool _enablePositionRestore;
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         public GitExtensionsForm()
-            : this(false) { }
+            : this(false)
+        {
+        }
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> indicating position restore.</summary>
         /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
         /// will be restored upon being re-opened.</param>
         public GitExtensionsForm(bool enablePositionRestore)
+            : base()
         {
             _enablePositionRestore = enablePositionRestore;
 
             Icon = ApplicationIcon;
-            SetFont();
-
-            ShowInTaskbar = Application.OpenForms.Count <= 0 || (Application.OpenForms.Count == 1 && Application.OpenForms[0] is FormSplash);
+            FormClosing += GitExtensionsForm_FormClosing;
 
             var cancelButton = new Button();
             cancelButton.Click += CancelButtonClick;
 
             CancelButton = cancelButton;
+        }
 
-            Load += GitExtensionsFormLoad;
-            FormClosing += GitExtensionsForm_FormClosing;
+        public virtual void CancelButtonClick(object sender, EventArgs e)
+        {
+            Close();
         }
 
         void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -68,56 +68,6 @@ namespace GitUI
                 catch (InvalidOperationException) { }
             }
 #endif
-        }
-
-        #region Hotkeys
-
-        /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>
-        protected bool HotkeysEnabled { get; set; }
-
-        /// <summary>Gets or sets the hotkeys</summary>
-        protected IEnumerable<Hotkey.HotkeyCommand> Hotkeys { get; set; }
-
-        /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (HotkeysEnabled && Hotkeys != null)
-                foreach (var hotkey in Hotkeys)
-                {
-                    if (hotkey != null && hotkey.KeyData == keyData)
-                    {
-                        return ExecuteCommand(hotkey.CommandCode);
-                    }
-                }
-
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
-
-        protected Keys GetShortcutKeys(int commandCode)
-        {
-            var hotkey = GetHotkeyCommand(commandCode);
-            return hotkey == null ? Keys.None : hotkey.KeyData;
-        }
-
-        protected Hotkey.HotkeyCommand GetHotkeyCommand(int commandCode)
-        {
-            if (Hotkeys == null)
-                return null;
-
-            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
-        }
-
-        /// <summary>Override this method to handle form-specific Hotkey commands.</summary>
-        protected virtual bool ExecuteCommand(int command)
-        {
-            return false;
-        }
-
-        #endregion
-
-        private void SetFont()
-        {
-            Font = Settings.Font;
         }
 
         #region icon
@@ -234,62 +184,27 @@ namespace GitUI
 
         #endregion icon
 
-        /// <summary>Indicates whether this is a valid <see cref="IComponent"/> running in design mode.</summary>
-        static bool CheckComponent(object value)
-        {
-            var component = value as IComponent;
-            if (component == null)
-                return false;
 
-            var site = component.Site;
-            return (site != null) && site.DesignMode;
+        /// <summary>Sets <see cref="AutoScaleMode"/>,
+        /// restores position, raises the <see cref="Form.Load"/> event,
+        /// and .
+        /// </summary>
+        protected override void OnLoad(EventArgs e)
+        {
+
+            base.OnLoad(e);
+
+            if (_enablePositionRestore)
+                RestorePosition(GetType().Name);
+
+            if (!CheckComponent(this))
+                OnRuntimeLoad(e);
         }
 
         /// <summary>Invoked at runtime during the <see cref="OnLoad"/> method.</summary>
         protected virtual void OnRuntimeLoad(EventArgs e)
         {
 
-        }
-
-        /// <summary>Sets <see cref="AutoScaleMode"/>, 
-        /// restores position, raises the <see cref="Form.Load"/> event,
-        /// and .
-        /// </summary>
-        protected override void OnLoad(EventArgs e)
-        {
-            AutoScaleMode = Settings.EnableAutoScale
-                ? AutoScaleMode.Dpi
-                : AutoScaleMode.None;
-
-            if (_enablePositionRestore)
-                RestorePosition(GetType().Name);
-
-            base.OnLoad(e);
-
-            if (!CheckComponent(this))
-                OnRuntimeLoad(e);
-        }
-
-        private void GitExtensionsFormLoad(object sender, EventArgs e)
-        {
-            // find out if the value is a component and is currently in design mode
-            var isComponentInDesignMode = CheckComponent(this);
-
-            if (!_translated && !isComponentInDesignMode)
-                throw new Exception("The control " + GetType().Name +
-                                    " is not translated in the constructor. You need to call Translate() right after InitializeComponent().");
-        }
-
-        /// <summary>Translates the <see cref="Form"/>'s fields and properties, including child controls.</summary>
-        protected void Translate()
-        {
-            Translator.Translate(this, Settings.CurrentTranslation);
-            _translated = true;
-        }
-
-        public virtual void CancelButtonClick(object sender, EventArgs e)
-        {
-            Close();
         }
 
         private bool _windowCentred;
@@ -433,16 +348,6 @@ namespace GitUI
             }
 
             return null;
-        }
-
-        public virtual void AddTranslationItems(ITranslation translation)
-        {
-            TranslationUtils.AddTranslationItemsFromFields(Name, this, translation);
-        }
-
-        public virtual void TranslateItems(ITranslation translation)
-        {
-            TranslationUtils.TranslateItemsFromFields(Name, this, translation);
         }
     }
 }

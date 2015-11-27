@@ -26,10 +26,10 @@ namespace TfsInterop.Interface
         string Url { get; set; }
     }
 
-    public interface ITfsHelper
+    public interface ITfsHelper : IDisposable
     {
         bool IsDependencyOk();
         void ConnectToTfsServer(string hostname, string teamCollection, string projectName, string buildDefinition = null);
-        IList<IBuild> QueryBuilds();
+        IList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running);
     }
 }

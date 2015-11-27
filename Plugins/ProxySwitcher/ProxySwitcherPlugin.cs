@@ -5,13 +5,10 @@ namespace ProxySwitcher
 {
     public class ProxySwitcherPlugin : GitPluginBase
     {
-        #region Translation
-        private readonly TranslationString _pluginDescription = new TranslationString("Proxy Switcher");
-        #endregion
-
-        public override string Description
+        public ProxySwitcherPlugin()
         {
-            get { return _pluginDescription.Text; }
+            Description = "Proxy Switcher";
+            Translate();
         }
 
         public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
