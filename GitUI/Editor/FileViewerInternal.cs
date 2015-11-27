@@ -9,6 +9,7 @@ using ICSharpCode.TextEditor.Document;
 using ResourceManager;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Linq;
 
 namespace GitUI.Editor
 {
@@ -35,9 +36,7 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
 
-            TextEditor.ShowLineNumbers = false;
             _lineNumbersControl = new DiffViewerLineNumberCtrl(TextEditor.ActiveTextAreaControl.TextArea);
-            TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _lineNumbersControl);
             _diffLineNumAnalyzer.OnLineNumAnalyzed += line =>
             {
                 _lineNumbersControl.AddDiffLineNum(line);
@@ -141,8 +140,6 @@ namespace GitUI.Editor
 
         public void SetText(string text, bool isDiff = false)
         {
-            _diffHighlightService = DiffHighlightService.IsCombinedDiff(text) ? CombinedDiffHighlightService.Instance : DiffHighlightService.Instance;
-
             _lineNumbersControl.Clear();
 
             TextEditor.Text = text;
@@ -150,6 +147,17 @@ namespace GitUI.Editor
 
             if (isDiff)
             {
+                TextEditor.ShowLineNumbers = false;
+                _lineNumbersControl.SetVisibility(true);
+                var index = TextEditor.ActiveTextAreaControl.TextArea.LeftMargins.IndexOf(_lineNumbersControl);
+                if (index == -1)
+                {
+                    TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _lineNumbersControl);
+                }
+
+                _diffHighlightService = DiffHighlightService.IsCombinedDiff(text)
+                    ? CombinedDiffHighlightService.Instance
+                    : DiffHighlightService.Instance;
                 _diffLineNumAnalyzer.StartAsync(text, () =>
                 {
                     if (TextEditor != null && !TextEditor.Disposing && TextEditor.Visible)
@@ -157,6 +165,11 @@ namespace GitUI.Editor
                         TextEditor.ActiveTextAreaControl.TextArea.Refresh();
                     }
                 });
+            }
+            else
+            {
+                TextEditor.ShowLineNumbers = true;
+                _lineNumbersControl.SetVisibility(false);
             }
         }
 

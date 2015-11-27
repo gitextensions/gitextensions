@@ -14,6 +14,7 @@ namespace GitUI.Editor.Diff
         const int TextHorizontalMargin = 4;
 
         private int _maxValueOfLineNum;
+        private bool _visible = true;
 
         public DiffViewerLineNumberCtrl(TextArea textArea) : base(textArea)
         {
@@ -24,7 +25,7 @@ namespace GitUI.Editor.Diff
         {
             get
             {
-                if (!DiffLines.Any())
+                if (!DiffLines.Any() || !_visible)
                 {
                     return new Size(0, 0);
                 }
@@ -138,6 +139,11 @@ namespace GitUI.Editor.Diff
                 return "R" + line.RightLineNum;
             }
             return null;
+        }
+
+        public void SetVisibility(bool visible)
+        {
+            _visible = visible;
         }
     }
 }
