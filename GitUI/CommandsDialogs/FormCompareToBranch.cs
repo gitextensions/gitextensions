@@ -16,6 +16,10 @@ namespace GitUI.CommandsDialogs
             ShowInTaskbar = false;
             InitializeComponent();
             Translate();
+            if (!IsUICommandsInitialized)
+            {// UICommands is not initialized in translation unit test.
+                return;
+            }
             branchSelector.Initialize(remote: true, containRevisons: null);
             branchSelector.CommitToCompare = selectedCommit;
             Activated += OnActivated;

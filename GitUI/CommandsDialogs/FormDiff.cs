@@ -43,6 +43,11 @@ namespace GitUI.CommandsDialogs
             _toolTipControl.SetToolTip(btnAnotherHeadCommit, anotherCommitTooltip.Text);
             _toolTipControl.SetToolTip(btnSwap, btnSwapTooltip.Text);
 
+            if (!IsUICommandsInitialized)
+            {// UICommands is not initialized in translation unit test.
+                return;
+            }
+
             _baseRevision = new GitRevision(Module, baseCommitSha);
             _headRevision = new GitRevision(Module, headCommitSha);
             _mergeBase = new GitRevision(Module, Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid));
