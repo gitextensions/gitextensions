@@ -208,6 +208,12 @@ namespace GitUI.UserControls
 
             public static void RegisterContextMenu(Type aType, ContextMenuStrip aMenu)
             {
+                if (DefaultContextMenus.ContainsKey(aType))
+                {
+                    // the translation unit test may create the RepoObjectTree multiple times,
+                    // which results in a duplicate key exception.
+                    return;
+                }
                 DefaultContextMenus.Add(aType, aMenu);
             }
 
