@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
 using ResourceManager;
+using System.Diagnostics;
 
 namespace Gerrit
 {
@@ -26,6 +27,7 @@ namespace Gerrit
         {
             InitializeComponent();
             Translate();
+            Trace.Assert (toolTip1 != null); // suppress warning on mono, because of "error as warning"
         }
 
         private void PublishClick(object sender, EventArgs e)
