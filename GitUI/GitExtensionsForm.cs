@@ -311,9 +311,9 @@ namespace GitUI
                 _windowPositionList.AddOrUpdate(position);
                 _windowPositionList.Save();
             }
-            catch (ConfigurationException)
+            catch (Exception)
             {
-                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
+                //TODO: howto restore a corrupted config?
             }
         }
 
@@ -346,9 +346,9 @@ namespace GitUI
                     return position;
                 }
             }
-            catch (ConfigurationException)
+            catch (Exception)
             {
-                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
+                //TODO: howto restore a corrupted config?
             }
 
             return null;
