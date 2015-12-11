@@ -10,7 +10,7 @@ Building installers for Git Extensions
     set_version_to.py --version 2.48
  
 
-3. Run BuildInstallers.VS2012.cmd or BuildInstallers.VS2013.cmd. This will generate two msi installers:   
+3. Run BuildInstallers.VS2012.cmd, or BuildInstallers.VS2013.cmd, or BuildInstallers.VS2015.cmd. This will generate two msi installers:   
     * GitExtensions248.msi - the standard install with only Git Extensions
     * GitExtensions248Complete.msi - also includes msysgit and KDiff3
 
