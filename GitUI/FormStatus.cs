@@ -14,9 +14,7 @@ namespace GitUI
         public delegate void ProcessStart(FormStatus form);
         public delegate void ProcessAbort(FormStatus form);
 
-        protected readonly SynchronizationContext syncContext;
         private bool UseDialogSettings = true;
-        private ProcessOutputTimer outpuTimer;
 
         public FormStatus(): this(true)
         { }
@@ -24,8 +22,6 @@ namespace GitUI
         public FormStatus(bool useDialogSettings)
             : base(true)
         {
-            outpuTimer = new ProcessOutputTimer(AppendMessageCrossThread);
-            syncContext = SynchronizationContext.Current;
             UseDialogSettings = useDialogSettings;
 
             InitializeComponent();
@@ -93,16 +89,9 @@ namespace GitUI
                     }
                     Text = text;
                 };
-            syncContext.Send(method, this);
+            BeginInvoke(method, this);
         }
 
-        public void AppendMessageCrossThread(string text)
-        {
-            if (syncContext == SynchronizationContext.Current)
-                AppendMessage(text);
-            else
-                syncContext.Post(o => AppendMessage(text), this);
-        }
 
         public void AddMessage(string text)
         {
@@ -114,23 +103,7 @@ namespace GitUI
             AddMessage(text + Environment.NewLine);
         }
 
-        private void AddMessageToTimer(string text)
-        {
-            if (outpuTimer != null)
-                outpuTimer.Append(text);
-        }
 
-        private void AppendMessage(string text)
-        {
-            //if not disposed
-            if (outpuTimer != null)
-            {
-                MessageTextBox.Text += text;
-                MessageTextBox.SelectionStart = MessageTextBox.Text.Length;
-                MessageTextBox.ScrollToCaret();
-                MessageTextBox.Visible = true;
-            }
-        }
 
 
         public void Done(bool isSuccess)
