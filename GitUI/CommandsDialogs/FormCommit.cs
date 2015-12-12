@@ -224,7 +224,7 @@ namespace GitUI.CommandsDialogs
                 splitMain.SplitterDistance = AppSettings.CommitDialogSplitter;
             if (AppSettings.CommitDialogRightSplitter != -1)
                 splitRight.SplitterDistance = AppSettings.CommitDialogRightSplitter;
-            
+
             Reset.Visible = AppSettings.ShowResetAllChanges;
             ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
@@ -404,7 +404,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.StageSelectedFile: return StageSelectedFile();
                 case Commands.UnStageSelectedFile: return UnStageSelectedFile();
                 case Commands.ShowHistory: return StartFileHistoryDialog();
-                case Commands.ToggleSelectionFilter: return ToggleSelectionFilter();                   
+                case Commands.ToggleSelectionFilter: return ToggleSelectionFilter();
                 default: return base.ExecuteCommand(cmd);
             }
         }
@@ -677,7 +677,7 @@ namespace GitUI.CommandsDialogs
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
             Amend.Enabled = true;
-            Reset.Enabled = DoChangesExist();            
+            Reset.Enabled = DoChangesExist();
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
@@ -731,7 +731,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 Staged.SelectStoredNextIndex(0);
-            }        
+            }
         }
 
         private void RestoreSelectedFiles(IList<GitItemStatus> unStagedFiles, IList<GitItemStatus> stagedFiles, IList<GitItemStatus> lastSelection)
@@ -1230,7 +1230,7 @@ namespace GitUI.CommandsDialogs
         }
 
         private void StageAll()
-        {            
+        {
             Stage(Unstaged.GitItemStatuses);
             Staged.Focus();
         }
@@ -1569,9 +1569,9 @@ namespace GitUI.CommandsDialogs
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
-            //  git commit and git commit-tree issues a warning if the commit log message 
-            //  given to it does not look like a valid UTF-8 string, unless you 
-            //  explicitly say your project uses a legacy encoding. The way to say 
+            //  git commit and git commit-tree issues a warning if the commit log message
+            //  given to it does not look like a valid UTF-8 string, unless you
+            //  explicitly say your project uses a legacy encoding. The way to say
             //  this is to have i18n.commitencoding in .git/config file, like this:...
             Encoding encoding = Module.CommitEncoding;
 
@@ -1728,7 +1728,6 @@ namespace GitUI.CommandsDialogs
                 return;
 
             SelectedDiff.Clear();
-            var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
 
             bool wereErrors;
             Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), true, out wereErrors);
@@ -1742,7 +1741,6 @@ namespace GitUI.CommandsDialogs
                 return;
 
             SelectedDiff.Clear();
-            var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
 
             bool wereErrors;
             Module.AssumeUnchangedFiles(Unstaged.SelectedItems.ToList(), false, out wereErrors);
@@ -1894,7 +1892,7 @@ namespace GitUI.CommandsDialogs
             GetUserSettings();
             string author = "";
             string committer = string.Format("{0} {1} <{2}>", _commitCommitterInfo.Text, _userName, _userEmail);
-            
+
             if (string.IsNullOrEmpty(toolAuthor.Text) || string.IsNullOrEmpty(toolAuthor.Text.Trim()))
             {
                 author = string.Format("{0} {1} <{2}>", _commitAuthorInfo.Text, _userName, _userEmail);
@@ -2454,7 +2452,7 @@ namespace GitUI.CommandsDialogs
             if (Unstaged.SelectedItem == null)
                 return;
 
-            Process gitProcess = Module.RunExternalCmdDetachedShowConsole(AppSettings.GitCommand, 
+            Process gitProcess = Module.RunExternalCmdDetachedShowConsole(AppSettings.GitCommand,
                 "add -p \"" + Unstaged.SelectedItem.Name + "\"");
 
             if (gitProcess != null)

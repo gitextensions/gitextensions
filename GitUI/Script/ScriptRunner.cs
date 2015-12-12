@@ -85,7 +85,6 @@ namespace GitUI.Script
             string argument = scriptInfo.Arguments;
 
             string command = OverrideCommandWhenNecessary(originalCommand);
-
             var allSelectedRevisions = new List<GitRevision>();
 
             GitRevision selectedRevision = null;
@@ -316,8 +315,12 @@ namespace GitUI.Script
                             argument = argument.Replace(option, Prompt.UserInput);
                         }
                         break;
+                    case "{WorkingDir}":
+                        argument = argument.Replace(option, aModule.WorkingDir);
+                        break;
                 }
             }
+            command = ExpandCommandVariables(command,aModule);
 
             if (!scriptInfo.RunInBackground)
                 FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
@@ -329,6 +332,12 @@ namespace GitUI.Script
                     aModule.RunExternalCmdDetached(command, argument);
             }
             return !scriptInfo.RunInBackground;
+        }
+
+        private static string ExpandCommandVariables(string originalCommand, GitModule aModule)
+        {
+            return originalCommand.Replace("{WorkingDir}", aModule.WorkingDir);
+           
         }
 
         private static GitRevision CalculateSelectedRevision(RevisionGrid revisionGrid, List<GitRef> selectedRemoteBranches,
@@ -426,7 +435,8 @@ namespace GitUI.Script
                         "{cDefaultRemote}",
                         "{cDefaultRemoteUrl}",
                         "{cDefaultRemotePathFromUrl}",
-                        "{UserInput}"
+                        "{UserInput}",
+                        "{WorkingDir}"
                     };
                 return options;
             }

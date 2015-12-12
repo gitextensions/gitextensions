@@ -8,7 +8,7 @@ namespace ResourceManager
     {
         public static string CreateLink(string caption, string uri)
         {
-            return "<a href="+uri.Quote()+">" + WebUtility.HtmlEncode(caption) + "</a>";
+            return "<a href="+WebUtility.HtmlEncode(uri).Quote()+">" + WebUtility.HtmlEncode(caption) + "</a>";
         }
 
         public static string CreateTagLink(string tag)
