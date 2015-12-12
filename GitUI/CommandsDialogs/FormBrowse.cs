@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using ConEmu.WinForms;
+
 using GitCommands;
 using GitCommands.Repository;
 using GitCommands.Utils;
@@ -234,6 +237,8 @@ namespace GitUI.CommandsDialogs
             _formBrowseMenuCommands = new FormBrowseMenuCommands(this, RevisionGrid);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
+
+			FillTerminalTab();
         }
 
         private new void Translate()
@@ -3343,6 +3348,41 @@ namespace GitUI.CommandsDialogs
                 }
             }
         }
+
+	    private void FillTerminalTab()
+	    {
+		    if(!EnvUtils.RunningOnWindows())
+			    return; // ConEmu only works on WinNT
+		    TabPage tabpage;
+		    CommitInfoTabControl.Controls.Add(tabpage = new TabPage("Console"));
+
+		    // Delay-create the terminal window when the tab is first selected
+		    ConEmuControl terminal = null;
+		    CommitInfoTabControl.Selecting += (sender, args) =>
+		    {
+			    if(args.TabPage != tabpage)
+				    return;
+			    if((terminal != null) && (terminal.IsConsoleProcessRunning)) // If user has typed "exit" in there, will also recreate
+				    return;
+
+			    // Create the terminal
+			    terminal = new ConEmuControl() {Dock = DockStyle.Fill};
+			    ConEmuStartInfo startinfo = terminal.AutoStartInfo ?? new ConEmuStartInfo();
+			    startinfo.ConsoleCommandLine = ConEmuConstants.DefaultConsoleCommandLine;
+			    startinfo.StartupDirectory = Module.WorkingDir;
+			    startinfo.IsKeepingTerminalOnCommandExit = false;
+
+			    // Set path to git in this window
+			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
+			    {
+				    string dirGit = Path.GetDirectoryName(AppSettings.GitCommand);
+				    if(!string.IsNullOrEmpty(dirGit))
+					    startinfo.SetEnv("PATH", dirGit + ";" + "%PATH%");
+			    }
+			    tabpage.Controls.Clear();
+			    tabpage.Controls.Add(terminal);
+		    };
+	    }
 
         /// <summary>
         /// Clean up any resources being used.
