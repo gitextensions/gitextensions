@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
@@ -171,9 +172,7 @@ namespace GitUI
         void gitCommand_Exited(object sender, EventArgs e)
         {
             // This has to happen on the UI thread
-            var method = new SendOrPostCallback(OnExit);
-
-            syncContext.Send(method, this);
+			BeginInvoke(new Action(OnExit));
         }
 
         /// <summary>
@@ -186,7 +185,7 @@ namespace GitUI
             return HandleOnExitCallback != null && HandleOnExitCallback(ref isError, this);
         }
 
-        private void OnExit(object state)
+        private void OnExit()
         {
             bool isError;
 
