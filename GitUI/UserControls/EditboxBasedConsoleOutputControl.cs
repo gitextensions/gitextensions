@@ -102,8 +102,8 @@ namespace GitUI.UserControls
 				process.StartInfo = startInfo;
 
 				process.EnableRaisingEvents = true;
-				process.OutputDataReceived += (sender, args) => FireDataReceived(new TextEventArgs(args.Data));
-				process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs(args.Data));
+				process.OutputDataReceived += (sender, args) => FireDataReceived(new TextEventArgs(args.Data ?? ""));
+				process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs(args.Data ?? ""));
 				process.Exited += delegate
 				{
 					Invoke(new Action(() =>
