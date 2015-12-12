@@ -122,7 +122,7 @@ namespace GitCommands
             }
         }
 
-        internal static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
+	    public static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
             return new ProcessStartInfo
             {
@@ -162,7 +162,7 @@ namespace GitCommands
             return startProcess;
         }
 
-        internal static bool UseSsh(string arguments)
+	    public static bool UseSsh(string arguments)
         {
             var x = !Plink() && GetArgumentsRequiresSsh(arguments);
             return x || arguments.Contains("plink");
