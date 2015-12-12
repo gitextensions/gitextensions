@@ -4,6 +4,9 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+
+using GitUI.UserControls;
+
 using ResourceManager;
 
 namespace GitUI
@@ -193,23 +196,20 @@ namespace GitUI
             Done(!isError);
         }
 
-        protected virtual void DataReceived(object sender, DataReceivedEventArgs e)
+        protected virtual void DataReceived(object sender, TextEventArgs e)
         {
 
         }
 
-        void gitCommand_DataReceived(object sender, DataReceivedEventArgs e)
+        void gitCommand_DataReceived(object sender, TextEventArgs e)
         {
-            if (e.Data == null)
-                return;
-
-            if (e.Data.Contains("%") || e.Data.StartsWith("remote: Counting objects"))
+	        if (e.Text.Contains("%") || e.Text.StartsWith("remote: Counting objects"))
             {
-                SetProgress(e.Data);
+                SetProgress(e.Text);
             }
             else
             {
-                AppendOutputLine(e.Data);
+                AppendOutputLine(e.Text);
             }
 
             DataReceived(sender, e);

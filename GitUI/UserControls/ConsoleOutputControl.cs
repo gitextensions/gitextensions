@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
 
 using JetBrains.Annotations;
@@ -16,6 +15,17 @@ namespace GitUI.UserControls
 
 		public abstract void AppendMessageFreeThreaded([NotNull] string text);
 
+		/// <summary>
+		/// Creates the instance best fitting the current environment.
+		/// </summary>
+		[NotNull]
+		public static ConsoleOutputControl CreateInstance()
+		{
+			if(ConsoleEmulatorOutputControl.IsSupportedInThisEnvironment)
+				return new ConsoleEmulatorOutputControl();
+			return new EditboxBasedConsoleOutputControl();
+		}
+
 		public abstract void Done();
 
 		public abstract void KillProcess();
@@ -26,13 +36,13 @@ namespace GitUI.UserControls
 
 		public abstract void StartProcess([NotNull] string command, string arguments, string workdir);
 
-		public event DataReceivedEventHandler DataReceived;
+		public event EventHandler<TextEventArgs> DataReceived;
 
-		protected void FireDataReceived([NotNull] DataReceivedEventArgs args)
+		protected void FireDataReceived([NotNull] TextEventArgs args)
 		{
 			if(args == null)
 				throw new ArgumentNullException("args");
-			DataReceivedEventHandler evt = DataReceived;
+			EventHandler<TextEventArgs> evt = DataReceived;
 			if(evt != null)
 				evt.Invoke(this, args);
 		}

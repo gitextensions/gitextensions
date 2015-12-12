@@ -26,9 +26,10 @@ namespace GitUI
             : base(true)
         {
             UseDialogSettings = useDialogSettings;
-			ConsoleOutput = new EditboxBasedConsoleOutputControl() {Dock = DockStyle.Fill};
+			ConsoleOutput = ConsoleOutputControl.CreateInstance();
+	        ConsoleOutput.Dock = DockStyle.Fill;
 
-            InitializeComponent();
+	        InitializeComponent();
             Translate();
             if (UseDialogSettings)
                 KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
