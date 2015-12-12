@@ -26,7 +26,7 @@ namespace GitUI
             : base(true)
         {
             UseDialogSettings = useDialogSettings;
-			_output = new EditboxBasedConsoleOutputControl() {Dock = DockStyle.Fill};
+			ConsoleOutput = new EditboxBasedConsoleOutputControl() {Dock = DockStyle.Fill};
 
             InitializeComponent();
             Translate();
@@ -43,7 +43,7 @@ namespace GitUI
             AbortCallback = abort;
         }
 
-		private readonly ConsoleOutputControl _output;
+	    protected readonly ConsoleOutputControl ConsoleOutput;	// Naming: protected stuff must be CLS-compliant here
         private readonly StringBuilder _outputString = new StringBuilder();
         public ProcessStart ProcessCallback;
         public ProcessAbort AbortCallback;
@@ -100,7 +100,7 @@ namespace GitUI
 
         public void AddMessage(string text)
         {
-            _output.AppendMessageFreeThreaded(text);
+            ConsoleOutput.AppendMessageFreeThreaded(text);
         }
 
         public void AddMessageLine(string text)
@@ -110,7 +110,7 @@ namespace GitUI
 
         public void Done(bool isSuccess)
         {
-			_output.Done();
+			ConsoleOutput.Done();
             AppendMessageCrossThread("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
@@ -156,12 +156,12 @@ namespace GitUI
 
 	    public void AppendMessageCrossThread(string text)
 	    {
-		    _output.AppendMessageFreeThreaded(text);
+		    ConsoleOutput.AppendMessageFreeThreaded(text);
 	    }
 
 	    public void Reset()
         {
-			_output.Reset();
+			ConsoleOutput.Reset();
             lock (_outputString)
             {
                 _outputString.Clear();
@@ -244,7 +244,7 @@ namespace GitUI
                 catch (InvalidOperationException) { }
             }
 #endif
-            _output.Start();
+            ConsoleOutput.Start();
             Reset();
             ProcessCallback(this);
         }
