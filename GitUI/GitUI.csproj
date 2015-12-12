@@ -49,6 +49,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>..\FxCopRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <NoWarn>1573</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -232,7 +233,10 @@
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
-    <Compile Include="UserControls\ConsoleProcessControl.cs">
+    <Compile Include="UserControls\ConsoleOutputControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\EditboxBasedConsoleOutputControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UserControls\ExListView.cs">

@@ -2,6 +2,9 @@
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+
+using GitUI.UserControls;
+
 using ResourceManager;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -23,6 +26,7 @@ namespace GitUI
             : base(true)
         {
             UseDialogSettings = useDialogSettings;
+			_output = new EditboxBasedConsoleOutputControl() {Dock = DockStyle.Fill};
 
             InitializeComponent();
             Translate();
@@ -39,6 +43,7 @@ namespace GitUI
             AbortCallback = abort;
         }
 
+		private readonly ConsoleOutputControl _output;
         private readonly StringBuilder _outputString = new StringBuilder();
         public ProcessStart ProcessCallback;
         public ProcessAbort AbortCallback;
@@ -95,7 +100,7 @@ namespace GitUI
 
         public void AddMessage(string text)
         {
-            AddMessageToTimer(text);
+            _output.AppendMessageFreeThreaded(text);
         }
 
         public void AddMessageLine(string text)
@@ -103,13 +108,9 @@ namespace GitUI
             AddMessage(text + Environment.NewLine);
         }
 
-
-
-
         public void Done(bool isSuccess)
         {
-            if (outpuTimer != null)
-                outpuTimer.Stop(true);
+			_output.Done();
             AppendMessageCrossThread("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
@@ -153,11 +154,14 @@ namespace GitUI
             }
         }
 
-        public void Reset()
+	    public void AppendMessageCrossThread(string text)
+	    {
+		    _output.AppendMessageFreeThreaded(text);
+	    }
+
+	    public void Reset()
         {
-            outpuTimer.Clear();
-            MessageTextBox.Text = "";
-            MessageTextBox.Visible = false;
+			_output.Reset();
             lock (_outputString)
             {
                 _outputString.Clear();
@@ -240,7 +244,7 @@ namespace GitUI
                 catch (InvalidOperationException) { }
             }
 #endif
-            outpuTimer.Start();
+            _output.Start();
             Reset();
             ProcessCallback(this);
         }
