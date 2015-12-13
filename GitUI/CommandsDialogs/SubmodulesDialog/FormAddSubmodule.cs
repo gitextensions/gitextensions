@@ -74,12 +74,12 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
 
         private void DirectoryTextUpdate(object sender, EventArgs e)
         {
-            var path = PathUtil.GetDirectoryName(Directory.Text);
+            string path = PathUtil.GetRepositoryName(Directory.Text);
 
-            if (path.EndsWith(".git"))
-                path = path.Replace(".git", "");
-
-            LocalPath.Text = PathUtil.GetFileName(path);
+            if (path != "")
+            {
+                LocalPath.Text = path;
+            }
         }
     }
 }

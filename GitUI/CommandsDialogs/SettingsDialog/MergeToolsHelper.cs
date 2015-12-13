@@ -138,6 +138,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "TortoiseMerge.exe";
                 case "winmerge":
                     return "winmergeu.exe";
+                case "vsdiffmerge":
+                    return "vsdiffmerge.exe";
             }
             return null;
         }
@@ -198,6 +200,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                     return FindFileInFolders("winmergeu.exe", winmergepath,
                                                           @"WinMerge\");
+                case "vsdiffmerge":
+                    string vsdiffmergepath = UnquoteString(GetGlobalSetting(settings, "difftool.vsdiffmerge.path"));
+                    string regvsdiffmergepath = GetVisualStudioPath() + "vsdiffmerge.exe";
+                    exeName = "vsdiffmerge.exe";
+                    return FindFileInFolders(exeName, vsdiffmergepath, regvsdiffmergepath);
             }
             exeName = difftoolText + ".exe";
             return GetFullPath(exeName);
@@ -224,6 +231,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "winmerge":
                     return "\"" + exeFile + "\" -e -u \"$LOCAL\" \"$REMOTE\"";
+                case "vsdiffmerge":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
             }
             return "";
         }
@@ -252,6 +261,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "TortoiseMerge.exe";
                 case "winmerge":
                     return "winmergeu.exe";
+                case "vsdiffmerge":
+                    return "vsdiffmerge.exe";
             }
             return null;
         }
@@ -315,6 +326,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                     exeName = "winmergeu.exe";
                     return FindFileInFolders(exeName, winmergepath, @"WinMerge\");
+                case "vsdiffmerge":
+                    string vsdiffmergepath = UnquoteString(GetGlobalSetting(settings, "mergetool.vsdiffmerge.path"));
+                    string regvsdiffmergepath = GetVisualStudioPath() + "vsdiffmerge.exe";
+                    exeName = "vsdiffmerge.exe";
+                    return FindFileInFolders(exeName, vsdiffmergepath, regvsdiffmergepath);
             }
             exeName = mergeToolText + ".exe";
             return GetFullPath(exeName);
@@ -329,6 +345,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "";
                 case "winmerge":
                     return "\"" + exeFile + "\" -e -u -dl \"Original\" -dr \"Modified\" \"$MERGED\" \"$REMOTE\"";
+                case "vsdiffmerge":
+                    return "\"" + exeFile + "\" /m \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\" ";
             }
             return AutoConfigMergeToolCmd(mergeToolText, exeFile);
         }
@@ -354,6 +372,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         command = command.Replace("/", "-");
 
                     return String.Format(command, exeFile);
+                case "vsdiffmerge":
+                    return "\"" + exeFile + "\" /m \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
             }
             // other commands supported natively by msysgit
             return "";
@@ -377,6 +397,28 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
             }
             return value ?? string.Empty;
+        }
+
+        private static string GetVisualStudioPath()
+        {
+            var vsVersions = new string[] { "14.0", "12.0", "11.0" };
+
+            foreach (var version in vsVersions)
+            {
+                string registryKeyString = string.Format(@"SOFTWARE{0}Microsoft\VisualStudio\{1}", Environment.Is64BitProcess ? @"\Wow6432Node\" : "\\", version);
+                using (RegistryKey localMachineKey = Registry.LocalMachine.OpenSubKey(registryKeyString))
+                {
+                    if (localMachineKey != null)
+                    {
+                        var path = localMachineKey.GetValue("InstallDir") as string;
+                        if (!string.IsNullOrEmpty(path))
+                        {
+                            return path;
+                        }
+                    }
+                }
+            }
+            return string.Empty;
         }
     }
 }

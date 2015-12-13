@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using ResourceManager;
+using System.Drawing;
+using GitCommands.Utils;
 
 namespace GitUI.CommandsDialogs
 {
@@ -96,10 +98,52 @@ namespace GitUI.CommandsDialogs
 
                 localChangesGB.Visible = IsThereUncommittedChanges();
                 ChangesMode = AppSettings.CheckoutBranchAction;
+
+                FinishFormLayout();
             }
             finally
             {
                 _isLoading = false;
+            }
+        }
+
+        /// <summary>
+        /// This functions applies docking properties of controls in a way
+        /// that is compatible with both Windows and Linux:
+        /// 
+        /// 1. Remember container size.
+        /// 2. Turn AutoSize off.
+        /// 3. Apply docking properties of child controls.
+        /// 
+        /// This helps to avoid containers size issues on Linux.
+        /// </summary>
+        private void FinishFormLayout()
+        {
+            System.Drawing.Size size = this.Size;
+            this.AutoSize = false;
+            this.Size = size;
+
+            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+
+            size = this.tableLayoutPanel1.Size;
+            tableLayoutPanel1.AutoSize = false;
+            tableLayoutPanel1.Size = size;
+
+            size = this.setBranchPanel.Size;
+            setBranchPanel.AutoSize = false;
+            setBranchPanel.Size = size;
+
+            setBranchPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            Branches.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+
+            horLine.Dock = System.Windows.Forms.DockStyle.Fill;
+            remoteOptionsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            localChangesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+
+            if (!EnvUtils.RunningOnWindows())
+            {
+                this.Height = tableLayoutPanel1.GetRowHeights().Sum();
+                this.Height -= tableLayoutPanel1.GetRowHeights().Last();
             }
         }
 
@@ -270,7 +314,13 @@ namespace GitUI.CommandsDialogs
         private void BranchTypeChanged()
         {
             if (!_isLoading)
+            {
                 Initialize();
+                if (LocalBranch.Checked)
+                    this.Height -= tableLayoutPanel1.GetRowHeights().Last();
+                else
+                    this.Height += remoteOptionsPanel.Height;
+            }
         }
 
         private void LocalBranchCheckedChanged(object sender, EventArgs e)

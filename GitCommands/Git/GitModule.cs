@@ -331,7 +331,7 @@ namespace GitCommands
         /// <summary>"(no branch)"</summary>
         public static readonly string DetachedBranch = "(no branch)";
 
-        private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from " };
+        private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from ", "(HEAD detached at " };
 
         public AppSettings.PullAction LastPullAction
         {

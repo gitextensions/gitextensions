@@ -1024,6 +1024,7 @@ namespace GitCommands
             addEncoding(new UnicodeEncoding());
             addEncoding(new UTF7Encoding());
             addEncoding(new UTF8Encoding(false));
+            addEncoding(System.Text.Encoding.GetEncoding("CP852"));
 
             try
             {
