@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using GitCommands;
+
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls
@@ -21,7 +23,7 @@ namespace GitUI.UserControls
 		[NotNull]
 		public static ConsoleOutputControl CreateInstance()
 		{
-			if(ConsoleEmulatorOutputControl.IsSupportedInThisEnvironment)
+			if((ConsoleEmulatorOutputControl.IsSupportedInThisEnvironment) && (AppSettings.UseConsoleEmulatorForCommands))
 				return new ConsoleEmulatorOutputControl();
 			return new EditboxBasedConsoleOutputControl();
 		}
