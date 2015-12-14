@@ -54,6 +54,7 @@ namespace System
             return s;
         }
 
+        [ContractAnnotation("null=>true")]
         public static bool IsNullOrEmpty(this string s)
         {
             return string.IsNullOrEmpty(s);
@@ -120,12 +121,14 @@ namespace System
         /// true if the value parameter is null or <see cref="string.Empty"/>, or if value consists exclusively of white-space characters.
         /// </returns>
         [Pure]
+        [ContractAnnotation("null=>true")]
         public static bool IsNullOrWhiteSpace([CanBeNull] this string value)
         {
             return string.IsNullOrWhiteSpace(value);
         }
 
         /// <summary>Indicates whether the specified string is neither null, nor empty, nor has only whitespace.</summary>
+        [ContractAnnotation("null=>false")]
         public static bool IsNotNullOrWhitespace([CanBeNull] this string value)
         {
             return !value.IsNullOrWhiteSpace();
