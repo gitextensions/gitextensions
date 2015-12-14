@@ -9,6 +9,9 @@ using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
+	/// <summary>
+	/// RSA key formats manip.
+	/// </summary>
 	public static class RsaUtil
 	{
 		/// <summary>
@@ -184,25 +187,25 @@ mpint     n
       publicExponent    INTEGER   -- e
   }
 */
-			var seqcontent = new MemoryStream();
+			var derParams = new MemoryStream();
 
 			// Modulus
-			WriteDerIntegerTlvTriplet(rsaparams.Modulus, seqcontent);
+			WriteDerIntegerTlvTriplet(rsaparams.Modulus, derParams);
 
 			// Public Exponent
-			WriteDerIntegerTlvTriplet(rsaparams.Exponent /* public exponent */, seqcontent);
+			WriteDerIntegerTlvTriplet(rsaparams.Exponent /* public exponent */, derParams);
 
 			// Sequence out of these
-			var sequence = new MemoryStream();
-			seqcontent.WriteByte(0x30 /* SEQUENCE */);
-			WriteDerLength((int)seqcontent.Length, sequence);
-			seqcontent.Position = 0;
-			seqcontent.WriteTo(sequence);
+			var derRoot = new MemoryStream();
+			derParams.WriteByte(0x30 /* SEQUENCE */);
+			WriteDerLength((int)derParams.Length, derRoot);
+			derParams.Position = 0;
+			derParams.WriteTo(derRoot);
 
 			// Header, PEM, footer
 			var sb = new StringBuilder();
 			sb.AppendLine("-----BEGIN RSA PUBLIC KEY-----");
-			WritePem(sequence, sb);
+			WritePem(derRoot, sb);
 			sb.AppendLine("-----END RSA PUBLIC KEY-----");
 
 			return sb.ToString();
@@ -281,7 +284,7 @@ mpint     n
 		private static byte[] EnsureNonnegativeInteger([NotNull] byte[] bigint)
 		{
 			if(bigint == null)
-				throw new ArgumentNullException(nameof(bigint));
+				throw new ArgumentNullException("bigint");
 			if(bigint.Length == 0)
 				return bigint;
 			if((bigint[0] & 0x80) == 0)
@@ -301,11 +304,11 @@ mpint     n
 		private static void WriteDerIntegerTlvTriplet([NotNull] byte[] bytes, [NotNull] Stream output)
 		{
 			if(bytes == null)
-				throw new ArgumentNullException(nameof(bytes));
+				throw new ArgumentNullException("bytes");
 			if(bytes.Length == 0)
-				throw new ArgumentOutOfRangeException(nameof(bytes), bytes, "Shan't be empty.");
+				throw new ArgumentOutOfRangeException("bytes", bytes, "Shan't be empty.");
 			if(output == null)
-				throw new ArgumentNullException(nameof(output));
+				throw new ArgumentNullException("output");
 
 			// Tag
 			output.WriteByte(0x02 /* INTEGER */);
@@ -337,9 +340,9 @@ mpint     n
 		private static void WriteLengthPrefixedValue([NotNull] byte[] bytes, [NotNull] Stream output)
 		{
 			if(bytes == null)
-				throw new ArgumentNullException(nameof(bytes));
+				throw new ArgumentNullException("bytes");
 			if(output == null)
-				throw new ArgumentNullException(nameof(output));
+				throw new ArgumentNullException("output");
 
 			int len = bytes.Length;
 			output.WriteByte((byte)((len >> 24) & 0xFF));
@@ -353,9 +356,9 @@ mpint     n
 		private static void WritePem([NotNull] Stream input, [NotNull] StringBuilder output)
 		{
 			if(input == null)
-				throw new ArgumentNullException(nameof(input));
+				throw new ArgumentNullException("input");
 			if(output == null)
-				throw new ArgumentNullException(nameof(output));
+				throw new ArgumentNullException("output");
 			input.Position = 0;
 			var buffer = new byte[48]; // 48 octets => 384 bits => 64 sextets, the required PEM line length (Convert::ToBase64String makes them 76 somehow)
 			int nRead;
