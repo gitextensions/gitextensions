@@ -109,6 +109,9 @@
     <Compile Include="CommandsDialogs\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\AnonymousGitModuleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,9 +130,7 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
-    <Compile Include="CommandsDialogs\FormLoadOpenSshKey.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="CommandsDialogs\FormLoadOpenSshKey.cs" />
     <Compile Include="CommandsDialogs\FormMergeSubmodule.cs">
       <SubType>Form</SubType>
     </Compile>
