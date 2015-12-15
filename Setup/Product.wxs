@@ -30,6 +30,9 @@
                     <Directory Id="TranslationsDir" Name="Translation" />
                     <Directory Id="IconsDir" Name="Icons" />
                     <Directory Id="DiffScriptsDir" Name="Diff-Scripts" />
+                    <Directory Id="DirConEmuRoot" Name="ConEmu">
+                        <Directory Id="DirConEmuSub" Name="ConEmu"/>
+                    </Directory>
                 </Directory>
             </Directory>
             <Directory Id="PersonalFolder">
@@ -90,6 +93,9 @@
             </Component>
             <Component Id="GitUI.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\GitUI.dll" />
+            </Component>
+            <Component Id="ConEmu.WinForms.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\ConEmu.WinForms.dll" />
             </Component>
             <Component Id="NetSpell.SpellChecker.dll" Guid="*">
                 <File Source="..\NetSpell.SpellChecker\bin\Release\NetSpell.SpellChecker.dll" />
@@ -483,6 +489,53 @@
                 <RegistryValue Name="puttygen" Value="[INSTALLDIR]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
             </Component>
         </DirectoryRef>
+        <DirectoryRef Id="DirConEmuRoot">
+            <Component Id="File.CER00" Guid="*">
+                <File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu.exe" />
+            </Component>
+            <Component Id="File.CER01" Guid="*">
+                <File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu64.exe" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="DirConEmuSub">
+            <Component Id="File.CES00" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\About-ConEmu.txt" /></Component>
+            <Component Id="File.CES01" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\Attach.cmd" /></Component>
+            <Component Id="File.CES02" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\cecho.cmd" /></Component>
+            <Component Id="File.CES03" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ClsEx.cmd" /></Component>
+            <Component Id="File.CES04" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\CmdInit.cmd" /></Component>
+            <Component Id="File.CES05" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\Cmd_Autorun.cmd" /></Component>
+            <Component Id="File.CES06" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ColorPrompt.cmd" /></Component>
+            <Component Id="File.CES07" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\Command%20Processor%20Off.reg" /></Component>
+            <Component Id="File.CES08" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\Command%20Processor.reg" /></Component>
+            <Component Id="File.CES09" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ConEmuC.exe" /></Component>
+            <Component Id="File.CES10" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ConEmuC64.exe" /></Component>
+            <Component Id="File.CES11" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ConEmuCD.dll" /></Component>
+            <Component Id="File.CES12" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ConEmuCD64.dll" /></Component>
+            <Component Id="File.CES13" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ConEmuHk.dll" /></Component>
+            <Component Id="File.CES14" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ConEmuHk64.dll" /></Component>
+            <Component Id="File.CES15" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ConEmu_MinGW.xml" /></Component>
+            <Component Id="File.CES16" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ConEmu_Sample.xml" /></Component>
+            <Component Id="File.CES17" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ConEmu_Tilde.xml" /></Component>
+            <Component Id="File.CES18" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\csudo.cmd" /></Component>
+            <Component Id="File.CES19" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ExtendedConsole.dll" /></Component>
+            <Component Id="File.CES20" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\ExtendedConsole64.dll" /></Component>
+            <Component Id="File.CES21" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\FAQ-ConEmu.txt" /></Component>
+            <Component Id="File.CES22" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\GitShowBranch.cmd" /></Component>
+            <Component Id="File.CES23" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\IsConEmu.cmd" /></Component>
+            <Component Id="File.CES24" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\License.txt" /></Component>
+            <Component Id="File.CES25" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\Portable.txt" /></Component>
+            <Component Id="File.CES26" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\RenameTab.cmd" /></Component>
+            <Component Id="File.CES27" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\SetConTitle.cmd" /></Component>
+            <Component Id="File.CES28" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\SetEscChar.cmd" /></Component>
+            <Component Id="File.CES29" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\SetProgress.cmd" /></Component>
+            <Component Id="File.CES30" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\Settings-ConEmu.reg" /></Component>
+            <Component Id="File.CES31" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\TypeBuildErrors.cmd" /></Component>
+            <Component Id="File.CES32" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu\WhatsNew-ConEmu.txt" /></Component>
+        </DirectoryRef>
+        <ComponentGroup Id="Component.ConEmuFiles">
+            <ComponentRef Id="File.CER00" /><ComponentRef Id="File.CER01" />
+            <ComponentRef Id="File.CES00" /> <ComponentRef Id="File.CES01" /> <ComponentRef Id="File.CES02" /> <ComponentRef Id="File.CES03" /> <ComponentRef Id="File.CES04" /> <ComponentRef Id="File.CES05" /> <ComponentRef Id="File.CES06" /> <ComponentRef Id="File.CES07" /> <ComponentRef Id="File.CES08" /> <ComponentRef Id="File.CES09" /> <ComponentRef Id="File.CES10" /> <ComponentRef Id="File.CES11" /> <ComponentRef Id="File.CES12" /> <ComponentRef Id="File.CES13" /> <ComponentRef Id="File.CES14" /> <ComponentRef Id="File.CES15" /> <ComponentRef Id="File.CES16" /> <ComponentRef Id="File.CES17" /> <ComponentRef Id="File.CES18" /> <ComponentRef Id="File.CES19" /> <ComponentRef Id="File.CES20" /> <ComponentRef Id="File.CES21" /> <ComponentRef Id="File.CES22" /> <ComponentRef Id="File.CES23" /> <ComponentRef Id="File.CES24" /> <ComponentRef Id="File.CES25" /> <ComponentRef Id="File.CES26" /> <ComponentRef Id="File.CES27" /> <ComponentRef Id="File.CES28" /> <ComponentRef Id="File.CES29" /> <ComponentRef Id="File.CES30" /> <ComponentRef Id="File.CES31" /> <ComponentRef Id="File.CES32" />
+        </ComponentGroup>
         <?foreach VsVersion in $(var.VsVersions)?>
         <DirectoryRef Id="VS$(var.VsVersion)">
             <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
@@ -596,6 +649,7 @@
             <ComponentRef Id="GitCommands.dll" />
             <ComponentRef Id="GitExtUtils.dll" />
             <ComponentRef Id="GitUI.dll" />
+            <ComponentRef Id="ConEmu.WinForms.dll" />
             <ComponentRef Id="ICSharpCode.TextEditor.dll" />
             <ComponentRef Id="PSTaskDialog.dll" />
             <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
@@ -619,6 +673,7 @@
             <ComponentRef Id="pageant.reg" />
             <ComponentRef Id="puttygen.exe" />
             <ComponentRef Id="puttygen.reg" />
+            <ComponentGroupRef Id="Component.ConEmuFiles" />
             <ComponentRef Id="GitExtSshAskPass.exe" />
             <ComponentRef Id="GitCredentialWinStore.exe" />
             <ComponentRef Id="GitExtensions.newstartmenu" />
