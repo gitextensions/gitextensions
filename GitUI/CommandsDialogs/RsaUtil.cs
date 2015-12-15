@@ -124,10 +124,6 @@ namespace GitUI.CommandsDialogs
 			derParams.Position = 0;
 			derParams.WriteTo(derRoot);
 
-			// TODO: remove
-			File.WriteAllBytes("T:\\rsapk.der", derRoot.ToArray());
-			// TODO: remove
-
 			// Header, PEM, footer
 			var sb = new StringBuilder();
 			sb.AppendLine("-----BEGIN RSA PRIVATE KEY-----");
