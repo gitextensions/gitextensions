@@ -3025,7 +3025,7 @@ namespace GitCommands
             }
             catch (Exception)
             {
-                return "! Unsupported commit message encoding: " + toEncodingName + " !\n\n" + s;
+                return s + "\n\n! Unsupported commit message encoding: " + toEncodingName + " !";
             }
             return ReEncodeStringFromLossless(s, encoding);
         }
