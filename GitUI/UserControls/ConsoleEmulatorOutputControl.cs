@@ -34,6 +34,14 @@ namespace GitUI.UserControls
 			}
 		}
 
+		public override bool IsDisplayingFullProcessOutput
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public static bool IsSupportedInThisEnvironment
 		{
 			get

@@ -74,7 +74,7 @@ namespace GitUI
             // This has to happen on the UI thread
             SendOrPostCallback method = o =>
                 {
-                    int index = text.IndexOf('%');
+                    int index = text.LastIndexOf('%');
                     int progressValue;
                     if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out progressValue) && progressValue >= 0)
                     {
@@ -96,7 +96,9 @@ namespace GitUI
                         }
 #endif
                     }
-                    Text = text;
+					// Show last progress message in the title, unless it's showin in the control body already
+					if(!ConsoleOutput.IsDisplayingFullProcessOutput)
+						Text = text;
                 };
             BeginInvoke(method, this);
         }

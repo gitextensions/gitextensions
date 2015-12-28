@@ -203,13 +203,14 @@ namespace GitUI
 
         void gitCommand_DataReceived(object sender, TextEventArgs e)
         {
-	        if (e.Text.Contains("%") || e.Text.StartsWith("remote: Counting objects"))
+            if (e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
             {
                 SetProgress(e.Text);
             }
             else
             {
-                AppendOutputLine(e.Text);
+                if(!ConsoleOutput.IsDisplayingFullProcessOutput)
+                    AppendOutputLine(e.Text);
             }
 
             DataReceived(sender, e);

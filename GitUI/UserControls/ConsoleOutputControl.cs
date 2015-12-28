@@ -15,6 +15,11 @@ namespace GitUI.UserControls
 	{
 		public abstract int ExitCode { get; }
 
+		/// <summary>
+		/// Whether this output controls accurately renders all of the process output, so there's no need in printing select lines manually, or duping progress in the title.
+		/// </summary>
+		public abstract bool IsDisplayingFullProcessOutput { get; }
+
 		public abstract void AppendMessageFreeThreaded([NotNull] string text);
 
 		/// <summary>

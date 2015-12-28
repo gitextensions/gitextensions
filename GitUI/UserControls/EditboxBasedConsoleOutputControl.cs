@@ -37,6 +37,14 @@ namespace GitUI.UserControls
 			}
 		}
 
+		public override bool IsDisplayingFullProcessOutput
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		public override void AppendMessageFreeThreaded(string text)
 		{
 			if(_timer != null)
