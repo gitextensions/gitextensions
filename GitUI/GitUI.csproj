@@ -175,6 +175,7 @@
       <DependentUpon>CommitDialogSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\EditorHelper.cs" />
+    <Compile Include="FormStatusOutputLog.cs" />
     <Compile Include="HelperDialogs\FormBuildServerCredentials.cs">
       <SubType>Form</SubType>
     </Compile>

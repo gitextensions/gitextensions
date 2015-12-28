@@ -46,7 +46,7 @@ namespace GitUI
             Text = Text + " (" + WorkingDirectory + ")";
 
             ConsoleOutput.ProcessExited += delegate { OnExit(ConsoleOutput.ExitCode); };
-            ConsoleOutput.DataReceived += gitCommand_DataReceived;
+            ConsoleOutput.DataReceived += DataReceivedCore;
         }
 
         public static bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
@@ -201,29 +201,33 @@ namespace GitUI
 
         }
 
-        void gitCommand_DataReceived(object sender, TextEventArgs e)
+	    private void DataReceivedCore(object sender, TextEventArgs e)
+	    {
+		    if(e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
+			    SetProgress(e.Text);
+		    else
+		    {
+			    const string ansiSuffix = "\u001B[K";
+			    string line = e.Text.Replace(ansiSuffix, "");
+
+			    if(ConsoleOutput.IsDisplayingFullProcessOutput)
+				    OutputLog.AppendLine(line); // To the log only, display control displays it by itself
+			    else
+				    AppendOutputLine(line); // Both to log and display control
+		    }
+
+		    DataReceived(sender, e);
+	    }
+
+		/// <summary>
+		/// Appends a line of text (CRLF added automatically) both to the logged output (<see cref="FormStatus.GetOutputString"/>) and to the display console control.
+		/// </summary>
+        public void AppendOutputLine(string line)
         {
-            if (e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
-            {
-                SetProgress(e.Text);
-            }
-            else
-            {
-                if(!ConsoleOutput.IsDisplayingFullProcessOutput)
-                    AppendOutputLine(e.Text);
-            }
+			// To the internal log (which can be then retrieved as full text from this form)
+            OutputLog.AppendLine(line);
 
-            DataReceived(sender, e);
-        }
-
-        public void AppendOutputLine(string rawLine)
-        {
-            const string ansiSuffix = "\u001B[K";
-
-            var line = rawLine.Replace(ansiSuffix, "");
-
-            AppendToOutputString(line + Environment.NewLine);
-
+			// To the display control
             AddMessageLine(line);
         }
 

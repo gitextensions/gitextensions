@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
 using GitCommands;
 
 using GitUI.UserControls;
+
+using JetBrains.Annotations;
 
 using ResourceManager;
 #if !__MonoCS__
@@ -48,11 +49,17 @@ namespace GitUI
         }
 
 	    protected readonly ConsoleOutputControl ConsoleOutput;	// Naming: protected stuff must be CLS-compliant here
-        private readonly StringBuilder _outputString = new StringBuilder();
         public ProcessStart ProcessCallback;
         public ProcessAbort AbortCallback;
         private bool errorOccurred;
         private bool showOnError;
+
+		/// <summary>
+		/// Gets the logged output text. Note that this is a separate string from what you see in the console output control.
+		/// For instance, progress messages might be skipped; other messages might be added manually.
+		/// </summary>
+		[NotNull]
+		public readonly FormStatusOutputLog OutputLog = new FormStatusOutputLog();
 
         protected override CreateParams CreateParams
         {
@@ -104,11 +111,17 @@ namespace GitUI
         }
 
 
+		/// <summary>
+		/// Adds a message to the console display control ONLY, <see cref="GetOutputString"/> will not list it.
+		/// </summary>
         public void AddMessage(string text)
         {
             ConsoleOutput.AppendMessageFreeThreaded(text);
         }
 
+		/// <summary>
+		/// Adds a message line to the console display control ONLY, <see cref="GetOutputString"/> will not list it.
+		/// </summary>
         public void AddMessageLine(string text)
         {
             AddMessage(text + Environment.NewLine);
@@ -168,10 +181,7 @@ namespace GitUI
 	    public void Reset()
         {
 			ConsoleOutput.Reset();
-            lock (_outputString)
-            {
-                _outputString.Clear();
-            }
+			OutputLog.Clear();
             ProgressBar.Visible = true;
             Ok.Enabled = false;
             ActiveControl = null;
@@ -260,27 +270,16 @@ namespace GitUI
             try
             {
                 AbortCallback(this);
-                AppendToOutputString(Environment.NewLine + "Aborted");
+                OutputLog.Append(Environment.NewLine + "Aborted");	// TODO: write to display control also, if we pull the function up to this base class
                 Done(false);
                 DialogResult = DialogResult.Abort;
             }
             catch { }
         }
 
-        public void AppendToOutputString(string text)
-        {
-            lock (_outputString)
-            {
-                _outputString.Append(text);
-            }
-        }
-
         public string GetOutputString()
         {
-            lock (_outputString)
-            {
-                return _outputString.ToString();
-            }
+			return OutputLog.GetString();
         }
 
 	    private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
