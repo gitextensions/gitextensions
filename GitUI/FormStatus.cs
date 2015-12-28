@@ -3,6 +3,8 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
+using GitCommands;
+
 using GitUI.UserControls;
 
 using ResourceManager;
@@ -17,7 +19,7 @@ namespace GitUI
         public delegate void ProcessStart(FormStatus form);
         public delegate void ProcessAbort(FormStatus form);
 
-        private bool UseDialogSettings = true;
+        private readonly bool UseDialogSettings = true;
 
         public FormStatus(): this(true)
         { }
@@ -26,8 +28,9 @@ namespace GitUI
             : base(true)
         {
             UseDialogSettings = useDialogSettings;
-			ConsoleOutput = ConsoleOutputControl.CreateInstance();
+	        ConsoleOutput = ConsoleOutputControl.CreateInstance();
 	        ConsoleOutput.Dock = DockStyle.Fill;
+	        ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
 
 	        InitializeComponent();
             Translate();
@@ -278,9 +281,13 @@ namespace GitUI
             }
         }
 
-        private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
-        {
-            GitCommands.AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
-        }
+	    private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
+	    {
+		    AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
+
+		    // Maintain the invariant: if changing to "don't keep" and conditions are such that the dialog would have closed in dont-keep mode, then close it
+		    if((!KeepDialogOpen.Checked /* keep off */) && (Ok.Enabled /* done */) && (!errorOccurred /* and successful */)) /* not checking for UseDialogSettings because checkbox is only visible with True */
+			    Close();
+	    }
     }
 }
