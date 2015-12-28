@@ -21,30 +21,6 @@ namespace GitUI.UserControls
 		[NotNull]
 		private readonly ConEmuControl _terminal;
 
-		/// <summary>
-		/// While the feature is experimental and has certain problems with binding output and errorlevels, allow it for select critical uses only, like the clone dialog.
-		/// </summary>
-		/// <returns></returns>
-		[NotNull]
-		public static IDisposable TemporarilyAllowExperimentalFeature()	// TODO: remove when stabilized
-		{
-			return new TemporarilyAllowExperimentalFeatureHelper();
-		}
-
-		class TemporarilyAllowExperimentalFeatureHelper : IDisposable // TODO: remove when stabilized
-		{
-			public TemporarilyAllowExperimentalFeatureHelper()
-			{
-				Interlocked.Increment(ref _allowExperimental);
-			}
-
-			public static int _allowExperimental;
-			void IDisposable.Dispose()
-			{
-				Interlocked.Decrement(ref _allowExperimental);
-			}
-		}
-
 		public ConsoleEmulatorOutputControl()
 		{
 			Controls.Add(_terminal = new ConEmuControl() {Dock = DockStyle.Fill, AutoStartInfo = null /* don't spawn terminal until we have gotten the command */});
@@ -63,7 +39,7 @@ namespace GitUI.UserControls
 			get
 			{
 				if(TemporarilyAllowExperimentalFeatureHelper._allowExperimental == 0)
-					return false;	// TODO: remove when stable
+					return false; // TODO: remove when stable
 
 				return EnvUtils.RunningOnWindows(); // ConEmu only works in WinNT
 			}
@@ -111,8 +87,34 @@ namespace GitUI.UserControls
 			startinfo.WhenPayloadProcessExits = WhenPayloadProcessExits.KeepTerminalAndShowMessage;
 			startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) => FireDataReceived(new TextEventArgs(args.GetText(GitModule.SystemEncoding)));
 			startinfo.PayloadExitedEventSink = delegate { FireProcessExited(); };
+			startinfo.ConsoleEmulatorExitedEventSink = delegate { FireTerminated(); };
 
 			_terminal.Start(startinfo);
+		}
+
+		/// <summary>
+		/// While the feature is experimental and has certain problems with binding output and errorlevels, allow it for select critical uses only, like the clone dialog.
+		/// </summary>
+		/// <returns></returns>
+		[NotNull]
+		public static IDisposable TemporarilyAllowExperimentalFeature() // TODO: remove when stabilized
+		{
+			return new TemporarilyAllowExperimentalFeatureHelper();
+		}
+
+		class TemporarilyAllowExperimentalFeatureHelper : IDisposable // TODO: remove when stabilized
+		{
+			public TemporarilyAllowExperimentalFeatureHelper()
+			{
+				Interlocked.Increment(ref _allowExperimental);
+			}
+
+			public static int _allowExperimental;
+
+			void IDisposable.Dispose()
+			{
+				Interlocked.Decrement(ref _allowExperimental);
+			}
 		}
 	}
 }

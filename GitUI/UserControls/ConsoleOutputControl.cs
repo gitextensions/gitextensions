@@ -56,6 +56,21 @@ namespace GitUI.UserControls
 				evt(this, EventArgs.Empty);
 		}
 
+		protected void FireTerminated()
+		{
+			EventHandler handler = Terminated;
+			if(handler != null)
+				handler(this, EventArgs.Empty);
+		}
+
+		/// <summary>
+		/// Fires when the cmdline process exits.
+		/// </summary>
 		public event EventHandler ProcessExited;
+
+		/// <summary>
+		/// Fires when the output control terminates. This only applies to the console emulator control mode (an editbox won't terminate), and fires when the console emulator itself (not the command it were executing) is terminated as a process, and the control goes blank.
+		/// </summary>
+		public event EventHandler Terminated;
 	}
 }
