@@ -105,7 +105,10 @@ namespace GitUI.UserControls
 			cmdl.AppendFileNameIfNotNull(command /* do the escaping for it */);
 			cmdl.AppendSwitch(arguments /* expecting to be already escaped */);
 
-			var startinfo = new ConEmuStartInfo() {ConsoleCommandLine = cmdl.ToString(), StartupDirectory = workdir, IsKeepingTerminalOnCommandExit = true};
+			var startinfo = new ConEmuStartInfo();
+			startinfo.ConsoleCommandLine = cmdl.ToString();
+			startinfo.StartupDirectory = workdir;
+			startinfo.WhenPayloadProcessExits = WhenPayloadProcessExits.KeepTerminalAndShowMessage;
 			startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) => FireDataReceived(new TextEventArgs(args.GetText(GitModule.SystemEncoding)));
 			startinfo.PayloadExitedEventSink = delegate { FireProcessExited(); };
 
