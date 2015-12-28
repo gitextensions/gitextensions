@@ -3370,7 +3370,7 @@ namespace GitUI.CommandsDialogs
 			    ConEmuStartInfo startinfo = terminal.AutoStartInfo ?? new ConEmuStartInfo();
 			    startinfo.ConsoleCommandLine = ConEmuConstants.DefaultConsoleCommandLine;
 			    startinfo.StartupDirectory = Module.WorkingDir;
-			    startinfo.IsKeepingTerminalOnCommandExit = false;
+			    startinfo.WhenPayloadProcessExits = WhenPayloadProcessExits.CloseTerminal;
 
 			    // Set path to git in this window
 			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
