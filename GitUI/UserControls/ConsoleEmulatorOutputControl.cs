@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 using ConEmu.WinForms;
 
@@ -18,6 +16,8 @@ namespace GitUI.UserControls
 	/// </summary>
 	public class ConsoleEmulatorOutputControl : ConsoleOutputControl
 	{
+		private int _nLastExitCode;
+
 		[NotNull]
 		private readonly ConEmuControl _terminal;
 
@@ -30,7 +30,7 @@ namespace GitUI.UserControls
 		{
 			get
 			{
-				return _terminal.LastExitCode;
+				return _nLastExitCode;
 			}
 		}
 
@@ -91,7 +91,11 @@ namespace GitUI.UserControls
 			startinfo.StartupDirectory = workdir;
 			startinfo.WhenPayloadProcessExits = WhenPayloadProcessExits.KeepTerminalAndShowMessage;
 			startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) => FireDataReceived(new TextEventArgs(args.GetText(GitModule.SystemEncoding)));
-			startinfo.PayloadExitedEventSink = delegate { FireProcessExited(); };
+			startinfo.PayloadExitedEventSink = (sender, args) =>
+			{
+				_nLastExitCode = args.ExitCode;
+				FireProcessExited();
+			};
 			startinfo.ConsoleEmulatorExitedEventSink = delegate { FireTerminated(); };
 
 			_terminal.Start(startinfo);
