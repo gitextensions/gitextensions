@@ -9,12 +9,9 @@ namespace GitStatistics
     {
         public event EventHandler LinesOfCodeUpdated;
 
-        private readonly DirectoryInfo _directory;
-
-        public LineCounter(DirectoryInfo directory)
+        public LineCounter()
         {
             LinesOfCodePerExtension = new Dictionary<string, int>();
-            _directory = directory;
         }
 
         public int NumberCommentsLines { get; private set; }

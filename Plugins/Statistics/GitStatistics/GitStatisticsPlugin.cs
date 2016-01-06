@@ -39,7 +39,6 @@ namespace GitStatistics
                     })
             {
                 formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
-                formGitStatistics.WorkingDir = new DirectoryInfo(gitUIEventArgs.GitModule.WorkingDir);
 
                 formGitStatistics.ShowDialog(gitUIEventArgs.OwnerForm);
             }

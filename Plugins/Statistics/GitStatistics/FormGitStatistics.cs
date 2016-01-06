@@ -51,7 +51,6 @@ namespace GitStatistics
                 };
 
         public string DirectoriesToIgnore { get; set; }
-        public DirectoryInfo WorkingDir { get; set; }
         private readonly SynchronizationContext _syncContext;
         private LineCounter _lineCounter;
 #pragma warning disable 0414
@@ -162,7 +161,7 @@ namespace GitStatistics
 
             _initializeLinesOfCodeDone = true;
 
-            _lineCounter = new LineCounter(WorkingDir);
+            _lineCounter = new LineCounter();
             _lineCounter.LinesOfCodeUpdated += lineCounter_LinesOfCodeUpdated;
 
             _loadThread = Task.Factory.StartNew(LoadLinesOfCode);
