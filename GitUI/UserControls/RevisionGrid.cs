@@ -695,7 +695,7 @@ namespace GitUI
             if (selectedRevisions.Count == 1 && firstSelectedRevision != null)
                 _navigationHistory.Push(firstSelectedRevision.Guid);
 
-            if (!Revisions.UpdatingVisibleRows &&
+            if (this.Parent != null && !Revisions.UpdatingVisibleRows &&
                 _revisionHighlighting.ProcessRevisionSelectionChange(Module, selectedRevisions) ==
                 AuthorEmailBasedRevisionHighlighting.SelectionChangeAction.RefreshUserInterface)
             {
