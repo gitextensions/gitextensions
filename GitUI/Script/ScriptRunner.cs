@@ -213,7 +213,7 @@ namespace GitUI.Script
                         argument = argument.Replace(option, selectedRevision.Guid);
                         break;
                     case "{sMessage}":
-                        argument = argument.Replace(option, selectedRevision.Message);
+                        argument = argument.Replace(option, selectedRevision.Subject);
                         break;
                     case "{sAuthor}":
                         argument = argument.Replace(option, selectedRevision.Author);
@@ -268,7 +268,7 @@ namespace GitUI.Script
                         argument = argument.Replace(option, currentRevision.Guid);
                         break;
                     case "{cMessage}":
-                        argument = argument.Replace(option, currentRevision.Message);
+                        argument = argument.Replace(option, currentRevision.Subject);
                         break;
                     case "{cAuthor}":
                         argument = argument.Replace(option, currentRevision.Author);

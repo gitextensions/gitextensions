@@ -56,7 +56,7 @@ namespace GitUI.UserControls
                     groupBox1.Text = Revision.Guid.Substring(0, 10);
                     labelAuthor.Text = string.Format("{0}", Revision.Author);
                     labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
-                    labelMessage.Text = string.Format("{0}", Revision.Message);
+                    labelMessage.Text = string.Format("{0}", Revision.Subject);
                     
                     var tagList = Revision.Refs.Where(r => r.IsTag).ToList();
                     string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName).ToArray());
