@@ -65,9 +65,9 @@ namespace DeleteUnusedBranches
             ClearResults();
         }
 
-        private static IEnumerable<Branch> GetObsoleteBranches(RefreshContext context)
+        private static IEnumerable<Branch> GetObsoleteBranches(RefreshContext context, string curBranch)
         {
-            foreach (string branchName in GetObsoleteBranchNames(context))
+            foreach (string branchName in GetObsoleteBranchNames(context, curBranch))
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
@@ -81,16 +81,15 @@ namespace DeleteUnusedBranches
             }
         }
 
-        private static IEnumerable<string> GetObsoleteBranchNames(RefreshContext context)
+        private static IEnumerable<string> GetObsoleteBranchNames(RefreshContext context, string curBranch)
         {
             var regex = string.IsNullOrEmpty(context.RegexFilter) ? null : new Regex(context.RegexFilter, RegexOptions.Compiled);
 
-            // TODO: skip current branch
             return context.Commands.RunGitCmd("branch" + (context.IncludeRemotes ? " -r" : "") + (context.IncludeUnmerged ? "" : " --merged " + context.ReferenceBranch))
                 .Split('\n')
                 .Where(branchName => !string.IsNullOrEmpty(branchName))
                 .Select(branchName => branchName.Trim('*', ' ', '\n', '\r'))
-                .Where(branchName => branchName != "HEAD" &&
+                .Where(branchName => branchName != "HEAD" && branchName != curBranch &&
                                      branchName != context.ReferenceBranch &&
                                      (!context.IncludeRemotes || branchName.StartsWith(context.RemoteRepositoryName + "/")) &&
                                      (regex == null || regex.IsMatch(branchName)));
@@ -233,10 +232,10 @@ namespace DeleteUnusedBranches
             }
 
             IsRefreshing = true;
-
+            var curBranch = _gitUiCommands.GitModule.GetSelectedBranch();
             var context = new RefreshContext(_gitCommands, IncludeRemoteBranches.Checked, includeUnmergedBranches.Checked, _referenceBranch, _NO_TRANSLATE_Remote.Text,
                 useRegexFilter.Checked ? regexFilter.Text : null, TimeSpan.FromDays(_days), _refreshCancellation.Token);
-            Task.Factory.StartNew(() => GetObsoleteBranches(context).ToList(), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default)
+            Task.Factory.StartNew(() => GetObsoleteBranches(context, curBranch).ToList(), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default)
                 .ContinueWith(task =>
                 {
                     if (IsDisposed || context.CancellationToken.IsCancellationRequested)
