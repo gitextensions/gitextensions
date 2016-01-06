@@ -1,4 +1,4 @@
-﻿using ResourceManager;
+﻿using System.Collections.Generic;
 
 namespace GitUI.CommandsDialogs.AboutBoxDialog
 {
@@ -11,11 +11,11 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
             Translate();
         }
 
-        public void LoadContributors(string coders, string translators, string designers, string others)
+        public void LoadContributors(IList<string> coders, IList<string> translators, IList<string> designers, IList<string> others)
         {
-            codersLabel.Text = coders;
-            translatorsLabel.Text = translators;
-            designersLabel.Text = designers;
+            Coders.DataSource = coders;
+            Translators.DataSource = translators;
+            Designers.DataSource = designers;
         }
     }
 }
