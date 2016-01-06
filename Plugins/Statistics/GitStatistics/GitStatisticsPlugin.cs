@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -32,23 +31,13 @@ namespace GitStatistics
         {
             if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
                 return false;
-
+            bool countSubmodule = IgnoreSubmodules[Settings].HasValue && !IgnoreSubmodules[Settings].Value;
             using (var formGitStatistics =
-                new FormGitStatistics(gitUIEventArgs.GitModule, CodeFiles[Settings])
+                new FormGitStatistics(gitUIEventArgs.GitModule, CodeFiles[Settings], countSubmodule)
                     {
                         DirectoriesToIgnore = IgnoreDirectories[Settings]
                     })
             {
-
-                if (IgnoreSubmodules[Settings].Value)
-                {
-                    foreach (var submodule in gitUIEventArgs.GitModule.GetSubmodulesInfo())
-                    {
-                        formGitStatistics.DirectoriesToIgnore += ";";
-                        formGitStatistics.DirectoriesToIgnore += Path.Combine(gitUIEventArgs.GitModule.WorkingDir, submodule.LocalPath);
-                    }
-                }
-
                 formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
                 formGitStatistics.WorkingDir = new DirectoryInfo(gitUIEventArgs.GitModule.WorkingDir);
 
