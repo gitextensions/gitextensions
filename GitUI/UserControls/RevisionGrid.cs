@@ -1905,9 +1905,10 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Any(rev => !GitRevision.IsArtificial(rev.Guid)))
             {
-                var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
-
-                form.ShowDialog(this);
+                using (var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid))
+                {
+                    form.ShowDialog(this);
+                }
             }
             else if (!selectedRevisions.Any())
             {
