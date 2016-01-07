@@ -62,7 +62,7 @@
 			this.chkUseSSL = new System.Windows.Forms.CheckBox();
 			this.panelSpacer1 = new System.Windows.Forms.Panel();
 			this.panelSpacer2 = new System.Windows.Forms.Panel();
-			this.chkShowDiffForAppParents = new System.Windows.Forms.CheckBox();
+			this.chkShowDiffForAllParents = new System.Windows.Forms.CheckBox();
 			this.groupBoxBehaviour.SuspendLayout();
 			this.tableLayoutPanelBehaviour.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).BeginInit();
@@ -294,7 +294,7 @@
 			this.tableLayoutPanelPerformance.Controls.Add(this.chkUseFastChecks, 0, 2);
 			this.tableLayoutPanelPerformance.Controls.Add(this.chkShowCurrentChangesInRevisionGraph, 0, 1);
 			this.tableLayoutPanelPerformance.Controls.Add(this.label12, 0, 6);
-			this.tableLayoutPanelPerformance.Controls.Add(this.chkShowDiffForAppParents, 0, 5);
+			this.tableLayoutPanelPerformance.Controls.Add(this.chkShowDiffForAllParents, 0, 5);
 			this.tableLayoutPanelPerformance.Controls.Add(this._NO_TRANSLATE_MaxCommits, 1, 6);
 			this.tableLayoutPanelPerformance.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tableLayoutPanelPerformance.Location = new System.Drawing.Point(3, 19);
@@ -508,15 +508,15 @@
 			this.panelSpacer2.Size = new System.Drawing.Size(1240, 5);
 			this.panelSpacer2.TabIndex = 60;
 			// 
-			// chkShowDiffForAppParents
+			// chkShowDiffForAllParents
 			// 
-			this.chkShowDiffForAppParents.AutoSize = true;
-			this.chkShowDiffForAppParents.Location = new System.Drawing.Point(3, 128);
-			this.chkShowDiffForAppParents.Name = "chkShowDiffForAppParents";
-			this.chkShowDiffForAppParents.Size = new System.Drawing.Size(303, 19);
-			this.chkShowDiffForAppParents.TabIndex = 8;
-			this.chkShowDiffForAppParents.Text = "Show file differences for all parents in browse dialog.";
-			this.chkShowDiffForAppParents.UseVisualStyleBackColor = true;
+			this.chkShowDiffForAllParents.AutoSize = true;
+			this.chkShowDiffForAllParents.Location = new System.Drawing.Point(3, 128);
+			this.chkShowDiffForAllParents.Name = "chkShowDiffForAllParents";
+			this.chkShowDiffForAllParents.Size = new System.Drawing.Size(303, 19);
+			this.chkShowDiffForAllParents.TabIndex = 8;
+			this.chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog.";
+			this.chkShowDiffForAllParents.UseVisualStyleBackColor = true;
 			// 
 			// GitExtensionsSettingsPage
 			// 
@@ -587,6 +587,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelEmailSettings;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelSmtpServer;
         private System.Windows.Forms.CheckBox chkFollowRenamesInFileHistoryExact;
-		private System.Windows.Forms.CheckBox chkShowDiffForAppParents;
+		private System.Windows.Forms.CheckBox chkShowDiffForAllParents;
 	}
 }

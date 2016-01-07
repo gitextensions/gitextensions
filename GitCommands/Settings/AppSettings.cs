@@ -812,10 +812,10 @@ namespace GitCommands
             set { SetInt("maxrevisiongraphcommits", value); }
         }
 
-        public static bool ShowDiffForAppParents
+        public static bool ShowDiffForAllParents
         {
-            get { return GetBool("showdiffforappparents", true); }
-            set { SetBool("showdiffforappparents", value); }
+            get { return GetBool("showdiffforallparents", true); }
+            set { SetBool("showdiffforallparents", value); }
         }
 
 		public static string RecentWorkingDir
