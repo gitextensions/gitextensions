@@ -1258,6 +1258,10 @@ namespace GitUI.CommandsDialogs
             ShowChanges(item, true);
         }
 
+		private void Staged_DataSourceChanged(object sender, EventArgs e)
+		{
+			commitStagedCount.Text = this.Staged.AllItems.Count().ToString();
+		}
         private void Staged_Enter(object sender, EventArgs e)
         {
             if (_currentFilesList != Staged)

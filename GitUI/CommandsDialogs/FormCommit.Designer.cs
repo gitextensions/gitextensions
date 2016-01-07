@@ -135,6 +135,8 @@ namespace GitUI.CommandsDialogs
             this.commitTemplatesToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.commitStatusStrip = new System.Windows.Forms.StatusStrip();
             this.commitAuthorStatus = new System.Windows.Forms.ToolStripStatusLabel();
+			this.commitStagedCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
+			this.commitStagedCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitCursorLineLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitCursorLine = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitCursorColumnLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -862,6 +864,7 @@ namespace GitUI.CommandsDialogs
             this.Staged.SelectedIndexChanged += new System.EventHandler(this.StagedSelectionChanged);
             this.Staged.DoubleClick += new System.EventHandler(this.Staged_DoubleClick);
             this.Staged.Enter += new System.EventHandler(this.Staged_Enter);
+			this.Staged.DataSourceChanged += new System.EventHandler(this.Staged_DataSourceChanged);
             // 
             // toolbarStaged
             // 
@@ -1256,6 +1259,8 @@ namespace GitUI.CommandsDialogs
             // 
             this.commitStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.commitAuthorStatus,
+            this.commitStagedCountLabel,
+            this.commitStagedCount,
             this.commitCursorLineLabel,
             this.commitCursorLine,
             this.commitCursorColumnLabel,
@@ -1279,6 +1284,20 @@ namespace GitUI.CommandsDialogs
             this.commitAuthorStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.commitAuthorStatus.ToolTipText = "Click to change author information.";
             this.commitAuthorStatus.Click += new System.EventHandler(this.commitCommitter_Click);
+			// 
+			// commitStageFileCountLabel
+			// 
+			this.commitStagedCountLabel.Name = "commitStagedCountLabel";
+			this.commitStagedCountLabel.Size = new System.Drawing.Size(20, 17);
+			this.commitStagedCountLabel.Text = "Staged";
+			// 
+			// commitStageFileCount
+			// 
+			this.commitStagedCount.AutoSize = false;
+			this.commitStagedCount.Name = "commitStagedCount";
+			this.commitStagedCount.Size = new System.Drawing.Size(40, 17);
+			this.commitStagedCount.Text = "0";
+			this.commitStagedCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // commitCursorLineLabel
             // 
@@ -1482,6 +1501,8 @@ namespace GitUI.CommandsDialogs
         private TableLayoutPanel tableLayoutPanel1;
         private StatusStrip commitStatusStrip;
         private ToolStripStatusLabel commitAuthorStatus;
+		private ToolStripStatusLabel commitStagedCountLabel;
+		private ToolStripStatusLabel commitStagedCount;
         private ToolStripStatusLabel commitCursorLineLabel;
         private ToolStripStatusLabel commitCursorLine;
         private ToolStripStatusLabel commitCursorColumnLabel;

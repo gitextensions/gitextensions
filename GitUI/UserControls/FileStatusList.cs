@@ -602,6 +602,9 @@ namespace GitUI
                 {
                     previouslySelectedItems.Add((GitItemStatus)Item.Tag);
                 }
+
+                if (DataSourceChanged != null)
+                    DataSourceChanged(this, new EventArgs());
             }
 
             FileStatusListView.BeginUpdate();
