@@ -198,6 +198,13 @@ namespace GitUI.CommandsDialogs
                 ToolStrip.Items.Remove(toolStripButton1);
                 _toolStripGitStatus.CommitTranslatedString = toolStripButton1.Text;
             }
+
+            if (!EnvUtils.RunningOnWindows())
+            {
+                toolStripSeparator6.Visible = false;
+                PuTTYToolStripMenuItem.Visible = false;
+            }
+
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             _filterRevisionsHelper.SetFilter(filter);
