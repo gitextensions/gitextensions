@@ -938,13 +938,13 @@ namespace GitCommands
 
         public static Font CommitFont
         {
-            get { return GetFont("commitfont", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size)); }
+            get { return GetFont("commitfont", new Font(SystemFonts.DialogFont.Name, SystemFonts.MessageBoxFont.Size)); }
             set { SetFont("commitfont", value); }
         }
 
         public static Font Font
         {
-            get { return GetFont("font", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size)); }
+            get { return GetFont("font", new Font(SystemFonts.DialogFont.Name, SystemFonts.DefaultFont.Size)); }
             set { SetFont("font", value); }
         }
 
