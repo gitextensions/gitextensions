@@ -142,9 +142,6 @@ namespace GitUI.Editor
         {
             _lineNumbersControl.Clear();
 
-            TextEditor.Text = text;
-            TextEditor.Refresh();
-
             if (isDiff)
             {
                 TextEditor.ShowLineNumbers = false;
@@ -158,6 +155,17 @@ namespace GitUI.Editor
                 _diffHighlightService = DiffHighlightService.IsCombinedDiff(text)
                     ? CombinedDiffHighlightService.Instance
                     : DiffHighlightService.Instance;
+            }
+            else
+            {
+                TextEditor.ShowLineNumbers = true;
+                _lineNumbersControl.SetVisibility(false);
+            }
+
+            TextEditor.Text = text;
+
+            if (isDiff)
+            {
                 _diffLineNumAnalyzer.StartAsync(text, () =>
                 {
                     if (TextEditor != null && !TextEditor.Disposing && TextEditor.Visible)
@@ -166,11 +174,8 @@ namespace GitUI.Editor
                     }
                 });
             }
-            else
-            {
-                TextEditor.ShowLineNumbers = true;
-                _lineNumbersControl.SetVisibility(false);
-            }
+
+            TextEditor.Refresh();
         }
 
         public void SetHighlighting(string syntax)

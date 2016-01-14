@@ -9,7 +9,7 @@ namespace GitUI.Editor.Diff
 {
     public class DiffHighlightService
     {
-        readonly LinePrefixHelper _linePrefixHelper = new LinePrefixHelper(new LineSegmentGetter());
+        protected readonly LinePrefixHelper LinePrefixHelper = new LinePrefixHelper(new LineSegmentGetter());
         public static DiffHighlightService Instance = new DiffHighlightService();
 
         protected DiffHighlightService()
@@ -121,25 +121,25 @@ namespace GitUI.Editor.Diff
             return 1;
         }
 
-        private List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
+        protected virtual List<ISegment> GetAddedLines(IDocument document, ref int line, ref bool found)
         {
-            return _linePrefixHelper.GetLinesStartingWith(document, ref line, "+", ref found);
+            return LinePrefixHelper.GetLinesStartingWith(document, ref line, "+", ref found);
         }
 
-        private List<ISegment> GetRemovedLines(IDocument document, ref int line, ref bool found)
+        protected virtual List<ISegment> GetRemovedLines(IDocument document, ref int line, ref bool found)
         {
-            return _linePrefixHelper.GetLinesStartingWith(document, ref line, "-", ref found);
+            return LinePrefixHelper.GetLinesStartingWith(document, ref line, "-", ref found);
         }
 
         protected void ProcessLineSegment(IDocument document, ref int line,
             LineSegment lineSegment, string prefixStr, Color color)
         {
-            if (_linePrefixHelper.DoesLineStartWith(document, lineSegment.Offset, prefixStr))
+            if (LinePrefixHelper.DoesLineStartWith(document, lineSegment.Offset, prefixStr))
             {
                 var endLine = document.GetLineSegment(line);
 
                 for (; line < document.TotalNumberOfLines
-                    && _linePrefixHelper.DoesLineStartWith(document, endLine.Offset, prefixStr);
+                    && LinePrefixHelper.DoesLineStartWith(document, endLine.Offset, prefixStr);
                     line++)
                 {
                     endLine = document.GetLineSegment(line);
