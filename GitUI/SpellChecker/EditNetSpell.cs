@@ -268,6 +268,9 @@ namespace GitUI.SpellChecker
 
         private void LoadDictionary()
         {
+            // Don`t load a dictionary in Design-time
+            if (Site != null && Site.DesignMode) return;
+
             string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), Settings.Dictionary), ".dic");
 
             if (_wordDictionary == null || _wordDictionary.DictionaryFile != dictionaryFile)
@@ -1029,6 +1032,8 @@ namespace GitUI.SpellChecker
         {
             if (disposing)
             {
+                CancelAutoComplete();
+                SpellCheckTimer.Stop();
                 _autoCompleteCancellationTokenSource.Dispose();
                 _customUnderlines.Dispose();
                 if (components != null)

@@ -6,6 +6,7 @@ Changelog
 * Fixed an intermittent bug where ObjectDisposedException occurs on launch
 * Fixed a bug where branch filter throws null reference exception when no repository selected
 * Support combined diff for merge commit
+* Support showing the real line number for diff
 
 ### Version 2.48.05 (16 May 2015)
 * Fixed issue #2493: StartBrowseDialog failed after clone

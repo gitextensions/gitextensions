@@ -321,9 +321,6 @@
     <Compile Include="CommandsDialogs\AboutBoxDialog\FormContributors.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\AboutBoxDialog\FormContributors.Designer.cs">
-      <DependentUpon>FormContributors.cs</DependentUpon>
-    </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\FormGoToCommit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1064,10 +1061,6 @@
       <DependentUpon>FileViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\AboutBoxDialog\FormContributors.resx">
-      <DependentUpon>FormContributors.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormGoToCommit.resx">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1421,6 +1414,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>GitUI.Properties</CustomToolNamespace>
+      <LogicalName>GitUI.Properties.Resources.resources</LogicalName> 
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGrid.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>

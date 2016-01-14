@@ -203,7 +203,8 @@
             "tmerge",
             "vimdiff",
             "winmerge",
-            "xxdiff"});
+            "xxdiff",
+            "vsdiffmerge"});
             this._NO_TRANSLATE_GlobalDiffTool.Location = new System.Drawing.Point(149, 201);
             this._NO_TRANSLATE_GlobalDiffTool.Name = "_NO_TRANSLATE_GlobalDiffTool";
             this._NO_TRANSLATE_GlobalDiffTool.Size = new System.Drawing.Size(241, 23);
@@ -323,7 +324,8 @@
             "kdiff3",
             "p4merge",
             "semanticmerge",
-            "TortoiseMerge"});
+            "TortoiseMerge",
+            "vsdiffmerge"});
             this._NO_TRANSLATE_GlobalMergeTool.Location = new System.Drawing.Point(149, 90);
             this._NO_TRANSLATE_GlobalMergeTool.Name = "_NO_TRANSLATE_GlobalMergeTool";
             this._NO_TRANSLATE_GlobalMergeTool.Size = new System.Drawing.Size(241, 23);
