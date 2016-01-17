@@ -47,7 +47,7 @@ namespace GitUI.Editor
         bool ShowTabs { get; set; }
         bool IsReadOnly { get; set; }
         bool Visible { get; set; }
-        
+
         int FirstVisibleLine { get; set; }
         int GetLineFromVisualPosY(int visualPosY);
         int LineAtCaret { get; }
@@ -55,6 +55,12 @@ namespace GitUI.Editor
         int TotalNumberOfLines { get; }
         //lineNumber is 0 based
         void GoToLine(int lineNumber);
+
+        /// <summary>
+        /// Indicates if the Goto line UI is applicable or not.
+        /// Code-behind goto line function is always availabe, so we can goto next diff section.
+        /// </summary>
+        bool IsGotoLineUIApplicable();
         Font Font { get; set; }
         void FocusTextArea();
 

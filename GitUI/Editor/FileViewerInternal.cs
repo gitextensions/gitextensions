@@ -19,6 +19,7 @@ namespace GitUI.Editor
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
         private readonly DiffViewerLineNumberCtrl _lineNumbersControl;
         private readonly DiffLineNumAnalyzer _diffLineNumAnalyzer = new DiffLineNumAnalyzer();
+        private bool _isGotoLineUIApplicable = true;
 
         public FileViewerInternal()
         {
@@ -163,6 +164,7 @@ namespace GitUI.Editor
             }
 
             TextEditor.Text = text;
+            _isGotoLineUIApplicable = !isDiff;
 
             if (isDiff)
             {
@@ -304,6 +306,11 @@ namespace GitUI.Editor
         public void GoToLine(int lineNumber)
         {
             TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(0, lineNumber);
+        }
+
+        public bool IsGotoLineUIApplicable()
+        {
+            return _isGotoLineUIApplicable;
         }
 
         public int LineAtCaret

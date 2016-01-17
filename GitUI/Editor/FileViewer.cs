@@ -995,6 +995,10 @@ namespace GitUI.Editor
 
         private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!_internalFileViewer.IsGotoLineUIApplicable())
+            {
+                return;
+            }
             using (FormGoToLine formGoToLine = new FormGoToLine())
             {
                 formGoToLine.SetMaxLineNumber(_internalFileViewer.TotalNumberOfLines);
