@@ -252,7 +252,7 @@ namespace GitUI.CommandsDialogs
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     revision = form.SelectedRevision;
-                    displayStr = form.SelectedRevision.Message;
+                    displayStr = form.SelectedRevision.Subject;
                     PopulateDiffFiles();
                 }
             }
