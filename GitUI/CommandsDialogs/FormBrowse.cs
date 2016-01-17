@@ -22,6 +22,7 @@ using GitUI.Plugin;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
+using Microsoft.Win32;
 using ResourceManager;
 using Settings = GitCommands.AppSettings;
 #if !__MonoCS__
@@ -144,7 +145,9 @@ namespace GitUI.CommandsDialogs
         private string _diffTabPageTitleBase = "";
 
         private readonly FormBrowseMenus _formBrowseMenus;
+#pragma warning disable 0414
         private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
+#pragma warning restore 0414
 
         /// <summary>
         /// For VS designer
@@ -231,9 +234,10 @@ namespace GitUI.CommandsDialogs
             FillBuildReport();  // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
 
-            _formBrowseMenuCommands = new FormBrowseMenuCommands(this, RevisionGrid);
+            _formBrowseMenuCommands = new FormBrowseMenuCommands(this);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
+            SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
         }
 
         private new void Translate()
@@ -861,8 +865,8 @@ namespace GitUI.CommandsDialogs
                     _rebase = new WarningToolStripItem
                     {
                         Text = Module.InTheMiddleOfRebase()
-                                   ? _warningMiddleOfRebase.Text
-                                   : _warningMiddleOfPatchApply.Text
+                            ? _warningMiddleOfRebase.Text
+                            : _warningMiddleOfPatchApply.Text
                     };
                     _rebase.Click += RebaseClick;
                     statusStrip.Items.Add(_rebase);
@@ -878,32 +882,37 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
-                !Directory.Exists(Module.GetGitDirectory() + "rebase-apply\\"))
-            {
-                if (_warning == null)
+            AsyncLoader.DoAsync(
+                () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
+                      !Directory.Exists(Module.GetGitDirectory() + "rebase-apply\\"),
+                (result) =>
                 {
-                    _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
-                    _warning.Click += WarningClick;
-                    statusStrip.Items.Add(_warning);
-                }
-            }
-            else
-            {
-                if (_warning != null)
-                {
-                    _warning.Click -= WarningClick;
-                    statusStrip.Items.Remove(_warning);
-                    _warning = null;
-                }
-            }
+                    if (result)
+                    {
+                        if (_warning == null)
+                        {
+                            _warning = new WarningToolStripItem {Text = _hintUnresolvedMergeConflicts.Text};
+                            _warning.Click += WarningClick;
+                            statusStrip.Items.Add(_warning);
+                        }
+                    }
+                    else
+                    {
+                        if (_warning != null)
+                        {
+                            _warning.Click -= WarningClick;
+                            statusStrip.Items.Remove(_warning);
+                            _warning = null;
+                        }
+                    }
 
-            //Only show status strip when there are status items on it.
-            //There is always a close (x) button, do not count first item.
-            if (statusStrip.Items.Count > 1)
-                statusStrip.Show();
-            else
-                statusStrip.Hide();
+                    //Only show status strip when there are status items on it.
+                    //There is always a close (x) button, do not count first item.
+                    if (statusStrip.Items.Count > 1)
+                        statusStrip.Show();
+                    else
+                        statusStrip.Hide();
+                });
         }
 
         /// <summary>
@@ -1589,6 +1598,12 @@ namespace GitUI.CommandsDialogs
         private void FormBrowseFormClosing(object sender, FormClosingEventArgs e)
         {
             SaveUserMenuPosition();
+            SaveApplicationSettings();
+        }
+
+        private static void SaveApplicationSettings()
+        {
+            Properties.Settings.Default.Save();
         }
 
         private void SaveUserMenuPosition()
@@ -2881,7 +2896,7 @@ namespace GitUI.CommandsDialogs
             {
                 resetFileToSelectedToolStripMenuItem.Visible = true;
                 TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
-                resetFileToSelectedToolStripMenuItem.Text += " (" + revisions[0].Message.ShortenTo(50) + ")";
+                resetFileToSelectedToolStripMenuItem.Text += " (" + revisions[0].Subject.ShortenTo(50) + ")";
 
                 if (revisions[0].HasParent())
                 {
@@ -2890,7 +2905,7 @@ namespace GitUI.CommandsDialogs
                     GitRevision parentRev = RevisionGrid.GetRevision(revisions[0].ParentGuids[0]);
                     if (parentRev != null)
                     {
-                        resetFileToParentToolStripMenuItem.Text += " (" + parentRev.Message.ShortenTo(50) + ")";
+                        resetFileToParentToolStripMenuItem.Text += " (" + parentRev.Subject.ShortenTo(50) + ")";
                     }
                 }
                 else
@@ -2908,11 +2923,11 @@ namespace GitUI.CommandsDialogs
             {
                 resetFileToFirstToolStripMenuItem.Visible = true;
                 TranslateItem(resetFileToFirstToolStripMenuItem.Name, resetFileToFirstToolStripMenuItem);
-                resetFileToFirstToolStripMenuItem.Text += " (" + revisions[1].Message.ShortenTo(50) + ")";
+                resetFileToFirstToolStripMenuItem.Text += " (" + revisions[1].Subject.ShortenTo(50) + ")";
 
                 resetFileToSecondToolStripMenuItem.Visible = true;
                 TranslateItem(resetFileToSecondToolStripMenuItem.Name, resetFileToSecondToolStripMenuItem);
-                resetFileToSecondToolStripMenuItem.Text += " (" + revisions[0].Message.ShortenTo(50) + ")";
+                resetFileToSecondToolStripMenuItem.Text += " (" + revisions[0].Subject.ShortenTo(50) + ")";
             }
             else
             {

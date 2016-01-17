@@ -9,6 +9,8 @@
 
 typedef DWORD ARGB;
 
+typedef HRESULT (WINAPI *FN_BufferedPaintInit) (void);
+typedef HRESULT (WINAPI *FN_BufferedPaintUnInit) (void);
 typedef HRESULT (WINAPI *FN_GetBufferedPaintBits) (HPAINTBUFFER hBufferedPaint, RGBQUAD **ppbBuffer, int *pcxRow);
 typedef HPAINTBUFFER (WINAPI *FN_BeginBufferedPaint) (HDC hdcTarget, const RECT *prcTarget, BP_BUFFERFORMAT dwFormat, BP_PAINTPARAMS *pPaintParams, HDC *phdc);
 typedef HRESULT (WINAPI *FN_EndBufferedPaint) (HPAINTBUFFER hBufferedPaint, BOOL fUpdateTarget);
@@ -48,6 +50,7 @@ class ATL_NO_VTABLE CGitExtensionsShellEx :
 {
 public:
     CGitExtensionsShellEx();
+    virtual ~CGitExtensionsShellEx();
 
     DECLARE_REGISTRY_RESOURCEID(IDR_GITEXTENSIONSSHELLEX)
 
@@ -73,32 +76,27 @@ public:
     // IContextMenu3
     STDMETHODIMP HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 
+private:
     void RunGitEx(const TCHAR* command);
 
     UINT AddMenuItem(HMENU hmenu, LPTSTR text, int resource, UINT firstId, UINT id, UINT position, bool isSubMenu);
 
-protected:
     TCHAR m_szFile[MAX_PATH];
     std::map<UINT_PTR, int> myIDMap;
     std::map<UINT, HBITMAP> bitmaps;
     std::map<int, int> commandsId;
 
+    HMODULE hUxTheme;
+    FN_BufferedPaintInit pfnBufferedPaintInit;
+    FN_BufferedPaintUnInit pfnBufferedPaintUnInit;
     FN_GetBufferedPaintBits pfnGetBufferedPaintBits;
     FN_BeginBufferedPaint pfnBeginBufferedPaint;
     FN_EndBufferedPaint pfnEndBufferedPaint;
-
-    CString GetRegistryValue(HKEY	hOpenKey, LPCTSTR szKey, LPCTSTR path);
-    bool GetRegistryBoolValue(HKEY	hOpenKey, LPCTSTR szKey, LPCTSTR path);
-    bool DisplayInSubmenu(CString settings, int id);
+    bool BufferedPaintAvailable;
+    bool BufferedPaintInitialized;
 
     HBITMAP IconToBitmapPARGB32(UINT uIcon);
-    HRESULT Create32BitHBITMAP(HDC hdc, const SIZE* psize, __deref_opt_out void** ppvBits, __out HBITMAP* phBmp);
     HRESULT ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer, HDC hdc, HICON hicon, SIZE& sizIcon);
-    bool HasAlpha(__in ARGB* pargb, SIZE& sizImage, int cxRow);
-    HRESULT ConvertToPARGB32(HDC hdc, __inout ARGB* pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow);
-
-    bool ValidWorkingDir(const std::wstring& dir);
-    bool IsValidGitDir(TCHAR m_szFile[]);
 };
 
 #endif //__GITEXTENSIONSSHELLEX_H_

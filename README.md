@@ -26,7 +26,7 @@ Special thanks to JetBRAINS for [Resharper](https://www.jetbrains.com/resharper/
 
 ## Links
 
-* Download page: [https://sourceforge.net/projects/gitextensions/](https://sourceforge.net/projects/gitextensions/)
+* Download page: [https://github.com/gitextensions/gitextensions/releases/latest](https://github.com/gitextensions/gitextensions/releases/latest)
 * Online manual: [https://git-extensions-documentation.readthedocs.org/en/latest/](https://git-extensions-documentation.readthedocs.org/en/latest/)
 * Issue tracker: [http://github.com/gitextensions/gitextensions/issues](http://github.com/gitextensions/gitextensions/issues)
 * Mailing list: [http://groups.google.com/group/gitextensions](http://groups.google.com/group/gitextensions)

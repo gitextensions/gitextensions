@@ -289,6 +289,10 @@ namespace JenkinsIntegration
                         return httpContent.ReadAsStreamAsync();
                     }
                 }
+                else if (task.Result.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    unauthorized = true;
+                }
             }
 
             if (retry)

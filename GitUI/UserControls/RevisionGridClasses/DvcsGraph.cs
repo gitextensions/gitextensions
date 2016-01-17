@@ -260,6 +260,7 @@ namespace GitUI.RevisionGridClasses
             }
             set
             {
+                lock (_backgroundEvent)
                 lock (_graphData)
                 {
                     ClearSelection();
