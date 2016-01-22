@@ -292,17 +292,20 @@ namespace GitUI
             set
             {
                 _currentStatus = value;
+
                 switch (_currentStatus)
                 {
                     case WorkingStatus.Stopped:
                         _workTreeWatcher.EnableRaisingEvents = false;
                         _gitDirWatcher.EnableRaisingEvents = false;
                         Visible = false;
-                        return;
+                        break;
+
                     case WorkingStatus.Paused:
                         _workTreeWatcher.EnableRaisingEvents = false;
                         _gitDirWatcher.EnableRaisingEvents = false;
-                        return;
+                        break;
+
                     case WorkingStatus.Started:
                         _workTreeWatcher.EnableRaisingEvents = true;
                         _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
@@ -320,10 +323,9 @@ namespace GitUI
                                         CurrentStatus = WorkingStatus.Stopped;
                                     });
                         }
+                        break;
 
-                        return;
-                    default:
-                        throw new NotSupportedException();
+                    default: throw new NotImplementedException("Others status aren't implememted yet.");
                 }
             }
         }
