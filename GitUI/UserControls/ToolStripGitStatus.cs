@@ -311,6 +311,7 @@ namespace GitUI
                         _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
                         Visible = true;
 
+                        // INFO minidfx 2015.01.16: Subscribe to the observable only when the property is set the first time to Started.
                         if (_repoStatusSubscription == null)
                         {
                             _repoStatusSubscription = _repoStatusObservable
