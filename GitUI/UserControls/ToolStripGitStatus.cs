@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -41,7 +42,10 @@ namespace GitUI
         public string CommitTranslatedString { get; set; }
 
         private IGitUICommandsSource _UICommandsSource;
-        private readonly IDisposable _repoStatusObservable;
+        private readonly IObservable<List<GitItemStatus>> _repoStatusObservable;
+
+        [CanBeNull]
+        private IDisposable _repoStatusSubscription;
 
         public IGitUICommandsSource UICommandsSource
         {
@@ -117,15 +121,7 @@ namespace GitUI
                 //.Publish()
                 //.RefCount() // Uncomment these lines if you have many subscriptions!
                 .SubscribeOn(TaskPoolScheduler.Default)
-                .ObserveOn(SynchronizationContext.Current)
-                .Subscribe(UpdateUI, e =>
-                {
-                    CurrentStatus = WorkingStatus.Stopped;
-                },
-                    () =>
-                    {
-                        CurrentStatus = WorkingStatus.Stopped;
-                    });
+                .ObserveOn(SynchronizationContext.Current);
         }
 
         private void GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
@@ -295,6 +291,20 @@ namespace GitUI
                         _workTreeWatcher.EnableRaisingEvents = true;
                         _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
                         Visible = true;
+
+                        if (_repoStatusSubscription == null)
+                        {
+                            _repoStatusSubscription = _repoStatusObservable
+                                .Subscribe(UpdateUI, e =>
+                                {
+                                    CurrentStatus = WorkingStatus.Stopped;
+                                },
+                                    () =>
+                                    {
+                                        CurrentStatus = WorkingStatus.Stopped;
+                                    });
+                        }
+
                         return;
                     default:
                         throw new NotSupportedException();

@@ -15,7 +15,10 @@
         {
             if (disposing && (components != null))
             {
-                _repoStatusObservable.Dispose();
+                if (_repoStatusSubscription != null)
+                {
+                    _repoStatusSubscription.Dispose();
+                }
                 components.Dispose();
             }
             base.Dispose(disposing);
