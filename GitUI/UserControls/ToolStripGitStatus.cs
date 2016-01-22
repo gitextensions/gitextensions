@@ -37,7 +37,8 @@ namespace GitUI
         private string _gitPath;
         private string _submodulesPath;
         private WorkingStatus _currentStatus;
-        private HashSet<string> _ignoredFiles = new HashSet<string>(); 
+        private HashSet<string> _ignoredFiles = new HashSet<string>();
+        private long skipInterval = 0;
 
         public string CommitTranslatedString { get; set; }
 
@@ -108,6 +109,7 @@ namespace GitUI
 
             _repoStatusObservable = Observable.Interval(TimeSpan.FromMilliseconds(UpdateDelay))
                 .Where(i => CurrentStatus == WorkingStatus.Started)
+                .SkipWhile(i => Interlocked.Read(ref skipInterval) > 0 && Interlocked.Decrement(ref skipInterval) > 0)
                 .Where(i => !UICommands.RepoChangedNotifier.IsLocked &&
                             !GitCommandHelpers.VersionInUse.RaceConditionWhenGitStatusIsUpdatingIndex ||
                             !Module.IsRunningGitProcess())
@@ -211,6 +213,8 @@ namespace GitUI
             // old submodule .git\index.lock file
             if (e.FullPath.EndsWith("\\.git\\index.lock"))
                 return;
+
+            Interlocked.Increment(ref skipInterval);
         }
 
         private void GitDirChanged(object sender, FileSystemEventArgs e)
@@ -226,6 +230,8 @@ namespace GitUI
             // cut/paste/rename/delete operations are not expected on directories inside nested .git dirs
             if (e.FullPath.StartsWith(_submodulesPath) && (Directory.Exists(e.FullPath)))
                 return;
+
+            Interlocked.Increment(ref skipInterval);
         }
 
         private HashSet<string> LoadIgnoredFiles()
