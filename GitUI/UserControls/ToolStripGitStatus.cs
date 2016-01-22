@@ -114,12 +114,14 @@ namespace GitUI
                 {
                     lock (SyncFetchingRepoStatus)
                     {
+                        var currentSkipInterval = skipInterval;
+
                         if (skipInterval > 0)
                         {
                             skipInterval -= 1;
                         }
 
-                        return skipInterval > 0;
+                        return currentSkipInterval > 0;
                     }
                 })
                 .Where(i => !UICommands.RepoChangedNotifier.IsLocked &&
