@@ -134,6 +134,10 @@ namespace GitUI
                 })
                 .SubscribeOn(TaskPoolScheduler.Default)
                 .ObserveOn(SynchronizationContext.Current);
+
+            _repoStatusSubscription = _repoStatusObservable.Subscribe(UpdateUI,
+                e => { CurrentStatus = WorkingStatus.Stopped; },
+                () => { CurrentStatus = WorkingStatus.Stopped; });
         }
 
         private void GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
@@ -310,20 +314,6 @@ namespace GitUI
                         _workTreeWatcher.EnableRaisingEvents = true;
                         _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
                         Visible = true;
-
-                        // INFO minidfx 2015.01.16: Subscribe to the observable only when the property is set the first time to Started.
-                        if (_repoStatusSubscription == null)
-                        {
-                            _repoStatusSubscription = _repoStatusObservable
-                                .Subscribe(UpdateUI, e =>
-                                {
-                                    CurrentStatus = WorkingStatus.Stopped;
-                                },
-                                    () =>
-                                    {
-                                        CurrentStatus = WorkingStatus.Stopped;
-                                    });
-                        }
                         break;
 
                     default: throw new NotImplementedException("Others status aren't implememted yet.");
