@@ -33,7 +33,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            new System.Windows.Forms.Timer(this.components);
             this.ignoredFilesTimer = new System.Windows.Forms.Timer(this.components);
             // 
             // ignoredFilesTimer
