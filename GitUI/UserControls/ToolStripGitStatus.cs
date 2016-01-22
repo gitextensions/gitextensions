@@ -132,8 +132,6 @@ namespace GitUI
 
                     return GitCommandHelpers.GetAllChangedFilesFromString(Module, result);
                 })
-                //.Publish()
-                //.RefCount() // Uncomment these lines if you have many subscriptions!
                 .SubscribeOn(TaskPoolScheduler.Default)
                 .ObserveOn(SynchronizationContext.Current);
         }
