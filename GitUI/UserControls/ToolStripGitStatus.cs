@@ -20,6 +20,7 @@ namespace GitUI
         private static readonly Bitmap IconDirtySubmodules = Properties.Resources.IconDirtySubmodules;
         private static readonly Bitmap IconStaged = Properties.Resources.IconStaged;
         private static readonly Bitmap IconMixed = Properties.Resources.IconMixed;
+        private static readonly object SyncFetchingRepoStatus = new object();
 
         /// <summary>
         /// We often change several files at once.
@@ -38,7 +39,7 @@ namespace GitUI
         private string _submodulesPath;
         private WorkingStatus _currentStatus;
         private HashSet<string> _ignoredFiles = new HashSet<string>();
-        private long skipInterval = 0;
+        private long skipInterval;
 
         public string CommitTranslatedString { get; set; }
 
@@ -109,7 +110,18 @@ namespace GitUI
 
             _repoStatusObservable = Observable.Interval(TimeSpan.FromMilliseconds(UpdateDelay))
                 .Where(i => CurrentStatus == WorkingStatus.Started)
-                .SkipWhile(i => Interlocked.Read(ref skipInterval) > 0 && Interlocked.Decrement(ref skipInterval) > 0)
+                .SkipWhile(i =>
+                {
+                    lock (SyncFetchingRepoStatus)
+                    {
+                        if (skipInterval > 0)
+                        {
+                            skipInterval -= 1;
+                        }
+
+                        return skipInterval > 0;
+                    }
+                })
                 .Where(i => !UICommands.RepoChangedNotifier.IsLocked &&
                             !GitCommandHelpers.VersionInUse.RaceConditionWhenGitStatusIsUpdatingIndex ||
                             !Module.IsRunningGitProcess())
