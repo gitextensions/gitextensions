@@ -45,9 +45,7 @@ namespace GitUI
 
         private IGitUICommandsSource _UICommandsSource;
         private readonly IObservable<List<GitItemStatus>> _repoStatusObservable;
-
-        [CanBeNull]
-        private IDisposable _repoStatusSubscription;
+        private readonly IDisposable _repoStatusSubscription;
 
         public IGitUICommandsSource UICommandsSource
         {
@@ -134,6 +132,8 @@ namespace GitUI
 
                     return GitCommandHelpers.GetAllChangedFilesFromString(Module, result);
                 })
+                .Timeout(TimeSpan.FromMilliseconds(MaxUpdatePeriod))
+                .Retry()
                 .SubscribeOn(TaskPoolScheduler.Default)
                 .ObserveOn(SynchronizationContext.Current);
 
@@ -318,7 +318,7 @@ namespace GitUI
                         Visible = true;
                         break;
 
-                    default: throw new NotImplementedException("Others status aren't implememted yet.");
+                    default: throw new NotImplementedException("Others status aren't implemented yet.");
                 }
             }
         }
