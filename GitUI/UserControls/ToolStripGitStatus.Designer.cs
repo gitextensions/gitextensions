@@ -15,6 +15,10 @@
         {
             if (disposing && (components != null))
             {
+                if (_repoStatusSubscription != null)
+                {
+                    _repoStatusSubscription.Dispose();
+                }
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -29,14 +33,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.timerRefresh = new System.Windows.Forms.Timer(this.components);
             this.ignoredFilesTimer = new System.Windows.Forms.Timer(this.components);
-            // 
-            // timerRefresh
-            // 
-            this.timerRefresh.Enabled = true;
-            this.timerRefresh.Interval = 500;
-            this.timerRefresh.Tick += new System.EventHandler(this.timerRefresh_Tick);
             // 
             // ignoredFilesTimer
             // 
@@ -47,7 +44,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer timerRefresh;
         private System.Windows.Forms.Timer ignoredFilesTimer;
     }
 }
