@@ -39,7 +39,7 @@ namespace GitUI
         private string _submodulesPath;
         private WorkingStatus _currentStatus;
         private HashSet<string> _ignoredFiles = new HashSet<string>();
-        private long skipInterval;
+        private volatile bool _shouldSkipInterval;
 
         public string CommitTranslatedString { get; set; }
 
@@ -110,17 +110,10 @@ namespace GitUI
                 .Where(i => CurrentStatus == WorkingStatus.Started)
                 .SkipWhile(i =>
                 {
-                    lock (SyncFetchingRepoStatus)
-                    {
-                        var currentSkipInterval = skipInterval;
+                    var shouldSkipInterval = _shouldSkipInterval;
+                    _shouldSkipInterval = false;
 
-                        if (skipInterval > 0)
-                        {
-                            skipInterval -= 1;
-                        }
-
-                        return currentSkipInterval > 0;
-                    }
+                    return shouldSkipInterval;
                 })
                 .Where(i => !UICommands.RepoChangedNotifier.IsLocked &&
                             !GitCommandHelpers.VersionInUse.RaceConditionWhenGitStatusIsUpdatingIndex ||
@@ -230,7 +223,7 @@ namespace GitUI
             if (e.FullPath.EndsWith("\\.git\\index.lock"))
                 return;
 
-            Interlocked.Increment(ref skipInterval);
+            _shouldSkipInterval = true;
         }
 
         private void GitDirChanged(object sender, FileSystemEventArgs e)
@@ -247,7 +240,7 @@ namespace GitUI
             if (e.FullPath.StartsWith(_submodulesPath) && (Directory.Exists(e.FullPath)))
                 return;
 
-            Interlocked.Increment(ref skipInterval);
+            _shouldSkipInterval = true;
         }
 
         private HashSet<string> LoadIgnoredFiles()
