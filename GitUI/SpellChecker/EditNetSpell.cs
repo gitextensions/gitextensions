@@ -56,6 +56,7 @@ namespace GitUI.SpellChecker
         public Font TextBoxFont { get; set; }
 
         public EventHandler TextAssigned;
+        public bool IsUndoInProgress = false;
 
         public EditNetSpell()
         {
@@ -267,6 +268,9 @@ namespace GitUI.SpellChecker
 
         private void LoadDictionary()
         {
+            // Don`t load a dictionary in Design-time
+            if (Site != null && Site.DesignMode) return;
+
             string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), Settings.Dictionary), ".dic");
 
             if (_wordDictionary == null || _wordDictionary.DictionaryFile != dictionaryFile)
@@ -623,12 +627,14 @@ namespace GitUI.SpellChecker
             if (!skipSelectionUndo)
                 return;
 
+            IsUndoInProgress = true;
             while (TextBox.UndoActionName.Equals("Unknown"))
             {
                 TextBox.Undo();
             }
             TextBox.Undo();
             skipSelectionUndo = false;
+            IsUndoInProgress = false;
         }
 
 
@@ -1026,6 +1032,8 @@ namespace GitUI.SpellChecker
         {
             if (disposing)
             {
+                CancelAutoComplete();
+                SpellCheckTimer.Stop();
                 _autoCompleteCancellationTokenSource.Dispose();
                 _customUnderlines.Dispose();
                 if (components != null)

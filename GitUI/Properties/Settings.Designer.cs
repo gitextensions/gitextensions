@@ -25,18 +25,6 @@ namespace GitUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::GitUI.WindowPositionList WindowPositions
-        {
-            get {
-                return ((global::GitUI.WindowPositionList)(this["WindowPositions"]));
-            }
-            set {
-                this["WindowPositions"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string Hotkeys {
             get {

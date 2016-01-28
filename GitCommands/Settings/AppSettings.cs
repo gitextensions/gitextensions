@@ -812,7 +812,13 @@ namespace GitCommands
             set { SetInt("maxrevisiongraphcommits", value); }
         }
 
-        public static string RecentWorkingDir
+        public static bool ShowDiffForAllParents
+        {
+            get { return GetBool("showdiffforallparents", true); }
+            set { SetBool("showdiffforallparents", value); }
+        }
+
+		public static string RecentWorkingDir
         {
             get { return GetString("RecentWorkingDir", null); }
             set { SetString("RecentWorkingDir", value); }
@@ -1024,6 +1030,7 @@ namespace GitCommands
             addEncoding(new UnicodeEncoding());
             addEncoding(new UTF7Encoding());
             addEncoding(new UTF8Encoding(false));
+            addEncoding(System.Text.Encoding.GetEncoding("CP852"));
 
             try
             {
@@ -1139,6 +1146,18 @@ namespace GitCommands
         {
             get { return GetBool("UseFormCommitMessage", true); }
             set { SetBool("UseFormCommitMessage", value); }
+        }
+
+        public static bool CommitAutomaticallyAfterCherryPick
+        {
+            get { return GetBool("CommitAutomaticallyAfterCherryPick", false); }
+            set { SetBool("CommitAutomaticallyAfterCherryPick", value); }
+        }
+
+        public static bool AddCommitReferenceToCherryPick
+        {
+            get { return GetBool("AddCommitReferenceToCherryPick", false); }
+            set { SetBool("AddCommitReferenceToCherryPick", value); }
         }
 
         public static DateTime LastUpdateCheck

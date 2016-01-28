@@ -345,7 +345,7 @@ namespace GitCommands
         /// <summary>"(no branch)"</summary>
         public static readonly string DetachedBranch = "(no branch)";
 
-        private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from " };
+        private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from ", "(HEAD detached at " };
 
         public AppSettings.PullAction LastPullAction
         {
@@ -1110,7 +1110,7 @@ namespace GitCommands
             revision.MessageEncoding = lines[9];
             if (shortFormat)
             {
-                revision.Message = ReEncodeCommitMessage(lines[10], revision.MessageEncoding);
+                revision.Subject = ReEncodeCommitMessage(lines[10], revision.MessageEncoding);
             }
             else
             {
@@ -1118,7 +1118,7 @@ namespace GitCommands
 
                 //commit message is not reencoded by git when format is given
                 revision.Body = ReEncodeCommitMessage(message, revision.MessageEncoding);
-                revision.Message = revision.Body.Substring(0, revision.Body.IndexOfAny(new[] { '\r', '\n' }));
+                revision.Subject = revision.Body.Substring(0, revision.Body.IndexOfAny(new[] { '\r', '\n' }));
             }
 
             return revision;
@@ -1707,6 +1707,30 @@ namespace GitCommands
 
                 return process.StandardOutput.ReadToEnd().Trim();
             }
+        }
+
+        public string AssumeUnchangedFiles(IList<GitItemStatus> files, bool assumeUnchanged, out bool wereErrors)
+        {
+            var output = "";
+            string error = "";
+            wereErrors = false;
+            var startInfo = CreateGitStartInfo("update-index --" + (assumeUnchanged ? "" : "no-") + "assume-unchanged --stdin");
+            var processReader = new Lazy<SynchronizedProcessReader>(() => new SynchronizedProcessReader(Process.Start(startInfo)));
+
+            foreach (var file in files.Where(file => file.IsAssumeUnchanged != assumeUnchanged))
+            {
+                UpdateIndex(processReader, file.Name);
+            }
+            if (processReader.IsValueCreated)
+            {
+                processReader.Value.Process.StandardInput.Close();
+                processReader.Value.WaitForExit();
+                wereErrors = processReader.Value.Process.ExitCode != 0;
+                output = processReader.Value.OutputString(SystemEncoding);
+                error = processReader.Value.ErrorString(SystemEncoding);
+            }
+
+            return output.Combine(Environment.NewLine, error);
         }
 
         public string StageFiles(IList<GitItemStatus> files, out bool wereErrors)
@@ -2313,16 +2337,23 @@ namespace GitCommands
             return list;
         }
 
-        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
+        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true, bool excludeAssumeUnchangedFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
             var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
+            List<GitItemStatus> result = GitCommandHelpers.GetAllChangedFilesFromString(this, status);
 
-            return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
+            if (!excludeAssumeUnchangedFiles)
+            {
+                string lsOutput = RunGitCmd("ls-files -v");
+                result.AddRange(GitCommandHelpers.GetAssumeUnchangedFilesFromString(this, lsOutput));
+            }
+
+            return result;
         }
 
-        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
+        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true, bool excludeAssumeUnchangedFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
-            var status = GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles);
+            var status = GetAllChangedFiles(excludeIgnoredFiles, excludeAssumeUnchangedFiles, untrackedFiles);
             GetCurrentSubmoduleStatus(status);
             return status;
         }

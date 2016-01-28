@@ -13,6 +13,7 @@ namespace GitCommands
             IsRenamed = false;
             IsCopied = false;
             IsConflict = false;
+            IsAssumeUnchanged = false;
             IsNew = false;
             IsStaged = true;
             IsSubmodule = false;
@@ -33,6 +34,7 @@ namespace GitCommands
                 else if (IsRenamed) return "Renamed";
                 else if (IsConflict) return "Conflict";
                 else if (IsCopied) return "Copied";
+                else if (IsAssumeUnchanged) return "Unchanged";
                 else return "";
             }
         }
@@ -44,6 +46,7 @@ namespace GitCommands
         public bool IsRenamed { get; set; }
         public bool IsCopied { get; set; }
         public bool IsConflict { get; set; }
+        public bool IsAssumeUnchanged { get; set; }
         public bool IsStaged { get; set; }
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }

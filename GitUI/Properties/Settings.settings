@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GitUI.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="WindowPositions" Type="GitUI.WindowPositionList" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="Hotkeys" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

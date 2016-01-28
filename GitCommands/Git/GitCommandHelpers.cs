@@ -1020,6 +1020,26 @@ namespace GitCommands
             return diffFiles;
         }
 
+        public static List<GitItemStatus> GetAssumeUnchangedFilesFromString(GitModule module, string lsString)
+        {
+            List<GitItemStatus> result = new List<GitItemStatus>();
+            string[] lines = lsString.SplitLines();
+            foreach (string line in lines)
+            {
+                char statusCharacter = line[0];
+                if (char.IsUpper(statusCharacter))
+                    continue;
+
+                string fileName = line.Substring(line.IndexOf(' ') + 1);
+                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(fileName, statusCharacter);
+                gitItemStatus.IsStaged = false;
+                gitItemStatus.IsAssumeUnchanged = true;
+                result.Add(gitItemStatus);
+            }
+
+            return result;
+        }
+
         private static GitItemStatus GitItemStatusFromCopyRename(bool fromDiff, string nextfile, string fileName, char x, string status)
         {
             var gitItemStatus = new GitItemStatus();
