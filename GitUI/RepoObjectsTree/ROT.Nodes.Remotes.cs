@@ -144,6 +144,7 @@ namespace GitUI.UserControls
 
                 var branches = Module.GetRefs(true, true)
                     .Where(branch => branch.IsRemote && !branch.IsTag)
+                    .OrderBy(r => r.Name)
                     .Select(branch => branch.Name);
 
                 var remotes = Module.GetRemotes(allowEmpty: true);

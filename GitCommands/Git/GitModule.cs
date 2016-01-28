@@ -2774,7 +2774,7 @@ namespace GitCommands
                 .Split(LineSeparator)
                 .Where(branch => !string.IsNullOrWhiteSpace(branch))// first is ""
                 .OrderByDescending(branch => branch.Contains(ActiveBranchIndicator))// * for current branch
-                .Select(line => line.Trim());// trim justify space
+                .ThenBy(r => r).Select(line => line.Trim());// trim justify space
         }
 
         /// <summary>
