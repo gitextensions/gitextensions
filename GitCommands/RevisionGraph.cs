@@ -112,6 +112,7 @@ namespace GitCommands
         }
 
         public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+        public bool FirstParent = false;
         public string RevisionFilter = String.Empty;
         public string PathFilter = String.Empty;
         public string BranchFilter = String.Empty;
@@ -194,7 +195,7 @@ namespace GitCommands
                 branchFilter,
                 RevisionFilter,
                 PathFilter,
-                AppSettings.FirstParent ? "--first-parent" : string.Empty);
+                FirstParent ? "--first-parent" : string.Empty);
 
             Encoding logOutputEncoding = _module.LogOutputEncoding;
 

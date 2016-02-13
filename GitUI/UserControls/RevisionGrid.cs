@@ -996,6 +996,7 @@ namespace GitUI
                     revGraphIMF = filterBarIMF;
 
                 _revisionGraphCommand = new RevisionGraph(Module) {
+                    FirstParent = UICommandsSource is FormBrowse && AppSettings.FirstParent,
                     BranchFilter = BranchFilter,
                     RefsOptions = _refsOptions,
                     RevisionFilter = _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
