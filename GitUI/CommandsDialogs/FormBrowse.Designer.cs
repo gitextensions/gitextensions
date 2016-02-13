@@ -2246,6 +2246,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem gitcommandLogToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem cherryPickSelectedDiffFileToolStripMenuItem;
-        private ToolStripButton toolStripButtonFirstParent;
+        internal ToolStripButton toolStripButtonFirstParent;
     }
 }

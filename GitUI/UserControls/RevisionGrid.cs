@@ -2049,6 +2049,15 @@ namespace GitUI
             _showCurrentBranchOnlyToolStripMenuItemChecked = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
             _showFilteredBranchesToolStripMenuItemChecked = AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly;
 
+            try
+            {
+                ((FormBrowse)UICommandsSource).toolStripButtonFirstParent.Enabled = AppSettings.BranchFilterEnabled;
+                ((FormBrowse)UICommandsSource).toolStripButtonFirstParent.Checked &= AppSettings.BranchFilterEnabled;
+            }
+            catch
+            {
+            }
+
             BranchFilter = _revisionFilter.GetBranchFilter();
 
             if (!AppSettings.BranchFilterEnabled)
