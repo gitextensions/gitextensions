@@ -1296,7 +1296,7 @@ namespace GitCommands
                     if (line.StartsWith("gitdir:"))
                     {
                         string gitpath = line.Substring(7).Trim();
-                        int pos = gitpath.IndexOf("/.git/");
+                        int pos = gitpath.IndexOf("/.git/modules/");
                         if (pos != -1)
                         {
                             gitpath = gitpath.Substring(0, pos + 1).Replace('/', '\\');
