@@ -358,6 +358,7 @@ namespace GitUI.UserControls
                 #endregion ex
 
                 Dictionary<string, BaseBranchNode> nodes = new Dictionary<string, BaseBranchNode>();
+                var branchFullPaths = new List<string>();
                 foreach (string branch in branches)
                 {
                     BranchNode branchNode = new BranchNode(this, branch);
@@ -365,7 +366,10 @@ namespace GitUI.UserControls
                         (tree, parentPath) => new BranchPathNode(tree, parentPath));
                     if (parent != null)
                         Nodes.AddNode(parent);
+                    branchFullPaths.Add(branchNode.FullPath);
                 }
+
+                FireBranchAddedEvent(branchFullPaths);
             }
 
             protected override void FillTreeViewNode()

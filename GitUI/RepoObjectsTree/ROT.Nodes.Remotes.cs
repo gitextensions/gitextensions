@@ -148,6 +148,7 @@ namespace GitUI.UserControls
                     .Select(branch => branch.Name);
 
                 var remotes = Module.GetRemotes(allowEmpty: true);
+                var branchFullPaths = new List<string>();
                 foreach (var branchPath in branches)
                 {
                     var remote = branchPath.Split('/').First();
@@ -160,7 +161,9 @@ namespace GitUI.UserControls
                         (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
                     if (parent != null)
                         Nodes.AddNode(parent);
+                    branchFullPaths.Add(remoteBranchNode.FullPath);
                 }
+                FireBranchAddedEvent(branchFullPaths);
             }
 
             private static BaseBranchNode CreateRemoteBranchPathNode(Tree tree,

@@ -117,6 +117,7 @@ namespace GitUI.UserControls
             public GitUICommands UICommands { get { return UICommandsSource.UICommands; } }
             public GitModule Module { get { return UICommands.Module; } }
             public TreeNode TreeViewNode { get; private set; }
+            public Action<List<string>> OnBranchesAdded;
 
             public Tree(TreeNode aTreeNode, IGitUICommandsSource uiCommands)
             {
@@ -164,6 +165,14 @@ namespace GitUI.UserControls
             protected virtual void FillTreeViewNode()
             {
                 Nodes.FillTreeViewNode(TreeViewNode);
+            }
+
+            protected void FireBranchAddedEvent(List<string> branchFullPaths)
+            {
+                if (OnBranchesAdded != null)
+                {
+                    OnBranchesAdded(branchFullPaths);
+                }
             }
         }
 

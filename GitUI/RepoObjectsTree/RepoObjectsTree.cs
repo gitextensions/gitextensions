@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 using ResourceManager;
 
 namespace GitUI.UserControls
@@ -17,11 +16,16 @@ namespace GitUI.UserControls
         /// <summary>Image key for a head branch.</summary>
         static readonly string headBranchKey = Guid.NewGuid().ToString();
 
+        private HashSet<string> _branchFilterAutoCompletionSrc = new HashSet<string>();
+
         public RepoObjectsTree()
         {
             InitializeComponent();
             treeMain.PreviewKeyDown += OnPreviewKeyDown;
             txtBranchFilter.PreviewKeyDown += OnPreviewKeyDown;
+            txtBranchFilter.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            txtBranchFilter.AutoCompleteSource = AutoCompleteSource.CustomSource;
+
             btnSearch.PreviewKeyDown += OnPreviewKeyDown;
             PreviewKeyDown += OnPreviewKeyDown;
             Translate();
@@ -45,6 +49,9 @@ namespace GitUI.UserControls
         protected override void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
         {
             base.OnUICommandsSourceChanged(sender, newSource);
+
+            txtBranchFilter.AutoCompleteCustomSource = null;
+            _branchFilterAutoCompletionSrc.Clear();
 
             DragDrops();
 
@@ -72,8 +79,33 @@ namespace GitUI.UserControls
             }
         }
 
+        private void AddBranchesToAutoCompletionSrc(List<string> branchPaths)
+        {
+            foreach (var branchFullPath in branchPaths)
+            {
+                AddBranchToAutoCompletionSrc(branchFullPath);
+            }
+        }
+        private void AddBranchToAutoCompletionSrc(string branchFullPath)
+        {
+            var lastPart = branchFullPath
+                    .Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
+                    .LastOrDefault();
+
+            _branchFilterAutoCompletionSrc.Add(branchFullPath);
+
+            if(lastPart != null && lastPart != branchFullPath)
+            {
+                if (!_branchFilterAutoCompletionSrc.Contains(lastPart))
+                {
+                    _branchFilterAutoCompletionSrc.Add(lastPart);
+                }
+            }
+        }
+
         void AddTree(Tree aTree)
         {
+            aTree.OnBranchesAdded += AddBranchesToAutoCompletionSrc;
             aTree.TreeViewNode.SelectedImageKey = aTree.TreeViewNode.ImageKey;
             aTree.TreeViewNode.Tag = aTree;
             treeMain.Nodes.Add(aTree.TreeViewNode);
@@ -102,20 +134,29 @@ namespace GitUI.UserControls
             // todo: task exception handling
             Cancel();
             _cancelledTokenSource = new CancellationTokenSource();
-            Task previousTask = null;
+            var token = _cancelledTokenSource.Token;
+            var tasks = rootNodes.Select(r => r.ReloadTask(token)).ToArray();
+            Task.Factory.ContinueWhenAll(tasks,
+                (t) =>
+                {
+                    if (!t.All(r => r.Status == TaskStatus.RanToCompletion))
+                    {
+                        return;
+                    }
+                    if (token.IsCancellationRequested)
+                    {
+                        return;
+                    }
+                    BeginInvoke(new Action(() =>
+                    {
+                        var autoCompletionSrc = new AutoCompleteStringCollection();
+                        autoCompletionSrc.AddRange(
+                            _branchFilterAutoCompletionSrc.ToArray());
 
-            foreach (Tree rootNode in rootNodes)
-            {
-                Task task = rootNode.ReloadTask(_cancelledTokenSource.Token);
-                if (previousTask == null)
-                {
-                    task.Start(TaskScheduler.Default);
-                }
-                else
-                {
-                    previousTask.ContinueWith((t) => task.Start(Task.Factory.Scheduler));
-                }
-            }
+                        txtBranchFilter.AutoCompleteCustomSource = autoCompletionSrc;
+                    }));
+                }, _cancelledTokenSource.Token);
+            tasks.ToList().ForEach(t => t.Start());
         }
 
         private void OnBtnSettingsClicked(object sender, EventArgs e)
@@ -184,14 +225,30 @@ namespace GitUI.UserControls
             var ret = new List<TreeNode>();
             foreach (TreeNode node in nodes)
             {
-                if (node.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                var branch = node.Tag as BaseBranchNode;
+                if (branch != null)
                 {
-                    node.BackColor = Color.LightYellow;
-                    ret.Add(node);
+                    if (branch.FullPath.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    {
+                        AddTreeNodeToSearchResult(ret, node);
+                    }
+                }
+                else
+                {
+                    if(node.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    {
+                        AddTreeNodeToSearchResult(ret, node);
+                    }
                 }
                 ret.AddRange(SearchTree(text, node.Nodes));
             }
             return ret;
+        }
+
+        private static void AddTreeNodeToSearchResult(List<TreeNode> ret, TreeNode node)
+        {
+            node.BackColor = Color.LightYellow;
+            ret.Add(node);
         }
 
         private TreeNode GetNextSearchResult()

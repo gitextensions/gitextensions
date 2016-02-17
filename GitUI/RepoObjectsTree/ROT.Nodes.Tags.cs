@@ -86,6 +86,7 @@ namespace GitUI.UserControls
             private void FillTagTree(IEnumerable<GitRef> tags)
             {
                 var nodes = new Dictionary<string, BaseBranchNode>();
+                var branchFullPaths = new List<string>();
                 foreach (var tag in tags)
                 {
                     var branchNode = new TagNode(this, tag.Name, tag);
@@ -93,7 +94,9 @@ namespace GitUI.UserControls
                         (tree, parentPath) => new BasePathNode(tree, parentPath));
                     if (parent != null)
                         Nodes.AddNode(parent);
+                    branchFullPaths.Add(branchNode.FullPath);
                 }
+                FireBranchAddedEvent(branchFullPaths);
             }
 
             protected override void FillTreeViewNode()
