@@ -65,7 +65,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ConEmu.WinForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ConEmu.Control.WinForms.15.12.27\lib\net35\ConEmu.WinForms.dll</HintPath>
+      <HintPath>..\packages\ConEmu.Control.WinForms.16.02.20\lib\net40\ConEmu.WinForms.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PSTaskDialog">

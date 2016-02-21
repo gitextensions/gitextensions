@@ -52,7 +52,9 @@ namespace GitUI.UserControls
 
 		public override void AppendMessageFreeThreaded(string text)
 		{
-			// TODO: write output text into the terminal
+			ConEmuSession session = _terminal.RunningSession;
+			if(session != null)
+				session.WriteOutputText(text);
 		}
 
 		public override void Done()
@@ -97,6 +99,7 @@ namespace GitUI.UserControls
 				FireProcessExited();
 			};
 			startinfo.ConsoleEmulatorExitedEventSink = delegate { FireTerminated(); };
+			startinfo.IsEchoingConsoleCommandLine = true;
 
 			_terminal.Start(startinfo);
 		}

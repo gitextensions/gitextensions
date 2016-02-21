@@ -3362,7 +3362,7 @@ namespace GitUI.CommandsDialogs
 		    {
 			    if(args.TabPage != tabpage)
 				    return;
-			    if((terminal != null) && (terminal.IsConsoleProcessRunning)) // If user has typed "exit" in there, will also recreate
+			    if((terminal != null) && (terminal.IsTerminalOpen)) // If user has typed "exit" in there, will also recreate
 				    return;
 
 			    // Create the terminal
