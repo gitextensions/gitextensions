@@ -64,10 +64,9 @@ namespace GitUI.UserControls
 
 		public override void KillProcess()
 		{
-			// TODO: kill the payload process when we know it
 			ConEmuSession session = _terminal.RunningSession;
 			if(session != null)
-				session.KillConsoleEmulator();
+				session.SendControlCAsync();
 		}
 
 		public override void Reset()
