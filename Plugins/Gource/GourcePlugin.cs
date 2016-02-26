@@ -16,7 +16,7 @@ namespace Gource
         #region Translation
         private readonly TranslationString _currentDirectoryIsNotValidGit = new TranslationString("The current directory is not a valid git repository.\n\n" +
             "Gource can be only be started from a valid git repository.");
-        private readonly TranslationString _resetConfigPath = new TranslationString("Cannot find Gource in the configured path: {0}.\n\n." +
+        private readonly TranslationString _resetConfigPath = new TranslationString("Cannot find Gource in the configured path: {0}.\n\n" +
             "Do you want to reset the configured path?");
         private readonly TranslationString _gource = new TranslationString("Gource");
         private readonly TranslationString _doYouWantDownloadGource = new TranslationString("There is no path to Gource configured.\n\n" +

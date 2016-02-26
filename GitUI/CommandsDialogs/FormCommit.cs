@@ -1543,10 +1543,10 @@ namespace GitUI.CommandsDialogs
             switch (_commitKind)
             {
                 case CommitKind.Fixup:
-                    message = string.Format("fixup! {0}", _editedCommit.Message);
+                    message = string.Format("fixup! {0}", _editedCommit.Subject);
                     break;
                 case CommitKind.Squash:
-                    message = string.Format("squash! {0}", _editedCommit.Message);
+                    message = string.Format("squash! {0}", _editedCommit.Subject);
                     break;
                 default:
                     message = Module.GetMergeMessage();

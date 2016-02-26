@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
                 for (int i = 0; i < parents.Length; i++)
                 {
                     var item = new ListViewItem(i + 1 + "");
-                    item.SubItems.Add(parents[i].Message);
+                    item.SubItems.Add(parents[i].Subject);
                     item.SubItems.Add(parents[i].Author);
                     item.SubItems.Add(parents[i].CommitDate.ToShortDateString());
                     ParentsList.Items.Add(item);

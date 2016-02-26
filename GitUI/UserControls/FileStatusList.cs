@@ -756,6 +756,11 @@ namespace GitUI
                     foreach (var parentRev in revision.ParentGuids)
                     {
                         dictionary.Add(parentRev, Module.GetDiffFilesWithSubmodulesStatus(revision.Guid, parentRev));
+
+                        //Only add the first parent to the dictionary if the setting to show diffs
+                        //for app parents is disabled
+                        if (!AppSettings.ShowDiffForAllParents)
+                            break;
                     }
                     GitItemStatusesWithParents = dictionary;
                 }

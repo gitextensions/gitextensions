@@ -235,7 +235,7 @@
                 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll" />
             </Component>
             <Component Id="Newtonsoft.Json.dll" Guid="*">
-                <File Source="..\GitExtensions\bin\Release\Newtonsoft.Json.dll" />
+                <File Source="..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll" />
             </Component>
             <Component Id="JiraCommitTipPlugin.dll" Guid="*">
                 <File Source="..\Plugins\JiraCommitTipPlugin\bin\Release\JiraComminTipPlugin.dll" />
