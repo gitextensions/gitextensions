@@ -32,7 +32,9 @@ namespace ResourceManager
             else if (GitRevision.IndexGuid == guid)
                 return "<a href='gitext://gotocommit/" + guid + "'>" + Strings.GetCurrentIndex() + "</a>";
             else
+            {
                 return "<a href='gitext://gotocommit/" + guid + "'>" + guid.Substring(0, 10) + "</a>";
+            }
         }
     }
 }

@@ -165,7 +165,7 @@ namespace GitUI.CommitInfo
                 ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
 
             data.ChildrenGuids = _children;
-            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
+            CommitInformation commitInformation = CommitInformation.GetCommitInfo(Module, data, CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
             _revisionInfo = commitInformation.Body;

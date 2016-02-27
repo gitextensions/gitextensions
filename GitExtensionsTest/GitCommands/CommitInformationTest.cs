@@ -48,7 +48,7 @@ namespace GitExtensionsTest
                                "\tP4@547123";
 
             var commitData = CommitData.CreateFromFormatedData(rawData, new GitModule(""));
-            var commitInformation = CommitInformation.GetCommitInfo(commitData, true);
+            var commitInformation = CommitInformation.GetCommitInfo(new GitModule(""), commitData, true);
 
             Assert.AreEqual(expectedHeader, commitInformation.Header);
             Assert.AreEqual(expectedBody, commitInformation.Body);
@@ -58,7 +58,7 @@ namespace GitExtensionsTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void CanCreateCommitInformationFromFormatedDataThrowsException()
         {
-            CommitInformation.GetCommitInfo(null, true);
+            CommitInformation.GetCommitInfo(new GitModule(""), null, true);
         }
 
         [TestMethod]
