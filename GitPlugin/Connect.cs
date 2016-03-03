@@ -99,7 +99,7 @@ namespace GitPlugin
 #if DEBUG
                 _gitPlugin.OutputPane.OutputString("Git Extensions plugin connected" + Environment.NewLine);
 #endif
-                RegiserGitPluginCommand();
+                RegisterGitPluginCommand();
             }
             catch (Exception ex)
             {
@@ -295,7 +295,7 @@ namespace GitPlugin
             }
         }
 
-        private void RegiserGitPluginCommand()
+        private void RegisterGitPluginCommand()
         {
             //GitPlugin.DeleteCommandBar("GitExtensions");
             try

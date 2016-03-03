@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGerritPublish));
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.Publish = new System.Windows.Forms.Button();
             this.AddRemote = new System.Windows.Forms.Button();
             this._NO_TRANSLATE_Remotes = new System.Windows.Forms.ComboBox();
@@ -165,7 +164,6 @@
         private System.Windows.Forms.Button Publish;
         private System.Windows.Forms.Button AddRemote;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_Remotes;
-        private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label labelRemote;
         private System.Windows.Forms.CheckBox PublishDraft;
         private System.Windows.Forms.Label labelBranch;
