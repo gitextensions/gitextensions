@@ -64,9 +64,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullRepositoryCaption = new TranslationString("Push was rejected from \"{0}\"");
         private readonly TranslationString _dontShowAgain = new TranslationString("Remember my decision.");
         private readonly TranslationString _useForceWithLeaseInstead =
-            new TranslationString("Force push may overwrite other people's change. Do you want to use the safer force with lease instead?");
+            new TranslationString("Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?");
         private readonly TranslationString _forceWithLeaseTooltips =
-            new TranslationString("Force with lease is a safer way to force push, it ensures you don't overwrite other's work.");
+            new TranslationString("Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository");
         #endregion
 
         private FormPush()

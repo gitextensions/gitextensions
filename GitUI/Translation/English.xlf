@@ -4988,11 +4988,11 @@ Are you sure you want to push this branch?</source>
         <target />
       </trans-unit>
       <trans-unit id="_useForceWithLeaseInstead.Text">
-        <source>Force push may overwrite other people's change. Do you want to use the safer force with lease instead?</source>
+        <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
         <target />
       </trans-unit>
       <trans-unit id="_forceWithLeaseTooltips.Text">
-        <source>Force with lease is a safer way to force push, it ensures you don't overwrite other's work</source>
+        <source>Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox1.Text">
