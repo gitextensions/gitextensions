@@ -3349,12 +3349,18 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+	    /// <summary>
+	    /// Adds a tab with console interface to Git over the current working copy. Recreates the terminal on tab activation if user exits the shell.
+	    /// </summary>
 	    private void FillTerminalTab()
 	    {
 		    if(!EnvUtils.RunningOnWindows())
 			    return; // ConEmu only works on WinNT
 		    TabPage tabpage;
+		    string sImageKey = "Resources.IconConsole";
+		    CommitInfoTabControl.ImageList.Images.Add(sImageKey, Resources.IconConsole);
 		    CommitInfoTabControl.Controls.Add(tabpage = new TabPage("Console"));
+		    tabpage.ImageKey = sImageKey; // After adding page
 
 		    // Delay-create the terminal window when the tab is first selected
 		    ConEmuControl terminal = null;
@@ -3362,25 +3368,35 @@ namespace GitUI.CommandsDialogs
 		    {
 			    if(args.TabPage != tabpage)
 				    return;
-			    if((terminal != null) && (terminal.IsConsoleEmulatorOpen)) // If user has typed "exit" in there, will also recreate
+			    if(terminal == null) // Lazy-create on first opening the tab
+			    {
+				    tabpage.Controls.Clear();
+				    tabpage.Controls.Add(terminal = new ConEmuControl() {Dock = DockStyle.Fill, AutoStartInfo = null});
+			    }
+			    if(terminal.IsConsoleEmulatorOpen) // If user has typed "exit" in there, restart the shell; otherwise just return
 				    return;
 
 			    // Create the terminal
-			    terminal = new ConEmuControl() {Dock = DockStyle.Fill};
-			    ConEmuStartInfo startinfo = terminal.AutoStartInfo ?? new ConEmuStartInfo();
-			    startinfo.ConsoleProcessCommandLine = ConEmuConstants.DefaultConsoleCommandLine;
+			    var startinfo = new ConEmuStartInfo();
 			    startinfo.StartupDirectory = Module.WorkingDir;
 			    startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator;
 
-			    // Set path to git in this window
+			    // Choose the console: bash from git with fallback to cmd
+			    string sGitBashFromUsrBin = Path.Combine(Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), ".."), "git-bash.exe"); // Git bin dir is /usr/bin under git installdir, so go 2x up
+			    string sGitBashFromBinOrCmd = Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), "git-bash.exe"); // In case we're running off just /bin or /cmd
+			    string sJustBash = Path.Combine(AppSettings.GitBinDir, "bash.exe"); // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+			    string sJustSh = Path.Combine(AppSettings.GitBinDir, "sh.exe"); // Fallback to SH
+			    startinfo.ConsoleProcessCommandLine = new[] {sGitBashFromUsrBin, sGitBashFromBinOrCmd, sJustBash, sJustSh}.Where(File.Exists).FirstOrDefault() ?? ConEmuConstants.DefaultConsoleCommandLine; // Choose whatever exists, or default CMD shell
+
+			    // Set path to git in this window (actually, effective with CMD only)
 			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
 			    {
 				    string dirGit = Path.GetDirectoryName(AppSettings.GitCommand);
 				    if(!string.IsNullOrEmpty(dirGit))
 					    startinfo.SetEnv("PATH", dirGit + ";" + "%PATH%");
 			    }
-			    tabpage.Controls.Clear();
-			    tabpage.Controls.Add(terminal);
+
+			    terminal.Start(startinfo);
 		    };
 	    }
 
