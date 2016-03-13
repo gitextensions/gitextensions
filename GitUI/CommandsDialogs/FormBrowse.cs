@@ -3362,15 +3362,15 @@ namespace GitUI.CommandsDialogs
 		    {
 			    if(args.TabPage != tabpage)
 				    return;
-			    if((terminal != null) && (terminal.IsTerminalOpen)) // If user has typed "exit" in there, will also recreate
+			    if((terminal != null) && (terminal.IsConsoleEmulatorOpen)) // If user has typed "exit" in there, will also recreate
 				    return;
 
 			    // Create the terminal
 			    terminal = new ConEmuControl() {Dock = DockStyle.Fill};
 			    ConEmuStartInfo startinfo = terminal.AutoStartInfo ?? new ConEmuStartInfo();
-			    startinfo.ConsoleCommandLine = ConEmuConstants.DefaultConsoleCommandLine;
+			    startinfo.ConsoleProcessCommandLine = ConEmuConstants.DefaultConsoleCommandLine;
 			    startinfo.StartupDirectory = Module.WorkingDir;
-			    startinfo.WhenPayloadProcessExits = WhenPayloadProcessExits.CloseTerminal;
+			    startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator;
 
 			    // Set path to git in this window
 			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
