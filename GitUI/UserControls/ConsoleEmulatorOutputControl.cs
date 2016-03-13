@@ -57,11 +57,6 @@ namespace GitUI.UserControls
 				session.WriteOutputText(text);
 		}
 
-		public override void Done()
-		{
-			// TODO: remove this method
-		}
-
 		public override void KillProcess()
 		{
 			ConEmuSession session = _terminal.RunningSession;
@@ -74,11 +69,6 @@ namespace GitUI.UserControls
 			ConEmuSession session = _terminal.RunningSession;
 			if(session != null)
 				session.CloseConsoleEmulator();
-		}
-
-		public override void Start()
-		{
-			// TODO: remove this method
 		}
 
 		public override void StartProcess(string command, string arguments, string workdir)

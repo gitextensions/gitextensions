@@ -51,12 +51,6 @@ namespace GitUI.UserControls
 				_timer.Append(text);
 		}
 
-		public override void Done()
-		{
-			if(_timer != null)
-				_timer.Stop(true);
-		}
-
 		public override void KillProcess()
 		{
 			if(InvokeRequired)
@@ -82,15 +76,12 @@ namespace GitUI.UserControls
 			_editbox.Visible = false;
 		}
 
-		public override void Start()
-		{
-			_timer.Start();
-		}
-
 		public override void StartProcess(string command, string arguments, string workdir)
 		{
 			try
 			{
+				_timer.Start();
+
 				GitCommandHelpers.SetEnvironmentVariable();
 
 				bool ssh = GitCommandHelpers.UseSsh(arguments);
@@ -135,6 +126,7 @@ namespace GitUI.UserControls
 							}
 							_exitcode = _process.ExitCode;
 							_process = null;
+							_timer.Stop(true);
 							FireProcessExited();
 						}));
 					}

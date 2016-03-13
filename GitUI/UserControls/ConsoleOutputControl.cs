@@ -33,13 +33,9 @@ namespace GitUI.UserControls
 			return new EditboxBasedConsoleOutputControl();
 		}
 
-		public abstract void Done();
-
 		public abstract void KillProcess();
 
 		public abstract void Reset();
-
-		public abstract void Start();
 
 		public abstract void StartProcess([NotNull] string command, string arguments, string workdir);
 

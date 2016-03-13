@@ -129,7 +129,6 @@ namespace GitUI
 
         public void Done(bool isSuccess)
         {
-			ConsoleOutput.Done();
             AppendMessageCrossThread("Done");
             ProgressBar.Visible = false;
             Ok.Enabled = true;
@@ -260,7 +259,6 @@ namespace GitUI
                 catch (InvalidOperationException) { }
             }
 #endif
-            ConsoleOutput.Start();
             Reset();
             ProcessCallback(this);
         }
