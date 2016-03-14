@@ -3342,7 +3342,7 @@ namespace GitUI.CommandsDialogs
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
             {
                 if (GitTree.SelectedNode != null)
-                {
+                { 
                     OnItemActivated();
                     e.Handled = true;
                 }
@@ -3382,8 +3382,8 @@ namespace GitUI.CommandsDialogs
 			    startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator;
 
 			    // Choose the console: bash from git with fallback to cmd
-			    string sGitBashFromUsrBin = Path.Combine(Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), ".."), "git-bash.exe"); // Git bin dir is /usr/bin under git installdir, so go 2x up
-			    string sGitBashFromBinOrCmd = Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), "git-bash.exe"); // In case we're running off just /bin or /cmd
+			    string sGitBashFromUsrBin = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), ".."), "git-bash.exe"); // Git bin dir is /usr/bin under git installdir, so go 2x up
+			    string sGitBashFromBinOrCmd = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), "git-bash.exe"); // In case we're running off just /bin or /cmd
 			    string sJustBash = Path.Combine(AppSettings.GitBinDir, "bash.exe"); // Generic bash, should generally be in the git dir, less configured than the specific git-bash
 			    string sJustSh = Path.Combine(AppSettings.GitBinDir, "sh.exe"); // Fallback to SH
 			    startinfo.ConsoleProcessCommandLine = new[] {sGitBashFromUsrBin, sGitBashFromBinOrCmd, sJustBash, sJustSh}.Where(File.Exists).FirstOrDefault() ?? ConEmuConstants.DefaultConsoleCommandLine; // Choose whatever exists, or default CMD shell
