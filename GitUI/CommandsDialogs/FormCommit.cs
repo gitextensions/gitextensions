@@ -229,6 +229,7 @@ namespace GitUI.CommandsDialogs
             ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
             AdjustCommitButtonPanelHeight();
+	    showUntrackedFilesToolStripMenuItem.Checked = !Module.RunGitCmd("config status.showUntrackedFiles").Trim().Equals("no");
         }
 
         private void AdjustCommitButtonPanelHeight()
