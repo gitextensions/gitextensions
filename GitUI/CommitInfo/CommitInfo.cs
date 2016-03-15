@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -32,6 +33,15 @@ namespace GitUI.CommitInfo
             {
                 _sortedRefs = null;
             };
+            _RevisionHeader.ContentsResized += RevisionHeaderOnContentsResized;
+        }
+
+        private void RevisionHeaderOnContentsResized(object sender, ContentsResizedEventArgs e)
+        {
+            const int margin = 2;
+            _RevisionHeader.ClientSize = new Size(
+                e.NewRectangle.Width + margin,
+                e.NewRectangle.Height + margin);
         }
 
         [DefaultValue(false)]
@@ -158,7 +168,6 @@ namespace GitUI.CommitInfo
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
-            _RevisionHeader.Height = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
             _revisionInfo = commitInformation.Body;
             updateText();
             LoadAuthorImage(data.Author ?? data.Committer);
