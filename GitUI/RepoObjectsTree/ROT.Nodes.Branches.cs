@@ -135,6 +135,7 @@ namespace GitUI.UserControls
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "Branch.png";
                 if (IsActive)
                 {
                     TreeViewNode.NodeFont = new Font(TreeViewNode.NodeFont, FontStyle.Bold);
