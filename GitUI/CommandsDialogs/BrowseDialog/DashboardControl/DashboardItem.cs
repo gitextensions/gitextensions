@@ -68,7 +68,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _NO_TRANSLATE_Title.Text = Path;
 
             bool hasDescription = !string.IsNullOrEmpty(text);
-            _NO_TRANSLATE_Description.Visible = hasDescription;
+            if (!hasDescription)
+            {
+                _NO_TRANSLATE_Description.AutoSize = false;
+                _NO_TRANSLATE_Description.Size = Size.Empty;
+            }
             _NO_TRANSLATE_Description.Text = text;
 
             if (icon != null)

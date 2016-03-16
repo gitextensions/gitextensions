@@ -9,11 +9,11 @@ using ResourceManager;
 
 namespace GitUI.Editor
 {
-    public partial class FileViewerWindows : GitExtensionsControl, IFileViewer
+    public partial class FileViewerInternal : GitExtensionsControl, IFileViewer
     {
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
 
-        public FileViewerWindows()
+        public FileViewerInternal()
         {
             InitializeComponent();
             Translate();

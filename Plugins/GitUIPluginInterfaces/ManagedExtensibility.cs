@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition.Hosting;
+using System.IO;
 
 namespace GitUIPluginInterfaces
 {
@@ -19,7 +20,7 @@ namespace GitUIPluginInterfaces
                 {
                     if (compositionContainer == null)
                     {
-                        var catalog = new DirectoryCatalog(@".\Plugins\", "*.dll");
+                        var catalog = new DirectoryCatalog("." + Path.DirectorySeparatorChar + "Plugins" + Path.DirectorySeparatorChar, "*.dll");
                         compositionContainer = new CompositionContainer(catalog);
                     }
 
