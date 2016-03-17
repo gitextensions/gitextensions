@@ -3357,7 +3357,7 @@ namespace GitUI.CommandsDialogs
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
             {
                 if (GitTree.SelectedNode != null)
-                { 
+                {
                     OnItemActivated();
                     e.Handled = true;
                 }
@@ -3402,6 +3402,10 @@ namespace GitUI.CommandsDialogs
 			    string sJustBash = Path.Combine(AppSettings.GitBinDir, "bash.exe"); // Generic bash, should generally be in the git dir, less configured than the specific git-bash
 			    string sJustSh = Path.Combine(AppSettings.GitBinDir, "sh.exe"); // Fallback to SH
 			    startinfo.ConsoleProcessCommandLine = new[] {sGitBashFromUsrBin, sGitBashFromBinOrCmd, sJustBash, sJustSh}.Where(File.Exists).FirstOrDefault() ?? ConEmuConstants.DefaultConsoleCommandLine; // Choose whatever exists, or default CMD shell
+                if(startinfo.ConsoleProcessCommandLine != ConEmuConstants.DefaultConsoleCommandLine)
+                {
+                    startinfo.ConsoleProcessCommandLine += " --login -i";
+                }
 
 			    // Set path to git in this window (actually, effective with CMD only)
 			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
