@@ -29,11 +29,11 @@ namespace GitUI
             : base(true)
         {
             UseDialogSettings = useDialogSettings;
-	        ConsoleOutput = ConsoleOutputControl.CreateInstance();
-	        ConsoleOutput.Dock = DockStyle.Fill;
-	        ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
+            ConsoleOutput = ConsoleOutputControl.CreateInstance();
+            ConsoleOutput.Dock = DockStyle.Fill;
+            ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
 
-	        InitializeComponent();
+            InitializeComponent();
             Translate();
             if (UseDialogSettings)
                 KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
@@ -48,18 +48,18 @@ namespace GitUI
             AbortCallback = abort;
         }
 
-	    protected readonly ConsoleOutputControl ConsoleOutput;	// Naming: protected stuff must be CLS-compliant here
+        protected readonly ConsoleOutputControl ConsoleOutput; // Naming: protected stuff must be CLS-compliant here
         public ProcessStart ProcessCallback;
         public ProcessAbort AbortCallback;
         private bool errorOccurred;
         private bool showOnError;
 
-		/// <summary>
-		/// Gets the logged output text. Note that this is a separate string from what you see in the console output control.
-		/// For instance, progress messages might be skipped; other messages might be added manually.
-		/// </summary>
-		[NotNull]
-		public readonly FormStatusOutputLog OutputLog = new FormStatusOutputLog();
+        /// <summary>
+        /// Gets the logged output text. Note that this is a separate string from what you see in the console output control.
+        /// For instance, progress messages might be skipped; other messages might be added manually.
+        /// </summary>
+        [NotNull]
+        public readonly FormStatusOutputLog OutputLog = new FormStatusOutputLog();
 
         protected override CreateParams CreateParams
         {
@@ -103,25 +103,24 @@ namespace GitUI
                         }
 #endif
                     }
-					// Show last progress message in the title, unless it's showin in the control body already
-					if(!ConsoleOutput.IsDisplayingFullProcessOutput)
-						Text = text;
+                    // Show last progress message in the title, unless it's showin in the control body already
+                    if(!ConsoleOutput.IsDisplayingFullProcessOutput)
+                      Text = text;
                 };
             BeginInvoke(method, this);
         }
 
-
-		/// <summary>
-		/// Adds a message to the console display control ONLY, <see cref="GetOutputString"/> will not list it.
-		/// </summary>
+        /// <summary>
+        /// Adds a message to the console display control ONLY, <see cref="GetOutputString" /> will not list it.
+        /// </summary>
         public void AddMessage(string text)
         {
             ConsoleOutput.AppendMessageFreeThreaded(text);
         }
 
-		/// <summary>
-		/// Adds a message line to the console display control ONLY, <see cref="GetOutputString"/> will not list it.
-		/// </summary>
+        /// <summary>
+        /// Adds a message line to the console display control ONLY, <see cref="GetOutputString" /> will not list it.
+        /// </summary>
         public void AddMessageLine(string text)
         {
             AddMessage(text + Environment.NewLine);
@@ -172,15 +171,15 @@ namespace GitUI
             }
         }
 
-	    public void AppendMessageCrossThread(string text)
-	    {
-		    ConsoleOutput.AppendMessageFreeThreaded(text);
-	    }
-
-	    public void Reset()
+        public void AppendMessageCrossThread(string text)
         {
-			ConsoleOutput.Reset();
-			OutputLog.Clear();
+            ConsoleOutput.AppendMessageFreeThreaded(text);
+        }
+
+        public void Reset()
+        {
+            ConsoleOutput.Reset();
+            OutputLog.Clear();
             ProgressBar.Visible = true;
             Ok.Enabled = false;
             ActiveControl = null;
@@ -277,16 +276,16 @@ namespace GitUI
 
         public string GetOutputString()
         {
-			return OutputLog.GetString();
+            return OutputLog.GetString();
         }
 
-	    private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
-	    {
-		    AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
+      private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
+      {
+          AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
 
-		    // Maintain the invariant: if changing to "don't keep" and conditions are such that the dialog would have closed in dont-keep mode, then close it
-		    if((!KeepDialogOpen.Checked /* keep off */) && (Ok.Enabled /* done */) && (!errorOccurred /* and successful */)) /* not checking for UseDialogSettings because checkbox is only visible with True */
-			    Close();
-	    }
+          // Maintain the invariant: if changing to "don't keep" and conditions are such that the dialog would have closed in dont-keep mode, then close it
+          if((!KeepDialogOpen.Checked /* keep off */) && (Ok.Enabled /* done */) && (!errorOccurred /* and successful */)) /* not checking for UseDialogSettings because checkbox is only visible with True */
+              Close();
+      }
     }
 }
