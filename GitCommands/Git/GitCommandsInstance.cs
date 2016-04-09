@@ -25,8 +25,6 @@ namespace GitCommands
             {
                 GitCommandHelpers.SetEnvironmentVariable();
 
-                var ssh = GitCommandHelpers.UseSsh(arguments);
-
                 Kill();
 
                 string quotedCmd = cmd;
@@ -36,6 +34,7 @@ namespace GitCommands
                 var executionStartTimestamp = DateTime.Now;
 
                 var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory, GitModule.SystemEncoding);
+                var ssh = GitCommandHelpers.UseSsh(arguments);
                 startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
 
                 //process used to execute external commands
