@@ -35,32 +35,11 @@ namespace GitCommands
 
                 var executionStartTimestamp = DateTime.Now;
 
-                //process used to execute external commands
-                var process = new Process();
                 var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory, GitModule.SystemEncoding);
                 startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
-                process.StartInfo = startInfo;
 
-                process.EnableRaisingEvents = true;
-                process.OutputDataReceived += ProcessOutputDataReceived;
-                process.ErrorDataReceived += ProcessErrorDataReceived;
-                process.Exited += ProcessExited;
-
-                process.Exited += (sender, args) =>
-                {
-                  var executionEndTimestamp = DateTime.Now;
-                  AppSettings.GitLog.Log (quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
-                };
-
-                process.Start();
-                lock (_processLock)
-                {
-                    _myProcess = process;
-                }
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
-
-                return process;
+                //process used to execute external commands
+                return createProcess(startInfo, quotedCmd + " " + arguments, executionStartTimestamp);
             }
             catch (Exception ex)
             {
@@ -68,6 +47,33 @@ namespace GitCommands
                 ex.Data.Add("arguments", arguments);
                 throw;
             }
+        }
+
+        private Process createProcess(ProcessStartInfo startInfo, String log, DateTime executionStartTimestamp)
+        {
+            var process = new Process();
+            process.StartInfo = startInfo;
+
+            process.EnableRaisingEvents = true;
+            process.OutputDataReceived += ProcessOutputDataReceived;
+            process.ErrorDataReceived += ProcessErrorDataReceived;
+            process.Exited += ProcessExited;
+
+            process.Exited += (sender, args) =>
+            {
+                var executionEndTimestamp = DateTime.Now;
+                AppSettings.GitLog.Log(log, executionStartTimestamp, executionEndTimestamp);
+            };
+
+            process.Start();
+            lock (_processLock)
+            {
+                _myProcess = process;
+            }
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            return process;
         }
 
         public void Kill()
