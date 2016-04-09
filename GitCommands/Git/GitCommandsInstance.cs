@@ -27,9 +27,7 @@ namespace GitCommands
 
                 Kill();
 
-                string quotedCmd = cmd;
-                if (quotedCmd.IndexOf(' ') != -1)
-                    quotedCmd = quotedCmd.Quote();
+                string quotedCmd = quoteString(cmd);
 
                 var executionStartTimestamp = DateTime.Now;
 
@@ -46,6 +44,14 @@ namespace GitCommands
                 ex.Data.Add("arguments", arguments);
                 throw;
             }
+        }
+
+        private string quoteString(String cmd)
+        {
+            if (cmd.IndexOf(' ') != -1)
+                return cmd.Quote();
+
+            return cmd;
         }
 
         private Process createProcess(ProcessStartInfo startInfo, String log, DateTime executionStartTimestamp)
