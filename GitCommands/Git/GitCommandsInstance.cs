@@ -27,8 +27,6 @@ namespace GitCommands
 
                 Kill();
 
-                string quotedCmd = quoteString(cmd);
-
                 var executionStartTimestamp = DateTime.Now;
 
                 var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory, GitModule.SystemEncoding);
@@ -36,7 +34,7 @@ namespace GitCommands
                 startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
 
                 //process used to execute external commands
-                return createProcess(startInfo, quotedCmd + " " + arguments, executionStartTimestamp);
+                return createProcess(startInfo, quoteString(cmd) + " " + arguments, executionStartTimestamp);
             }
             catch (Exception ex)
             {
