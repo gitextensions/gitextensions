@@ -1926,7 +1926,7 @@ namespace GitUI
 
         private void CreateTagToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (ShouldStartDialog())
                 return;
 
             using (var frm = new FormCreateTag(UICommands, GetRevision(LastRowIndex)))
@@ -1940,7 +1940,7 @@ namespace GitUI
 
         private void ResetCurrentBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (ShouldStartDialog())
                 return;
 
             var frm = new FormResetCurrentBranch(UICommands, GetRevision(LastRowIndex));
@@ -1949,7 +1949,7 @@ namespace GitUI
 
         private void CreateNewBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (ShouldStartDialog())
                 return;
 
             UICommands.DoActionOnRepo(() =>
@@ -2066,7 +2066,7 @@ namespace GitUI
 
         private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (ShouldStartDialog())
                 return;
 
             UICommands.StartRevertCommitDialog(this, GetRevision(LastRowIndex));
@@ -2315,7 +2315,7 @@ namespace GitUI
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (ShouldStartDialog())
                 return;
 
             string revision = GetRevision(LastRowIndex).Guid;
@@ -2383,7 +2383,7 @@ namespace GitUI
 
         private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (ShouldStartDialog())
                 return;
 
             UICommands.StartFixupCommitDialog(this, GetRevision(LastRowIndex));
@@ -2391,12 +2391,16 @@ namespace GitUI
 
         private void SquashCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (ShouldStartDialog())
                 return;
 
             UICommands.StartSquashCommitDialog(this, GetRevision(LastRowIndex));
         }
 
+        private bool ShouldStartDialog()
+        {
+            return Revisions.RowCount <= LastRowIndex || LastRowIndex < 0;
+        }
         internal void ShowRelativeDate_ToolStripMenuItemClick(object sender, EventArgs e)
         {
             AppSettings.RelativeDate = !AppSettings.RelativeDate;
@@ -2533,7 +2537,7 @@ namespace GitUI
 
         private void ContinueBisect(GitBisectOption bisectOption)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (ShouldStartDialog())
                 return;
 
             FormProcess.ShowDialog(this, Module, GitCommandHelpers.ContinueBisectCmd(bisectOption, GetRevision(LastRowIndex).Guid), false);
