@@ -7090,6 +7090,10 @@ This will just checkout on the submodule the commit determined by the superproje
         <source>Draw non relatives gray</source>
         <target />
       </trans-unit>
+	  <trans-unit id="editCommitToolStripMenuItem.Text">
+        <source>Edit commit</source>
+        <target />
+      </trans-unit>
       <trans-unit id="filterToolStripMenuItem.Text">
         <source>Set advanced filter</source>
         <target />

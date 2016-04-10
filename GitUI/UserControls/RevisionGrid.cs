@@ -2381,6 +2381,22 @@ namespace GitUI
             UICommands.StartCherryPickDialog(this, revisions);
         }
 
+        private void EditCommitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (ShouldStartDialog())
+                return;
+
+            String rebaseCmd = GitCommandHelpers.RebaseCmd(GetRevision(LastRowIndex).ParentGuids[0],
+                true  /* isRebaseInteractive */,
+                false /* shouldPreserveMerges */,
+                false /* shouldAutosquash */,
+                true /* shouldStash */);
+
+            Dictionary<string, string> envVariables = new Dictionary<String, String>();
+            envVariables.Add("GIT_SEQUENCE_EDITOR", "sed -i -re '0,/pick/s//e/'");
+            FormProcess.ReadDialog(this, null, rebaseCmd, envVariables, this.Module, null, true);
+        }
+
         private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (ShouldStartDialog())
@@ -2401,6 +2417,7 @@ namespace GitUI
         {
             return Revisions.RowCount <= LastRowIndex || LastRowIndex < 0;
         }
+
         internal void ShowRelativeDate_ToolStripMenuItemClick(object sender, EventArgs e)
         {
             AppSettings.RelativeDate = !AppSettings.RelativeDate;
