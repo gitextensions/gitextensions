@@ -81,7 +81,7 @@ namespace GitUI
 
         public static bool ShowDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {
-            using (var formProcess = new FormProcess(process, arguments, new Dictionary<String, String>(), aWorkingDirectory, input, useDialogSettings))
+            using (var formProcess = new FormProcess(process, arguments, new Dictionary<string, string>(), aWorkingDirectory, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return !formProcess.ErrorOccurred();
@@ -90,7 +90,7 @@ namespace GitUI
 
         public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {
-            FormProcess formProcess = new FormProcess(process, arguments, new Dictionary<String, String>(), aWorkingDirectory, input, useDialogSettings);
+            FormProcess formProcess = new FormProcess(process, arguments, new Dictionary<string, string>(), aWorkingDirectory, input, useDialogSettings);
 
             formProcess.ControlBox = true;
             formProcess.Show(owner);

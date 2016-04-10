@@ -2392,7 +2392,7 @@ namespace GitUI
                 false /* shouldAutosquash */,
                 true /* shouldStash */);
 
-            Dictionary<string, string> envVariables = new Dictionary<String, String>();
+            Dictionary<string, string> envVariables = new Dictionary<string, string>();
             envVariables.Add("GIT_SEQUENCE_EDITOR", "sed -i -re '0,/pick/s//e/'");
             FormProcess.ReadDialog(this, null, rebaseCmd, envVariables, this.Module, null, true);
         }

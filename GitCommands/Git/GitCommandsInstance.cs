@@ -49,7 +49,7 @@ namespace GitCommands
             }
         }
 
-        private string quoteString(String cmd)
+        private string quoteString(string cmd)
         {
             if (cmd.IndexOf(' ') != -1)
                 return cmd.Quote();
@@ -57,7 +57,7 @@ namespace GitCommands
             return cmd;
         }
 
-        private Process createProcess(ProcessStartInfo startInfo, String log, DateTime executionStartTimestamp)
+        private Process createProcess(ProcessStartInfo startInfo, string log, DateTime executionStartTimestamp)
         {
             var process = new Process();
             process.StartInfo = startInfo;
