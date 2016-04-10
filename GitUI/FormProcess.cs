@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -21,6 +22,7 @@ namespace GitUI
         public string Remote { get; set; }
         public string ProcessString { get; set; }
         public string ProcessArguments { get; set; }
+        public Dictionary<string, string> ProcessEnvVariables { get; set; }
         public string ProcessInput { get; set; }
         public readonly string WorkingDirectory;
         public Process Process { get; set; }
@@ -32,13 +34,14 @@ namespace GitUI
             : base(true)
         { }
 
-        protected FormProcess(string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+        protected FormProcess(string process, string arguments, Dictionary<string, string> processEnvVariables, string aWorkingDirectory, string input, bool useDialogSettings)
             : base(useDialogSettings)
         {
             ProcessCallback = processStart;
             AbortCallback = processAbort;
             ProcessString = process ?? AppSettings.GitCommand;
             ProcessArguments = arguments;
+            ProcessEnvVariables = processEnvVariables;
             Remote = "";
             ProcessInput = input;
             WorkingDirectory = aWorkingDirectory;
@@ -78,7 +81,7 @@ namespace GitUI
 
         public static bool ShowDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {
-            using (var formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings))
+            using (var formProcess = new FormProcess(process, arguments, new Dictionary<String, String>(), aWorkingDirectory, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return !formProcess.ErrorOccurred();
@@ -87,7 +90,7 @@ namespace GitUI
 
         public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {
-            FormProcess formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings);
+            FormProcess formProcess = new FormProcess(process, arguments, new Dictionary<String, String>(), aWorkingDirectory, input, useDialogSettings);
 
             formProcess.ControlBox = true;
             formProcess.Show(owner);
@@ -102,12 +105,12 @@ namespace GitUI
 
         public static string ReadDialog(GitModuleForm owner, string arguments)
         {
-            return ReadDialog(owner, null, arguments, owner.Module, null, true);
+            return ReadDialog(owner, null, arguments, new Dictionary<string, string>(), owner.Module, null, true);
         }
 
-        public static string ReadDialog(IWin32Window owner, string process, string arguments, GitModule module, string input, bool useDialogSettings)
+        public static string ReadDialog(IWin32Window owner, string process, string arguments, Dictionary<string, string> envVariables, GitModule module, string input, bool useDialogSettings)
         {
-            using (var formProcess = new FormProcess(process, arguments, module.WorkingDir, input, useDialogSettings))
+            using (var formProcess = new FormProcess(process, arguments, envVariables, module.WorkingDir, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return formProcess.GetOutputString();
@@ -130,7 +133,7 @@ namespace GitUI
 
             try
             {
-                Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
+                Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments, ProcessEnvVariables);
 
                 gitCommand.Exited += gitCommand_Exited;
                 gitCommand.DataReceived += gitCommand_DataReceived;

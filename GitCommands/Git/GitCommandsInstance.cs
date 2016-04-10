@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Permissions;
 
@@ -19,7 +20,7 @@ namespace GitCommands
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public Process CmdStartProcess(string cmd, string arguments)
+        public Process CmdStartProcess(string cmd, string arguments, Dictionary<string, string> envVariables)
         {
             try
             {
@@ -32,6 +33,10 @@ namespace GitCommands
                 var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory, GitModule.SystemEncoding);
                 var ssh = GitCommandHelpers.UseSsh(arguments);
                 startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
+
+                foreach (var envVariable in envVariables)
+                    startInfo.EnvironmentVariables.Add(envVariable.Key, envVariable.Value);
+
 
                 //process used to execute external commands
                 return createProcess(startInfo, quoteString(cmd) + " " + arguments, executionStartTimestamp);
