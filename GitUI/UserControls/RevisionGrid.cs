@@ -3356,5 +3356,20 @@ namespace GitUI
             if (revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url))
                 Process.Start(revision.BuildStatus.Url);
         }
+
+        private void editCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (LatestSelectedRevision == null)
+                return;
+
+            String rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.ParentGuids[0], 
+                interactive: true, preserveMerges: false, autosquash: false, autostash: true);
+
+            using (var formProcess = new FormProcess(null, rebaseCmd, Module.WorkingDir, null, true))
+            {
+                formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", "sed -i -re '0,/pick/s//e/'");
+                formProcess.ShowDialog(this);
+            }
+        }
     }
 }

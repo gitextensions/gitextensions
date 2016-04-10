@@ -147,6 +147,7 @@ namespace GitUI
             this.quickSearchTimer = new System.Windows.Forms.Timer(this.components);
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.mainContextMenu.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -581,6 +582,7 @@ namespace GitUI
             // manipulateCommitToolStripMenuItem
             // 
             this.manipulateCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editCommitToolStripMenuItem,
             this.fixupCommitToolStripMenuItem,
             this.squashCommitToolStripMenuItem,
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem});
@@ -789,6 +791,13 @@ namespace GitUI
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text = "Get help on how to use these features";
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Click += new System.EventHandler(this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click);
             // 
+            // editCommitToolStripMenuItem
+            // 
+            this.editCommitToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editCommitToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.editCommitToolStripMenuItem.Text = "Edit commit";
+            this.editCommitToolStripMenuItem.Click += new System.EventHandler(this.editCommitToolStripMenuItem_Click);
+            // 
             // RevisionGrid
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -882,5 +891,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem selectAsBaseToolStripMenuItem;
         private ToolStripMenuItem getHelpOnHowToUseTheseFeaturesToolStripMenuItem;
         private ToolStripMenuItem openBuildReportToolStripMenuItem;
+        private ToolStripMenuItem editCommitToolStripMenuItem;
     }
 }
