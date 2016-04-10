@@ -108,6 +108,7 @@ namespace GitUI
             this.cherryPickCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.archiveRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manipulateCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixupCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.squashCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -502,11 +503,19 @@ namespace GitUI
             // manipulateCommitToolStripMenuItem
             //
             this.manipulateCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editCommitToolStripMenuItem,
             this.fixupCommitToolStripMenuItem,
             this.squashCommitToolStripMenuItem});
             this.manipulateCommitToolStripMenuItem.Name = "manipulateCommitToolStripMenuItem";
             this.manipulateCommitToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.manipulateCommitToolStripMenuItem.Text = "Advanced";
+            //
+            // editCommitToolStripMenuItem
+            //
+            this.editCommitToolStripMenuItem.Name = "editCommitToolStripMenuItem";
+            this.editCommitToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.editCommitToolStripMenuItem.Text = "Edit commit";
+            this.editCommitToolStripMenuItem.Click += new System.EventHandler(this.EditCommitToolStripMenuItemClick);
             //
             // fixupCommitToolStripMenuItem
             //
@@ -764,6 +773,7 @@ namespace GitUI
         private System.Windows.Forms.Button CloneRepository;
         private System.Windows.Forms.ToolStripMenuItem showMergeCommitsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixupCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameBranchToolStripMenuItem;

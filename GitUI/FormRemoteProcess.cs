@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using ResourceManager;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -29,13 +30,13 @@ namespace GitUI
         { }
 
         public FormRemoteProcess(GitModule module, string process, string arguments)
-            : base(process, arguments, module.WorkingDir, null, true)
+            : base(process, arguments, new Dictionary<string, string>(), module.WorkingDir, null, true)
         {
             this.Module = module;
         }
 
         public FormRemoteProcess(GitModule module, string arguments)
-            : base(null, arguments, module.WorkingDir, null, true)
+            : base(null, arguments, new Dictionary<string, string>(), module.WorkingDir, null, true)
         {
             this.Module = module;
         }

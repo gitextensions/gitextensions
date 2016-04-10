@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Permissions;
 
@@ -19,48 +20,26 @@ namespace GitCommands
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public Process CmdStartProcess(string cmd, string arguments)
+        public Process CmdStartProcess(string cmd, string arguments, Dictionary<string, string> envVariables)
         {
             try
             {
                 GitCommandHelpers.SetEnvironmentVariable();
 
-                var ssh = GitCommandHelpers.UseSsh(arguments);
-
                 Kill();
-
-                string quotedCmd = cmd;
-                if (quotedCmd.IndexOf(' ') != -1)
-                    quotedCmd = quotedCmd.Quote();
 
                 var executionStartTimestamp = DateTime.Now;
 
-                //process used to execute external commands
-                var process = new Process();
                 var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory, GitModule.SystemEncoding);
+                var ssh = GitCommandHelpers.UseSsh(arguments);
                 startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
-                process.StartInfo = startInfo;
 
-                process.EnableRaisingEvents = true;
-                process.OutputDataReceived += ProcessOutputDataReceived;
-                process.ErrorDataReceived += ProcessErrorDataReceived;
-                process.Exited += ProcessExited;
+                foreach (var envVariable in envVariables)
+                    startInfo.EnvironmentVariables.Add(envVariable.Key, envVariable.Value);
 
-                process.Exited += (sender, args) =>
-                {
-                  var executionEndTimestamp = DateTime.Now;
-                  AppSettings.GitLog.Log (quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
-                };
 
-                process.Start();
-                lock (_processLock)
-                {
-                    _myProcess = process;
-                }
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
-
-                return process;
+                //process used to execute external commands
+                return createProcess(startInfo, quoteString(cmd) + " " + arguments, executionStartTimestamp);
             }
             catch (Exception ex)
             {
@@ -68,6 +47,41 @@ namespace GitCommands
                 ex.Data.Add("arguments", arguments);
                 throw;
             }
+        }
+
+        private string quoteString(string cmd)
+        {
+            if (cmd.IndexOf(' ') != -1)
+                return cmd.Quote();
+
+            return cmd;
+        }
+
+        private Process createProcess(ProcessStartInfo startInfo, string log, DateTime executionStartTimestamp)
+        {
+            var process = new Process();
+            process.StartInfo = startInfo;
+
+            process.EnableRaisingEvents = true;
+            process.OutputDataReceived += ProcessOutputDataReceived;
+            process.ErrorDataReceived += ProcessErrorDataReceived;
+            process.Exited += ProcessExited;
+
+            process.Exited += (sender, args) =>
+            {
+                var executionEndTimestamp = DateTime.Now;
+                AppSettings.GitLog.Log(log, executionStartTimestamp, executionEndTimestamp);
+            };
+
+            process.Start();
+            lock (_processLock)
+            {
+                _myProcess = process;
+            }
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            return process;
         }
 
         public void Kill()
