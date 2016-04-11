@@ -126,9 +126,9 @@ namespace ResourceManager
 
         private static string GetCommitSubject(string sha, GitModule module)
         {
-            var rev = module.GetRevision(sha, shortFormat: true);
-            var subject = rev.IsArtificial()? "" : rev.Subject;
-            return subject;
+            return GitRevision.IsArtificial(sha)
+                ? ""
+                : module.GetRevision(sha, shortFormat: true).Subject;
         }
 
         private static string RemoveRedundancies(string info)
