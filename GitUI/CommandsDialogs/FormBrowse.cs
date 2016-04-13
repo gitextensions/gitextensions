@@ -3073,16 +3073,6 @@ namespace GitUI.CommandsDialogs
             return "[" + branch + "]";
         }
 
-        private ToolStripMenuItem AddSubmoduleToMenu(string name, object module)
-        {
-            var spmenu = new ToolStripMenuItem(name);
-            spmenu.Click += SubmoduleToolStripButtonClick;
-            spmenu.Width = 200;
-            spmenu.Tag = module;
-            toolStripButtonLevelUp.DropDownItems.Add(spmenu);
-            return spmenu;
-        }
-
         DateTime _previousUpdateTime;
 
         private void LoadSubmodulesIntoDropDownMenu()
@@ -3110,136 +3100,153 @@ namespace GitUI.CommandsDialogs
             return !gitSubmoduleStatus.IsDirty ? Resources.Modified : Resources.IconSubmoduleDirty;
         }
 
-        private Task GetSubmoduleStatusImageAsync(ToolStripMenuItem mi, GitModule module, string submodulePath)
+        private void AddSubmoduleStatusImageAndText(ToolStripItemInfo info, GitModule module, string submodulePath)
         {
             if (String.IsNullOrEmpty(submodulePath))
             {
-                mi.Image = Resources.IconFolderSubmodule;
-                return null;
+                info.Image = Resources.IconFolderSubmodule;
+                return;
             }
-            var token = _submodulesStatusImagesCTS.Token;
-            return Task.Factory.StartNew(() =>
+
+            var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(module, submodulePath);
+            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
             {
-                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(module, submodulePath);
-                if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
-                {
-                    var submodule = submoduleStatus.GetSubmodule(module);
-                    submoduleStatus.CheckSubmoduleStatus(submodule);
-                }
-                return submoduleStatus;
+                var submodule = submoduleStatus.GetSubmodule(module);
+                submoduleStatus.CheckSubmoduleStatus(submodule);
+            }
+
+            info.Image = GetItemImage(submoduleStatus);
+            if (submoduleStatus != null)
+                info.Text += submoduleStatus.AddedAndRemovedString();
+        }
+
+        private void UpdateSubmodulesList()
+        {
+            RemoveSubmoduleButtons();
+
+            _previousUpdateTime = DateTime.Now;
+            _submodulesStatusImagesCTS = new CancellationTokenSource();
+
+            var loadingItem = new ToolStripMenuItem("Loading...");
+            toolStripButtonLevelUp.DropDownItems.Add(loadingItem);
+
+            List<ToolStripItemInfo> infoItems = new List<ToolStripItemInfo>();
+
+            var token = _submodulesStatusImagesCTS.Token;
+            Task.Factory.StartNew(() =>
+            {
+                UpdateSubmodulesStatusForMenu(infoItems);
+                UpdateSuperModuleStatusForMenu(infoItems);
             }, token)
                 .ContinueWith((task) =>
                 {
-                    mi.Image = GetItemImage(task.Result);
-                    if (task.Result != null)
-                        mi.Text += task.Result.AddedAndRemovedString();
+                    var items = infoItems.ConvertAll<ToolStripItem>(i => i.createToolStripItem(200));
+                    items.Add(new ToolStripSeparator());
+
+                    var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
+                    mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
+                    items.Add(mi);
+
+                    if (!string.IsNullOrEmpty(Module.SubmodulePath))
+                    {
+                        var usmi = new ToolStripMenuItem(_updateCurrentSubmodule.Text);
+                        usmi.Tag = Module.SubmodulePath;
+                        usmi.Click += UpdateSubmoduleToolStripMenuItemClick;
+                        items.Add(usmi);
+                    }
+
+                    toolStripButtonLevelUp.DropDownItems.Clear();
+                    toolStripButtonLevelUp.DropDownItems.AddRange(items.ToArray());
                 },
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private void UpdateSubmodulesList()
+        private void UpdateSubmodulesStatusForMenu(List<ToolStripItemInfo> infoItems)
         {
-            RemoveSubmoduleButtons();
-            _previousUpdateTime = DateTime.Now;
-            _submodulesStatusImagesCTS = new CancellationTokenSource();
-
-            foreach (var submodule in Module.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName))
+            var submodules = Module.GetSubmodulesLocalPathes();
+            Parallel.ForEach(submodules, submodulePath =>
             {
-                var name = submodule;
-                string path = Module.GetSubmoduleFullPath(submodule);
-                if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                    name = name + " " + GetModuleBranch(path);
+                var module = Module.GetSubmodule(submodulePath);
+                var info = CreateModuleMenuItemInfo(submodulePath, module);
+                infoItems.Add(info);
+            });
 
-                var smi = AddSubmoduleToMenu(name, path);
-                var module = Module.GetSubmodule(submodule);
-                var submoduleName = module.GetCurrentSubmoduleLocalPath();
-                GetSubmoduleStatusImageAsync(smi, module.SuperprojectModule, submoduleName);
+            infoItems.Sort((first, second) => first.Text.CompareTo(second.Text));
+
+            if (infoItems.Count == 0)
+            {
+                var info = new ToolStripItemInfo(_noSubmodulesPresent.Text);
+                infoItems.Add(info);
+            }
+        }
+
+        private void UpdateSuperModuleStatusForMenu(List<ToolStripItemInfo> infoItems)
+        {
+            if (Module.SuperprojectModule == null)
+                return;
+
+            var info = new ToolStripItemInfo();
+            info.IsSeparator = true;
+            infoItems.Add(info);
+
+            GitModule superproject = Module.SuperprojectModule;
+            GitModule supersuperproject = Module.FindTopProjectModule();
+
+            bool hasTopProject = superproject.WorkingDir != supersuperproject.WorkingDir;
+            if (hasTopProject)
+            {
+                var displayName = "Top project: " + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
+                info = CreateModuleMenuItemInfo(displayName, supersuperproject);
+                infoItems.Add(info);
             }
 
-            bool containSubmodules = toolStripButtonLevelUp.DropDownItems.Count != 0;
-            if (!containSubmodules)
-                toolStripButtonLevelUp.DropDownItems.Add(_noSubmodulesPresent.Text);
+            var superProjectDisplayName = "Superproject: ";
+            if (hasTopProject)
+                superProjectDisplayName += superproject.SubmodulePath;
+            else
+                superProjectDisplayName += Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
 
-            string currentSubmoduleName = null;
-            if (Module.SuperprojectModule != null)
+            info = CreateModuleMenuItemInfo(superProjectDisplayName, superproject);
+            infoItems.Add(info);
+
+            var submodules = supersuperproject.GetSubmodulesLocalPathes();
+            if (submodules.Any())
             {
-                var superprojectSeparator = new ToolStripSeparator();
-                toolStripButtonLevelUp.DropDownItems.Add(superprojectSeparator);
+                string currentModulePath = Module.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
+                currentModulePath = PathUtil.GetDirectoryName(currentModulePath.ToPosixPath());
 
-                GitModule supersuperproject = Module.FindTopProjectModule();
-                if (Module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
+                var supersuperSubmodulesInfo = new List<ToolStripItemInfo>();
+                Parallel.ForEach(submodules, submodulePath =>
                 {
-                    var name = "Top project: " + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
-                    string path = supersuperproject.WorkingDir;
-                    if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                        name = name + " " + GetModuleBranch(path);
+                    var module = supersuperproject.GetSubmodule(submodulePath);
+                    info = CreateModuleMenuItemInfo(submodulePath, module);
 
-                    var smi = AddSubmoduleToMenu(name, supersuperproject);
-                    smi.Image = Resources.IconFolderSubmodule;
-                }
+                    if (submodulePath == currentModulePath)
+                        info.BoldFont = true;
 
-                {
-                    var name = "Superproject: ";
-                    GitModule parentModule = Module.SuperprojectModule;
-                    string localpath = "";
-                    if (Module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
-                    {
-                        parentModule = supersuperproject;
-                        localpath = Module.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                        localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
-                        name = name + localpath;
-                    }
-                    else
-                        name = name + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
-                    string path = Module.SuperprojectModule.WorkingDir;
-                    if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                        name = name + " " + GetModuleBranch(path);
+                    supersuperSubmodulesInfo.Add(info);
+                });
 
-                    var smi = AddSubmoduleToMenu(name, Module.SuperprojectModule);
-                    GetSubmoduleStatusImageAsync(smi, parentModule, localpath);
-                }
-
-                var submodules = supersuperproject.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName);
-                if (submodules.Any())
-                {
-                    string localpath = Module.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                    localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
-
-                    foreach (var submodule in submodules)
-                    {
-                        var name = submodule;
-                        string path = supersuperproject.GetSubmoduleFullPath(submodule);
-                        if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                            name = name + " " + GetModuleBranch(path);
-                        var submenu = AddSubmoduleToMenu(name, path);
-                        if (submodule == localpath)
-                        {
-                            currentSubmoduleName = Module.GetCurrentSubmoduleLocalPath();
-                            submenu.Font = new Font(submenu.Font, FontStyle.Bold);
-                        }
-                        var module = supersuperproject.GetSubmodule(submodule);
-                        var submoduleName = module.GetCurrentSubmoduleLocalPath();
-                        GetSubmoduleStatusImageAsync(submenu, module.SuperprojectModule, submoduleName);
-                    }
-                }
+                supersuperSubmodulesInfo.Sort((first, second) => first.Text.CompareTo(second.Text));
+                infoItems.AddRange(supersuperSubmodulesInfo);
             }
+        }
 
-            var separator = new ToolStripSeparator();
-            toolStripButtonLevelUp.DropDownItems.Add(separator);
+        private ToolStripItemInfo CreateModuleMenuItemInfo(string namePrefix, GitModule module)
+        {
+            var name = AppendModuleBranchForMenu(module, namePrefix);
+            var info = new ToolStripItemInfo(name, module, SubmoduleToolStripButtonClick);
+            AddSubmoduleStatusImageAndText(info, module.SuperprojectModule, module.SubmodulePath);
+            return info;
+        }
 
-            var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
-            mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
-            toolStripButtonLevelUp.DropDownItems.Add(mi);
-
-            if (currentSubmoduleName != null)
-            {
-                var usmi = new ToolStripMenuItem(_updateCurrentSubmodule.Text);
-                usmi.Tag = currentSubmoduleName;
-                usmi.Click += UpdateSubmoduleToolStripMenuItemClick;
-                toolStripButtonLevelUp.DropDownItems.Add(usmi);
-            }
+        private string AppendModuleBranchForMenu(GitModule module, string name)
+        {
+            if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(module.WorkingDir))
+                name = name + " " + GetModuleBranch(module.WorkingDir);
+            return name;
         }
 
         private void toolStripButtonLevelUp_ButtonClick(object sender, EventArgs e)
