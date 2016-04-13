@@ -372,12 +372,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SaveAndRescan_Click(null, null);
         }
 
-        // TODO: needed somewhere?
-        ////private void SetGlobalMergeToolText(string text)
-        ////{
-        ////    throw new NotImplementedException("GlobalMergeTool.Text = ...");
-        ////}
-
         private void GotoPageGlobalSettings()
         {
             PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());

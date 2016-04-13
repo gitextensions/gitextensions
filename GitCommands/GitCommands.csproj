@@ -98,6 +98,7 @@
     <Compile Include="Settings\SettingsContainer.cs" />
     <Compile Include="Settings\SettingsPath.cs" />
     <Compile Include="Utils\EnvUtils.cs" />
+    <Compile Include="Git\BranchComparison.cs" />
     <Compile Include="GitExtLinks\GitExtLink.cs" />
     <Compile Include="GitExtLinks\GitExtLinkDef.cs" />
     <Compile Include="GitExtLinks\GitExtLinksParser.cs" />
@@ -105,15 +106,18 @@
     <Compile Include="Git\GitCheckoutBranchCmd.cs" />
     <Compile Include="Git\GitCommand.cs" />
     <Compile Include="Utils\EncodingHelper.cs" />
+    <Compile Include="Git\GitCommandResult.cs" />
     <Compile Include="Git\GitConvert.cs" />
     <Compile Include="Git\GitDeleteBranchCmd.cs" />
     <Compile Include="Git\GitCommandHelpers.cs" />
     <Compile Include="Git\GitModule.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Git\GitRemote.cs" />
     <Compile Include="Git\GitSubmoduleStatus.cs" />
     <Compile Include="Git\GitSvnCommandHelpers.cs" />
     <Compile Include="Git\GitCommandsInstance.cs" />
+    <Compile Include="Git\RemoteInfo.cs" />
     <Compile Include="LockableNotifier.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
     <Compile Include="CommitHelper.cs" />

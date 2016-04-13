@@ -82,5 +82,17 @@ namespace GitUI.Properties {
                 this["Dashboard_CommonSplitContainer_SplitterDistance"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("213")]
+        public int FormBrowse_MainSplitContainer_SplitterDistance {
+            get {
+                return ((int)(this["FormBrowse_MainSplitContainer_SplitterDistance"]));
+            }
+            set {
+                this["FormBrowse_MainSplitContainer_SplitterDistance"] = value;
+            }
+        }
     }
 }

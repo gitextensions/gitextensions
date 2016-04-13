@@ -44,6 +44,7 @@ namespace GitUI.CommandsDialogs
             }
             if (!Module.CheckBranchFormat(branchName))
             {
+                // invalid branch name
                 MessageBox.Show(string.Format(_branchNameIsNotValud.Text, branchName), Text);
                 DialogResult = DialogResult.None;
                 return;

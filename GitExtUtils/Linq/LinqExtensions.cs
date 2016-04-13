@@ -91,6 +91,10 @@ namespace System.Linq
             return string.Join(separator, source.ToArray());
         }
 
+        public static string Join(this IEnumerable<string> source, char separator)
+        {
+            return source.Join(separator.ToString());
+        }
 
         //
         // Summary:

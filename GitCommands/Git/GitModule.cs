@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
@@ -76,6 +78,18 @@ namespace GitCommands
     [DebuggerDisplay("GitModule ( {_workingDir} )")]
     public sealed class GitModule : IGitModule
     {
+        /// <summary>'/' : ref path separator</summary>
+        public const char RefSeparator = '/';
+        /// <summary>"/" : ref path separator</summary>
+        public static readonly string RefSep = RefSeparator.ToString(CultureInfo.InvariantCulture);
+
+        /// <summary>'\n' : new-line separator</summary>
+        const char LineSeparator = '\n';
+        /// <summary>"*" indicates the current branch</summary>
+        public static char ActiveBranchIndicator = '*';
+        /// <summary>"*" indicates the current branch</summary>
+        public static string ActiveBranchIndicatorStr = ActiveBranchIndicator.ToString();
+
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
         private readonly object _lock = new object();
 
@@ -1331,6 +1345,47 @@ namespace GitCommands
             return RunGitCmd(arguments);
         }
 
+        /// <summary>Show the changes recorded in the stash as a diff between the stashed state and its original parent.</summary>
+        public string StashShowDiff(string stash = null)
+        {
+            return RunGitCmd(string.Format("stash show {0}", stash));
+        }
+
+        /// <summary>Remove a single stashed state from the stash list and apply it on top of the current working tree state.</summary>
+        /// <param name="stash">Stash to pop.</param>
+        /// <param name="includeIndex">Try to reinstate both working tree and index changes.</param>
+        public string StashPop(string stash = null, bool includeIndex = false)
+        {
+            return RunGitCmd(
+                string.Format(
+                    "stash pop {0} {1}",
+                    includeIndex ? "--index" : "",
+                    stash
+                )
+            );
+        }
+
+        /// <summary>Creates and checks out a new branch starting from the commit at which the stash was originally created.
+        /// Applies the changes recorded in the stash to the new working tree and index.</summary>
+        public string StashBranch(string branchName, string stash = null)
+        {
+            return RunGitCmd(
+                string.Format(
+                    "stash branch {0} {1}",
+                    branchName,
+                    stash
+                )
+            );
+        }
+
+        /// <summary>Remove a single stashed state from the stash list. 
+        /// <remarks>When no stash is given, removes the latest one.</remarks></summary>
+        public GitCommandResult StashDelete(string stash = null)
+        {
+            string stashDelete = RunGitCmd(string.Format("stash drop {0}", stash));
+            return new GitCommandResult(stashDelete, stashDelete.Contains("Dropped"));
+        }
+
         public string ResetSoft(string commit)
         {
             return ResetSoft(commit, "");
@@ -1993,6 +2048,119 @@ namespace GitCommands
             return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
+        /// <summary>Gets a key/value collection of branches with configured upstream branches. 
+        /// Key: Local Branch; Value: (Upstream) Remote Branch</summary>
+        public IDictionary<string, string> GetConfiguredUpstreamBranches()
+        {
+            // foreach ref: sort descending on upstream value and output: {upstream}<{ref}
+            string output = RunGitCmd("for-each-ref --sort=-upstream --format='%(upstream:short)<%(refname:short)' refs/heads");
+            // example output:
+            // jberger/left-panel/-main<left-panel/-main
+            // origin/master<master
+            // <left-panel/dragdrops
+            // <some-branch
+
+            const string separator = "<";
+            var upstreams =
+                output
+                    .Split('\n') // delimit by new-line
+                    .TakeWhile(branch => !branch.StartsWith(separator))// take only branches w/ upstream
+                    .Select(branch =>
+                    {
+                        // {upstream}<{local}
+                        string line = branch.Trim();// trim each line
+                        return new { Line = line, IndexOf = line.IndexOf(separator) };
+                    }).ToDictionary(
+                        line => line.Line.Substring(line.IndexOf + 1),// local
+                        line => line.Line.Substring(0, line.IndexOf)) // upstream
+                ;
+
+            return upstreams;
+        }
+
+        /// <summary>Gets information for all remotes.</summary>
+        public IEnumerable<RemoteInfo> GetRemotesInfo()
+        {
+            return
+                GetRemotes(false)
+                .Select(remote =>
+                    new RemoteInfo(
+                        RunGitCmd(string.Format("remote show {0}", remote)),
+                        RunGitCmd(string.Format("ls-remote --heads {0}", remote))));
+        }
+
+        /// <summary>Executes the specified 'git remote' command.</summary>
+        public string RemoteCmd(GitRemote remoteCommand)
+        {
+            return RunGitCmd(remoteCommand.ToString());
+        }
+
+        /// <summary>Gets the number of commits which appear in a branch/revision that are NOT in another branch/revision.
+        /// <example>If a feature branch is behind master by 2 commits; '2' will be returned.</example></summary>
+        /// <param name="behindRevision">Commits in <paramref name="aheadRevision"/> but NOT in this branch/revision.</param>
+        /// <param name="aheadRevision">Commits in this branch/revision.</param>
+        public int GetCommitDiffCount(string behindRevision, string aheadRevision)
+        {
+            string n = RunGitCmd(string.Format("rev-list {0} ^{1} --count", aheadRevision, behindRevision));
+            return int.Parse(n);
+        }
+
+        /// <summary>Gets the number of commits which appear in a remote branch that are NOT in another branch/revision.
+        /// <remarks>Indicates how many commits the local branch is behind the remote branch; possibly for pulling.</remarks></summary>
+        /// <param name="behindRevision">Revision/branch to check how many commits it's behind.</param>
+        /// <param name="remoteTrackingBranch">Remote branch.</param>
+        public int GetCommitDiffCount(string behindRevision, RemoteInfo.RemoteTrackingBranch remoteTrackingBranch)
+        {
+            return GetCommitDiffCount(behindRevision, remoteTrackingBranch.FullPath);
+        }
+
+        /// <summary>Gets the number of commits which appear in a local branch/revision that are NOT in a remote branch.
+        /// <remarks>Indicates how many commits the local branch is ahead of the remote branch.</remarks></summary>
+        /// <param name="remoteTrackingBranch">Remote branch to check the number of commits it's behind.</param>
+        /// <param name="aheadRevision">Local revision/branch.</param>
+        public int GetCommitDiffCount(RemoteInfo.RemoteTrackingBranch remoteTrackingBranch, string aheadRevision)
+        {
+            return GetCommitDiffCount(remoteTrackingBranch.FullPath, aheadRevision);
+        }
+
+        /// <summary>Indicates whether a branch/revision is behind another branch/revision.</summary>
+        /// <param name="behindRevision">Local branch/revision to check if it's behind.</param>
+        /// <param name="aheadRevision">Local branch/revision that may be ahead.</param>
+        public bool IsBranchBehind(string behindRevision, string aheadRevision)
+        {
+            return GetCommitDiffCount(behindRevision, aheadRevision) != 0;
+        }
+
+        /// <summary>Indicates whether a local branch/revision is behind a remote branch; possibly for pulling.</summary>
+        /// <param name="behindRevision">Local branch/revision to check if it's behind.</param>
+        /// <param name="remoteTrackingBranch">Remote branch.</param>
+        public bool IsBranchBehind(string behindRevision, RemoteInfo.RemoteTrackingBranch remoteTrackingBranch)
+        {
+            return IsBranchBehind(behindRevision, remoteTrackingBranch.FullPath);
+        }
+
+        /// <summary>Indicates whether a remote branch is lacking commits that are in a local branch/revision.</summary>
+        /// <param name="aheadRevision">Local branch/revision.</param>
+        /// <param name="remoteTrackingBranch">Remote branch to check if it's behind.</param>
+        public bool IsRemoteBranchBehind(RemoteInfo.RemoteTrackingBranch remoteTrackingBranch, string aheadRevision)
+        {
+            return IsBranchBehind(remoteTrackingBranch.FullPath, aheadRevision);
+        }
+
+        /// <summary>Compares commits between a (control) branch and another (test) branch.</summary>
+        public BranchComparison CompareCommits(string branch, string otherBranch)
+        {
+            string output = RunGitCmd(string.Format("rev-list {0}...{1} --count", branch, otherBranch));
+            // "2    0"
+
+            var splits = output.SplitThenTrim(" ").ToArray();
+            int nBranch = int.Parse(splits[0]);
+            int nOther = int.Parse(splits[1]);
+
+            return new BranchComparison(branch, nBranch, otherBranch, nOther);
+        }
+
+        /// <summary>Gets the local config file.</summary>
         public IEnumerable<string> GetSettings(string setting)
         {
             return LocalConfigFile.GetValues(setting);
@@ -2046,7 +2214,6 @@ namespace GitCommands
                     stashes.Add(new GitStash(stashString, i));
                 }
             }
-
             return stashes;
         }
 
@@ -2580,6 +2747,18 @@ namespace GitCommands
             return gitRefs;
         }
 
+        /// <summary>Gets the branch names, with the active branch, if applicable, listed first.
+        /// <remarks>A bit quicker than <see cref="GetHeads()"/>.
+        /// The active branch will be indicated by a "*", so ensure to Trim before processing.</remarks></summary>
+        public IEnumerable<string> GetBranchNames()
+        {
+            return RunGitCmd("branch", SystemEncoding)
+                .Split(LineSeparator)
+                .Where(branch => !string.IsNullOrWhiteSpace(branch))// first is ""
+                .OrderByDescending(branch => branch.Contains(ActiveBranchIndicator))// * for current branch
+                .Select(line => line.Trim());// trim justify space
+        }
+
         /// <summary>
         /// Gets branches which contain the given commit.
         /// If both local and remote branches are requested, remote branches are prefixed with "remotes/"
@@ -2896,6 +3075,7 @@ namespace GitCommands
                 return SubmoduleStatus.NewSubmodule;
             if (loaddata)
                 data = CommitData.GetCommitData(this, commit, ref error);
+
             if (data == null)
                 return SubmoduleStatus.Unknown;
             if (data.CommitDate > olddata.CommitDate)

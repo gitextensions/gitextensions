@@ -9,7 +9,10 @@ using GitCommands.Settings;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
+using GitUI.Blame;
+using GitUI.Notifications;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Notifications;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
 using Settings = GitCommands.AppSettings;
@@ -24,6 +27,7 @@ namespace GitUI
             Module = module;
             RepoChangedNotifier = new ActionNotifier(
                 () => InvokeEvent(null, PostRepositoryChanged));
+            Notifications = NotificationManager.Get(this);
         }
 
         public GitUICommands(string workingDir)
@@ -224,6 +228,9 @@ namespace GitUI
 
         public Icon FormIcon { get { return GitExtensionsForm.ApplicationIcon; } }
 
+        /// <summary>Gets notifications implementation.</summary>
+        public INotifications Notifications { get; private set; }
+
         public bool StartBatchFileProcessDialog(object owner, string batchFile)
         {
             string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".cmd");
@@ -284,20 +291,25 @@ namespace GitUI
             return StartBrowseDialog("");
         }
 
+        public bool StartDeleteBranchDialog(string branch)
+        {
+            return StartDeleteBranchDialog(null, branch);
+        }
+
         public bool StartDeleteBranchDialog(IWin32Window owner, string branch)
+        {
+            return StartDeleteBranchDialog(owner, new string[] { branch });
+        }
+
+        public bool StartDeleteBranchDialog(IWin32Window owner, IEnumerable<string> branches)
         {
             return DoActionOnRepo(owner, true, false, PreDeleteBranch, PostDeleteBranch, () =>
                 {
-                    using (var form = new FormDeleteBranch(this, branch))
+                    using (var form = new FormDeleteBranch(this, branches))
                         form.ShowDialog(owner);
                     return true;
                 }
             );
-        }
-
-        public bool StartDeleteBranchDialog(string branch)
-        {
-            return StartDeleteBranchDialog(null, branch);
         }
 
         public bool StartCheckoutRevisionDialog(IWin32Window owner, string revision = null)

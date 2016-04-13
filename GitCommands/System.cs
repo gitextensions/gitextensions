@@ -70,6 +70,16 @@ namespace System
                 return left + sep + right;
         }
 
+        public static string Combine(this string left, char sep, string right)
+        {
+            if (left.IsNullOrEmpty())
+                return right;
+            else if (right.IsNullOrEmpty())
+                return left;
+            else
+                return left + sep + right;
+        }
+
         /// <summary>
         /// Quotes string if it is not null
         /// </summary>
