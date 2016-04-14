@@ -30,6 +30,7 @@
                     <Directory Id="TranslationsDir" Name="Translation" />
                     <Directory Id="IconsDir" Name="Icons" />
                     <Directory Id="DiffScriptsDir" Name="Diff-Scripts" />
+                    <Directory Id="DirConEmu" Name="ConEmu" />
                 </Directory>
             </Directory>
             <Directory Id="PersonalFolder">
@@ -90,6 +91,9 @@
             </Component>
             <Component Id="GitUI.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\GitUI.dll" />
+            </Component>
+            <Component Id="ConEmu.WinForms.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\ConEmu.WinForms.dll" />
             </Component>
             <Component Id="NetSpell.SpellChecker.dll" Guid="*">
                 <File Source="..\NetSpell.SpellChecker\bin\Release\NetSpell.SpellChecker.dll" />
@@ -483,6 +487,21 @@
                 <RegistryValue Name="puttygen" Value="[INSTALLDIR]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
             </Component>
         </DirectoryRef>
+        <DirectoryRef Id="DirConEmu">
+            <Component Id="File.CER00" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\CmdInit.cmd" /></Component>
+            <Component Id="File.CER01" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu.exe" /></Component>
+            <Component Id="File.CER03" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu64.exe" /></Component>
+            <Component Id="File.CER04" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuC.exe" /></Component>
+            <Component Id="File.CER05" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuC64.exe" /></Component>
+            <Component Id="File.CER06" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuCD.dll" /></Component>
+            <Component Id="File.CER07" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuCD64.dll" /></Component>
+            <Component Id="File.CER08" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuHk.dll" /></Component>
+            <Component Id="File.CER09" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuHk64.dll" /></Component>
+            <Component Id="File.CER10" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\GitShowBranch.cmd" /></Component>
+        </DirectoryRef>
+        <ComponentGroup Id="Component.ConEmuFiles">
+          <ComponentRef Id="File.CER00" /><ComponentRef Id="File.CER01" /><ComponentRef Id="File.CER03" /><ComponentRef Id="File.CER04" /><ComponentRef Id="File.CER05" /><ComponentRef Id="File.CER06" /><ComponentRef Id="File.CER07" /><ComponentRef Id="File.CER08" /><ComponentRef Id="File.CER09" /><ComponentRef Id="File.CER10" />
+        </ComponentGroup>
         <?foreach VsVersion in $(var.VsVersions)?>
         <DirectoryRef Id="VS$(var.VsVersion)">
             <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
@@ -596,6 +615,7 @@
             <ComponentRef Id="GitCommands.dll" />
             <ComponentRef Id="GitExtUtils.dll" />
             <ComponentRef Id="GitUI.dll" />
+            <ComponentRef Id="ConEmu.WinForms.dll" />
             <ComponentRef Id="ICSharpCode.TextEditor.dll" />
             <ComponentRef Id="PSTaskDialog.dll" />
             <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
@@ -619,6 +639,7 @@
             <ComponentRef Id="pageant.reg" />
             <ComponentRef Id="puttygen.exe" />
             <ComponentRef Id="puttygen.reg" />
+            <ComponentGroupRef Id="Component.ConEmuFiles" />
             <ComponentRef Id="GitExtSshAskPass.exe" />
             <ComponentRef Id="GitCredentialWinStore.exe" />
             <ComponentRef Id="GitExtensions.newstartmenu" />

@@ -1172,6 +1172,12 @@ namespace GitCommands
             set { SetBool("CheckForReleaseCandidates", value); }
         }
 
+        public static bool UseConsoleEmulatorForCommands
+        {
+            get { return GetBool("UseConsoleEmulatorForCommands", true); }
+            set { SetBool("UseConsoleEmulatorForCommands", value); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return Application.ExecutablePath;
