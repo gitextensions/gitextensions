@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using GitCommands;
+using GitCommands.Git;
 
 namespace ResourceManager
 {
@@ -41,7 +42,7 @@ namespace ResourceManager
         /// Gets the commit info from CommitData.
         /// </summary>
         /// <returns></returns>
-        public static CommitInformation GetCommitInfo(GitModule module, CommitData data, bool showRevisionsAsLinks)
+        public static CommitInformation GetCommitInfo(IGitRevisionProvider module, CommitData data, bool showRevisionsAsLinks)
         {
             if (data == null)
                 throw new ArgumentNullException("data");

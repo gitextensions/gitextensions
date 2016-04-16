@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using GitCommands;
+using GitCommands.Git;
 
 namespace ResourceManager
 {
@@ -48,7 +49,7 @@ namespace ResourceManager
         /// Generate header.
         /// </summary>
         /// <returns></returns>
-        public static string GetHeader(this CommitData commitData, GitModule module, bool showRevisionsAsLinks)
+        public static string GetHeader(this CommitData commitData, IGitRevisionProvider module, bool showRevisionsAsLinks)
         {
             StringBuilder header = new StringBuilder();
             string authorEmail = GetEmail(commitData.Author);
@@ -124,7 +125,7 @@ namespace ResourceManager
             return RemoveRedundancies(header.ToString());
         }
 
-        private static string GetCommitSubject(string sha, GitModule module)
+        private static string GetCommitSubject(string sha, IGitRevisionProvider module)
         {
             return GitRevision.IsArtificial(sha)
                 ? ""
