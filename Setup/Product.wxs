@@ -24,7 +24,6 @@
                 <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
                     <Directory Id="PuttyDir" Name="PuTTY" />
                     <Directory Id="PluginsDir" Name="Plugins" />
-                    <Directory Id="GitCredentialWinStoreDir" Name="GitCredentialWinStore" />
                     <Directory Id="InstallerDir" Name="Installer" />
                     <Directory Id="DictionariesDir" Name="Dictionaries" />
                     <Directory Id="TranslationsDir" Name="Translation" />
@@ -197,11 +196,6 @@
                 <RegistryKey Root="HKCR" Key="github-windows\shell\open\command">
                     <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
                 </RegistryKey>
-            </Component>
-        </DirectoryRef>
-        <DirectoryRef Id="GitCredentialWinStoreDir">
-            <Component Id="GitCredentialWinStore.exe" Guid="*">
-                <File Source="..\bin\git-credential-winstore.exe" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="PluginsDir">
@@ -641,7 +635,6 @@
             <ComponentRef Id="puttygen.reg" />
             <ComponentGroupRef Id="Component.ConEmuFiles" />
             <ComponentRef Id="GitExtSshAskPass.exe" />
-            <ComponentRef Id="GitCredentialWinStore.exe" />
             <ComponentRef Id="GitExtensions.newstartmenu" />
             <ComponentRef Id="GitExtensions.startmenu" />
             <ComponentRef Id="English.gif" />
@@ -856,11 +849,9 @@
         <CustomAction Id="InstallKDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
         <Binary Id="Git" SourceFile="..\Bin\Git-2.8.1-32-bit.exe" />
         <CustomAction Id="InstallGit" Impersonate="no" BinaryKey="Git" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
-        <CustomAction Id="InstallGitCredentialWinStore" FileKey="GitExtensions.exe" ExeCommand="installcredhelper" Return="asyncWait" />
         <InstallExecuteSequence>
             <Custom Action="InstallKDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
             <Custom Action="InstallGit" After="InstallFiles"><![CDATA[INSTALLGIT=1]]></Custom>
-            <Custom Action="InstallGitCredentialWinStore" After="InstallFinalize"><![CDATA[INSTALLGITCREDENTIALWINSTORE=1]]></Custom>
         </InstallExecuteSequence>
         <?endif ?>
         <UI />

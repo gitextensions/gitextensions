@@ -1907,9 +1907,6 @@ namespace GitUI
                 case "gitignore":
                     StartEditGitIgnoreDialog();
                     return;
-                case "installcredhelper":
-                    InstallCredHelper();
-                    return;
                 case "init":        // [path]
                     RunInitCommand(args);
                     return;
@@ -1981,19 +1978,6 @@ namespace GitUI
             Application.Run(frmCmdLine);
         }
 
-        private void InstallCredHelper()
-        {
-            string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
-            if (!File.Exists(gcsFileName))
-            {
-                return;
-            }
-
-            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
-            configFileGlobalSettings.SetValue("credential.helper", "!\"" + gcsFileName + "\"");
-            configFileGlobalSettings.Save();
-        }
-
         private void Uninstall()
         {
             var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
@@ -2004,11 +1988,6 @@ namespace GitUI
                 configFileGlobalSettings.SetValue("core.editor", "");
             }
 
-            var credentialHelper = configFileGlobalSettings.GetValue("credential.helper");
-            if (credentialHelper.ToLowerInvariant().Contains(AppSettings.GetInstallDir().ToLowerInvariant()))
-            {
-                configFileGlobalSettings.SetValue("credential.helper", "");
-            }
             configFileGlobalSettings.Save();
         }
 
