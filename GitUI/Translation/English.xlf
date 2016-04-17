@@ -5097,10 +5097,6 @@ Nothing to rebase.</source>
         <source>Local branch name</source>
         <target />
       </trans-unit>
-      <trans-unit id="Delete.Text">
-        <source>Delete</source>
-        <target />
-      </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
         <source>Load SSH key</source>
         <target />
@@ -5109,15 +5105,11 @@ Nothing to rebase.</source>
         <source>Default merge with</source>
         <target />
       </trans-unit>
-      <trans-unit id="New.Text">
-        <source>New</source>
-        <target />
-      </trans-unit>
       <trans-unit id="Prune.Text">
         <source>Prune remote branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="PuTTYSSH.Text">
+      <trans-unit id="lblMgtPuttyPanelHeader.Text">
         <source>PuTTY SSH</source>
         <target />
       </trans-unit>
@@ -5130,7 +5122,7 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
-        <source>Save</source>
+        <source>Save changes</source>
         <target />
       </trans-unit>
       <trans-unit id="SshBrowse.Text">
@@ -5145,8 +5137,8 @@ Nothing to rebase.</source>
         <source>Update all remote branch info</source>
         <target />
       </trans-unit>
-      <trans-unit id="_hintDelete.Text">
-        <source>Delete</source>
+      <trans-unit id="_gitMessage.Text">
+        <source>Message</source>
         <target />
       </trans-unit>
       <trans-unit id="_labelUrlAsFetch.Text">
@@ -5187,6 +5179,14 @@ Value has been reset to empty value.</source>
         <source>Private key (*.ppk)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_gbMgtPanelHeaderNew.Text">
+        <source>Create new remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gbMgtPanelHeaderEdit.Text">
+        <source>Edit remote details</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_warningNoKeyEntered.Text">
         <source>No SSH key file entered</source>
         <target />
@@ -5199,10 +5199,6 @@ Value has been reset to empty value.</source>
         <source>Url needed</source>
         <target />
       </trans-unit>
-      <trans-unit id="buttonClose.Text">
-        <source>Close</source>
-        <target />
-      </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
         <source>Separate Push Url</source>
         <target />
@@ -5211,7 +5207,7 @@ Value has been reset to empty value.</source>
         <source>Name</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox1.Text">
+      <trans-unit id="lblMgtDetailsPanelHeader.Text">
         <source>Details</source>
         <target />
       </trans-unit>

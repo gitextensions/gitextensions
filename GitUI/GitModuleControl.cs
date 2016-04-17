@@ -116,7 +116,10 @@ namespace GitUI
                         parent = parent.Parent;
                 }
 
-                UICommandsSource = cmdsSrc;
+                if (cmdsSrc != null)
+                {
+                    UICommandsSource = cmdsSrc;
+                }
             }
         }
 

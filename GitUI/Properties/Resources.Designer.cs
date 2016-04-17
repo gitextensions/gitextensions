@@ -742,6 +742,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Icon_86 {
+            get {
+                object obj = ResourceManager.GetObject("Icon_86", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IconAddToGitIgnore {
             get {
                 object obj = ResourceManager.GetObject("IconAddToGitIgnore", resourceCulture);
