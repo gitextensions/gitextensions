@@ -375,7 +375,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "vsdiffmerge":
                     return "\"" + exeFile + "\" /m \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
             }
-            // other commands supported natively by msysgit
+            // other commands supported natively by git for windows
             return "";
         }
 

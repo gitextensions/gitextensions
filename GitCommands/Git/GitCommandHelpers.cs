@@ -944,7 +944,7 @@ namespace GitCommands
         }
 
         /*
-               source: C:\Program Files\msysgit\doc\git\html\git-status.html
+               source: https://git-scm.com/docs/git-status
         */
         public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff = false)
         {
