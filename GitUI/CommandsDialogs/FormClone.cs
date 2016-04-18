@@ -140,8 +140,22 @@ namespace GitUI.CommandsDialogs
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);
 
+                // Shallow clone params
+                int? depth = null;
+                bool? isSingleBranch = null;
+                if(!cbDownloadFullHistory.Checked)
+                {
+                    depth = 1;
+                    // Single branch considerations:
+                    // If neither depth nor single-branch family params are specified, then it's like no-single-branch by default.
+                    // If depth is specified, then single-branch is assumed.
+                    // But with single-branch it's really nontrivial to switch to another branch in the GUI, and it's very hard in cmdline (obvious choices to fetch another branch lead to local repo corruption).
+                    // So let's reset it to no-single-branch to (a) have the same branches behavior as with full clone, and (b) make it easier for users when switching branches.
+                    isSingleBranch = false;
+                }
+
                 var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
-                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, null);
+                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, depth, isSingleBranch);
                 using (var fromProcess = new FormRemoteProcess(Module, AppSettings.GitCommand, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
