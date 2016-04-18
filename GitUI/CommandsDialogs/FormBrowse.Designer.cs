@@ -214,6 +214,7 @@ namespace GitUI.CommandsDialogs
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.commitcountPerUserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitcommandLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuitemSparse = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.cherryPickSelectedDiffFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 #if !__MonoCS__ || Mono212Released //waiting for mono 2.12
@@ -1307,6 +1308,7 @@ namespace GitUI.CommandsDialogs
             this.editgitignoreToolStripMenuItem1,
             this.editgitattributesToolStripMenuItem,
             this.editmailmapToolStripMenuItem,
+            this.menuitemSparse,
             this.toolStripSeparator4,
             this.gitMaintenanceToolStripMenuItem,
             this.repoSettingsToolStripMenuItem,
@@ -1945,6 +1947,13 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1.Size = new System.Drawing.Size(1154, 28);
             this.menuStrip1.TabIndex = 3;
             // 
+            // menuitemSparse
+            // 
+            this.menuitemSparse.Name = "menuitemSparse";
+            this.menuitemSparse.Size = new System.Drawing.Size(221, 22);
+            this.menuitemSparse.Text = "Sparse Working Copy…";
+            this.menuitemSparse.Click += new System.EventHandler(this.menuitemSparseWorkingCopy_Click);
+            // 
             // commitcountPerUserToolStripMenuItem
             // 
             this.commitcountPerUserToolStripMenuItem.Image = global::GitUI.Properties.Resources.statistic;
@@ -2233,5 +2242,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem gitcommandLogToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem cherryPickSelectedDiffFileToolStripMenuItem;
+        private ToolStripMenuItem menuitemSparse;
     }
 }
