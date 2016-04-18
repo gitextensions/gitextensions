@@ -852,14 +852,14 @@
             </Feature>
         </Feature>
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
-        <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-64bit-Setup_0.9.98-2.exe" />
+        <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.98-3.exe" />
         <CustomAction Id="InstallKDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
-        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.9.5-preview20141217.exe" />
-        <CustomAction Id="InstallMsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
+        <Binary Id="Git" SourceFile="..\Bin\Git-2.8.1-32-bit.exe" />
+        <CustomAction Id="InstallGit" Impersonate="no" BinaryKey="Git" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
         <CustomAction Id="InstallGitCredentialWinStore" FileKey="GitExtensions.exe" ExeCommand="installcredhelper" Return="asyncWait" />
         <InstallExecuteSequence>
             <Custom Action="InstallKDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
-            <Custom Action="InstallMsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
+            <Custom Action="InstallGit" After="InstallFiles"><![CDATA[INSTALLGIT=1]]></Custom>
             <Custom Action="InstallGitCredentialWinStore" After="InstallFinalize"><![CDATA[INSTALLGITCREDENTIALWINSTORE=1]]></Custom>
         </InstallExecuteSequence>
         <?endif ?>
