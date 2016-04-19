@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
             this.label3 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_NewDirectory = new System.Windows.Forms.TextBox();
             this.brachLabel = new System.Windows.Forms.Label();
-            this.Branches = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_Branches = new System.Windows.Forms.ComboBox();
             this.cbIntializeAllSubmodules = new System.Windows.Forms.CheckBox();
             this.cbDownloadFullHistory = new System.Windows.Forms.CheckBox();
             this.Info = new System.Windows.Forms.Label();
@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.Controls.Add(this.label3, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_NewDirectory, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.brachLabel, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.Branches, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_Branches, 1, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -212,16 +212,16 @@ namespace GitUI.CommandsDialogs
             this.brachLabel.Text = "&Branch:";
             this.brachLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // Branches
+            // _NO_TRANSLATE_Branches
             // 
-            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this._NO_TRANSLATE_Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(135, 93);
-            this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(372, 23);
-            this.Branches.TabIndex = 9;
-            this.Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
+            this._NO_TRANSLATE_Branches.FormattingEnabled = true;
+            this._NO_TRANSLATE_Branches.Location = new System.Drawing.Point(135, 93);
+            this._NO_TRANSLATE_Branches.Name = "_NO_TRANSLATE_Branches";
+            this._NO_TRANSLATE_Branches.Size = new System.Drawing.Size(372, 23);
+            this._NO_TRANSLATE_Branches.TabIndex = 9;
+            this._NO_TRANSLATE_Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
             // 
             // cbIntializeAllSubmodules
             // 
@@ -392,7 +392,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Button LoadSSHKey;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_NewDirectory;
         private System.Windows.Forms.Label Info;
-        private System.Windows.Forms.ComboBox Branches;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_Branches;
         private System.Windows.Forms.CheckBox cbIntializeAllSubmodules;
         private System.Windows.Forms.CheckBox cbDownloadFullHistory;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
