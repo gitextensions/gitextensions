@@ -812,7 +812,13 @@ namespace GitCommands
             set { SetInt("maxrevisiongraphcommits", value); }
         }
 
-        public static string RecentWorkingDir
+        public static bool ShowDiffForAllParents
+        {
+            get { return GetBool("showdiffforallparents", true); }
+            set { SetBool("showdiffforallparents", value); }
+        }
+
+		public static string RecentWorkingDir
         {
             get { return GetString("RecentWorkingDir", null); }
             set { SetString("RecentWorkingDir", value); }
@@ -1164,6 +1170,12 @@ namespace GitCommands
         {
             get { return GetBool("CheckForReleaseCandidates", false); }
             set { SetBool("CheckForReleaseCandidates", value); }
+        }
+
+        public static bool UseConsoleEmulatorForCommands
+        {
+            get { return GetBool("UseConsoleEmulatorForCommands", true); }
+            set { SetBool("UseConsoleEmulatorForCommands", value); }
         }
 
         public static string GetGitExtensionsFullPath()

@@ -3,6 +3,9 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+
+using GitUI.UserControls;
+
 using ResourceManager;
 
 namespace GitUI
@@ -152,11 +155,11 @@ namespace GitUI
             return false;
         }
 
-        protected override void DataReceived(object sender, DataReceivedEventArgs e)
+        protected override void DataReceived(object sender, TextEventArgs e)
         {
             if (Plink)
             {
-                if (e.Data.StartsWith("If you trust this host, enter \"y\" to add the key to"))
+                if (e.Text.StartsWith("If you trust this host, enter \"y\" to add the key to"))
                 {
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {

@@ -91,13 +91,11 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Loads setting value from settings to Control
         /// </summary>
-        /// <param name="settings"></param>
         public abstract void LoadSetting(ISettingsSource settings, T control);
 
         /// <summary>
         /// Saves value from Control to settings
         /// </summary>
-        /// <param name="settings"></param>
         public abstract void SaveSetting(ISettingsSource settings, T control);
 
 
