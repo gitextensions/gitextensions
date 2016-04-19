@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+
+using GitUI.UserControls;
+
 using ResourceManager;
 
 namespace GitUI
@@ -23,10 +27,7 @@ namespace GitUI
         public string ProcessArguments { get; set; }
         public string ProcessInput { get; set; }
         public readonly string WorkingDirectory;
-        public Process Process { get; set; }
         public HandleOnExit HandleOnExitCallback { get; set; }
-
-        private GitCommandsInstance gitCommand;
 
         protected FormProcess()
             : base(true)
@@ -43,6 +44,9 @@ namespace GitUI
             ProcessInput = input;
             WorkingDirectory = aWorkingDirectory;
             Text = Text + " (" + WorkingDirectory + ")";
+
+            ConsoleOutput.ProcessExited += delegate { OnExit(ConsoleOutput.ExitCode); };
+            ConsoleOutput.DataReceived += DataReceivedCore;
         }
 
         public static bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
@@ -126,54 +130,42 @@ namespace GitUI
             if (QuotedProcessString.IndexOf(' ') != -1)
                 QuotedProcessString = QuotedProcessString.Quote();
             AddMessageLine(QuotedProcessString + " " + ProcessArguments);
-            gitCommand = new GitCommandsInstance(WorkingDirectory);
 
             try
             {
-                Process = gitCommand.CmdStartProcess(ProcessString, ProcessArguments);
+				ConsoleOutput.StartProcess(ProcessString, ProcessArguments, WorkingDirectory);
 
-                gitCommand.Exited += gitCommand_Exited;
-                gitCommand.DataReceived += gitCommand_DataReceived;
                 if (!string.IsNullOrEmpty(ProcessInput))
                 {
+					throw new NotSupportedException("No non-NULL usages of ProcessInput are currently expected.");	// Not implemented with all terminal variations, so let's postpone until there's at least one non-null case
+/*
                     Thread.Sleep(500);
                     Process.StandardInput.Write(ProcessInput);
                     AddMessageLine(string.Format(":: Wrote [{0}] to process!\r\n", ProcessInput));
+*/
                 }
             }
             catch (Exception e)
             {
                 AddMessageLine("\n" + e.ToStringWithData());
-                gitCommand.ExitCode = 1;
-                gitCommand_Exited(null, null);
+                OnExit(1);
             }
         }
 
         private void processAbort(FormStatus form)
         {
-            if (Process != null)
-            {
-                Process.TerminateTree();
-            }
+			ConsoleOutput.KillProcess();
         }
 
         protected void KillGitCommand()
         {
             try
             {
-                gitCommand.Kill();
+                ConsoleOutput.KillProcess();
             }
             catch
             {
             }
-        }
-
-        void gitCommand_Exited(object sender, EventArgs e)
-        {
-            // This has to happen on the UI thread
-            var method = new SendOrPostCallback(OnExit);
-
-            syncContext.Send(method, this);
         }
 
         /// <summary>
@@ -186,13 +178,13 @@ namespace GitUI
             return HandleOnExitCallback != null && HandleOnExitCallback(ref isError, this);
         }
 
-        private void OnExit(object state)
+        private void OnExit(int exitcode)
         {
             bool isError;
 
             try
             {
-                isError = gitCommand != null && gitCommand.ExitCode != 0;
+                isError = exitcode != 0;
                 if (HandleOnExit(ref isError))
                     return;
             }
@@ -204,36 +196,38 @@ namespace GitUI
             Done(!isError);
         }
 
-        protected virtual void DataReceived(object sender, DataReceivedEventArgs e)
+        protected virtual void DataReceived(object sender, TextEventArgs e)
         {
 
         }
 
-        void gitCommand_DataReceived(object sender, DataReceivedEventArgs e)
+	    private void DataReceivedCore(object sender, TextEventArgs e)
+	    {
+		    if(e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
+			    SetProgress(e.Text);
+		    else
+		    {
+			    const string ansiSuffix = "\u001B[K";
+			    string line = e.Text.Replace(ansiSuffix, "");
+
+			    if(ConsoleOutput.IsDisplayingFullProcessOutput)
+				    OutputLog.AppendLine(line); // To the log only, display control displays it by itself
+			    else
+				    AppendOutputLine(line); // Both to log and display control
+		    }
+
+		    DataReceived(sender, e);
+	    }
+
+		/// <summary>
+		/// Appends a line of text (CRLF added automatically) both to the logged output (<see cref="FormStatus.GetOutputString"/>) and to the display console control.
+		/// </summary>
+        public void AppendOutputLine(string line)
         {
-            if (e.Data == null)
-                return;
+			// To the internal log (which can be then retrieved as full text from this form)
+            OutputLog.AppendLine(line);
 
-            if (e.Data.Contains("%") || e.Data.StartsWith("remote: Counting objects"))
-            {
-                SetProgress(e.Data);
-            }
-            else
-            {
-                AppendOutputLine(e.Data);
-            }
-
-            DataReceived(sender, e);
-        }
-
-        public void AppendOutputLine(string rawLine)
-        {
-            const string ansiSuffix = "\u001B[K";
-
-            var line = rawLine.Replace(ansiSuffix, "");
-
-            AppendToOutputString(line + Environment.NewLine);
-
+			// To the display control
             AddMessageLine(line);
         }
 

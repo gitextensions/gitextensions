@@ -19,6 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkAlwaysShowAdvOpt.Checked = AppSettings.AlwaysShowAdvOpt;
             chkCheckForRCVersions.Checked = AppSettings.CheckForReleaseCandidates;
             chkRememberIgnoreWhiteSpacePreference.Checked = AppSettings.RememberIgnoreWhiteSpacePreference;
+            chkConsoleEmulator.Checked = AppSettings.UseConsoleEmulatorForCommands;
         }
 
         protected override void PageToSettings()
@@ -29,6 +30,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.AlwaysShowAdvOpt = chkAlwaysShowAdvOpt.Checked;
             AppSettings.CheckForReleaseCandidates = chkCheckForRCVersions.Checked;
             AppSettings.RememberIgnoreWhiteSpacePreference = chkRememberIgnoreWhiteSpacePreference.Checked;
+            AppSettings.UseConsoleEmulatorForCommands = chkConsoleEmulator.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

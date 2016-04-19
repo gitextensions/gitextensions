@@ -90,6 +90,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
             _autoGenKeywords.Clear();
 
+            LoadSettings();
+
             foreach (var setting in settings)
             {                
                 _autoGenKeywords.Add(setting.Caption);

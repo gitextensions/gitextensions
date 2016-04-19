@@ -9,9 +9,9 @@ namespace Stash
     class Settings
     {
         private const string StashHttpRegex = 
-            @"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/scm\/(?<project>~?\w+)\/(?<repo>\w+).git";
+            @"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/scm\/(?<project>~?([\w\-]+))\/(?<repo>([\w\-]+)).git";
         private const string StashSshRegex =
-            @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?\w+)\/(?<repo>\w+).git";
+            @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([\w\-]+))\/(?<repo>([\w\-]+)).git";
 
         public static Settings Parse(IGitModule gitModule, ISettingsSource setting)
         {

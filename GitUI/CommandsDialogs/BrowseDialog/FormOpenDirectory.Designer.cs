@@ -59,7 +59,6 @@
             // Load
             // 
             this.Load.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Load.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Load.Image = global::GitUI.Properties.Resources.IconRepoOpen;
             this.Load.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Load.Location = new System.Drawing.Point(296, 45);
@@ -97,7 +96,6 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Open local repository";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Open_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
