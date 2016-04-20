@@ -51,6 +51,7 @@ namespace GitUIPluginInterfaces
         event GitUIPostActionEventHandler PostUpdateSubmodules;
         event GitUIPostActionEventHandler PostVerifyDatabase;
         event GitUIPostActionEventHandler PostViewPatch;
+        event GitUIPostActionEventHandler PostSparseWorkingCopy;
         event GitUIEventHandler PostBrowseInitialize;
         event GitUIEventHandler PostRegisterPlugin;
         event GitUIEventHandler PreAddFiles;
@@ -94,6 +95,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreVerifyDatabase;
         event GitUIEventHandler PreViewPatch;
         event GitUIEventHandler PreBrowseInitialize;
+        event GitUIEventHandler PreSparseWorkingCopy;
         
         IGitModule GitModule { get; }
         string GitCommand(string arguments);
@@ -153,5 +155,6 @@ namespace GitUIPluginInterfaces
         bool StartUpdateSubmodulesDialog();
         bool StartVerifyDatabaseDialog();
         bool StartViewPatchDialog();
+        bool StartSparseWorkingCopyDialog();
     }
 }
