@@ -249,18 +249,13 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-
-        private void LoadSshKeyClick(object sender, EventArgs e)
-        {
-            BrowseForPrivateKey.BrowseAndLoad(this);
-        }
-
-        private void FormCloneLoad(object sender, EventArgs e)
-        {
-            if (!GitCommandHelpers.Plink())
-                LoadSSHKey.Visible = false;
-        }
-
+	    private void LoadSshKeyClick(object sender, EventArgs e)
+	    {
+		    if(GitCommandHelpers.Plink())
+			    BrowseForPrivateKey.BrowseAndLoad(this);
+		    else
+			    FormLoadOpenSshKey.RunWizard(_NO_TRANSLATE_From.Text, UICommands);
+	    }
 
         private void FromSelectedIndexChanged(object sender, EventArgs e)
         {
