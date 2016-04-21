@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using ConEmu.WinForms;
+
 using GitCommands;
 using GitCommands.Repository;
 using GitCommands.Utils;
@@ -22,6 +25,7 @@ using GitUI.Plugin;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
+using Microsoft.Win32;
 using ResourceManager;
 using Settings = GitCommands.AppSettings;
 #if !__MonoCS__
@@ -144,7 +148,9 @@ namespace GitUI.CommandsDialogs
         private string _diffTabPageTitleBase = "";
 
         private readonly FormBrowseMenus _formBrowseMenus;
+#pragma warning disable 0414
         private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
+#pragma warning restore 0414
 
         /// <summary>
         /// For VS designer
@@ -195,6 +201,13 @@ namespace GitUI.CommandsDialogs
                 ToolStrip.Items.Remove(toolStripButton1);
                 _toolStripGitStatus.CommitTranslatedString = toolStripButton1.Text;
             }
+
+            if (!EnvUtils.RunningOnWindows())
+            {
+                toolStripSeparator6.Visible = false;
+                PuTTYToolStripMenuItem.Visible = false;
+            }
+
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             _filterRevisionsHelper.SetFilter(filter);
@@ -231,9 +244,12 @@ namespace GitUI.CommandsDialogs
             FillBuildReport();  // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
 
-            _formBrowseMenuCommands = new FormBrowseMenuCommands(this, RevisionGrid);
+            _formBrowseMenuCommands = new FormBrowseMenuCommands(this);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
+            SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
+
+			FillTerminalTab();
         }
 
         private new void Translate()
@@ -861,8 +877,8 @@ namespace GitUI.CommandsDialogs
                     _rebase = new WarningToolStripItem
                     {
                         Text = Module.InTheMiddleOfRebase()
-                                   ? _warningMiddleOfRebase.Text
-                                   : _warningMiddleOfPatchApply.Text
+                            ? _warningMiddleOfRebase.Text
+                            : _warningMiddleOfPatchApply.Text
                     };
                     _rebase.Click += RebaseClick;
                     statusStrip.Items.Add(_rebase);
@@ -878,32 +894,37 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
-                !Directory.Exists(Module.GetGitDirectory() + "rebase-apply\\"))
-            {
-                if (_warning == null)
+            AsyncLoader.DoAsync(
+                () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
+                      !Directory.Exists(Module.GetGitDirectory() + "rebase-apply\\"),
+                (result) =>
                 {
-                    _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
-                    _warning.Click += WarningClick;
-                    statusStrip.Items.Add(_warning);
-                }
-            }
-            else
-            {
-                if (_warning != null)
-                {
-                    _warning.Click -= WarningClick;
-                    statusStrip.Items.Remove(_warning);
-                    _warning = null;
-                }
-            }
+                    if (result)
+                    {
+                        if (_warning == null)
+                        {
+                            _warning = new WarningToolStripItem {Text = _hintUnresolvedMergeConflicts.Text};
+                            _warning.Click += WarningClick;
+                            statusStrip.Items.Add(_warning);
+                        }
+                    }
+                    else
+                    {
+                        if (_warning != null)
+                        {
+                            _warning.Click -= WarningClick;
+                            statusStrip.Items.Remove(_warning);
+                            _warning = null;
+                        }
+                    }
 
-            //Only show status strip when there are status items on it.
-            //There is always a close (x) button, do not count first item.
-            if (statusStrip.Items.Count > 1)
-                statusStrip.Show();
-            else
-                statusStrip.Hide();
+                    //Only show status strip when there are status items on it.
+                    //There is always a close (x) button, do not count first item.
+                    if (statusStrip.Items.Count > 1)
+                        statusStrip.Show();
+                    else
+                        statusStrip.Hide();
+                });
         }
 
         /// <summary>
@@ -1589,6 +1610,12 @@ namespace GitUI.CommandsDialogs
         private void FormBrowseFormClosing(object sender, FormClosingEventArgs e)
         {
             SaveUserMenuPosition();
+            SaveApplicationSettings();
+        }
+
+        private static void SaveApplicationSettings()
+        {
+            Properties.Settings.Default.Save();
         }
 
         private void SaveUserMenuPosition()
@@ -2871,7 +2898,7 @@ namespace GitUI.CommandsDialogs
             {
                 resetFileToSelectedToolStripMenuItem.Visible = true;
                 TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
-                resetFileToSelectedToolStripMenuItem.Text += " (" + revisions[0].Message.ShortenTo(50) + ")";
+                resetFileToSelectedToolStripMenuItem.Text += " (" + revisions[0].Subject.ShortenTo(50) + ")";
 
                 if (revisions[0].HasParent())
                 {
@@ -2880,7 +2907,7 @@ namespace GitUI.CommandsDialogs
                     GitRevision parentRev = RevisionGrid.GetRevision(revisions[0].ParentGuids[0]);
                     if (parentRev != null)
                     {
-                        resetFileToParentToolStripMenuItem.Text += " (" + parentRev.Message.ShortenTo(50) + ")";
+                        resetFileToParentToolStripMenuItem.Text += " (" + parentRev.Subject.ShortenTo(50) + ")";
                     }
                 }
                 else
@@ -2898,11 +2925,11 @@ namespace GitUI.CommandsDialogs
             {
                 resetFileToFirstToolStripMenuItem.Visible = true;
                 TranslateItem(resetFileToFirstToolStripMenuItem.Name, resetFileToFirstToolStripMenuItem);
-                resetFileToFirstToolStripMenuItem.Text += " (" + revisions[1].Message.ShortenTo(50) + ")";
+                resetFileToFirstToolStripMenuItem.Text += " (" + revisions[1].Subject.ShortenTo(50) + ")";
 
                 resetFileToSecondToolStripMenuItem.Visible = true;
                 TranslateItem(resetFileToSecondToolStripMenuItem.Name, resetFileToSecondToolStripMenuItem);
-                resetFileToSecondToolStripMenuItem.Text += " (" + revisions[0].Message.ShortenTo(50) + ")";
+                resetFileToSecondToolStripMenuItem.Text += " (" + revisions[0].Subject.ShortenTo(50) + ")";
             }
             else
             {
@@ -3344,6 +3371,62 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+	    /// <summary>
+	    /// Adds a tab with console interface to Git over the current working copy. Recreates the terminal on tab activation if user exits the shell.
+	    /// </summary>
+	    private void FillTerminalTab()
+	    {
+		    if(!EnvUtils.RunningOnWindows())
+			    return; // ConEmu only works on WinNT
+		    TabPage tabpage;
+		    string sImageKey = "Resources.IconConsole";
+		    CommitInfoTabControl.ImageList.Images.Add(sImageKey, Resources.IconConsole);
+		    CommitInfoTabControl.Controls.Add(tabpage = new TabPage("Console"));
+		    tabpage.ImageKey = sImageKey; // After adding page
+
+		    // Delay-create the terminal window when the tab is first selected
+		    ConEmuControl terminal = null;
+		    CommitInfoTabControl.Selecting += (sender, args) =>
+		    {
+			    if(args.TabPage != tabpage)
+				    return;
+			    if(terminal == null) // Lazy-create on first opening the tab
+			    {
+				    tabpage.Controls.Clear();
+				    tabpage.Controls.Add(terminal = new ConEmuControl() {Dock = DockStyle.Fill, AutoStartInfo = null});
+			    }
+			    if(terminal.IsConsoleEmulatorOpen) // If user has typed "exit" in there, restart the shell; otherwise just return
+				    return;
+
+			    // Create the terminal
+			    var startinfo = new ConEmuStartInfo();
+			    startinfo.StartupDirectory = Module.WorkingDir;
+			    startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator;
+
+			    // Choose the console: bash from git with fallback to cmd
+			    string sGitBashFromUsrBin = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), ".."), "git-bash.exe"); // Git bin dir is /usr/bin under git installdir, so go 2x up
+			    string sGitBashFromBinOrCmd = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), "git-bash.exe"); // In case we're running off just /bin or /cmd
+		        var gitDir = Path.GetDirectoryName(AppSettings.GitCommandValue);
+			    string sJustBash = Path.Combine(gitDir, "bash.exe"); // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+			    string sJustSh = Path.Combine(gitDir, "sh.exe"); // Fallback to SH
+			    startinfo.ConsoleProcessCommandLine = new[] {sGitBashFromUsrBin, sGitBashFromBinOrCmd, sJustBash, sJustSh}.Where(File.Exists).FirstOrDefault() ?? ConEmuConstants.DefaultConsoleCommandLine; // Choose whatever exists, or default CMD shell
+                if(startinfo.ConsoleProcessCommandLine != ConEmuConstants.DefaultConsoleCommandLine)
+                {
+                    startinfo.ConsoleProcessCommandLine += " --login -i";
+                }
+
+			    // Set path to git in this window (actually, effective with CMD only)
+			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
+			    {
+				    string dirGit = Path.GetDirectoryName(AppSettings.GitCommand);
+				    if(!string.IsNullOrEmpty(dirGit))
+					    startinfo.SetEnv("PATH", dirGit + ";" + "%PATH%");
+			    }
+
+			    terminal.Start(startinfo);
+		    };
+	    }
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -3372,6 +3455,11 @@ namespace GitUI.CommandsDialogs
                     components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
+        {
+            UICommands.StartSparseWorkingCopyDialog(this);
         }
     }
 }

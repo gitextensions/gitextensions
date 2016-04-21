@@ -122,7 +122,7 @@ namespace GitCommands
             }
         }
 
-        internal static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
+	    public static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
             return new ProcessStartInfo
             {
@@ -162,7 +162,7 @@ namespace GitCommands
             return startProcess;
         }
 
-        internal static bool UseSsh(string arguments)
+	    public static bool UseSsh(string arguments)
         {
             var x = !Plink() && GetArgumentsRequiresSsh(arguments);
             return x || arguments.Contains("plink");
@@ -479,7 +479,26 @@ namespace GitCommands
             return CloneCmd(fromPath, toPath, false, false, string.Empty, null);
         }
 
-        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, string branch, int? depth)
+        /// <summary>
+        /// Git Clone.
+        /// </summary>
+        /// <param name="fromPath"></param>
+        /// <param name="toPath"></param>
+        /// <param name="central">Makes a bare repo.</param>
+        /// <param name="initSubmodules"></param>
+        /// <param name="branch">
+        /// <para><c>NULL</c>: do not checkout working copy (--no-checkout).</para>
+        /// <para><c>""</c> (empty string): checkout remote HEAD (branch param omitted, default behavior for clone).</para>
+        /// <para>(a non-empty string): checkout the given branch (--branch smth).</para>
+        /// </param>
+        /// <param name="depth">An int value for --depth param, or <c>NULL</c> to omit the param.</param>
+        /// <param name="isSingleBranch">
+        /// <para><c>True</c>: --single-branch.</para>
+        /// <para><c>False</c>: --no-single-branch.</para>
+        /// <para><c>NULL</c>: don't pass any such param to git.</para>
+        /// </param>
+        /// <returns></returns>
+        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, [CanBeNull] string branch, int? depth, [Optional] bool? isSingleBranch)
         {
             var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
             var to = toPath.ToPosixPath();
@@ -490,8 +509,12 @@ namespace GitCommands
                 options.Add("--recurse-submodules");
             if (depth.HasValue)
                 options.Add("--depth " + depth);
+            if(isSingleBranch.HasValue)
+                options.Add(isSingleBranch.Value ? "--single-branch" : "--no-single-branch");
             options.Add("--progress");
-            if (!string.IsNullOrEmpty(branch))
+            if (branch == null)
+                options.Add("--no-checkout");
+            else if (branch != "")
                 options.Add("--branch " + branch);
             options.Add(string.Format("\"{0}\"", from.Trim()));
             options.Add(string.Format("\"{0}\"", to.Trim()));

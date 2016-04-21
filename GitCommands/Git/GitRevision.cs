@@ -27,7 +27,7 @@ namespace GitCommands
         public GitRevision(GitModule aModule, string guid)
         {
             Guid = guid;
-            Message = "";
+            Subject = "";
             _module = aModule;
         }
 
@@ -53,7 +53,7 @@ namespace GitCommands
             }
         }
 
-        public string Message { get; set; }
+        public string Subject { get; set; }
         public string Body { get; set; }
         //UTF-8 when is null or empty
         public string MessageEncoding { get; set; }
@@ -77,7 +77,7 @@ namespace GitCommands
             {
                 sha = sha.Substring(0, 4) + ".." + sha.Substring(sha.Length - 4, 4);
             }
-            return String.Format("{0}:{1}", sha, Message);
+            return String.Format("{0}:{1}", sha, Subject);
         }
 
         public bool MatchesSearchString(string searchString)
@@ -89,7 +89,7 @@ namespace GitCommands
                 return true;
 
             return (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
-                    Message.ToLower().Contains(searchString);
+                    Subject.ToLower().Contains(searchString);
         }
 
         public bool IsArtificial()

@@ -35,11 +35,7 @@ namespace GitUI.Editor
 
             GitUICommandsSourceSet += FileViewer_GitUICommandsSourceSet;
 
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows())
-                _internalFileViewer = new FileViewerWindows();
-            else
-                _internalFileViewer = new FileViewerMono();
-
+            _internalFileViewer = new FileViewerInternal();
             _internalFileViewer.MouseEnter += _internalFileViewer_MouseEnter;
             _internalFileViewer.MouseLeave += _internalFileViewer_MouseLeave;
             _internalFileViewer.MouseMove += _internalFileViewer_MouseMove;
