@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace ResourceManager.Xliff
 {
-    /// <summary>Serializes and deserialize a <see cref="Translation"/>.</summary>
+    /// <summary>Serializes and deserialize a <see cref="TranslationFile"/>.</summary>
     public static class TranslationSerializer
     {
         public static void Serialize(TranslationFile translation, string path)

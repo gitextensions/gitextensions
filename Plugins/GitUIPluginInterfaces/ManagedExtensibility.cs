@@ -1,32 +1,59 @@
-﻿using System.ComponentModel.Composition.Hosting;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition.Hosting;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace GitUIPluginInterfaces
 {
     public class ManagedExtensibility
     {
-        private static CompositionContainer compositionContainer;
+        private static List<CompositionContainer> _compositionContainers;
 
         private static readonly object compositionContainerSyncObj = new object();
 
         /// <summary>
         /// The MEF container.
         /// </summary>
-        public static CompositionContainer CompositionContainer
+        private static List<CompositionContainer> GetCompositionContainers()
         {
-            get
+            lock (compositionContainerSyncObj)
             {
-                lock (compositionContainerSyncObj)
+                if (_compositionContainers == null)
                 {
-                    if (compositionContainer == null)
+                    _compositionContainers = new List<CompositionContainer>();
+                    foreach (var dll in new DirectoryInfo("." + Path.DirectorySeparatorChar + "Plugins").EnumerateFiles("*.dll"))
                     {
-                        var catalog = new DirectoryCatalog("." + Path.DirectorySeparatorChar + "Plugins" + Path.DirectorySeparatorChar, "*.dll");
-                        compositionContainer = new CompositionContainer(catalog);
+                        _compositionContainers.Add(new CompositionContainer(new DirectoryCatalog(dll.DirectoryName, dll.Name)));
                     }
+                }
 
-                    return compositionContainer;
+                return _compositionContainers;
+            }
+        }
+
+        public static IEnumerable<Lazy<T, TMetadataView>> GetExports<T, TMetadataView>()
+        {
+            var ret = new List<Lazy<T, TMetadataView>>();
+            foreach(var container in GetCompositionContainers())
+            {
+                try
+                {
+                    var exps = container.GetExports<T, TMetadataView>();
+                    ret.AddRange(exps);
+                }
+                catch (System.Reflection.ReflectionTypeLoadException ex)
+                {
+                    Trace.TraceError("GetExports() failed {0}", string.Join(Environment.NewLine, ex.LoaderExceptions.Select(r => r.ToString())));
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError("Failed to get exports, {0}", ex.ToString());
                 }
             }
+            return ret;
         }
     }
 }

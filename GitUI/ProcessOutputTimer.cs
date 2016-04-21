@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Text;
-using System.Timers;
+using System.Windows.Forms;
 
 namespace GitUI
 {
     public sealed class ProcessOutputTimer : IDisposable
     {
         public delegate void DoOutputCallback(string text);
-        private Timer _timer; 
-        private StringBuilder textToAdd = new StringBuilder();
+        private readonly Timer _timer; 
+        private readonly StringBuilder textToAdd = new StringBuilder();
         private DoOutputCallback doOutput;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="doOutput">Will be called on the home thread.</param>
         public ProcessOutputTimer(DoOutputCallback doOutput)
         {
             this.doOutput = doOutput;
             _timer = new Timer();
-            _timer.Elapsed += _timer_Elapsed;
+            _timer.Tick += _timer_Elapsed;
         }
 
         public void Start(int interval)
@@ -37,6 +41,9 @@ namespace GitUI
                 _timer_Elapsed(null, null);
         }
 
+		/// <summary>
+		/// Can be called on any thread.
+		/// </summary>
         public void Append(string text)
         {
             lock(textToAdd)
@@ -45,7 +52,7 @@ namespace GitUI
             }
         }
 
-        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        private void _timer_Elapsed(object sender, EventArgs eventArgs)
         {
             lock (textToAdd)
             {
@@ -70,8 +77,6 @@ namespace GitUI
             Clear();
             doOutput = null;
             _timer.Dispose();
-            GC.SuppressFinalize(this);
         }
-
     }
 }

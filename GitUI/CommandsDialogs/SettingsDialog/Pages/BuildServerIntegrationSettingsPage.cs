@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _populateBuildServerTypeTask =
                 Task.Factory.StartNew(() =>
                         {
-                            var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                            var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
                             var buildServerTypes = exports.Select(export =>
                                 {
                                     var canBeLoaded = export.Metadata.CanBeLoaded;
@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return null;
             var defaultProjectName = Module.WorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
 
-            var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
+            var exports = ManagedExtensibility.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
             var selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());
             if (selectedExport != null)
             {

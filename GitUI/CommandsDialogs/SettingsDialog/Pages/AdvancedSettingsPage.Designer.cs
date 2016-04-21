@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdvancedSettingsPage));
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.CheckoutGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -35,10 +37,12 @@
             this.chkUseLocalChangesAction = new System.Windows.Forms.CheckBox();
             this.GeneralGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.chkRememberIgnoreWhiteSpacePreference = new System.Windows.Forms.CheckBox();
             this.chkCheckForRCVersions = new System.Windows.Forms.CheckBox();
             this.chkAlwaysShowAdvOpt = new System.Windows.Forms.CheckBox();
             this.chkDontSHowHelpImages = new System.Windows.Forms.CheckBox();
-            this.chkRememberIgnoreWhiteSpacePreference = new System.Windows.Forms.CheckBox();
+            this.chkConsoleEmulator = new System.Windows.Forms.CheckBox();
+            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel2.SuspendLayout();
             this.CheckoutGB.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -59,7 +63,7 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(443, 263);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(443, 283);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // CheckoutGB
@@ -117,10 +121,10 @@
             this.GeneralGB.AutoSize = true;
             this.GeneralGB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.GeneralGB.Controls.Add(this.tableLayoutPanel1);
-            this.GeneralGB.Dock = System.Windows.Forms.DockStyle.Top;
+            this.GeneralGB.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GeneralGB.Location = new System.Drawing.Point(3, 117);
             this.GeneralGB.Name = "GeneralGB";
-            this.GeneralGB.Size = new System.Drawing.Size(437, 143);
+            this.GeneralGB.Size = new System.Drawing.Size(437, 163);
             this.GeneralGB.TabIndex = 1;
             this.GeneralGB.TabStop = false;
             this.GeneralGB.Text = "General";
@@ -135,15 +139,27 @@
             this.tableLayoutPanel1.Controls.Add(this.chkCheckForRCVersions, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.chkAlwaysShowAdvOpt, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.chkDontSHowHelpImages, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.chkConsoleEmulator, 0, 4);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 21);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(275, 100);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(361, 120);
             this.tableLayoutPanel1.TabIndex = 1;
+            // 
+            // chkRememberIgnoreWhiteSpacePreference
+            // 
+            this.chkRememberIgnoreWhiteSpacePreference.AutoSize = true;
+            this.chkRememberIgnoreWhiteSpacePreference.Location = new System.Drawing.Point(3, 78);
+            this.chkRememberIgnoreWhiteSpacePreference.Name = "chkRememberIgnoreWhiteSpacePreference";
+            this.chkRememberIgnoreWhiteSpacePreference.Size = new System.Drawing.Size(269, 19);
+            this.chkRememberIgnoreWhiteSpacePreference.TabIndex = 4;
+            this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the ignore-white-space preference";
+            this.chkRememberIgnoreWhiteSpacePreference.UseVisualStyleBackColor = true;
             // 
             // chkCheckForRCVersions
             // 
@@ -175,22 +191,30 @@
             this.chkDontSHowHelpImages.Text = "Don\'t show help images";
             this.chkDontSHowHelpImages.UseVisualStyleBackColor = true;
             // 
-            // chkRememberIgnoreWhiteSpacePreference
+            // chkConsoleEmulator
             // 
-            this.chkRememberIgnoreWhiteSpacePreference.AutoSize = true;
-            this.chkRememberIgnoreWhiteSpacePreference.Location = new System.Drawing.Point(3, 78);
-            this.chkRememberIgnoreWhiteSpacePreference.Name = "chkRememberIgnoreWhiteSpacePreference";
-            this.chkRememberIgnoreWhiteSpacePreference.Size = new System.Drawing.Size(269, 19);
-            this.chkRememberIgnoreWhiteSpacePreference.TabIndex = 4;
-            this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the ignore-white-space preference";
-            this.chkRememberIgnoreWhiteSpacePreference.UseVisualStyleBackColor = true;
+            this.chkConsoleEmulator.AutoSize = true;
+            this.chkConsoleEmulator.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chkConsoleEmulator.Location = new System.Drawing.Point(3, 103);
+            this.chkConsoleEmulator.Name = "chkConsoleEmulator";
+            this.chkConsoleEmulator.Size = new System.Drawing.Size(355, 14);
+            this.chkConsoleEmulator.TabIndex = 4;
+            this.chkConsoleEmulator.Text = "Use Console Emulator for console output in command dialogs";
+            this.tooltip.SetToolTip(this.chkConsoleEmulator, resources.GetString("chkConsoleEmulator.ToolTip"));
+            this.chkConsoleEmulator.UseVisualStyleBackColor = true;
+            // 
+            // tooltip
+            // 
+            this.tooltip.AutoPopDelay = 30000;
+            this.tooltip.InitialDelay = 500;
+            this.tooltip.ReshowDelay = 100;
             // 
             // AdvancedSettingsPage
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "AdvancedSettingsPage";
-            this.Size = new System.Drawing.Size(1303, 465);
+            this.Size = new System.Drawing.Size(1758, 956);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.CheckoutGB.ResumeLayout(false);
@@ -219,6 +243,7 @@
         private System.Windows.Forms.CheckBox chkAlwaysShowAdvOpt;
         private System.Windows.Forms.CheckBox chkCheckForRCVersions;
         private System.Windows.Forms.CheckBox chkRememberIgnoreWhiteSpacePreference;
-
+        private System.Windows.Forms.CheckBox chkConsoleEmulator;
+        private System.Windows.Forms.ToolTip tooltip;
     }
 }

@@ -664,7 +664,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillTagDropDown()
         {
-            /// var tags = Module.GetTagHeads(GitModule.GetTagHeadsOption.OrderByCommitDateDescending); // comment out to sort by commit date
+            // var tags = Module.GetTagHeads(GitModule.GetTagHeadsOption.OrderByCommitDateDescending); // comment out to sort by commit date
             var tags = Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByName)
                 .Select(tag => tag.Name).ToList();
             tags.Insert(0, AllRefs);
