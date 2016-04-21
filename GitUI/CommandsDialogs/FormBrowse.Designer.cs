@@ -1951,7 +1951,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.menuitemSparse.Name = "menuitemSparse";
             this.menuitemSparse.Size = new System.Drawing.Size(221, 22);
-            this.menuitemSparse.Text = "Sparse Working Copy…";
+            this.menuitemSparse.Text = "Sparse Working Copy";
             this.menuitemSparse.Click += new System.EventHandler(this.menuitemSparseWorkingCopy_Click);
             // 
             // commitcountPerUserToolStripMenuItem
