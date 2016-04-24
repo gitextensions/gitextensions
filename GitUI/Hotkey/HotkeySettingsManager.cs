@@ -225,6 +225,8 @@ namespace GitUI.Hotkey
                     hk(RevisionGrid.Commands.NextQuickSearch, Keys.Alt | Keys.Down),
                     hk(RevisionGrid.Commands.PrevQuickSearch, Keys.Alt | Keys.Up),
                     hk(RevisionGrid.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),
+                    hk(RevisionGrid.Commands.SelectAsBaseToCompare, Keys.Control | Keys.L),
+                    hk(RevisionGrid.Commands.CompareToBase, Keys.Control | Keys.R),
                     hk(RevisionGrid.Commands.GoToCommit, Keys.Control | Keys.Shift | Keys.G)),
                 new HotkeySettings(FileViewer.HotkeySettingsName,
                     hk(FileViewer.Commands.Find, Keys.Control | Keys.F),
