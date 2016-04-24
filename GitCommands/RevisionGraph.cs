@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -57,8 +58,6 @@ namespace GitCommands
 
         public bool ShaOnly { get; set; }
 
-        private readonly char[] _splitChars = " \t\n".ToCharArray();
-
         private readonly char[] _hexChars = "0123456789ABCDEFabcdef".ToCharArray();
 
         private const string CommitBegin = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
@@ -68,19 +67,9 @@ namespace GitCommands
         private enum ReadStep
         {
             Commit,
-            Hash,
-            Parents,
-            Tree,
-            AuthorName,
-            AuthorEmail,
-            AuthorDate,
-            CommitterName,
-            CommitterEmail,
-            CommitterDate,
-            CommitMessageEncoding,
-            CommitMessage,
+            CommitSubject,
+            CommitBody,
             FileName,
-            Done,
         }
 
         private ReadStep _nextStep = ReadStep.Commit;
@@ -145,8 +134,9 @@ namespace GitCommands
                     /* Committer Name          */ "%cN%n" +
                     /* Committer Email         */ "%cE%n" +
                     /* Committer Date          */ "%ct%n" +
-                    /* Commit message encoding */ "%e%n" + //there is a bug: git does not recode commit message when format is given
-                    /* Commit Message          */ "%s";
+                    /* Commit message encoding */ "%e%x00" + //there is a bug: git does not recode commit message when format is given
+                    /* Commit Subject          */ "%s%x00" +
+                    /* Commit Body             */ "%B%x00";
             }
 
             // NOTE:
@@ -195,8 +185,6 @@ namespace GitCommands
                 RevisionFilter,
                 PathFilter);
 
-            Encoding logOutputEncoding = _module.LogOutputEncoding;
-
             Process p = _module.RunGitCmdDetached(arguments, GitModule.LosslessEncoding);
 
             if (taskState.IsCancellationRequested)
@@ -206,24 +194,56 @@ namespace GitCommands
             if (BeginUpdate != null)
                 BeginUpdate(this, EventArgs.Empty);
 
-            string line;
-            do
+            _nextStep = ReadStep.Commit;
+            foreach (string data in ReadDataBlocks(p.StandardOutput))
             {
-                line = p.StandardOutput.ReadLine();
-                //commit message is not encoded by git
-                if (_nextStep != ReadStep.CommitMessage)
-                    line = GitModule.ReEncodeString(line, GitModule.LosslessEncoding, logOutputEncoding);
+                if (taskState.IsCancellationRequested)
+                    break;
 
-                if (line != null)
-                {
-                    foreach (string entry in line.Split('\0'))
-                    {
-                        DataReceived(entry);
-                    }
-                }
-            } while (line != null && !taskState.IsCancellationRequested);
+                DataReceived(data);
+            }
         }
 
+        private static IEnumerable<string> ReadDataBlocks(StreamReader reader)
+        {
+            int bufferSize = 4 * 1024;
+            char[] buffer = new char[bufferSize];
+
+            StringBuilder incompleteBlock = new StringBuilder();
+            while (true)
+            {
+                int bytesRead = reader.ReadBlock(buffer, 0, bufferSize);
+                if (bytesRead == 0)
+                    break;
+
+                string bufferString = new string(buffer, 0, bytesRead);
+                string[] dataBlocks = bufferString.Split(new char[] { '\0' });
+
+                if (dataBlocks.Length > 1)
+                {
+                    // There are at least two blocks, so we can return the first one
+                    incompleteBlock.Append(dataBlocks[0]);
+                    yield return incompleteBlock.ToString();
+                    incompleteBlock.Clear();
+                }
+
+                int lastDataBlockIndex = dataBlocks.Length - 1;
+
+                // Return all the blocks until the last one 
+                for (int i = 1; i < lastDataBlockIndex; i++)
+                {
+                    yield return dataBlocks[i];
+                }
+
+                // Append the beginning of the last block
+                incompleteBlock.Append(dataBlocks[lastDataBlockIndex]);
+            }
+
+            if (incompleteBlock.Length > 0)
+            {
+                yield return incompleteBlock.ToString();
+            }
+        }
 
         private void ProccessGitLogExecuted()
         {
@@ -275,102 +295,81 @@ namespace GitCommands
                 if (_revision.Guid.Trim(_hexChars).Length == 0 &&
                     (InMemFilter == null || InMemFilter.PassThru(_revision)))
                 {
+                    // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
+                    // Full commit message is used in InMemFilter but later it's not needed
+                    _revision.Body = null;
+
                     RevisionCount++;
                     if (Updated != null)
                         Updated(this, new RevisionGraphUpdatedEventArgs(_revision));
                 }
             }
-            _nextStep = ReadStep.Commit;
         }
 
-        void DataReceived(string line)
+        void DataReceived(string data)
         {
-            if (line == null)
-                return;
-
-            if (line == CommitBegin)
+            if (data.StartsWith(CommitBegin))
             {
                 // a new commit finalizes the last revision
                 FinishRevision();
-
                 _nextStep = ReadStep.Commit;
             }
 
             switch (_nextStep)
             {
                 case ReadStep.Commit:
-                    // Sanity check
-                    if (line == CommitBegin)
+                    data = GitModule.ReEncodeString(data, GitModule.LosslessEncoding, _module.LogOutputEncoding);
+
+                    string[] lines = data.Split(new char[] { '\n' });
+                    Debug.Assert(lines.Length == 11);
+                    Debug.Assert(lines[0] == CommitBegin);
+
+                    _revision = new GitRevision(_module, null);
+
+                    _revision.Guid = lines[1];
                     {
-                        _revision = new GitRevision(_module, null);
+                        List<GitRef> gitRefs;
+                        if (_refs.TryGetValue(_revision.Guid, out gitRefs))
+                            _revision.Refs.AddRange(gitRefs);
                     }
-                    else
-                    {
-                        // Bail out until we see what we expect
-                        return;
-                    }
-                    break;
 
-                case ReadStep.Hash:
-                    _revision.Guid = line;
+                    _revision.ParentGuids = lines[2].Split(new char[] { ' ' });
+                    _revision.TreeGuid = lines[3];
 
-                    List<GitRef> gitRefs;
-                    if (_refs.TryGetValue(_revision.Guid, out gitRefs))
-                        _revision.Refs.AddRange(gitRefs);
-
-                    break;
-
-                case ReadStep.Parents:
-                    _revision.ParentGuids = line.Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);
-                    break;
-
-                case ReadStep.Tree:
-                    _revision.TreeGuid = line;
-                    break;
-
-                case ReadStep.AuthorName:
-                    _revision.Author = line;
-                    break;
-
-                case ReadStep.AuthorEmail:
-                    _revision.AuthorEmail = line;
-                    break;
-
-                case ReadStep.AuthorDate:
+                    _revision.Author = lines[4];
+                    _revision.AuthorEmail = lines[5];
                     {
                         DateTime dateTime;
-                        if (DateTimeUtils.TryParseUnixTime(line, out dateTime))
+                        if (DateTimeUtils.TryParseUnixTime(lines[6], out dateTime))
                             _revision.AuthorDate = dateTime;
                     }
-                    break;
 
-                case ReadStep.CommitterName:
-                    _revision.Committer = line;
-                    break;
-
-                case ReadStep.CommitterEmail:
-                    _revision.CommitterEmail = line;
-                    break;
-
-                case ReadStep.CommitterDate:
+                    _revision.Committer = lines[7];
+                    _revision.CommitterEmail = lines[8];
                     {
                         DateTime dateTime;
-                        if (DateTimeUtils.TryParseUnixTime(line, out dateTime))
+                        if (DateTimeUtils.TryParseUnixTime(lines[9], out dateTime))
                             _revision.CommitDate = dateTime;
                     }
+
+                    _revision.MessageEncoding = lines[10];
                     break;
 
-                case ReadStep.CommitMessageEncoding:
-                    _revision.MessageEncoding = line;
+                case ReadStep.CommitSubject:
+                    _revision.Subject = _module.ReEncodeCommitMessage(data, _revision.MessageEncoding);
                     break;
 
-                case ReadStep.CommitMessage:
-                    _revision.Message = _module.ReEncodeCommitMessage(line, _revision.MessageEncoding);
-
+                case ReadStep.CommitBody:
+                    _revision.Body = _module.ReEncodeCommitMessage(data, _revision.MessageEncoding);
                     break;
 
                 case ReadStep.FileName:
-                    _revision.Name = line;
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        // Git adds \n between the format string (ends with \0 in our case) 
+                        // and the first file name. So, we need to remove it from the file name.
+                        _revision.Name = data.TrimStart(new char[] { '\n' });
+                    }
                     break;
             }
 

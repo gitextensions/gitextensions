@@ -3674,6 +3674,30 @@ When you want to delete a not-fully merged branch, you can override this using t
         <source>Diff</source>
         <target />
       </trans-unit>
+      <trans-unit id="anotherBranchTooltip.Text">
+        <source>Select another branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="anotherCommitTooltip.Text">
+        <source>Select another commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="baseCommitGroup.Text">
+        <source>BASE</source>
+        <target />
+      </trans-unit>      
+      <trans-unit id="btnSwapTooltip.Text">
+        <source>Swap BASE and Compare commits</source>
+        <target />
+      </trans-unit>      
+      <trans-unit id="ckCompareToMergeBase.Text">
+        <source>Compare to merge base</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="headCommitGroup.Text">
+        <source>Compare</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormDonate" source-language="en">
@@ -6930,6 +6954,22 @@ This will just checkout on the submodule the commit determined by the superproje
         <source>Commit</source>
         <target />
       </trans-unit>
+      <trans-unit id="compareToBaseToolStripMenuItem.Text">
+        <source>Compare to BASE</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="compareToBranchToolStripMenuItem.Text">
+        <source>Compare to branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="compareToolStripMenuItem.Text">
+        <source>Compare</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="compareWithCurrentBranchToolStripMenuItem.Text">
+        <source>Compare with current branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="DateDataGridViewColumn.HeaderText">
         <source>Date</source>
         <target />
@@ -6984,6 +7024,10 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="QuickSearch.Text">
         <source>Quick search</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="selectAsBaseToolStripMenuItem.Text">
+        <source>Select as BASE to compare</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowAllBranches.Text">

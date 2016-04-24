@@ -849,7 +849,7 @@ Please download Gource and set the path in the plugins settings dialog.</source>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
-.Do you want to reset the configured path?</source>
+Do you want to reset the configured path?</source>
         <target />
       </trans-unit>
     </body>

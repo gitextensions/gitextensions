@@ -61,6 +61,7 @@
             this.AutoStash = new System.Windows.Forms.CheckBox();
             this.AddRemote = new System.Windows.Forms.Button();
             this.folderBrowserButton1 = new GitUI.UserControls.FolderBrowserButton();
+            this.Unshallow = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -192,12 +193,14 @@
             this.tableLayoutPanel2.Controls.Add(this.groupBox1, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.groupBox3, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.groupBox4, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.Unshallow, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 5);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 5;
+            this.tableLayoutPanel2.RowCount = 6;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -375,7 +378,7 @@
             this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox4.Size = new System.Drawing.Size(768, 155);
+            this.groupBox4.Size = new System.Drawing.Size(768, 130);
             this.groupBox4.TabIndex = 15;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Tag options";
@@ -517,6 +520,17 @@
             this.folderBrowserButton1.Size = new System.Drawing.Size(188, 31);
             this.folderBrowserButton1.TabIndex = 5;
             // 
+            // Unshallow
+            // 
+            this.Unshallow.AutoSize = true;
+            this.Unshallow.Margin = new System.Windows.Forms.Padding(9, 3, 3, 3);
+            this.Unshallow.Name = "Unshallow";
+            this.Unshallow.Size = new System.Drawing.Size(139, 19);
+            this.Unshallow.TabIndex = 20;
+            this.Unshallow.Text = "Download full history";
+            this.Tooltip.SetToolTip(this.Unshallow, "Fetches as much history from the remote source as possible.\nIf full history is available (if the source is not a shallow clone itself), then this repo will be a shallow clone no more.\n\nActual command line (if checked): --unshallow");
+            this.Unshallow.Visible = false;
+            // 
             // FormPull
             // 
             this.AcceptButton = this.Pull;
@@ -589,5 +603,6 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button AddRemote;
         private UserControls.FolderBrowserButton folderBrowserButton1;
+        private System.Windows.Forms.CheckBox Unshallow;
     }
 }

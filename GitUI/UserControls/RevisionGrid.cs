@@ -90,6 +90,8 @@ namespace GitUI
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
+        private GitRevision _baseCommitToCompare = null;
+
         public RevisionGrid()
         {
             InitLayout();
@@ -156,6 +158,7 @@ namespace GitUI
             {
                 SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
             }
+            compareToBaseToolStripMenuItem.Enabled = false;
         }
 
         private void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
@@ -695,7 +698,7 @@ namespace GitUI
             if (selectedRevisions.Count == 1 && firstSelectedRevision != null)
                 _navigationHistory.Push(firstSelectedRevision.Guid);
 
-            if (!Revisions.UpdatingVisibleRows &&
+            if (this.Parent != null && !Revisions.UpdatingVisibleRows &&
                 _revisionHighlighting.ProcessRevisionSelectionChange(Module, selectedRevisions) ==
                 AuthorEmailBasedRevisionHighlighting.SelectionChangeAction.RefreshUserInterface)
             {
@@ -829,14 +832,14 @@ namespace GitUI
             private static bool CheckCondition(string filter, Regex regex, string value)
             {
                 return string.IsNullOrEmpty(filter) ||
-                       ((regex != null) && regex.Match(value).Success);
+                       ((regex != null) && (value != null) && regex.Match(value).Success);
             }
 
             public override bool PassThru(GitRevision rev)
             {
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
-                       (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message) ||
+                       (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Body) ||
                         CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
             }
 
@@ -1647,7 +1650,7 @@ namespace GitUI
             }
             else if (columnIndex == messageColIndex)
             {
-                e.Value = revision.Message;
+                e.Value = revision.Subject;
             }
             else if (columnIndex == authorColIndex)
             {
@@ -1905,9 +1908,10 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Any(rev => !GitRevision.IsArtificial(rev.Guid)))
             {
-                var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
-
-                form.ShowDialog(this);
+                using (var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid))
+                {
+                    form.ShowDialog(this);
+                }
             }
             else if (!selectedRevisions.Any())
             {
@@ -2094,6 +2098,7 @@ namespace GitUI
             bisectSkipRevisionToolStripMenuItem.Visible = inTheMiddleOfBisect;
             stopBisectToolStripMenuItem.Visible = inTheMiddleOfBisect;
             bisectSeparator.Visible = inTheMiddleOfBisect;
+            compareWithCurrentBranchToolStripMenuItem.Visible = Module.GetSelectedBranch().IsNotNullOrWhitespace();
 
             var revision = GetRevision(LastRowIndex);
 
@@ -2112,6 +2117,11 @@ namespace GitUI
                 toolStripItem.Tag = head.Name;
                 toolStripItem.Click += ToolStripItemClickDeleteTag;
                 deleteTagDropDown.Items.Add(toolStripItem);
+
+                toolStripItem = new ToolStripMenuItem(head.Name);
+                toolStripItem.Tag = head.CompleteName;
+                toolStripItem.Click += ToolStripItemClickMergeBranch;
+                mergeBranchDropDown.Items.Add(toolStripItem);
             }
 
             //For now there is no action that could be done on currentBranch
@@ -2462,7 +2472,7 @@ namespace GitUI
                 //Add working directory as virtual commit
                 var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
                 {
-                    Message = Strings.GetCurrentUnstagedChanges(),
+                    Subject = Strings.GetCurrentUnstagedChanges(),
                     ParentGuids =
                         StagedChanges.Result
                             ? new[] { GitRevision.IndexGuid }
@@ -2476,7 +2486,7 @@ namespace GitUI
                 //Add index as virtual commit
                 var index = new GitRevision(Module, GitRevision.IndexGuid)
                 {
-                    Message = Strings.GetCurrentIndex(),
+                    Subject = Strings.GetCurrentIndex(),
                     ParentGuids = new[] { filtredCurrentCheckout }
                 };
                 Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
@@ -2492,7 +2502,7 @@ namespace GitUI
 
         private void MessageToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Clipboard.SetText(GetRevision(LastRowIndex).Message);
+            Clipboard.SetText(GetRevision(LastRowIndex).Subject);
         }
 
         private void AuthorToolStripMenuItemClick(object sender, EventArgs e)
@@ -2889,7 +2899,9 @@ namespace GitUI
             SelectCurrentRevision,
             GoToCommit,
             NavigateBackward,
-            NavigateForward
+            NavigateForward,
+            SelectAsBaseToCompare,
+            CompareToBase
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2917,6 +2929,8 @@ namespace GitUI
                 case Commands.PrevQuickSearch: NextQuickSearch(false); break;
                 case Commands.NavigateBackward: NavigateBackward(); break;
                 case Commands.NavigateForward: NavigateForward(); break;
+                case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
+                case Commands.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
                 default:
                     {
                         bool result = base.ExecuteCommand(cmd);
@@ -3008,7 +3022,7 @@ namespace GitUI
         {
             var revision = GetRevision(LastRowIndex);
             CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(revision.Guid, 15));
-            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(revision.Message, 30));
+            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(revision.Subject, 30));
             CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, revision.Author);
             CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, revision.CommitDate.ToString());
         }
@@ -3056,5 +3070,50 @@ namespace GitUI
         }
 
         internal RevisionGridMenuCommands MenuCommands { get { return _revisionGridMenuCommands; } }
+
+        private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var headCommit = this.GetSelectedRevisions().First();
+            using (var form = new FormCompareToBranch(UICommands, headCommit.Guid))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    var baseCommit = Module.RevParse(form.BranchName);
+                    using (var diffForm = new FormDiff(UICommands, this, baseCommit, headCommit.Guid,
+                        form.BranchName, headCommit.Subject))
+                    {
+                        diffForm.ShowDialog(this);
+                    }
+                }
+            }
+        }
+
+        private void CompareWithCurrentBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var baseCommit = this.GetSelectedRevisions().First();
+            var headBranch = Module.GetSelectedBranch();
+            var headBranchName = Module.RevParse(headBranch);
+            using (var diffForm = new FormDiff(UICommands, this, baseCommit.Guid, headBranchName,
+                baseCommit.Subject, headBranch))
+            {
+                diffForm.ShowDialog(this);
+            }
+        }
+
+        private void selectAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _baseCommitToCompare = GetSelectedRevisions().First();
+            compareToBaseToolStripMenuItem.Enabled = true;
+        }
+
+        private void compareToBaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var headCommit = GetSelectedRevisions().First();
+            using (var diffForm = new FormDiff(UICommands, this, _baseCommitToCompare.Guid, headCommit.Guid,
+                _baseCommitToCompare.Subject, headCommit.Subject))
+            {
+                diffForm.ShowDialog(this);
+            }
+        }
     }
 }

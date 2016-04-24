@@ -25,7 +25,7 @@ namespace GitUI.SpellChecker
         public SpellCheckEditControl(RichTextBox richTextBox)
         {
             _richTextBox = richTextBox;
-            // Start receiving messages (make sure you call ReleaseHandle on Dispose):
+            // Start receiving messages
             AssignHandle(richTextBox.Handle);
         }
 
@@ -209,6 +209,7 @@ namespace GitUI.SpellChecker
         {
             if (!disposing)
                 return;
+            ReleaseHandle();
             if (_bitmap != null)
                 _bitmap.Dispose();
             if (_bufferGraphics != null)

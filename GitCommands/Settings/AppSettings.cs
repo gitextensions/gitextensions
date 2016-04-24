@@ -812,7 +812,13 @@ namespace GitCommands
             set { SetInt("maxrevisiongraphcommits", value); }
         }
 
-        public static string RecentWorkingDir
+        public static bool ShowDiffForAllParents
+        {
+            get { return GetBool("showdiffforallparents", true); }
+            set { SetBool("showdiffforallparents", value); }
+        }
+
+		public static string RecentWorkingDir
         {
             get { return GetString("RecentWorkingDir", null); }
             set { SetString("RecentWorkingDir", value); }
@@ -932,13 +938,13 @@ namespace GitCommands
 
         public static Font CommitFont
         {
-            get { return GetFont("commitfont", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size)); }
+            get { return GetFont("commitfont", new Font(SystemFonts.DialogFont.Name, SystemFonts.MessageBoxFont.Size)); }
             set { SetFont("commitfont", value); }
         }
 
         public static Font Font
         {
-            get { return GetFont("font", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size)); }
+            get { return GetFont("font", new Font(SystemFonts.DialogFont.Name, SystemFonts.DefaultFont.Size)); }
             set { SetFont("font", value); }
         }
 
@@ -1164,6 +1170,12 @@ namespace GitCommands
         {
             get { return GetBool("CheckForReleaseCandidates", false); }
             set { SetBool("CheckForReleaseCandidates", value); }
+        }
+
+        public static bool UseConsoleEmulatorForCommands
+        {
+            get { return GetBool("UseConsoleEmulatorForCommands", true); }
+            set { SetBool("UseConsoleEmulatorForCommands", value); }
         }
 
         public static string GetGitExtensionsFullPath()

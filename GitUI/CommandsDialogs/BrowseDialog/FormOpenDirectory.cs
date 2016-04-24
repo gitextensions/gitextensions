@@ -46,20 +46,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
                 choosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
-
                 Repositories.AddMostRecentRepository(choosenModule.WorkingDir);
+                Close();
             }
             else
             {
-                DialogResult = DialogResult.None;
                 MessageBox.Show(this, _warningOpenFailed.Text, _warningOpenFailedCaption.Text);
             }
-        }
-
-        private void Open_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (DialogResult == DialogResult.None)
-                e.Cancel = true;
         }
 
         private void DirectoryKeyPress(object sender, KeyPressEventArgs e)

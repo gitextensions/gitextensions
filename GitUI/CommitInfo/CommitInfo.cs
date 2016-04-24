@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitCommands.GitExtLinks;
 using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager;
@@ -158,7 +159,7 @@ namespace GitUI.CommitInfo
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
-            _RevisionHeader.Height = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
+            _RevisionHeader.Height = GetRevisionHeaderHeight();
             _revisionInfo = commitInformation.Body;
             updateText();
             LoadAuthorImage(data.Author ?? data.Committer);
@@ -198,6 +199,14 @@ namespace GitUI.CommitInfo
             // simulate a two column layout even when there's more then one tab used
             _revisionHeaderTabStops = new int[] { tabStop, tabStop + 1, tabStop + 2, tabStop + 3 };
             return _revisionHeaderTabStops;
+        }
+
+        private int GetRevisionHeaderHeight()
+        {
+            if (EnvUtils.IsMonoRuntime())
+                return (int)(_RevisionHeader.Lines.Length * (0.8 + _RevisionHeader.Font.GetHeight()));
+
+            return _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
         }
 
         private void loadSortedRefs()
