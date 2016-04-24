@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using ConEmu.WinForms;
+
 using GitCommands;
 using GitCommands.Repository;
 using GitCommands.Utils;
@@ -198,6 +201,13 @@ namespace GitUI.CommandsDialogs
                 ToolStrip.Items.Remove(toolStripButton1);
                 _toolStripGitStatus.CommitTranslatedString = toolStripButton1.Text;
             }
+
+            if (!EnvUtils.RunningOnWindows())
+            {
+                toolStripSeparator6.Visible = false;
+                PuTTYToolStripMenuItem.Visible = false;
+            }
+
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             _filterRevisionsHelper.SetFilter(filter);
@@ -238,6 +248,8 @@ namespace GitUI.CommandsDialogs
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
+
+			FillTerminalTab();
         }
 
         private new void Translate()
@@ -2145,18 +2157,23 @@ namespace GitUI.CommandsDialogs
 
         private void copyFilenameToClipboardToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (!DiffFiles.SelectedItems.Any())
+            CopyFullPathToClipboard(DiffFiles, Module);
+        }
+
+        public static void CopyFullPathToClipboard(FileStatusList diffFiles, GitModule module)
+        {
+            if (!diffFiles.SelectedItems.Any())
                 return;
 
             var fileNames = new StringBuilder();
-            foreach (var item in DiffFiles.SelectedItems)
+            foreach (var item in diffFiles.SelectedItems)
             {
                 //Only use append line when multiple items are selected.
                 //This to make it easier to use the text from clipboard when 1 file is selected.
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append(Path.Combine(Module.WorkingDir, item.Name).ToNativePath());
+                fileNames.Append(Path.Combine(module.WorkingDir, item.Name).ToNativePath());
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -2543,12 +2560,17 @@ namespace GitUI.CommandsDialogs
         //
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!DiffFiles.SelectedItems.Any())
+            OpenContainingFolder(DiffFiles, Module);
+        }
+
+        public static void OpenContainingFolder(FileStatusList diffFiles, GitModule module)
+        {
+            if (!diffFiles.SelectedItems.Any())
                 return;
 
-            foreach (var item in DiffFiles.SelectedItems)
+            foreach (var item in diffFiles.SelectedItems)
             {
-                string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(Module, item);
+                string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(module, item);
                 FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
             }
         }
@@ -3359,6 +3381,62 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+	    /// <summary>
+	    /// Adds a tab with console interface to Git over the current working copy. Recreates the terminal on tab activation if user exits the shell.
+	    /// </summary>
+	    private void FillTerminalTab()
+	    {
+		    if(!EnvUtils.RunningOnWindows())
+			    return; // ConEmu only works on WinNT
+		    TabPage tabpage;
+		    string sImageKey = "Resources.IconConsole";
+		    CommitInfoTabControl.ImageList.Images.Add(sImageKey, Resources.IconConsole);
+		    CommitInfoTabControl.Controls.Add(tabpage = new TabPage("Console"));
+		    tabpage.ImageKey = sImageKey; // After adding page
+
+		    // Delay-create the terminal window when the tab is first selected
+		    ConEmuControl terminal = null;
+		    CommitInfoTabControl.Selecting += (sender, args) =>
+		    {
+			    if(args.TabPage != tabpage)
+				    return;
+			    if(terminal == null) // Lazy-create on first opening the tab
+			    {
+				    tabpage.Controls.Clear();
+				    tabpage.Controls.Add(terminal = new ConEmuControl() {Dock = DockStyle.Fill, AutoStartInfo = null});
+			    }
+			    if(terminal.IsConsoleEmulatorOpen) // If user has typed "exit" in there, restart the shell; otherwise just return
+				    return;
+
+			    // Create the terminal
+			    var startinfo = new ConEmuStartInfo();
+			    startinfo.StartupDirectory = Module.WorkingDir;
+			    startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator;
+
+			    // Choose the console: bash from git with fallback to cmd
+			    string sGitBashFromUsrBin = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), ".."), "git-bash.exe"); // Git bin dir is /usr/bin under git installdir, so go 2x up
+			    string sGitBashFromBinOrCmd = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), "git-bash.exe"); // In case we're running off just /bin or /cmd
+		        var gitDir = Path.GetDirectoryName(AppSettings.GitCommandValue);
+			    string sJustBash = Path.Combine(gitDir, "bash.exe"); // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+			    string sJustSh = Path.Combine(gitDir, "sh.exe"); // Fallback to SH
+			    startinfo.ConsoleProcessCommandLine = new[] {sGitBashFromUsrBin, sGitBashFromBinOrCmd, sJustBash, sJustSh}.Where(File.Exists).FirstOrDefault() ?? ConEmuConstants.DefaultConsoleCommandLine; // Choose whatever exists, or default CMD shell
+                if(startinfo.ConsoleProcessCommandLine != ConEmuConstants.DefaultConsoleCommandLine)
+                {
+                    startinfo.ConsoleProcessCommandLine += " --login -i";
+                }
+
+			    // Set path to git in this window (actually, effective with CMD only)
+			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
+			    {
+				    string dirGit = Path.GetDirectoryName(AppSettings.GitCommand);
+				    if(!string.IsNullOrEmpty(dirGit))
+					    startinfo.SetEnv("PATH", dirGit + ";" + "%PATH%");
+			    }
+
+			    terminal.Start(startinfo);
+		    };
+	    }
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -3387,6 +3465,11 @@ namespace GitUI.CommandsDialogs
                     components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
+        {
+            UICommands.StartSparseWorkingCopyDialog(this);
         }
     }
 }

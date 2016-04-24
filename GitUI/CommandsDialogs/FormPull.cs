@@ -123,6 +123,15 @@ namespace GitUI.CommandsDialogs
             {
                 Branches.Text = defaultRemoteBranch;
             }
+
+            // If this repo is shallow, show an option to Unshallow
+            if(aCommands != null)
+            {
+                // Detect by presence of the shallow file, not 100% sure it's the best way, but it's created upon shallow cloning and removed upon unshallowing
+                bool isRepoShallow = File.Exists(Path.Combine(aCommands.Module.GetGitDirectory(), "shallow"));
+                if(isRepoShallow)
+                    Unshallow.Visible = true;
+            }
         }
 
         private void Init(string defaultRemote)
@@ -455,12 +464,12 @@ namespace GitUI.CommandsDialogs
         {
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg()));
+                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked));
             }
 
             Debug.Assert(Merge.Checked || Rebase.Checked);
 
-            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg()))
+            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked))
                        {
                            HandleOnExitCallback = HandlePullOnExit
                        };

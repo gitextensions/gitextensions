@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitCommands.GitExtLinks;
 using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager;
@@ -207,6 +208,8 @@ namespace GitUI.CommitInfo
             // simulate a two column layout even when there's more then one tab used
             _revisionHeaderTabStops = new int[] { tabStop, tabStop + 1, tabStop + 2, tabStop + 3 };
             return _revisionHeaderTabStops;
+
+
         }
 
         private void loadSortedRefs()
