@@ -1917,6 +1917,6 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\ConEmu.Core.16.3.10.0\build\ConEmu.Core.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ConEmu.Core.16.3.10.0\build\ConEmu.Core.Targets'))" />
+    <Error Condition="!Exists('..\packages\ConEmu.Core.16.3.10.0\Build\ConEmu.Core.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ConEmu.Core.16.3.10.0\build\ConEmu.Core.Targets'))" />
   </Target>
 </Project>
