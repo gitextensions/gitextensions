@@ -3228,5 +3228,56 @@ namespace GitCommands
             }
             return branchName;
         }
+
+        public IList<GitItemStatus> GetCombinedDiffFileList(string shaOfMergeCommit)
+        {
+            var fileList = RunGitCmd("diff-tree --name-only -z --cc --no-commit-id " + shaOfMergeCommit);
+
+            var ret = new List<GitItemStatus>();
+            if (string.IsNullOrWhiteSpace(fileList))
+            {
+                return ret;
+            }
+
+            var files = fileList.Split(new []{'\0'}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var file in files)
+            {
+                var item = new GitItemStatus
+                {
+                    IsChanged = true,
+                    IsConflict = true,
+                    IsTracked = true,
+                    IsDeleted = false,
+                    IsStaged = false,
+                    IsNew = false,
+                    Name = file,
+                };
+                ret.Add(item);
+            }
+
+            return ret;
+        }
+
+        public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath,
+            string extraArgs, Encoding encoding)
+        {
+            var cmd = string.Format("diff-tree {4} --no-commit-id {0} {1} {2} -- {3}",
+                extraArgs,
+                revisionOfMergeCommit.Guid,
+                AppSettings.UsePatienceDiffAlgorithm ? "--patience" : "",
+                filePath,
+                AppSettings.OmitUninterestingDiff? "--cc" : "-c -p");
+
+            var patchManager = new PatchManager();
+            var patch = RunCacheableCmd(AppSettings.GitCommand, cmd, LosslessEncoding);
+
+            if (string.IsNullOrWhiteSpace(patch))
+            {
+                return "";
+            }
+
+            patchManager.LoadPatch(patch, false, encoding);
+            return GetPatch(patchManager, filePath, filePath).Text;
+        }
     }
 }
