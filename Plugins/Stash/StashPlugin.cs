@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace Stash
@@ -13,7 +14,7 @@ namespace Stash
         }
 
         public static StringSetting StashUsername = new StringSetting("Stash Username", string.Empty);
-        public static StringSetting StashPassword = new StringSetting("Stash Password", string.Empty);
+        public static PasswordSetting StashPassword = new PasswordSetting("Stash Password", string.Empty);
         public static StringSetting StashBaseURL = new StringSetting("Specify the base URL to Stash", "https://example.stash.com");
         public static BoolSetting StashDisableSSL = new BoolSetting("Disable SSL verification", false);
 
