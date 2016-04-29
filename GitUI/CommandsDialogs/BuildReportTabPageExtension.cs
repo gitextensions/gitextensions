@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitUI.UserControls;
 
 namespace GitUI.CommandsDialogs
 {
@@ -16,7 +17,7 @@ namespace GitUI.CommandsDialogs
         private readonly TabControl tabControl;
 
         private TabPage buildReportTabPage;
-        private WebBrowser buildReportWebBrowser;
+        private WebBrowserCtrl buildReportWebBrowser;
         private GitRevision selectedGitRevision;
 
         public BuildReportTabPageExtension(TabControl tabControl)
@@ -85,7 +86,7 @@ namespace GitUI.CommandsDialogs
             if (e.PropertyName == "BuildStatus")
             {
                 // Refresh the selected Git revision
-                this.FillBuildReport(this.selectedGitRevision);    
+                this.FillBuildReport(this.selectedGitRevision);
             }
         }
 
@@ -98,10 +99,10 @@ namespace GitUI.CommandsDialogs
                     Text = "Build Report",
                     UseVisualStyleBackColor = true
                 };
-            this.buildReportWebBrowser = new WebBrowser
-                {
-                    Dock = DockStyle.Fill
-                };
+            this.buildReportWebBrowser = new WebBrowserCtrl
+            {
+                Dock = DockStyle.Fill
+            };
             this.buildReportTabPage.Controls.Add(this.buildReportWebBrowser);
         }
 
