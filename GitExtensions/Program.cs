@@ -62,7 +62,9 @@ namespace GitExtensions
             AppSettings.LoadSettings();
             if (EnvUtils.RunningOnWindows())
             {
-                //Quick HOME check:
+              WebBrowserEmulationMode.SetBrowserFeatureControl();
+
+              //Quick HOME check:
                 FormSplash.SetAction("Checking home path...");
                 Application.DoEvents();
 
