@@ -60,6 +60,10 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _noSubmodulesPresent =
             new TranslationString("No submodules");
+        private readonly TranslationString _topProjectModuleFormat =
+            new TranslationString("Top project: {0}");
+        private readonly TranslationString _superprojectModuleFormat =
+            new TranslationString("Superproject: {0}");
 
         private readonly TranslationString _saveFileFilterCurrentFormat =
             new TranslationString("Current format");
@@ -73,6 +77,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _errorCaption =
             new TranslationString("Error");
+        private readonly TranslationString _loading =
+            new TranslationString("Loading...");
 
         private readonly TranslationString _noReposHostPluginLoaded =
             new TranslationString("No repository host plugin loaded.");
@@ -3080,15 +3086,11 @@ namespace GitUI.CommandsDialogs
 
         private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
         {
-            var button = sender as ToolStripMenuItem;
-
-            if (button == null)
-                return;
-
-            if (button.Tag is GitModule)
-                SetGitModule(this, new GitModuleEventArgs(button.Tag as GitModule));
-            else
-                SetWorkingDir(button.Tag as string);
+            var menuSender = sender as ToolStripMenuItem;
+            if (menuSender != null)
+            {
+                SetWorkingDir(menuSender.Tag as string);
+            }
         }
 
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
@@ -3098,7 +3100,6 @@ namespace GitUI.CommandsDialogs
 
         private void RemoveSubmoduleButtons()
         {
-            _submodulesStatusImagesCTS.Cancel();
             foreach (var item in toolStripButtonLevelUp.DropDownItems)
             {
                 var toolStripButton = item as ToolStripMenuItem;
@@ -3111,19 +3112,24 @@ namespace GitUI.CommandsDialogs
         private string GetModuleBranch(string path)
         {
             string branch = GitModule.GetSelectedBranchFast(path);
-            if (GitModule.IsDetachedHead(branch))
-                return "[no branch]";
-            return "[" + branch + "]";
+            return string.Format("[{0}]", GitModule.IsDetachedHead(branch) ? _noBranchTitle.Text : branch);
         }
 
-        private ToolStripMenuItem AddSubmoduleToMenu(string name, object module)
+        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat)
         {
-            var spmenu = new ToolStripMenuItem(name);
+            var spmenu = new ToolStripMenuItem(string.Format(textFormat, info.Text));
             spmenu.Click += SubmoduleToolStripButtonClick;
             spmenu.Width = 200;
-            spmenu.Tag = module;
-            toolStripButtonLevelUp.DropDownItems.Add(spmenu);
+            spmenu.Tag = info.Path;
+            if (info.Bold)
+                spmenu.Font = new Font(spmenu.Font, FontStyle.Bold);
+            spmenu.Image = GetItemImage(info);
             return spmenu;
+        }
+
+        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info)
+        {
+            return CreateSubmoduleMenuItem(info, "{0}");
         }
 
         DateTime _previousUpdateTime;
@@ -3135,154 +3141,215 @@ namespace GitUI.CommandsDialogs
                 UpdateSubmodulesList();
         }
 
-        private CancellationTokenSource _submodulesStatusImagesCTS = new CancellationTokenSource();
+        private CancellationTokenSource _submodulesStatusCTS = new CancellationTokenSource();
 
-        private static Image GetItemImage(GitSubmoduleStatus gitSubmoduleStatus)
+        /// <summary>Holds submodule information that is gathered asynchronously.</summary>
+        private class SubmoduleInfo
         {
-            if (gitSubmoduleStatus == null)
-                return Resources.IconFolderSubmodule;
-            if (gitSubmoduleStatus.Status == SubmoduleStatus.FastForward)
-                return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
-            if (gitSubmoduleStatus.Status == SubmoduleStatus.Rewind)
-                return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
-            if (gitSubmoduleStatus.Status == SubmoduleStatus.NewerTime)
-                return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionSemiUpDirty : Resources.IconSubmoduleRevisionSemiUp;
-            if (gitSubmoduleStatus.Status == SubmoduleStatus.OlderTime)
-                return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionSemiDownDirty : Resources.IconSubmoduleRevisionSemiDown;
-
-            return !gitSubmoduleStatus.IsDirty ? Resources.Modified : Resources.IconSubmoduleDirty;
+            public string Text; // User-friendly display text
+            public string Path; // Full path to submodule
+            public SubmoduleStatus? Status;
+            public bool IsDirty;
+            public bool Bold;
+        }
+        /// <summary>Complete set of gathered submodule information.</summary>
+        private class SubmoduleInfoResult
+        {
+            public List<SubmoduleInfo> OurSubmodules = new List<SubmoduleInfo>();
+            public List<SubmoduleInfo> SuperSubmodules = new List<SubmoduleInfo>();
+            public SubmoduleInfo TopProject, Superproject;
+            public string CurrentSubmoduleName;
         }
 
-        private Task GetSubmoduleStatusImageAsync(ToolStripMenuItem mi, GitModule module, string submodulePath)
+        private static Image GetItemImage(SubmoduleInfo info)
         {
-            if (String.IsNullOrEmpty(submodulePath))
+            if (info.Status == null)
+                return Resources.IconFolderSubmodule;
+            if (info.Status == SubmoduleStatus.FastForward)
+                return info.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
+            if (info.Status == SubmoduleStatus.Rewind)
+                return info.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
+            if (info.Status == SubmoduleStatus.NewerTime)
+                return info.IsDirty ? Resources.IconSubmoduleRevisionSemiUpDirty : Resources.IconSubmoduleRevisionSemiUp;
+            if (info.Status == SubmoduleStatus.OlderTime)
+                return info.IsDirty ? Resources.IconSubmoduleRevisionSemiDownDirty : Resources.IconSubmoduleRevisionSemiDown;
+
+            return info.IsDirty ? Resources.IconSubmoduleDirty : Resources.Modified;
+        }
+
+        private static void GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
+        {
+            Task.Factory.StartNew(() =>
             {
-                mi.Image = Resources.IconFolderSubmodule;
-                return null;
-            }
-            var token = _submodulesStatusImagesCTS.Token;
-            return Task.Factory.StartNew(() =>
-            {
-                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(module, submodulePath);
+                var submodule = new GitModule(info.Path);
+                var supermodule = submodule.SuperprojectModule;
+                var submoduleName = submodule.GetCurrentSubmoduleLocalPath();
+
+                info.Status = null;
+
+                if (String.IsNullOrEmpty(submoduleName) || supermodule == null)
+                    return;
+
+                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(supermodule, submoduleName);
                 if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                 {
-                    var submodule = submoduleStatus.GetSubmodule(module);
-                    submoduleStatus.CheckSubmoduleStatus(submodule);
+                    submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(supermodule));
                 }
-                return submoduleStatus;
-            }, token)
-                .ContinueWith((task) =>
+                if (submoduleStatus != null)
                 {
-                    mi.Image = GetItemImage(task.Result);
-                    if (task.Result != null)
-                        mi.Text += task.Result.AddedAndRemovedString();
-                },
-                    CancellationToken.None,
-                    TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.FromCurrentSynchronizationContext());
+                    info.Status = submoduleStatus.Status;
+                    info.IsDirty = submoduleStatus.IsDirty;
+                    info.Text += submoduleStatus.AddedAndRemovedString();
+                }
+            }, cancelToken, TaskCreationOptions.AttachedToParent, TaskScheduler.Default);
         }
 
         private void UpdateSubmodulesList()
         {
-            RemoveSubmoduleButtons();
             _previousUpdateTime = DateTime.Now;
-            _submodulesStatusImagesCTS = new CancellationTokenSource();
 
-            foreach (var submodule in Module.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName))
+            // Cancel any previous async activities:
+            _submodulesStatusCTS.Cancel();
+            _submodulesStatusCTS.Dispose();
+            _submodulesStatusCTS = new CancellationTokenSource();
+
+            RemoveSubmoduleButtons();
+            toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
+
+            // Start gathering new submodule information asynchronously.  This makes a significant difference in UI
+            // responsiveness if there are numerous submodules (e.g. > 100).
+            var cancelToken = _submodulesStatusCTS.Token;
+            string thisModuleDir = Module.WorkingDir;
+            // First task: Gather list of submodules on a background thread.
+            var updateTask = Task.Factory.StartNew(() =>
             {
-                var name = submodule;
-                string path = Module.GetSubmoduleFullPath(submodule);
-                if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                    name = name + " " + GetModuleBranch(path);
+                // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
+                GitModule threadModule = new GitModule(thisModuleDir);
+                SubmoduleInfoResult result = new SubmoduleInfoResult();
 
-                var smi = AddSubmoduleToMenu(name, path);
-                var module = Module.GetSubmodule(submodule);
-                var submoduleName = module.GetCurrentSubmoduleLocalPath();
-                GetSubmoduleStatusImageAsync(smi, module.SuperprojectModule, submoduleName);
-            }
-
-            bool containSubmodules = toolStripButtonLevelUp.DropDownItems.Count != 0;
-            if (!containSubmodules)
-                toolStripButtonLevelUp.DropDownItems.Add(_noSubmodulesPresent.Text);
-
-            string currentSubmoduleName = null;
-            if (Module.SuperprojectModule != null)
-            {
-                var superprojectSeparator = new ToolStripSeparator();
-                toolStripButtonLevelUp.DropDownItems.Add(superprojectSeparator);
-
-                GitModule supersuperproject = Module.FindTopProjectModule();
-                if (Module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
+                // Add all submodules inside the current repository:
+                foreach (var submodule in threadModule.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName))
                 {
-                    var name = "Top project: " + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
-                    string path = supersuperproject.WorkingDir;
+                    cancelToken.ThrowIfCancellationRequested();
+                    var name = submodule;
+                    string path = threadModule.GetSubmoduleFullPath(submodule);
                     if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                         name = name + " " + GetModuleBranch(path);
 
-                    var smi = AddSubmoduleToMenu(name, supersuperproject);
-                    smi.Image = Resources.IconFolderSubmodule;
+                    var smi = new SubmoduleInfo { Text = name, Path = path };
+                    result.OurSubmodules.Add(smi);
+                    GetSubmoduleStatusAsync(smi, cancelToken);
                 }
 
+                if (threadModule.SuperprojectModule != null)
                 {
-                    var name = "Superproject: ";
-                    GitModule parentModule = Module.SuperprojectModule;
-                    string localpath = "";
-                    if (Module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
+                    GitModule supersuperproject = threadModule.FindTopProjectModule();
+                    if (threadModule.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
                     {
-                        parentModule = supersuperproject;
-                        localpath = Module.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                        localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
-                        name = name + localpath;
-                    }
-                    else
-                        name = name + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
-                    string path = Module.SuperprojectModule.WorkingDir;
-                    if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                        name = name + " " + GetModuleBranch(path);
-
-                    var smi = AddSubmoduleToMenu(name, Module.SuperprojectModule);
-                    GetSubmoduleStatusImageAsync(smi, parentModule, localpath);
-                }
-
-                var submodules = supersuperproject.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName);
-                if (submodules.Any())
-                {
-                    string localpath = Module.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                    localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
-
-                    foreach (var submodule in submodules)
-                    {
-                        var name = submodule;
-                        string path = supersuperproject.GetSubmoduleFullPath(submodule);
+                        var name = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
+                        string path = supersuperproject.WorkingDir;
                         if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                             name = name + " " + GetModuleBranch(path);
-                        var submenu = AddSubmoduleToMenu(name, path);
-                        if (submodule == localpath)
+
+                        result.TopProject = new SubmoduleInfo { Text = name, Path = supersuperproject.WorkingDir };
+                        GetSubmoduleStatusAsync(result.TopProject, cancelToken);
+                    }
+
+                    {
+                        string name;
+                        GitModule parentModule = threadModule.SuperprojectModule;
+                        string localpath = "";
+                        if (threadModule.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
                         {
-                            currentSubmoduleName = Module.GetCurrentSubmoduleLocalPath();
-                            submenu.Font = new Font(submenu.Font, FontStyle.Bold);
+                            parentModule = supersuperproject;
+                            localpath = threadModule.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
+                            localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
+                            name = localpath;
                         }
-                        var module = supersuperproject.GetSubmodule(submodule);
-                        var submoduleName = module.GetCurrentSubmoduleLocalPath();
-                        GetSubmoduleStatusImageAsync(submenu, module.SuperprojectModule, submoduleName);
+                        else
+                            name = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
+                        string path = threadModule.SuperprojectModule.WorkingDir;
+                        if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
+                            name = name + " " + GetModuleBranch(path);
+
+                        result.Superproject = new SubmoduleInfo { Text = name, Path = threadModule.SuperprojectModule.WorkingDir };
+                        GetSubmoduleStatusAsync(result.Superproject, cancelToken);
+                    }
+
+                    var submodules = supersuperproject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName);
+                    if (submodules.Any())
+                    {
+                        string localpath = threadModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
+                        localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
+
+                        foreach (var submodule in submodules)
+                        {
+                            cancelToken.ThrowIfCancellationRequested();
+                            var name = submodule;
+                            string path = supersuperproject.GetSubmoduleFullPath(submodule);
+                            if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
+                                name = name + " " + GetModuleBranch(path);
+                            bool bold = false;
+                            if (submodule == localpath)
+                            {
+                                result.CurrentSubmoduleName = threadModule.GetCurrentSubmoduleLocalPath();
+                                bold = true;
+                            }
+                            var smi = new SubmoduleInfo { Text = name, Path = path, Bold = bold };
+                            result.SuperSubmodules.Add(smi);
+                            GetSubmoduleStatusAsync(smi, cancelToken);
+                        }
                     }
                 }
-            }
+                return result;
+            }, cancelToken);
 
-            var separator = new ToolStripSeparator();
-            toolStripButtonLevelUp.DropDownItems.Add(separator);
-
-            var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
-            mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
-            toolStripButtonLevelUp.DropDownItems.Add(mi);
-
-            if (currentSubmoduleName != null)
+            // Second task: Populate toolbar menu on UI thread.  Note further tasks are created by
+            // CreateSubmoduleMenuItem to update images with submodule status.
+            updateTask.ContinueWith((task) =>
             {
-                var usmi = new ToolStripMenuItem(_updateCurrentSubmodule.Text);
-                usmi.Tag = currentSubmoduleName;
-                usmi.Click += UpdateSubmoduleToolStripMenuItemClick;
-                toolStripButtonLevelUp.DropDownItems.Add(usmi);
-            }
+                if (task.Result == null)
+                    return;
+
+                RemoveSubmoduleButtons();
+                var newItems = new List<ToolStripItem>();
+
+                task.Result.OurSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
+                if (task.Result.OurSubmodules.Count == 0)
+                    newItems.Add(new ToolStripMenuItem(_noSubmodulesPresent.Text));
+
+                if (task.Result.Superproject != null)
+                {
+                    newItems.Add(new ToolStripSeparator());
+                    if (task.Result.TopProject != null)
+                        newItems.Add(CreateSubmoduleMenuItem(task.Result.TopProject, _topProjectModuleFormat.Text));
+                    newItems.Add(CreateSubmoduleMenuItem(task.Result.Superproject, _superprojectModuleFormat.Text));
+                    task.Result.SuperSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
+                }
+
+                newItems.Add(new ToolStripSeparator());
+
+                var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
+                mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
+                newItems.Add(mi);
+
+                if (task.Result.CurrentSubmoduleName != null)
+                {
+                    var usmi = new ToolStripMenuItem(_updateCurrentSubmodule.Text);
+                    usmi.Tag = task.Result.CurrentSubmoduleName;
+                    usmi.Click += UpdateSubmoduleToolStripMenuItemClick;
+                    newItems.Add(usmi);
+                }
+
+                // Using AddRange is critical: if you used Add to add menu items one at a
+                // time, performance would be extremely slow with many submodules (> 100).
+                toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
+
+                _previousUpdateTime = DateTime.Now;
+            },
+                cancelToken,
+                TaskContinuationOptions.OnlyOnRanToCompletion,
+                TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void toolStripButtonLevelUp_ButtonClick(object sender, EventArgs e)
@@ -3474,7 +3541,7 @@ namespace GitUI.CommandsDialogs
                 if (_pullButton != null)
                     _pullButton.Dispose();
 #endif
-                _submodulesStatusImagesCTS.Dispose();
+                _submodulesStatusCTS.Dispose();
                 if (_formBrowseMenus != null)
                     _formBrowseMenus.Dispose();
                 if (_filterRevisionsHelper != null)
