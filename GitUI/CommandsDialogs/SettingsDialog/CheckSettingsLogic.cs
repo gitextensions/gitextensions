@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 gitpath = possibleNewPath.Trim();
             }
 
-            foreach (var toolsPath in new[] { @"usr\bin\", @"bin\" })
+            foreach (var toolsPath in new[] { @"bin\", @"usr\bin\" })
             {
                 gitpath = gitpath.Replace(@"\cmd\git.exe", @"\" + toolsPath)
                     .Replace(@"\cmd\git.cmd", @"\" + toolsPath)
