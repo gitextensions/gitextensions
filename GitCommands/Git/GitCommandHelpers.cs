@@ -562,9 +562,23 @@ namespace GitCommands
 
         public static string BranchCmd(string branchName, string revision, bool checkout)
         {
+            string cmd = null;
             if (checkout)
-                return string.Format("checkout -b \"{0}\" \"{1}\"", branchName.Trim(), revision);
-            return string.Format("branch \"{0}\" \"{1}\"", branchName.Trim(), revision);
+            {
+                cmd = string.Format("checkout -b \"{0}\"", branchName.Trim());
+            }
+            else
+            {
+                cmd = string.Format("branch \"{0}\"", branchName.Trim());
+            }
+            if (revision.IsNullOrWhiteSpace())
+            {
+                return cmd;
+            }
+            else
+            {
+                return cmd + string.Format(" \"{0}\"", revision);
+            }
         }
 
         public static string MergedBranches()
