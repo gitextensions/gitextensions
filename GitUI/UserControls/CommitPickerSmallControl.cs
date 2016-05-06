@@ -40,7 +40,8 @@ namespace GitUI.UserControls
                 MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.");
             }
 
-            if (_selectedCommitHash.IsNullOrEmpty())
+            var isArtificialCommitForEmptyRepo = _selectedCommitHash == "HEAD";
+            if (_selectedCommitHash.IsNullOrEmpty() || isArtificialCommitForEmptyRepo)
             {
                 textBoxCommitHash.Text = "";
                 lbCommits.Text = "";
