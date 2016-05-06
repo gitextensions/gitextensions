@@ -333,7 +333,8 @@ namespace GitCommands
                             _revision.Refs.AddRange(gitRefs);
                     }
 
-                    _revision.ParentGuids = lines[2].Split(new char[] { ' ' });
+                    // RemoveEmptyEntries is required for root commits. They should have empty list of parents.
+                    _revision.ParentGuids = lines[2].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     _revision.TreeGuid = lines[3];
 
                     _revision.Author = lines[4];
