@@ -1414,7 +1414,13 @@ namespace GitUI
             }
             else
             {
-                e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+                if (e.RowIndex % 2 == 0)
+                {
+                    Brush brush = new SolidBrush(Color.FromArgb(255, 240, 240, 240));
+                    e.Graphics.FillRectangle(brush, e.CellBounds);
+                }
+                else
+                    e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
             }
 
             Color foreColor;
