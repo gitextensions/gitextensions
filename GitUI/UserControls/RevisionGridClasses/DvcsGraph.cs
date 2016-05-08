@@ -52,7 +52,7 @@ namespace GitUI.RevisionGridClasses
 
         #endregion
 
-        private int _nodeDimension = 8;
+        private int _nodeDimension = 10;
         private int _laneWidth = 13;
         private int _laneLineWidth = 2;
         private const int MaxLanes = 40;
@@ -1287,8 +1287,6 @@ namespace GitUI.RevisionGridClasses
 
             return childrenIds;
         }
-
-
 
         private void dataGrid_Resize(object sender, EventArgs e)
         {
