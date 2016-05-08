@@ -685,19 +685,19 @@ namespace GitUI
             }
         }
 
-        public int SetSelectionFilter(string filter)
+        public int SetSelectionFilter(string selectionFilter)
         {
-            return FilterFiles(RegexFor(filter));
+            return SelectFiles(RegexForSelecting(selectionFilter));
         }
 
-        private static Regex RegexFor(string value)
+        private static Regex RegexForSelecting(string value)
         {
             return string.IsNullOrEmpty(value)
                 ? new Regex("^$", RegexOptions.Compiled)
                 : new Regex(value, RegexOptions.Compiled);
         }
 
-        private int FilterFiles(Regex filter)
+        private int SelectFiles(Regex selctionFilter)
         {
             try
             {
@@ -707,7 +707,7 @@ namespace GitUI
                 int i = 0;
                 foreach (var item in items)
                 {
-                    FileStatusListView.Items[i].Selected = filter.IsMatch(item.Name);
+                    FileStatusListView.Items[i].Selected = selctionFilter.IsMatch(item.Name);
                     i++;
                 }
 
@@ -719,6 +719,24 @@ namespace GitUI
             }
         }
 
+        public int SetFilter(string value)
+        {
+            return FilterFiles(RegexForFiltering(value));
+        }
+
+        private static Regex RegexForFiltering(string value)
+        {
+            return string.IsNullOrEmpty(value)
+                ? new Regex(".", RegexOptions.Compiled)
+                : new Regex(value, RegexOptions.Compiled);
+        }
+
+        private int FilterFiles(Regex filter)
+        {
+            _filter = filter;
+            UpdateFileStatusListView();
+            return FileStatusListView.Items.Count;
+        }
         public void SetDiffs(List<GitRevision> revisions)
         {
             switch (revisions.Count)
