@@ -255,6 +255,14 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             this.SuspendLayout();
+            // FilterToolTip
+            // 
+            this.FilterToolTip.AutomaticDelay = 0;
+            this.FilterToolTip.ShowAlways = true;
+            this.FilterToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Error;
+            this.FilterToolTip.ToolTipTitle = "RegEx";
+            this.FilterToolTip.UseAnimation = false;
+            this.FilterToolTip.UseFading = false;
             // 
             // toolPanel
             // 
@@ -934,6 +942,17 @@ namespace GitUI.CommandsDialogs
             this.DiffSplitContainer.SplitterWidth = 5;
             this.DiffSplitContainer.TabIndex = 0;
             // 
+            // FilterWatermarkLabel
+            // 
+            this.FilterWatermarkLabel.AutoSize = true;
+            this.FilterWatermarkLabel.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FilterWatermarkLabel.ForeColor = System.Drawing.Color.LightGray;
+            this.FilterWatermarkLabel.Location = new System.Drawing.Point(3, 2);
+            this.FilterWatermarkLabel.Name = "FilterWatermarkLabel";
+            this.FilterWatermarkLabel.Size = new System.Drawing.Size(26, 21);
+            this.FilterWatermarkLabel.TabIndex = 3;
+            this.FilterWatermarkLabel.Text = "Search";
+            // 
             // DiffFiles
             // 
             this.DiffFiles.ContextMenuStrip = this.DiffContextMenu;
@@ -1125,6 +1144,21 @@ namespace GitUI.CommandsDialogs
             this.findInDiffToolStripMenuItem.Size = new System.Drawing.Size(248, 24);
             this.findInDiffToolStripMenuItem.Text = "Find";
             this.findInDiffToolStripMenuItem.Click += new System.EventHandler(this.findInDiffToolStripMenuItem_Click);
+            // 
+            // FilterComboBox
+            // 
+            this.FilterComboBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.FilterComboBox.FormattingEnabled = true;
+            this.FilterComboBox.Location = new System.Drawing.Point(0, 0);
+            this.FilterComboBox.Margin = new System.Windows.Forms.Padding(5);
+            this.FilterComboBox.Name = "FilterComboBox";
+            this.FilterComboBox.Size = new System.Drawing.Size(215, 24);
+            this.FilterComboBox.TabIndex = 2;
+            this.FilterComboBox.SelectedIndexChanged += new System.EventHandler(this.FilterComboBox_SelectedIndexChanged);
+            this.FilterComboBox.TextUpdate += new System.EventHandler(this.FilterComboBox_TextUpdate);
+            this.FilterComboBox.GotFocus += new System.EventHandler(this.FilterComboBox_GotFocus);
+            this.FilterComboBox.LostFocus += new System.EventHandler(this.FilterComboBox_LostFocus);
+            this.FilterComboBox.MouseEnter += new System.EventHandler(this.FilterComboBox_MouseEnter);
             // 
             // DiffText
             // 

@@ -3625,5 +3625,90 @@ namespace GitUI.CommandsDialogs
         {
             ComboBoxHelper.ResizeComboBoxDropDownWidth (toolStripBranchFilterComboBox.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
+
+        #region FilterComboBox
+
+        private long _lastUserInputTime;
+        private string _ToolTipText="";
+        private void FilterComboBox_TextUpdate(object sender, EventArgs e)
+        {
+            var currentTime = DateTime.Now.Ticks;
+            if (_lastUserInputTime == 0)
+            {
+                long timerLastChanged = currentTime;
+                var timer = new System.Windows.Forms.Timer { Interval = 250 };
+                timer.Tick += (s, a) =>
+                {
+                    if (NoUserInput(timerLastChanged))
+                    {
+                        _ToolTipText = "";
+                        var fileCount = 0;
+                        try
+                        {
+                            fileCount = DiffFiles.SetFilter(FilterComboBox.Text);
+                        }
+                        catch (ArgumentException ae)
+                        {
+                            _ToolTipText = ae.Message;
+                        }
+                        if (fileCount>0)
+                        {
+                            AddToSelectionFilter(FilterComboBox.Text);
+                        }
+
+                        timer.Stop();
+                        _lastUserInputTime = 0;
+                    }
+                    timerLastChanged = _lastUserInputTime;
+                };
+
+                timer.Start();
+            }
+
+            _lastUserInputTime = currentTime;
+        }
+
+        private bool NoUserInput(long timerLastChanged)
+        {
+            return timerLastChanged == _lastUserInputTime;
+        }
+
+        private void AddToSelectionFilter(string filter)
+        {
+            if (!FilterComboBox.Items.Cast<string>().Any(candiate => candiate == filter))
+            {
+                const int SelectionFilterMaxLength = 10;
+                if (FilterComboBox.Items.Count == SelectionFilterMaxLength)
+                {
+                    FilterComboBox.Items.RemoveAt(SelectionFilterMaxLength - 1);
+                }
+                FilterComboBox.Items.Insert(0, filter);
+            }
+        }
+
+        private void FilterComboBox_MouseEnter(object sender, EventArgs e)
+        {
+            FilterToolTip.SetToolTip(FilterComboBox, _ToolTipText);
+        }
+
+        private void FilterComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DiffFiles.SetFilter(FilterComboBox.Text);
+        }
+
+        private void FilterComboBox_GotFocus(object sender, EventArgs e)
+        {
+            FilterWatermarkLabel.Visible = false;
+        }
+
+        private void FilterComboBox_LostFocus(object sender, EventArgs e)
+        {
+            if (!FilterWatermarkLabel.Visible && string.IsNullOrEmpty(FilterComboBox.Text))
+            {
+                FilterWatermarkLabel.Visible = true;
+            }
+        }
+
+        #endregion FilterComboBox
     }
 }
