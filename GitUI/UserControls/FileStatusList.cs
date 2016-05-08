@@ -74,6 +74,8 @@ namespace GitUI
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
+
+            _filter = new Regex(".*");
         }
 
         protected override void DisposeCustomResources()
@@ -586,6 +588,7 @@ namespace GitUI
                     }
                     foreach (var item in pair.Value)
                     {
+                        if (_filter.IsMatch(item.Name))
                         {
                             var listItem = new ListViewItem(item.Name, group);
                             listItem.ImageIndex = GetItemImageIndex(item);
@@ -789,6 +792,8 @@ namespace GitUI
                 }
             }
         }
+
+        private Regex _filter;
     }
 
 }
