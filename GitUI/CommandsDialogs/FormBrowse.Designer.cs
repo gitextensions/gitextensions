@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using GitUI.Editor;
 
 namespace GitUI.CommandsDialogs
@@ -86,6 +86,8 @@ namespace GitUI.CommandsDialogs
             this.FileText = new GitUI.Editor.FileViewer();
             this.DiffTabPage = new System.Windows.Forms.TabPage();
             this.DiffSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.FilterWatermarkLabel = new System.Windows.Forms.Label();
+            this.FilterToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,6 +110,7 @@ namespace GitUI.CommandsDialogs
             this.fileHistoryDiffToolstripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findInDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.FilterComboBox = new System.Windows.Forms.ComboBox();
             this.DiffText = new GitUI.Editor.FileViewer();
             this.TreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -919,7 +922,9 @@ namespace GitUI.CommandsDialogs
             // 
             // DiffSplitContainer.Panel1
             // 
+            this.DiffSplitContainer.Panel1.Controls.Add(this.FilterWatermarkLabel);
             this.DiffSplitContainer.Panel1.Controls.Add(this.DiffFiles);
+            this.DiffSplitContainer.Panel1.Controls.Add(this.FilterComboBox);
             // 
             // DiffSplitContainer.Panel2
             // 
@@ -2236,5 +2241,8 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem cherryPickSelectedDiffFileToolStripMenuItem;
         private ToolStripMenuItem menuitemSparse;
         private ToolStripButton ShowFirstParent;
+        private ComboBox FilterComboBox;
+        private Label FilterWatermarkLabel;
+        private ToolTip FilterToolTip;
     }
 }
