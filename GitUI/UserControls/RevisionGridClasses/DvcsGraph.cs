@@ -130,7 +130,7 @@ namespace GitUI.RevisionGridClasses
             RowHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
             RowTemplate.DefaultCellStyle.Font = SystemFonts.DefaultFont;
 
-            _whiteBorderPen = new Pen(Brushes.White, _laneLineWidth + 2);
+            _whiteBorderPen = new Pen(Brushes.White, _laneLineWidth);
             _blackBorderPen = new Pen(Brushes.Black, _laneLineWidth + 1);
 
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
