@@ -791,7 +791,7 @@ namespace GitUI
             }
         }
 
-        		        public void SetDiff(GitRevision revision)
+        public void SetDiff(GitRevision revision)
         {
             NoFiles.Text = _noDiffFilesChangesDefaultText;
 
