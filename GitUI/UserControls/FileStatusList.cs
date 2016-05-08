@@ -536,7 +536,6 @@ namespace GitUI
         }
 
         private GitItemsWithParents _itemsDictionary = new Dictionary<string, IList<GitItemStatus>>();
-        private bool _itemsChanging = false;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitItemsWithParents GitItemStatusesWithParents
@@ -554,7 +553,6 @@ namespace GitUI
 
         private void UpdateFileStatusListView()
         {
-            _itemsChanging = true;
             if (_itemsDictionary == null || !_itemsDictionary.Any())
                 NoFiles.Visible = true;
             else
@@ -646,9 +644,6 @@ namespace GitUI
 
         private void FileStatusListView_SizeChanged(object sender, EventArgs e)
         {
-            if (_itemsChanging)
-                return;
-
             NoFiles.Location = new Point(5, 5);
             NoFiles.Size = new Size(Size.Width - 10, Size.Height - 10);
             Refresh();
