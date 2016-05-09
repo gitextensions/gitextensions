@@ -542,7 +542,7 @@ namespace GitUI.RevisionGridClasses
             if ((e.State & DataGridViewElementStates.Visible) == 0 || e.ColumnIndex != 0)
                 return;
 
-            var standardBrush = (e.RowIndex % 2 == 0) ? new SolidBrush(Color.FromArgb(255, 240, 240, 240)) : Brushes.White;
+            var standardBrush = (e.RowIndex % 2 == 0) ? Brushes.White : new SolidBrush(Color.FromArgb(255, 240, 240, 240));
             var brush = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
                             ? _selectionBrush : standardBrush;
             e.Graphics.FillRectangle(brush, e.CellBounds);
