@@ -111,30 +111,43 @@ namespace GitUI.BuildServerIntegration
                         var protectedData = new byte[stream.Length];
 
                         stream.Read(protectedData, 0, (int)stream.Length);
-
-                        byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.CurrentUser);
-                        using (var memoryStream = new MemoryStream(unprotectedData))
+                        try
                         {
-                            ConfigFile credentialsConfig = new ConfigFile("", false);
-
-                            using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
+                            byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null,
+                                DataProtectionScope.CurrentUser);
+                            using (var memoryStream = new MemoryStream(unprotectedData))
                             {
-                                credentialsConfig.LoadFromString(textReader.ReadToEnd());
-                            }
+                                ConfigFile credentialsConfig = new ConfigFile("", false);
 
-                            ConfigSection section = credentialsConfig.FindConfigSection(CredentialsConfigName);
-
-                            if (section != null)
-                            {
-                                buildServerCredentials.UseGuestAccess = section.GetValueAsBool(UseGuestAccessKey, true);
-                                buildServerCredentials.Username = section.GetValue(UsernameKey);
-                                buildServerCredentials.Password = section.GetValue(PasswordKey);
-
-                                if (useStoredCredentialsIfExisting)
+                                using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
                                 {
-                                    return buildServerCredentials;
+                                    credentialsConfig.LoadFromString(textReader.ReadToEnd());
+                                }
+
+                                ConfigSection section = credentialsConfig.FindConfigSection(CredentialsConfigName);
+
+                                if (section != null)
+                                {
+                                    buildServerCredentials.UseGuestAccess = section.GetValueAsBool(UseGuestAccessKey,
+                                        true);
+                                    buildServerCredentials.Username = section.GetValue(UsernameKey);
+                                    buildServerCredentials.Password = section.GetValue(PasswordKey);
+
+                                    if (useStoredCredentialsIfExisting)
+                                    {
+                                        return buildServerCredentials;
+                                    }
                                 }
                             }
+                        }
+                        catch (CryptographicException)
+                        {
+                            // As per MSDN, the ProtectedData.Unprotect method is per user,
+                            // it will throw the CryptographicException if the current user 
+                            // is not the one who protected the data.
+
+                            // Set this variable to false so the user can reset the credentials.
+                            useStoredCredentialsIfExisting = false;
                         }
                     }
                 }
