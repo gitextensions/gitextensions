@@ -94,7 +94,7 @@ namespace GitUI
                         revisionToCmp = revisions[1].Guid;
                     else if (diffKind == DiffWithRevisionKind.DiffAParentLocal)
                         revisionToCmp = revisions[0].ParentGuids.Length == 0 ? null : revisions[0].ParentGuids[0];
-                    else if (diffKind == DiffWithRevisionKind.DiffBLocal)
+                    else if (diffKind == DiffWithRevisionKind.DiffBParentLocal)
                         revisionToCmp = revisions[1].ParentGuids.Length == 0 ? null : revisions[1].ParentGuids[0];
                     else
                         revisionToCmp = null;
