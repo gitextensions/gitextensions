@@ -945,13 +945,13 @@ namespace GitUI.CommandsDialogs
             // FilterWatermarkLabel
             // 
             this.FilterWatermarkLabel.AutoSize = true;
-            this.FilterWatermarkLabel.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FilterWatermarkLabel.Font = new System.Drawing.Font("Segoe UI", System.Drawing.SystemFonts.DefaultFont.Size + 1.0f);
             this.FilterWatermarkLabel.ForeColor = System.Drawing.Color.LightGray;
             this.FilterWatermarkLabel.Location = new System.Drawing.Point(3, 2);
             this.FilterWatermarkLabel.Name = "FilterWatermarkLabel";
             this.FilterWatermarkLabel.Size = new System.Drawing.Size(26, 21);
             this.FilterWatermarkLabel.TabIndex = 3;
-            this.FilterWatermarkLabel.Text = "Search";
+            this.FilterWatermarkLabel.Text = "Filter files...";
             // 
             // DiffFiles
             // 
