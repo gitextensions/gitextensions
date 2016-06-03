@@ -24,6 +24,7 @@ using GitUI.Hotkey;
 using GitUI.Plugin;
 using GitUI.Properties;
 using GitUI.Script;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft.Win32;
 using ResourceManager;
@@ -192,7 +193,9 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.GitModuleChanged += SetGitModule;
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
-            Translate();
+            toolStripBranches.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
+
+            Translate ();
 
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
@@ -3558,6 +3561,11 @@ namespace GitUI.CommandsDialogs
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
         {
             UICommands.StartSparseWorkingCopyDialog(this);
+        }
+
+        private void toolStripBranches_DropDown_ResizeDropDownWidth (object sender, EventArgs e)
+        {
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (toolStripBranches.ComboBox, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
         }
     }
 }

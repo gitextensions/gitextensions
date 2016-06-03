@@ -255,6 +255,7 @@
     <Compile Include="UserControls\BranchSelector.Designer.cs">
       <DependentUpon>BranchSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ComboBoxHelper.cs" />
     <Compile Include="UserControls\CommitPickerSmallControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1468,7 +1469,7 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>GitUI.Properties</CustomToolNamespace>
-      <LogicalName>GitUI.Properties.Resources.resources</LogicalName> 
+      <LogicalName>GitUI.Properties.Resources.resources</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGrid.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
