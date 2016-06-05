@@ -381,6 +381,12 @@ namespace GitUI.UserControls
                     form.ShowDialog(TreeViewNode.TreeView);
                 }
             }
+
+            protected override void ApplyStyle()
+            {
+                base.ApplyStyle();
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "Branch.png";
+            }
         }
 
         sealed class RemoteRepoNode : BaseBranchNode
