@@ -120,6 +120,7 @@ namespace GitUI.UserControls
             // 
             // treeMain
             // 
+            this.treeMain.BorderStyle = BorderStyle.None;
             this.treeMain.ContextMenuStrip = this.menuMain;
             this.treeMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeMain.FullRowSelect = true;
