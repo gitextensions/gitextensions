@@ -54,6 +54,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toggleSplitViewLayout = new System.Windows.Forms.ToolStripButton();
+            this.toggleLeftPanel = new System.Windows.Forms.ToolStripButton();
             this.toolStripTextBoxFilter = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
@@ -302,6 +303,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.ToolStrip.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toggleLeftPanel,
             this.RefreshButton,
             this.toolStripSeparator17,
             this.toolStripButtonLevelUp,
@@ -584,6 +586,17 @@ namespace GitUI.CommandsDialogs
             this.toolStripLabel2.Name = "toolStripLabel2";
             this.toolStripLabel2.Size = new System.Drawing.Size(45, 22);
             this.toolStripLabel2.Text = "Filter:";
+            // 
+            // toggleLeftPanel
+            // 
+            this.toggleLeftPanel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Left;
+            this.toggleLeftPanel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toggleLeftPanel.Image = global::GitUI.Properties.Resources.Branch;
+            this.toggleLeftPanel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toggleLeftPanel.Name = "toggleLeftPanel";
+            this.toggleLeftPanel.Size = new System.Drawing.Size(23, 22);
+            this.toggleLeftPanel.ToolTipText = "Toggle left panel";
+            this.toggleLeftPanel.Click += new System.EventHandler(this.toggleLeftPanel_Click);
             // 
             // toggleSplitViewLayout
             // 
@@ -2145,6 +2158,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator33;
         private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
         private ToolStripSplitButton branchSelect;
+        private ToolStripButton toggleLeftPanel;
         private ToolStripButton toggleSplitViewLayout;
         private ToolStripMenuItem editCheckedOutFileToolStripMenuItem;
         private SplitContainer toolPanel;

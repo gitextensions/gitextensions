@@ -186,6 +186,7 @@ namespace GitUI.CommandsDialogs
             Task.Factory.StartNew(PluginLoader.Load)
                 .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
             RevisionGrid.GitModuleChanged += SetGitModule;
+            RevisionGrid.OnToggleLeftPanelRequested = () => toggleLeftPanel_Click(null, null);
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
             Translate();
@@ -3407,6 +3408,11 @@ namespace GitUI.CommandsDialogs
                     components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void toggleLeftPanel_Click(object sender, EventArgs e)
+        {
+            MainSplitContainer.Panel1Collapsed = !MainSplitContainer.Panel1Collapsed;
         }
     }
 }
