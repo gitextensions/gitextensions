@@ -7,10 +7,12 @@ using GitCommands;
 using GitCommands.Git;
 using ResourceManager;
 using System.Drawing;
+using GitUI.Script;
 using GitCommands.Utils;
 
 namespace GitUI.CommandsDialogs
 {
+
     public partial class FormCheckoutBranch : GitModuleForm
     {
         #region Translation
@@ -275,6 +277,8 @@ namespace GitUI.CommandsDialogs
                     UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
             }
 
+            ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+
             if (UICommands.StartCommandLineProcessDialog(cmd, owner))
             {
                 if (stash)
@@ -304,6 +308,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 UICommands.UpdateSubmodules(this);
+
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
 
                 return DialogResult.OK;
             }
