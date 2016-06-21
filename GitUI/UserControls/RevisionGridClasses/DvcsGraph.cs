@@ -181,6 +181,8 @@ namespace GitUI.RevisionGridClasses
         /// </summary>
         internal DataGridViewColumn DateColumn { get { return Columns[3]; } }
 
+        internal DataGridViewColumn IdColumn { get { return Columns[4]; } }
+
         public void ShowAuthor(bool show)
         {
             this.AuthorColumn.Visible = show;

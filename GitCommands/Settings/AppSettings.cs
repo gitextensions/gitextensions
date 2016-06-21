@@ -733,6 +733,12 @@ namespace GitCommands
             set { SetBool("showtags", value); }
         }
 
+        public static bool ShowIds
+        {
+            get { return GetBool("showids", false); }
+            set { SetBool("showids", value); }
+        }
+
         public static int RevisionGraphLayout
         {
             get { return GetInt("revisiongraphlayout", 2); }

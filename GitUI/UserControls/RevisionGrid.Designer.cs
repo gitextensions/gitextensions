@@ -77,6 +77,7 @@ namespace GitUI
             this.IsMessageMultilineDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AuthorDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IdDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mainContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.markRevisionAsBadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.markRevisionAsGoodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -167,6 +168,7 @@ namespace GitUI
             this.MessageDataGridViewColumn,
             this.AuthorDataGridViewColumn,
             this.DateDataGridViewColumn,
+            this.IdDataGridViewColumn,
             this.IsMessageMultilineDataGridViewColumn});
             this.Revisions.ContextMenuStrip = this.mainContextMenu;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -239,7 +241,7 @@ namespace GitUI
             this.AuthorDataGridViewColumn.Name = "Author";
             this.AuthorDataGridViewColumn.ReadOnly = true;
             this.AuthorDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.AuthorDataGridViewColumn.Width = 150;
+            this.AuthorDataGridViewColumn.Width = 130;
             // 
             // Date
             // 
@@ -247,7 +249,16 @@ namespace GitUI
             this.DateDataGridViewColumn.Name = "Date";
             this.DateDataGridViewColumn.ReadOnly = true;
             this.DateDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.DateDataGridViewColumn.Width = 180;
+            this.DateDataGridViewColumn.Width = 120;
+            //
+            // Id
+            //
+            this.IdDataGridViewColumn.HeaderText = "SHA1";
+            this.IdDataGridViewColumn.Name = "ID";
+            this.IdDataGridViewColumn.ReadOnly = true;
+            this.IdDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.IdDataGridViewColumn.Width = 50;
+            this.IdDataGridViewColumn.Visible = false;
             // 
             // mainContextMenu
             // 
@@ -834,6 +845,7 @@ namespace GitUI
         private System.Windows.Forms.DataGridViewTextBoxColumn MessageDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AuthorDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IdDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn GraphDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn IsMessageMultilineDataGridViewColumn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
