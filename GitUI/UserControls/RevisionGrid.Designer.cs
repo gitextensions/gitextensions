@@ -241,7 +241,7 @@ namespace GitUI
             this.AuthorDataGridViewColumn.Name = "Author";
             this.AuthorDataGridViewColumn.ReadOnly = true;
             this.AuthorDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.AuthorDataGridViewColumn.Width = 130;
+            this.AuthorDataGridViewColumn.Width = 150;
             // 
             // Date
             // 
@@ -249,7 +249,7 @@ namespace GitUI
             this.DateDataGridViewColumn.Name = "Date";
             this.DateDataGridViewColumn.ReadOnly = true;
             this.DateDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.DateDataGridViewColumn.Width = 120;
+            this.DateDataGridViewColumn.Width = 135;
             //
             // Id
             //
@@ -257,7 +257,7 @@ namespace GitUI
             this.IdDataGridViewColumn.Name = "ID";
             this.IdDataGridViewColumn.ReadOnly = true;
             this.IdDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.IdDataGridViewColumn.Width = 50;
+            this.IdDataGridViewColumn.Width = 62;
             this.IdDataGridViewColumn.Visible = false;
             // 
             // mainContextMenu
