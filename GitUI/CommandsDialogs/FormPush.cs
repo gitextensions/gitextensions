@@ -9,6 +9,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Script;
+using GitUI.UserControls;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -115,7 +116,7 @@ namespace GitUI.CommandsDialogs
             else
                 _NO_TRANSLATE_Remotes.Text = _currentBranchRemote;
             RemotesUpdated(null, null);
-            
+
             if (AppSettings.AlwaysShowAdvOpt)
                 ShowOptions_LinkClicked(null, null);
         }
@@ -159,7 +160,7 @@ namespace GitUI.CommandsDialogs
         }
 
         private bool IsBranchKnownToRemote(string remote, string branch)
-        { 
+        {
             var refs = Module.GetRefs(true, true);
 
             var remoteRefs = refs.Where(r => r.IsRemote && r.LocalName == branch && r.Remote == remote);
@@ -519,6 +520,8 @@ namespace GitUI.CommandsDialogs
                 _NO_TRANSLATE_Branch.Items.Add(head);
 
             _NO_TRANSLATE_Branch.Text = curBranch;
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (_NO_TRANSLATE_Branch, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
         }
 
         private void PullClick(object sender, EventArgs e)
@@ -537,6 +540,8 @@ namespace GitUI.CommandsDialogs
             foreach (var head in Module.GetRefs(false, true))
                 if (!RemoteBranch.Items.Contains(head))
                     RemoteBranch.Items.Add(head);
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (RemoteBranch, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
         }
 
         private void BranchSelectedValueChanged(object sender, EventArgs e)
@@ -669,6 +674,8 @@ namespace GitUI.CommandsDialogs
                 .Select(tag => tag.Name).ToList();
             tags.Insert(0, AllRefs);
             TagComboBox.DataSource = tags;
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (TagComboBox, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
         }
 
         private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)

@@ -10,6 +10,7 @@ using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.Script;
+using GitUI.UserControls;
 using ResourceManager;
 using Settings = GitCommands.AppSettings;
 
@@ -166,6 +167,8 @@ namespace GitUI.CommandsDialogs
             IList<string> remotes = new List<string>(Module.GetRemotes());
             remotes.Insert(0, AllRemotes);
             _NO_TRANSLATE_Remotes.DataSource = remotes;
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (_NO_TRANSLATE_Remotes, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
         }
 
         public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
@@ -234,6 +237,8 @@ namespace GitUI.CommandsDialogs
             //_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
             _heads.Insert(0, GitRef.NoHead(Module));
             Branches.DataSource = _heads;
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (Branches, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
 
             Cursor.Current = Cursors.Default;
         }
