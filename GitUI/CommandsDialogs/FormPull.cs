@@ -168,7 +168,7 @@ namespace GitUI.CommandsDialogs
             remotes.Insert(0, AllRemotes);
             _NO_TRANSLATE_Remotes.DataSource = remotes;
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth (_NO_TRANSLATE_Remotes, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (_NO_TRANSLATE_Remotes, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
@@ -238,7 +238,7 @@ namespace GitUI.CommandsDialogs
             _heads.Insert(0, GitRef.NoHead(Module));
             Branches.DataSource = _heads;
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth (Branches, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (Branches, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
             Cursor.Current = Cursors.Default;
         }

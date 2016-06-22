@@ -3565,7 +3565,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripBranches_DropDown_ResizeDropDownWidth (object sender, EventArgs e)
         {
-            ComboBoxHelper.ResizeComboBoxDropDownWidth (toolStripBranches.ComboBox, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (toolStripBranches.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
     }
 }

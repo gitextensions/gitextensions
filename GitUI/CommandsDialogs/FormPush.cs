@@ -521,7 +521,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_Branch.Text = curBranch;
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth (_NO_TRANSLATE_Branch, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (_NO_TRANSLATE_Branch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void PullClick(object sender, EventArgs e)
@@ -541,7 +541,7 @@ namespace GitUI.CommandsDialogs
                 if (!RemoteBranch.Items.Contains(head))
                     RemoteBranch.Items.Add(head);
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth (RemoteBranch, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (RemoteBranch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void BranchSelectedValueChanged(object sender, EventArgs e)
@@ -675,7 +675,7 @@ namespace GitUI.CommandsDialogs
             tags.Insert(0, AllRefs);
             TagComboBox.DataSource = tags;
 
-            ComboBoxHelper.ResizeComboBoxDropDownWidth (TagComboBox, AppSettings.BranchDropDownMinWith, AppSettings.BranchDropDownMaxWith);
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (TagComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)

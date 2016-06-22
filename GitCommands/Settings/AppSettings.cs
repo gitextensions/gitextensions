@@ -35,8 +35,8 @@ namespace GitCommands
         private static RepoDistSettings _SettingsContainer;
         public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
 
-        public static int BranchDropDownMinWith = 300;
-        public static int BranchDropDownMaxWith = 600;
+        public static int BranchDropDownMinWidth = 300;
+        public static int BranchDropDownMaxWidth = 600;
 
         static AppSettings()
         {

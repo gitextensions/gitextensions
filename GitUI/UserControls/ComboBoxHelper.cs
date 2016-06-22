@@ -5,7 +5,7 @@ namespace GitUI.UserControls
 {
     public static class ComboBoxHelper
     {
-        public static void ResizeComboBoxDropDownWidth(ComboBox comboBox, int minWith, int maxWith)
+        public static void ResizeComboBoxDropDownWidth(ComboBox comboBox, int minWidth, int maxWidth)
         {
             var calculatedWidth = 0;
             using (var graphics = comboBox.CreateGraphics())
@@ -16,7 +16,7 @@ namespace GitUI.UserControls
                     calculatedWidth = Math.Max((int) area.Width, calculatedWidth);
                 }
             }
-            comboBox.DropDownWidth = Math.Min(Math.Max(calculatedWidth, minWith), maxWith);
+            comboBox.DropDownWidth = Math.Min(Math.Max(calculatedWidth, minWidth), maxWidth);
         }
     }
 }
