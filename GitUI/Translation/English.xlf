@@ -2544,6 +2544,10 @@ Enter valid branch name or select predefined value.</source>
         <source>Don't show me this message again.</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkSetLocalChangesActionAsDefault.Text">
+        <source>Set as default</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Select branch</source>
         <target />
