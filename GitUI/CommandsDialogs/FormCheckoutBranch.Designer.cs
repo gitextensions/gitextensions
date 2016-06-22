@@ -238,6 +238,7 @@ namespace GitUI.CommandsDialogs
             this.rbReset.TabIndex = 4;
             this.rbReset.Text = "Reset";
             this.rbReset.UseVisualStyleBackColor = true;
+            this.rbReset.CheckedChanged += new System.EventHandler(this.rbReset_CheckedChanged);
             // 
             // rbStash
             // 

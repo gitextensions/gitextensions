@@ -436,5 +436,14 @@ namespace GitUI.CommandsDialogs
         {
             Branches.Focus();
         }
+
+        private void rbReset_CheckedChanged(object sender, EventArgs e)
+        {
+            chkSetLocalChangesActionAsDefault.Enabled = !rbReset.Checked;
+            if (rbReset.Checked)
+            {
+                chkSetLocalChangesActionAsDefault.Checked = false;
+            }
+        }
     }
 }
