@@ -596,6 +596,9 @@ namespace GitUI
 
         public override void Refresh()
         {
+            if (IsDisposed)
+                return;
+
             SetRevisionsLayout();
 
             base.Refresh();
