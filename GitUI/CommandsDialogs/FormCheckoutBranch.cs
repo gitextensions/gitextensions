@@ -256,7 +256,8 @@ namespace GitUI.CommandsDialogs
             }
 
             LocalChangesAction changes = ChangesMode;
-            if (changes != LocalChangesAction.Reset)
+            if (changes != LocalChangesAction.Reset &&
+                chkSetLocalChangesActionAsDefault.Checked)
             {
                 AppSettings.CheckoutBranchAction = changes;
             }
@@ -416,7 +417,7 @@ namespace GitUI.CommandsDialogs
                         .Where(a => !GitModule.IsDetachedHead(a) &&
                                     !a.EndsWith("/HEAD"));
                 result.UnionWith(branches);
-                
+
             }
             for (int index = 1; index < _containRevisons.Length; index++)
             {
