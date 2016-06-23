@@ -39,9 +39,17 @@ namespace TeamCityIntegration.Settings
 
         public void SaveSettings(ISettingsSource buildServerConfig)
         {
-            buildServerConfig.SetString("BuildServerUrl", TeamCityServerUrl.Text);
-            buildServerConfig.SetString("ProjectName", TeamCityProjectName.Text);
-            buildServerConfig.SetString("BuildIdFilter", TeamCityBuildIdFilter.Text);
+            if (BuildServerSettingsHelper.IsRegexValid(TeamCityBuildIdFilter.Text))
+            {
+                buildServerConfig.SetString("BuildServerUrl", TeamCityServerUrl.Text);
+                buildServerConfig.SetString("ProjectName", TeamCityProjectName.Text);
+                buildServerConfig.SetString("BuildIdFilter", TeamCityBuildIdFilter.Text);
+            }
+        }
+
+        private void TeamCityBuildIdFilter_TextChanged(object sender, System.EventArgs e)
+        {
+            labelRegexError.Visible = !BuildServerSettingsHelper.IsRegexValid(TeamCityBuildIdFilter.Text);
         }
     }
 }
