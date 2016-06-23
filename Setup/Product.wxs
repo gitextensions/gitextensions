@@ -273,6 +273,9 @@
             <!-- Component Id="TfsInterop.Vs2013.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2013\bin\Release\TfsInterop.Vs2013.dll" />
             </Component -->
+            <Component Id="TfsInterop.Vs2015.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\TfsInterop.Vs2015.dll" />
+            </Component>
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
             <Component Id="Blue.ico" Guid="*">
@@ -706,6 +709,7 @@
                     <ComponentRef Id="TfsIntegration.dll" />
                     <ComponentRef Id="TfsInterop.Vs2012.dll" />
                     <!-- ComponentRef Id="TfsInterop.Vs2013.dll" /-->
+                    <ComponentRef Id="TfsInterop.Vs2015.dll" />
                 </Feature>
             </Feature>
             <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
