@@ -34,7 +34,7 @@ namespace TfsIntegration.Settings
                 TfsServer.Text = buildServerConfig.GetString("TfsServer", string.Empty);
                 TfsTeamCollectionName.Text = buildServerConfig.GetString("TfsTeamCollectionName", "DefaultCollection");
                 TfsProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
-                TfsBuildDefinitionName.Text = buildServerConfig.GetString("TfsBuildDefinitionName", string.Empty);
+                TfsBuildDefinitionNameFilter.Text = buildServerConfig.GetString("TfsBuildDefinitionName", string.Empty);
             }
         }
 
@@ -43,7 +43,7 @@ namespace TfsIntegration.Settings
             buildServerConfig.SetString("TfsServer", TfsServer.Text);
             buildServerConfig.SetString("TfsTeamCollectionName", TfsTeamCollectionName.Text);
             buildServerConfig.SetString("ProjectName", TfsProjectName.Text);
-            buildServerConfig.SetString("TfsBuildDefinitionName", TfsBuildDefinitionName.Text);
+            buildServerConfig.SetString("TfsBuildDefinitionName", TfsBuildDefinitionNameFilter.Text);
         }
     }
 }

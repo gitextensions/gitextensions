@@ -28,15 +28,57 @@ namespace TfsIntegration.Settings
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.Label label13;
+            System.Windows.Forms.Label label1;
+            System.Windows.Forms.Label label2;
+            System.Windows.Forms.Label label3;
+            System.Windows.Forms.Label labelBuildIdFilter;
             this.TfsServer = new System.Windows.Forms.TextBox();
             this.TfsProjectName = new System.Windows.Forms.TextBox();
             this.TfsTeamCollectionName = new System.Windows.Forms.TextBox();
-            this.TfsBuildDefinitionName = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.TfsBuildDefinitionNameFilter = new System.Windows.Forms.TextBox();
+            label13 = new System.Windows.Forms.Label();
+            label1 = new System.Windows.Forms.Label();
+            label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            labelBuildIdFilter = new System.Windows.Forms.Label();
             this.SuspendLayout();
+            // 
+            // TfsServer
+            // 
+            this.TfsServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TfsServer.Location = new System.Drawing.Point(162, 8);
+            this.TfsServer.Name = "TfsServer";
+            this.TfsServer.Size = new System.Drawing.Size(380, 23);
+            this.TfsServer.TabIndex = 1;
+            // 
+            // TfsProjectName
+            // 
+            this.TfsProjectName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TfsProjectName.Location = new System.Drawing.Point(162, 76);
+            this.TfsProjectName.Name = "TfsProjectName";
+            this.TfsProjectName.Size = new System.Drawing.Size(380, 23);
+            this.TfsProjectName.TabIndex = 3;
+            // 
+            // TfsTeamCollectionName
+            // 
+            this.TfsTeamCollectionName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TfsTeamCollectionName.Location = new System.Drawing.Point(162, 42);
+            this.TfsTeamCollectionName.Name = "TfsTeamCollectionName";
+            this.TfsTeamCollectionName.Size = new System.Drawing.Size(380, 23);
+            this.TfsTeamCollectionName.TabIndex = 2;
+            // 
+            // TfsBuildDefinitionNameFilter
+            // 
+            this.TfsBuildDefinitionNameFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TfsBuildDefinitionNameFilter.Location = new System.Drawing.Point(162, 110);
+            this.TfsBuildDefinitionNameFilter.Name = "TfsBuildDefinitionNameFilter";
+            this.TfsBuildDefinitionNameFilter.Size = new System.Drawing.Size(380, 23);
+            this.TfsBuildDefinitionNameFilter.TabIndex = 4;
             // 
             // label13
             // 
@@ -70,61 +112,36 @@ namespace TfsIntegration.Settings
             label3.AutoSize = true;
             label3.Location = new System.Drawing.Point(3, 104);
             label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(158, 30);
+            label3.Size = new System.Drawing.Size(137, 30);
             label3.TabIndex = 2;
-            label3.Text = "Build definition name\r\n(use first found if left empty)";
+            label3.Text = "Build definition name\r\n(all existing if left empty)";
             // 
-            // TfsServer
+            // labelBuildIdFilter
             // 
-            this.TfsServer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TfsServer.Location = new System.Drawing.Point(162, 8);
-            this.TfsServer.Name = "TfsServer";
-            this.TfsServer.Size = new System.Drawing.Size(380, 23);
-            this.TfsServer.TabIndex = 1;
-            // 
-            // TfsProjectName
-            // 
-            this.TfsProjectName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TfsProjectName.Location = new System.Drawing.Point(162, 76);
-            this.TfsProjectName.Name = "TfsProjectName";
-            this.TfsProjectName.Size = new System.Drawing.Size(380, 23);
-            this.TfsProjectName.TabIndex = 3;
-            // 
-            // TfsTeamCollectionName
-            // 
-            this.TfsTeamCollectionName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TfsTeamCollectionName.Location = new System.Drawing.Point(162, 42);
-            this.TfsTeamCollectionName.Name = "TfsTeamCollectionName";
-            this.TfsTeamCollectionName.Size = new System.Drawing.Size(380, 23);
-            this.TfsTeamCollectionName.TabIndex = 2;
-            // 
-            // TfsBuildDefinitionName
-            // 
-            this.TfsBuildDefinitionName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TfsBuildDefinitionName.Location = new System.Drawing.Point(162, 110);
-            this.TfsBuildDefinitionName.Name = "TfsBuildDefinitionName";
-            this.TfsBuildDefinitionName.Size = new System.Drawing.Size(380, 23);
-            this.TfsBuildDefinitionName.TabIndex = 4;
+            labelBuildIdFilter.AutoSize = true;
+            labelBuildIdFilter.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
+            labelBuildIdFilter.Location = new System.Drawing.Point(159, 136);
+            labelBuildIdFilter.Name = "labelBuildIdFilter";
+            labelBuildIdFilter.Size = new System.Drawing.Size(45, 15);
+            labelBuildIdFilter.TabIndex = 8;
+            labelBuildIdFilter.Text = "Regexp";
             // 
             // TfsSettingsUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(labelBuildIdFilter);
             this.Controls.Add(label3);
             this.Controls.Add(label2);
             this.Controls.Add(label1);
             this.Controls.Add(label13);
-            this.Controls.Add(this.TfsBuildDefinitionName);
+            this.Controls.Add(this.TfsBuildDefinitionNameFilter);
             this.Controls.Add(this.TfsTeamCollectionName);
             this.Controls.Add(this.TfsProjectName);
             this.Controls.Add(this.TfsServer);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "TfsSettingsUserControl";
-            this.Size = new System.Drawing.Size(550, 140);
+            this.Size = new System.Drawing.Size(550, 157);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -135,10 +152,6 @@ namespace TfsIntegration.Settings
         private System.Windows.Forms.TextBox TfsServer;
         private System.Windows.Forms.TextBox TfsProjectName;
         private System.Windows.Forms.TextBox TfsTeamCollectionName;
-        private System.Windows.Forms.TextBox TfsBuildDefinitionName;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox TfsBuildDefinitionNameFilter;
     }
 }
