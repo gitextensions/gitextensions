@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using GitCommands.Settings;
@@ -40,10 +41,18 @@ namespace TfsIntegration.Settings
 
         public void SaveSettings(ISettingsSource buildServerConfig)
         {
-            buildServerConfig.SetString("TfsServer", TfsServer.Text);
-            buildServerConfig.SetString("TfsTeamCollectionName", TfsTeamCollectionName.Text);
-            buildServerConfig.SetString("ProjectName", TfsProjectName.Text);
-            buildServerConfig.SetString("TfsBuildDefinitionName", TfsBuildDefinitionNameFilter.Text);
+            if (BuildServerSettingsHelper.IsRegexValid(TfsBuildDefinitionNameFilter.Text))
+            {
+                buildServerConfig.SetString("TfsServer", TfsServer.Text);
+                buildServerConfig.SetString("TfsTeamCollectionName", TfsTeamCollectionName.Text);
+                buildServerConfig.SetString("ProjectName", TfsProjectName.Text);
+                buildServerConfig.SetString("TfsBuildDefinitionName", TfsBuildDefinitionNameFilter.Text);
+            }
+        }
+
+        private void TfsBuildDefinitionNameFilter_TextChanged(object sender, EventArgs e)
+        {
+            labelRegexError.Visible = !BuildServerSettingsHelper.IsRegexValid(TfsBuildDefinitionNameFilter.Text);
         }
     }
 }

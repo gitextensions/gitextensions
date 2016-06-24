@@ -75,6 +75,7 @@
     <Compile Include="BuildServerIntegration\BuildInfo.cs" />
     <Compile Include="BuildServerIntegration\BuildServerAdapterMetadataAttribute.cs" />
     <Compile Include="BuildServerIntegration\BuildServerCredentials.cs" />
+    <Compile Include="BuildServerIntegration\BuildServerSettingsHelper.cs" />
     <Compile Include="BuildServerIntegration\BuildServerSettingsUserControlMetadata.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerAdapter.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerCredentials.cs" />
