@@ -1823,7 +1823,7 @@ Tendrá acceso para hacer Push. {2}</target>
         <source>Add file(s) to .gitignore</source>
         
       </trans-unit>
-      <trans-unit id="AddToIngore.Text">
+      <trans-unit id="AddToIgnore.Text">
         <source>Ignore</source>
         <target>Añadir a .gitignore</target>
         

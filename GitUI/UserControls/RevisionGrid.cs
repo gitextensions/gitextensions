@@ -3035,31 +3035,39 @@ namespace GitUI
         private void goToParentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var r = GetRevision(LastRowIndex);
-
-            if (_parentChildNavigationHistory.HasPreviousParent)
-                _parentChildNavigationHistory.NavigateToPreviousParent(r.Guid);
-            else if (r.HasParent())
-                _parentChildNavigationHistory.NavigateToParent(r.Guid, r.ParentGuids[0]);
+            if (r != null)
+            {
+                if (_parentChildNavigationHistory.HasPreviousParent)
+                    _parentChildNavigationHistory.NavigateToPreviousParent(r.Guid);
+                else if (r.HasParent())
+                    _parentChildNavigationHistory.NavigateToParent(r.Guid, r.ParentGuids[0]);
+            }
         }
 
         private void goToChildToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var r = GetRevision(LastRowIndex);
-            var children = GetRevisionChildren(r.Guid);
+            if (r != null)
+            {
+                var children = GetRevisionChildren(r.Guid);
 
-            if (_parentChildNavigationHistory.HasPreviousChild)
-                _parentChildNavigationHistory.NavigateToPreviousChild(r.Guid);
-            else if (children.Any())
-                _parentChildNavigationHistory.NavigateToChild(r.Guid, children[0]);
+                if (_parentChildNavigationHistory.HasPreviousChild)
+                    _parentChildNavigationHistory.NavigateToPreviousChild(r.Guid);
+                else if (children.Any())
+                    _parentChildNavigationHistory.NavigateToChild(r.Guid, children[0]);
+            }
         }
 
         private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
         {
-            var revision = GetRevision(LastRowIndex);
-            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(revision.Guid, 15));
-            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(revision.Subject, 30));
-            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, revision.Author);
-            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, revision.CommitDate.ToString());
+            var r = GetRevision(LastRowIndex);
+            if (r != null)
+            {
+                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(r.Guid, 15));
+                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(r.Subject, 30));
+                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, r.Author);
+                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, r.CommitDate.ToString());
+            }
         }
 
         public void GoToRef(string refName, bool showNoRevisionMsg)
