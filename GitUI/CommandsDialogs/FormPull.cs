@@ -667,7 +667,7 @@ namespace GitUI.CommandsDialogs
                 IEnumerable<string> remotes = (IEnumerable<string>)_NO_TRANSLATE_Remotes.DataSource;
                 foreach (var r in remotes)
                 {
-                    if (!r.Equals(AllRemotes) && !r.IsNullOrWhiteSpace())
+                    if (!r.IsNullOrWhiteSpace() && !r.Equals(AllRemotes))
                         yield return r;
                 }
             }
