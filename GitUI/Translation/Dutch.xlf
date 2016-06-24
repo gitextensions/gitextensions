@@ -1823,7 +1823,7 @@ U heeft rechten om commits te verzenden. {2}
         <source>Add file(s) to .gitignore</source>
         
       </trans-unit>
-      <trans-unit id="AddToIngore.Text">
+      <trans-unit id="AddToIgnore.Text">
         <source>Ignore</source>
         <target>Toevoegen aan .gitignore</target>
         

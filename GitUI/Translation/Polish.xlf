@@ -1828,7 +1828,7 @@ Będziesz mieć uprawnienia wysyłania. {2}</target>
         <target>Dodaj plik(i) do .gitignore</target>
         
       </trans-unit>
-      <trans-unit id="AddToIngore.Text">
+      <trans-unit id="AddToIgnore.Text">
         <source>Ignore</source>
         <target>Ignoruj</target>
         

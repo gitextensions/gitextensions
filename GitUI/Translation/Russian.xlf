@@ -1828,7 +1828,7 @@ You will have push access. {2}</source>
         <target>Добавить файл(ы) в .gitignore</target>
         
       </trans-unit>
-      <trans-unit id="AddToIngore.Text">
+      <trans-unit id="AddToIgnore.Text">
         <source>Ignore</source>
         <target>Добавить</target>
         

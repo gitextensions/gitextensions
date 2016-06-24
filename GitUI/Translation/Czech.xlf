@@ -1828,7 +1828,7 @@ Budete moci odesílat. {2}</target>
         <target>Přidat soubor(y) do .gitignore</target>
         
       </trans-unit>
-      <trans-unit id="AddToIngore.Text">
+      <trans-unit id="AddToIgnore.Text">
         <source>Ignore</source>
         <target>Ignorovat</target>
         
