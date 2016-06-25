@@ -37,6 +37,7 @@ namespace TeamCityIntegration.Settings
             this.TeamCityProjectName = new System.Windows.Forms.TextBox();
             this.TeamCityBuildIdFilter = new System.Windows.Forms.TextBox();
             this.labelRegexError = new System.Windows.Forms.Label();
+            this.CheckBoxLogAsGuest = new System.Windows.Forms.CheckBox();
             label13 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
             labelBuildFilter = new System.Windows.Forms.Label();
@@ -97,7 +98,7 @@ namespace TeamCityIntegration.Settings
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TeamCityServerUrl.Location = new System.Drawing.Point(136, 9);
             this.TeamCityServerUrl.Name = "TeamCityServerUrl";
-            this.TeamCityServerUrl.Size = new System.Drawing.Size(443, 23);
+            this.TeamCityServerUrl.Size = new System.Drawing.Size(509, 23);
             this.TeamCityServerUrl.TabIndex = 1;
             // 
             // TeamCityProjectName
@@ -106,7 +107,7 @@ namespace TeamCityIntegration.Settings
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TeamCityProjectName.Location = new System.Drawing.Point(136, 39);
             this.TeamCityProjectName.Name = "TeamCityProjectName";
-            this.TeamCityProjectName.Size = new System.Drawing.Size(443, 23);
+            this.TeamCityProjectName.Size = new System.Drawing.Size(509, 23);
             this.TeamCityProjectName.TabIndex = 3;
             // 
             // TeamCityBuildIdFilter
@@ -115,7 +116,7 @@ namespace TeamCityIntegration.Settings
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TeamCityBuildIdFilter.Location = new System.Drawing.Point(136, 93);
             this.TeamCityBuildIdFilter.Name = "TeamCityBuildIdFilter";
-            this.TeamCityBuildIdFilter.Size = new System.Drawing.Size(443, 23);
+            this.TeamCityBuildIdFilter.Size = new System.Drawing.Size(509, 23);
             this.TeamCityBuildIdFilter.TabIndex = 5;
             this.TeamCityBuildIdFilter.TextChanged += new System.EventHandler(this.TeamCityBuildIdFilter_TextChanged);
             // 
@@ -124,17 +125,28 @@ namespace TeamCityIntegration.Settings
             this.labelRegexError.AutoSize = true;
             this.labelRegexError.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.labelRegexError.ForeColor = System.Drawing.Color.Red;
-            this.labelRegexError.Location = new System.Drawing.Point(133, 152);
+            this.labelRegexError.Location = new System.Drawing.Point(188, 121);
             this.labelRegexError.Name = "labelRegexError";
             this.labelRegexError.Size = new System.Drawing.Size(457, 20);
             this.labelRegexError.TabIndex = 10;
             this.labelRegexError.Text = "The \"Build Id Filter\" regular expression is not valid and won\'t be saved!";
             this.labelRegexError.Visible = false;
             // 
+            // CheckBoxLogAsGuest
+            // 
+            this.CheckBoxLogAsGuest.AutoSize = true;
+            this.CheckBoxLogAsGuest.Location = new System.Drawing.Point(137, 148);
+            this.CheckBoxLogAsGuest.Name = "CheckBoxLogAsGuest";
+            this.CheckBoxLogAsGuest.Size = new System.Drawing.Size(268, 21);
+            this.CheckBoxLogAsGuest.TabIndex = 11;
+            this.CheckBoxLogAsGuest.Text = "Log as guest to display the build report";
+            this.CheckBoxLogAsGuest.UseVisualStyleBackColor = true;
+            // 
             // TeamCitySettingsUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.CheckBoxLogAsGuest);
             this.Controls.Add(this.labelRegexError);
             this.Controls.Add(labelBuildIdFilter);
             this.Controls.Add(labelProjectNameComment);
@@ -146,7 +158,7 @@ namespace TeamCityIntegration.Settings
             this.Controls.Add(this.TeamCityServerUrl);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "TeamCitySettingsUserControl";
-            this.Size = new System.Drawing.Size(592, 186);
+            this.Size = new System.Drawing.Size(658, 178);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -158,5 +170,6 @@ namespace TeamCityIntegration.Settings
         private System.Windows.Forms.TextBox TeamCityProjectName;
         private System.Windows.Forms.TextBox TeamCityBuildIdFilter;
         private System.Windows.Forms.Label labelRegexError;
+        private System.Windows.Forms.CheckBox CheckBoxLogAsGuest;
     }
 }
