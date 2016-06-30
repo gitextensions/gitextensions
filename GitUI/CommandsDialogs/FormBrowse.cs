@@ -25,6 +25,7 @@ using GitUI.Script;
 using GitUIPluginInterfaces;
 using Microsoft.Win32;
 using ResourceManager;
+using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 using Settings = GitCommands.AppSettings;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;

@@ -7,6 +7,7 @@ using GitCommands;
 using GitCommands.Settings;
 using Microsoft.Win32;
 using ResourceManager;
+using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {

@@ -15,16 +15,14 @@ namespace GitUI.UserControls
         List<Tree> rootNodes = new List<Tree>();
         /// <summary>Image key for a head branch.</summary>
         static readonly string headBranchKey = Guid.NewGuid().ToString();
-
+        private AutoCompleteTextBoxes.AutoCompleteTextBox txtBranchFilter;
         private HashSet<string> _branchFilterAutoCompletionSrc = new HashSet<string>();
 
         public RepoObjectsTree()
         {
             InitializeComponent();
+            InitiliazeSearchBox();
             treeMain.PreviewKeyDown += OnPreviewKeyDown;
-            txtBranchFilter.PreviewKeyDown += OnPreviewKeyDown;
-            txtBranchFilter.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            txtBranchFilter.AutoCompleteSource = AutoCompleteSource.CustomSource;
 
             btnSearch.PreviewKeyDown += OnPreviewKeyDown;
             PreviewKeyDown += OnPreviewKeyDown;
@@ -36,6 +34,24 @@ namespace GitUI.UserControls
             treeMain.HideSelection = false;
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
+        }
+
+        private void InitiliazeSearchBox()
+        {
+            txtBranchFilter = AutoCompleteTextBoxes.AutoCompleteTextBoxFactory.Create();
+            //
+            // txtBranchFilter
+            //
+            this.txtBranchFilter.Dock = DockStyle.Fill;
+            this.txtBranchFilter.Name = "txtBranchFilter";
+            this.txtBranchFilter.TabIndex = 1;
+            this.txtBranchFilter.TextChanged += OnBranchFilterChanged;
+            this.txtBranchFilter.KeyDown += txtBranchFilter_KeyDown;
+            this.branchFilterPanel.Controls.Add(txtBranchFilter, 1, 0);
+
+            txtBranchFilter.PreviewKeyDown += OnPreviewKeyDown;
+            txtBranchFilter.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            txtBranchFilter.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
 
         private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
