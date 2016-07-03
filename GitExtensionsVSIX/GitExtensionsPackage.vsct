@@ -177,14 +177,22 @@
           <ButtonText>&amp;Apply patch</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtViewChangesCommand" priority="0x0001" type="Button">
+      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtHistoryCommand" priority="0x0001" type="Button">
+        <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuFindGroup" />
+        <Icon guid="guidImages" id="history"/>
+        <Strings>
+          <CommandName>GitExt.FileHistory</CommandName>
+          <ButtonText>&amp;File history</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtViewChangesCommand" priority="0x0002" type="Button">
         <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuFindGroup" />
         <Strings>
           <CommandName>GitExt.ViewChanges</CommandName>
           <ButtonText>V&amp;iew changes</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtFindFileCommand" priority="0x0002" type="Button">
+      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtFindFileCommand" priority="0x0003" type="Button">
         <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuFindGroup" />
         <Icon guid="guidImages" id="find"/>
         <Strings>
