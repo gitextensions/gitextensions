@@ -104,7 +104,7 @@
         <Icon guid="guidImages" id="clone"/>
         <Strings>
           <CommandName>GitExt.Clone</CommandName>
-          <ButtonText>Clone &amp;repository</ButtonText>
+          <ButtonText>Clone repositor&amp;y</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtNewCommand" priority="0x0003" type="Button">
