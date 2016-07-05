@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.FullHistoryInFileHistory)
             {
-                res.RevisionFilter = string.Concat(" --full-history --simplify-by-decoration ", res.RevisionFilter);
+                res.RevisionFilter = string.Concat(" --full-history ", res.RevisionFilter);
             }
 
             res.PathFilter = " \"" + fileName + "\"";
