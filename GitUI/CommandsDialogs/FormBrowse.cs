@@ -3086,10 +3086,10 @@ namespace GitUI.CommandsDialogs
                 var revision = new GitRevision(Module, e.Data);
                 var found = RevisionGrid.SetSelectedRevision(revision);
 
-                // If --first-parent filtration is used, user can click on parent commit
-                // that is not present in the shown git log, explict filtration needs to be 
-                // applied first to traverse to this commit
-                if (!found)
+                // When 'git log --first-parent' filtration is used, user can click on child commit
+                // that is not present in the shown git log. User still wants to see the child commit
+                // and to make it possible we add explicit branch filter and refresh.
+                if (AppSettings.FirstParentFilterEnabled && !found)
                 {
                     _filterBranchHelper.SetBranchFilter(e.Data, refresh: true);
                     RevisionGrid.SetSelectedRevision(revision);
