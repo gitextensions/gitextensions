@@ -648,20 +648,41 @@ namespace GitUI
         // Returns whether the required revision was found and selected
         private bool InternalSetSelectedRevision(string revision)
         {
-            if (revision != null)
+            int index = FindRevisionIndex(revision);
+            if( index >= 0 )
             {
-                for (var i = 0; i < Revisions.RowCount; i++)
+                SetSelectedIndex(index);
+                return true;
+            }
+            else
+            { 
+                Revisions.ClearSelection();
+                Revisions.Select();
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Find specified revision in known to the grid revisions 
+        /// </summary>
+        /// <param name="revision">Revision to lookup</param>
+        /// <returns>Index of the found revision or -1 if nothing was found</returns>
+        private int FindRevisionIndex(string revision)
+        {
+            if (string.IsNullOrWhiteSpace(revision))
+            {
+                return -1;
+            }
+
+            for (int i = 0; i < Revisions.RowCount; i++)
+            {
+                if (GetRevision(i).Guid == revision)
                 {
-                    if (GetRevision(i).Guid != revision)
-                        continue;
-                    SetSelectedIndex(i);
-                    return true;
+                    return i;
                 }
             }
 
-            Revisions.ClearSelection();
-            Revisions.Select();
-            return false;
+            return -1;
         }
 
         public bool SetSelectedRevision(string revision)
