@@ -217,6 +217,7 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1 = new GitUI.MenuStripEx();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.toolStripMenuItemReflog = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
             this.toolPanel.Panel1.SuspendLayout();
             this.toolPanel.Panel2.SuspendLayout();
@@ -1489,6 +1490,7 @@ namespace GitUI.CommandsDialogs
             this.archiveToolStripMenuItem,
             this.checkoutToolStripMenuItem,
             this.bisectToolStripMenuItem,
+            this.toolStripMenuItemReflog,
             this.toolStripSeparator22,
             this.formatPatchToolStripMenuItem,
             this.applyPatchToolStripMenuItem,
@@ -1967,6 +1969,13 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1.Size = new System.Drawing.Size(923, 24);
             this.menuStrip1.TabIndex = 3;
             // 
+            // toolStripMenuItemReflog
+            // 
+            this.toolStripMenuItemReflog.Name = "toolStripMenuItemReflog";
+            this.toolStripMenuItemReflog.Size = new System.Drawing.Size(254, 26);
+            this.toolStripMenuItemReflog.Text = "Show reflog...";
+            this.toolStripMenuItemReflog.Click += new System.EventHandler(this.toolStripMenuItemReflog_Click);
+            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2218,5 +2227,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem menuitemSparse;
         private ToolStripButton ShowFirstParent;
         private ToolTip FilterToolTip;
+        private ToolStripMenuItem toolStripMenuItemReflog;
     }
 }

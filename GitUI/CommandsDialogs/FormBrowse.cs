@@ -20,6 +20,7 @@ using GitCommands.Repository;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+using GitUI.CommandsDialogs.RefLogDialog;
 using GitUI.Hotkey;
 using GitUI.Plugin;
 using GitUI.Properties;
@@ -3657,6 +3658,16 @@ namespace GitUI.CommandsDialogs
         private void toolStripBranches_DropDown_ResizeDropDownWidth(object sender, EventArgs e)
         {
             ComboBoxHelper.ResizeComboBoxDropDownWidth(toolStripBranchFilterComboBox.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+        }
+
+        private void toolStripMenuItemReflog_Click(object sender, EventArgs e)
+        {
+            var formReflog = new FormReflog(this.UICommands);
+            formReflog.ShowDialog();
+            if (formReflog.ShouldRefresh)
+            {
+                RefreshRevisions();
+            }
         }
     }
 }

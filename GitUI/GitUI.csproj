@@ -145,6 +145,12 @@
     <Compile Include="CommandsDialogs\FormDiff.Designer.cs">
       <DependentUpon>FormDiff.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\FormReflog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormReflog.Designer.cs">
+      <DependentUpon>FormReflog.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\FormSparseWorkingCopyViewModel.cs" />
     <Compile Include="CommandsDialogs\FormMergeSubmodule.cs">
       <SubType>Form</SubType>
@@ -1050,6 +1056,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormMergeSubmodule.resx">
       <DependentUpon>FormMergeSubmodule.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\FormReflog.resx">
+      <DependentUpon>FormReflog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.resx">
