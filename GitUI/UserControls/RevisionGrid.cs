@@ -1188,9 +1188,11 @@ namespace GitUI
         private void SelectInitialRevision()
         {
             string filtredCurrentCheckout = _filtredCurrentCheckout;
-            if (LastSelectedRows != null)
+            string[] lastSelectedRows = LastSelectedRows;
+
+            if (lastSelectedRows != null)
             {
-                Revisions.SelectedIds = LastSelectedRows;
+                Revisions.SelectedIds = lastSelectedRows;
                 LastSelectedRows = null;
             }
             else
