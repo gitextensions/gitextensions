@@ -99,8 +99,10 @@ namespace GitExtensions
                     {
                         if (!checklistSettingsPage.CheckSettings())
                         {
-                            checkSettingsLogic.AutoSolveAllSettings();
-                            uiCommands.StartSettingsDialog();
+                            if (!checkSettingsLogic.AutoSolveAllSettings())
+                            {
+                                uiCommands.StartSettingsDialog();
+                            }
                         }
                     }
                 }
