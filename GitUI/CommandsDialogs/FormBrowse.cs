@@ -3083,7 +3083,17 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
-                RevisionGrid.SetSelectedRevision(new GitRevision(Module, e.Data));
+                var revision = new GitRevision(Module, e.Data);
+                var found = RevisionGrid.SetSelectedRevision(revision);
+
+                // If --first-parent filtration is used, user can click on parent commit
+                // that is not present in the shown git log, explict filtration needs to be 
+                // applied first to traverse to this commit
+                if (!found)
+                {
+                    _filterBranchHelper.SetBranchFilter(e.Data, refresh: true);
+                    RevisionGrid.SetSelectedRevision(revision);
+                }
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {

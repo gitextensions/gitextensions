@@ -97,7 +97,8 @@ namespace GitUI
             InitLayout();
             InitializeComponent();
 
-            _parentChildNavigationHistory = new ParentChildNavigationHistory(SetSelectedRevision);
+            // Parent-child navigation can expect that SetSelectedRevision is always successfull since it always uses first-parents
+            _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _revisionHighlighting = new AuthorEmailBasedRevisionHighlighting();
 
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
@@ -663,12 +664,14 @@ namespace GitUI
             return false;
         }
 
-        public void SetSelectedRevision(string revision)
+        public bool SetSelectedRevision(string revision)
         {
-            if (InternalSetSelectedRevision(revision))
+            var found = InternalSetSelectedRevision(revision);
+            if (found)
             {
                 _navigationHistory.Push(revision);
             }
+            return found;
         }
 
         public GitRevision GetRevision(string guid)
@@ -676,9 +679,9 @@ namespace GitUI
             return Revisions.GetRevision(guid);
         }
 
-        public void SetSelectedRevision(GitRevision revision)
+        public bool SetSelectedRevision(GitRevision revision)
         {
-            SetSelectedRevision(revision != null ? revision.Guid : null);
+            return SetSelectedRevision(revision != null ? revision.Guid : null);
         }
 
         public void HighlightBranch(string aId)
