@@ -424,6 +424,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Name = "filterToolStripMenuItem";
                 menuCommand.Text = "Set advanced filter";
                 menuCommand.Image = global::GitUI.Properties.Resources.IconFilter;
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.RevisionFilter);
                 menuCommand.ExecuteAction = () => _revisionGrid.FilterToolStripMenuItemClick(null, null);
 
                 resultList.Add(menuCommand);
