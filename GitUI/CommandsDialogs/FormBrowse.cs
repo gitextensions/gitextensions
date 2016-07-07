@@ -3089,7 +3089,7 @@ namespace GitUI.CommandsDialogs
                 // When 'git log --first-parent' filtration is used, user can click on child commit
                 // that is not present in the shown git log. User still wants to see the child commit
                 // and to make it possible we add explicit branch filter and refresh.
-                if (AppSettings.FirstParentFilterEnabled && !found)
+                if (AppSettings.ShowFirstParent && !found)
                 {
                     _filterBranchHelper.SetBranchFilter(e.Data, refresh: true);
                     RevisionGrid.SetSelectedRevision(revision);

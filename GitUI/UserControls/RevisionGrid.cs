@@ -1012,6 +1012,9 @@ namespace GitUI
                 if (!AppSettings.ShowMergeCommits)
                     _refsOptions |= RefsFiltringOptions.NoMerges;
 
+                if (AppSettings.ShowFirstParent)
+                    _refsOptions |= RefsFiltringOptions.FirstParent;
+
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
                                                                                                    _revisionFilter.GetInMemCommitterFilter(),
                                                                                                    _revisionFilter.GetInMemMessageFilter(),
@@ -1219,7 +1222,7 @@ namespace GitUI
             // In such situation selected commits likelly are absent from availabe Revisions and
             // thus it is not possible to make them selectable. To prevent jumping around to a random commit
             // in UI we first filter out all unavailable commits from LastSelectedRows.
-            if (AppSettings.FirstParentFilterEnabled)
+            if (AppSettings.ShowFirstParent)
             {
                 lastSelectedRows = lastSelectedRows.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
             }
@@ -2967,6 +2970,7 @@ namespace GitUI
             ShowCurrentBranchOnly,
             ShowFilteredBranches,
             ShowRemoteBranches,
+            ShowFirstParent,
             GoToParent,
             GoToChild,
             ToggleHighlightSelectedBranch,

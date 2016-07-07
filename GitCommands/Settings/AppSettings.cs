@@ -772,10 +772,10 @@ namespace GitCommands
             set { SetBool("branchfilterenabled", value); }
         }
 
-        public static bool FirstParentFilterEnabled
+        public static bool ShowFirstParent
         {
-            get { return GetBool("firstparentfilterenabled", false); }
-            set { SetBool("firstparentfilterenabled", value); }
+            get { return GetBool("showfirstparent", false); }
+            set { SetBool("showfirstparent", value); }
         }
 
         public static int CommitDialogSplitter

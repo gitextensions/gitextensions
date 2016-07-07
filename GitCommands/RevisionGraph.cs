@@ -19,7 +19,8 @@ namespace GitCommands
         All = 15,           // --all
         Boundary = 16,      // --boundary
         ShowGitNotes = 32,  // --not --glob=notes --not
-        NoMerges = 64       // --no-merges
+        NoMerges = 64,      // --no-merges
+        FirstParent = 128   // --first-parent
     }
 
     public abstract class RevisionGraphInMemFilter
@@ -171,6 +172,9 @@ namespace GitCommands
 
             if ((RefsOptions & RefsFiltringOptions.NoMerges) == RefsFiltringOptions.NoMerges)
                 logParam += " --no-merges";
+
+            if ((RefsOptions & RefsFiltringOptions.FirstParent) == RefsFiltringOptions.FirstParent)
+                logParam += " --first-parent";
 
             string branchFilter = BranchFilter;
             if ((!string.IsNullOrWhiteSpace(BranchFilter)) &&
