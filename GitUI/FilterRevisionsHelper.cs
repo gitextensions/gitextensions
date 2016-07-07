@@ -84,7 +84,8 @@ namespace GitUI
             this._NO_TRANSLATE_label.Click += this.ToolStripLabelClick;
             this._NO_TRANSLATE_textBox.Leave += this.ToolStripTextBoxFilterLeave;
             this._NO_TRANSLATE_textBox.KeyPress += this.ToolStripTextBoxFilterKeyPress;
-            this._NO_TRANSLATE_showFirstParentButton.Click += this.ToolStripShowFirstParentButton;
+            this._NO_TRANSLATE_showFirstParentButton.Click += this.ToolStripShowFirstParentButtonClick;
+            this._NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += this.RevisionGridShowFirstParentsToggled;       
         }
 
         public void SetFilter(string filter)
@@ -151,9 +152,14 @@ namespace GitUI
             ApplyFilter();
         }
 
-        private void ToolStripShowFirstParentButton(object sender, EventArgs e)
+        private void ToolStripShowFirstParentButtonClick(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            this._NO_TRANSLATE_revisionGrid.ShowFirstParent_ToolStripMenuItemClick(sender, e);
+        }
+
+        private void RevisionGridShowFirstParentsToggled(object sender, EventArgs e)
+        {
+            this._NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
         }
 
         private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)

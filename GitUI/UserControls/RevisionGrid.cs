@@ -79,6 +79,7 @@ namespace GitUI
         private int _rowHeigth;
         public event EventHandler<GitModuleEventArgs> GitModuleChanged;
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
+        public event EventHandler<EventArgs> ShowFirstParentsToggled;
 
         private readonly RevisionGridMenuCommands _revisionGridMenuCommands;
 
@@ -2754,6 +2755,11 @@ namespace GitUI
         internal void ShowFirstParent_ToolStripMenuItemClick(object sender, EventArgs e)
         {
             AppSettings.ShowFirstParent = !AppSettings.ShowFirstParent;
+
+            var handler = ShowFirstParentsToggled;
+            if (handler != null)
+                handler(this, e);
+
             ForceRefreshRevisions();
         }
 
