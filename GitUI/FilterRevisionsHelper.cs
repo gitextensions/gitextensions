@@ -1,3 +1,4 @@
+using GitCommands;
 using System;
 using System.Windows.Forms;
 
@@ -9,6 +10,7 @@ namespace GitUI
         private ToolStripDropDownButton _NO_TRANSLATE_dropDownButton;
         private RevisionGrid _NO_TRANSLATE_revisionGrid;
         private ToolStripLabel _NO_TRANSLATE_label;
+        private ToolStripButton _NO_TRANSLATE_showFirstParentButton;
 
         private ToolStripMenuItem commitToolStripMenuItem;
         private ToolStripMenuItem committerToolStripMenuItem;
@@ -61,13 +63,14 @@ namespace GitUI
             this.hashToolStripMenuItem.Text = "Hash";        
         }
 
-        public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, Form form)
+        public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
             : this()
         {
             this._NO_TRANSLATE_dropDownButton = dropDownButton;
             this._NO_TRANSLATE_textBox = textBox;
             this._NO_TRANSLATE_revisionGrid = revisionGrid;
             this._NO_TRANSLATE_label = label;
+            this._NO_TRANSLATE_showFirstParentButton = showFirstParentButton;
             this._NO_TRANSLATE_form = form;
 
             this._NO_TRANSLATE_dropDownButton.DropDownItems.AddRange(new ToolStripItem[] {
@@ -76,9 +79,12 @@ namespace GitUI
                 this.authorToolStripMenuItem,
                 this.diffContainsToolStripMenuItem});
 
+            this._NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
+
             this._NO_TRANSLATE_label.Click += this.ToolStripLabelClick;
             this._NO_TRANSLATE_textBox.Leave += this.ToolStripTextBoxFilterLeave;
             this._NO_TRANSLATE_textBox.KeyPress += this.ToolStripTextBoxFilterKeyPress;
+            this._NO_TRANSLATE_showFirstParentButton.Click += this.ToolStripShowFirstParentButton;
         }
 
         public void SetFilter(string filter)
@@ -143,6 +149,11 @@ namespace GitUI
         private void ToolStripLabelClick(object sender, EventArgs e)
         {
             ApplyFilter();
+        }
+
+        private void ToolStripShowFirstParentButton(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)
