@@ -2856,35 +2856,20 @@ namespace GitUI.CommandsDialogs
 
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
-                Module.LastPullAction = Settings.PullAction.Merge;
+            Module.LastPullAction = Settings.PullAction.Merge;
             PullToolStripMenuItemClick(sender, e);
-
-            //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
-                Module.LastPullActionToFormPullAction();
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
-                Module.LastPullAction = Settings.PullAction.Rebase;
+            Module.LastPullAction = Settings.PullAction.Rebase;
             PullToolStripMenuItemClick(sender, e);
-
-            //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
-                Module.LastPullActionToFormPullAction();
         }
 
         private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
-                Module.LastPullAction = Settings.PullAction.Fetch;
+            Module.LastPullAction = Settings.PullAction.Fetch;
             PullToolStripMenuItemClick(sender, e);
-
-            //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
-                Module.LastPullActionToFormPullAction();
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
