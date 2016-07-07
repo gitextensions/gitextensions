@@ -343,6 +343,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showMergeCommitsToolStripMenuItem";
                 menuCommand.Text = "Show merge commits";
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleShowMergeCommits);
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowMergeCommits_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.ShowMergeCommits;
 
