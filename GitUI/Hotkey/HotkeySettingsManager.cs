@@ -219,6 +219,8 @@ namespace GitUI.Hotkey
                     hk(RevisionGrid.Commands.ToggleRevisionCardLayout, Keys.Control | Keys.Shift | Keys.L),
                     hk(RevisionGrid.Commands.ShowAllBranches, Keys.Control | Keys.Shift | Keys.A),
                     hk(RevisionGrid.Commands.ShowCurrentBranchOnly, Keys.Control | Keys.Shift | Keys.U),
+                    hk(RevisionGrid.Commands.ShowFilteredBranches, Keys.Control | Keys.Shift | Keys.F),
+                    hk(RevisionGrid.Commands.ShowRemoteBranches, Keys.Control | Keys.Shift | Keys.R),
                     hk(RevisionGrid.Commands.GoToParent, Keys.Control | Keys.P),
                     hk(RevisionGrid.Commands.GoToChild, Keys.Control | Keys.N),
                     hk(RevisionGrid.Commands.ToggleHighlightSelectedBranch, Keys.Control | Keys.Shift | Keys.B),
