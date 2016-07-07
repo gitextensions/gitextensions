@@ -406,6 +406,16 @@ namespace GitUI.UserControls.RevisionGridClasses
                 resultList.Add(menuCommand);
             }
 
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ToggleRevisionCardLayout";
+                menuCommand.Text = "Change commit view layout";
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleRevisionCardLayout);
+                menuCommand.ExecuteAction = () => _revisionGrid.ToggleRevisionCardLayout();
+
+                resultList.Add(menuCommand);
+            }
+
             resultList.Add(MenuCommand.CreateSeparator());
 
             {
