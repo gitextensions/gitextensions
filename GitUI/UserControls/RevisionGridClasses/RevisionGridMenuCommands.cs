@@ -420,7 +420,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
             {
                 var menuCommand = new MenuCommand();
-                menuCommand.Name = "showFirstParents";
+                menuCommand.Name = "showFirstParent";
                 menuCommand.Text = "Show first parents";
                 menuCommand.Image = global::GitUI.Properties.Resources.IconFilter;
                 menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowFirstParent);

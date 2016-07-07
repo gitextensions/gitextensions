@@ -217,7 +217,7 @@ namespace GitUI.CommandsDialogs
             this.menuitemSparse = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.cherryPickSelectedDiffFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FirstParents = new System.Windows.Forms.ToolStripButton();
+            this.ShowFirstParent = new System.Windows.Forms.ToolStripButton();
 #if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
 #endif
@@ -319,7 +319,7 @@ namespace GitUI.CommandsDialogs
             this.toggleSplitViewLayout,
             this.toolStripTextBoxFilter,
             this.toolStripDropDownButton1,
-            this.FirstParents});
+            this.ShowFirstParent});
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ToolStrip.Name = "ToolStrip";
@@ -1986,14 +1986,14 @@ namespace GitUI.CommandsDialogs
             this.cherryPickSelectedDiffFileToolStripMenuItem.Text = "Cherry pick file's changes";
             this.cherryPickSelectedDiffFileToolStripMenuItem.Click += new System.EventHandler(this.cherryPickSelectedDiffFileToolStripMenuItem_Click);
             // 
-            // FirstParents
+            // ShowFirstParent
             // 
-            this.FirstParents.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.FirstParents.Image = global::GitUI.Properties.Resources.IconFilter;
-            this.FirstParents.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.FirstParents.Name = "FirstParents";
-            this.FirstParents.Size = new System.Drawing.Size(23, 22);
-            this.FirstParents.ToolTipText = "Show only first parents";
+            this.ShowFirstParent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ShowFirstParent.Image = global::GitUI.Properties.Resources.IconFilter;
+            this.ShowFirstParent.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ShowFirstParent.Name = "ShowFirstParent";
+            this.ShowFirstParent.Size = new System.Drawing.Size(23, 22);
+            this.ShowFirstParent.ToolTipText = "Show first parents";
             // 
             // FormBrowse
             // 
@@ -2255,6 +2255,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem cherryPickSelectedDiffFileToolStripMenuItem;
         private ToolStripMenuItem menuitemSparse;
-        private ToolStripButton FirstParents;
+        private ToolStripButton ShowFirstParent;
     }
 }
