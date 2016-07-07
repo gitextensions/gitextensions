@@ -409,6 +409,18 @@ namespace GitUI.UserControls.RevisionGridClasses
 
             {
                 var menuCommand = new MenuCommand();
+                menuCommand.Name = "showFirstParents";
+                menuCommand.Text = "Show first parents";
+                menuCommand.Image = global::GitUI.Properties.Resources.IconFilter;
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowFirstParent);
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowFirstParent_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowFirstParent;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
                 menuCommand.Name = "filterToolStripMenuItem";
                 menuCommand.Text = "Set advanced filter";
                 menuCommand.Image = global::GitUI.Properties.Resources.IconFilter;

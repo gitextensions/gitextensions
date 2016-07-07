@@ -2751,6 +2751,12 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
+        internal void ShowFirstParent_ToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            AppSettings.ShowFirstParent = !AppSettings.ShowFirstParent;
+            ForceRefreshRevisions();
+        }
+
         public void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
             var handler = GitModuleChanged;
@@ -3002,6 +3008,7 @@ namespace GitUI
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnly_ToolStripMenuItemClick(null, null); break;
                 case Commands.ShowFilteredBranches: ShowFilteredBranches_ToolStripMenuItemClick(null, null); break;
                 case Commands.ShowRemoteBranches: ShowRemoteBranches_ToolStripMenuItemClick(null, null); break;
+                case Commands.ShowFirstParent: ShowFirstParent_ToolStripMenuItemClick(null, null); break;
                 case Commands.SelectCurrentRevision: SetSelectedRevision(new GitRevision(Module, CurrentCheckout)); break;
                 case Commands.GoToCommit: _revisionGridMenuCommands.GotoCommitExcecute(); break;
                 case Commands.GoToParent: goToParentToolStripMenuItem_Click(null, null); break;
