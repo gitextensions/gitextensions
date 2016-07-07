@@ -53,6 +53,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSplitLoad = new System.Windows.Forms.ToolStripSplitButton();
             this.loadHistoryOnShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadBlameOnShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ShowFirstParent = new System.Windows.Forms.ToolStripButton();
 #if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
@@ -293,6 +294,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator19,
             this.toolStripRevisionFilterLabel,
             this.toolStripRevisionFilterTextBox,
+            this.ShowFirstParent,
             this.toolStripRevisionFilterDropDownButton,
             this.toolStripSeparator3,
             this.toolStripSplitLoad});
@@ -383,6 +385,15 @@ namespace GitUI.CommandsDialogs
             this.loadBlameOnShowToolStripMenuItem.Text = "Load blame on show";
             this.loadBlameOnShowToolStripMenuItem.Click += new System.EventHandler(this.loadBlameOnShowToolStripMenuItem_Click);
             // 
+            // ShowFirstParent
+            // 
+            this.ShowFirstParent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ShowFirstParent.Image = global::GitUI.Properties.Resources.IconFilter;
+            this.ShowFirstParent.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ShowFirstParent.Name = "ShowFirstParent";
+            this.ShowFirstParent.Size = new System.Drawing.Size(23, 22);
+            this.ShowFirstParent.ToolTipText = "Show first parents";
+            // 
             // FormFileHistory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -451,5 +462,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem loadBlameOnShowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem followFileHistoryRenamesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton ShowFirstParent;
     }
 }
