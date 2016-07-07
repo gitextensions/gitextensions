@@ -538,10 +538,10 @@ namespace GitCommands
             set { SetEnum("FormPullAction", value); }
         }
 
-        public static bool DonSetAsLastPullAction
+        public static bool SetNextPullActionAsDefault
         {
-            get { return GetBool("DonSetAsLastPullAction", true); }
-            set { SetBool("DonSetAsLastPullAction", value); }
+            get { return !GetBool("DonSetAsLastPullAction", true); }
+            set { SetBool("DonSetAsLastPullAction", !value); }
         }
 
         public static string SmtpServer

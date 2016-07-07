@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.pullToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fetchAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dontSetAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setNextPullActionAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButtonPush = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.GitBash = new System.Windows.Forms.ToolStripButton();
@@ -444,7 +444,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator14,
             this.pullToolStripMenuItem1,
             this.fetchAllToolStripMenuItem,
-            this.dontSetAsDefaultToolStripMenuItem});
+            this.setNextPullActionAsDefaultToolStripMenuItem});
             this.toolStripButtonPull.Image = global::GitUI.Properties.Resources.Icon_4;
             this.toolStripButtonPull.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonPull.Name = "toolStripButtonPull";
@@ -500,12 +500,12 @@ namespace GitUI.CommandsDialogs
             // 
             // dontSetAsDefaultToolStripMenuItem
             // 
-            this.dontSetAsDefaultToolStripMenuItem.Checked = true;
-            this.dontSetAsDefaultToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dontSetAsDefaultToolStripMenuItem.Name = "dontSetAsDefaultToolStripMenuItem";
-            this.dontSetAsDefaultToolStripMenuItem.Size = new System.Drawing.Size(206, 24);
-            this.dontSetAsDefaultToolStripMenuItem.Text = "Don\'t set as default";
-            this.dontSetAsDefaultToolStripMenuItem.Click += new System.EventHandler(this.dontSetAsDefaultToolStripMenuItem_Click);
+            this.setNextPullActionAsDefaultToolStripMenuItem.Checked = false;
+            this.setNextPullActionAsDefaultToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.setNextPullActionAsDefaultToolStripMenuItem.Name = "dontSetAsDefaultToolStripMenuItem";
+            this.setNextPullActionAsDefaultToolStripMenuItem.Size = new System.Drawing.Size(206, 24);
+            this.setNextPullActionAsDefaultToolStripMenuItem.Text = "Set the next selection as default";
+            this.setNextPullActionAsDefaultToolStripMenuItem.Click += new System.EventHandler(this.dontSetAsDefaultToolStripMenuItem_Click);
             // 
             // toolStripButtonPush
             // 
@@ -2217,7 +2217,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem fetchToolStripMenuItem;
         private ToolStripMenuItem pullToolStripMenuItem1;
         private ToolStripSeparator toolStripSeparator14;
-        private ToolStripMenuItem dontSetAsDefaultToolStripMenuItem;
+        private ToolStripMenuItem setNextPullActionAsDefaultToolStripMenuItem;
         private ToolStripMenuItem fetchAllToolStripMenuItem;
         private ToolStripMenuItem resetFileToToolStripMenuItem;
         private ToolStripMenuItem resetFileToFirstToolStripMenuItem;

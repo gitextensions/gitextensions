@@ -2850,8 +2850,8 @@ namespace GitUI.CommandsDialogs
 
         private void dontSetAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.DonSetAsLastPullAction = !dontSetAsDefaultToolStripMenuItem.Checked;
-            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+            Settings.SetNextPullActionAsDefault = !setNextPullActionAsDefaultToolStripMenuItem.Checked;
+            setNextPullActionAsDefaultToolStripMenuItem.Checked = Settings.SetNextPullActionAsDefault;
         }
 
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2874,13 +2874,15 @@ namespace GitUI.CommandsDialogs
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
+            if (Settings.SetNextPullActionAsDefault)
                 Module.LastPullAction = Settings.PullAction.None;
             PullToolStripMenuItemClick(sender, e);
 
             //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
+            if (!Settings.SetNextPullActionAsDefault)
                 Module.LastPullActionToFormPullAction();
+
+            Settings.SetNextPullActionAsDefault = false;
         }
 
         private void RefreshPullIcon()
@@ -2916,7 +2918,7 @@ namespace GitUI.CommandsDialogs
 
         private void fetchAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
+            if (Settings.SetNextPullActionAsDefault)
                 Module.LastPullAction = Settings.PullAction.FetchAll;
 
             RefreshPullIcon();
@@ -2925,8 +2927,10 @@ namespace GitUI.CommandsDialogs
             UICommands.StartPullDialog(this, true, out pullCompelted, true);
 
             //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
+            if (!Settings.SetNextPullActionAsDefault)
                 Module.LastPullActionToFormPullAction();
+
+            Settings.SetNextPullActionAsDefault = false;
         }
 
         private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -3447,7 +3451,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
-            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+            setNextPullActionAsDefaultToolStripMenuItem.Checked = Settings.SetNextPullActionAsDefault;
         }
 
         private void FormBrowse_Activated(object sender, EventArgs e)
