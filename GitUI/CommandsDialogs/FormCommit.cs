@@ -253,7 +253,7 @@ namespace GitUI.CommandsDialogs
             // Do not remember commit message of fixup or squash commits, since they have
             // a special meaning, and can be dangerous if used inappropriately.
             if (CommitKind.Normal == _commitKind)
-                GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text);
+                GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
 
             AppSettings.CommitDialogDeviceDpi = GetCurrentDeviceDpi();
             AppSettings.CommitDialogSplitter = splitMain.SplitterDistance;
@@ -966,7 +966,7 @@ namespace GitUI.CommandsDialogs
                 ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
                 Message.Text = string.Empty;
-                CommitHelper.SetCommitMessage(Module, string.Empty);
+                CommitHelper.SetCommitMessage(Module, string.Empty, Amend.Checked);
 
                 bool pushCompleted = true;
                 if (push)
@@ -1606,8 +1606,12 @@ namespace GitUI.CommandsDialogs
                 default:
                     message = Module.GetMergeMessage();
 
-                    if (string.IsNullOrEmpty(message) && File.Exists(GitCommands.CommitHelper.GetCommitMessagePath(Module)))
-                        message = File.ReadAllText(GitCommands.CommitHelper.GetCommitMessagePath(Module), Module.CommitEncoding);
+                    if (string.IsNullOrEmpty(message) && File.Exists(CommitHelper.GetCommitMessagePath(Module)))
+                    {
+                        message = File.ReadAllText(CommitHelper.GetCommitMessagePath(Module), Module.CommitEncoding);
+                        if (File.Exists(CommitHelper.GetAmendPath(Module)))
+                            Amend.Checked = bool.Parse(File.ReadAllText(CommitHelper.GetAmendPath(Module)));
+                    }
                     break;
             }
 
@@ -1620,7 +1624,7 @@ namespace GitUI.CommandsDialogs
             //Save last commit message in settings. This way it can be used in multiple repositories.
             AppSettings.LastCommitMessage = commitMessageText;
 
-            var path = Path.Combine(Module.GetGitDirectory(), "COMMITMESSAGE");
+            var path = CommitHelper.GetCommitMessagePath(Module);
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
