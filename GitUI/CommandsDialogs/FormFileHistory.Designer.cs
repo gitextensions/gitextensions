@@ -388,7 +388,7 @@ namespace GitUI.CommandsDialogs
             // ShowFirstParent
             // 
             this.ShowFirstParent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ShowFirstParent.Image = global::GitUI.Properties.Resources.IconFilter;
+            this.ShowFirstParent.Image = global::GitUI.Properties.Resources.IconShowFirstParent;
             this.ShowFirstParent.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ShowFirstParent.Name = "ShowFirstParent";
             this.ShowFirstParent.Size = new System.Drawing.Size(23, 22);
