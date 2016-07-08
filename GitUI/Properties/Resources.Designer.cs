@@ -22,8 +22,8 @@ namespace GitUI.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal partial class Resources
-    {
+    internal class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
@@ -1205,6 +1205,16 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap IconSelectRevision {
             get {
                 object obj = ResourceManager.GetObject("IconSelectRevision", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconShowFirstParent {
+            get {
+                object obj = ResourceManager.GetObject("IconShowFirstParent", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
