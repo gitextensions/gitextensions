@@ -322,7 +322,19 @@ namespace GitUI.Script
             }
             command = ExpandCommandVariables(command,aModule);
 
-            if (!scriptInfo.RunInBackground)
+            if (command.StartsWith(PluginPrefix))
+            {
+                command = command.Replace(PluginPrefix, "");
+                foreach (var plugin in Plugin.LoadedPlugins.Plugins)
+                    if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        var eventArgs = new GitUIEventArgs(owner, revisionGrid.UICommands, argument);
+                        return plugin.Execute(eventArgs);
+                    }
+                return false;
+            }
+
+                if (!scriptInfo.RunInBackground)
                 FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
             else
             {
@@ -442,6 +454,8 @@ namespace GitUI.Script
             }
         }
 
+        private static string PluginPrefix = "plugin:";
+
         private static string OverrideCommandWhenNecessary(string originalCommand)
         {
             //Make sure we are able to run git, even if git is not in the path
@@ -457,6 +471,12 @@ namespace GitUI.Script
 
             if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
                 return "explorer";
+
+            //Prefix should be {plugin:pluginname},{plugin=pluginname}
+            var match = System.Text.RegularExpressions.Regex.Match(originalCommand, @"\{plugin.(.+)\}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            if (match.Success && match.Groups.Count > 1)
+                originalCommand = string.Format("{0}{1}", PluginPrefix, match.Groups[1].Value.ToLower());
+
             return originalCommand;
         }
 
