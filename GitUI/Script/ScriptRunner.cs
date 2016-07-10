@@ -334,7 +334,7 @@ namespace GitUI.Script
                 return false;
             }
 
-                if (!scriptInfo.RunInBackground)
+            if (!scriptInfo.RunInBackground)
                 FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
             else
             {
