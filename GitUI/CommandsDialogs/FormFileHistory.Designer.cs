@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.FileChanges = new GitUI.RevisionGrid();
-            this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.FileHistoryContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffToolremotelocalStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.DiffContextMenu.SuspendLayout();
+            this.FileHistoryContextMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.ViewTab.SuspendLayout();
             this.DiffTab.SuspendLayout();
@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs
             // 
             // FileChanges
             // 
-            this.FileChanges.ContextMenuStrip = this.DiffContextMenu;
+            this.FileChanges.ContextMenuStrip = this.FileHistoryContextMenu;
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Margin = new System.Windows.Forms.Padding(4);
@@ -105,7 +105,7 @@ namespace GitUI.CommandsDialogs
             // 
             // DiffContextMenu
             // 
-            this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FileHistoryContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openWithDifftoolToolStripMenuItem,
             this.diffToolremotelocalStripMenuItem,
             this.saveAsToolStripMenuItem,
@@ -117,8 +117,8 @@ namespace GitUI.CommandsDialogs
             this.followFileHistoryRenamesToolStripMenuItem,
             this.fullHistoryToolStripMenuItem,
             this.toolStripSeparator4});
-            this.DiffContextMenu.Name = "DiffContextMenu";
-            this.DiffContextMenu.Size = new System.Drawing.Size(264, 184);
+            this.FileHistoryContextMenu.Name = "DiffContextMenu";
+            this.FileHistoryContextMenu.Size = new System.Drawing.Size(264, 184);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
@@ -419,7 +419,7 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
-            this.DiffContextMenu.ResumeLayout(false);
+            this.FileHistoryContextMenu.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.ViewTab.ResumeLayout(false);
             this.DiffTab.ResumeLayout(false);
@@ -443,7 +443,7 @@ namespace GitUI.CommandsDialogs
         private FileViewer View;
         private FileViewer Diff;
         private RevisionGrid FileChanges;
-        private System.Windows.Forms.ContextMenuStrip DiffContextMenu;
+        private System.Windows.Forms.ContextMenuStrip FileHistoryContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private Blame.BlameControl Blame;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
