@@ -54,6 +54,7 @@ namespace GitUI.CommandsDialogs
             this.loadHistoryOnShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadBlameOnShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ShowFirstParent = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 #if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
@@ -114,7 +115,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator1,
             this.followFileHistoryToolStripMenuItem,
             this.followFileHistoryRenamesToolStripMenuItem,
-            this.fullHistoryToolStripMenuItem});
+            this.fullHistoryToolStripMenuItem,
+            this.toolStripSeparator4});
             this.DiffContextMenu.Name = "DiffContextMenu";
             this.DiffContextMenu.Size = new System.Drawing.Size(264, 184);
             // 
@@ -393,6 +395,11 @@ namespace GitUI.CommandsDialogs
             this.ShowFirstParent.Name = "ShowFirstParent";
             this.ShowFirstParent.Size = new System.Drawing.Size(23, 22);
             this.ShowFirstParent.ToolTipText = "Show first parents";
+            //
+            // toolStripSeparator4
+            //
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(336, 6);
             // 
             // FormFileHistory
             // 
@@ -463,5 +470,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem loadBlameOnShowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem followFileHistoryRenamesToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton ShowFirstParent;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     }
 }
