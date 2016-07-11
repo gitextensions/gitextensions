@@ -227,7 +227,6 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemChecked;
 
-
                 resultList.Add(menuCommand);
             }
 

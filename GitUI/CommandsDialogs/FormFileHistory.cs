@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, FileChanges, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
 
             _formBrowseMenus = new FormBrowseMenus(FileHistoryContextMenu);
-            _formBrowseMenus.ResetMenuCommandSets();       
+            _formBrowseMenus.ResetMenuCommandSets();
             _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, FileChanges.MenuCommands.GetNavigateMenuCommands());
             _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, FileChanges.MenuCommands.GetViewMenuCommands());
             _formBrowseMenus.InsertAdditionalMainMenuItems(toolStripSeparator4);
