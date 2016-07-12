@@ -37,7 +37,7 @@ namespace PatchApply
 
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
+            if (body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
                 body = body.Replace("\r", "");
 
             if (header == null || body == null)
@@ -120,7 +120,7 @@ namespace PatchApply
             string body = selectedChunks.ToStagePatch(false, true);
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
+            if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
                 body = body.Replace("\r", "");
 
             if (header == null || body == null)
