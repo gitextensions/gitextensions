@@ -1467,7 +1467,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 bSilent = sender != pullToolStripMenuItem1;
-                RefreshPullIcon();
+
                 Module.LastPullActionToFormPullAction();
             }
 
@@ -2854,22 +2854,53 @@ namespace GitUI.CommandsDialogs
             setNextPullActionAsDefaultToolStripMenuItem.Checked = Settings.SetNextPullActionAsDefault;
         }
 
+        private void doPullAction(Action action)
+        {
+            var actLactPullAction = Module.LastPullAction;
+            try
+            {
+                action();
+            }
+            finally
+            {
+                if (!Settings.SetNextPullActionAsDefault)
+                {
+                    Module.LastPullAction = actLactPullAction;
+                    Module.LastPullActionToFormPullAction();
+                }
+                Settings.SetNextPullActionAsDefault = false;
+                RefreshPullIcon();
+            }
+        }
+
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Module.LastPullAction = Settings.PullAction.Merge;
-            PullToolStripMenuItemClick(sender, e);
+            doPullAction(() =>
+                {
+                    Module.LastPullAction = Settings.PullAction.Merge;
+                    PullToolStripMenuItemClick(sender, e);
+                }
+            );
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Module.LastPullAction = Settings.PullAction.Rebase;
-            PullToolStripMenuItemClick(sender, e);
+            doPullAction(() =>
+            {
+                Module.LastPullAction = Settings.PullAction.Rebase;
+                PullToolStripMenuItemClick(sender, e);
+            }
+            );
         }
 
         private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Module.LastPullAction = Settings.PullAction.Fetch;
-            PullToolStripMenuItemClick(sender, e);
+            doPullAction(() =>
+            {
+                Module.LastPullAction = Settings.PullAction.Fetch;
+                PullToolStripMenuItemClick(sender, e);
+            }
+            );
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
