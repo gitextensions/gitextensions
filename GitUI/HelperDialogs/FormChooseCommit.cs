@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -37,6 +39,7 @@ namespace GitUI.HelperDialogs
         }
 
         public GitCommands.GitRevision SelectedRevision { get; private set; }
+        private Dictionary<string, string> _parents;
 
         protected override void OnLoad(EventArgs e)
         {
@@ -69,6 +72,34 @@ namespace GitUI.HelperDialogs
         private void buttonGotoCommit_Click(object sender, EventArgs e)
         {
             revisionGrid.MenuCommands.GotoCommitExcecute();
+        }
+
+        private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            revisionGrid.SetSelectedRevision(new GitRevision(revisionGrid.Module, _parents[((LinkLabel)sender).Text]));
+        }
+
+        private void revisionGrid_SelectionChanged(object sender, EventArgs e)
+        {
+            var revisions = revisionGrid.GetSelectedRevisions();
+            if (1 != revisions.Count)
+            {
+                return;
+            }
+            SelectedRevision = revisions[0];
+
+            flowLayoutPanelParents.Visible = SelectedRevision.ParentGuids.Length != 0;
+
+            if(!flowLayoutPanelParents.Visible)
+                return;
+            _parents = SelectedRevision.ParentGuids.ToDictionary(p=> p.Substring(0, 10), p=> p);
+            linkLabelParent.Text = _parents.Keys.ElementAt(0);
+
+            linkLabelParent2.Visible = _parents.Count > 1;
+            if (linkLabelParent2.Visible)
+            {
+                linkLabelParent2.Text = _parents.Keys.ElementAt(1);
+            }
         }
     }
 }
