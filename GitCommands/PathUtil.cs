@@ -71,6 +71,16 @@ namespace GitCommands
             return fileName;
         }
 
+        public static bool TryConvertWindowsPathToPosix(string path, out string posixPath)
+        {
+            posixPath = null;
+            var directoryInfo = new DirectoryInfo(path);
+            if (!directoryInfo.Exists)
+                return false;
+            posixPath = "/" + directoryInfo.FullName.Replace(@"\", "/").Remove(1, 1);
+            return true;
+        }
+
         public static bool Equal(string path1, string path2)
         {
             path1 = Path.GetFullPath(path1).TrimEnd('\\');
