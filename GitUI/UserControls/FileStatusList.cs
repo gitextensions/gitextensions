@@ -348,13 +348,28 @@ namespace GitUI
                 ClearSelected();
                 if (value == null)
                     return;
+                ListViewItem newSelected = null;
                 foreach (ListViewItem item in FileStatusListView.Items)
+                {
                     if (value.CompareTo((GitItemStatus)item.Tag) == 0)
                     {
-                        item.Selected = true;
-                        item.EnsureVisible();
-                        return;
+                        if (newSelected == null)
+                        {
+                            newSelected = item;
+                        }
+                        else if (item.Tag == value)
+                        {
+                            newSelected = item;
+                            break;
+                        }
+
                     }
+                }
+                if (newSelected != null)
+                {
+                    newSelected.Selected = true;
+                    newSelected.EnsureVisible();
+                }
             }
         }
 
