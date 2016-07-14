@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (!EnvUtils.RunningOnWindows())
                 return;
 
-            CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
+            CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text.Trim()), DifftoolPath.Text.Trim());
             string exeName;
             string exeFile;
             if (!String.IsNullOrEmpty(DifftoolPath.Text))
