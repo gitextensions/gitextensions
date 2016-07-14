@@ -90,6 +90,7 @@ namespace GitUI.CommandsDialogs
             this.resetAlltrackedChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.editGitIgnoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editLocallyIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAllUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.selectionFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -708,6 +709,7 @@ namespace GitUI.CommandsDialogs
             this.resetAlltrackedChangesToolStripMenuItem,
             this.toolStripSeparator1,
             this.editGitIgnoreToolStripMenuItem,
+            this.editLocallyIgnoredFilesToolStripMenuItem,
             this.deleteAllUntrackedFilesToolStripMenuItem,
             this.toolStripMenuItem2,
             this.selectionFilterToolStripMenuItem});
@@ -786,6 +788,14 @@ namespace GitUI.CommandsDialogs
             this.editGitIgnoreToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.editGitIgnoreToolStripMenuItem.Text = "Edit ignored files";
             this.editGitIgnoreToolStripMenuItem.Click += new System.EventHandler(this.EditGitIgnoreToolStripMenuItemClick);
+            // 
+            // editLocallyIgnoredFilesToolStripMenuItem
+            // 
+            this.editLocallyIgnoredFilesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconEditGitIgnore;
+            this.editLocallyIgnoredFilesToolStripMenuItem.Name = "editLocallyIgnoredFilesToolStripMenuItem";
+            this.editLocallyIgnoredFilesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.editLocallyIgnoredFilesToolStripMenuItem.Text = "Edit locally ignored files";
+            this.editLocallyIgnoredFilesToolStripMenuItem.Click += new System.EventHandler(this.EditGitInfoExcludeToolStripMenuItemClick);
             // 
             // deleteAllUntrackedFilesToolStripMenuItem
             // 
@@ -1431,6 +1441,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem resetAlltrackedChangesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem editGitIgnoreToolStripMenuItem;
+        private ToolStripMenuItem editLocallyIgnoredFilesToolStripMenuItem;
         private ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
         private ToolStripEx toolbarStaged;
         private FileStatusList Staged;

@@ -140,6 +140,8 @@ namespace GitUI.CommandsDialogs
             this.editgitignoreToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.editgitattributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editmailmapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.editgitinfoexcludeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.gitMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1310,6 +1312,8 @@ namespace GitUI.CommandsDialogs
             this.editgitattributesToolStripMenuItem,
             this.editmailmapToolStripMenuItem,
             this.menuitemSparse,
+            this.toolStripSeparator10,
+            this.editgitinfoexcludeToolStripMenuItem,
             this.toolStripSeparator4,
             this.gitMaintenanceToolStripMenuItem,
             this.repoSettingsToolStripMenuItem,
@@ -1384,6 +1388,18 @@ namespace GitUI.CommandsDialogs
             this.editmailmapToolStripMenuItem.Size = new System.Drawing.Size(261, 24);
             this.editmailmapToolStripMenuItem.Text = "Edit .mailmap";
             this.editmailmapToolStripMenuItem.Click += new System.EventHandler(this.EditMailMapToolStripMenuItemClick);
+            // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(258, 6);
+            // 
+            // editgitinfoexcludeToolStripMenuItem
+            // 
+            this.editgitinfoexcludeToolStripMenuItem.Name = "editgitinfoexcludeToolStripMenuItem";
+            this.editgitinfoexcludeToolStripMenuItem.Size = new System.Drawing.Size(261, 24);
+            this.editgitinfoexcludeToolStripMenuItem.Text = "Edit .git/info/exclude";
+            this.editgitinfoexcludeToolStripMenuItem.Click += new System.EventHandler(this.EditGitInfoExcludeToolStripMenuItemClick);
             // 
             // toolStripSeparator4
             // 
@@ -2244,5 +2260,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem cherryPickSelectedDiffFileToolStripMenuItem;
         private ToolStripMenuItem menuitemSparse;
+        private ToolStripSeparator toolStripSeparator10;
+        private ToolStripMenuItem editgitinfoexcludeToolStripMenuItem;
     }
 }

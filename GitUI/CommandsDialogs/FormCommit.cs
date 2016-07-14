@@ -1527,7 +1527,13 @@ namespace GitUI.CommandsDialogs
 
         private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartEditGitIgnoreDialog(this);
+            UICommands.StartEditGitIgnoreDialog(this, false);
+            Initialize();
+        }
+
+        private void EditGitInfoExcludeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            UICommands.StartEditGitIgnoreDialog(this, false);
             Initialize();
         }
 
@@ -1718,7 +1724,7 @@ namespace GitUI.CommandsDialogs
 
             SelectedDiff.Clear();
             var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
-            if (UICommands.StartAddToGitIgnoreDialog(this, fileNames))
+            if (UICommands.StartAddToGitIgnoreDialog(this, false, fileNames))
                 Initialize();
         }
 
