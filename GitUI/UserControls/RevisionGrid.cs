@@ -150,6 +150,7 @@ namespace GitUI
 
             IsMessageMultilineDataGridViewColumn.Width = 25;
             IsMessageMultilineDataGridViewColumn.DisplayIndex = 2;
+            IsMessageMultilineDataGridViewColumn.Resizable = DataGridViewTriState.False;
 
             this.HotkeysEnabled = true;
             try
@@ -1564,9 +1565,9 @@ namespace GitUI
                 else if (columnIndex == idColIndex)
                 {
                     if (!revision.IsArtificial())
-                    { 
+                    {
                         var text = revision.Guid;
-                        e.Graphics.DrawString(text, new Font("Consolas", rowFont.SizeInPoints), foreBrush, 
+                        e.Graphics.DrawString(text, new Font("Consolas", rowFont.SizeInPoints), foreBrush,
                                               new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
                 }
