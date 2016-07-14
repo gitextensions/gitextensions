@@ -580,14 +580,14 @@ namespace GitUI
             // 
             this.fixupCommitToolStripMenuItem.Name = "fixupCommitToolStripMenuItem";
             this.fixupCommitToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
-            this.fixupCommitToolStripMenuItem.Text = "Fixup commit";
+            this.fixupCommitToolStripMenuItem.Text = "Create a fixup commit";
             this.fixupCommitToolStripMenuItem.Click += new System.EventHandler(this.FixupCommitToolStripMenuItemClick);
             // 
             // squashCommitToolStripMenuItem
             // 
             this.squashCommitToolStripMenuItem.Name = "squashCommitToolStripMenuItem";
             this.squashCommitToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
-            this.squashCommitToolStripMenuItem.Text = "Squash commit";
+            this.squashCommitToolStripMenuItem.Text = "Create a squash commit";
             this.squashCommitToolStripMenuItem.Click += new System.EventHandler(this.SquashCommitToolStripMenuItemClick);
             // 
             // toolStripSeparator1

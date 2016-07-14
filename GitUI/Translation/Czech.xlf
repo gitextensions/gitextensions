@@ -8810,7 +8810,7 @@ Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</tar
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Fixup commit</source>
+        <source>Create a fixup commit</source>
         <target>Opravit odevzdání</target>
         
       </trans-unit>
@@ -8939,7 +8939,7 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Squash commit</source>
+        <source>Create a squash commit</source>
         <target>Slisovat odevzdání</target>
         
       </trans-unit>

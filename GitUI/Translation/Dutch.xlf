@@ -8732,7 +8732,7 @@ This will just checkout on the submodule the commit determined by the superproje
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Fixup commit</source>
+        <source>Create a fixup commit</source>
         <target>Repareer commit</target>
         
       </trans-unit>
@@ -8859,7 +8859,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Squash commit</source>
+        <source>Create a squash commit</source>
         <target>Commits samenvoegen tot 1</target>
         
       </trans-unit>
