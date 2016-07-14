@@ -1719,12 +1719,22 @@ namespace GitUI.CommandsDialogs
 
         private void AddFileTogitignoreToolStripMenuItemClick(object sender, EventArgs e)
         {
+            HandleExcludeFileClick(false);
+        }
+
+        private void AddFileToGitInfoExcludeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            HandleExcludeFileClick(true);
+        }
+
+        private void HandleExcludeFileClick(bool localExclude)
+        {
             if (!Unstaged.SelectedItems.Any())
                 return;
 
             SelectedDiff.Clear();
             var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
-            if (UICommands.StartAddToGitIgnoreDialog(this, false, fileNames))
+            if (UICommands.StartAddToGitIgnoreDialog(this, localExclude, fileNames))
                 Initialize();
         }
 

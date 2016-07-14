@@ -37,6 +37,7 @@ namespace GitUI.CommandsDialogs
             this.deleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.addFileTogitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.doNotAssumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -197,6 +198,7 @@ namespace GitUI.CommandsDialogs
             this.deleteFileToolStripMenuItem,
             this.toolStripSeparator5,
             this.addFileTogitignoreToolStripMenuItem,
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem,
             this.assumeUnchangedToolStripMenuItem,
             this.doNotAssumeUnchangedToolStripMenuItem,
             this.toolStripSeparator4,
@@ -313,6 +315,14 @@ namespace GitUI.CommandsDialogs
             this.addFileTogitignoreToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.addFileTogitignoreToolStripMenuItem.Text = "Add file to .gitignore";
             this.addFileTogitignoreToolStripMenuItem.Click += new System.EventHandler(this.AddFileTogitignoreToolStripMenuItemClick);
+            // 
+            // addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem
+            // 
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconAddToGitIgnore;
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Name = "addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem";
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Text = "Add file to .git/info/exclude";
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Click += new System.EventHandler(this.AddFileToGitInfoExcludeToolStripMenuItemClick);
             // 
             // assumeUnchangedToolStripMenuItem
             // 
@@ -1409,6 +1419,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Button SolveMergeconflicts;
         private FileViewer SelectedDiff;
         private System.Windows.Forms.ToolStripMenuItem addFileTogitignoreToolStripMenuItem;
+        private ToolStripMenuItem addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assumeUnchangedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem doNotAssumeUnchangedToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
