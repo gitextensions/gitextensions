@@ -105,9 +105,7 @@ namespace GitUI.UserControls
 				process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs(args.Data ?? ""));
 				process.Exited += delegate
 				{
-					if(!IsDisposed)
-					{
-						Invoke(new Action(() =>
+                    this.InvokeAsync(new Action(() =>
 						{
 							if(_process == null)
 								return;
@@ -129,7 +127,7 @@ namespace GitUI.UserControls
 							_timer.Stop(true);
 							FireProcessExited();
 						}));
-					}
+					
 				};
 
 				process.Exited += (sender, args) =>
