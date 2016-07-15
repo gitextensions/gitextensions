@@ -3159,5 +3159,16 @@ namespace GitUI
                 diffForm.ShowDialog(this);
             }
         }
+
+        private void getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenManual();
+        }
+
+        private void OpenManual()
+        {
+            string url = UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature");
+            OsShellUtil.OpenUrlInDefaultBrowser(url);
+        }
     }
 }
