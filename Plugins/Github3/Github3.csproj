@@ -10,11 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Github3</RootNamespace>
     <AssemblyName>Github3</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <ReleaseVersion>2.48</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Externals\Git.hub\Git.hub\Git.hub.csproj">
-      <Project>{f50b1dbf-1c9f-4437-87ec-7aba805cc446}</Project>
+      <Project>{F50B1DBF-1C9F-4437-87EC-7ABA805CC446}</Project>
       <Name>Git.hub</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
