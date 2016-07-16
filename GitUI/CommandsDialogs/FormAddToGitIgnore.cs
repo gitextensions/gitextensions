@@ -12,6 +12,7 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormAddToGitIgnore : GitModuleForm
     {
+        private readonly TranslationString _addToLocalExcludeTitle = new TranslationString("Add file(s) to .git/info/exclude");
         private readonly TranslationString _matchingFilesString = new TranslationString("{0} file(s) matched");
         private readonly TranslationString _updateStatusString = new TranslationString("Updating ...");
 
@@ -26,6 +27,8 @@ namespace GitUI.CommandsDialogs
             _ignoredFilesLoader = new AsyncLoader();
             Translate();
 
+            if (localExclude)
+                Text = _addToLocalExcludeTitle.Text;
             if (filePatterns != null)
                 FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
         }

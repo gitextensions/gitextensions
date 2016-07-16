@@ -10,6 +10,9 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormGitIgnore : GitModuleForm
     {
+        private readonly TranslationString _editLocalExcludeTitle =
+            new TranslationString("Edit .git/info/exclude");
+
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
             new TranslationString(".gitignore is only supported when there is a working directory.");
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupportedCaption =
@@ -69,6 +72,9 @@ namespace GitUI.CommandsDialogs
             _localExclude = localExclude;
             InitializeComponent();
             Translate();
+
+            if (localExclude)
+                Text = _editLocalExcludeTitle.Text;
         }
 
         private string ExcludeFileRelative
