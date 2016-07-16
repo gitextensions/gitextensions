@@ -29,14 +29,18 @@ namespace GitCommands.Settings
             SaveTimer.AutoReset = false;
             SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
 
-            _fileWatcher.Path = Path.GetDirectoryName(SettingsFilePath);
-            _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
             _fileWatcher.IncludeSubdirectories = false;
             _fileWatcher.EnableRaisingEvents = false;
             _fileWatcher.Changed += _fileWatcher_Changed;
             _fileWatcher.Renamed += _fileWatcher_Renamed;
             _fileWatcher.Created += _fileWatcher_Created;
-            _fileWatcher.EnableRaisingEvents = Directory.Exists(_fileWatcher.Path);
+            var dir = Path.GetDirectoryName(SettingsFilePath);
+            if (Directory.Exists(dir))
+            {
+                _fileWatcher.Path = dir;
+                _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
+                _fileWatcher.EnableRaisingEvents = true;
+            }
             FileChanged();
         }
 
