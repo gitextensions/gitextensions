@@ -197,6 +197,12 @@
     <Compile Include="CommandsDialogs\SettingsDialog\AutoLayoutSettingsPage.Designer.cs">
       <DependentUpon>AutoLayoutSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.Designer.cs">
+      <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormStatusOutputLog.cs" />
     <Compile Include="Editor\Diff\CombinedDiffHighlightService.cs" />
     <Compile Include="Editor\Diff\DiffHighlightService.cs" />

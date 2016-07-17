@@ -3512,7 +3512,7 @@ namespace GitUI.CommandsDialogs
 	    /// </summary>
 	    private void FillTerminalTab()
 	    {
-		    if(!EnvUtils.RunningOnWindows())
+		    if(!EnvUtils.RunningOnWindows() || !Module.EffectiveSettings.Detailed.ShowConEmuTab.ValueOrDefault)
 			    return; // ConEmu only works on WinNT
 		    TabPage tabpage;
 		    string sImageKey = "Resources.IconConsole";

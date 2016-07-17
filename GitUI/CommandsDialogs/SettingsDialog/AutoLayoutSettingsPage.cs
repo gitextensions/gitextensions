@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands.Settings;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -114,5 +115,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
         }
 
+    }
+
+    public class BoolNullableISettingAdapter : GitUIPluginInterfaces.BoolSetting
+    {
+        public BoolNullableISettingAdapter(string aCaption, BoolNullableSetting setting)
+            : base(setting.FullPath, aCaption, setting.DefaultValue.Value)
+        { }
     }
 }

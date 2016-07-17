@@ -5,7 +5,7 @@ namespace GitCommands.Settings
 
     public class StringSetting : Setting<string>
     {
-        public StringSetting(string aName, ISettingsSource settingsSource, string aDefaultValue)
+        public StringSetting(string aName, SettingsPath settingsSource, string aDefaultValue)
             : base(aName, settingsSource, aDefaultValue)
         {
         }
@@ -26,7 +26,7 @@ namespace GitCommands.Settings
 
     public class BoolNullableSetting : Setting<bool?>
     {
-        public BoolNullableSetting(string aName, ISettingsSource settingsSource, bool aDefaultValue)
+        public BoolNullableSetting(string aName, SettingsPath settingsSource, bool aDefaultValue)
             : base(aName, settingsSource, aDefaultValue)
         { }
 
@@ -58,7 +58,7 @@ namespace GitCommands.Settings
 
     public class BoolSetting : Setting<bool>
     {
-        public BoolSetting(string aName, ISettingsSource settingsSource, bool aDefaultValue)
+        public BoolSetting(string aName, SettingsPath settingsSource, bool aDefaultValue)
             : base(aName, settingsSource, aDefaultValue)
         { }
 
@@ -78,7 +78,7 @@ namespace GitCommands.Settings
 
     public class EnumSetting<T> : Setting<T> where T : struct
     {
-        public EnumSetting(string aName, ISettingsSource settingsSource, T aDefaultValue)
+        public EnumSetting(string aName, SettingsPath settingsSource, T aDefaultValue)
             : base(aName, settingsSource, aDefaultValue)
         { }
 
@@ -98,7 +98,7 @@ namespace GitCommands.Settings
 
     public class EnumNullableSetting<T> : Setting<T?> where T : struct
     {
-        public EnumNullableSetting(string aName, ISettingsSource settingsSource)
+        public EnumNullableSetting(string aName, SettingsPath settingsSource)
             : base(aName, settingsSource, null)
         { }
 
