@@ -198,6 +198,11 @@ namespace GitCommands
             }
         }
 
+        public ISettingsSource GetEffectiveSettings()
+        {
+            return EffectiveSettings;
+        }
+
         private RepoDistSettings _distributedSettings;
         public RepoDistSettings DistributedSettings
         {

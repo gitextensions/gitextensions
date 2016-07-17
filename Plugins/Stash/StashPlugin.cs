@@ -1,6 +1,5 @@
 ﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace Stash

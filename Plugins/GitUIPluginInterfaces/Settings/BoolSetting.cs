@@ -1,33 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using GitUI;
 
 namespace GitUIPluginInterfaces
 {
     public class BoolSetting: ISetting
     {
-        public BoolSetting(string aName, bool? aDefaultValue)
+        public BoolSetting(string aName, bool aDefaultValue)
             : this(aName, aName, aDefaultValue)
         {
         }
 
-        public BoolSetting(string aName, string aCaption, bool? aDefaultValue)
+        public BoolSetting(string aName, string aCaption, bool aDefaultValue)
         {
             Name = aName;
             Caption = aCaption;
             DefaultValue = aDefaultValue;
-            _controlBinding = new CheckBoxBinding(this);
         }
 
         public string Name { get; private set; }
         public string Caption { get; private set; }
-        public bool? DefaultValue { get; set; }
-        private ISettingControlBinding _controlBinding;
-        public ISettingControlBinding ControlBinding
+        public bool DefaultValue { get; set; }
+
+        public ISettingControlBinding CreateControlBinding()
         {
-            get { return _controlBinding; }
+            return new CheckBoxBinding(this);
+        }
+
+        public bool? this[ISettingsSource settings]
+        {
+            get
+            {
+                return settings.GetBool(Name);
+            }
+
+            set
+            {
+                settings.SetBool(Name, value);
+            }
+        }
+
+        public bool ValueOrDefault(ISettingsSource settings)
+        {
+            return this[settings] ?? DefaultValue;
         }
 
         private class CheckBoxBinding : SettingControlBinding<CheckBox>
@@ -41,42 +56,29 @@ namespace GitUIPluginInterfaces
 
             public override CheckBox CreateControl()
             {
-                return new CheckBox();
+                CheckBox result = new CheckBox();
+                result.ThreeState = true;
+                return result;
             }
 
-            public override void LoadSetting(ISettingsSource settings, CheckBox control)
+            public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, CheckBox control)
             {
-                //TODO handle three states
-                control.Checked = Setting[settings].Value;
+                bool? settingVal;
+                if (areSettingsEffective)
+                {
+                    settingVal = Setting.ValueOrDefault(settings);
+                }
+                else
+                {
+                    settingVal = Setting[settings];
+                }
+
+                control.SetNullableChecked(settingVal);
             }
 
             public override void SaveSetting(ISettingsSource settings, CheckBox control)
             {
-                //TODO handle three states
-                Setting[settings] = control.Checked;
-            }
-        }
-
-        public bool? this[ISettingsSource settings]
-        {
-            get 
-            {
-                return settings.GetValue(Name, DefaultValue, s =>
-                    {
-                        if (string.IsNullOrWhiteSpace(s))
-                            return DefaultValue;
-                        return string.Compare(s, true.ToString(), StringComparison.InvariantCultureIgnoreCase) == 0;
-                    });
-            }
-
-            set 
-            {
-                settings.SetValue(Name, value, b =>
-                    {
-                        if (!b.HasValue)
-                            return string.Empty;
-                        return b.Value.ToString();
-                    });
+                Setting[settings] = control.GetNullableChecked();
             }
         }
     }

@@ -70,5 +70,7 @@ namespace GitUIPluginInterfaces
         bool IsBareRepository();
 
         bool IsRunningGitProcess();
+
+        ISettingsSource GetEffectiveSettings();
     }
 }

@@ -15,7 +15,15 @@ namespace ResourceManager
         }
 
         //Store settings to use later
-        public ISettingsSource Settings { get; set; }
+        public ISettingsSource Settings
+        {
+            get
+            {
+                return SettingsContainer.GetSettingsSource();
+            }
+        }
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public virtual IEnumerable<ISetting> GetSettings()
         {
@@ -24,10 +32,12 @@ namespace ResourceManager
 
         public virtual void Register(IGitUICommands gitUiCommands)
         {
+            SettingsContainer.SetSettingsSource(gitUiCommands.GitModule.GetEffectiveSettings());
         }
 
         public virtual void Unregister(IGitUICommands gitUiCommands)
         {
+            SettingsContainer.SetSettingsSource(null);
         }
 
         public abstract bool Execute(GitUIBaseEventArgs gitUiCommands);

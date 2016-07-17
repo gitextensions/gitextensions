@@ -54,7 +54,7 @@ namespace Github3
         {
             get
             {
-                return Github3Plugin.instance.OAuthToken[Github3Plugin.instance.Settings];
+                return Github3Plugin.instance.OAuthToken.ValueOrDefault(Github3Plugin.instance.Settings);
             }
             set
             {

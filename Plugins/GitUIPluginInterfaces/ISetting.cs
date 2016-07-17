@@ -18,7 +18,7 @@ namespace GitUIPluginInterfaces
         /// </summary>
         string Caption { get; }
 
-        ISettingControlBinding ControlBinding { get; }
+        ISettingControlBinding CreateControlBinding();
     }
 
     public interface ISettingControlBinding
@@ -30,13 +30,11 @@ namespace GitUIPluginInterfaces
         /// <returns></returns>
         Control GetControl();
 
-        Control UserControl { get; }
-
         /// <summary>
         /// Loads setting value from settings to Control
         /// </summary>
         /// <param name="settings"></param>
-        void LoadSetting(ISettingsSource settings);
+        void LoadSetting(ISettingsSource settings, bool areSettingsEffective);
 
         /// <summary>
         /// Saves value from Control to settings
@@ -48,12 +46,13 @@ namespace GitUIPluginInterfaces
     public abstract class SettingControlBinding<T> : ISettingControlBinding where T : Control
     {
         private T _control;
+
         private T Control
         {
             get
             {
                 if (_control == null)
-                    throw new NullReferenceException("Control");
+                    _control = CreateControl();
 
                 return _control;
             }
@@ -61,14 +60,12 @@ namespace GitUIPluginInterfaces
 
         public Control GetControl()
         {
-            return _control = CreateControl();
+            return Control;
         }
 
-        public Control UserControl { get { return Control; } }
-
-        public void LoadSetting(ISettingsSource settings)
+        public void LoadSetting(ISettingsSource settings, bool areSettingsEffective)
         {
-            LoadSetting(settings, Control);
+            LoadSetting(settings, areSettingsEffective, Control);
         }
 
         /// <summary>
@@ -91,7 +88,7 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Loads setting value from settings to Control
         /// </summary>
-        public abstract void LoadSetting(ISettingsSource settings, T control);
+        public abstract void LoadSetting(ISettingsSource settings, bool areSettingsEffective, T control);
 
         /// <summary>
         /// Saves value from Control to settings
