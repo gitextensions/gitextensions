@@ -8,7 +8,7 @@ namespace ReleaseNotesGenerator
     {
         public ReleaseNotesGeneratorPlugin()
         {
-            Description = "Release Notes Generator";
+            SetNameAndDescription("Release Notes Generator");
             Translate();
         }
 

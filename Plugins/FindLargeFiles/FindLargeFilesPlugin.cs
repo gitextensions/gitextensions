@@ -8,7 +8,7 @@ namespace FindLargeFiles
     {
         public FindLargeFilesPlugin()
         {
-            Description = "Find large files";
+            SetNameAndDescription("Find large files");
             Translate();
         }
 

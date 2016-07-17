@@ -14,6 +14,18 @@ namespace ResourceManager
             protected set { _description = value; }
         }
 
+        public string Name
+        {
+            get;
+            protected set;
+        }
+
+        protected void SetNameAndDescription(string aName)
+        {
+            Name = aName;
+            Description = aName;
+        }
+
         //Store settings to use later
         public ISettingsSource Settings
         {

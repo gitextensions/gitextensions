@@ -8,7 +8,7 @@ namespace GitStatistics
     {
         public GitStatisticsPlugin()
         {
-            Description = "Statistics";
+            SetNameAndDescription("Statistics");
             Translate();
         }
 

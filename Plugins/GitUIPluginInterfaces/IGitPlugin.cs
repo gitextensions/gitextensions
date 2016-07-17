@@ -4,6 +4,8 @@ namespace GitUIPluginInterfaces
 {
     public interface IGitPlugin
     {
+        string Name { get; }
+
         string Description { get; }
 
         IGitPluginSettingsContainer SettingsContainer { get; set; }

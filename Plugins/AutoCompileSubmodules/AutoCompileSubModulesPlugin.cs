@@ -17,7 +17,7 @@ namespace AutoCompileSubmodules
 
         public AutoCompileSubModulesPlugin()
         {
-            Description = "Auto compile SubModules";
+            SetNameAndDescription("Auto compile SubModules");
             Translate();
         }
 

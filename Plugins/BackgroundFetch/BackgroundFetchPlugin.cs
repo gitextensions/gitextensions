@@ -11,7 +11,7 @@ namespace BackgroundFetch
     {
         public BackgroundFetchPlugin()
         {
-            Description = "Periodic background fetch";
+            SetNameAndDescription("Periodic background fetch");
             Translate();
         }
 

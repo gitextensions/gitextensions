@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         private void Init(IGitPlugin _gitPlugin)
         {
             this._gitPlugin = _gitPlugin;
-            settingsCointainer = new GitPluginSettingsContainer(_gitPlugin.Description);
+            settingsCointainer = new GitPluginSettingsContainer(_gitPlugin.Name);
         }
 
         public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost aPageHost, IGitPlugin gitPlugin)

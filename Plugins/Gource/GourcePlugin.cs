@@ -32,7 +32,7 @@ namespace Gource
 
         public GourcePlugin()
         {
-            Description = "Gource";
+            SetNameAndDescription("Gource");
             Translate();
         }
 

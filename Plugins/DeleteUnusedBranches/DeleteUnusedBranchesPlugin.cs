@@ -8,7 +8,7 @@ namespace DeleteUnusedBranches
     {
         public DeleteUnusedBranchesPlugin()
         {
-            Description = "Delete obsolete branches";
+            SetNameAndDescription("Delete obsolete branches");
             Translate();
         }
 

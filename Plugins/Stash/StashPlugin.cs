@@ -8,7 +8,7 @@ namespace Stash
     {
         public StashPlugin()
         {
-            Description = "Create Stash Pull Request";
+            SetNameAndDescription("Create Stash Pull Request");
             Translate();
         }
 
