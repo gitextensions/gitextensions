@@ -553,12 +553,12 @@ namespace GitUI
                         revListArgs += "--grep=\"" + filter + "\" ";
                     else
                         inMemMessageFilter = filter;
-                if (parameters[1])
+                if (parameters[1] && !filter.IsNullOrWhiteSpace())
                     if (cmdLineSafe)
                         revListArgs += "--committer=\"" + filter + "\" ";
                     else
                         inMemCommitterFilter = filter;
-                if (parameters[2])
+                if (parameters[2] && !filter.IsNullOrWhiteSpace())
                     if (cmdLineSafe)
                         revListArgs += "--author=\"" + filter + "\" ";
                     else
