@@ -38,7 +38,7 @@ namespace GitUI.UserControls.AutoCompleteTextBoxes
             // 
             this._wpfElementHost.AutoSize = true;
             this._wpfElementHost.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._wpfElementHost.Location = new System.Drawing.Point(0, 2);
+            this._wpfElementHost.Location = new System.Drawing.Point(0, 1);
             this._wpfElementHost.Name = "_wpfElementHost";
             this._wpfElementHost.Size = new System.Drawing.Size(150, 19);
             this._wpfElementHost.TabIndex = 0;
@@ -51,8 +51,8 @@ namespace GitUI.UserControls.AutoCompleteTextBoxes
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this._wpfElementHost);
             this.Name = "WpfAutoCompleteTextBoxHost";
-            this.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            this.Size = new System.Drawing.Size(150, 23);
+            this.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
+            this.Size = new System.Drawing.Size(150, 21);
             this.ResumeLayout(false);
             this.PerformLayout();
 
