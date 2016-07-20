@@ -78,7 +78,7 @@ namespace GitUI.CommandsDialogs
                     UICommands.UpdateSubmodules(this);
                 }
 
-                DialogResult = DialogResult.OK;
+                DialogResult = wasSuccessFul? DialogResult.OK : DialogResult.None;
             }
             catch (Exception ex)
             {
