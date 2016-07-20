@@ -3660,6 +3660,7 @@ namespace GitUI.CommandsDialogs
             var settings = Properties.Settings.Default;
             FileTreeSplitContainer.SplitterDistance = settings.FormBrowse_FileTreeSplitContainer_SplitterDistance;
             DiffSplitContainer.SplitterDistance = settings.FormBrowse_DiffSplitContainer_SplitterDistance;
+            MainSplitContainer.SplitterDistance = settings.FormBrowse_MainSplitContainer_SplitterDistance;
         }
     }
 }
