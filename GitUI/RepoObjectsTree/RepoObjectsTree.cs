@@ -16,7 +16,7 @@ namespace GitUI.UserControls
         /// <summary>Image key for a head branch.</summary>
         static readonly string headBranchKey = Guid.NewGuid().ToString();
         private AutoCompleteTextBoxes.AutoCompleteTextBox txtBranchFilter;
-        private HashSet<string> _branchFilterAutoCompletionSrc = new HashSet<string>();
+        private readonly HashSet<string> _branchFilterAutoCompletionSrc = new HashSet<string>();
 
         public RepoObjectsTree()
         {
@@ -67,7 +67,8 @@ namespace GitUI.UserControls
             base.OnUICommandsSourceChanged(sender, newSource);
 
             txtBranchFilter.AutoCompleteCustomSource = null;
-            _branchFilterAutoCompletionSrc.Clear();
+
+            CancelBackgroundTasks();
 
             DragDrops();
 
@@ -134,25 +135,32 @@ namespace GitUI.UserControls
         private RemoteBranchTree _remoteTree;
         private List<TreeNode> _searchResult;
         private bool _searchCriteriaChanged = false;
+        private Task[] _tasks;
 
-        private void Cancel()
+        private void CancelBackgroundTasks()
         {
             if (_cancelledTokenSource != null)
             {
+                _cancelledTokenSource.Cancel();
                 _cancelledTokenSource.Dispose();
                 _cancelledTokenSource = null;
+                if (_tasks != null)
+                {
+                    Task.WaitAll(_tasks);
+                }
+                _branchFilterAutoCompletionSrc.Clear();
             }
+            _cancelledTokenSource = new CancellationTokenSource();
         }
 
         /// <summary>Reloads the repo's objects tree.</summary>
         public void Reload()
         {
             // todo: task exception handling
-            Cancel();
-            _cancelledTokenSource = new CancellationTokenSource();
+            CancelBackgroundTasks();
             var token = _cancelledTokenSource.Token;
-            var tasks = rootNodes.Select(r => r.ReloadTask(token)).ToArray();
-            Task.Factory.ContinueWhenAll(tasks,
+            _tasks = rootNodes.Select(r => r.ReloadTask(token)).ToArray();
+            Task.Factory.ContinueWhenAll(_tasks,
                 (t) =>
                 {
                     if (!t.All(r => r.Status == TaskStatus.RanToCompletion))
@@ -172,7 +180,7 @@ namespace GitUI.UserControls
                         txtBranchFilter.AutoCompleteCustomSource = autoCompletionSrc;
                     }));
                 }, _cancelledTokenSource.Token);
-            tasks.ToList().ForEach(t => t.Start());
+            _tasks.ToList().ForEach(t => t.Start());
         }
 
         private void OnBtnSettingsClicked(object sender, EventArgs e)
