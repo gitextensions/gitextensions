@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Threading;
 using PatchApply;
 
 namespace GitUI.Editor.Diff
@@ -16,7 +17,7 @@ namespace GitUI.Editor.Diff
 
         private void BgWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            Start(doWorkEventArgs.Argument as string);
+            Start(doWorkEventArgs.Argument as string, sender as BackgroundWorker);
         }
 
         protected void FireLineAnalyzedEvent(DiffLineNum diffline)
@@ -42,7 +43,7 @@ namespace GitUI.Editor.Diff
             _bgWorker.RunWorkerAsync(diffContent);
         }
 
-        public void Start(string diffContent)
+        public void Start(string diffContent, BackgroundWorker worker)
         {
             var isCombinedDiff = PatchProcessor.IsCombinedDiff(diffContent);
             var lineNumInDiff = 0;
@@ -51,7 +52,7 @@ namespace GitUI.Editor.Diff
             var isHeaderLineLocated = false;
             foreach (var line in diffContent.Split('\n'))
             {
-                if (_bgWorker.CancellationPending)
+                if (worker.CancellationPending)
                 {
                     return;
                 }

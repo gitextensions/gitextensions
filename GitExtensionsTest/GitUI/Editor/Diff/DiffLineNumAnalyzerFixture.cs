@@ -1,7 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using GitUI.Editor.Diff;
 using NSubstitute;
 using NUnit.Framework;
@@ -49,7 +49,7 @@ namespace GitExtensionsTest.GitUI.Editor.Diff
         [Test]
         public void CanGetHeaders()
         {
-            _lineNumAnalyzer.Start(_sampleDiff);
+            _lineNumAnalyzer.Start(_sampleDiff, new BackgroundWorker());
             _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 5
                 && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
                 && line.RightLineNum == DiffLineNum.NotApplicableLineNum));
@@ -62,7 +62,7 @@ namespace GitExtensionsTest.GitUI.Editor.Diff
         [Test]
         public void CanGetContextLines()
         {
-            _lineNumAnalyzer.Start(_sampleDiff);
+            _lineNumAnalyzer.Start(_sampleDiff, new BackgroundWorker());
 
             // header1
             _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 6
@@ -86,7 +86,7 @@ namespace GitExtensionsTest.GitUI.Editor.Diff
         [Test]
         public void CanGetMinusLines()
         {
-            _lineNumAnalyzer.Start(_sampleDiff);
+            _lineNumAnalyzer.Start(_sampleDiff, new BackgroundWorker());
 
             _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 9
                 && line.LeftLineNum == 12
@@ -100,7 +100,7 @@ namespace GitExtensionsTest.GitUI.Editor.Diff
         [Test]
         public void CanGetPlusLines()
         {
-            _lineNumAnalyzer.Start(_sampleDiff);
+            _lineNumAnalyzer.Start(_sampleDiff, new BackgroundWorker());
 
             _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 12
                 && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
@@ -118,7 +118,7 @@ namespace GitExtensionsTest.GitUI.Editor.Diff
         [Test]
         public void CanGetLineNumbersForCombinedDiff()
         {
-            _lineNumAnalyzer.Start(_sampleCombindedDiff);
+            _lineNumAnalyzer.Start(_sampleCombindedDiff, new BackgroundWorker());
 
             _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 6
                 && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
