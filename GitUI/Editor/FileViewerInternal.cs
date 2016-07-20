@@ -42,6 +42,7 @@ namespace GitUI.Editor
             {
                 _lineNumbersControl.AddDiffLineNum(line);
             };
+            this.Disposed += (s,e) => _diffLineNumAnalyzer.Cancel();
         }
 
         public new Font Font

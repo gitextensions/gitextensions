@@ -29,10 +29,7 @@ namespace GitUI.Editor.Diff
         BackgroundWorker _bgWorker = new BackgroundWorker();
         public void StartAsync(string diffContent, Action onCompleted)
         {
-            if (_bgWorker.IsBusy)
-            {
-                _bgWorker.CancelAsync();
-            }
+            Cancel();
 
             _bgWorker = new BackgroundWorker();
             _bgWorker.DoWork += BgWorkerOnDoWork;
@@ -163,6 +160,15 @@ namespace GitUI.Editor.Diff
         private static bool IsMinusLineInCombinedDiff(string line)
         {
             return line.StartsWith("--") || line.StartsWith("- ") || line.StartsWith(" -");
+        }
+
+        public void Cancel()
+        {
+            if (_bgWorker != null && _bgWorker.IsBusy)
+            {
+                _bgWorker.CancelAsync();
+                _bgWorker = null;
+            }
         }
     }
 
