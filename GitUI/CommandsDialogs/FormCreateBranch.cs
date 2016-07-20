@@ -73,7 +73,7 @@ namespace GitUI.CommandsDialogs
                     FormProcess.ShowDialog(this, cmd);
                 }
 
-                if (CheckoutAfterCreate.Checked)
+                if (wasSuccessFul && CheckoutAfterCreate.Checked)
                 {
                     UICommands.UpdateSubmodules(this);
                 }
