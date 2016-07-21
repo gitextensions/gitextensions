@@ -119,7 +119,8 @@ namespace GitUI.Editor.Diff
         public void AddDiffLineNum(DiffLineNum diffLineNum)
         {
             DiffLines[diffLineNum.LineNumInDiff] = diffLineNum;
-            _maxValueOfLineNum = Math.Max(diffLineNum.LeftLineNum, diffLineNum.RightLineNum);
+                _maxValueOfLineNum = Math.Max(_maxValueOfLineNum,
+                    Math.Max(diffLineNum.LeftLineNum, diffLineNum.RightLineNum));
         }
 
         public void Clear(bool forDiff)
