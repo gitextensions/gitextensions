@@ -141,7 +141,7 @@ namespace GitUI.Editor
 
         public void SetText(string text, bool isDiff = false)
         {
-            _lineNumbersControl.Clear();
+            _lineNumbersControl.Clear(isDiff);
 
             if (isDiff)
             {
