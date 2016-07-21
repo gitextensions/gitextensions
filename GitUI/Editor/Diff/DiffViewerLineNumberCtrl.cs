@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using GitCommands;
 using GitCommands.Utils;
 using ICSharpCode.TextEditor;
@@ -13,7 +14,7 @@ namespace GitUI.Editor.Diff
 
         private int _maxValueOfLineNum;
         private bool _visible = true;
-        private Size lastSize = new Size(0, 0);
+        private Size _lastSize = new Size(0, 0);
 
         public DiffViewerLineNumberCtrl(TextArea textArea) : base(textArea)
         {
@@ -26,17 +27,17 @@ namespace GitUI.Editor.Diff
             {
                 if (!_visible)
                 {
-                    lastSize = new Size(0, 0);
+                    _lastSize = new Size(0, 0);
                 } 
-                else if (DiffLines.Count > 0)
+                else if (DiffLines.Any())
                 {
                     var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);
                     // Workaround that right most numbers get clipped when using mono.
                     var monoTextWidthAdjustment = EnvUtils.IsMonoRuntime() ? 10 : 0;
-                    lastSize = new Size((int)size.Width * 2 + TextHorizontalMargin + monoTextWidthAdjustment, 0);
+                    _lastSize = new Size((int)size.Width * 2 + TextHorizontalMargin + monoTextWidthAdjustment, 0);
                 }
 
-                return lastSize;
+                return _lastSize;
             }
         }
 
@@ -123,7 +124,7 @@ namespace GitUI.Editor.Diff
         {
             if (!forDiff)
             {
-                lastSize = new Size(0, 0);
+                _lastSize = new Size(0, 0);
             }
             DiffLines.Clear();
         }
