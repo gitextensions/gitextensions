@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using GitCommands;
 using PatchApply;
 
 namespace GitUI.Editor.Diff
@@ -105,6 +106,17 @@ namespace GitUI.Editor.Diff
                     };
                     AddToResult(ret, meta);
                     rightLineNum++;
+                }
+                else if (line.StartsWith(GitModule.NoNewLineAtTheEnd))
+                {
+                    var meta = new DiffLineNum
+                    {
+                        LineNumInDiff = lineNumInDiff,
+                        LeftLineNum = DiffLineNum.NotApplicableLineNum,
+                        RightLineNum = DiffLineNum.NotApplicableLineNum,
+                        Style = DiffLineNum.DiffLineStyle.Header
+                    };
+                    AddToResult(ret, meta);
                 }
                 else if (isHeaderLineLocated)
                 {
