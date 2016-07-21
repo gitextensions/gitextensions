@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using GitCommands;
 using PatchApply;
 
 namespace GitUI.Editor.Diff
@@ -126,6 +127,10 @@ namespace GitUI.Editor.Diff
                     };
                     batch.Add(meta);
                     rightLineNum++;
+                }
+                else if (line.StartsWith(GitModule.NoNewLineAtTheEnd))
+                {
+                    break;
                 }
                 else if (isHeaderLineLocated)
                 {
