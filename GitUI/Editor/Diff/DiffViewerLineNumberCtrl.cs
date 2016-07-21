@@ -116,11 +116,28 @@ namespace GitUI.Editor.Diff
 
         private ConcurrentDictionary<int, DiffLineNum> DiffLines { get; set; }
 
-        public void AddDiffLineNum(DiffLineNum diffLineNum)
+        public void AddDiffLineNum(List<DiffLineNum> diffLineNums)
         {
-            DiffLines[diffLineNum.LineNumInDiff] = diffLineNum;
+            foreach (var diffLineNum in diffLineNums)
+            {
+                DiffLines[diffLineNum.LineNumInDiff] = diffLineNum;
                 _maxValueOfLineNum = Math.Max(_maxValueOfLineNum,
                     Math.Max(diffLineNum.LeftLineNum, diffLineNum.RightLineNum));
+            }
+            try
+            {
+                textArea.BeginInvoke(new Action(() =>
+                {
+                    if (!textArea.IsDisposed)
+                    {
+                        textArea.Refresh();
+                    }
+                }));
+            }
+            catch (InvalidOperationException)
+            {
+                // ignore when textArea is disposed.
+            }
         }
 
         public void Clear(bool forDiff)
