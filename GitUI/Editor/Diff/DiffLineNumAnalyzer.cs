@@ -1,37 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using GitCommands;
 using PatchApply;
 
 namespace GitUI.Editor.Diff
 {
     public class DiffLineNumAnalyzer
     {
-        public delegate void EvLineNumAnalyzed(DiffLineNum diffLineNum);
         private static Regex regex = new Regex(
             @"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public event EvLineNumAnalyzed OnLineNumAnalyzed;
+        public event Action<List<DiffLineNum>> OnLineNumAnalyzed;
 
         private void BgWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            Start(doWorkEventArgs.Argument as string);
+            Start(doWorkEventArgs.Argument as string, sender as BackgroundWorker);
         }
 
-        protected void FireLineAnalyzedEvent(DiffLineNum diffline)
+        protected void FireLineAnalyzedEvent(List<DiffLineNum> diffline)
         {
             var handler = OnLineNumAnalyzed;
             if (handler != null) handler(diffline);
+            Thread.Sleep(100);// sleep for a while to improve the UI responsiveness
         }
 
         BackgroundWorker _bgWorker = new BackgroundWorker();
         public void StartAsync(string diffContent, Action onCompleted)
         {
-            if (_bgWorker.IsBusy)
-            {
-                _bgWorker.CancelAsync();
-            }
+            Cancel();
 
             _bgWorker = new BackgroundWorker();
             _bgWorker.DoWork += BgWorkerOnDoWork;
@@ -42,16 +42,17 @@ namespace GitUI.Editor.Diff
             _bgWorker.RunWorkerAsync(diffContent);
         }
 
-        public void Start(string diffContent)
+        public void Start(string diffContent, BackgroundWorker worker)
         {
             var isCombinedDiff = PatchProcessor.IsCombinedDiff(diffContent);
             var lineNumInDiff = 0;
             var leftLineNum = DiffLineNum.NotApplicableLineNum;
             var rightLineNum = DiffLineNum.NotApplicableLineNum;
             var isHeaderLineLocated = false;
+            var batch = new List<DiffLineNum>();
             foreach (var line in diffContent.Split('\n'))
             {
-                if (_bgWorker.CancellationPending)
+                if (worker.CancellationPending)
                 {
                     return;
                 }
@@ -70,7 +71,7 @@ namespace GitUI.Editor.Diff
                     leftLineNum = int.Parse(lineNumbers.Groups["leftStart"].Value);
                     rightLineNum = int.Parse(lineNumbers.Groups["rightStart"].Value);
 
-                    FireLineAnalyzedEvent(meta);
+                    batch.Add(meta);
                     isHeaderLineLocated = true;
                 }
                 else if (isHeaderLineLocated && isCombinedDiff)
@@ -99,7 +100,7 @@ namespace GitUI.Editor.Diff
                         rightLineNum++;
                     }
 
-                    FireLineAnalyzedEvent(meta);
+                    batch.Add(meta);
                 }
 
                 else if (isHeaderLineLocated && IsMinusLine(line))
@@ -111,7 +112,7 @@ namespace GitUI.Editor.Diff
                         RightLineNum = DiffLineNum.NotApplicableLineNum,
                         Style = DiffLineNum.DiffLineStyle.Minus
                     };
-                    FireLineAnalyzedEvent(meta);
+                    batch.Add(meta);
 
                     leftLineNum++;
                 }
@@ -124,8 +125,12 @@ namespace GitUI.Editor.Diff
                         RightLineNum = rightLineNum,
                         Style = DiffLineNum.DiffLineStyle.Plus,
                     };
-                    FireLineAnalyzedEvent(meta);
+                    batch.Add(meta);
                     rightLineNum++;
+                }
+                else if (line.StartsWith(GitModule.NoNewLineAtTheEnd))
+                {
+                    break;
                 }
                 else if (isHeaderLineLocated)
                 {
@@ -136,11 +141,21 @@ namespace GitUI.Editor.Diff
                         RightLineNum = rightLineNum,
                         Style = DiffLineNum.DiffLineStyle.Context,
                     };
-                    FireLineAnalyzedEvent(meta);
+                    batch.Add(meta);
 
                     leftLineNum++;
                     rightLineNum++;
                 }
+
+                if (lineNumInDiff % 100 == 0)
+                {
+                    FireLineAnalyzedEvent(batch);
+                    batch = new List<DiffLineNum>();
+                }
+            }
+            if (batch.Any())
+            {
+                FireLineAnalyzedEvent(batch);
             }
         }
 
@@ -162,6 +177,15 @@ namespace GitUI.Editor.Diff
         private static bool IsMinusLineInCombinedDiff(string line)
         {
             return line.StartsWith("--") || line.StartsWith("- ") || line.StartsWith(" -");
+        }
+
+        public void Cancel()
+        {
+            if (_bgWorker != null && _bgWorker.IsBusy)
+            {
+                _bgWorker.CancelAsync();
+                _bgWorker = null;
+            }
         }
     }
 

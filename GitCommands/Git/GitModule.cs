@@ -80,6 +80,8 @@ namespace GitCommands
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private readonly object _lock = new object();
 
+        public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
+
         public GitModule(string workingdir)
         {
             _superprojectInit = false;

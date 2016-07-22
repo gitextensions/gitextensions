@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -15,11 +16,11 @@ namespace GitUI.Editor.Diff
 
         private int _maxValueOfLineNum;
         private bool _visible = true;
-        private Size lastSize = new Size(0, 0);
+        private Size _lastSize = new Size(0, 0);
 
         public DiffViewerLineNumberCtrl(TextArea textArea) : base(textArea)
         {
-            DiffLines = new Dictionary<int, DiffLineNum>();
+            DiffLines = new ConcurrentDictionary<int, DiffLineNum>();
         }
 
         public override Size Size
@@ -28,17 +29,17 @@ namespace GitUI.Editor.Diff
             {
                 if (!_visible)
                 {
-                    lastSize = new Size(0, 0);
-                } 
-                else if (DiffLines.Count > 0)
+                    _lastSize = new Size(0, 0);
+                }
+                else if (DiffLines.Any())
                 {
                     var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);
                     // Workaround that right most numbers get clipped when using mono.
                     var monoTextWidthAdjustment = EnvUtils.IsMonoRuntime() ? 10 : 0;
-                    lastSize = new Size((int)size.Width * 2 + TextHorizontalMargin + monoTextWidthAdjustment, 0);
+                    _lastSize = new Size((int)size.Width * 2 + TextHorizontalMargin + monoTextWidthAdjustment, 0);
                 }
 
-                return lastSize;
+                return _lastSize;
             }
         }
 
@@ -68,11 +69,12 @@ namespace GitUI.Editor.Diff
                 {
                     continue;
                 }
-                if (!DiffLines.ContainsKey(curLine + 1))
+                DiffLineNum diffLine;
+                if (!DiffLines.TryGetValue(curLine + 1, out diffLine))
                 {
                     continue;
                 }
-                var diffLine = DiffLines[curLine + 1];
+
                 if (diffLine.Style != DiffLineNum.DiffLineStyle.Context)
                 {
                     var brush = default(Brush);
@@ -112,19 +114,37 @@ namespace GitUI.Editor.Diff
             }
         }
 
-        private Dictionary<int, DiffLineNum> DiffLines { get; set; }
+        private ConcurrentDictionary<int, DiffLineNum> DiffLines { get; set; }
 
-        public void AddDiffLineNum(DiffLineNum diffLineNum)
+        public void AddDiffLineNum(List<DiffLineNum> diffLineNums)
         {
-            DiffLines[diffLineNum.LineNumInDiff] = diffLineNum;
-            _maxValueOfLineNum = Math.Max(diffLineNum.LeftLineNum, diffLineNum.RightLineNum);
+            foreach (var diffLineNum in diffLineNums)
+            {
+                DiffLines[diffLineNum.LineNumInDiff] = diffLineNum;
+                _maxValueOfLineNum = Math.Max(_maxValueOfLineNum,
+                    Math.Max(diffLineNum.LeftLineNum, diffLineNum.RightLineNum));
+            }
+            try
+            {
+                textArea.BeginInvoke(new Action(() =>
+                {
+                    if (!textArea.IsDisposed)
+                    {
+                        textArea.Refresh();
+                    }
+                }));
+            }
+            catch (InvalidOperationException)
+            {
+                // ignore when textArea is disposed.
+            }
         }
 
         public void Clear(bool forDiff)
         {
             if (!forDiff)
             {
-                lastSize = new Size(0, 0);
+                _lastSize = new Size(0, 0);
             }
             DiffLines.Clear();
         }

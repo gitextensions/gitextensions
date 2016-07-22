@@ -449,13 +449,12 @@ namespace PatchApply
                         inPreContext = false;
                         result.AddDiffLine(patchLine, false);
                     }
-                    else if (line.StartsWith("\\"))
+                    else if (line.StartsWith(GitModule.NoNewLineAtTheEnd))
                     {
-                        if (line.Contains("No newline at end of file"))
-                            if (result.CurrentSubChunk.AddedLines.Count > 0 && result.CurrentSubChunk.PostContext.Count == 0)
-                                result.CurrentSubChunk.IsNoNewLineAtTheEnd = line;
-                            else
-                                result.CurrentSubChunk.WasNoNewLineAtTheEnd = line;
+                        if (result.CurrentSubChunk.AddedLines.Count > 0 && result.CurrentSubChunk.PostContext.Count == 0)
+                            result.CurrentSubChunk.IsNoNewLineAtTheEnd = line;
+                        else
+                            result.CurrentSubChunk.WasNoNewLineAtTheEnd = line;
                     }
                     else
                         inPatch = false;
@@ -504,7 +503,7 @@ namespace PatchApply
                 {
                     if (!line.Equals(string.Empty))
                     {
-                        result.CurrentSubChunk.IsNoNewLineAtTheEnd = "\\ No newline at end of file";
+                        result.CurrentSubChunk.IsNoNewLineAtTheEnd = GitModule.NoNewLineAtTheEnd;
                         result.AddDiffLine(patchLine, reset);
                         if (reset && patchLine.Selected)
                         {
@@ -518,7 +517,7 @@ namespace PatchApply
                                 clonedLine.SetOperation("+");
                                 result.CurrentSubChunk.AddedLines.Add(clonedLine);
                             }
-                            result.CurrentSubChunk.WasNoNewLineAtTheEnd = "\\ No newline at end of file";
+                            result.CurrentSubChunk.WasNoNewLineAtTheEnd = GitModule.NoNewLineAtTheEnd;
                         }
                     }
                 }
