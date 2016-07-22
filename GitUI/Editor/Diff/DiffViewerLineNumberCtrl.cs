@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using GitCommands;
 using GitCommands.Utils;
 using ICSharpCode.TextEditor;
@@ -114,10 +112,11 @@ namespace GitUI.Editor.Diff
 
         private Dictionary<int, DiffLineNum> DiffLines { get; set; }
 
-        public void AddDiffLineNum(DiffLineNum diffLineNum)
+        public void DisplayLineNumFor(string diff)
         {
-            DiffLines[diffLineNum.LineNumInDiff] = diffLineNum;
-            _maxValueOfLineNum = Math.Max(diffLineNum.LeftLineNum, diffLineNum.RightLineNum);
+            var result = new DiffLineNumAnalyzer().Analyze(diff);
+            DiffLines = result.LineNumbers;
+            _maxValueOfLineNum = result.MaxLineNumber;
         }
 
         public void Clear(bool forDiff)
