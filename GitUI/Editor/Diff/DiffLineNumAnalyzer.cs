@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using PatchApply;
 
@@ -7,43 +7,26 @@ namespace GitUI.Editor.Diff
 {
     public class DiffLineNumAnalyzer
     {
-        public delegate void EvLineNumAnalyzed(DiffLineNum diffLineNum);
         private static Regex regex = new Regex(
             @"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public event EvLineNumAnalyzed OnLineNumAnalyzed;
-
-        private void BgWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
+        public class Result
         {
-            Start(doWorkEventArgs.Argument as string);
+            public Dictionary<int, DiffLineNum> LineNumbers = new Dictionary<int, DiffLineNum>();
+            public int MaxLineNumber = 0;
         }
 
-        protected void FireLineAnalyzedEvent(DiffLineNum diffline)
+        private void AddToResult(Result result, DiffLineNum diffLine)
         {
-            var handler = OnLineNumAnalyzed;
-            if (handler != null) handler(diffline);
+            result.LineNumbers.Add(diffLine.LineNumInDiff, diffLine);
+            result.MaxLineNumber = Math.Max(result.MaxLineNumber,
+                Math.Max(diffLine.LeftLineNum, diffLine.RightLineNum));
         }
 
-        BackgroundWorker _bgWorker = new BackgroundWorker();
-        public void StartAsync(string diffContent, Action onCompleted)
+        public Result Analyze(string diffContent)
         {
-            if (_bgWorker.IsBusy)
-            {
-                _bgWorker.CancelAsync();
-            }
-
-            _bgWorker = new BackgroundWorker();
-            _bgWorker.DoWork += BgWorkerOnDoWork;
-            _bgWorker.WorkerSupportsCancellation = true;
-
-            _bgWorker.RunWorkerCompleted += (sender, args) => onCompleted();
-
-            _bgWorker.RunWorkerAsync(diffContent);
-        }
-
-        public void Start(string diffContent)
-        {
+            var ret = new Result();
             var isCombinedDiff = PatchProcessor.IsCombinedDiff(diffContent);
             var lineNumInDiff = 0;
             var leftLineNum = DiffLineNum.NotApplicableLineNum;
@@ -51,10 +34,6 @@ namespace GitUI.Editor.Diff
             var isHeaderLineLocated = false;
             foreach (var line in diffContent.Split('\n'))
             {
-                if (_bgWorker.CancellationPending)
-                {
-                    return;
-                }
                 lineNumInDiff++;
                 if (line.StartsWith("@"))
                 {
@@ -70,7 +49,7 @@ namespace GitUI.Editor.Diff
                     leftLineNum = int.Parse(lineNumbers.Groups["leftStart"].Value);
                     rightLineNum = int.Parse(lineNumbers.Groups["rightStart"].Value);
 
-                    FireLineAnalyzedEvent(meta);
+                    AddToResult(ret, meta);
                     isHeaderLineLocated = true;
                 }
                 else if (isHeaderLineLocated && isCombinedDiff)
@@ -99,7 +78,7 @@ namespace GitUI.Editor.Diff
                         rightLineNum++;
                     }
 
-                    FireLineAnalyzedEvent(meta);
+                    AddToResult(ret, meta);
                 }
 
                 else if (isHeaderLineLocated && IsMinusLine(line))
@@ -111,7 +90,7 @@ namespace GitUI.Editor.Diff
                         RightLineNum = DiffLineNum.NotApplicableLineNum,
                         Style = DiffLineNum.DiffLineStyle.Minus
                     };
-                    FireLineAnalyzedEvent(meta);
+                    AddToResult(ret, meta);
 
                     leftLineNum++;
                 }
@@ -124,7 +103,7 @@ namespace GitUI.Editor.Diff
                         RightLineNum = rightLineNum,
                         Style = DiffLineNum.DiffLineStyle.Plus,
                     };
-                    FireLineAnalyzedEvent(meta);
+                    AddToResult(ret, meta);
                     rightLineNum++;
                 }
                 else if (isHeaderLineLocated)
@@ -136,12 +115,13 @@ namespace GitUI.Editor.Diff
                         RightLineNum = rightLineNum,
                         Style = DiffLineNum.DiffLineStyle.Context,
                     };
-                    FireLineAnalyzedEvent(meta);
+                    AddToResult(ret, meta);
 
                     leftLineNum++;
                     rightLineNum++;
                 }
             }
+            return ret;
         }
 
         private static bool IsMinusLine(string line)
