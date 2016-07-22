@@ -27,6 +27,7 @@ namespace GitUI.UserControls
             _timer = new ProcessOutputTimer(AppendMessage);
             _editbox = new RichTextBox { BackColor = SystemColors.Window, BorderStyle = BorderStyle.FixedSingle, Dock = DockStyle.Fill, Name = "_editbox", ReadOnly = true };
             Controls.Add(_editbox);
+            _timer.Start();
         }
 
         public override int ExitCode
@@ -80,8 +81,6 @@ namespace GitUI.UserControls
         {
             try
             {
-                _timer.Start();
-
                 GitCommandHelpers.SetEnvironmentVariable();
 
                 bool ssh = GitCommandHelpers.UseSsh(arguments);
