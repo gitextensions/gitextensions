@@ -251,9 +251,11 @@ namespace GitUI.BuildServerIntegration
                     {
                         rowData.BuildStatus = buildInfo;
 
-                        if (BuildStatusImageColumnIndex != -1)
+                        if (BuildStatusImageColumnIndex != -1 &&
+                            revisions.Rows[row].Cells[BuildStatusImageColumnIndex].Displayed)
                             revisions.UpdateCellValue(BuildStatusImageColumnIndex, row);
-                        if (BuildStatusMessageColumnIndex != -1)
+                        if (BuildStatusMessageColumnIndex != -1 &&
+                            revisions.Rows[row].Cells[BuildStatusImageColumnIndex].Displayed)
                             revisions.UpdateCellValue(BuildStatusMessageColumnIndex, row);
                     }
                 }
