@@ -18,11 +18,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             if (File.Exists(fileName))
                 return Path.GetFullPath(fileName);
 
-            var values = Environment.GetEnvironmentVariable("PATH");
-            foreach (var path in values.Split(';'))
+            foreach (var path in PathUtil.GetEnvironmentValidPaths())
             {
                 var fullPath = Path.Combine(path, fileName);
-                if (File.Exists(fullPath))
+                if (PathUtil.PathExists(fullPath))
                     return fullPath;
             }
             return null;

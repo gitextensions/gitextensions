@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using GitCommands.Utils;
 
@@ -119,6 +120,67 @@ namespace GitCommands
             }
 
             return name;
+        }
+
+        public static IEnumerable<string> GetEnvironmentValidPaths()
+        {
+            return GetValidPaths(GetEnvironmentPaths());
+        }
+
+        public static IEnumerable<string> GetValidPaths(IEnumerable<string> paths)
+        {
+            return paths.Where(aPath => IsValidPath(aPath));
+        }
+
+        static IEnumerable<string> GetEnvironmentPaths()
+        {
+            string pathVariable = Environment.GetEnvironmentVariable("PATH");
+            return GetEnvironmentPaths(pathVariable);
+        }
+
+        public static IEnumerable<string> GetEnvironmentPaths(string aPathVariable)
+        {
+            if (aPathVariable.IsNullOrWhiteSpace())
+                yield break;
+
+            foreach (string rawdir in aPathVariable.Split(';'))
+            {
+                string dir = rawdir;
+                // Usually, paths with spaces are not quoted on %PATH%, but it's well possible, and .NET won't consume a quoted path
+                // This does not handle the full grammar of the %PATH%, but at least prevents Illegal Characters in Path exceptions (see #2924)
+                dir = dir.Trim(new char[] { ' ', '"', '\t' });
+                if (dir.Length == 0)
+                    continue;
+                yield return dir;
+            }
+        }
+
+        public static bool IsValidPath(string aPath)
+        {
+            FileInfo fi = null;
+            try
+            {
+                fi = new FileInfo(aPath);
+            }
+            catch (ArgumentException) { }
+            catch (PathTooLongException) { }
+            catch (NotSupportedException) { }
+
+            return fi != null;
+        }
+                
+        public static bool PathExists(string aPath)
+        {
+            FileInfo fi = null;
+            try
+            {
+                fi = new FileInfo(aPath);
+            }
+            catch (ArgumentException) { }
+            catch (PathTooLongException) { }
+            catch (NotSupportedException) { }
+
+            return fi != null && fi.Exists;
         }
     }
 }
