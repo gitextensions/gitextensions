@@ -182,5 +182,24 @@ namespace GitCommands
 
             return fi != null && fi.Exists;
         }
+
+        public static bool TryFindFullPath(string aFileName, out string fullPath)
+        {
+            if (PathUtil.PathExists(aFileName))
+            {
+                fullPath = Path.GetFullPath(aFileName);
+                return true;
+            }
+
+            foreach (var path in PathUtil.GetEnvironmentValidPaths())
+            {
+                fullPath = Path.Combine(path, aFileName);
+                if (PathUtil.PathExists(fullPath))
+                    return true;
+            }
+
+            fullPath = null;
+            return false;
+        }
     }
 }

@@ -182,14 +182,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static bool CheckIfFileIsInPath(string fileName)
         {
-            string path = Environment.GetEnvironmentVariable("PATH");
-
-            foreach (string dir in PathUtil.GetEnvironmentValidPaths())
-            {
-                if (PathUtil.PathExists(Path.Combine(dir, fileName)))
-                    return true;
-            }
-            return false;
+            string foo;
+            return PathUtil.TryFindFullPath(fileName, out foo);
         }
 
         public bool SolveMergeToolForKDiff()

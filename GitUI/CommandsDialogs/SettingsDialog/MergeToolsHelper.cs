@@ -15,16 +15,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static string GetFullPath(string fileName)
         {
-            if (File.Exists(fileName))
-                return Path.GetFullPath(fileName);
+            string fullPath;
+            PathUtil.TryFindFullPath(fileName, out fullPath);
 
-            foreach (var path in PathUtil.GetEnvironmentValidPaths())
-            {
-                var fullPath = Path.Combine(path, fileName);
-                if (PathUtil.PathExists(fullPath))
-                    return fullPath;
-            }
-            return null;
+            return fullPath;
         }
 
         public static string FindFileInFolders(string fileName, params string[] locations)
