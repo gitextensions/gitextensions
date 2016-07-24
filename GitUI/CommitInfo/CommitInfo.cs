@@ -195,7 +195,7 @@ namespace GitUI.CommitInfo
         private void loadAnnotatedTagInfo(GitRevision revision)
         {
             _annotatedTagsMessages = GetAnnotatedTagsMessages(revision);
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
 
         private IDictionary<string, string> GetAnnotatedTagsMessages(GitRevision revision)
