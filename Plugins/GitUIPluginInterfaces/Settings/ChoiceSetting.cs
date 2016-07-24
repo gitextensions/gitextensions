@@ -31,15 +31,12 @@ namespace GitUIPluginInterfaces
             return new ComboBoxBinding(this);
     }
 
-        private class ComboBoxBinding : SettingControlBinding<ComboBox>
+        private class ComboBoxBinding : SettingControlBinding<ChoiceSetting, ComboBox>
         {
 
-            ChoiceSetting Setting;
-
             public ComboBoxBinding(ChoiceSetting aSetting)
-            {
-                Setting = aSetting;
-            }
+                : base(aSetting)
+            { }
 
             public override ComboBox CreateControl()
             {

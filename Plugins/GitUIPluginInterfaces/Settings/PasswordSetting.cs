@@ -25,14 +25,11 @@ namespace GitUIPluginInterfaces
             return new TextBoxBinding(this);
     }
 
-        private class TextBoxBinding : SettingControlBinding<TextBox>
+        private class TextBoxBinding : SettingControlBinding<PasswordSetting, TextBox>
         {
-            PasswordSetting Setting;
-
             public TextBoxBinding(PasswordSetting aSetting)
-            {
-                Setting = aSetting;
-            }
+                : base(aSetting)
+            { }
 
             public override TextBox CreateControl()
             {

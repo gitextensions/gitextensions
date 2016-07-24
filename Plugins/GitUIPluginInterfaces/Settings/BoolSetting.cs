@@ -45,14 +45,11 @@ namespace GitUIPluginInterfaces
             return this[settings] ?? DefaultValue;
         }
 
-        private class CheckBoxBinding : SettingControlBinding<CheckBox>
+        private class CheckBoxBinding : SettingControlBinding<BoolSetting, CheckBox>
         {
-            BoolSetting Setting;
-
             public CheckBoxBinding(BoolSetting aSetting)
-            {
-                Setting = aSetting;
-            }
+                : base(aSetting)
+            { }
 
             public override CheckBox CreateControl()
             {

@@ -20,6 +20,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
+        protected override void Init(ISettingsPageHost aPageHost)
+        {
+            base.Init(aPageHost);
+            CreateSettingsControls();
+            Translate();
+        }
+
         private DetailedGroup DetailedSettings
         {
             get
@@ -28,9 +35,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        protected override IEnumerable<ISetting> GetSettings()
+        private void CreateSettingsControls()
         {
-            yield return new BoolNullableISettingAdapter("Show the Console tab", DetailedSettings.ShowConEmuTab);
+            GroupBoxSettingsLayout main = new GroupBoxSettingsLayout(this, "Browse repository window");
+            AddSettingsLayout(main);
+            main.AddBoolSetting("Show the Console tab", DetailedSettings.ShowConEmuTab);
         }
 
         public static SettingsPageReference GetPageReference()

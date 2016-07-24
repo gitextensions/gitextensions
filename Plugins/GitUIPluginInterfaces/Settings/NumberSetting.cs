@@ -29,14 +29,11 @@ namespace GitUIPluginInterfaces
             return new TextBoxBinding(this);
     }
 
-        private class TextBoxBinding : SettingControlBinding<TextBox>
+        private class TextBoxBinding : SettingControlBinding<NumberSetting<T>, TextBox>
         {
-            NumberSetting<T> Setting;
-
             public TextBoxBinding(NumberSetting<T> aSetting)
-            {
-                Setting = aSetting;
-            }
+                : base(aSetting)
+            { }
 
             public override TextBox CreateControl()
             {
