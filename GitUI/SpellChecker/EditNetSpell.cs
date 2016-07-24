@@ -1047,7 +1047,7 @@ namespace GitUI.SpellChecker
                 _customUnderlines.Dispose();
                 if (components != null)
                     components.Dispose();
-                if (_autoCompleteListTask.Status == TaskStatus.Created)
+                if (_autoCompleteListTask != null &&_autoCompleteListTask.Status == TaskStatus.Canceled)
                 {
                     _autoCompleteListTask.Dispose();
                 }
