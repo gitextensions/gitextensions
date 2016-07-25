@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -33,7 +34,10 @@ namespace GitUI.CommitInfo
             {
                 _sortedRefs = null;
             };
-            _RevisionHeader.Font = new System.Drawing.Font(System.Drawing.FontFamily.GenericMonospace, AppSettings.Font.Size);
+
+            using (Graphics g = CreateGraphics())
+                if (!AppSettings.Font.IsFixedWidth(g))
+                    _RevisionHeader.Font = new Font(FontFamily.GenericMonospace, AppSettings.Font.Size);
         }
 
         [DefaultValue(false)]
