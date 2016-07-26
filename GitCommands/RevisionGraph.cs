@@ -12,15 +12,16 @@ namespace GitCommands
     [Flags]
     public enum RefsFiltringOptions
     {
-        Branches = 1,       // --branches
-        Remotes = 2,        // --remotes
-        Tags = 4,           // --tags
-        Stashes = 8,        //
-        All = 15,           // --all
-        Boundary = 16,      // --boundary
-        ShowGitNotes = 32,  // --not --glob=notes --not
-        NoMerges = 64,      // --no-merges
-        FirstParent = 128   // --first-parent
+        Branches = 1,               // --branches
+        Remotes = 2,                // --remotes
+        Tags = 4,                   // --tags
+        Stashes = 8,                //
+        All = 15,                   // --all
+        Boundary = 16,              // --boundary
+        ShowGitNotes = 32,          // --not --glob=notes --not
+        NoMerges = 64,              // --no-merges
+        FirstParent = 128,          // --first-parent
+        SimplifyByDecoration = 256  // --simplify-by-decoration
     }
 
     public abstract class RevisionGraphInMemFilter
