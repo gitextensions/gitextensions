@@ -409,6 +409,7 @@
             this.SimplifyByDecorationCheck.TabIndex = 35;
             this.SimplifyByDecorationCheck.Text = "Simplify by decoration";
             this.SimplifyByDecorationCheck.UseVisualStyleBackColor = true;
+            this.SimplifyByDecorationCheck.CheckedChanged += new System.EventHandler(this.OnSimplifyByDecorationCheckedChanged);
             // 
             // FormRevisionFilter
             // 

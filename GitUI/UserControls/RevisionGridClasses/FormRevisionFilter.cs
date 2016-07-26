@@ -37,6 +37,11 @@ namespace GitUI.RevisionGridClasses
             EnableFilters();
         }
 
+        private void OnSimplifyByDecorationCheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void EnableFilters()
         {
             Since.Enabled = SinceCheck.Checked;
