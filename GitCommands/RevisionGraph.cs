@@ -177,6 +177,9 @@ namespace GitCommands
             if ((RefsOptions & RefsFiltringOptions.FirstParent) == RefsFiltringOptions.FirstParent)
                 logParam += " --first-parent";
 
+            if ((RefsOptions & RefsFiltringOptions.SimplifyByDecoration) == RefsFiltringOptions.SimplifyByDecoration)
+                logParam += " --simplify-by-decoration";
+
             string branchFilter = BranchFilter;
             if ((!string.IsNullOrWhiteSpace(BranchFilter)) &&
                 (BranchFilter.IndexOfAny(ShellGlobCharacters) >= 0))
