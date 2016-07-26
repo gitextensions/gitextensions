@@ -39,7 +39,8 @@ namespace GitUI.RevisionGridClasses
 
         private void OnSimplifyByDecorationCheckedChanged(object sender, EventArgs e)
         {
-
+            AppSettings.ShowSimplifyByDecoration = SimplifyByDecorationCheck.Checked;
+            EnableFilters();
         }
 
         private void EnableFilters()
@@ -54,8 +55,10 @@ namespace GitUI.RevisionGridClasses
 
             BranchFilterCheck.Checked = AppSettings.BranchFilterEnabled;
             CurrentBranchOnlyCheck.Checked = AppSettings.ShowCurrentBranchOnly;
+            SimplifyByDecorationCheck.Checked = AppSettings.ShowSimplifyByDecoration;
 
             CurrentBranchOnlyCheck.Enabled = BranchFilterCheck.Checked;
+            SimplifyByDecorationCheck.Enabled = BranchFilterCheck.Checked;
             BranchFilter.Enabled = BranchFilterCheck.Checked &&
                                    !CurrentBranchOnlyCheck.Checked;
         }

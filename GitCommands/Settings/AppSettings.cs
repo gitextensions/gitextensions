@@ -1227,6 +1227,8 @@ namespace GitCommands
             }
         }
 
+        public static bool ShowSimplifyByDecoration { get; set; }
+
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;
