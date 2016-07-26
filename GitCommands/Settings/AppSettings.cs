@@ -766,6 +766,12 @@ namespace GitCommands
             set { SetBool("showcurrentbranchonly", value); }
         }
 
+        public static bool ShowSimplifyByDecoration
+        {
+            get { return GetBool("showsimplifybydecoration", false); }
+            set { SetBool("showsimplifybydecoration", value); }
+        }
+
         public static bool BranchFilterEnabled
         {
             get { return GetBool("branchfilterenabled", false); }
@@ -1226,8 +1232,6 @@ namespace GitCommands
                 return _VersionIndependentRegKey;
             }
         }
-
-        public static bool ShowSimplifyByDecoration { get; set; }
 
         public static bool IsPortable()
         {
