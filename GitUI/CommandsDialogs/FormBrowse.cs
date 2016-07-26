@@ -3091,7 +3091,7 @@ namespace GitUI.CommandsDialogs
                 // and to make it possible we add explicit branch filter and refresh.
                 if (AppSettings.ShowFirstParent && !found)
                 {
-                    _filterBranchHelper.SetBranchFilter(e.Data, refresh: true);
+                    _filterBranchHelper.SetBranchFilter(revision.Guid, refresh: true);
                     RevisionGrid.SetSelectedRevision(revision);
                 }
             }
