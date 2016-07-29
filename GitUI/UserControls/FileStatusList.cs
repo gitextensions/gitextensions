@@ -567,6 +567,7 @@ namespace GitUI
                     }
                     return;
                 }
+                FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                 FileStatusListView.BeginUpdate();
                 var list = new List<ListViewItem>();
                 foreach (var pair in value)
