@@ -191,5 +191,10 @@ namespace GitUI.CommandsDialogs
         {
             Process.Start(@"https://github.com/github/gitignore");
         }
+
+        private void lnkGitIgnoreGenerate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"https://www.gitignore.io/");
+        }
     }
 }
