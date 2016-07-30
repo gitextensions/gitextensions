@@ -58,7 +58,8 @@ namespace GitUI.CommandsDialogs
             "obj/",
             "[Rr]elease*/",
             "_ReSharper*/",
-            "[Tt]est[Rr]esult*"
+            "[Tt]est[Rr]esult*",
+            ".vs/"
         };
         #endregion
 
