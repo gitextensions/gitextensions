@@ -59,7 +59,9 @@ namespace GitUI.CommandsDialogs
             "[Rr]elease*/",
             "_ReSharper*/",
             "[Tt]est[Rr]esult*",
-            ".vs/"
+            ".vs/",
+            "#Nuget packages folder",
+            "packages/"
         };
         #endregion
 
