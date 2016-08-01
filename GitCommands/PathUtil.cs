@@ -77,7 +77,7 @@ namespace GitCommands
             var directoryInfo = new DirectoryInfo(path);
             if (!directoryInfo.Exists)
                 return false;
-            posixPath = "/" + directoryInfo.FullName.Replace(@"\", "/").Remove(1, 1);
+            posixPath = "/" + directoryInfo.FullName.ToPosixPath().Remove(1, 1);
             return true;
         }
 
