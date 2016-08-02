@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs
             //Replace windows path separator to Linux path separator.
             //This is needed to keep the file history working when started from file tree in
             //browse dialog.
-            fileName = fileName.Replace('\\', '/');
+            fileName = fileName.ToPosixPath();
 
             // we will need this later to look up proper casing for the file
             var fullFilePath = Path.Combine(Module.WorkingDir, fileName);

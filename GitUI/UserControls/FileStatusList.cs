@@ -252,7 +252,7 @@ namespace GitUI
                     {
                         string fileName = Path.Combine(Module.WorkingDir, item.Name);
 
-                        fileList.Add(fileName.Replace('/', '\\'));
+                        fileList.Add(fileName.ToNativePath());
                     }
 
                     DataObject obj = new DataObject();
