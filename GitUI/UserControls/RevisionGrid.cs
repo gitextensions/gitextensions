@@ -152,6 +152,7 @@ namespace GitUI
 
             IsMessageMultilineDataGridViewColumn.Width = 25;
             IsMessageMultilineDataGridViewColumn.DisplayIndex = 2;
+            IsMessageMultilineDataGridViewColumn.Resizable = DataGridViewTriState.False;
 
             this.HotkeysEnabled = true;
             try
@@ -554,12 +555,12 @@ namespace GitUI
                         revListArgs += "--grep=\"" + filter + "\" ";
                     else
                         inMemMessageFilter = filter;
-                if (parameters[1])
+                if (parameters[1] && !filter.IsNullOrWhiteSpace())
                     if (cmdLineSafe)
                         revListArgs += "--committer=\"" + filter + "\" ";
                     else
                         inMemCommitterFilter = filter;
-                if (parameters[2])
+                if (parameters[2] && !filter.IsNullOrWhiteSpace())
                     if (cmdLineSafe)
                         revListArgs += "--author=\"" + filter + "\" ";
                     else
@@ -1610,9 +1611,9 @@ namespace GitUI
                 else if (columnIndex == idColIndex)
                 {
                     if (!revision.IsArtificial())
-                    { 
+                    {
                         var text = revision.Guid;
-                        e.Graphics.DrawString(text, new Font("Consolas", rowFont.SizeInPoints), foreBrush, 
+                        e.Graphics.DrawString(text, new Font("Consolas", rowFont.SizeInPoints), foreBrush,
                                               new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                     }
                 }
@@ -3222,6 +3223,17 @@ namespace GitUI
             {
                 diffForm.ShowDialog(this);
             }
+        }
+
+        private void getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenManual();
+        }
+
+        private void OpenManual()
+        {
+            string url = UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature");
+            OsShellUtil.OpenUrlInDefaultBrowser(url);
         }
     }
 }

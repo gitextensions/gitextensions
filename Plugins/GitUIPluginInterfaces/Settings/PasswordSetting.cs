@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace GitUIPluginInterfaces.Settings
+namespace GitUIPluginInterfaces
 {
     public class PasswordSetting : ISetting
     {
@@ -14,36 +14,41 @@ namespace GitUIPluginInterfaces.Settings
             Name = aName;
             Caption = aCaption;
             DefaultValue = aDefaultValue;
-            _controlBinding = new TextBoxBinding(this);
         }
 
         public string Name { get; private set; }
         public string Caption { get; private set; }
         public string DefaultValue { get; set; }
 
-        private ISettingControlBinding _controlBinding;
-        public ISettingControlBinding ControlBinding
+        public ISettingControlBinding CreateControlBinding()
         {
-            get { return _controlBinding; }
-        }
+            return new TextBoxBinding(this);
+    }
 
-        private class TextBoxBinding : SettingControlBinding<TextBox>
+        private class TextBoxBinding : SettingControlBinding<PasswordSetting, TextBox>
         {
-            PasswordSetting Setting;
-
             public TextBoxBinding(PasswordSetting aSetting)
-            {
-                Setting = aSetting;
-            }
+                : base(aSetting)
+            { }
 
             public override TextBox CreateControl()
             {
                 return new TextBox {PasswordChar = '\u25CF'};
             }
 
-            public override void LoadSetting(ISettingsSource settings, TextBox control)
+            public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, TextBox control)
             {
-                control.Text = Setting[settings];
+                string settingVal;
+                if (areSettingsEffective)
+                {
+                    settingVal = Setting.ValueOrDefault(settings);
+                }
+                else
+                {
+                    settingVal = Setting[settings];
+                }
+
+                control.Text = settingVal;
             }
 
             public override void SaveSetting(ISettingsSource settings, TextBox control)
@@ -56,18 +61,18 @@ namespace GitUIPluginInterfaces.Settings
         {
             get
             {
-                return settings.GetValue(Name, DefaultValue, s =>
-                {
-                    if (string.IsNullOrEmpty(s))
-                        return DefaultValue;
-                    return s;
-                });
+                return settings.GetString(Name, null);
             }
 
             set
             {
-                settings.SetValue(Name, value, s => { return s; });
+                settings.SetString(Name, value);
             }
+        }
+
+        public string ValueOrDefault(ISettingsSource settings)
+        {
+            return this[settings] ?? DefaultValue;
         }
     }
 }

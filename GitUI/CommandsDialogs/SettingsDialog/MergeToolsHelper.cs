@@ -15,17 +15,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static string GetFullPath(string fileName)
         {
-            if (File.Exists(fileName))
-                return Path.GetFullPath(fileName);
+            string fullPath;
+            PathUtil.TryFindFullPath(fileName, out fullPath);
 
-            var values = Environment.GetEnvironmentVariable("PATH");
-            foreach (var path in values.Split(';'))
-            {
-                var fullPath = Path.Combine(path, fileName);
-                if (File.Exists(fullPath))
-                    return fullPath;
-            }
-            return null;
+            return fullPath;
         }
 
         public static string FindFileInFolders(string fileName, params string[] locations)
@@ -171,8 +164,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                     exeName = "kdiff3.exe";
 
-                    return FindFileInFolders(exeName, kdiff3path, @"KDiff3\",
-                                                          regkdiff3path);
+                    return FindFileInFolders(exeName, kdiff3path, @"KDiff3\", regkdiff3path);
+                case "p4merge":
+                    string p4mergepath = UnquoteString(GetGlobalSetting(settings, "difftool.p4merge.path"));
+                    exeName = "p4merge.exe";
+                    return FindFileInFolders(exeName, p4mergepath, @"Perforce\");
                 case "meld":
                     string difftoolMeldPath = UnquoteString(GetGlobalSetting(settings, "difftool.meld.path"));
                     string programFilesMeldPath = @"Meld\meld\";

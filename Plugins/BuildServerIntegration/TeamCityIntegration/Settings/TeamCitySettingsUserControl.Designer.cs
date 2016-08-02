@@ -38,6 +38,7 @@ namespace TeamCityIntegration.Settings
             this.TeamCityBuildIdFilter = new System.Windows.Forms.TextBox();
             this.labelRegexError = new System.Windows.Forms.Label();
             this.CheckBoxLogAsGuest = new System.Windows.Forms.CheckBox();
+            this.buttonProjectChooser = new System.Windows.Forms.Button();
             label13 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
             labelBuildFilter = new System.Windows.Forms.Label();
@@ -100,6 +101,7 @@ namespace TeamCityIntegration.Settings
             this.TeamCityServerUrl.Name = "TeamCityServerUrl";
             this.TeamCityServerUrl.Size = new System.Drawing.Size(509, 23);
             this.TeamCityServerUrl.TabIndex = 1;
+            this.TeamCityServerUrl.TextChanged += new System.EventHandler(this.TeamCityServerUrl_TextChanged);
             // 
             // TeamCityProjectName
             // 
@@ -107,7 +109,7 @@ namespace TeamCityIntegration.Settings
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TeamCityProjectName.Location = new System.Drawing.Point(136, 39);
             this.TeamCityProjectName.Name = "TeamCityProjectName";
-            this.TeamCityProjectName.Size = new System.Drawing.Size(509, 23);
+            this.TeamCityProjectName.Size = new System.Drawing.Size(478, 23);
             this.TeamCityProjectName.TabIndex = 3;
             // 
             // TeamCityBuildIdFilter
@@ -142,10 +144,22 @@ namespace TeamCityIntegration.Settings
             this.CheckBoxLogAsGuest.Text = "Log as guest to display the build report";
             this.CheckBoxLogAsGuest.UseVisualStyleBackColor = true;
             // 
+            // buttonProjectChooser
+            // 
+            this.buttonProjectChooser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonProjectChooser.Location = new System.Drawing.Point(617, 38);
+            this.buttonProjectChooser.Name = "buttonProjectChooser";
+            this.buttonProjectChooser.Size = new System.Drawing.Size(28, 25);
+            this.buttonProjectChooser.TabIndex = 12;
+            this.buttonProjectChooser.Text = "...";
+            this.buttonProjectChooser.UseVisualStyleBackColor = true;
+            this.buttonProjectChooser.Click += new System.EventHandler(this.buttonProjectChooser_Click);
+            // 
             // TeamCitySettingsUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.buttonProjectChooser);
             this.Controls.Add(this.CheckBoxLogAsGuest);
             this.Controls.Add(this.labelRegexError);
             this.Controls.Add(labelBuildIdFilter);
@@ -158,7 +172,7 @@ namespace TeamCityIntegration.Settings
             this.Controls.Add(this.TeamCityServerUrl);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "TeamCitySettingsUserControl";
-            this.Size = new System.Drawing.Size(658, 178);
+            this.Size = new System.Drawing.Size(658, 188);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -171,5 +185,6 @@ namespace TeamCityIntegration.Settings
         private System.Windows.Forms.TextBox TeamCityBuildIdFilter;
         private System.Windows.Forms.Label labelRegexError;
         private System.Windows.Forms.CheckBox CheckBoxLogAsGuest;
+        private System.Windows.Forms.Button buttonProjectChooser;
     }
 }

@@ -8781,8 +8781,8 @@ Cela va juste charger dans le sous module le commit déterminé par le projet su
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Fixup commit</source>
-        <target>Corriger le commit</target>
+        <source>Create a fixup commit</source>
+        <target>Créer un commit correctif (fixup)</target>
         
       </trans-unit>
       <trans-unit id="hashCopyToolStripMenuItem.Text">
@@ -8910,8 +8910,8 @@ Si c'est un dépôt central (dépôt nu sans répertoire de travail) :
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Squash commit</source>
-        <target>Ecraser le commit</target>
+        <source>Create a squash commit</source>
+        <target>Créer un commit d'écrasement (squash)</target>
         
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">

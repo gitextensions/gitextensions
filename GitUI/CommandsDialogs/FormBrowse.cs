@@ -155,6 +155,7 @@ namespace GitUI.CommandsDialogs
         private string _diffTabPageTitleBase = "";
 
         private readonly FormBrowseMenus _formBrowseMenus;
+        ConEmuControl terminal = null;
 #pragma warning disable 0414
         private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
 #pragma warning restore 0414
@@ -1467,7 +1468,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 bSilent = sender != pullToolStripMenuItem1;
-                RefreshPullIcon();
+
                 Module.LastPullActionToFormPullAction();
             }
 
@@ -1877,6 +1878,7 @@ namespace GitUI.CommandsDialogs
             }
 
             SetGitModule(this, new GitModuleEventArgs(module));
+            ChangeTerminalActiveFolder(path);
         }
 
         private void HistoryItemMenuClick(object sender, EventArgs e)
@@ -2178,7 +2180,7 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var fileName = Path.Combine(Module.WorkingDir, (gitItem).FileName);
-            Clipboard.SetText(fileName.Replace('/', '\\'));
+            Clipboard.SetText(fileName.ToNativePath());
         }
 
         private void copyFilenameToClipboardToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -2524,7 +2526,7 @@ namespace GitUI.CommandsDialogs
                     {
                         string fileName = Path.Combine(Module.WorkingDir, item.FileName);
 
-                        fileList.Add(fileName.Replace('/', '\\'));
+                        fileList.Add(fileName.ToNativePath());
                     }
 
                     DataObject obj = new DataObject();
@@ -2619,7 +2621,7 @@ namespace GitUI.CommandsDialogs
             for (int i = 0; i < pathParts.Length; i++)
             {
                 string pathPart = pathParts[i];
-                string diffPathPart = pathPart.Replace("/", "\\");
+                string diffPathPart = pathPart.ToNativePath();
 
                 var currentFoundNode = currentNodes.Cast<TreeNode>().FirstOrDefault(a =>
                 {
@@ -2850,52 +2852,70 @@ namespace GitUI.CommandsDialogs
 
         private void dontSetAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.DonSetAsLastPullAction = !dontSetAsDefaultToolStripMenuItem.Checked;
-            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+            Settings.SetNextPullActionAsDefault = !setNextPullActionAsDefaultToolStripMenuItem.Checked;
+            setNextPullActionAsDefaultToolStripMenuItem.Checked = Settings.SetNextPullActionAsDefault;
+        }
+
+        private void doPullAction(Action action)
+        {
+            var actLactPullAction = Module.LastPullAction;
+            try
+            {
+                action();
+            }
+            finally
+            {
+                if (!Settings.SetNextPullActionAsDefault)
+                {
+                    Module.LastPullAction = actLactPullAction;
+                    Module.LastPullActionToFormPullAction();
+                }
+                Settings.SetNextPullActionAsDefault = false;
+                RefreshPullIcon();
+            }
         }
 
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
-                Module.LastPullAction = Settings.PullAction.Merge;
-            PullToolStripMenuItemClick(sender, e);
-
-            //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
-                Module.LastPullActionToFormPullAction();
+            doPullAction(() =>
+                {
+                    Module.LastPullAction = Settings.PullAction.Merge;
+                    PullToolStripMenuItemClick(sender, e);
+                }
+            );
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
+            doPullAction(() =>
+            {
                 Module.LastPullAction = Settings.PullAction.Rebase;
-            PullToolStripMenuItemClick(sender, e);
-
-            //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
-                Module.LastPullActionToFormPullAction();
+                PullToolStripMenuItemClick(sender, e);
+            }
+            );
         }
 
         private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
+            doPullAction(() =>
+            {
                 Module.LastPullAction = Settings.PullAction.Fetch;
-            PullToolStripMenuItemClick(sender, e);
-
-            //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
-                Module.LastPullActionToFormPullAction();
+                PullToolStripMenuItemClick(sender, e);
+            }
+            );
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
+            if (Settings.SetNextPullActionAsDefault)
                 Module.LastPullAction = Settings.PullAction.None;
             PullToolStripMenuItemClick(sender, e);
 
             //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
+            if (!Settings.SetNextPullActionAsDefault)
                 Module.LastPullActionToFormPullAction();
+
+            Settings.SetNextPullActionAsDefault = false;
         }
 
         private void RefreshPullIcon()
@@ -2931,7 +2951,7 @@ namespace GitUI.CommandsDialogs
 
         private void fetchAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
+            if (Settings.SetNextPullActionAsDefault)
                 Module.LastPullAction = Settings.PullAction.FetchAll;
 
             RefreshPullIcon();
@@ -2940,8 +2960,10 @@ namespace GitUI.CommandsDialogs
             UICommands.StartPullDialog(this, true, out pullCompelted, true);
 
             //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
+            if (!Settings.SetNextPullActionAsDefault)
                 Module.LastPullActionToFormPullAction();
+
+            Settings.SetNextPullActionAsDefault = false;
         }
 
         private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -3472,7 +3494,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
-            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+            setNextPullActionAsDefaultToolStripMenuItem.Checked = Settings.SetNextPullActionAsDefault;
         }
 
         private void FormBrowse_Activated(object sender, EventArgs e)
@@ -3502,7 +3524,7 @@ namespace GitUI.CommandsDialogs
 	    /// </summary>
 	    private void FillTerminalTab()
 	    {
-		    if(!EnvUtils.RunningOnWindows())
+		    if(!EnvUtils.RunningOnWindows() || !Module.EffectiveSettings.Detailed.ShowConEmuTab.ValueOrDefault)
 			    return; // ConEmu only works on WinNT
 		    TabPage tabpage;
 		    string sImageKey = "Resources.IconConsole";
@@ -3511,7 +3533,6 @@ namespace GitUI.CommandsDialogs
 		    tabpage.ImageKey = sImageKey; // After adding page
 
 		    // Delay-create the terminal window when the tab is first selected
-		    ConEmuControl terminal = null;
 		    CommitInfoTabControl.Selecting += (sender, args) =>
 		    {
 			    if(args.TabPage != tabpage)
@@ -3552,6 +3573,23 @@ namespace GitUI.CommandsDialogs
 			    terminal.Start(startinfo);
 		    };
 	    }
+
+        public void ChangeTerminalActiveFolder(string path)
+        {
+            if (terminal == null || terminal.RunningSession == null || string.IsNullOrWhiteSpace(path))
+                return;
+
+            string posixPath;
+            if (PathUtil.TryConvertWindowsPathToPosix(path, out posixPath))
+            {
+                //Clear terminal line by sending 'backspace' characters
+                for (int i = 0; i < 10000; i++)
+                {
+                    terminal.RunningSession.WriteInputText("\b");
+                }
+                terminal.RunningSession.WriteInputText(@"cd " + posixPath + Environment.NewLine);
+            }
+        }
 
         /// <summary>
         /// Clean up any resources being used.

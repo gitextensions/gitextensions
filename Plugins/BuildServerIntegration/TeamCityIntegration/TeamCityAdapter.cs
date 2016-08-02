@@ -16,11 +16,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using Microsoft.Win32;
 
 namespace TeamCityIntegration
 {
@@ -85,18 +83,7 @@ namespace TeamCityIntegration
 
             if (!string.IsNullOrEmpty(hostName))
             {
-                httpClient = new HttpClient
-                    {
-                        Timeout = TimeSpan.FromMinutes(2),
-                        BaseAddress = hostName.Contains("://")
-                                          ? new Uri(hostName, UriKind.Absolute)
-                                          : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
-                    };
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
-
-                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
-
-                UpdateHttpClientOptions(buildServerCredentials);
+                InitializeHttpClient(hostName, () => buildServerWatcher.GetBuildServerCredentials(this, true));
 
                 if (ProjectNames.Length > 0)
                 {
@@ -112,6 +99,24 @@ namespace TeamCityIntegration
                     }
                 }
             }
+        }
+
+        public void InitializeHttpClient(string hostName, Func<IBuildServerCredentials> getBuildServerCredentials = null)
+        {
+            SetHttpClient(hostName);
+            UpdateHttpClientOptions(getBuildServerCredentials != null ? getBuildServerCredentials() : null);
+        }
+
+        private void SetHttpClient(string hostName)
+        {
+            httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromMinutes(2),
+                BaseAddress = hostName.Contains("://")
+                    ? new Uri(hostName, UriKind.Absolute)
+                    : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
+            };
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
         }
 
         /// <summary>
@@ -421,6 +426,11 @@ namespace TeamCityIntegration
             return GetXmlResponseAsync(string.Format("projects/{0}", projectName), cancellationToken);
         }
 
+        private Task<XDocument> GetProjectsResponseAsync(CancellationToken cancellationToken)
+        {
+            return GetXmlResponseAsync("projects", cancellationToken);
+        }
+
         private Task<XDocument> GetFilteredBuildsXmlResponseAsync(string buildTypeId, CancellationToken cancellationToken, DateTime? sinceDate = null, bool? running = null)
         {
             var values = new List<string> { "branch:(default:any)" };
@@ -472,5 +482,40 @@ namespace TeamCityIntegration
                 httpClient.Dispose();
             }
         }
+
+        public IList<string> GetAllProjects()
+        {
+            var projectsRootElement = GetProjectsResponseAsync(CancellationToken.None).Result;
+            var projects = projectsRootElement.Root.Elements().Select(e=>(string)e.Attribute("id"));
+            return projects.ToList();
+        }
+
+        public Project GetProjectChildren(string projectId)
+        {
+            var projectsRootElement = GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None).Result;
+            var builds = projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build()
+            {
+                Id = (string)e.Attribute("id"),
+                Name = (string)e.Attribute("name")
+            }).ToList();
+            var projects = projectsRootElement.Root.Element("projects").Elements().Select(e => (string)e.Attribute("id")).ToList();
+            return new Project
+            {
+                Builds = builds,
+                Projects = projects
+            };
+        }
+    }
+
+    public class Project
+    {
+        public IList<string> Projects { get; set; }
+        public IList<Build> Builds { get; set; }
+    }
+
+    public class Build
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
 }

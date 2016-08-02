@@ -19,7 +19,7 @@ namespace GitUI
                 if (gitPlugin == null)
                     continue;
 
-                gitPlugin.Settings = new GitPluginSettingsContainer(gitPlugin.Description);
+                gitPlugin.SettingsContainer = new GitPluginSettingsContainer(gitPlugin.Name);
 
                 var gitRepositoryHostPlugin = gitPlugin as IRepositoryHostPlugin;
                 if (gitRepositoryHostPlugin != null)

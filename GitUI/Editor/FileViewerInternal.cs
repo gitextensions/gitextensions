@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using GitCommands;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using ResourceManager;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Linq;
 
 namespace GitUI.Editor
 {
@@ -18,7 +13,6 @@ namespace GitUI.Editor
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
         private readonly DiffViewerLineNumberCtrl _lineNumbersControl;
-        private readonly DiffLineNumAnalyzer _diffLineNumAnalyzer = new DiffLineNumAnalyzer();
         private bool _isGotoLineUIApplicable = true;
 
         public FileViewerInternal()
@@ -38,10 +32,6 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
 
             _lineNumbersControl = new DiffViewerLineNumberCtrl(TextEditor.ActiveTextAreaControl.TextArea);
-            _diffLineNumAnalyzer.OnLineNumAnalyzed += line =>
-            {
-                _lineNumbersControl.AddDiffLineNum(line);
-            };
         }
 
         public new Font Font
@@ -141,7 +131,7 @@ namespace GitUI.Editor
 
         public void SetText(string text, bool isDiff = false)
         {
-            _lineNumbersControl.Clear();
+            _lineNumbersControl.Clear(isDiff);
 
             if (isDiff)
             {
@@ -168,15 +158,8 @@ namespace GitUI.Editor
 
             if (isDiff)
             {
-                _diffLineNumAnalyzer.StartAsync(text, () =>
-                {
-                    if (TextEditor != null && !TextEditor.Disposing && TextEditor.Visible)
-                    {
-                        TextEditor.ActiveTextAreaControl.TextArea.Refresh();
-                    }
-                });
+                _lineNumbersControl.DisplayLineNumFor(text);
             }
-
             TextEditor.Refresh();
         }
 

@@ -8,7 +8,7 @@ namespace DeleteUnusedBranches
     {
         public DeleteUnusedBranchesPlugin()
         {
-            Description = "Delete obsolete branches";
+            SetNameAndDescription("Delete obsolete branches");
             Translate();
         }
 
@@ -23,7 +23,7 @@ namespace DeleteUnusedBranches
 
         public override bool Execute(GitUIBaseEventArgs gitUiArgs)
         {
-            using (var frm = new DeleteUnusedBranchesForm(DaysOlderThan[Settings], MergedInBranch[Settings], gitUiArgs.GitModule, gitUiArgs.GitUICommands, this))
+            using (var frm = new DeleteUnusedBranchesForm(DaysOlderThan.ValueOrDefault(Settings), MergedInBranch.ValueOrDefault(Settings), gitUiArgs.GitModule, gitUiArgs.GitUICommands, this))
             {
                 frm.ShowDialog(gitUiArgs.OwnerForm);
             }

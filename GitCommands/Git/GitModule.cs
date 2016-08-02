@@ -77,7 +77,10 @@ namespace GitCommands
     public sealed class GitModule : IGitModule
     {
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
+        private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private readonly object _lock = new object();
+
+        public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
 
         public GitModule(string workingdir)
         {
@@ -195,6 +198,11 @@ namespace GitCommands
 
                 return _effectiveSettings;
             }
+        }
+
+        public ISettingsSource GetEffectiveSettings()
+        {
+            return EffectiveSettings;
         }
 
         private RepoDistSettings _distributedSettings;
@@ -386,7 +394,7 @@ namespace GitCommands
                 {
                     if (line.StartsWith("gitdir:"))
                     {
-                        string path = line.Substring(7).Trim().Replace('/', '\\');
+                        string path = line.Substring(7).Trim().ToNativePath();
                         if (Path.IsPathRooted(path))
                             return path.EnsureTrailingPathSeparator();
                         else
@@ -766,7 +774,7 @@ namespace GitCommands
             using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
             {
                 byte[] buf = ms.ToArray();
-                if (EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
+                if (EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
                 {
                     if (!FileHelper.IsBinaryFile(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(buf))
                     {
@@ -3126,6 +3134,8 @@ namespace GitCommands
                         encoding = Encoding.UTF8;
                     else if (toEncodingName.Equals(LosslessEncoding.HeaderName, StringComparison.InvariantCultureIgnoreCase))
                         encoding = null; //no recoding is needed
+                    else if (CpEncodingPattern.IsMatch(toEncodingName)) // Encodings written as e.g. "cp1251", which is not a supported encoding string
+                        encoding = Encoding.GetEncoding(int.Parse(toEncodingName.Substring(2)));
                     else
                         encoding = Encoding.GetEncoding(toEncodingName);
                 }
@@ -3135,7 +3145,7 @@ namespace GitCommands
             }
             catch (Exception)
             {
-                return "! Unsupported commit message encoding: " + toEncodingName + " !\n\n" + s;
+                return s + "\n\n! Unsupported commit message encoding: " + toEncodingName + " !";
             }
             return ReEncodeStringFromLossless(s, encoding);
         }

@@ -8826,7 +8826,7 @@ To po prostu przełączy zatwierdzenie ustalone przez superprojekt na moduł zal
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Fixup commit</source>
+        <source>Create a fixup commit</source>
         <target>Napraw zatwierdzenie</target>
         
       </trans-unit>
@@ -8955,7 +8955,7 @@ Jeżeli to centralne repozytorium (nagie repozytorium - bez katalogu roboczego):
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Squash commit</source>
+        <source>Create a squash commit</source>
         <target>Dołącz zatwierdzenie</target>
         
       </trans-unit>

@@ -252,7 +252,7 @@ namespace GitUI
                     {
                         string fileName = Path.Combine(Module.WorkingDir, item.Name);
 
-                        fileList.Add(fileName.Replace('/', '\\'));
+                        fileList.Add(fileName.ToNativePath());
                     }
 
                     DataObject obj = new DataObject();
@@ -348,13 +348,28 @@ namespace GitUI
                 ClearSelected();
                 if (value == null)
                     return;
+                ListViewItem newSelected = null;
                 foreach (ListViewItem item in FileStatusListView.Items)
+                {
                     if (value.CompareTo((GitItemStatus)item.Tag) == 0)
                     {
-                        item.Selected = true;
-                        item.EnsureVisible();
-                        return;
+                        if (newSelected == null)
+                        {
+                            newSelected = item;
+                        }
+                        else if (item.Tag == value)
+                        {
+                            newSelected = item;
+                            break;
+                        }
+
                     }
+                }
+                if (newSelected != null)
+                {
+                    newSelected.Selected = true;
+                    newSelected.EnsureVisible();
+                }
             }
         }
 
@@ -552,6 +567,7 @@ namespace GitUI
                     }
                     return;
                 }
+                FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                 FileStatusListView.BeginUpdate();
                 var list = new List<ListViewItem>();
                 foreach (var pair in value)
@@ -765,15 +781,6 @@ namespace GitUI
                 else
                 {
                     GitItemsWithParents dictionary = new Dictionary<string, IList<GitItemStatus>>();
-                    var isMergeCommit = revision.ParentGuids.Count() == 2;
-                    if (isMergeCommit)
-                    {
-                        var conflicts = Module.GetCombinedDiffFileList(revision.Guid);
-                        if (conflicts.Any())
-                        {
-                            dictionary.Add(CombinedDiff.Text, conflicts);
-                        }
-                    }
                     foreach (var parentRev in revision.ParentGuids)
                     {
                         dictionary.Add(parentRev, Module.GetDiffFilesWithSubmodulesStatus(revision.Guid, parentRev));
@@ -782,6 +789,15 @@ namespace GitUI
                         //for app parents is disabled
                         if (!AppSettings.ShowDiffForAllParents)
                             break;
+                    }
+                    var isMergeCommit = revision.ParentGuids.Count() == 2;
+                    if (isMergeCommit)
+                    {
+                        var conflicts = Module.GetCombinedDiffFileList(revision.Guid);
+                        if (conflicts.Any())
+                        {
+                            dictionary.Add(CombinedDiff.Text, conflicts);
+                        }
                     }
                     GitItemStatusesWithParents = dictionary;
                 }

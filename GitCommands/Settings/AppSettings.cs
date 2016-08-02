@@ -102,7 +102,7 @@ namespace GitCommands
             string debugPath = @"GitExtensions\bin\Debug";
             int len = debugPath.Length;
             var path = gitExtDir.Substring(gitExtDir.Length - len);
-            if (debugPath.Replace('\\', '/').Equals(path.Replace('\\', '/')))
+            if (debugPath.ToPosixPath().Equals(path.ToPosixPath()))
             {
                 string projectPath = gitExtDir.Substring(0, gitExtDir.Length - len);
                 return Path.Combine(projectPath, "Bin");
@@ -538,10 +538,10 @@ namespace GitCommands
             set { SetEnum("FormPullAction", value); }
         }
 
-        public static bool DonSetAsLastPullAction
+        public static bool SetNextPullActionAsDefault
         {
-            get { return GetBool("DonSetAsLastPullAction", true); }
-            set { SetBool("DonSetAsLastPullAction", value); }
+            get { return !GetBool("DonSetAsLastPullAction", true); }
+            set { SetBool("DonSetAsLastPullAction", !value); }
         }
 
         public static string SmtpServer

@@ -8773,7 +8773,7 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Fixup commit</source>
+        <source>Create a fixup commit</source>
         <target>Arreglar commit</target>
         
       </trans-unit>
@@ -8902,7 +8902,7 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Squash commit</source>
+        <source>Create a squash commit</source>
         <target>Aplastar commit</target>
         
       </trans-unit>

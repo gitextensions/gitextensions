@@ -248,7 +248,11 @@ namespace GitUI.SpellChecker
                     };
 
             _autoCompleteListTask.ContinueWith(
-                w => _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word)),
+                w =>
+                {
+                    _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word));
+                    w.Dispose();
+                },
                 _autoCompleteCancellationTokenSource.Token,
                 TaskContinuationOptions.NotOnCanceled,
                 TaskScheduler.FromCurrentSynchronizationContext()
@@ -834,7 +838,12 @@ namespace GitUI.SpellChecker
                             throw;
                         }
 
-                        return subTasks.SelectMany(t => t.Result).Distinct().ToList();
+                        return subTasks.SelectMany(t =>
+                        {
+                            var res = t.Result;
+                            t.Dispose();
+                            return res;
+                        }).Distinct().ToList();
                     });
         }
 
@@ -1038,6 +1047,10 @@ namespace GitUI.SpellChecker
                 _customUnderlines.Dispose();
                 if (components != null)
                     components.Dispose();
+                if (_autoCompleteListTask != null &&_autoCompleteListTask.Status == TaskStatus.Canceled)
+                {
+                    _autoCompleteListTask.Dispose();
+                }
             }
             base.Dispose(disposing);
         }

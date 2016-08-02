@@ -1,18 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
+using FluentAssertions;
 using GitUI.Editor.Diff;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace GitExtensionsTest.GitUI.Editor.Diff
 {
-    public interface IDiffLineNumRecv
-    {
-        void OnLineNumAnalyzed(DiffLineNum lineNum);
-    }
-
     [TestFixture]
     public class TestDiffLineNumAnalyzer
     {
@@ -21,7 +16,6 @@ namespace GitExtensionsTest.GitUI.Editor.Diff
         private readonly string _sampleDiff;
         private readonly string _sampleCombindedDiff;
         private DiffLineNumAnalyzer _lineNumAnalyzer;
-        private IDiffLineNumRecv _lineNumMetaRecv;
 
         private static string GetCallingAssemblyDir()
         {
@@ -42,114 +36,93 @@ namespace GitExtensionsTest.GitUI.Editor.Diff
         public void SetUp()
         {
             _lineNumAnalyzer = new DiffLineNumAnalyzer();
-            _lineNumMetaRecv = Substitute.For<IDiffLineNumRecv>();
-            _lineNumAnalyzer.OnLineNumAnalyzed += _lineNumMetaRecv.OnLineNumAnalyzed;
         }
 
         [Test]
         public void CanGetHeaders()
         {
-            _lineNumAnalyzer.Start(_sampleDiff);
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 5
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == DiffLineNum.NotApplicableLineNum));
-
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 17
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == DiffLineNum.NotApplicableLineNum));
+            var result = _lineNumAnalyzer.Analyze(_sampleDiff);
+            var headerLines = new List<int> {5, 17};
+            foreach (var header in headerLines)
+            {
+                result.LineNumbers[header].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+                result.LineNumbers[header].RightLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            }
         }
 
         [Test]
         public void CanGetContextLines()
         {
-            _lineNumAnalyzer.Start(_sampleDiff);
+            var result = _lineNumAnalyzer.Analyze(_sampleDiff);
 
-            // header1
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 6
-                && line.LeftLineNum == 9
-                && line.RightLineNum == 9));
+            result.LineNumbers[6].LeftLineNum.Should().Be(9);
+            result.LineNumbers[6].RightLineNum.Should().Be(9);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 14
-                && line.LeftLineNum == 15
-                && line.RightLineNum == 16));
+            result.LineNumbers[14].LeftLineNum.Should().Be(15);
+            result.LineNumbers[14].RightLineNum.Should().Be(16);
 
-            // header2
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 18
-                && line.LeftLineNum == 33
-                && line.RightLineNum == 34));
+            result.LineNumbers[18].LeftLineNum.Should().Be(33);
+            result.LineNumbers[18].RightLineNum.Should().Be(34);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 25
-                && line.LeftLineNum == 39
-                && line.RightLineNum == 40));
+            result.LineNumbers[25].LeftLineNum.Should().Be(39);
+            result.LineNumbers[25].RightLineNum.Should().Be(40);
         }
 
         [Test]
         public void CanGetMinusLines()
         {
-            _lineNumAnalyzer.Start(_sampleDiff);
+            var result = _lineNumAnalyzer.Analyze(_sampleDiff);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 9
-                && line.LeftLineNum == 12
-                && line.RightLineNum == DiffLineNum.NotApplicableLineNum));
+            result.LineNumbers[9].LeftLineNum.Should().Be(12);
+            result.LineNumbers[9].RightLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 21
-                && line.LeftLineNum == 36
-                && line.RightLineNum == DiffLineNum.NotApplicableLineNum));
+            result.LineNumbers[21].LeftLineNum.Should().Be(36);
+            result.LineNumbers[21].RightLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
         }
 
         [Test]
         public void CanGetPlusLines()
         {
-            _lineNumAnalyzer.Start(_sampleDiff);
+            var result = _lineNumAnalyzer.Analyze(_sampleDiff);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 12
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == 14));
+            result.LineNumbers[12].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            result.LineNumbers[12].RightLineNum.Should().Be(14);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 13
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == 15));
+            result.LineNumbers[13].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            result.LineNumbers[13].RightLineNum.Should().Be(15);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 22
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == 37));
+            result.LineNumbers[22].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            result.LineNumbers[22].RightLineNum.Should().Be(37);
         }
 
         [Test]
         public void CanGetLineNumbersForCombinedDiff()
         {
-            _lineNumAnalyzer.Start(_sampleCombindedDiff);
+            var result = _lineNumAnalyzer.Analyze(_sampleCombindedDiff);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 6
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == 70
-                && line.Style == DiffLineNum.DiffLineStyle.Context));
+            result.LineNumbers[6].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            result.LineNumbers[6].RightLineNum.Should().Be(70);
+            result.LineNumbers[6].Style.Should().Be(DiffLineNum.DiffLineStyle.Context);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 9
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == 73
-                && line.Style == DiffLineNum.DiffLineStyle.Plus));
+            result.LineNumbers[9].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            result.LineNumbers[9].RightLineNum.Should().Be(73);
+            result.LineNumbers[9].Style.Should().Be(DiffLineNum.DiffLineStyle.Plus);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 19
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == 83
-                && line.Style == DiffLineNum.DiffLineStyle.Plus));
+            result.LineNumbers[19].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            result.LineNumbers[19].RightLineNum.Should().Be(83);
+            result.LineNumbers[19].Style.Should().Be(DiffLineNum.DiffLineStyle.Plus);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 34
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == 100
-                && line.Style == DiffLineNum.DiffLineStyle.Context));
+            result.LineNumbers[34].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            result.LineNumbers[34].RightLineNum.Should().Be(100);
+            result.LineNumbers[34].Style.Should().Be(DiffLineNum.DiffLineStyle.Context);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 37
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == DiffLineNum.NotApplicableLineNum
-                && line.Style == DiffLineNum.DiffLineStyle.Minus));
+            result.LineNumbers[37].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            result.LineNumbers[37].RightLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            result.LineNumbers[37].Style.Should().Be(DiffLineNum.DiffLineStyle.Minus);
 
-            _lineNumMetaRecv.Received(1).OnLineNumAnalyzed(Arg.Is<DiffLineNum>(line => line.LineNumInDiff == 38
-                && line.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                && line.RightLineNum == 103
-                && line.Style == DiffLineNum.DiffLineStyle.Plus));
+            result.LineNumbers[38].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
+            result.LineNumbers[38].RightLineNum.Should().Be(103);
+            result.LineNumbers[38].Style.Should().Be(DiffLineNum.DiffLineStyle.Plus);
         }
-
     }
 }

@@ -8802,7 +8802,7 @@ Das wird nur das Untermodul auschecken das der Commit anhand des übergeordneten
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Fixup commit</source>
+        <source>Create a fixup commit</source>
         <target>Commit reparieren</target>
         
       </trans-unit>
@@ -8931,7 +8931,7 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Squash commit</source>
+        <source>Create a squash commit</source>
         <target>Commit squashen</target>
         
       </trans-unit>

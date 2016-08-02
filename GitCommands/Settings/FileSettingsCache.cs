@@ -14,6 +14,7 @@ namespace GitCommands.Settings
         private DateTime LastFileModificationDate = DateTime.MaxValue;
         private DateTime? LastModificationDate = null;
         private readonly FileSystemWatcher _fileWatcher = new FileSystemWatcher();
+        private bool canEnableFileWatcher = false;
 
         private System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
         private bool _autoSave = true;
@@ -29,14 +30,19 @@ namespace GitCommands.Settings
             SaveTimer.AutoReset = false;
             SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
 
-            _fileWatcher.Path = Path.GetDirectoryName(SettingsFilePath);
-            _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
             _fileWatcher.IncludeSubdirectories = false;
             _fileWatcher.EnableRaisingEvents = false;
             _fileWatcher.Changed += _fileWatcher_Changed;
             _fileWatcher.Renamed += _fileWatcher_Renamed;
             _fileWatcher.Created += _fileWatcher_Created;
-            _fileWatcher.EnableRaisingEvents = Directory.Exists(_fileWatcher.Path);
+            var dir = Path.GetDirectoryName(SettingsFilePath);
+            if (Directory.Exists(dir))
+            {
+                _fileWatcher.Path = dir;
+                _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
+                canEnableFileWatcher = true;
+                _fileWatcher.EnableRaisingEvents = canEnableFileWatcher;
+            }
             FileChanged();
         }
 
@@ -141,7 +147,7 @@ namespace GitCommands.Settings
                 LastFileModificationDate = GetLastFileModificationUTC();
                 LastFileRead = DateTime.UtcNow;
                 if (SaveTimer != null)
-                    _fileWatcher.EnableRaisingEvents = true;
+                    _fileWatcher.EnableRaisingEvents = canEnableFileWatcher;
             }
 
             catch (IOException e)
@@ -159,7 +165,7 @@ namespace GitCommands.Settings
                 {
                     ReadSettings(SettingsFilePath);
                     LastFileRead = DateTime.UtcNow;
-                    _fileWatcher.EnableRaisingEvents = true;
+                    _fileWatcher.EnableRaisingEvents = canEnableFileWatcher;
                 }
                 catch (IOException e)
                 {

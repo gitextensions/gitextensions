@@ -139,6 +139,7 @@ namespace GitUI
             this.Loading = new System.Windows.Forms.PictureBox();
             this.quickSearchTimer = new System.Windows.Forms.Timer(this.components);
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.mainContextMenu.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -571,7 +572,8 @@ namespace GitUI
             // 
             this.manipulateCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fixupCommitToolStripMenuItem,
-            this.squashCommitToolStripMenuItem});
+            this.squashCommitToolStripMenuItem,
+            this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem});
             this.manipulateCommitToolStripMenuItem.Name = "manipulateCommitToolStripMenuItem";
             this.manipulateCommitToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.manipulateCommitToolStripMenuItem.Text = "Advanced";
@@ -580,14 +582,14 @@ namespace GitUI
             // 
             this.fixupCommitToolStripMenuItem.Name = "fixupCommitToolStripMenuItem";
             this.fixupCommitToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
-            this.fixupCommitToolStripMenuItem.Text = "Fixup commit";
+            this.fixupCommitToolStripMenuItem.Text = "Create a fixup commit";
             this.fixupCommitToolStripMenuItem.Click += new System.EventHandler(this.FixupCommitToolStripMenuItemClick);
             // 
             // squashCommitToolStripMenuItem
             // 
             this.squashCommitToolStripMenuItem.Name = "squashCommitToolStripMenuItem";
             this.squashCommitToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
-            this.squashCommitToolStripMenuItem.Text = "Squash commit";
+            this.squashCommitToolStripMenuItem.Text = "Create a squash commit";
             this.squashCommitToolStripMenuItem.Click += new System.EventHandler(this.SquashCommitToolStripMenuItemClick);
             // 
             // toolStripSeparator1
@@ -763,6 +765,13 @@ namespace GitUI
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(149, 6);
             // 
+            // getHelpOnHowToUseTheseFeaturesToolStripMenuItem
+            // 
+            this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Name = "getHelpOnHowToUseTheseFeaturesToolStripMenuItem";
+            this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Size = new System.Drawing.Size(333, 26);
+            this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text = "Get help on how to use these features";
+            this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Click += new System.EventHandler(this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click);
+            // 
             // RevisionGrid
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -854,5 +863,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem compareWithCurrentBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compareToBaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectAsBaseToolStripMenuItem;
+        private ToolStripMenuItem getHelpOnHowToUseTheseFeaturesToolStripMenuItem;
     }
 }

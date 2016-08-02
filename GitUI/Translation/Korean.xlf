@@ -8525,7 +8525,7 @@ This will just checkout on the submodule the commit determined by the superproje
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Fixup commit</source>
+        <source>Create a fixup commit</source>
         <target>커밋 수정</target>
         
       </trans-unit>
@@ -8643,7 +8643,7 @@ If this is a central repository (bare repository without a working directory):
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Squash commit</source>
+        <source>Create a squash commit</source>
         <target>Squash 커밋</target>
         
       </trans-unit>

@@ -1,6 +1,6 @@
+using System;
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
-using GitCommands.Settings;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
@@ -25,6 +25,7 @@ namespace TeamCityIntegration.Settings
         public void Initialize(string defaultProjectName)
         {
             _defaultProjectName = defaultProjectName;
+            SetChooseBuildButtonState();
         }
 
         public void LoadSettings(ISettingsSource buildServerConfig)
@@ -49,9 +50,40 @@ namespace TeamCityIntegration.Settings
             }
         }
 
-        private void TeamCityBuildIdFilter_TextChanged(object sender, System.EventArgs e)
+        private void TeamCityBuildIdFilter_TextChanged(object sender, EventArgs e)
         {
             labelRegexError.Visible = !BuildServerSettingsHelper.IsRegexValid(TeamCityBuildIdFilter.Text);
+        }
+
+        private void buttonProjectChooser_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var teamCityBuildChooser = new TeamCityBuildChooser(TeamCityServerUrl.Text);
+                var result = teamCityBuildChooser.ShowDialog(this);
+
+                if (result == DialogResult.OK)
+                {
+                    TeamCityProjectName.Text = teamCityBuildChooser.TeamCityProjectName;
+                    TeamCityBuildIdFilter.Text = teamCityBuildChooser.TeamCityBuildIdFilter;
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this,
+                    "Fail to load the projects and build list." + Environment.NewLine + "Please verify the server url.",
+                    "Error when loading the projects and build list", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void TeamCityServerUrl_TextChanged(object sender, EventArgs e)
+        {
+            SetChooseBuildButtonState();
+        }
+
+        private void SetChooseBuildButtonState()
+        {
+            buttonProjectChooser.Enabled = !string.IsNullOrWhiteSpace(TeamCityServerUrl.Text);
         }
     }
 }

@@ -250,7 +250,11 @@ namespace GitUI.CommandsDialogs
                         foreach (string remoteBranch in remotes)
                             if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
                                 track = false;
-
+                    var autoSetupMerge = Module.EffectiveConfigFile.GetValue("branch.autoSetupMerge");
+                    if (autoSetupMerge.IsNotNullOrWhitespace() && autoSetupMerge.ToLowerInvariant() == "false")
+                    {
+                        track = false;
+                    }
                     if (track && !AppSettings.DontConfirmAddTrackingRef)
                     {
                         DialogResult result = MessageBox.Show(String.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text), _pushCaption.Text, MessageBoxButtons.YesNoCancel);

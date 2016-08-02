@@ -55,9 +55,9 @@ namespace GitUI.CommandsDialogs
             this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-#endif
+
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -363,9 +363,9 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-#endif
+
             this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

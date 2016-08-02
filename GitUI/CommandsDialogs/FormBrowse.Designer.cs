@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.pullToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fetchAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dontSetAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setNextPullActionAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButtonPush = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.GitBash = new System.Windows.Forms.ToolStripButton();
@@ -218,33 +218,32 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.cherryPickSelectedDiffFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ShowFirstParent = new System.Windows.Forms.ToolStripButton();
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
-#endif
+
             this.toolPanel.Panel1.SuspendLayout();
             this.toolPanel.Panel2.SuspendLayout();
             this.toolPanel.SuspendLayout();
             this.ToolStrip.SuspendLayout();
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).BeginInit();
-#endif
+
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
             this.MainSplitContainer.SuspendLayout();
             this.CommitInfoTabControl.SuspendLayout();
             this.CommitInfoTabPage.SuspendLayout();
             this.TreeTabPage.SuspendLayout();
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.FileTreeSplitContainer)).BeginInit();
-#endif
+
             this.FileTreeSplitContainer.Panel1.SuspendLayout();
             this.FileTreeSplitContainer.Panel2.SuspendLayout();
             this.FileTreeSplitContainer.SuspendLayout();
             this.FileTreeContextMenu.SuspendLayout();
             this.DiffTabPage.SuspendLayout();
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.DiffSplitContainer)).BeginInit();
-#endif
+
             this.DiffSplitContainer.Panel1.SuspendLayout();
             this.DiffSplitContainer.Panel2.SuspendLayout();
             this.DiffSplitContainer.SuspendLayout();
@@ -446,7 +445,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator14,
             this.pullToolStripMenuItem1,
             this.fetchAllToolStripMenuItem,
-            this.dontSetAsDefaultToolStripMenuItem});
+            this.setNextPullActionAsDefaultToolStripMenuItem});
             this.toolStripButtonPull.Image = global::GitUI.Properties.Resources.Icon_4;
             this.toolStripButtonPull.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonPull.Name = "toolStripButtonPull";
@@ -502,12 +501,12 @@ namespace GitUI.CommandsDialogs
             // 
             // dontSetAsDefaultToolStripMenuItem
             // 
-            this.dontSetAsDefaultToolStripMenuItem.Checked = true;
-            this.dontSetAsDefaultToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.dontSetAsDefaultToolStripMenuItem.Name = "dontSetAsDefaultToolStripMenuItem";
-            this.dontSetAsDefaultToolStripMenuItem.Size = new System.Drawing.Size(206, 24);
-            this.dontSetAsDefaultToolStripMenuItem.Text = "Don\'t set as default";
-            this.dontSetAsDefaultToolStripMenuItem.Click += new System.EventHandler(this.dontSetAsDefaultToolStripMenuItem_Click);
+            this.setNextPullActionAsDefaultToolStripMenuItem.Checked = false;
+            this.setNextPullActionAsDefaultToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.setNextPullActionAsDefaultToolStripMenuItem.Name = "dontSetAsDefaultToolStripMenuItem";
+            this.setNextPullActionAsDefaultToolStripMenuItem.Size = new System.Drawing.Size(206, 24);
+            this.setNextPullActionAsDefaultToolStripMenuItem.Text = "Set the next selection as default";
+            this.setNextPullActionAsDefaultToolStripMenuItem.Click += new System.EventHandler(this.dontSetAsDefaultToolStripMenuItem_Click);
             // 
             // toolStripButtonPush
             // 
@@ -2013,34 +2012,34 @@ namespace GitUI.CommandsDialogs
             this.toolPanel.Panel1.ResumeLayout(false);
             this.toolPanel.Panel1.PerformLayout();
             this.toolPanel.Panel2.ResumeLayout(false);
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).EndInit();
-#endif
+
             this.toolPanel.ResumeLayout(false);
             this.ToolStrip.ResumeLayout(false);
             this.ToolStrip.PerformLayout();
             this.MainSplitContainer.Panel1.ResumeLayout(false);
             this.MainSplitContainer.Panel2.ResumeLayout(false);
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitContainer)).EndInit();
-#endif
+
             this.MainSplitContainer.ResumeLayout(false);
             this.CommitInfoTabControl.ResumeLayout(false);
             this.CommitInfoTabPage.ResumeLayout(false);
             this.TreeTabPage.ResumeLayout(false);
             this.FileTreeSplitContainer.Panel1.ResumeLayout(false);
             this.FileTreeSplitContainer.Panel2.ResumeLayout(false);
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.FileTreeSplitContainer)).EndInit();
-#endif
+
             this.FileTreeSplitContainer.ResumeLayout(false);
             this.FileTreeContextMenu.ResumeLayout(false);
             this.DiffTabPage.ResumeLayout(false);
             this.DiffSplitContainer.Panel1.ResumeLayout(false);
             this.DiffSplitContainer.Panel2.ResumeLayout(false);
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.DiffSplitContainer)).EndInit();
-#endif
+
             this.DiffSplitContainer.ResumeLayout(false);
             this.DiffContextMenu.ResumeLayout(false);
             this.TreeContextMenu.ResumeLayout(false);
@@ -2228,7 +2227,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem fetchToolStripMenuItem;
         private ToolStripMenuItem pullToolStripMenuItem1;
         private ToolStripSeparator toolStripSeparator14;
-        private ToolStripMenuItem dontSetAsDefaultToolStripMenuItem;
+        private ToolStripMenuItem setNextPullActionAsDefaultToolStripMenuItem;
         private ToolStripMenuItem fetchAllToolStripMenuItem;
         private ToolStripMenuItem resetFileToToolStripMenuItem;
         private ToolStripMenuItem resetFileToFirstToolStripMenuItem;
