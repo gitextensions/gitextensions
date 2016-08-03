@@ -69,7 +69,8 @@ namespace GitUI.SpellChecker
 
             EnabledChanged += EditNetSpellEnabledChanged;
 
-            InitializeAutoCompleteWordsTask();
+            if(AppSettings.ProvideAutocompletion)
+              InitializeAutoCompleteWordsTask();
         }
 
         public override string Text
@@ -247,16 +248,17 @@ namespace GitUI.SpellChecker
                         IgnoreWordsWithDigits = true
                     };
 
-            _autoCompleteListTask.ContinueWith(
+            if(AppSettings.ProvideAutocompletion)
+                _autoCompleteListTask.ContinueWith(
                 w =>
                 {
                     _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word));
                     w.Dispose();
                 },
-                _autoCompleteCancellationTokenSource.Token,
-                TaskContinuationOptions.NotOnCanceled,
-                TaskScheduler.FromCurrentSynchronizationContext()
-            );
+                    _autoCompleteCancellationTokenSource.Token,
+                    TaskContinuationOptions.NotOnCanceled,
+                    TaskScheduler.FromCurrentSynchronizationContext()
+                );
             //
             // spelling
             //
@@ -916,7 +918,7 @@ namespace GitUI.SpellChecker
 
         private void UpdateOrShowAutoComplete (bool calledByUser)
         {
-            if (_autoCompleteListTask == null)
+            if (_autoCompleteListTask == null || !AppSettings.ProvideAutocompletion)
                 return;
 
             if (!_autoCompleteListTask.IsCompleted)

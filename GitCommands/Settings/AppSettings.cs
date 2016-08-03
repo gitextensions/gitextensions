@@ -280,6 +280,12 @@ namespace GitCommands
             set { SetBool("showresetallchanges", value); }
         }
 
+        public static bool ProvideAutocompletion
+        {
+          get { return GetBool("provideautocompletion", true); }
+          set { SetBool("provideautocompletion", value); }
+        }
+
         public static string TruncatePathMethod
         {
             get { return GetString("truncatepathmethod", "none"); }
