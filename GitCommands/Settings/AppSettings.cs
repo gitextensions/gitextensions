@@ -766,10 +766,22 @@ namespace GitCommands
             set { SetBool("showcurrentbranchonly", value); }
         }
 
+        public static bool ShowSimplifyByDecoration
+        {
+            get { return GetBool("showsimplifybydecoration", false); }
+            set { SetBool("showsimplifybydecoration", value); }
+        }
+
         public static bool BranchFilterEnabled
         {
             get { return GetBool("branchfilterenabled", false); }
             set { SetBool("branchfilterenabled", value); }
+        }
+
+        public static bool ShowFirstParent
+        {
+            get { return GetBool("showfirstparent", false); }
+            set { SetBool("showfirstparent", value); }
         }
 
         public static int CommitDialogSplitter

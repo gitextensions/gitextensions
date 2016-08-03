@@ -192,9 +192,9 @@ namespace GitUI.CommandsDialogs
             Task.Factory.StartNew(PluginLoader.Load)
                 .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
             RevisionGrid.GitModuleChanged += SetGitModule;
-            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
-            _filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
-            toolStripBranches.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
+            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
+            _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
+            toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
 
             Translate ();
 
@@ -3105,7 +3105,17 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
-                RevisionGrid.SetSelectedRevision(new GitRevision(Module, e.Data));
+                var revision = new GitRevision(Module, e.Data);
+                var found = RevisionGrid.SetSelectedRevision(revision);
+
+                // When 'git log --first-parent' filtration is used, user can click on child commit
+                // that is not present in the shown git log. User still wants to see the child commit
+                // and to make it possible we add explicit branch filter and refresh.
+                if (AppSettings.ShowFirstParent && !found)
+                {
+                    _filterBranchHelper.SetBranchFilter(revision.Guid, refresh: true);
+                    RevisionGrid.SetSelectedRevision(revision);
+                }
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
@@ -3618,7 +3628,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripBranches_DropDown_ResizeDropDownWidth (object sender, EventArgs e)
         {
-            ComboBoxHelper.ResizeComboBoxDropDownWidth (toolStripBranches.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (toolStripBranchFilterComboBox.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
     }
 }
