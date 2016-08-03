@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace GitCommands.Settings
 {
@@ -19,6 +16,7 @@ namespace GitCommands.Settings
             : base(aLowerPriority, aSettingsCache)
         {
             BuildServer = new BuildServer(this);
+            Detailed = new DetailedGroup(this);
         }
 
         #region CreateXXX
@@ -97,7 +95,8 @@ namespace GitCommands.Settings
         }
 
         public readonly BuildServer BuildServer;
-        
+        public readonly DetailedGroup Detailed;
+
         public bool NoFastForwardMerge
         {
             get { return this.GetBool("NoFastForwardMerge", false); }
@@ -133,6 +132,17 @@ namespace GitCommands.Settings
             {
                 return new SettingsPath(this, Type.Value);
             }
+        }
+    }
+
+    public class DetailedGroup : SettingsPath
+    {
+        public readonly BoolNullableSetting ShowConEmuTab;
+
+        public DetailedGroup(RepoDistSettings container)
+            : base(container, "Detailed")
+        {
+            ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", this, true);
         }
     }
 

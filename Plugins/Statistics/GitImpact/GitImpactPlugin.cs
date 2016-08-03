@@ -8,7 +8,7 @@ namespace GitImpact
     {
         public GitImpactPlugin()
         {
-            Description = "Impact Graph";
+            SetNameAndDescription("Impact Graph");
             Translate();
         }
 

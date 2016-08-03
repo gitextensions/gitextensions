@@ -16,11 +16,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using Microsoft.Win32;
 
 namespace TeamCityIntegration
 {
@@ -46,8 +44,6 @@ namespace TeamCityIntegration
         }
     }
 
-
-
     [Export(typeof(IBuildServerAdapter))]
     [TeamCityIntegrationMetadata("TeamCity")]
     [PartCreationPolicy(CreationPolicy.NonShared)]
@@ -65,6 +61,8 @@ namespace TeamCityIntegration
 
         private Regex BuildIdFilter { get; set; }
 
+        public string LogAsGuestUrlParameter { get; set; }
+
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config)
         {
             if (this.buildServerWatcher != null)
@@ -73,22 +71,19 @@ namespace TeamCityIntegration
             this.buildServerWatcher = buildServerWatcher;
 
             ProjectNames = config.GetString("ProjectName", "").Split(new char[]{'|'}, StringSplitOptions.RemoveEmptyEntries);
-            BuildIdFilter = new Regex(config.GetString("BuildIdFilter", ""), RegexOptions.Compiled);
+
+            var buildIdFilerSetting = config.GetString("BuildIdFilter", "");
+            if (!BuildServerSettingsHelper.IsRegexValid(buildIdFilerSetting))
+            {
+                return;
+            }
+            BuildIdFilter = new Regex(buildIdFilerSetting, RegexOptions.Compiled);
             var hostName = config.GetString("BuildServerUrl", null);
+            LogAsGuestUrlParameter = config.GetBool("LogAsGuest", false) ? "&guest=1" : string.Empty;
+
             if (!string.IsNullOrEmpty(hostName))
             {
-                httpClient = new HttpClient
-                    {
-                        Timeout = TimeSpan.FromMinutes(2),
-                        BaseAddress = hostName.Contains("://")
-                                          ? new Uri(hostName, UriKind.Absolute)
-                                          : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
-                    };
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
-
-                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
-
-                UpdateHttpClientOptions(buildServerCredentials);
+                InitializeHttpClient(hostName, () => buildServerWatcher.GetBuildServerCredentials(this, true));
 
                 if (ProjectNames.Length > 0)
                 {
@@ -102,9 +97,26 @@ namespace TeamCityIntegration
                                    select element.Attribute("id").Value,
                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
                     }
-
                 }
             }
+        }
+
+        public void InitializeHttpClient(string hostName, Func<IBuildServerCredentials> getBuildServerCredentials = null)
+        {
+            SetHttpClient(hostName);
+            UpdateHttpClientOptions(getBuildServerCredentials != null ? getBuildServerCredentials() : null);
+        }
+
+        private void SetHttpClient(string hostName)
+        {
+            httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromMinutes(2),
+                BaseAddress = hostName.Contains("://")
+                    ? new Uri(hostName, UriKind.Absolute)
+                    : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
+            };
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
         }
 
         /// <summary>
@@ -252,14 +264,14 @@ namespace TeamCityIntegration
             return false;
         }
 
-        private static BuildInfo CreateBuildInfo(XDocument buildXmlDocument)
+        private BuildInfo CreateBuildInfo(XDocument buildXmlDocument)
         {
             var buildXElement = buildXmlDocument.Element("build");
             var idValue = buildXElement.Attribute("id").Value;
             var statusValue = buildXElement.Attribute("status").Value;
             var startDateText = buildXElement.Element("startDate").Value;
             var statusText = buildXElement.Element("statusText").Value;
-            var webUrl = buildXElement.Attribute("webUrl").Value;
+            var webUrl = buildXElement.Attribute("webUrl").Value + LogAsGuestUrlParameter;
             var revisionsElements = buildXElement.XPathSelectElements("revisions/revision");
             var commitHashList = revisionsElements.Select(x => x.Attribute("version").Value).ToArray();
             var runningAttribute = buildXElement.Attribute("running");
@@ -414,6 +426,11 @@ namespace TeamCityIntegration
             return GetXmlResponseAsync(string.Format("projects/{0}", projectName), cancellationToken);
         }
 
+        private Task<XDocument> GetProjectsResponseAsync(CancellationToken cancellationToken)
+        {
+            return GetXmlResponseAsync("projects", cancellationToken);
+        }
+
         private Task<XDocument> GetFilteredBuildsXmlResponseAsync(string buildTypeId, CancellationToken cancellationToken, DateTime? sinceDate = null, bool? running = null)
         {
             var values = new List<string> { "branch:(default:any)" };
@@ -465,5 +482,40 @@ namespace TeamCityIntegration
                 httpClient.Dispose();
             }
         }
+
+        public IList<string> GetAllProjects()
+        {
+            var projectsRootElement = GetProjectsResponseAsync(CancellationToken.None).Result;
+            var projects = projectsRootElement.Root.Elements().Select(e=>(string)e.Attribute("id"));
+            return projects.ToList();
+        }
+
+        public Project GetProjectChildren(string projectId)
+        {
+            var projectsRootElement = GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None).Result;
+            var builds = projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build()
+            {
+                Id = (string)e.Attribute("id"),
+                Name = (string)e.Attribute("name")
+            }).ToList();
+            var projects = projectsRootElement.Root.Element("projects").Elements().Select(e => (string)e.Attribute("id")).ToList();
+            return new Project
+            {
+                Builds = builds,
+                Projects = projects
+            };
+        }
+    }
+
+    public class Project
+    {
+        public IList<string> Projects { get; set; }
+        public IList<Build> Builds { get; set; }
+    }
+
+    public class Build
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
 }

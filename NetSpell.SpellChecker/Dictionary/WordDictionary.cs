@@ -305,7 +305,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     </para>
         /// </param>
         /// <returns>
-        ///     A System.Collections.Generic.List<string> of words expanded from base word
+        ///     A System.Collections.Generic.List(of String) of words expanded from base word
         /// </returns>
         public List<string> ExpandWord(Word word)
         {

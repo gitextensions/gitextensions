@@ -186,8 +186,16 @@ Are you sure you want to continue?</source>
         <source>Name</source>
         <target />
       </trans-unit>
+      <trans-unit id="regexDoesNotMatch.Text">
+        <source>Does not match</source>
+        <target />
+      </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="useRegexCaseInsensitive.Text">
+        <source>Case insensitive</source>
         <target />
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">

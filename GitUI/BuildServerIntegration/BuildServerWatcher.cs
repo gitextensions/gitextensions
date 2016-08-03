@@ -9,6 +9,7 @@ using System.Reactive.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
@@ -48,20 +49,22 @@ namespace GitUI.BuildServerIntegration
             DisposeBuildServerAdapter();
 
             // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
-            buildServerAdapter = GetBuildServerAdapter();
+            GetBuildServerAdapter().ContinueWith((Task<IBuildServerAdapter> task) =>
+            {
+                buildServerAdapter = task.Result;
 
-            UpdateUI();
+                UpdateUI();
 
-            if (buildServerAdapter == null)
-                return;
+                if (buildServerAdapter == null)
+                    return;
 
-            var scheduler = NewThreadScheduler.Default;
-            var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
-            var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
-            var fromNowObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
-            var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
+                var scheduler = NewThreadScheduler.Default;
+                var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
+                var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
+                var fromNowObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
+                var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
 
-            var cancellationToken = new CompositeDisposable
+                var cancellationToken = new CompositeDisposable
                 {
                     fullDayObservable.OnErrorResumeNext(fullObservable)
                                      .OnErrorResumeNext(Observable.Empty<BuildInfo>()
@@ -80,7 +83,9 @@ namespace GitUI.BuildServerIntegration
                                            .Subscribe(OnBuildInfoUpdate)
                 };
 
-            buildStatusCancellationToken = cancellationToken;
+                buildStatusCancellationToken = cancellationToken;
+            },
+            TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public void CancelBuildStatusFetchOperation()
@@ -111,30 +116,43 @@ namespace GitUI.BuildServerIntegration
                         var protectedData = new byte[stream.Length];
 
                         stream.Read(protectedData, 0, (int)stream.Length);
-
-                        byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.CurrentUser);
-                        using (var memoryStream = new MemoryStream(unprotectedData))
+                        try
                         {
-                            ConfigFile credentialsConfig = new ConfigFile("", false);
-
-                            using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
+                            byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null,
+                                DataProtectionScope.CurrentUser);
+                            using (var memoryStream = new MemoryStream(unprotectedData))
                             {
-                                credentialsConfig.LoadFromString(textReader.ReadToEnd());
-                            }
+                                ConfigFile credentialsConfig = new ConfigFile("", false);
 
-                            ConfigSection section = credentialsConfig.FindConfigSection(CredentialsConfigName);
-
-                            if (section != null)
-                            {
-                                buildServerCredentials.UseGuestAccess = section.GetValueAsBool(UseGuestAccessKey, true);
-                                buildServerCredentials.Username = section.GetValue(UsernameKey);
-                                buildServerCredentials.Password = section.GetValue(PasswordKey);
-
-                                if (useStoredCredentialsIfExisting)
+                                using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
                                 {
-                                    return buildServerCredentials;
+                                    credentialsConfig.LoadFromString(textReader.ReadToEnd());
+                                }
+
+                                ConfigSection section = credentialsConfig.FindConfigSection(CredentialsConfigName);
+
+                                if (section != null)
+                                {
+                                    buildServerCredentials.UseGuestAccess = section.GetValueAsBool(UseGuestAccessKey,
+                                        true);
+                                    buildServerCredentials.Username = section.GetValue(UsernameKey);
+                                    buildServerCredentials.Password = section.GetValue(PasswordKey);
+
+                                    if (useStoredCredentialsIfExisting)
+                                    {
+                                        return buildServerCredentials;
+                                    }
                                 }
                             }
+                        }
+                        catch (CryptographicException)
+                        {
+                            // As per MSDN, the ProtectedData.Unprotect method is per user,
+                            // it will throw the CryptographicException if the current user 
+                            // is not the one who protected the data.
+
+                            // Set this variable to false so the user can reset the credentials.
+                            useStoredCredentialsIfExisting = false;
                         }
                     }
                 }
@@ -238,25 +256,27 @@ namespace GitUI.BuildServerIntegration
                     {
                         rowData.BuildStatus = buildInfo;
 
-                        if (BuildStatusImageColumnIndex != -1)
+                        if (BuildStatusImageColumnIndex != -1 &&
+                            revisions.Rows[row].Cells[BuildStatusImageColumnIndex].Displayed)
                             revisions.UpdateCellValue(BuildStatusImageColumnIndex, row);
-                        if (BuildStatusMessageColumnIndex != -1)
+                        if (BuildStatusMessageColumnIndex != -1 &&
+                            revisions.Rows[row].Cells[BuildStatusImageColumnIndex].Displayed)
                             revisions.UpdateCellValue(BuildStatusMessageColumnIndex, row);
                     }
                 }
             }
         }
 
-        private IBuildServerAdapter GetBuildServerAdapter()
+        private Task<IBuildServerAdapter> GetBuildServerAdapter()
         {
-            if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
-                return null;
-            var buildServerType = Module.EffectiveSettings.BuildServer.Type.Value;
-            if (string.IsNullOrEmpty(buildServerType))
-                return null;
-            try
+            return Task<IBuildServerAdapter>.Factory.StartNew(() =>
             {
-                var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
+                    return null;
+                var buildServerType = Module.EffectiveSettings.BuildServer.Type.Value;
+                if (string.IsNullOrEmpty(buildServerType))
+                    return null;
+                var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
                 var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
 
                 if (export != null)
@@ -279,12 +299,9 @@ namespace GitUI.BuildServerIntegration
                         // Invalid arguments, do not return a build server adapter
                     }
                 }
-            }
-            catch (System.Reflection.ReflectionTypeLoadException)
-            {
-                Trace.WriteLine("GetExports() failed");
-            }
-            return null;
+
+                return null;
+            });
         }
 
         private void UpdateUI()

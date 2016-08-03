@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs
                 FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
         }
 
-        private void AddToIngoreClick(object sender, EventArgs e)
+        private void AddToIgnoreClick(object sender, EventArgs e)
         {
             var patterns = GetCurrentPatterns().ToArray();
             if (patterns.Length == 0)

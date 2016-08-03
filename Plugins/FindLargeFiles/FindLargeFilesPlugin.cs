@@ -8,7 +8,7 @@ namespace FindLargeFiles
     {
         public FindLargeFilesPlugin()
         {
-            Description = "Find large files";
+            SetNameAndDescription("Find large files");
             Translate();
         }
 
@@ -22,7 +22,7 @@ namespace FindLargeFiles
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            using (var frm = new FindLargeFilesForm(SizeLargeFile[Settings], gitUiCommands))
+            using (var frm = new FindLargeFilesForm(SizeLargeFile.ValueOrDefault(Settings), gitUiCommands))
                 frm.ShowDialog(gitUiCommands.OwnerForm);
             return true;
         }

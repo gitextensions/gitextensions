@@ -1,57 +1,59 @@
 ﻿using System.Windows.Forms;
 
-namespace GitUIPluginInterfaces.Settings
+namespace GitUIPluginInterfaces
 {
     public class PasswordSetting : ISetting
     {
-        private readonly string name;
-        private readonly string caption;
-        private readonly ISettingControlBinding controlBinding;
-
-        public PasswordSetting(string name)
+        public PasswordSetting(string aName, string aDefaultValue)
+            : this(aName, aName, aDefaultValue)
         {
-            this.name = name;
-            caption = name;
-            controlBinding = new PasswordSettingControlBinding(this);
         }
 
-        public string Name
+        public PasswordSetting(string aName, string aCaption, string aDefaultValue)
         {
-            get { return name; }
+            Name = aName;
+            Caption = aCaption;
+            DefaultValue = aDefaultValue;
         }
 
-        public string Caption
-        {
-            get { return caption; }
-        }
+        public string Name { get; private set; }
+        public string Caption { get; private set; }
+        public string DefaultValue { get; set; }
 
-        public ISettingControlBinding ControlBinding
+        public ISettingControlBinding CreateControlBinding()
         {
-            get { return controlBinding; }
-        }
+            return new TextBoxBinding(this);
+    }
 
-        private class PasswordSettingControlBinding : SettingControlBinding<TextBox>
+        private class TextBoxBinding : SettingControlBinding<PasswordSetting, TextBox>
         {
-            private readonly PasswordSetting setting;
-
-            public PasswordSettingControlBinding(PasswordSetting aSetting)
-            {
-                setting = aSetting;
-            }
+            public TextBoxBinding(PasswordSetting aSetting)
+                : base(aSetting)
+            { }
 
             public override TextBox CreateControl()
             {
-                return new TextBox { UseSystemPasswordChar = true };
+                return new TextBox {PasswordChar = '\u25CF'};
             }
 
-            public override void LoadSetting(ISettingsSource settings, TextBox control)
+            public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, TextBox control)
             {
-                control.Text = setting[settings];
+                string settingVal;
+                if (areSettingsEffective)
+                {
+                    settingVal = Setting.ValueOrDefault(settings);
+                }
+                else
+                {
+                    settingVal = Setting[settings];
+                }
+
+                control.Text = settingVal;
             }
 
             public override void SaveSetting(ISettingsSource settings, TextBox control)
             {
-                setting[settings] = control.Text;
+                Setting[settings] = control.Text;
             }
         }
 
@@ -59,13 +61,18 @@ namespace GitUIPluginInterfaces.Settings
         {
             get
             {
-                return settings.GetValue(Name, string.Empty, s => s ?? string.Empty);
+                return settings.GetString(Name, null);
             }
 
-            private set
+            set
             {
-                settings.SetValue(Name, value, s => s);
+                settings.SetString(Name, value);
             }
+        }
+
+        public string ValueOrDefault(ISettingsSource settings)
+        {
+            return this[settings] ?? DefaultValue;
         }
     }
 }

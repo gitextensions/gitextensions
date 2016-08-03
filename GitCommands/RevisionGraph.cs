@@ -12,14 +12,16 @@ namespace GitCommands
     [Flags]
     public enum RefsFiltringOptions
     {
-        Branches = 1,       // --branches
-        Remotes = 2,        // --remotes
-        Tags = 4,           // --tags
-        Stashes = 8,        //
-        All = 15,           // --all
-        Boundary = 16,      // --boundary
-        ShowGitNotes = 32,  // --not --glob=notes --not
-        NoMerges = 64       // --no-merges
+        Branches = 1,               // --branches
+        Remotes = 2,                // --remotes
+        Tags = 4,                   // --tags
+        Stashes = 8,                //
+        All = 15,                   // --all
+        Boundary = 16,              // --boundary
+        ShowGitNotes = 32,          // --not --glob=notes --not
+        NoMerges = 64,              // --no-merges
+        FirstParent = 128,          // --first-parent
+        SimplifyByDecoration = 256  // --simplify-by-decoration
     }
 
     public abstract class RevisionGraphInMemFilter
@@ -171,6 +173,12 @@ namespace GitCommands
 
             if ((RefsOptions & RefsFiltringOptions.NoMerges) == RefsFiltringOptions.NoMerges)
                 logParam += " --no-merges";
+
+            if ((RefsOptions & RefsFiltringOptions.FirstParent) == RefsFiltringOptions.FirstParent)
+                logParam += " --first-parent";
+
+            if ((RefsOptions & RefsFiltringOptions.SimplifyByDecoration) == RefsFiltringOptions.SimplifyByDecoration)
+                logParam += " --simplify-by-decoration";
 
             string branchFilter = BranchFilter;
             if ((!string.IsNullOrWhiteSpace(BranchFilter)) &&
@@ -333,7 +341,8 @@ namespace GitCommands
                             _revision.Refs.AddRange(gitRefs);
                     }
 
-                    _revision.ParentGuids = lines[2].Split(new char[] { ' ' });
+                    // RemoveEmptyEntries is required for root commits. They should have empty list of parents.
+                    _revision.ParentGuids = lines[2].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     _revision.TreeGuid = lines[3];
 
                     _revision.Author = lines[4];

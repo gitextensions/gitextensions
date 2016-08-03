@@ -9,6 +9,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Script;
+using GitUI.UserControls;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -115,7 +116,7 @@ namespace GitUI.CommandsDialogs
             else
                 _NO_TRANSLATE_Remotes.Text = _currentBranchRemote;
             RemotesUpdated(null, null);
-            
+
             if (AppSettings.AlwaysShowAdvOpt)
                 ShowOptions_LinkClicked(null, null);
         }
@@ -159,7 +160,7 @@ namespace GitUI.CommandsDialogs
         }
 
         private bool IsBranchKnownToRemote(string remote, string branch)
-        { 
+        {
             var refs = Module.GetRefs(true, true);
 
             var remoteRefs = refs.Where(r => r.IsRemote && r.LocalName == branch && r.Remote == remote);
@@ -249,7 +250,11 @@ namespace GitUI.CommandsDialogs
                         foreach (string remoteBranch in remotes)
                             if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
                                 track = false;
-
+                    var autoSetupMerge = Module.EffectiveConfigFile.GetValue("branch.autoSetupMerge");
+                    if (autoSetupMerge.IsNotNullOrWhitespace() && autoSetupMerge.ToLowerInvariant() == "false")
+                    {
+                        track = false;
+                    }
                     if (track && !AppSettings.DontConfirmAddTrackingRef)
                     {
                         DialogResult result = MessageBox.Show(String.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text), _pushCaption.Text, MessageBoxButtons.YesNoCancel);
@@ -519,6 +524,8 @@ namespace GitUI.CommandsDialogs
                 _NO_TRANSLATE_Branch.Items.Add(head);
 
             _NO_TRANSLATE_Branch.Text = curBranch;
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (_NO_TRANSLATE_Branch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void PullClick(object sender, EventArgs e)
@@ -537,6 +544,8 @@ namespace GitUI.CommandsDialogs
             foreach (var head in Module.GetRefs(false, true))
                 if (!RemoteBranch.Items.Contains(head))
                     RemoteBranch.Items.Add(head);
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (RemoteBranch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void BranchSelectedValueChanged(object sender, EventArgs e)
@@ -664,11 +673,13 @@ namespace GitUI.CommandsDialogs
 
         private void FillTagDropDown()
         {
-            /// var tags = Module.GetTagHeads(GitModule.GetTagHeadsOption.OrderByCommitDateDescending); // comment out to sort by commit date
+            // var tags = Module.GetTagHeads(GitModule.GetTagHeadsOption.OrderByCommitDateDescending); // comment out to sort by commit date
             var tags = Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByName)
                 .Select(tag => tag.Name).ToList();
             tags.Insert(0, AllRefs);
             TagComboBox.DataSource = tags;
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (TagComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void ForcePushBranchesCheckedChanged(object sender, EventArgs e)

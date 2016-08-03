@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Forms;
 using Atlassian.Jira;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace JiraComminTipPlugin
@@ -16,7 +15,7 @@ namespace JiraComminTipPlugin
         private JiraNamedEntity filter;
         private readonly StringSetting url = new StringSetting("Jira URL", @"https://jira.atlassian.com");
         private readonly StringSetting user = new StringSetting("Jira user", string.Empty);
-        private readonly PasswordSetting password = new PasswordSetting("Jira password");
+        private readonly PasswordSetting password = new PasswordSetting("Jira password", string.Empty);
         private readonly StringSetting filterName = new StringSetting("Filter name", "[Filter should be in your favorites]");
 
         public JiraComminPlugin()

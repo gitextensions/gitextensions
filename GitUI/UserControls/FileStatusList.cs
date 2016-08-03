@@ -25,6 +25,8 @@ namespace GitUI
             new TranslationString("Operation not supported");
         private readonly TranslationString _DiffWithParent =
             new TranslationString("Diff with parent");
+        public readonly TranslationString CombinedDiff =
+            new TranslationString("Combined Diff");
 
         private readonly IDisposable selectedIndexChangeSubscription;
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
@@ -250,7 +252,7 @@ namespace GitUI
                     {
                         string fileName = Path.Combine(Module.WorkingDir, item.Name);
 
-                        fileList.Add(fileName.Replace('/', '\\'));
+                        fileList.Add(fileName.ToNativePath());
                     }
 
                     DataObject obj = new DataObject();
@@ -346,13 +348,28 @@ namespace GitUI
                 ClearSelected();
                 if (value == null)
                     return;
+                ListViewItem newSelected = null;
                 foreach (ListViewItem item in FileStatusListView.Items)
+                {
                     if (value.CompareTo((GitItemStatus)item.Tag) == 0)
                     {
-                        item.Selected = true;
-                        item.EnsureVisible();
-                        return;
+                        if (newSelected == null)
+                        {
+                            newSelected = item;
+                        }
+                        else if (item.Tag == value)
+                        {
+                            newSelected = item;
+                            break;
+                        }
+
                     }
+                }
+                if (newSelected != null)
+                {
+                    newSelected.Selected = true;
+                    newSelected.EnsureVisible();
+                }
             }
         }
 
@@ -550,6 +567,7 @@ namespace GitUI
                     }
                     return;
                 }
+                FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
                 FileStatusListView.BeginUpdate();
                 var list = new List<ListViewItem>();
                 foreach (var pair in value)
@@ -557,8 +575,18 @@ namespace GitUI
                     ListViewGroup group = null;
                     if (!String.IsNullOrEmpty(pair.Key))
                     {
-                        string shortHash = pair.Key.Length > 8 ? pair.Key.Substring(0, 8) : pair.Key;
-                        group = new ListViewGroup(_DiffWithParent.Text + " " + shortHash);
+                        var groupName = "";
+                        if (pair.Key == CombinedDiff.Text)
+                        {
+                            groupName = CombinedDiff.Text;
+                        }
+                        else
+                        {
+                            string shortHash = pair.Key.Length > 8 ? pair.Key.Substring(0, 8) : pair.Key;
+                            groupName = _DiffWithParent.Text + " " + shortHash;
+                        }
+
+                        group = new ListViewGroup(groupName);
                         group.Tag = pair.Key;
                         FileStatusListView.Groups.Add(group);
                     }
@@ -761,6 +789,15 @@ namespace GitUI
                         //for app parents is disabled
                         if (!AppSettings.ShowDiffForAllParents)
                             break;
+                    }
+                    var isMergeCommit = revision.ParentGuids.Count() == 2;
+                    if (isMergeCommit)
+                    {
+                        var conflicts = Module.GetCombinedDiffFileList(revision.Guid);
+                        if (conflicts.Any())
+                        {
+                            dictionary.Add(CombinedDiff.Text, conflicts);
+                        }
                     }
                     GitItemStatusesWithParents = dictionary;
                 }

@@ -118,7 +118,15 @@ namespace GitUI.AutoCompletion
             if (content != null)
                 return content;
 
-            return File.ReadAllText(Path.Combine(module.WorkingDir, file.Name));
+            // Try to read the contents of the file: if it cannot be read, skip the operation silently.
+            try
+            {
+                return File.ReadAllText(Path.Combine(module.WorkingDir, file.Name));
+            }
+            catch
+            {
+                return "";
+            }
         }
     }
 }

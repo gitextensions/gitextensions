@@ -34,7 +34,7 @@
             this.ChangeHomeButton = new System.Windows.Forms.Button();
             this.label51 = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.downloadMsysgit = new System.Windows.Forms.LinkLabel();
+            this.downloadGitForWindows = new System.Windows.Forms.LinkLabel();
             this.label50 = new System.Windows.Forms.Label();
             this.BrowseGitBinPath = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
@@ -92,7 +92,7 @@
             // 
             this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox7.Controls.Add(this.downloadMsysgit);
+            this.groupBox7.Controls.Add(this.downloadGitForWindows);
             this.groupBox7.Controls.Add(this.label50);
             this.groupBox7.Controls.Add(this.BrowseGitBinPath);
             this.groupBox7.Controls.Add(this.label13);
@@ -107,16 +107,16 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Git";
             // 
-            // downloadMsysgit
+            // downloadGitForWindows
             // 
-            this.downloadMsysgit.AutoSize = true;
-            this.downloadMsysgit.Location = new System.Drawing.Point(369, 91);
-            this.downloadMsysgit.Name = "downloadMsysgit";
-            this.downloadMsysgit.Size = new System.Drawing.Size(111, 16);
-            this.downloadMsysgit.TabIndex = 10;
-            this.downloadMsysgit.TabStop = true;
-            this.downloadMsysgit.Text = "Download msysgit";
-            this.downloadMsysgit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.downloadMsysgit_LinkClicked);
+            this.downloadGitForWindows.AutoSize = true;
+            this.downloadGitForWindows.Location = new System.Drawing.Point(369, 91);
+            this.downloadGitForWindows.Name = "downloadMsysgit";
+            this.downloadGitForWindows.Size = new System.Drawing.Size(111, 16);
+            this.downloadGitForWindows.TabIndex = 10;
+            this.downloadGitForWindows.TabStop = true;
+            this.downloadGitForWindows.Text = "Download msysgit";
+            this.downloadGitForWindows.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.downloadGitForWindows_LinkClicked);
             // 
             // label50
             // 
@@ -125,8 +125,7 @@
             this.label50.Name = "label50";
             this.label50.Size = new System.Drawing.Size(557, 16);
             this.label50.TabIndex = 9;
-            this.label50.Text = "Git Extensions can use msysgit or cygwin to access git repositories. Set the corr" +
-    "ect paths below.";
+            this.label50.Text = "Git Extensions can use Git for Windows or cygwin to access git repositories. Set the correct paths below.";
             // 
             // BrowseGitBinPath
             // 
@@ -210,7 +209,7 @@
         private System.Windows.Forms.Button ChangeHomeButton;
         private System.Windows.Forms.Label label51;
         private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.LinkLabel downloadMsysgit;
+        private System.Windows.Forms.LinkLabel downloadGitForWindows;
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.Button BrowseGitBinPath;
         private System.Windows.Forms.Label label13;

@@ -92,9 +92,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CheckSettingsLogic.SolveLinuxToolsDir(GitBinPath.Text.Trim());
         }
 
-        private void downloadMsysgit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void downloadGitForWindows_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"http://msysgit.github.io/");
+            Process.Start(@"https://git-scm.com/downloads");
         }
 
         private void ChangeHomeButton_Click(object sender, EventArgs e)

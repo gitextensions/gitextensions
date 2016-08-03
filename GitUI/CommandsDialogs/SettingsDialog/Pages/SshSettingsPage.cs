@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using GitCommands;
-using GitCommands.Settings;
 using GitCommands.Utils;
 using Microsoft.Win32;
 
@@ -27,7 +26,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             return new SettingsPageReferenceByType(typeof(SshSettingsPage));
         }
-        private ConfigFileSettings GlobalConfigFileSettings { get { return CommonLogic.ConfigFileSettingsSet.GlobalSettings; } }
 
         protected override void SettingsToPage()
         {
@@ -35,7 +33,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             PuttygenPath.Text = AppSettings.Puttygen;
             PageantPath.Text = AppSettings.Pageant;
             AutostartPageant.Checked = AppSettings.AutoStartPageant;
-            GitCredPath.Text = GlobalConfigFileSettings.GetValue("credential.helper");
 
             if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                 OpenSSH.Checked = true;
@@ -56,7 +53,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.Puttygen = PuttygenPath.Text;
             AppSettings.Pageant = PageantPath.Text;
             AppSettings.AutoStartPageant = AutostartPageant.Checked;
-            GlobalConfigFileSettings.SetValue("credential.helper", GitCredPath.Text);
 
             if (OpenSSH.Checked)
                 GitCommandHelpers.UnsetSsh();
@@ -191,33 +187,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void PageantBrowse_Click(object sender, EventArgs e)
         {
             PageantPath.Text = CommonLogic.SelectFile(".", "PAgeant (pageant.exe)|pageant.exe", PageantPath.Text);
-        }
-
-        private void BrowseGitCred_Click(object sender, EventArgs e)
-        {
-            var prev = GitCredPath.Text.TrimStart('!').Trim('\"');
-            var filename = CommonLogic.SelectFile(".", "git-credential-winstore (*.exe)|*.exe", prev);
-            if (!string.IsNullOrEmpty(filename))
-                GitCredPath.Text = "!\"" + filename + "\"";
-            else
-                GitCredPath.Text = "";
-        }
-
-        private void SuggestGitCred_Click(object sender, EventArgs e)
-        {
-            string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
-            if (!File.Exists(gcsFileName))
-            {
-                GitCredPath.Text = "";
-                return;
-            }
-
-            if (EnvUtils.RunningOnWindows())
-                GitCredPath.Text = "!\"" + gcsFileName + "\"";
-            else if (EnvUtils.RunningOnMacOSX())
-                GitCredPath.Text = "osxkeychain";
-            else
-                GitCredPath.Text = "cache --timeout=300"; // 5 min
         }
     }
 }

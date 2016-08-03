@@ -13,11 +13,14 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            _ignoredFilesLoader.Cancel();
-
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                _ignoredFilesLoader.Cancel();
+                _ignoredFilesLoader.Dispose();
+                if (components != null)
+                {
+                    components.Dispose();
+                }
             }
             base.Dispose(disposing);
         }
@@ -38,7 +41,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this._NO_TRANSLATE_Preview = new System.Windows.Forms.ListBox();
-            this.AddToIngore = new System.Windows.Forms.Button();
+            this.AddToIgnore = new System.Windows.Forms.Button();
             this.FilePattern = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -136,16 +139,16 @@
             this._NO_TRANSLATE_Preview.Size = new System.Drawing.Size(575, 180);
             this._NO_TRANSLATE_Preview.TabIndex = 2;
             // 
-            // AddToIngore
+            // AddToIgnore
             // 
-            this.AddToIngore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddToIngore.Location = new System.Drawing.Point(335, 7);
-            this.AddToIngore.Name = "AddToIngore";
-            this.AddToIngore.Size = new System.Drawing.Size(110, 25);
-            this.AddToIngore.TabIndex = 7;
-            this.AddToIngore.Text = "Ignore";
-            this.AddToIngore.UseVisualStyleBackColor = true;
-            this.AddToIngore.Click += new System.EventHandler(this.AddToIngoreClick);
+            this.AddToIgnore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.AddToIgnore.Location = new System.Drawing.Point(335, 7);
+            this.AddToIgnore.Name = "AddToIgnore";
+            this.AddToIgnore.Size = new System.Drawing.Size(110, 25);
+            this.AddToIgnore.TabIndex = 7;
+            this.AddToIgnore.Text = "Ignore";
+            this.AddToIgnore.UseVisualStyleBackColor = true;
+            this.AddToIgnore.Click += new System.EventHandler(this.AddToIgnoreClick);
             // 
             // FilePattern
             // 
@@ -163,7 +166,7 @@
             // panel1
             // 
             this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Controls.Add(this.AddToIngore);
+            this.panel1.Controls.Add(this.AddToIgnore);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 297);
             this.panel1.Name = "panel1";
@@ -195,7 +198,7 @@
             // 
             // FormAddToGitIgnore
             // 
-            this.AcceptButton = this.AddToIngore;
+            this.AcceptButton = this.AddToIgnore;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.btnCancel;
@@ -225,7 +228,7 @@
 
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListBox _NO_TRANSLATE_Preview;
-        private System.Windows.Forms.Button AddToIngore;
+        private System.Windows.Forms.Button AddToIgnore;
         private System.Windows.Forms.TextBox FilePattern;
         private System.Windows.Forms.Panel noMatchPanel;
         private System.Windows.Forms.Label label2;
