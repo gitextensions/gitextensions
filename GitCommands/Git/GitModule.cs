@@ -1026,6 +1026,12 @@ namespace GitCommands
             }
             else
             {
+                string shellPath;
+                if (TryFindShellPath("git-bash.exe", out shellPath))
+                {
+                    return RunExternalCmdDetachedShowConsole(shellPath, string.Empty);
+                }
+
                 string args;
                 if (string.IsNullOrWhiteSpace(bashCommand))
                 {
@@ -1035,11 +1041,37 @@ namespace GitCommands
                 {
                     args = "--login -i -c \"" + bashCommand.Replace("\"", "\\\"") + "\"";
                 }
+                args = "/c \"\"{0}\" " + args;
 
-                string termCmd = File.Exists(AppSettings.GitBinDir + "bash.exe") ? "bash" : "sh";
-                return RunExternalCmdDetachedShowConsole("cmd.exe",
-                    string.Format("/c \"\"{0}{1}\" {2}", AppSettings.GitBinDir, termCmd, args));
+                if (TryFindShellPath("bash.exe", out shellPath))
+                {
+                    return RunExternalCmdDetachedShowConsole("cmd.exe", string.Format(args, shellPath));
+                }
+
+                if (TryFindShellPath("sh.exe", out shellPath))
+                {
+                    return RunExternalCmdDetachedShowConsole("cmd.exe", string.Format(args, shellPath));
+                }
+
+                return RunExternalCmdDetachedShowConsole("cmd.exe", @"/K echo git bash command not found! :( Please add a folder containing 'bash.exe' to your PATH...");
             }
+        }
+
+        private bool TryFindShellPath(string shell, out string shellPath)
+        {
+            shellPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", shell);
+            if (PathUtil.PathExists(shellPath))
+                return true;
+
+            shellPath = Path.Combine(AppSettings.GitBinDir, shell);
+            if (PathUtil.PathExists(shellPath))
+                return true;
+
+            if (PathUtil.TryFindFullPath(shell, out shellPath))
+                return true;
+
+            shellPath = null;
+            return false;
         }
 
         public string Init(bool bare, bool shared)
