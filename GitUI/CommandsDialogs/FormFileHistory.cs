@@ -468,6 +468,7 @@ namespace GitUI.CommandsDialogs
                 _asyncLoader.Dispose();
                 _filterRevisionsHelper.Dispose();
                 _filterBranchHelper.Dispose();
+                _formBrowseMenus.Dispose();
 
                 if (components != null)
                     components.Dispose();
