@@ -51,6 +51,11 @@ namespace GitUI.BuildServerIntegration
             // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
             GetBuildServerAdapter().ContinueWith((Task<IBuildServerAdapter> task) =>
             {
+                if (revisions.IsDisposed)
+                {
+                    return;
+                }
+
                 buildServerAdapter = task.Result;
 
                 UpdateUI();
