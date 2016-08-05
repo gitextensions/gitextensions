@@ -35,8 +35,8 @@
       <Menu guid="guidGitExtensionsPackageCmdSet" id="gitExtMenu" type="Menu" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_FILEEDITVIEW"/>
         <Strings>
-          <ButtonText>GitExt</ButtonText>
-          <CommandName>GitExt</CommandName>
+          <ButtonText>G&amp;itExt</ButtonText>
+          <CommandName>G&amp;itExt</CommandName>
         </Strings>
       </Menu>
       <Menu guid="guidGitExtensionsPackageCmdSet" id="gitExtToolbar" type="Toolbar" >
