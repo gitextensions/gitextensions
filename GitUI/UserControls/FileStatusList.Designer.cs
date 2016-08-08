@@ -45,6 +45,7 @@ namespace GitUI
             this.FileStatusListView.LabelWrap = false;
             this.FileStatusListView.Location = new System.Drawing.Point(0, 0);
             this.FileStatusListView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.FileStatusListView.MultiSelect = false;
             this.FileStatusListView.Name = "FileStatusListView";
             this.FileStatusListView.OwnerDraw = true;
             this.FileStatusListView.ShowItemToolTips = true;
