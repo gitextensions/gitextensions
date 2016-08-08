@@ -72,7 +72,7 @@ namespace GitUI
             FileStatusListView.SmallImageList = _images;
             FileStatusListView.LargeImageList = _images;
 
-            NoFiles.Visible = false;
+            HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             this.Controls.SetChildIndex(NoFiles, 0);
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
 
@@ -557,10 +557,10 @@ namespace GitUI
         private void UpdateFileStatusListView(bool updateCausedByFilter=false)
         {
             if (_itemsDictionary == null || !_itemsDictionary.Any())
-                NoFiles.Visible = true;
+                HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
             else
-                NoFiles.Visible = false;
-			FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
+            FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
             GitItemStatus previouslySelectedItem = new GitItemStatus(); ;
             if (updateCausedByFilter)
@@ -756,7 +756,7 @@ namespace GitUI
         }
         public void SetDiffs(List<GitRevision> revisions)
         {
-            NoFiles.Visible = false;
+            HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             switch (revisions.Count)
             {
                 case 0:
@@ -791,19 +791,19 @@ namespace GitUI
         private void UpdateNoFilesLabelVisibility()
         {
             if (GitItemStatusesWithParents == null && GitItemStatuses == null)
-                NoFiles.Visible = true;
+                HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
             else if (GitItemStatusesWithParents != null)
             {
                 List<string> keys = GitItemStatusesWithParents.Keys.ToList();
                 if (keys.Count == 0)
-                    NoFiles.Visible = true;
+                    HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
                 else if (keys.Count == 1 && (GitItemStatusesWithParents[keys[0]] == null || GitItemStatusesWithParents[keys[0]].Count == 0))
-                    NoFiles.Visible = true;
+                    HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
             }
             else if (GitItemStatuses != null)
             {
                 if (GitItemStatuses.Count == 0)
-                    NoFiles.Visible = true;
+                    HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
             }
         }
 
@@ -848,6 +848,98 @@ namespace GitUI
                 }
             }
         }
+
+        private void HandleVisibility_NoFilesLabel_FilterComboBox(bool filesPresent)
+        {
+            NoFiles.Visible = !filesPresent;
+            FilterComboBox.Visible = filesPresent;
+        }
+
+
+        #region FilterComboBox
+
+        private long _lastUserInputTime;
+        private string _ToolTipText = "";
+        private void FilterComboBox_TextUpdate(object sender, EventArgs e)
+        {
+            var currentTime = DateTime.Now.Ticks;
+            if (_lastUserInputTime == 0)
+            {
+                long timerLastChanged = currentTime;
+                var timer = new System.Windows.Forms.Timer { Interval = 250 };
+                timer.Tick += (s, a) =>
+                {
+                    if (NoUserInput(timerLastChanged))
+                    {
+                        _ToolTipText = "";
+                        var fileCount = 0;
+                        try
+                        {
+                            fileCount = SetFilter(FilterComboBox.Text);
+                        }
+                        catch (ArgumentException ae)
+                        {
+                            _ToolTipText = ae.Message;
+                        }
+                        if (fileCount > 0)
+                        {
+                            AddToSelectionFilter(FilterComboBox.Text);
+                        }
+
+                        timer.Stop();
+                        _lastUserInputTime = 0;
+                    }
+                    timerLastChanged = _lastUserInputTime;
+                };
+
+                timer.Start();
+            }
+
+            _lastUserInputTime = currentTime;
+        }
+
+        private bool NoUserInput(long timerLastChanged)
+        {
+            return timerLastChanged == _lastUserInputTime;
+        }
+
+        private void AddToSelectionFilter(string filter)
+        {
+            if (!FilterComboBox.Items.Cast<string>().Any(candiate => candiate == filter))
+            {
+                const int SelectionFilterMaxLength = 10;
+                if (FilterComboBox.Items.Count == SelectionFilterMaxLength)
+                {
+                    FilterComboBox.Items.RemoveAt(SelectionFilterMaxLength - 1);
+                }
+                FilterComboBox.Items.Insert(0, filter);
+            }
+        }
+
+        private void FilterComboBox_MouseEnter(object sender, EventArgs e)
+        {
+            FilterToolTip.SetToolTip(FilterComboBox, _ToolTipText);
+        }
+
+        private void FilterComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetFilter(FilterComboBox.Text);
+        }
+
+        private void FilterComboBox_GotFocus(object sender, EventArgs e)
+        {
+            FilterWatermarkLabel.Visible = false;
+        }
+
+        private void FilterComboBox_LostFocus(object sender, EventArgs e)
+        {
+            if (!FilterWatermarkLabel.Visible && string.IsNullOrEmpty(FilterComboBox.Text))
+            {
+                FilterWatermarkLabel.Visible = true;
+            }
+        }
+
+        #endregion FilterComboBox
 
         private Regex _filter;
     }
