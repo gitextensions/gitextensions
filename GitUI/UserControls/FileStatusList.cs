@@ -736,11 +736,6 @@ namespace GitUI
             }
         }
 
-        public int SetFilter(string value)
-        {
-            return FilterFiles(RegexForFiltering(value));
-        }
-
         private static Regex RegexForFiltering(string value)
         {
             return string.IsNullOrEmpty(value)
@@ -748,12 +743,13 @@ namespace GitUI
                 : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        private int FilterFiles(Regex filter)
+        private int FilterFiles(string value)
         {
-            _filter = filter;
+            _filter = RegexForFiltering(value);
             UpdateFileStatusListView(true);
             return FileStatusListView.Items.Count;
         }
+
         public void SetDiffs(List<GitRevision> revisions)
         {
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
@@ -875,7 +871,7 @@ namespace GitUI
                         var fileCount = 0;
                         try
                         {
-                            fileCount = SetFilter(FilterComboBox.Text);
+                            fileCount = FilterFiles(FilterComboBox.Text);
                         }
                         catch (ArgumentException ae)
                         {
@@ -923,7 +919,7 @@ namespace GitUI
 
         private void FilterComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetFilter(FilterComboBox.Text);
+            FilterFiles(FilterComboBox.Text);
         }
 
         private void FilterComboBox_GotFocus(object sender, EventArgs e)
