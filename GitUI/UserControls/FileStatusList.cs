@@ -33,9 +33,14 @@ namespace GitUI
 
         private const int ImageSize = 16;
 
-        public FileStatusList()
+        private bool _filterVisible;
+
+        public FileStatusList(bool filterVisible = false)
         {
             InitializeComponent(); Translate();
+            _filterVisible = filterVisible;
+            FilterComboBox.Visible = _filterVisible;
+            FilterWatermarkLabel.Visible = _filterVisible;
 
             selectedIndexChangeSubscription = Observable.FromEventPattern(
                 h => FileStatusListView.SelectedIndexChanged += h,
@@ -753,26 +758,6 @@ namespace GitUI
             }
         }
 
-        private static Regex RegexForFiltering(string value)
-        {
-            return string.IsNullOrEmpty(value)
-                ? new Regex(".", RegexOptions.Compiled)
-                : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        }
-
-        public void SetFilter(string value)
-        {
-            FilterComboBox.Text = value;
-            FilterFiles(value);
-        }
-
-        private int FilterFiles(string value)
-        {
-            _filter = RegexForFiltering(value);
-            UpdateFileStatusListView(true);
-            return FileStatusListView.Items.Count;
-        }
-
         public void SetDiffs(List<GitRevision> revisions)
         {
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
@@ -871,14 +856,38 @@ namespace GitUI
         private void HandleVisibility_NoFilesLabel_FilterComboBox(bool filesPresent)
         {
             NoFiles.Visible = !filesPresent;
-            FilterComboBox.Visible = filesPresent;
+            if (_filterVisible)
+            {
+                FilterComboBox.Visible = filesPresent;
+            }
         }
 
+        #region Filtering
 
-        #region FilterComboBox
 
         private long _lastUserInputTime;
         private string _ToolTipText = "";
+
+        private static Regex RegexForFiltering(string value)
+        {
+            return string.IsNullOrEmpty(value)
+                ? new Regex(".", RegexOptions.Compiled)
+                : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        }
+
+        public void SetFilter(string value)
+        {
+            FilterComboBox.Text = value;
+            FilterFiles(value);
+        }
+
+        private int FilterFiles(string value)
+        {
+            _filter = RegexForFiltering(value);
+            UpdateFileStatusListView(true);
+            return FileStatusListView.Items.Count;
+        }
+
         private void FilterComboBox_TextUpdate(object sender, EventArgs e)
         {
             var currentTime = DateTime.Now.Ticks;
@@ -958,9 +967,9 @@ namespace GitUI
             }
         }
 
-        #endregion FilterComboBox
-
         private Regex _filter;
+
+        #endregion Filtering
     }
 
 }
