@@ -861,7 +861,7 @@ namespace GitUI.CommandsDialogs
                     // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
                     if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                         return;
-                    StageAll();
+                    StageAllAccordingToFilter();
                     // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
                     if (Staged.IsEmpty)
                         return;
@@ -1229,15 +1229,16 @@ namespace GitUI.CommandsDialogs
                 Staged.Focus();
         }
 
-        private void StageAll()
+        private void StageAllAccordingToFilter()
         {
-            Stage(Unstaged.GitItemStatuses);
+            Stage(Unstaged.GitItemFilteredStatuses);
+            Unstaged.SetFilter(String.Empty);
             Staged.Focus();
         }
 
         private void StageAllToolStripMenuItemClick(object sender, EventArgs e)
         {
-            StageAll();
+            StageAllAccordingToFilter();
         }
 
         private void StagedSelectionChanged(object sender, EventArgs e)
@@ -1266,7 +1267,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Stage(IList<GitItemStatus> gitItemStatusses)
+        private void Stage(IList<GitItemStatus> gitItemStatuses)
         {
             EnableStageButtons(false);
             try
@@ -1278,12 +1279,12 @@ namespace GitUI.CommandsDialogs
                 Cursor.Current = Cursors.WaitCursor;
                 Unstaged.StoreNextIndexToSelect();
                 toolStripProgressBar1.Visible = true;
-                toolStripProgressBar1.Maximum = gitItemStatusses.Count() * 2;
+                toolStripProgressBar1.Maximum = gitItemStatuses.Count() * 2;
                 toolStripProgressBar1.Value = 0;
 
                 var files = new List<GitItemStatus>();
 
-                foreach (var gitItemStatus in gitItemStatusses)
+                foreach (var gitItemStatus in gitItemStatuses)
                 {
                     toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
                     if (gitItemStatus.Name.EndsWith("/"))
