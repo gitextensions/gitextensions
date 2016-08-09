@@ -577,6 +577,7 @@ namespace GitUI
             FileStatusListView.Items.Clear();
             if (_itemsDictionary != null)
             {
+                var list = new List<ListViewItem>();
                 foreach (var pair in _itemsDictionary)
                 {
                     ListViewGroup group = null;
@@ -616,10 +617,11 @@ namespace GitUI
                                 listItem.Selected = true;
                             }
                             listItem.Tag = item;
-                            FileStatusListView.Items.Add(listItem);
+                            list.Add(listItem);
                         }
-                    };
+                    }
                 }
+                FileStatusListView.Items.AddRange(list.ToArray());
             }
             if (updateCausedByFilter == false)
             {
