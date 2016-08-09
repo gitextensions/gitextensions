@@ -562,12 +562,12 @@ namespace GitUI
                 HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
-            GitItemStatus previouslySelectedItem = new GitItemStatus(); ;
+            var previouslySelectedItems = new List<GitItemStatus>();
             if (updateCausedByFilter)
             {
-                if (FileStatusListView.SelectedItems.Count != 0)
+                foreach (ListViewItem Item in FileStatusListView.SelectedItems)
                 {
-                    previouslySelectedItem = (GitItemStatus)FileStatusListView.SelectedItems[0].Tag;
+                    previouslySelectedItems.Add((GitItemStatus)Item.Tag);
                 }
             }
 
@@ -612,7 +612,7 @@ namespace GitUI
                                                                   TaskContinuationOptions.OnlyOnRanToCompletion,
                                                                   TaskScheduler.FromCurrentSynchronizationContext());
                             }
-                            if (item == (GitItemStatus)previouslySelectedItem)
+                            if (previouslySelectedItems.Contains(item))
                             {
                                 listItem.Selected = true;
                             }
