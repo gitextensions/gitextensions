@@ -303,7 +303,7 @@ namespace GitUI
             get
             {
                 return (FileStatusListView.Items.Cast<ListViewItem>().
-                    Select(selectedItem => (GitItemStatus) selectedItem.Tag));
+                    Select(selectedItem => (GitItemStatus)selectedItem.Tag));
             }
         }
 
@@ -335,14 +335,14 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-       public GitItemStatus SelectedItem
+        public GitItemStatus SelectedItem
         {
             get
             {
                 if (FileStatusListView.SelectedItems.Count > 0)
                 {
                     ListViewItem item = FileStatusListView.SelectedItems[0];
-                    return (GitItemStatus) item.Tag;
+                    return (GitItemStatus)item.Tag;
                 }
                 return null;
             }
@@ -534,7 +534,7 @@ namespace GitUI
 
         public void SetGitItemStatuses(string parentRev, IList<GitItemStatus> items)
         {
-            var dictionary = new Dictionary<string, IList<GitItemStatus>> {{parentRev ?? "", items}};
+            var dictionary = new Dictionary<string, IList<GitItemStatus>> { { parentRev ?? "", items } };
             GitItemStatusesWithParents = dictionary;
         }
 
@@ -554,7 +554,7 @@ namespace GitUI
             }
         }
 
-        private void UpdateFileStatusListView(bool updateCausedByFilter=false)
+        private void UpdateFileStatusListView(bool updateCausedByFilter = false)
         {
             if (_itemsDictionary == null || !_itemsDictionary.Any())
                 HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
@@ -621,7 +621,7 @@ namespace GitUI
                     };
                 }
             }
-            if (updateCausedByFilter==false)
+            if (updateCausedByFilter == false)
             {
                 FileStatusListView_SelectedIndexChanged();
                 if (DataSourceChanged != null)
@@ -679,22 +679,22 @@ namespace GitUI
             switch (e.KeyCode)
             {
                 case Keys.A:
-                {
-                    if (!e.Control)
+                    {
+                        if (!e.Control)
+                            break;
+                        FileStatusListView.BeginUpdate();
+                        try
+                        {
+                            for (var i = 0; i < FileStatusListView.Items.Count; i++)
+                                FileStatusListView.Items[i].Selected = true;
+                            e.Handled = true;
+                        }
+                        finally
+                        {
+                            FileStatusListView.EndUpdate();
+                        }
                         break;
-                    FileStatusListView.BeginUpdate();
-                    try
-                    {
-                        for (var i = 0; i < FileStatusListView.Items.Count; i++)
-                            FileStatusListView.Items[i].Selected = true;
-                        e.Handled = true;
                     }
-                    finally
-                    {
-                        FileStatusListView.EndUpdate();
-                    }
-                    break;
-                }
                 default:
                     if (KeyDown != null)
                         KeyDown(sender, e);
