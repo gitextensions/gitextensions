@@ -4826,6 +4826,10 @@ This will initialize and update all submodules recursive.</source>
         <source>Push branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="ckForceWithLease.Text">
+        <source>Force With &amp;Lease</source>
+        <target />
+      </trans-unit>
       <trans-unit id="DeleteColumn.HeaderText">
         <source>Delete Remote Branch</source>
         <target />
@@ -4981,6 +4985,14 @@ Are you sure you want to push this branch?</source>
       </trans-unit>
       <trans-unit id="_yes.Text">
         <source>Yes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_useForceWithLeaseInstead.Text">
+        <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_forceWithLeaseTooltips.Text">
+        <source>Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox1.Text">

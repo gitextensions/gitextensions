@@ -40,6 +40,13 @@ namespace GitCommands
         SameTime
     }
 
+    public enum ForcePushOptions
+    {
+        DoNotForce,
+        Force,
+        ForceWithLease,
+    }
+
     public struct ConflictedFileData
     {
         public ConflictedFileData(string hash, string filename)
@@ -1592,13 +1599,11 @@ namespace GitCommands
         /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
         /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
         /// <returns>'git push' command with the specified parameters.</returns>
-        public string PushAllCmd(string remote, bool force, bool track, int recursiveSubmodules)
+        public string PushAllCmd(string remote, ForcePushOptions force, bool track, int recursiveSubmodules)
         {
             remote = remote.ToPosixPath();
 
-            var sforce = "";
-            if (force)
-                sforce = "-f ";
+            var sforce = GitCommandHelpers.GetForcePushArgument(force);
 
             var strack = "";
             if (track)
@@ -1628,7 +1633,7 @@ namespace GitCommands
         /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
         /// <returns>'git push' command with the specified parameters.</returns>
         public string PushCmd(string remote, string fromBranch, string toBranch,
-            bool force, bool track, int recursiveSubmodules)
+            ForcePushOptions force, bool track, int recursiveSubmodules)
         {
             remote = remote.ToPosixPath();
 
@@ -1642,9 +1647,7 @@ namespace GitCommands
 
             if (toBranch != null) toBranch = toBranch.Replace(" ", "");
 
-            var sforce = "";
-            if (force)
-                sforce = "-f ";
+            var sforce = GitCommandHelpers.GetForcePushArgument(force);
 
             var strack = "";
             if (track)
