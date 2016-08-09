@@ -521,6 +521,21 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
+        public IList<GitItemStatus> GitItemFilteredStatuses
+        {
+            get
+            {
+                var result = new List<GitItemStatus>();
+                foreach(ListViewItem listViewItem in FileStatusListView.Items)
+                {
+                    result.Add((GitItemStatus)listViewItem.Tag);
+                }
+                return result;
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public string GitFirstParent
         {
             get
