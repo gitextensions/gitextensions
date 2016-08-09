@@ -1232,6 +1232,7 @@ namespace GitUI.CommandsDialogs
         private void StageAllAccordingToFilter()
         {
             Stage(Unstaged.GitItemFilteredStatuses);
+            Unstaged.SetFilter(String.Empty);
             Staged.Focus();
         }
 

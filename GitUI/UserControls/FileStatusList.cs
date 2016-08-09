@@ -760,6 +760,12 @@ namespace GitUI
                 : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
+        public void SetFilter(string value)
+        {
+            FilterComboBox.Text = value;
+            FilterFiles(value);
+        }
+
         private int FilterFiles(string value)
         {
             _filter = RegexForFiltering(value);
