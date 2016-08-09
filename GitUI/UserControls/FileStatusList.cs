@@ -822,15 +822,6 @@ namespace GitUI
                 else
                 {
                     GitItemsWithParents dictionary = new Dictionary<string, IList<GitItemStatus>>();
-                    var isMergeCommit = revision.ParentGuids.Count() == 2;
-                    if (isMergeCommit)
-                    {
-                        var conflicts = Module.GetCombinedDiffFileList(revision.Guid);
-                        if (conflicts.Any())
-                        {
-                            dictionary.Add(CombinedDiff.Text, conflicts);
-                        }
-                    }
                     foreach (var parentRev in revision.ParentGuids)
                     {
                         dictionary.Add(parentRev, Module.GetDiffFilesWithSubmodulesStatus(revision.Guid, parentRev));
@@ -839,6 +830,15 @@ namespace GitUI
                         //for app parents is disabled
                         if (!AppSettings.ShowDiffForAllParents)
                             break;
+                    }
+                    var isMergeCommit = revision.ParentGuids.Count() == 2;
+                    if (isMergeCommit)
+                    {
+                        var conflicts = Module.GetCombinedDiffFileList(revision.Guid);
+                        if (conflicts.Any())
+                        {
+                            dictionary.Add(CombinedDiff.Text, conflicts);
+                        }
                     }
                     GitItemStatusesWithParents = dictionary;
                 }
