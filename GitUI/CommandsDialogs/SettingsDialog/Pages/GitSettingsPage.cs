@@ -70,13 +70,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             CheckSettingsLogic.SolveLinuxToolsDir(GitBinPath.Text.Trim());
 
-            using (var browseDialog = new FolderBrowserDialog { SelectedPath = AppSettings.GitBinDir })
-            {
+            var userSelectedPath = OsShellUtil.PickFolder(this, AppSettings.GitBinDir);
 
-                if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    GitBinPath.Text = browseDialog.SelectedPath;
-                }
+            if (userSelectedPath != null)
+            {
+                GitBinPath.Text = userSelectedPath;
             }
         }
 
