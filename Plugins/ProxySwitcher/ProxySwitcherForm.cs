@@ -40,7 +40,7 @@ namespace ProxySwitcher
 
         private void ProxySwitcherForm_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(SettingsKey.HttpProxy[settings]))
+            if (string.IsNullOrEmpty(SettingsKey.HttpProxy.ValueOrDefault(settings)))
             {
                 MessageBox.Show(this, _pleaseSetProxy.Text, this.Text, MessageBoxButtons.OK);
                 this.Close();
@@ -67,10 +67,10 @@ namespace ProxySwitcher
         {
             var sb = new StringBuilder();
             sb.Append("\"");
-            var username = SettingsKey.Username[settings];
+            var username = SettingsKey.Username.ValueOrDefault(settings);
             if (!string.IsNullOrEmpty(username))
             {
-                var password = SettingsKey.Password[settings];
+                var password = SettingsKey.Password.ValueOrDefault(settings);
                 sb.Append(username);
                 if(!string.IsNullOrEmpty(password))
                 {
@@ -79,8 +79,8 @@ namespace ProxySwitcher
                 }
                 sb.Append("@");
             }
-            sb.Append(SettingsKey.HttpProxy[settings]);
-            var port = SettingsKey.HttpProxyPort[settings];
+            sb.Append(SettingsKey.HttpProxy.ValueOrDefault(settings));
+            var port = SettingsKey.HttpProxyPort.ValueOrDefault(settings);
             if (!string.IsNullOrEmpty(port))
             {
                 sb.Append(":");

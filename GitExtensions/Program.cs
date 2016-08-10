@@ -62,7 +62,9 @@ namespace GitExtensions
             AppSettings.LoadSettings();
             if (EnvUtils.RunningOnWindows())
             {
-                //Quick HOME check:
+              WebBrowserEmulationMode.SetBrowserFeatureControl();
+
+              //Quick HOME check:
                 FormSplash.SetAction("Checking home path...");
                 Application.DoEvents();
 
@@ -82,7 +84,9 @@ namespace GitExtensions
 
             try
             {
-                if (AppSettings.CheckSettings || string.IsNullOrEmpty(AppSettings.GitCommandValue))
+                if (AppSettings.CheckSettings 
+                    || string.IsNullOrEmpty(AppSettings.GitCommandValue)
+                    || !File.Exists(AppSettings.GitCommandValue))
                 {
                     FormSplash.SetAction("Checking settings...");
                     Application.DoEvents();
@@ -95,8 +99,10 @@ namespace GitExtensions
                     {
                         if (!checklistSettingsPage.CheckSettings())
                         {
-                            checkSettingsLogic.AutoSolveAllSettings();
-                            uiCommands.StartSettingsDialog();
+                            if (!checkSettingsLogic.AutoSolveAllSettings())
+                            {
+                                uiCommands.StartSettingsDialog();
+                            }
                         }
                     }
                 }

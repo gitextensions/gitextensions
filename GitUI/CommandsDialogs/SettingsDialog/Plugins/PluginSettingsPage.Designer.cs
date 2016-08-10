@@ -30,7 +30,6 @@
         {
             this.labelNoSettings = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panelAutoGenControls = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,7 +50,6 @@
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.panelAutoGenControls, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.labelNoSettings, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -62,13 +60,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(600, 301);
             this.tableLayoutPanel1.TabIndex = 3;
-            // 
-            // 
-            this.panelAutoGenControls.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelAutoGenControls.Location = new System.Drawing.Point(3, 33);
-            this.panelAutoGenControls.Name = "panelAutoGenControls";
-            this.panelAutoGenControls.Size = new System.Drawing.Size(594, 225);
-            this.panelAutoGenControls.TabIndex = 2;
             // 
             // PluginSettingsPage
             // 
@@ -87,6 +78,5 @@
 
         private System.Windows.Forms.Label labelNoSettings;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Panel panelAutoGenControls;
     }
 }

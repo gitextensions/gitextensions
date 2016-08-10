@@ -66,7 +66,7 @@ namespace GitCommands
                 {
                     if (Delay > 0)
                     {
-                        Thread.Sleep(Delay);
+                        token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
                     }
                     if (!token.IsCancellationRequested)
                     {
@@ -105,13 +105,15 @@ namespace GitCommands
         public Task<T> Load<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
             Cancel();
+            if (_cancelledTokenSource != null)
+                _cancelledTokenSource.Dispose();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
             return Task.Factory.StartNew(() => 
                 {
                     if (Delay > 0)
                     {
-                        Thread.Sleep(Delay);
+                        token.WaitHandle.WaitOne(TimeSpan.FromMilliseconds(Delay));
                     }
                     if (token.IsCancellationRequested)
                     {
@@ -161,8 +163,9 @@ namespace GitCommands
 
         protected virtual void Dispose(bool disposing)
         {
-            if (_cancelledTokenSource != null)
-                _cancelledTokenSource.Dispose();
+            if (disposing)
+                if (_cancelledTokenSource != null)
+                    _cancelledTokenSource.Dispose();
         }
 
         public void Dispose()

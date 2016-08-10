@@ -10,6 +10,7 @@ using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.Script;
+using GitUI.UserControls;
 using ResourceManager;
 using Settings = GitCommands.AppSettings;
 
@@ -123,6 +124,15 @@ namespace GitUI.CommandsDialogs
             {
                 Branches.Text = defaultRemoteBranch;
             }
+
+            // If this repo is shallow, show an option to Unshallow
+            if(aCommands != null)
+            {
+                // Detect by presence of the shallow file, not 100% sure it's the best way, but it's created upon shallow cloning and removed upon unshallowing
+                bool isRepoShallow = File.Exists(Path.Combine(aCommands.Module.GetGitDirectory(), "shallow"));
+                if(isRepoShallow)
+                    Unshallow.Visible = true;
+            }
         }
 
         private void Init(string defaultRemote)
@@ -157,6 +167,8 @@ namespace GitUI.CommandsDialogs
             IList<string> remotes = new List<string>(Module.GetRemotes());
             remotes.Insert(0, AllRemotes);
             _NO_TRANSLATE_Remotes.DataSource = remotes;
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (_NO_TRANSLATE_Remotes, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
@@ -225,6 +237,8 @@ namespace GitUI.CommandsDialogs
             //_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
             _heads.Insert(0, GitRef.NoHead(Module));
             Branches.DataSource = _heads;
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (Branches, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
             Cursor.Current = Cursors.Default;
         }
@@ -441,7 +455,7 @@ namespace GitUI.CommandsDialogs
         private bool IsSubmodulesInitialized()
         {
             // Fast submodules check
-            var submodules = Module.GetSubmodulesLocalPathes();
+            var submodules = Module.GetSubmodulesLocalPaths();
             foreach (var submoduleName in submodules)
             {
                 GitModule submodule = Module.GetSubmodule(submoduleName);
@@ -455,12 +469,12 @@ namespace GitUI.CommandsDialogs
         {
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg()));
+                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked));
             }
 
             Debug.Assert(Merge.Checked || Rebase.Checked);
 
-            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg()))
+            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked))
                        {
                            HandleOnExitCallback = HandlePullOnExit
                        };
@@ -653,7 +667,7 @@ namespace GitUI.CommandsDialogs
                 IEnumerable<string> remotes = (IEnumerable<string>)_NO_TRANSLATE_Remotes.DataSource;
                 foreach (var r in remotes)
                 {
-                    if (!r.Equals(AllRemotes) && !r.IsNullOrWhiteSpace())
+                    if (!r.IsNullOrWhiteSpace() && !r.Equals(AllRemotes))
                         yield return r;
                 }
             }

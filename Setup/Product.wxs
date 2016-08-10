@@ -24,12 +24,12 @@
                 <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
                     <Directory Id="PuttyDir" Name="PuTTY" />
                     <Directory Id="PluginsDir" Name="Plugins" />
-                    <Directory Id="GitCredentialWinStoreDir" Name="GitCredentialWinStore" />
                     <Directory Id="InstallerDir" Name="Installer" />
                     <Directory Id="DictionariesDir" Name="Dictionaries" />
                     <Directory Id="TranslationsDir" Name="Translation" />
                     <Directory Id="IconsDir" Name="Icons" />
                     <Directory Id="DiffScriptsDir" Name="Diff-Scripts" />
+                    <Directory Id="DirConEmu" Name="ConEmu" />
                 </Directory>
             </Directory>
             <Directory Id="PersonalFolder">
@@ -96,6 +96,9 @@
             </Component>
             <Component Id="GitUI.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\GitUI.dll" />
+            </Component>
+            <Component Id="ConEmu.WinForms.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\Release\ConEmu.WinForms.dll" />
             </Component>
             <Component Id="NetSpell.SpellChecker.dll" Guid="*">
                 <File Source="..\NetSpell.SpellChecker\bin\Release\NetSpell.SpellChecker.dll" />
@@ -199,11 +202,6 @@
                 <RegistryKey Root="HKCR" Key="github-windows\shell\open\command">
                     <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
                 </RegistryKey>
-            </Component>
-        </DirectoryRef>
-        <DirectoryRef Id="GitCredentialWinStoreDir">
-            <Component Id="GitCredentialWinStore.exe" Guid="*">
-                <File Source="..\bin\git-credential-winstore.exe" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="PluginsDir">
@@ -340,6 +338,9 @@
             </Component>
             <Component Id="nlNL.dic" Guid="*">
                 <File Source="..\Bin\Dictionaries\nl-NL.dic" />
+            </Component>
+			<Component Id="roRO.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\ro-RO.dic" />
             </Component>
             <Component Id="ruRU.dic" Guid="*">
                 <File Source="..\Bin\Dictionaries\ru-RU.dic" />
@@ -489,6 +490,21 @@
                 <RegistryValue Name="puttygen" Value="[INSTALLDIR]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
             </Component>
         </DirectoryRef>
+        <DirectoryRef Id="DirConEmu">
+            <Component Id="File.CER00" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\CmdInit.cmd" /></Component>
+            <Component Id="File.CER01" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu.exe" /></Component>
+            <Component Id="File.CER03" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmu64.exe" /></Component>
+            <Component Id="File.CER04" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuC.exe" /></Component>
+            <Component Id="File.CER05" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuC64.exe" /></Component>
+            <Component Id="File.CER06" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuCD.dll" /></Component>
+            <Component Id="File.CER07" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuCD64.dll" /></Component>
+            <Component Id="File.CER08" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuHk.dll" /></Component>
+            <Component Id="File.CER09" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\ConEmuHk64.dll" /></Component>
+            <Component Id="File.CER10" Guid="*"><File Source="..\GitExtensions\Bin\Release\ConEmu\GitShowBranch.cmd" /></Component>
+        </DirectoryRef>
+        <ComponentGroup Id="Component.ConEmuFiles">
+          <ComponentRef Id="File.CER00" /><ComponentRef Id="File.CER01" /><ComponentRef Id="File.CER03" /><ComponentRef Id="File.CER04" /><ComponentRef Id="File.CER05" /><ComponentRef Id="File.CER06" /><ComponentRef Id="File.CER07" /><ComponentRef Id="File.CER08" /><ComponentRef Id="File.CER09" /><ComponentRef Id="File.CER10" />
+        </ComponentGroup>
         <?foreach VsVersion in $(var.VsVersions)?>
         <DirectoryRef Id="VS$(var.VsVersion)">
             <Directory Id="VS$(var.VsVersion)_Addins" Name="Addins">
@@ -604,6 +620,7 @@
             <ComponentRef Id="GitCommands.dll" />
             <ComponentRef Id="GitExtUtils.dll" />
             <ComponentRef Id="GitUI.dll" />
+            <ComponentRef Id="ConEmu.WinForms.dll" />
             <ComponentRef Id="ICSharpCode.TextEditor.dll" />
             <ComponentRef Id="PSTaskDialog.dll" />
             <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
@@ -627,8 +644,8 @@
             <ComponentRef Id="pageant.reg" />
             <ComponentRef Id="puttygen.exe" />
             <ComponentRef Id="puttygen.reg" />
+            <ComponentGroupRef Id="Component.ConEmuFiles" />
             <ComponentRef Id="GitExtSshAskPass.exe" />
-            <ComponentRef Id="GitCredentialWinStore.exe" />
             <ComponentRef Id="GitExtensions.newstartmenu" />
             <ComponentRef Id="GitExtensions.startmenu" />
             <ComponentRef Id="English.gif" />
@@ -745,6 +762,9 @@
                 <Feature Id="nlNL" Title="nl-NL" Level="1">
                     <ComponentRef Id="nlNL.dic" />
                 </Feature>
+                <Feature Id="roRO" Title="ro-RO" Level="1">
+                    <ComponentRef Id="roRO.dic" />
+                </Feature>
                 <Feature Id="ruRU" Title="ru-RU" Level="1">
                     <ComponentRef Id="ruRU.dic" />
                 </Feature>
@@ -839,15 +859,13 @@
             </Feature>
         </Feature>
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
-        <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-64bit-Setup_0.9.98-2.exe" />
+        <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe" />
         <CustomAction Id="InstallKDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
-        <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.9.5-preview20141217.exe" />
-        <CustomAction Id="InstallMsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
-        <CustomAction Id="InstallGitCredentialWinStore" FileKey="GitExtensions.exe" ExeCommand="installcredhelper" Return="asyncWait" />
+        <Binary Id="Git" SourceFile="..\Bin\Git-2.8.1-32-bit.exe" />
+        <CustomAction Id="InstallGit" Impersonate="no" BinaryKey="Git" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
         <InstallExecuteSequence>
             <Custom Action="InstallKDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
-            <Custom Action="InstallMsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
-            <Custom Action="InstallGitCredentialWinStore" After="InstallFinalize"><![CDATA[INSTALLGITCREDENTIALWINSTORE=1]]></Custom>
+            <Custom Action="InstallGit" After="InstallFiles"><![CDATA[INSTALLGIT=1]]></Custom>
         </InstallExecuteSequence>
         <?endif ?>
         <UI />

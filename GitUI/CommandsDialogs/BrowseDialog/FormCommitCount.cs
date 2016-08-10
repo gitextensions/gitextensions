@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             var items = CommitCounter.GroupAllCommitsByContributor(Module).Item1;
             if (cbIncludeSubmodules.Checked)
             {
-                IList<string> submodules = Module.GetSubmodulesLocalPathes();
+                IList<string> submodules = Module.GetSubmodulesLocalPaths();
                 foreach (var submoduleName in submodules)
                 {
                     GitModule submodule = Module.GetSubmodule(submoduleName);

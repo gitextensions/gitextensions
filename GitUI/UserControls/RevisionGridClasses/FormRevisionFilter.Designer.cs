@@ -57,6 +57,7 @@
             this.BranchFilter = new System.Windows.Forms.TextBox();
             this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
             this.BranchFilterCheck = new System.Windows.Forms.CheckBox();
+            this.SimplifyByDecorationCheck = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_Limit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -201,7 +202,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.Ok, 2, 10);
+            this.tableLayoutPanel1.Controls.Add(this.Ok, 2, 11);
             this.tableLayoutPanel1.Controls.Add(this.LimitCheck, 1, 6);
             this.tableLayoutPanel1.Controls.Add(this.IgnoreCase, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.MessageCheck, 1, 4);
@@ -229,11 +230,13 @@
             this.tableLayoutPanel1.Controls.Add(this.BranchFilter, 2, 8);
             this.tableLayoutPanel1.Controls.Add(this.CurrentBranchOnlyCheck, 2, 9);
             this.tableLayoutPanel1.Controls.Add(this.BranchFilterCheck, 1, 8);
+            this.tableLayoutPanel1.Controls.Add(this.SimplifyByDecorationCheck, 2, 10);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 11;
+            this.tableLayoutPanel1.RowCount = 12;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -396,11 +399,23 @@
             this.BranchFilterCheck.UseVisualStyleBackColor = true;
             this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.OnBranchFilterCheckedChanged);
             // 
+            // SimplifyByDecorationCheck
+            // 
+            this.SimplifyByDecorationCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.SimplifyByDecorationCheck.AutoSize = true;
+            this.SimplifyByDecorationCheck.Location = new System.Drawing.Point(213, 262);
+            this.SimplifyByDecorationCheck.Name = "SimplifyByDecorationCheck";
+            this.SimplifyByDecorationCheck.Size = new System.Drawing.Size(131, 17);
+            this.SimplifyByDecorationCheck.TabIndex = 35;
+            this.SimplifyByDecorationCheck.Text = "Simplify by decoration";
+            this.SimplifyByDecorationCheck.UseVisualStyleBackColor = true;
+            this.SimplifyByDecorationCheck.CheckedChanged += new System.EventHandler(this.OnSimplifyByDecorationCheckedChanged);
+            // 
             // FormRevisionFilter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(457, 316);
+            this.ClientSize = new System.Drawing.Size(457, 344);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -447,7 +462,6 @@
         private System.Windows.Forms.TextBox BranchFilter;
         private System.Windows.Forms.CheckBox CurrentBranchOnlyCheck;
         private System.Windows.Forms.CheckBox BranchFilterCheck;
-
-
+        private System.Windows.Forms.CheckBox SimplifyByDecorationCheck;
     }
 }

@@ -247,7 +247,8 @@ namespace GitUI
                 Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2,
                     Math.Max(0, Owner.Top + Owner.Height / 2 - Height / 2));
             }
-            WindowState = position.State;
+            if(WindowState != position.State)
+                WindowState = position.State;
         }
 
         static Rectangle? FindWindowScreen(Point location)

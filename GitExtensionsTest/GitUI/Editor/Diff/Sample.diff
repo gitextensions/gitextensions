@@ -1,0 +1,25 @@
+﻿diff --git xx/yy/zz.cs
+index 93bc062,27d19d9..66e2c37
+--- a/xx/yy/zz.cs
++++ b/xx/yy/zz.cs
+@@ -9,9 +9,10 @@
+     <AppDesignerFolder>Properties</AppDesignerFolder>
+     <RootNamespace>CustomBuildTasks</RootNamespace>
+     <AssemblyName>CustomBuildTasks</AssemblyName>
+-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+     <FileAlignment>512</FileAlignment>
+     <TargetFrameworkProfile />
++    <ProductVersion>8.0.30703</ProductVersion>
++    <SchemaVersion>2.0</SchemaVersion>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+@@ -33,7 +34,7 @@
+   <ItemGroup>
+     <Reference Include="System" />
+     <Reference Include="Microsoft.Build.Framework" />
+-    <Reference Include="Microsoft.Build.Utilities" />
++    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="GenerateUniqueIdentifierTask.cs" />

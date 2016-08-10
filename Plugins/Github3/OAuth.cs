@@ -12,6 +12,7 @@ namespace Github3
         public OAuth()
         {
             InitializeComponent();
+            webBrowser1.ScriptErrorsSuppressed = true;
         }
 
         protected override void OnLoad(System.EventArgs e)

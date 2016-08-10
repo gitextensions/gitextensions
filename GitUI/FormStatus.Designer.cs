@@ -18,11 +18,6 @@ namespace GitUI
             {
                 components.Dispose();
             }
-            if (outpuTimer != null)
-            {
-                outpuTimer.Dispose();
-                outpuTimer = null;
-            }
             base.Dispose(disposing);
         }
 
@@ -35,7 +30,6 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.Ok = new System.Windows.Forms.Button();
-            this.MessageTextBox = new System.Windows.Forms.RichTextBox();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.KeepDialogOpen = new System.Windows.Forms.CheckBox();
             this.Abort = new System.Windows.Forms.Button();
@@ -60,18 +54,6 @@ namespace GitUI
             this.Ok.UseCompatibleTextRendering = true;
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
-            // 
-            // MessageTextBox
-            // 
-            this.MessageTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.MessageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.MessageTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MessageTextBox.Location = new System.Drawing.Point(56, 3);
-            this.MessageTextBox.Name = "MessageTextBox";
-            this.MessageTextBox.ReadOnly = true;
-            this.MessageTextBox.Size = new System.Drawing.Size(480, 255);
-            this.MessageTextBox.TabIndex = 0;
-            this.MessageTextBox.Text = "";
             // 
             // ProgressBar
             // 
@@ -162,7 +144,7 @@ namespace GitUI
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel3.Controls.Add(this.picBoxSuccessFail, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.MessageTextBox, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.ConsoleOutput, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -200,7 +182,6 @@ namespace GitUI
         #endregion
 
         private System.Windows.Forms.ProgressBar ProgressBar;
-        private System.Windows.Forms.RichTextBox MessageTextBox;
         protected System.Windows.Forms.Button Ok;
         protected System.Windows.Forms.CheckBox KeepDialogOpen;
         protected System.Windows.Forms.Button Abort;

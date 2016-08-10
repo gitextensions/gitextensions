@@ -176,7 +176,11 @@ namespace GitCommands
 
         public override string ToString()
         {
-            return Full.Replace(".msysgit.0", "").Replace(".msysgit.1", "");
+            return Full
+                .Replace(".msysgit.0", "")
+                .Replace(".msysgit.1", "")
+                .Replace(".windows.0", "")
+                .Replace(".windows.1", "");
         }
     }
 }

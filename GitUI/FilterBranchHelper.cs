@@ -181,6 +181,7 @@ namespace GitUI
             {
                 localToolStripMenuItem.Dispose();
                 remoteToolStripMenuItem.Dispose();
+                tagsToolStripMenuItem.Dispose();
             }
         }
     }

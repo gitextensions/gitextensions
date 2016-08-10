@@ -107,6 +107,10 @@ namespace ResourceManager
         /// <summary>"Fetch and Push URLs differ"</summary>
         public static TranslationString RemoteDifferingUrlsTip = new TranslationString("Fetch and Push URLs differ");
 
+        public static string GetUninterestingDiffOmitted()
+        {
+            return Instance._uninterestingDiffOmitted.Text;
+        }
 
         private readonly TranslationString _dateText               = new TranslationString("Date");
         private readonly TranslationString _authorText             = new TranslationString("Author");
@@ -120,6 +124,7 @@ namespace ResourceManager
         private readonly TranslationString _currentUnstagedChanges = new TranslationString("Current unstaged changes");
         private readonly TranslationString _currentIndex   = new TranslationString("Commit index");
         private readonly TranslationString _loadingData    = new TranslationString("Loading data...");
+        private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
 
         public static string GetNSecondsAgoText(int value)
         {

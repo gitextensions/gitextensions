@@ -18,6 +18,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             CurrentSettings = RepoDistSettingsSet.EffectiveSettings;
         }
 
+        public bool AreEffectiveSettingsSet
+        {
+            get { return CurrentSettings == RepoDistSettingsSet.EffectiveSettings; }
+        }
+
         public void SetEffectiveSettings()
         {
             if (RepoDistSettingsSet != null)
@@ -52,5 +57,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             LoadSettings();
         }
 
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // RepoDistSettingsPage
+            // 
+            this.Name = "RepoDistSettingsPage";
+            this.Size = new System.Drawing.Size(951, 518);
+            this.ResumeLayout(false);
+
+        }
     }
 }

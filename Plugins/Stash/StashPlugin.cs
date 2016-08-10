@@ -8,12 +8,12 @@ namespace Stash
     {
         public StashPlugin()
         {
-            Description = "Create Stash Pull Request";
+            SetNameAndDescription("Create Stash Pull Request");
             Translate();
         }
 
         public static StringSetting StashUsername = new StringSetting("Stash Username", string.Empty);
-        public static StringSetting StashPassword = new StringSetting("Stash Password", string.Empty);
+        public static PasswordSetting StashPassword = new PasswordSetting("Stash Password", string.Empty);
         public static StringSetting StashBaseURL = new StringSetting("Specify the base URL to Stash", "https://example.stash.com");
         public static BoolSetting StashDisableSSL = new BoolSetting("Disable SSL verification", false);
 

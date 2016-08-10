@@ -17,6 +17,7 @@ namespace GitUI.CommandsDialogs
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly AsyncLoader _asyncLoader;
+        private readonly FormBrowseMenus _formBrowseMenus;
 
         private FormFileHistory()
             : this(null)
@@ -40,8 +41,14 @@ namespace GitUI.CommandsDialogs
                 tabControl1.TabPages[2].ImageIndex = 2;
             }
 
-            _filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, FileChanges);
-            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);
+            _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, FileChanges);
+            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, FileChanges, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
+
+            _formBrowseMenus = new FormBrowseMenus(FileHistoryContextMenu);
+            _formBrowseMenus.ResetMenuCommandSets();
+            _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, FileChanges.MenuCommands.GetNavigateMenuCommands());
+            _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, FileChanges.MenuCommands.GetViewMenuCommands());
+            _formBrowseMenus.InsertAdditionalMainMenuItems(toolStripSeparator4);
         }
 
         public FormFileHistory(GitUICommands aCommands, string fileName, GitRevision revision, bool filterByRevision)
@@ -125,7 +132,7 @@ namespace GitUI.CommandsDialogs
             //Replace windows path separator to Linux path separator.
             //This is needed to keep the file history working when started from file tree in
             //browse dialog.
-            fileName = fileName.Replace('\\', '/');
+            fileName = fileName.ToPosixPath();
 
             // we will need this later to look up proper casing for the file
             var fullFilePath = Path.Combine(Module.WorkingDir, fileName);
@@ -185,7 +192,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.FullHistoryInFileHistory)
             {
-                res.RevisionFilter = string.Concat(" --full-history --simplify-by-decoration ", res.RevisionFilter);
+                res.RevisionFilter = string.Concat(" --full-history ", res.RevisionFilter);
             }
 
             res.PathFilter = " \"" + fileName + "\"";
@@ -461,6 +468,7 @@ namespace GitUI.CommandsDialogs
                 _asyncLoader.Dispose();
                 _filterRevisionsHelper.Dispose();
                 _filterBranchHelper.Dispose();
+                _formBrowseMenus.Dispose();
 
                 if (components != null)
                     components.Dispose();

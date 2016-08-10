@@ -123,10 +123,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void DefaultCloneDestinationBrowseClick(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog { SelectedPath = cbDefaultCloneDestination.Text })
+            var userSelectedPath = OsShellUtil.PickFolder(this, cbDefaultCloneDestination.Text);
+
+            if (userSelectedPath != null)
             {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    cbDefaultCloneDestination.Text = dialog.SelectedPath;
+                cbDefaultCloneDestination.Text = userSelectedPath;
             }
         }
     }
