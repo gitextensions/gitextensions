@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using System.Windows.Forms;
+
+namespace GitUI.CommandsDialogs
 {
     partial class SearchWindow<T>
     {
@@ -13,8 +15,6 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            backgroundLoader.Cancel();
-
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -30,53 +30,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.panel1.SuspendLayout();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblEnterFileName = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // listBox1
+            // tableLayoutPanel1
             // 
-            this.listBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(12, 58);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(301, 145);
-            this.listBox1.TabIndex = 2;
-            this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
-            this.listBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listBox1_KeyUp);
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.lblEnterFileName, 0, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(325, 213);
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // panel1
+            // lblEnterFileName
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.Window;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.textBox1);
-            this.panel1.Location = new System.Drawing.Point(12, 8);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(301, 51);
-            this.panel1.TabIndex = 7;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Enter file name:";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(6, 23);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(290, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
-            this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyUp);
+            this.lblEnterFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblEnterFileName.AutoSize = true;
+            this.lblEnterFileName.BackColor = System.Drawing.SystemColors.Control;
+            this.lblEnterFileName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblEnterFileName.Location = new System.Drawing.Point(0, 0);
+            this.lblEnterFileName.Margin = new System.Windows.Forms.Padding(0);
+            this.lblEnterFileName.Name = "lblEnterFileName";
+            this.lblEnterFileName.Padding = new System.Windows.Forms.Padding(0, 7, 0, 0);
+            this.lblEnterFileName.Size = new System.Drawing.Size(325, 22);
+            this.lblEnterFileName.TabIndex = 0;
+            this.lblEnterFileName.Text = "Enter File Name";
             // 
             // SearchWindow
             // 
@@ -85,31 +70,25 @@
             this.BackColor = System.Drawing.Color.Lime;
             this.ClientSize = new System.Drawing.Size(325, 213);
             this.ControlBox = false;
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(64, 64);
             this.Name = "SearchWindow";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.TransparencyKey = System.Drawing.Color.Lime;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SearchWindow_FormClosing);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
-
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Label lblEnterFileName;
     }
 }
