@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitUI.CommandsDialogs;
 using ResourceManager;
 
 namespace GitUI.UserControls
@@ -15,7 +16,7 @@ namespace GitUI.UserControls
         List<Tree> rootNodes = new List<Tree>();
         /// <summary>Image key for a head branch.</summary>
         static readonly string headBranchKey = Guid.NewGuid().ToString();
-        private AutoCompleteTextBoxes.AutoCompleteTextBox txtBranchFilter;
+        private SearchControl<string> txtBranchFilter;
         private readonly HashSet<string> _branchFilterAutoCompletionSrc = new HashSet<string>();
 
         public RepoObjectsTree()
@@ -38,11 +39,16 @@ namespace GitUI.UserControls
 
         private void InitiliazeSearchBox()
         {
-            txtBranchFilter = AutoCompleteTextBoxes.AutoCompleteTextBoxFactory.Create();
+            txtBranchFilter = new SearchControl<string>(FilterBranch, i => { });
+            txtBranchFilter.OnTextEntered += () =>
+            {
+                OnBranchFilterChanged(null, null);
+                OnBtnSearchClicked(null, null);
+            };
             //
             // txtBranchFilter
             //
-            this.txtBranchFilter.Dock = DockStyle.Fill;
+            this.txtBranchFilter.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             this.txtBranchFilter.Name = "txtBranchFilter";
             this.txtBranchFilter.TabIndex = 1;
             this.txtBranchFilter.TextChanged += OnBranchFilterChanged;
@@ -50,13 +56,18 @@ namespace GitUI.UserControls
             this.branchFilterPanel.Controls.Add(txtBranchFilter, 1, 0);
 
             txtBranchFilter.PreviewKeyDown += OnPreviewKeyDown;
-            txtBranchFilter.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            txtBranchFilter.AutoCompleteSource = AutoCompleteSource.CustomSource;
+        }
+
+        private IList<string> FilterBranch(string arg)
+        {
+            return _branchFilterAutoCompletionSrc
+                .Where(r => r.IndexOf(arg, StringComparison.OrdinalIgnoreCase) != -1)
+                .ToList();
         }
 
         private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            if (e.KeyCode == Keys.F3)
+            if (e.KeyCode == Keys.F3 || e.KeyCode == Keys.Enter)
             {
                 OnBtnSearchClicked(null, null);
             }
@@ -65,8 +76,6 @@ namespace GitUI.UserControls
         protected override void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
         {
             base.OnUICommandsSourceChanged(sender, newSource);
-
-            txtBranchFilter.AutoCompleteCustomSource = null;
 
             CancelBackgroundTasks();
 
@@ -176,8 +185,6 @@ namespace GitUI.UserControls
                         var autoCompletionSrc = new AutoCompleteStringCollection();
                         autoCompletionSrc.AddRange(
                             _branchFilterAutoCompletionSrc.ToArray());
-
-                        txtBranchFilter.AutoCompleteCustomSource = autoCompletionSrc;
                     }));
                 }, _cancelledTokenSource.Token);
             _tasks.ToList().ForEach(t => t.Start());
@@ -215,6 +222,7 @@ namespace GitUI.UserControls
 
         private void OnBtnSearchClicked(object sender, EventArgs e)
         {
+            txtBranchFilter.CloseDropdown();
             if (_searchCriteriaChanged && _searchResult != null && _searchResult.Any())
             {
                 _searchCriteriaChanged = false;

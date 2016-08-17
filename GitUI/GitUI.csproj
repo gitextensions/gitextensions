@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\FxCop.targets" />
   <PropertyGroup>
@@ -64,9 +64,7 @@
     <CodeAnalysisRuleSet>..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" Condition="!$(DefineConstants.Contains('__MONOCS__'))"/>
-    <Reference Include="PresentationFramework" Condition="!$(DefineConstants.Contains('__MONOCS__'))"/>
-    <Reference Include="ConEmu.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=00340228797aafb8, processorArchitecture=MSIL">
+      <Reference Include="ConEmu.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=00340228797aafb8, processorArchitecture=MSIL">
       <HintPath>..\packages\ConEmu.Control.WinForms.1.0.20160313.1\lib\net40\ConEmu.WinForms.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -97,17 +95,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Security" />
-    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" Condition="!$(DefineConstants.Contains('__MONOCS__'))">
-      <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Input.Toolkit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" Condition="!$(DefineConstants.Contains('__MONOCS__'))">
-      <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xaml" Condition="!$(DefineConstants.Contains('__MONOCS__'))"/>
     <Reference Include="System.Xml" />
     <Reference Include="ICSharpCode.TextEditor">
       <HintPath>..\Bin\ICSharpCode.TextEditor.dll</HintPath>
@@ -117,13 +106,7 @@
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell">
       <HintPath>..\Bin\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsBase" Condition="!$(DefineConstants.Contains('__MONOCS__'))"/>
-    <Reference Include="WindowsFormsIntegration" Condition="!$(DefineConstants.Contains('__MONOCS__'))"/>
-    <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" Condition="!$(DefineConstants.Contains('__MONOCS__'))">
-      <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\WPFToolkit.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    </Reference>    
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -282,23 +265,6 @@
     <Compile Include="RepoHosts.cs" />
     <Compile Include="Script\ScriptRunner.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
-    <Compile Include="UserControls\AutoCompleteTextBoxes\AutoCompleteTextBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\AutoCompleteTextBoxes\AutoCompleteTextBoxFactory.cs" />
-    <Compile Include="UserControls\AutoCompleteTextBoxes\WinformsAutoCompleteTextBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\AutoCompleteTextBoxes\WinformsAutoCompleteTextBox.Designer.cs">
-      <DependentUpon>WinformsAutoCompleteTextBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\AutoCompleteTextBoxes\WpfAutoCompleteTextBoxEx.cs" Condition="!$(DefineConstants.Contains('__MONOCS__'))" />
-    <Compile Include="UserControls\AutoCompleteTextBoxes\WpfAutoCompleteTextBoxHost.cs" Condition="!$(DefineConstants.Contains('__MONOCS__'))">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\AutoCompleteTextBoxes\WpfAutoCompleteTextBoxHost.Designer.cs" Condition="!$(DefineConstants.Contains('__MONOCS__'))">
-      <DependentUpon>WpfAutoCompleteTextBoxHost.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\BranchComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1193,12 +1159,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\AutoCompleteTextBoxes\WinformsAutoCompleteTextBox.resx">
-      <DependentUpon>WinformsAutoCompleteTextBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\AutoCompleteTextBoxes\WpfAutoCompleteTextBoxHost.resx" Condition="!$(DefineConstants.Contains('__MONOCS__'))">
-      <DependentUpon>WpfAutoCompleteTextBoxHost.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\BranchSelector.resx">
       <DependentUpon>BranchSelector.cs</DependentUpon>
