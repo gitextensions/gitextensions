@@ -35,6 +35,9 @@
             this.tableLayoutPanelForDiffViewer = new System.Windows.Forms.TableLayoutPanel();
             this.chkOmitUninterestingDiff = new System.Windows.Forms.CheckBox();
             this.chkRememberIgnoreWhiteSpacePreference = new System.Windows.Forms.CheckBox();
+            this.tableLayoutPanelForWarnDiffFiles = new System.Windows.Forms.TableLayoutPanel();
+            this.chkCheckForDiffViewerSelectedFilesLimitNumber = new System.Windows.Forms.CheckBox();
+            this.upDownDiffViewerSelectedFilesLimitNumber = new System.Windows.Forms.NumericUpDown();
             this.CheckoutGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.chkAlwaysShowCheckoutDlg = new System.Windows.Forms.CheckBox();
@@ -53,6 +56,8 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.DiffViewerGB.SuspendLayout();
             this.tableLayoutPanelForDiffViewer.SuspendLayout();
+            this.tableLayoutPanelForWarnDiffFiles.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownDiffViewerSelectedFilesLimitNumber)).BeginInit();
             this.CheckoutGB.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.GeneralGB.SuspendLayout();
@@ -75,7 +80,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(399, 373);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(399, 404);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // DiffViewerGB
@@ -86,7 +91,7 @@
             this.DiffViewerGB.Dock = System.Windows.Forms.DockStyle.Top;
             this.DiffViewerGB.Location = new System.Drawing.Point(3, 283);
             this.DiffViewerGB.Name = "DiffViewerGB";
-            this.DiffViewerGB.Size = new System.Drawing.Size(393, 87);
+            this.DiffViewerGB.Size = new System.Drawing.Size(393, 118);
             this.DiffViewerGB.TabIndex = 2;
             this.DiffViewerGB.TabStop = false;
             this.DiffViewerGB.Text = "Diff Viewer";
@@ -99,15 +104,16 @@
             this.tableLayoutPanelForDiffViewer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOmitUninterestingDiff, 0, 0);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberIgnoreWhiteSpacePreference, 0, 0);
-            this.tableLayoutPanelForDiffViewer.Location = new System.Drawing.Point(6, 21);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.tableLayoutPanelForWarnDiffFiles, 0, 3);
+            this.tableLayoutPanelForDiffViewer.Location = new System.Drawing.Point(6, 20);
             this.tableLayoutPanelForDiffViewer.Name = "tableLayoutPanelForDiffViewer";
             this.tableLayoutPanelForDiffViewer.RowCount = 1;
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelForDiffViewer.Size = new System.Drawing.Size(255, 46);
+            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelForDiffViewer.Size = new System.Drawing.Size(255, 78);
             this.tableLayoutPanelForDiffViewer.TabIndex = 1;
             // 
             // chkOmitUninterestingDiff
@@ -129,6 +135,44 @@
             this.chkRememberIgnoreWhiteSpacePreference.TabIndex = 4;
             this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the ignore-white-space preference";
             this.chkRememberIgnoreWhiteSpacePreference.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanelForWarnDiffFiles
+            // 
+            this.tableLayoutPanelForWarnDiffFiles.ColumnCount = 2;
+            this.tableLayoutPanelForWarnDiffFiles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelForWarnDiffFiles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelForWarnDiffFiles.Controls.Add(this.chkCheckForDiffViewerSelectedFilesLimitNumber, 0, 0);
+            this.tableLayoutPanelForWarnDiffFiles.Controls.Add(this.upDownDiffViewerSelectedFilesLimitNumber, 1, 0);
+            this.tableLayoutPanelForWarnDiffFiles.Location = new System.Drawing.Point(3, 49);
+            this.tableLayoutPanelForWarnDiffFiles.Name = "tableLayoutPanelForWarnDiffFiles";
+            this.tableLayoutPanelForWarnDiffFiles.RowCount = 1;
+            this.tableLayoutPanelForWarnDiffFiles.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelForWarnDiffFiles.Size = new System.Drawing.Size(247, 26);
+            this.tableLayoutPanelForWarnDiffFiles.TabIndex = 7;
+            // 
+            // chkCheckForDiffViewerSelectedFilesLimitNumber
+            // 
+            this.chkCheckForDiffViewerSelectedFilesLimitNumber.AutoSize = true;
+            this.chkCheckForDiffViewerSelectedFilesLimitNumber.Location = new System.Drawing.Point(0, 3);
+            this.chkCheckForDiffViewerSelectedFilesLimitNumber.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
+            this.chkCheckForDiffViewerSelectedFilesLimitNumber.Name = "chkCheckForDiffViewerSelectedFilesLimitNumber";
+            this.chkCheckForDiffViewerSelectedFilesLimitNumber.Size = new System.Drawing.Size(189, 17);
+            this.chkCheckForDiffViewerSelectedFilesLimitNumber.TabIndex = 0;
+            this.chkCheckForDiffViewerSelectedFilesLimitNumber.Text = "Warn if selected files exceed:       ";
+            this.chkCheckForDiffViewerSelectedFilesLimitNumber.UseVisualStyleBackColor = true;
+            this.chkCheckForDiffViewerSelectedFilesLimitNumber.CheckedChanged += new System.EventHandler(this.chkCheckForDiffViewerSelectedFilesLimitNumber_CheckedChanged);
+            // 
+            // upDownDiffViewerSelectedFilesLimitNumber
+            // 
+            this.upDownDiffViewerSelectedFilesLimitNumber.Location = new System.Drawing.Point(195, 3);
+            this.upDownDiffViewerSelectedFilesLimitNumber.Name = "upDownDiffViewerSelectedFilesLimitNumber";
+            this.upDownDiffViewerSelectedFilesLimitNumber.Size = new System.Drawing.Size(48, 21);
+            this.upDownDiffViewerSelectedFilesLimitNumber.TabIndex = 1;
+            this.upDownDiffViewerSelectedFilesLimitNumber.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
             // CheckoutGB
             // 
@@ -325,13 +369,16 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "AdvancedSettingsPage";
-            this.Size = new System.Drawing.Size(1059, 891);
+            this.Size = new System.Drawing.Size(1032, 484);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.DiffViewerGB.ResumeLayout(false);
             this.DiffViewerGB.PerformLayout();
             this.tableLayoutPanelForDiffViewer.ResumeLayout(false);
             this.tableLayoutPanelForDiffViewer.PerformLayout();
+            this.tableLayoutPanelForWarnDiffFiles.ResumeLayout(false);
+            this.tableLayoutPanelForWarnDiffFiles.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.upDownDiffViewerSelectedFilesLimitNumber)).EndInit();
             this.CheckoutGB.ResumeLayout(false);
             this.CheckoutGB.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
@@ -369,5 +416,8 @@
         private System.Windows.Forms.CheckBox chkAutoNormaliseBranchName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cboAutoNormaliseSymbol;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelForWarnDiffFiles;
+        private System.Windows.Forms.CheckBox chkCheckForDiffViewerSelectedFilesLimitNumber;
+        private System.Windows.Forms.NumericUpDown upDownDiffViewerSelectedFilesLimitNumber;
     }
 }

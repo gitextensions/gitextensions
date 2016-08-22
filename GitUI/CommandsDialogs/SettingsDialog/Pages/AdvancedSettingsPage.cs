@@ -32,6 +32,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkAutoNormaliseBranchName.Checked = AppSettings.AutoNormaliseBranchName;
             cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
             cboAutoNormaliseSymbol.SelectedValue = AppSettings.AutoNormaliseSymbol;
+            chkCheckForDiffViewerSelectedFilesLimitNumber.Checked = AppSettings.CheckForDiffViewerSelectedFilesLimitNumber;
+            upDownDiffViewerSelectedFilesLimitNumber.Enabled = AppSettings.CheckForDiffViewerSelectedFilesLimitNumber;
+            upDownDiffViewerSelectedFilesLimitNumber.Value = AppSettings.DiffViewerSelectedFilesLimitNumber;
         }
 
         protected override void PageToSettings()
@@ -46,6 +49,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.UseConsoleEmulatorForCommands = chkConsoleEmulator.Checked;
             AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.Checked;
             AppSettings.AutoNormaliseSymbol = (string)cboAutoNormaliseSymbol.SelectedValue;
+            AppSettings.CheckForDiffViewerSelectedFilesLimitNumber = chkCheckForDiffViewerSelectedFilesLimitNumber.Checked;
+            AppSettings.DiffViewerSelectedFilesLimitNumber = (int)upDownDiffViewerSelectedFilesLimitNumber.Value;
         }
 
         public static SettingsPageReference GetPageReference()
@@ -57,6 +62,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void chkAutoNormaliseBranchName_CheckedChanged(object sender, System.EventArgs e)
         {
             cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
+        }
+
+        private void chkCheckForDiffViewerSelectedFilesLimitNumber_CheckedChanged(object sender, System.EventArgs e)
+        {
+            upDownDiffViewerSelectedFilesLimitNumber.Enabled = chkCheckForDiffViewerSelectedFilesLimitNumber.Checked;
         }
     }
 }

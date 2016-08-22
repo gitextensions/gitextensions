@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI
 {
@@ -9,6 +12,11 @@ namespace GitUI
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
+        private readonly TranslationString diffWarnLimitExceeded = new TranslationString("Selected files number exceed limit");
+
+        private readonly TranslationString diffWarnLimitExceededConfirmation =
+            new TranslationString("Selected files number exceed limit.\nDo you want to continue?");
+
         private GitUICommands _uiCommands;
         /// <summary>Gets a <see cref="GitUICommands"/> reference.</summary>
         [Browsable(false)]
@@ -71,6 +79,24 @@ namespace GitUI
         protected bool ExecuteScriptCommand(int command)
         {
             return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command);
+        }
+
+        protected bool checkDiffSelectedItemsLimit(List<GitItemStatus> list)
+        {
+            bool ret = true;
+
+            if (AppSettings.CheckForDiffViewerSelectedFilesLimitNumber)
+            {
+                if (list.Count > AppSettings.DiffViewerSelectedFilesLimitNumber)
+                {
+                    if (MessageBox.Show(this, diffWarnLimitExceededConfirmation.Text, diffWarnLimitExceeded.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    {
+                        ret = false;
+                    }
+                }
+            }
+
+            return ret;
         }
     }
 }
