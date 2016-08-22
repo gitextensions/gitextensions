@@ -1813,16 +1813,15 @@ namespace GitUI.CommandsDialogs
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (!Unstaged.SelectedItems.Any())
+            if (!Unstaged.SelectedItems.Any() || !checkDiffSelectedItemsLimit(Unstaged.SelectedItems.ToList()))
                 return;
 
-            var item = Unstaged.SelectedItem;
-            var fileName = item.Name;
-
-            var cmdOutput = Module.OpenWithDifftool(fileName);
-
-            if (!string.IsNullOrEmpty(cmdOutput))
-                MessageBox.Show(this, cmdOutput);
+            foreach (var item in Unstaged.SelectedItems)
+            {
+                var cmdOutput = Module.OpenWithDifftool(item.Name);
+                if (!string.IsNullOrEmpty(cmdOutput))
+                    MessageBox.Show(this, cmdOutput);
+            }
         }
 
 
@@ -2435,6 +2434,9 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripMenuItem9_Click(object sender, EventArgs e)
         {
+            if (!Staged.SelectedItems.Any() || !checkDiffSelectedItemsLimit(Staged.SelectedItems.ToList()))
+                return;
+
             foreach (var item in Staged.SelectedItems)
             {
                 string output = Module.OpenWithDifftool(item.Name, null, null, null, "--cached");

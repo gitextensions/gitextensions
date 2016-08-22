@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager;
 
 namespace GitUI
 {
@@ -9,6 +12,15 @@ namespace GitUI
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
+        protected readonly TranslationString noDiffWarnLimit = new TranslationString("Diff warn settings missing");
+
+        protected readonly TranslationString noDiffWarnLimitMessage = new TranslationString("There is no diff warn. Please go to settings and set a diff warn limit!");
+
+        private readonly TranslationString diffWarnLimitExceeded = new TranslationString("Diff warn limit exceeded");
+
+        private readonly TranslationString diffWarnLimitExceededConfirmation =
+            new TranslationString("Diff warn limit exceeded.\nDo you want to continue?");
+
         private GitUICommands _uiCommands;
         /// <summary>Gets a <see cref="GitUICommands"/> reference.</summary>
         [Browsable(false)]
@@ -71,6 +83,31 @@ namespace GitUI
         protected bool ExecuteScriptCommand(int command)
         {
             return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command);
+        }
+
+        protected bool checkDiffSelectedItemsLimit(List<GitItemStatus> list)
+        {
+            bool ret = true;
+
+            string diffWarnLimitStr = Module.GetEffectiveSetting("diff.warn.limit");
+            if (string.IsNullOrEmpty(diffWarnLimitStr))
+            {
+                MessageBox.Show(this, noDiffWarnLimitMessage.Text, noDiffWarnLimit.Text);
+                ret = false;
+            }
+            else
+            {
+                int diffWarnLimit = Int32.Parse(diffWarnLimitStr);
+                if (list.Count > diffWarnLimit)
+                {
+                    if (MessageBox.Show(this, diffWarnLimitExceededConfirmation.Text, diffWarnLimitExceeded.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    {
+                        ret = false;
+                    }
+                }
+            }
+
+            return ret;
         }
     }
 }

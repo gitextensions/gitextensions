@@ -87,6 +87,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             DifftoolPath.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text));
             DifftoolCmd.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.cmd", _NO_TRANSLATE_GlobalDiffTool.Text));
+            DiffWarnValue.Text = CurrentSettings.GetValue("diff.warn.limit");
 
             GlobalKeepMergeBackup.SetNullableChecked(CurrentSettings.mergetool.keepBackup.Value);
 
@@ -115,6 +116,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                 CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text), DifftoolPath.Text);
                 CurrentSettings.SetPathValue(string.Format("difftool.{0}.cmd", _NO_TRANSLATE_GlobalDiffTool.Text), DifftoolCmd.Text);
+                CurrentSettings.SetValue("diff.warn.limit", DiffWarnValue.Text);
 
                 CurrentSettings.SetValue("merge.tool", _NO_TRANSLATE_GlobalMergeTool.Text);
 

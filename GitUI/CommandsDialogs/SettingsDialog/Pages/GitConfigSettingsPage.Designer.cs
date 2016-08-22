@@ -67,20 +67,23 @@
             this.globalAutoCrlfFalse = new System.Windows.Forms.RadioButton();
             this.globalAutoCrlfNotSet = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanelGitConfig = new System.Windows.Forms.TableLayoutPanel();
+            this.DiffWarnLabel = new System.Windows.Forms.Label();
+            this.DiffWarnValue = new System.Windows.Forms.NumericUpDown();
             this.InvalidGitPathGlobal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxLineEndings.SuspendLayout();
             this.flowLayoutPanelLineEndings.SuspendLayout();
             this.tableLayoutPanelGitConfig.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DiffWarnValue)).BeginInit();
             this.SuspendLayout();
             // 
             // label60
             // 
             this.label60.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(3, 458);
+            this.label60.Location = new System.Drawing.Point(3, 463);
             this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(127, 15);
+            this.label60.Size = new System.Drawing.Size(114, 13);
             this.label60.TabIndex = 79;
             this.label60.Text = "Files content encoding";
             // 
@@ -88,15 +91,15 @@
             // 
             this.Global_FilesEncoding.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Global_FilesEncoding.FormattingEnabled = true;
-            this.Global_FilesEncoding.Location = new System.Drawing.Point(149, 454);
+            this.Global_FilesEncoding.Location = new System.Drawing.Point(132, 459);
             this.Global_FilesEncoding.Name = "Global_FilesEncoding";
-            this.Global_FilesEncoding.Size = new System.Drawing.Size(241, 23);
+            this.Global_FilesEncoding.Size = new System.Drawing.Size(241, 21);
             this.Global_FilesEncoding.TabIndex = 17;
             // 
             // BrowseCommitTemplate
             // 
             this.BrowseCommitTemplate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseCommitTemplate.Location = new System.Drawing.Point(1052, 292);
+            this.BrowseCommitTemplate.Location = new System.Drawing.Point(668, 307);
             this.BrowseCommitTemplate.Name = "BrowseCommitTemplate";
             this.BrowseCommitTemplate.Size = new System.Drawing.Size(108, 25);
             this.BrowseCommitTemplate.TabIndex = 15;
@@ -108,24 +111,24 @@
             // 
             this.label57.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(3, 297);
+            this.label57.Location = new System.Drawing.Point(3, 313);
             this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(140, 15);
+            this.label57.Size = new System.Drawing.Size(123, 13);
             this.label57.TabIndex = 76;
             this.label57.Text = "Path to commit template";
             // 
             // CommitTemplatePath
             // 
             this.CommitTemplatePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.CommitTemplatePath.Location = new System.Drawing.Point(149, 293);
+            this.CommitTemplatePath.Location = new System.Drawing.Point(132, 309);
             this.CommitTemplatePath.Name = "CommitTemplatePath";
-            this.CommitTemplatePath.Size = new System.Drawing.Size(897, 23);
+            this.CommitTemplatePath.Size = new System.Drawing.Size(530, 21);
             this.CommitTemplatePath.TabIndex = 14;
             // 
             // DiffToolCmdSuggest
             // 
             this.DiffToolCmdSuggest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.DiffToolCmdSuggest.Location = new System.Drawing.Point(1052, 261);
+            this.DiffToolCmdSuggest.Location = new System.Drawing.Point(668, 251);
             this.DiffToolCmdSuggest.Name = "DiffToolCmdSuggest";
             this.DiffToolCmdSuggest.Size = new System.Drawing.Size(108, 25);
             this.DiffToolCmdSuggest.TabIndex = 13;
@@ -137,25 +140,25 @@
             // 
             this.DifftoolCmd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.DifftoolCmd.FormattingEnabled = true;
-            this.DifftoolCmd.Location = new System.Drawing.Point(149, 262);
+            this.DifftoolCmd.Location = new System.Drawing.Point(132, 253);
             this.DifftoolCmd.Name = "DifftoolCmd";
-            this.DifftoolCmd.Size = new System.Drawing.Size(897, 23);
+            this.DifftoolCmd.Size = new System.Drawing.Size(530, 21);
             this.DifftoolCmd.TabIndex = 12;
             // 
             // label48
             // 
             this.label48.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(3, 266);
+            this.label48.Location = new System.Drawing.Point(3, 257);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(105, 15);
+            this.label48.Size = new System.Drawing.Size(90, 13);
             this.label48.TabIndex = 72;
             this.label48.Text = "Difftool command";
             // 
             // BrowseDiffTool
             // 
             this.BrowseDiffTool.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseDiffTool.Location = new System.Drawing.Point(1052, 230);
+            this.BrowseDiffTool.Location = new System.Drawing.Point(668, 220);
             this.BrowseDiffTool.Name = "BrowseDiffTool";
             this.BrowseDiffTool.Size = new System.Drawing.Size(108, 25);
             this.BrowseDiffTool.TabIndex = 11;
@@ -167,18 +170,18 @@
             // 
             this.label42.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(3, 235);
+            this.label42.Location = new System.Drawing.Point(3, 226);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(87, 15);
+            this.label42.Size = new System.Drawing.Size(79, 13);
             this.label42.TabIndex = 70;
             this.label42.Text = "Path to difftool";
             // 
             // DifftoolPath
             // 
             this.DifftoolPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.DifftoolPath.Location = new System.Drawing.Point(149, 231);
+            this.DifftoolPath.Location = new System.Drawing.Point(132, 222);
             this.DifftoolPath.Name = "DifftoolPath";
-            this.DifftoolPath.Size = new System.Drawing.Size(897, 23);
+            this.DifftoolPath.Size = new System.Drawing.Size(530, 21);
             this.DifftoolPath.TabIndex = 10;
             // 
             // GlobalDiffTool
@@ -205,9 +208,9 @@
             "winmerge",
             "xxdiff",
             "vsdiffmerge"});
-            this._NO_TRANSLATE_GlobalDiffTool.Location = new System.Drawing.Point(149, 201);
+            this._NO_TRANSLATE_GlobalDiffTool.Location = new System.Drawing.Point(132, 193);
             this._NO_TRANSLATE_GlobalDiffTool.Name = "_NO_TRANSLATE_GlobalDiffTool";
-            this._NO_TRANSLATE_GlobalDiffTool.Size = new System.Drawing.Size(241, 23);
+            this._NO_TRANSLATE_GlobalDiffTool.Size = new System.Drawing.Size(241, 21);
             this._NO_TRANSLATE_GlobalDiffTool.TabIndex = 9;
             this._NO_TRANSLATE_GlobalDiffTool.TextChanged += new System.EventHandler(this.GlobalDiffTool_TextChanged);
             // 
@@ -215,9 +218,9 @@
             // 
             this.label41.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(3, 205);
+            this.label41.Location = new System.Drawing.Point(3, 197);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(47, 15);
+            this.label41.Size = new System.Drawing.Size(42, 13);
             this.label41.TabIndex = 67;
             this.label41.Text = "Difftool";
             // 
@@ -226,9 +229,9 @@
             this.label28.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label28.AutoSize = true;
             this.tableLayoutPanelGitConfig.SetColumnSpan(this.label28, 2);
-            this.label28.Location = new System.Drawing.Point(3, 180);
+            this.label28.Location = new System.Drawing.Point(3, 173);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(174, 15);
+            this.label28.Size = new System.Drawing.Size(161, 13);
             this.label28.TabIndex = 66;
             this.label28.Text = "Keep backup (.orig) after merge";
             // 
@@ -241,11 +244,11 @@
             this.tableLayoutPanelGitConfig.SetColumnSpan(this.InvalidGitPathGlobal, 2);
             this.InvalidGitPathGlobal.Controls.Add(this.label9);
             this.InvalidGitPathGlobal.Controls.Add(this.pictureBox1);
-            this.InvalidGitPathGlobal.Location = new System.Drawing.Point(1052, 31);
+            this.InvalidGitPathGlobal.Location = new System.Drawing.Point(668, 30);
             this.InvalidGitPathGlobal.Name = "InvalidGitPathGlobal";
             this.InvalidGitPathGlobal.Padding = new System.Windows.Forms.Padding(3);
             this.tableLayoutPanelGitConfig.SetRowSpan(this.InvalidGitPathGlobal, 4);
-            this.InvalidGitPathGlobal.Size = new System.Drawing.Size(255, 53);
+            this.InvalidGitPathGlobal.Size = new System.Drawing.Size(242, 47);
             this.InvalidGitPathGlobal.TabIndex = 65;
             this.InvalidGitPathGlobal.Visible = false;
             // 
@@ -255,7 +258,7 @@
             this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label9.Location = new System.Drawing.Point(57, 3);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(193, 45);
+            this.label9.Size = new System.Drawing.Size(180, 39);
             this.label9.TabIndex = 19;
             this.label9.Text = "You need to set the correct path to \r\ngit before you can change\r\nglobal settings." +
     "\r\n";
@@ -266,7 +269,7 @@
             this.pictureBox1.Image = global::GitUI.Properties.Resources.error;
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(54, 45);
+            this.pictureBox1.Size = new System.Drawing.Size(54, 39);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 18;
             this.pictureBox1.TabStop = false;
@@ -274,7 +277,7 @@
             // MergeToolCmdSuggest
             // 
             this.MergeToolCmdSuggest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.MergeToolCmdSuggest.Location = new System.Drawing.Point(1052, 150);
+            this.MergeToolCmdSuggest.Location = new System.Drawing.Point(668, 142);
             this.MergeToolCmdSuggest.Name = "MergeToolCmdSuggest";
             this.MergeToolCmdSuggest.Size = new System.Drawing.Size(108, 25);
             this.MergeToolCmdSuggest.TabIndex = 7;
@@ -286,25 +289,25 @@
             // 
             this.MergeToolCmd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.MergeToolCmd.FormattingEnabled = true;
-            this.MergeToolCmd.Location = new System.Drawing.Point(149, 152);
+            this.MergeToolCmd.Location = new System.Drawing.Point(132, 144);
             this.MergeToolCmd.Name = "MergeToolCmd";
-            this.MergeToolCmd.Size = new System.Drawing.Size(897, 23);
+            this.MergeToolCmd.Size = new System.Drawing.Size(530, 21);
             this.MergeToolCmd.TabIndex = 6;
             // 
             // label19
             // 
             this.label19.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(3, 155);
+            this.label19.Location = new System.Drawing.Point(3, 148);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(120, 15);
+            this.label19.Size = new System.Drawing.Size(103, 13);
             this.label19.TabIndex = 62;
             this.label19.Text = "Mergetool command";
             // 
             // BrowseMergeTool
             // 
             this.BrowseMergeTool.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseMergeTool.Location = new System.Drawing.Point(1052, 119);
+            this.BrowseMergeTool.Location = new System.Drawing.Point(668, 111);
             this.BrowseMergeTool.Name = "BrowseMergeTool";
             this.BrowseMergeTool.Size = new System.Drawing.Size(108, 25);
             this.BrowseMergeTool.TabIndex = 5;
@@ -326,9 +329,9 @@
             "semanticmerge",
             "TortoiseMerge",
             "vsdiffmerge"});
-            this._NO_TRANSLATE_GlobalMergeTool.Location = new System.Drawing.Point(149, 90);
+            this._NO_TRANSLATE_GlobalMergeTool.Location = new System.Drawing.Point(132, 84);
             this._NO_TRANSLATE_GlobalMergeTool.Name = "_NO_TRANSLATE_GlobalMergeTool";
-            this._NO_TRANSLATE_GlobalMergeTool.Size = new System.Drawing.Size(241, 23);
+            this._NO_TRANSLATE_GlobalMergeTool.Size = new System.Drawing.Size(241, 21);
             this._NO_TRANSLATE_GlobalMergeTool.TabIndex = 3;
             this._NO_TRANSLATE_GlobalMergeTool.TextChanged += new System.EventHandler(this.GlobalMergeTool_TextChanged);
             // 
@@ -336,18 +339,18 @@
             // 
             this.PathToKDiff3.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.PathToKDiff3.AutoSize = true;
-            this.PathToKDiff3.Location = new System.Drawing.Point(3, 124);
+            this.PathToKDiff3.Location = new System.Drawing.Point(3, 117);
             this.PathToKDiff3.Name = "PathToKDiff3";
-            this.PathToKDiff3.Size = new System.Drawing.Size(103, 15);
+            this.PathToKDiff3.Size = new System.Drawing.Size(93, 13);
             this.PathToKDiff3.TabIndex = 59;
             this.PathToKDiff3.Text = "Path to mergetool";
             // 
             // MergetoolPath
             // 
             this.MergetoolPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.MergetoolPath.Location = new System.Drawing.Point(149, 120);
+            this.MergetoolPath.Location = new System.Drawing.Point(132, 113);
             this.MergetoolPath.Name = "MergetoolPath";
-            this.MergetoolPath.Size = new System.Drawing.Size(897, 23);
+            this.MergetoolPath.Size = new System.Drawing.Size(530, 21);
             this.MergetoolPath.TabIndex = 4;
             // 
             // GlobalKeepMergeBackup
@@ -356,7 +359,7 @@
             this.GlobalKeepMergeBackup.AutoSize = true;
             this.GlobalKeepMergeBackup.Checked = true;
             this.GlobalKeepMergeBackup.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-            this.GlobalKeepMergeBackup.Location = new System.Drawing.Point(1052, 181);
+            this.GlobalKeepMergeBackup.Location = new System.Drawing.Point(668, 173);
             this.GlobalKeepMergeBackup.Name = "GlobalKeepMergeBackup";
             this.GlobalKeepMergeBackup.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.GlobalKeepMergeBackup.Size = new System.Drawing.Size(15, 14);
@@ -368,53 +371,53 @@
             // 
             this.label7.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 94);
+            this.label7.Location = new System.Drawing.Point(3, 88);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(62, 15);
+            this.label7.Size = new System.Drawing.Size(55, 13);
             this.label7.TabIndex = 56;
             this.label7.Text = "Mergetool";
             // 
             // GlobalEditor
             // 
             this.GlobalEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.GlobalEditor.Location = new System.Drawing.Point(149, 61);
+            this.GlobalEditor.Location = new System.Drawing.Point(132, 57);
             this.GlobalEditor.Name = "GlobalEditor";
-            this.GlobalEditor.Size = new System.Drawing.Size(897, 23);
+            this.GlobalEditor.Size = new System.Drawing.Size(530, 21);
             this.GlobalEditor.TabIndex = 2;
             // 
             // label6
             // 
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 65);
+            this.label6.Location = new System.Drawing.Point(3, 61);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(38, 15);
+            this.label6.Size = new System.Drawing.Size(35, 13);
             this.label6.TabIndex = 54;
             this.label6.Text = "Editor";
             // 
             // GlobalUserEmail
             // 
             this.GlobalUserEmail.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.GlobalUserEmail.Location = new System.Drawing.Point(149, 32);
+            this.GlobalUserEmail.Location = new System.Drawing.Point(132, 30);
             this.GlobalUserEmail.Name = "GlobalUserEmail";
-            this.GlobalUserEmail.Size = new System.Drawing.Size(241, 23);
+            this.GlobalUserEmail.Size = new System.Drawing.Size(241, 21);
             this.GlobalUserEmail.TabIndex = 1;
             // 
             // GlobalUserName
             // 
             this.GlobalUserName.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.GlobalUserName.Location = new System.Drawing.Point(149, 3);
+            this.GlobalUserName.Location = new System.Drawing.Point(132, 3);
             this.GlobalUserName.Name = "GlobalUserName";
-            this.GlobalUserName.Size = new System.Drawing.Size(241, 23);
+            this.GlobalUserName.Size = new System.Drawing.Size(241, 21);
             this.GlobalUserName.TabIndex = 0;
             // 
             // label4
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 36);
+            this.label4.Location = new System.Drawing.Point(3, 34);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(62, 15);
+            this.label4.Size = new System.Drawing.Size(56, 13);
             this.label4.TabIndex = 51;
             this.label4.Text = "User email";
             // 
@@ -424,7 +427,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 7);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(63, 15);
+            this.label3.Size = new System.Drawing.Size(58, 13);
             this.label3.TabIndex = 50;
             this.label3.Text = "User name";
             // 
@@ -435,10 +438,10 @@
             this.groupBoxLineEndings.AutoSize = true;
             this.tableLayoutPanelGitConfig.SetColumnSpan(this.groupBoxLineEndings, 4);
             this.groupBoxLineEndings.Controls.Add(this.flowLayoutPanelLineEndings);
-            this.groupBoxLineEndings.Location = new System.Drawing.Point(3, 323);
+            this.groupBoxLineEndings.Location = new System.Drawing.Point(3, 338);
             this.groupBoxLineEndings.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
             this.groupBoxLineEndings.Name = "groupBoxLineEndings";
-            this.groupBoxLineEndings.Size = new System.Drawing.Size(1304, 122);
+            this.groupBoxLineEndings.Size = new System.Drawing.Size(907, 112);
             this.groupBoxLineEndings.TabIndex = 16;
             this.groupBoxLineEndings.TabStop = false;
             this.groupBoxLineEndings.Text = "Line endings";
@@ -452,9 +455,9 @@
             this.flowLayoutPanelLineEndings.Controls.Add(this.globalAutoCrlfNotSet);
             this.flowLayoutPanelLineEndings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanelLineEndings.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanelLineEndings.Location = new System.Drawing.Point(3, 19);
+            this.flowLayoutPanelLineEndings.Location = new System.Drawing.Point(3, 17);
             this.flowLayoutPanelLineEndings.Name = "flowLayoutPanelLineEndings";
-            this.flowLayoutPanelLineEndings.Size = new System.Drawing.Size(1298, 100);
+            this.flowLayoutPanelLineEndings.Size = new System.Drawing.Size(901, 92);
             this.flowLayoutPanelLineEndings.TabIndex = 5;
             // 
             // globalAutoCrlfTrue
@@ -462,7 +465,7 @@
             this.globalAutoCrlfTrue.AutoSize = true;
             this.globalAutoCrlfTrue.Location = new System.Drawing.Point(3, 3);
             this.globalAutoCrlfTrue.Name = "globalAutoCrlfTrue";
-            this.globalAutoCrlfTrue.Size = new System.Drawing.Size(495, 19);
+            this.globalAutoCrlfTrue.Size = new System.Drawing.Size(449, 17);
             this.globalAutoCrlfTrue.TabIndex = 0;
             this.globalAutoCrlfTrue.TabStop = true;
             this.globalAutoCrlfTrue.Text = "Checkout Windows-style, commit Unix-style line endings (\"core.autocrlf\"  is set t" +
@@ -472,9 +475,9 @@
             // globalAutoCrlfInput
             // 
             this.globalAutoCrlfInput.AutoSize = true;
-            this.globalAutoCrlfInput.Location = new System.Drawing.Point(3, 28);
+            this.globalAutoCrlfInput.Location = new System.Drawing.Point(3, 26);
             this.globalAutoCrlfInput.Name = "globalAutoCrlfInput";
-            this.globalAutoCrlfInput.Size = new System.Drawing.Size(448, 19);
+            this.globalAutoCrlfInput.Size = new System.Drawing.Size(405, 17);
             this.globalAutoCrlfInput.TabIndex = 1;
             this.globalAutoCrlfInput.TabStop = true;
             this.globalAutoCrlfInput.Text = "Checkout as-is, commit Unix-style line endings (\"core.autocrlf\"  is set to \"input" +
@@ -484,9 +487,9 @@
             // globalAutoCrlfFalse
             // 
             this.globalAutoCrlfFalse.AutoSize = true;
-            this.globalAutoCrlfFalse.Location = new System.Drawing.Point(3, 53);
+            this.globalAutoCrlfFalse.Location = new System.Drawing.Point(3, 49);
             this.globalAutoCrlfFalse.Name = "globalAutoCrlfFalse";
-            this.globalAutoCrlfFalse.Size = new System.Drawing.Size(349, 19);
+            this.globalAutoCrlfFalse.Size = new System.Drawing.Size(319, 17);
             this.globalAutoCrlfFalse.TabIndex = 2;
             this.globalAutoCrlfFalse.TabStop = true;
             this.globalAutoCrlfFalse.Text = "Checkout as-is, commit as-is (\"core.autocrlf\"  is set to \"false\")";
@@ -495,9 +498,9 @@
             // globalAutoCrlfNotSet
             // 
             this.globalAutoCrlfNotSet.AutoSize = true;
-            this.globalAutoCrlfNotSet.Location = new System.Drawing.Point(3, 78);
+            this.globalAutoCrlfNotSet.Location = new System.Drawing.Point(3, 72);
             this.globalAutoCrlfNotSet.Name = "globalAutoCrlfNotSet";
-            this.globalAutoCrlfNotSet.Size = new System.Drawing.Size(63, 19);
+            this.globalAutoCrlfNotSet.Size = new System.Drawing.Size(60, 17);
             this.globalAutoCrlfNotSet.TabIndex = 4;
             this.globalAutoCrlfNotSet.TabStop = true;
             this.globalAutoCrlfNotSet.Text = "Not set";
@@ -511,14 +514,14 @@
             this.tableLayoutPanelGitConfig.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelGitConfig.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelGitConfig.Controls.Add(this.label3, 0, 0);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.label60, 0, 12);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.groupBoxLineEndings, 0, 11);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.label60, 0, 13);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.groupBoxLineEndings, 0, 12);
             this.tableLayoutPanelGitConfig.Controls.Add(this.GlobalUserName, 1, 0);
             this.tableLayoutPanelGitConfig.Controls.Add(this.label4, 0, 1);
             this.tableLayoutPanelGitConfig.Controls.Add(this.GlobalUserEmail, 1, 1);
             this.tableLayoutPanelGitConfig.Controls.Add(this.label6, 0, 2);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.CommitTemplatePath, 1, 10);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.label57, 0, 10);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.CommitTemplatePath, 1, 11);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.label57, 0, 11);
             this.tableLayoutPanelGitConfig.Controls.Add(this.GlobalEditor, 1, 2);
             this.tableLayoutPanelGitConfig.Controls.Add(this.InvalidGitPathGlobal, 2, 0);
             this.tableLayoutPanelGitConfig.Controls.Add(this.label7, 0, 3);
@@ -534,17 +537,19 @@
             this.tableLayoutPanelGitConfig.Controls.Add(this.MergeToolCmd, 1, 5);
             this.tableLayoutPanelGitConfig.Controls.Add(this.label41, 0, 7);
             this.tableLayoutPanelGitConfig.Controls.Add(this.label28, 0, 6);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.Global_FilesEncoding, 1, 12);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.Global_FilesEncoding, 1, 13);
             this.tableLayoutPanelGitConfig.Controls.Add(this.BrowseMergeTool, 2, 4);
             this.tableLayoutPanelGitConfig.Controls.Add(this.MergeToolCmdSuggest, 2, 5);
             this.tableLayoutPanelGitConfig.Controls.Add(this.BrowseDiffTool, 2, 8);
             this.tableLayoutPanelGitConfig.Controls.Add(this.DiffToolCmdSuggest, 2, 9);
-            this.tableLayoutPanelGitConfig.Controls.Add(this.BrowseCommitTemplate, 2, 10);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.BrowseCommitTemplate, 2, 11);
             this.tableLayoutPanelGitConfig.Controls.Add(this.GlobalKeepMergeBackup, 2, 6);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.DiffWarnLabel, 0, 10);
+            this.tableLayoutPanelGitConfig.Controls.Add(this.DiffWarnValue, 1, 10);
             this.tableLayoutPanelGitConfig.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanelGitConfig.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelGitConfig.Name = "tableLayoutPanelGitConfig";
-            this.tableLayoutPanelGitConfig.RowCount = 14;
+            this.tableLayoutPanelGitConfig.RowCount = 15;
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -555,12 +560,35 @@
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelGitConfig.Size = new System.Drawing.Size(1310, 778);
+            this.tableLayoutPanelGitConfig.Size = new System.Drawing.Size(913, 778);
             this.tableLayoutPanelGitConfig.TabIndex = 81;
+            // 
+            // DiffWarnLabel
+            // 
+            this.DiffWarnLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.DiffWarnLabel.AutoSize = true;
+            this.DiffWarnLabel.Location = new System.Drawing.Point(3, 285);
+            this.DiffWarnLabel.Name = "DiffWarnLabel";
+            this.DiffWarnLabel.Size = new System.Drawing.Size(51, 13);
+            this.DiffWarnLabel.TabIndex = 80;
+            this.DiffWarnLabel.Text = "Diff warn";
+            // 
+            // DiffWarnValue
+            // 
+            this.DiffWarnValue.Location = new System.Drawing.Point(132, 282);
+            this.DiffWarnValue.Name = "DiffWarnValue";
+            this.DiffWarnValue.Size = new System.Drawing.Size(47, 21);
+            this.DiffWarnValue.TabIndex = 81;
+            this.DiffWarnValue.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
             // GitConfigSettingsPage
             // 
@@ -568,7 +596,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.tableLayoutPanelGitConfig);
             this.Name = "GitConfigSettingsPage";
-            this.Size = new System.Drawing.Size(1310, 863);
+            this.Size = new System.Drawing.Size(913, 567);
             this.InvalidGitPathGlobal.ResumeLayout(false);
             this.InvalidGitPathGlobal.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -578,6 +606,7 @@
             this.flowLayoutPanelLineEndings.PerformLayout();
             this.tableLayoutPanelGitConfig.ResumeLayout(false);
             this.tableLayoutPanelGitConfig.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DiffWarnValue)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -623,5 +652,7 @@
         private System.Windows.Forms.RadioButton globalAutoCrlfNotSet;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGitConfig;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelLineEndings;
+        private System.Windows.Forms.Label DiffWarnLabel;
+        private System.Windows.Forms.NumericUpDown DiffWarnValue;
     }
 }
