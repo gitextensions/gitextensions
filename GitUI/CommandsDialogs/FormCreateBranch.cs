@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
         }
 
 
-        public IEnumerable<T> FindControls<T>(Control control) where T : Control
+        private IEnumerable<T> FindControls<T>(Control control) where T : Control
         {
             var controls = control.Controls.Cast<Control>().ToList();
             return controls.SelectMany(FindControls<T>)
@@ -43,7 +43,8 @@ namespace GitUI.CommandsDialogs
                            .Cast<T>();
         }
 
-        private void BranchNameTextBox_TextChanged(object sender, EventArgs e)
+
+        private void BranchNameTextBox_Leave(object sender, EventArgs e)
         {
             if (!AppSettings.AutoNormaliseBranchName || !BranchNameTextBox.Text.Any(GitBranchNameNormaliser.IsValidChar))
             {
@@ -64,7 +65,7 @@ namespace GitUI.CommandsDialogs
             {
                 label.AutoSize = true;
             }
-            
+
             BranchNameTextBox.Focus();
         }
 
@@ -115,7 +116,7 @@ namespace GitUI.CommandsDialogs
                     UICommands.UpdateSubmodules(this);
                 }
 
-                DialogResult = wasSuccessFul? DialogResult.OK : DialogResult.None;
+                DialogResult = wasSuccessFul ? DialogResult.OK : DialogResult.None;
             }
             catch (Exception ex)
             {
