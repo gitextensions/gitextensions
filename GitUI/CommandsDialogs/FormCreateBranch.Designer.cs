@@ -101,7 +101,7 @@
             this.BranchNameTextBox.Name = "BranchNameTextBox";
             this.BranchNameTextBox.Size = new System.Drawing.Size(242, 21);
             this.BranchNameTextBox.TabIndex = 1;
-            this.BranchNameTextBox.TextChanged += new System.EventHandler(this.BranchNameTextBox_TextChanged);
+            this.BranchNameTextBox.Leave += new System.EventHandler(this.BranchNameTextBox_Leave);
             // 
             // chkbxOrphan
             // 
