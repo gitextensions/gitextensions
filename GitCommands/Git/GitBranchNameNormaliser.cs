@@ -109,7 +109,7 @@ namespace GitCommands.Git
         /// <returns></returns>
         public static bool IsValidChar(char c)
         {
-            return (c > 39 && c < 177) &&
+            return (c > 39 && c < 127) &&
                     c != ' ' && c != '~' && c != '^' && c != ':' &&
                     Array.IndexOf(Path.GetInvalidPathChars(), c) < 0;
         }
@@ -151,8 +151,9 @@ namespace GitCommands.Git
         }
 
         /// <summary>
-        /// Branch name cannot have ASCII control characters (i.e. bytes whose values are lower than \040, or \177 'DEL'), 
+        /// Branch name cannot have ASCII control characters (i.e. bytes whose values are lower than \040, or \127 'DEL'),
         /// space, tilde '~', caret '^', or colon ':' anywhere.
+        /// Also allow any valid Unicode letters.
         /// </summary>
         /// <param name="branchName">Name of the branch.</param>
         /// <param name="options">The options.</param>
@@ -162,7 +163,7 @@ namespace GitCommands.Git
             var result = new StringBuilder(branchName.Length);
             foreach (char t in branchName)
             {
-                if (IsValidChar(t))
+                if (IsValidChar(t) || char.IsLetterOrDigit(t))
                 {
                     result.Append(t);
                 }
