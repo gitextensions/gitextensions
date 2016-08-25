@@ -1497,6 +1497,14 @@ namespace GitCommands
 
         public static void StartPageantWithKey(string sshKeyFile)
         {
+            //ensure pageant is loaded, so we can wait for loading a key in the next command
+            //otherwise we'll stuck there waiting until pageant exits
+            var pageantProcName = Path.GetFileNameWithoutExtension(AppSettings.Pageant);
+            if (Process.GetProcessesByName(pageantProcName).Length == 0)
+            {
+                Process pageantProcess = RunExternalCmdDetached(AppSettings.Pageant, "", "");
+                pageantProcess.WaitForInputIdle();
+            }
             GitCommandHelpers.RunCmd(AppSettings.Pageant, "\"" + sshKeyFile + "\"");
         }
 
