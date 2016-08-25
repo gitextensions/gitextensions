@@ -99,7 +99,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 string cmd;
-                if (chkbxOrphan.Checked)
+                if (Orphan.Checked)
                 {
                     cmd = GitCommandHelpers.CreateOrphanCmd(branchName, commitGuid);
                 }
@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
-                if (chkbxOrphan.Checked && wasSuccessFul && chkbxClearOrphan.Checked)
+                if (Orphan.Checked && wasSuccessFul && ClearOrphan.Checked)
                 {// orphan AND orphan creation success AND clear
                     cmd = GitCommandHelpers.RemoveCmd();
                     FormProcess.ShowDialog(this, cmd);
@@ -130,8 +130,8 @@ namespace GitUI.CommandsDialogs
 
         private void Orphan_CheckedChanged(object sender, EventArgs e)
         {
-            bool isOrphan = chkbxOrphan.Checked;
-            chkbxClearOrphan.Enabled = isOrphan;
+            bool isOrphan = Orphan.Checked;
+            ClearOrphan.Enabled = isOrphan;
 
             chkbxCheckoutAfterCreate.Enabled = (isOrphan == false);// auto-checkout for orphan
             if (isOrphan)
