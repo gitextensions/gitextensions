@@ -308,8 +308,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripRevisionFilterLabel,
             this.toggleSplitViewLayout,
             this.toolStripRevisionFilterTextBox,
-            this.ShowFirstParent,
-            this.toolStripRevisionFilterDropDownButton});
+            this.toolStripRevisionFilterDropDownButton,
+            this.ShowFirstParent});
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ToolStrip.Name = "ToolStrip";
