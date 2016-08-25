@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs
             this.FileText = new GitUI.Editor.FileViewer();
             this.DiffTabPage = new System.Windows.Forms.TabPage();
             this.DiffSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.DiffFiles = new GitUI.FileStatusList(filterVisible: true);
+            this.DiffFiles = new GitUI.FileStatusList();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
