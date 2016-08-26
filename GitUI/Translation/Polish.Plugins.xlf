@@ -1,0 +1,1434 @@
+<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Auto compile SubModules</source>
+        <target>Automatycznie kompiluj moduły zależne</target>
+        
+      </trans-unit>
+      <trans-unit id="MsBuildArguments.Caption">
+        <source>msbuild.exe arguments</source>
+        <target>Argumenty msbuild.exe</target>
+        
+      </trans-unit>
+      <trans-unit id="MsBuildEnabled.Caption">
+        <source>Enabled</source>
+        <target>Włączone</target>
+        
+      </trans-unit>
+      <trans-unit id="MsBuildPath.Caption">
+        <source>Path to msbuild.exe</source>
+        <target>Ścieżka do msbuild.exe</target>
+        
+      </trans-unit>
+      <trans-unit id="_doYouWantBuild.Text">
+        <source>Do you want to build {0}?
+
+{1}</source>
+        <target>Chcesz stworzyć {0}?
+
+{1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_enterCorrectMsBuildPath.Text">
+        <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
+        <target>Proszę podać poprawną ścieżkę MSBuild w oknie ustawień wtyczki i spróbuj ponownie.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en">
+    <body>
+      <trans-unit id="AutoRefresh.Caption">
+        <source>Refresh view after fetch</source>
+        <target>Odśwież widok po pobraniu</target>
+        
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Periodic background fetch</source>
+        <target>Okresowe pobieranie w tle</target>
+        
+      </trans-unit>
+      <trans-unit id="FetchAllSubmodules.Caption">
+        <source>Fetch all submodules</source>
+        <target>Pobierz wszystkie moduły zależne</target>
+        
+      </trans-unit>
+      <trans-unit id="FetchInterval.Caption">
+        <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target>Pobierz co (sekundy) - ustaw na 0, aby wyłączyć</target>
+        
+      </trans-unit>
+      <trans-unit id="GitCommand.Caption">
+        <source>Arguments of git command to run</source>
+        <target>Argumenty komendy git przy uruchomieniu</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create local tracking branches</source>
+        <target>Stwórz lokalne śledzenie gałęzi</target>
+        
+      </trans-unit>
+      <trans-unit id="Remote.Text">
+        <source>origin</source>
+        <target>źródło</target>
+        
+      </trans-unit>
+      <trans-unit id="button1.Text">
+        <source>Create local tracking branches</source>
+        <target>Stwórz lokalne śledzenie gałęzi</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Remote to create tracking branches for</source>
+        <target>Zdalna do stworzenia śledzeń gałęzi</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Create local tracking branches</source>
+        <target>Stwórz lokalne śledzenie gałęzi</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Delete obsolete branches</source>
+        <target>Usuwanie przestarzałych gałęzi</target>
+        
+      </trans-unit>
+      <trans-unit id="Author.HeaderText">
+        <source>Last author</source>
+        <target>Ostatni autor</target>
+        
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Close</source>
+        <target>Zamknij</target>
+        
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target>Usuń</target>
+        
+      </trans-unit>
+      <trans-unit id="IncludeRemoteBranches.Text">
+        <source>Delete remote branches from</source>
+        <target>Usuń zdalne gałęzie z</target>
+        
+      </trans-unit>
+      <trans-unit id="Message.HeaderText">
+        <source>Last message</source>
+        <target>Ostatnia wiadomość</target>
+        
+      </trans-unit>
+      <trans-unit id="RefreshBtn.Text">
+        <source>Search branches</source>
+        <target>Szukaj gałęzi</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonSettings.Text">
+        <source>Settings</source>
+        <target>Ustawienia</target>
+        
+      </trans-unit>
+      <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
+        <source>Last activity</source>
+        <target>Ostatnia aktywność</target>
+        
+      </trans-unit>
+      <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
+        <source>Delete</source>
+        <target>Usuń</target>
+        
+      </trans-unit>
+      <trans-unit id="includeUnmergedBranches.Text">
+        <source>Include unmerged branches</source>
+        <target>Dołącz niescalone gałęzie</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Delete branches older than x days</source>
+        <target>Usuń gałęzie starsze niż x dni</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Delete branches fully merged into branch</source>
+        <target>Usuń gałęzie w pełni scalone do gałęzi</target>
+        
+      </trans-unit>
+      <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
+        <source>Name</source>
+        <target>Nazwa</target>
+        
+      </trans-unit>
+      <trans-unit id="regexFilter.Text">
+        <source>/(feature|develop)/</source>
+        <target>/(funkcja|rozwijanie)/</target>
+        
+      </trans-unit>
+      <trans-unit id="remote.Text">
+        <source>origin</source>
+        <target>źródło</target>
+        
+      </trans-unit>
+      <trans-unit id="useRegexFilter.Text">
+        <source>Use regex to filter branches</source>
+        <target>Wykorzystaj regex do filtrowania gałęzi</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en">
+    <body>
+      <trans-unit id="DaysOlderThan.Caption">
+        <source>Delete obsolete branches older than (days)</source>
+        <target>Usuń przestarzałe gałęzie, starsze niż (dni)</target>
+        
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Delete obsolete branches</source>
+        <target>Usuwanie przestarzałych gałęzi</target>
+        
+      </trans-unit>
+      <trans-unit id="MergedInBranch.Caption">
+        <source>Branch where all branches should be merged in</source>
+        <target>Gałąź, do której powinny zostać scalone inne</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Find large files</source>
+        <target>Znajdź duże pliki</target>
+        
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Close</source>
+        <target>Zamknij</target>
+        
+      </trans-unit>
+      <trans-unit id="CompressedSize.HeaderText">
+        <source>Compressed size</source>
+        <target>Skompresowany</target>
+        
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target>Usuń</target>
+        
+      </trans-unit>
+      <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
+        <source>Commit count</source>
+        <target>Liczba zatwierdzeń</target>
+        
+      </trans-unit>
+      <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
+        <source>Delete</source>
+        <target>Usuń</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
+        
+      </trans-unit>
+      <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
+        <source>Last commit date</source>
+        <target>Data ostatniego zatwierdzenia</target>
+        
+      </trans-unit>
+      <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
+        <source>Path</source>
+        <target>Ścieżka</target>
+        
+      </trans-unit>
+      <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
+        <source>SHA</source>
+        <target>SHA</target>
+        
+      </trans-unit>
+      <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
+        <source>Size</source>
+        <target>Rozmiar</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Find large files</source>
+        <target>Znajdź duże pliki</target>
+        
+      </trans-unit>
+      <trans-unit id="SizeLargeFile.Caption">
+        <source>Find large files bigger than (Mb)</source>
+        <target>Znajdź duże pliki, większe niż (Mb)</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Change Submitted</source>
+        <target>Zmiana wysłana</target>
+        
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target>Zamknij</target>
+        
+      </trans-unit>
+      <trans-unit id="labelSubmitted.Text">
+        <source>Your change has been submitted for review at the following location:</source>
+        <target>Twoja zmiana została przesłana do przeglądu w następującej lokalizacji:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritDownload" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Download Gerrit Change</source>
+        <target>Pobierz zmiany Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="AddRemote.Text">
+        <source>Manage remotes</source>
+        <target>Zarządzaj zdalnymi</target>
+        
+      </trans-unit>
+      <trans-unit id="Download.Text">
+        <source>&amp;Download</source>
+        <target>Pobierz</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotGetChangeDetails.Text">
+        <source>Could not retrieve the change details</source>
+        <target>Nie można odzyskać szczegółów zmiany</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadCaption.Text">
+        <source>Download change {0}</source>
+        <target>Pobierz zmianę {0}</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadGerritChangeCaption.Text">
+        <source>Download Gerrit Change</source>
+        <target>Pobierz zmiany Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectChange.Text">
+        <source>Please enter a change</source>
+        <target>Proszę wpisać zmianę</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectRemote.Text">
+        <source>Please select a remote repository</source>
+        <target>Proszę wybrać katalog zdalny</target>
+        
+      </trans-unit>
+      <trans-unit id="labelChange.Text">
+        <source>Change:</source>
+        <target>Zmiana:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelEnterChangeIdOrNumber.Text">
+        <source>Enter the Change-Id or the number from the Gerrit URL</source>
+        <target>Podaj ID zmiany lub numer z URL Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRemote.Text">
+        <source>Remote:</source>
+        <target>Zdalne:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelTopicBranch.Text">
+        <source>Topic branch:</source>
+        <target>Temat gałęzi:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritPublish" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Publish Gerrit Change</source>
+        <target>Opublikuj zmiany Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="AddRemote.Text">
+        <source>Manage remotes</source>
+        <target>Zarządzaj zdalnymi</target>
+        
+      </trans-unit>
+      <trans-unit id="Publish.Text">
+        <source>&amp;Publish</source>
+        <target>Publikuj</target>
+        
+      </trans-unit>
+      <trans-unit id="PublishDraft.Text">
+        <source>Submit review as draft</source>
+        <target>Prześlij przegląd jako szkic</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishCaption.Text">
+        <source>Publish change</source>
+        <target>Opublikuj zmianę</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishGerritChangeCaption.Text">
+        <source>Publish Gerrit Change</source>
+        <target>Opublikuj zmiany Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectBranch.Text">
+        <source>Please enter a branch</source>
+        <target>Proszę podać gałąź</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectRemote.Text">
+        <source>Please select a remote repository</source>
+        <target>Proszę wybrać katalog zdalny</target>
+        
+      </trans-unit>
+      <trans-unit id="labelBranch.Text">
+        <source>Branch:</source>
+        <target>Gałąź:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRemote.Text">
+        <source>Remote:</source>
+        <target>Zdalne:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelTopic.Text">
+        <source>Topic:</source>
+        <target>Temat:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGitReview" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Edit .gitreview</source>
+        <target>Edytuj .gitreview</target>
+        
+      </trans-unit>
+      <trans-unit id="Save.Text">
+        <source>Save</source>
+        <target>Zapisz</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotAccessGitreview.Text">
+        <source>Failed to save .gitreview.
+Check if file is accessible.</source>
+        <target>Nie udało się zapisać .gitreview.
+Sprawdź, czy plik jest dostępny.</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotAccessGitreviewCaption.Text">
+        <source>Failed to save .gitreview</source>
+        <target>Nie udało się zapisać .gitreview</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
+        <source>.gitreview is only supported when there is a working directory.</source>
+        <target>.gitreview jest wspierane, tylko jeżeli istnieje katalog roboczy.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
+        <source>No working directory</source>
+        <target>Brak katalogu roboczego</target>
+        
+      </trans-unit>
+      <trans-unit id="_saveFileQuestion.Text">
+        <source>Save changes to .gitreview?</source>
+        <target>Zapisać zmiany .gitreview?</target>
+        
+      </trans-unit>
+      <trans-unit id="_saveFileQuestionCaption.Text">
+        <source>Save changes?</source>
+        <target>Zapisać zmiany?</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Provide the configuration for
+.gitreview to setup Gerrit.
+
+Example configuration:
+
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review
+defaultrebase=0</source>
+        <target>Zapewnij konfigurację dla
+.gitreview, aby zainstalować Gerrit.
+
+Przykładowa konfiguracja:
+
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review
+defaultrebase=0</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkGitReviewHelp.Text">
+        <source>GitHub page for git-review</source>
+        <target>Strona GitHub o git-review</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Statistics</source>
+        <target>Statystyki</target>
+        
+      </trans-unit>
+      <trans-unit id="CommitStatistics.Text">
+        <source>Loading..</source>
+        <target>Ładowanie...</target>
+        
+      </trans-unit>
+      <trans-unit id="LinesOfCodePerLanguageText.Text">
+        <source>Loading...</source>
+        <target>Ładowanie...</target>
+        
+      </trans-unit>
+      <trans-unit id="LinesOfCodePerTypeText.Text">
+        <source>Loading...</source>
+        <target>Ładowanie...</target>
+        
+      </trans-unit>
+      <trans-unit id="LoadingLabel.Text">
+        <source>Loading...</source>
+        <target>Ładowanie...</target>
+        
+      </trans-unit>
+      <trans-unit id="TestCodeText.Text">
+        <source>Loading...</source>
+        <target>Ładowanie...</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalCommits.Text">
+        <source>Total commits</source>
+        <target>Wszystkie zatwierdzenia</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalLinesOfCode.Text">
+        <source>Total lines of code</source>
+        <target>Wszystkie linie kodu</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalLinesOfCode2.Text">
+        <source>Total lines of code</source>
+        <target>Wszystkie linie kodu</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalLinesOfTestCode.Text">
+        <source>Total lines of code</source>
+        <target>Wszystkie linie kodu</target>
+        
+      </trans-unit>
+      <trans-unit id="tabPage1.Text">
+        <source>Lines of code per language</source>
+        <target>Linie kodu na język</target>
+        
+      </trans-unit>
+      <trans-unit id="tabPage2.Text">
+        <source>Commits per contributor</source>
+        <target>Zatwierdzenia na współpracownika</target>
+        
+      </trans-unit>
+      <trans-unit id="tabPage3.Text">
+        <source>Lines of code per type</source>
+        <target>Linie kodu na rodzaj</target>
+        
+      </trans-unit>
+      <trans-unit id="tabPage4.Text">
+        <source>Lines of testcode</source>
+        <target>Linie kodu próbnego</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormImpact" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Impact</source>
+        <target>Wkład</target>
+        
+      </trans-unit>
+      <trans-unit id="cbIncludingSubmodules.Text">
+        <source>Including submodules</source>
+        <target>Dołącz moduły zależne</target>
+        
+      </trans-unit>
+      <trans-unit id="lblAuthor.Text">
+        <source>Author</source>
+        <target>Autor</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormPluginInformation" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Gerrit Plugin</source>
+        <target>Wtyczka Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target>Zamknij</target>
+        
+      </trans-unit>
+      <trans-unit id="informationLabel.Text">
+        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+
+To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
+        <target>Wtyczka Gerrit dla GitExtensions zapewnia integrację z Gerrit. Działa ona na zasadzie narzędzia git-review.
+
+Aby aktywować Gerrit dla repozytorium, należy stworzyć plik .gitreview. Można to zrobić poprzez opcję w menu Repozytorium | Edytuj .gitreview. Sprawdź link poniżej, aby uzyskać więcej informacji o pliku .gitreview oraz narzędziu git-review.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Gerrit Code Review</source>
+        <target>Przegląd kodu Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadGerritChange.Text">
+        <source>Download Gerrit Change</source>
+        <target>Pobierz zmiany Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_editGitReview.Text">
+        <source>Edit .gitreview</source>
+        <target>Edytuj .gitreview</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHook.Text">
+        <source>Install Hook</source>
+        <target>Zainstaluj hook</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookFailed.Text">
+        <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
+        <target>Nie można pobrać pliku wiadomości zatwierdzenia. Proszę zainstalować ten hook ręcznie.</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookMessage.Text">
+        <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
+        <target>Gerrit wymaga zainstalowanego hook'u wiadomości zatwierdzenia. Chcesz zainstalować ten hook w swoim repozytorium?</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookShortText.Text">
+        <source>Install commit-msg hook</source>
+        <target>Zainstaluj hook wiadomości zatwierdzenia</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishGerritChange.Text">
+        <source>Publish Gerrit Change</source>
+        <target>Opublikuj zmiany Gerrit</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritSettings" source-language="en">
+    <body>
+      <trans-unit id="_settingsError.Text">
+        <source>Error loading .gitreview file.</source>
+        <target>Błąd ładowania pliku .gitreview.</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
+        <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
+        <target>Zdalne &quot;{0}&quot; określone w ustawieniu &quot;defaultremote&quot; w pliku .gitreview nie odnosi się do skonfigurowanego zdalnego. Stwórz to zdalne lub zmień ustawienie w pliku .gitreview.</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorFileNotFound.Text">
+        <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
+        <target>Nie można znaleźć &quot;.gitreview&quot; w katalogu roboczym.</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorHostNotEntered.Text">
+        <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
+        <target>Ustawienie &quot;host&quot; w pliku .gitreview jest obowiązkowe</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorPortNotNumeric.Text">
+        <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
+        <target>&quot;port&quot; określony w pliku .gitreview może zawierać tylko cyfry.</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorProjectNotEntered.Text">
+        <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
+        <target>Ustawienie &quot;project&quot; w pliku .gitreview jest obowiązkowe</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitFlowForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>GitFlow</source>
+        <target>GitFlow</target>
+        
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target>Zamknij</target>
+        
+      </trans-unit>
+      <trans-unit id="btnCreateBranch.Text">
+        <source>Start!</source>
+        <target>Rozpocznij!</target>
+        
+      </trans-unit>
+      <trans-unit id="btnFinish.Text">
+        <source>Finish</source>
+        <target>Zakończ</target>
+        
+      </trans-unit>
+      <trans-unit id="btnInit.Text">
+        <source>Init GitFlow</source>
+        <target>Zainicjalizuj GitFlow</target>
+        
+      </trans-unit>
+      <trans-unit id="btnPublish.Text">
+        <source>Publish</source>
+        <target>Opublikuj</target>
+        
+      </trans-unit>
+      <trans-unit id="btnPull.Text">
+        <source>Pull</source>
+        <target>Połącz</target>
+        
+      </trans-unit>
+      <trans-unit id="cbBasedOn.Text">
+        <source>based on:</source>
+        <target>Na podstawie:</target>
+        
+      </trans-unit>
+      <trans-unit id="gbManage.Text">
+        <source>Manage existing branches:</source>
+        <target>Zarządzaj istniejącymi gałęziami:</target>
+        
+      </trans-unit>
+      <trans-unit id="gbStart.Text">
+        <source>Start branch:</source>
+        <target>Rozpocznij gałąź:</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>branch:</source>
+        <target>Gałąź:</target>
+        
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>Expected name:</source>
+        <target>Spodziewana nazwa:</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>command:</source>
+        <target>Komenda:</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>Remote to pull from :</source>
+        <target>Zdalne do połączenia z:</target>
+        
+      </trans-unit>
+      <trans-unit id="lblCaptionHead.Text">
+        <source>HEAD:</source>
+        <target>HEAD:</target>
+        
+      </trans-unit>
+      <trans-unit id="lblHead.Text">
+        <source>ref/...</source>
+        <target>ref/...</target>
+        
+      </trans-unit>
+      <trans-unit id="lblPrefixName.Text">
+        <source>[prefix]/</source>
+        <target>[prefiks]/</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkGitFlow.Text">
+        <source>About GitFlow</source>
+        <target>Informacje o GitFlow</target>
+        
+      </trans-unit>
+      <trans-unit id="panel3.Text">
+        <source>Result of git flow command run</source>
+        <target>Rezultat uruchomienia komendy git flow</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitFlowPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>GitFlow</source>
+        <target>GitFlow</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="Github3Plugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Github</source>
+        <target>Github</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Impact Graph</source>
+        <target>Wykres wkładu</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
+    <body>
+      <trans-unit id="CodeFiles.Caption">
+        <source>Code files</source>
+        <target>Pliki z kodem</target>
+        
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Statistics</source>
+        <target>Statystyki</target>
+        
+      </trans-unit>
+      <trans-unit id="IgnoreDirectories.Caption">
+        <source>Directories to ignore (EndsWith)</source>
+        <target>Ignorowane katalogi (kończące się na:)</target>
+        
+      </trans-unit>
+      <trans-unit id="IgnoreSubmodules.Caption">
+        <source>Ignore submodules</source>
+        <target>Ignoruj moduły zależne</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GourcePlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Gource</source>
+        <target>Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="GourceArguments.Caption">
+        <source>Arguments</source>
+        <target>Argumenty</target>
+        
+      </trans-unit>
+      <trans-unit id="GourcePath.Caption">
+        <source>Path to &quot;gource&quot;</source>
+        <target>Ścieżka do &quot;gource&quot;</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GourceStart" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Gource</source>
+        <target>Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="ArgumentsLabel.Text">
+        <source>Arguments</source>
+        <target>Argumenty</target>
+        
+      </trans-unit>
+      <trans-unit id="GourceBrowse.Text">
+        <source>Browse</source>
+        <target>Przeglądaj</target>
+        
+      </trans-unit>
+      <trans-unit id="WorkingDirBrowse.Text">
+        <source>Browse</source>
+        <target>Przeglądaj</target>
+        
+      </trans-unit>
+      <trans-unit id="button1.Text">
+        <source>Start</source>
+        <target>Start</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Path to gource</source>
+        <target>Ścieżka do gource</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Repository</source>
+        <target>Repozytorium</target>
+        
+      </trans-unit>
+      <trans-unit id="linkLabel1.Text">
+        <source>gource project</source>
+        <target>Projekt gource</target>
+        
+      </trans-unit>
+      <trans-unit id="textBox1.Text">
+        <source>  -h, --help                       Help
+
+  -WIDTHxHEIGHT                    Set window size
+  -f                               Fullscreen
+
+  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)
+      --stop-position  POSITION    Stop at some position
+      --stop-on-idle               Stop on break in activity
+      --stop-at-end                Stop at end of the log
+      --loop                       Loop at the end of the log
+
+  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens
+                                   for a number of seconds (default: 3)
+  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 4)
+      --realtime                   Realtime playback speed
+  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)
+  -e, --elasticity FLOAT           Elasticity of nodes
+  -b, --background FFFFFF          Background colour in hex
+
+  --user-image-dir DIRECTORY       Dir containing images to use as avatars
+  --default-user-image IMAGE       Default user image file
+  --colour-images                  Colourize user images
+
+  --date-format FORMAT             Specify display date string (strftime format)
+  --log-format  FORMAT             Specify format of log (git,cvs,hg,bzr,custom)
+  --git-branch                     Get the git log of a particular branch
+  --git-log-command                Show git log command used by gource
+  --cvs-exp-command                Show cvs-exp.pl log command used by gource
+  --hg-log-command                 Show hg log (Mercurial) command used by gource
+  --bzr-log-command                Show bzr log (Bazaar) command used by gource
+
+  --multi-sampling                 Enable multi-sampling
+  --crop AXIS                      Crop view on an axis (vertical,horizontal)
+
+  --bloom-multiplier               Adjust the amount of bloom (default: 1.0)
+  --bloom-intensity                Adjust the intensity of the bloom (default: 0.75)
+
+  --disable-auto-skip              Disable auto skipping
+  --disable-progress               Disable the progress bar
+  --disable-bloom                  Disable bloom effect
+
+  --hide DISPLAY_ELEMENT           date,users,files,tree,usernames,filenames,dirnames
+
+  --max-files NUMBER               Max number of active files (default: 1000)
+  --max-file-lag SECONDS           Max time files of a commit can take to appear
+
+  --max-user-speed UNITS           Speed users can travel per second (default: 500)
+
+  --user-friction SECONDS          Time users come to a complete hault (default: 0.67)
+  --user-scale SCALE               Change scale of users (default: 1.0)
+
+  --camera-mode MODE               Camera mode (overview,track)
+
+  --follow-user USER               Camera will automatically follow this user
+  --highlight-user USER            Highlight the names of a particular user
+  --highlight-all-users            Highlight the names of all users
+  --file-filter REGEX              Ignore files matching this regexe
+
+  --output-ppm-stream FILE         Write frames as PPM to a file ('-' for STDOUT)
+  --output-framerate FPS           Framerate of output (25,30,60)</source>
+        <target>  -h, --help                       Pomoc
+
+  -SZEROKOŚĆxWYSOKOŚĆ                    Ustaw rozmiar okna
+  -f                               Pełny ekran
+
+  -p, --start-position POZYCJA    Rozpocznij na danej pozycji w dzienniku (0.0-1.0)
+      --stop-position   POZYCJA    Zakończ na danej pozycji
+      --stop-on-idle               Zakończ na przerwie w aktywności
+      --stop-at-end                Zakończ na końcu dziennika
+      --loop                       Zapętl na końcu dziennika
+
+  -a, --auto-skip-seconds SEKUNDY  Automatyczne pominięcie do następnego wpisu, gdy nic się nie dzieje przez daną liczbę sekund (domyślnie: 3)
+  -s, --seconds-per-day SEKUNDY    Szybkość na dzień w sekundach (domyślnie: 4)
+      --realtime                   Szybkość odtwarzania w czasie rzeczywistym
+  -i, --file-idle-time SEKUNDY     Czas pozostania plików bezczynnymi (domyślnie: 60)
+  -e, --elasticity OPŁYW           Elastyczność węzłów
+  -b, --background FFFFFF          Kolor tła w hex'ach
+
+  --user-image-dir DIRECTORY       Katalog z obrazkami do użycia jako awatary
+  --default-user-image IMAGE       Plik domyślnego obrazka użytkownika
+  --colour-images                  Koloruj obrazki użytkowników
+
+  --date-format FORMAT             Określ wyświetlanie daty ciągu (format strftime)
+  --log-format  FORMAT             Określ format dziennika (git,cvs,hg,bzr,custom)
+  --git-branch                     Odbierz dziennik git z określonej gałęzi
+  --git-log-command                Pokaż dziennik komend git używanych przez gource
+  --cvs-exp-command                Pokaż dziennik komendy cvs-exp.pl używanej przez gource
+  --hg-log-command                 Pokaż dziennik komendy hg (Mercurial) używanej przez gource
+  --bzr-log-command                Pokaż dziennik komendy bzr (Bazaar) używanej przez gource
+
+  --multi-sampling                 Włącz wielopróbkowanie
+  --crop SIATKA                      Przytnij widok na siatce (vertical - pionowy, horizontal - poziomy)
+
+  --bloom-multiplier               Dostosuj ilość efektu bloom (domyślnie: 1.0)
+  --bloom-intensity                Dostosuj intensywność efektu bloom (domyślnie: 0.75)
+
+  --disable-auto-skip              Wyłącz automatyczne pomijanie
+  --disable-progress               Wyłącz pasek postępu
+  --disable-bloom                  Wyłącz efekt bloom
+
+  --hide WYŚWIETLANY_ELEMENT date,users,files,tree,usernames,filenames,dirnames
+
+  --max-files LICZBA               Maksymalna ilość aktywnych plików (domyślnie: 1000)
+  --max-file-lag SEKUNDY           Maksymalny czas do wyświetlenia zatwierdzenia plików
+
+  --max-user-speed JEDNOSTKA           Szybkość na sekundę, z która mogą się przemieszczać użytkownicy (domyślnie: 500)
+
+  --user-friction SEKUNDY          Czas, po którym użytkownicy stają się butni (domyślnie: 0.67)
+  --user-scale SKALA               Zmień skalę użytkowników (domyślnie: 1.0)
+
+  --camera-mode TRYB               Tryb kamery (overview - przegląd, track - śledzenie)
+
+  --follow-user UŻYTKOWNIK               Kamera będzie podążać za użytkownikiem
+  --highlight-user UŻYTKOWNIK            Podświetl nazwy danego użytkownika
+  --highlight-all-users            Podświetl nazwy wszystkich użytkowników
+  --file-filter REGEX              Ignoruj pliki pasujące do tego regex
+
+  --output-ppm-stream PLIK         Zapisz ramki do pliku jako PPM ('-' dla STDOUT)
+  --output-framerate FPS           Szybkość ramek wyniku (25,30,60)</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="label1.Text">
+        <source>Project name</source>
+        <target>Nazwa projektu</target>
+        
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Jenkins server URL</source>
+        <target>URL serwera Jenkins</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Proxy Switcher</source>
+        <target>Przełącznik proxy</target>
+        
+      </trans-unit>
+      <trans-unit id="ApplyGlobally_CheckBox.Text">
+        <source>Apply globally</source>
+        <target>Zatwierdź globalnie</target>
+        
+      </trans-unit>
+      <trans-unit id="GlobalHttpProxy_Label.Text">
+        <source>Global http.proxy:</source>
+        <target>Globalne http.proxy:</target>
+        
+      </trans-unit>
+      <trans-unit id="LocalHttpProxy_Label.Text">
+        <source>Local http.proxy:</source>
+        <target>Lokalne http.proxy:</target>
+        
+      </trans-unit>
+      <trans-unit id="SetProxy_Button.Text">
+        <source>Set proxy</source>
+        <target>Ustaw proxy</target>
+        
+      </trans-unit>
+      <trans-unit id="UnsetProxy_Button.Text">
+        <source>Unset proxy</source>
+        <target>Wyłącz proxy</target>
+        
+      </trans-unit>
+      <trans-unit id="_pleaseSetProxy.Text">
+        <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
+        <target>Brak skonfigurowanego proxy. Proszę ustawić host proxy w ustawieniach wtyczki.</target>
+        
+      </trans-unit>
+      <trans-unit id="_pluginDescription.Text">
+        <source>Proxy Switcher</source>
+        <target>Przełącznik proxy</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Proxy Switcher</source>
+        <target>Przełącznik proxy</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Release Notes Generator</source>
+        <target>Generator informacji o wydaniu</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonCopyAsHtml.Text">
+        <source>as HTML table</source>
+        <target>Tabela HTML</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonCopyAsTextTableSpace.Text">
+        <source>as text table (spaces)</source>
+        <target>Tabela tekstowa (spacje)</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonCopyAsTextTableTab.Text">
+        <source>as text table (tabs)</source>
+        <target>Tabela tekstowa (tabulatory)</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonCopyOrigOutput.Text">
+        <source>original output</source>
+        <target>Pierwotny wynik</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonGenerate.Text">
+        <source>Generate</source>
+        <target>Wygeneruj</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Result</source>
+        <target>Wynik</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxCopy.Text">
+        <source>Copy to clipboard</source>
+        <target>Skopiuj do schowka</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Commit expression &quot;To&quot; (including):</source>
+        <target>Formuła zatwierdzenia &quot;Do&quot; (dołączanie):</target>
+        
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>separate columns with spaces</source>
+        <target>Rozdziel kolumny spacjami.</target>
+        
+      </trans-unit>
+      <trans-unit id="label11.Text">
+        <source>Clipboard will contain HTML code (plain text) and HTML format
+which can be pasted to programs like MS Word or LibreOffice Writer.
+</source>
+        <target>Do schowka zostanie skopiowany kod HTML (zwykły tekst) oraz formatowanie HTML,
+które mogą zostać wklejone do programów takich jak MS Word lub LibreOffice Writer.</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>Formuła zatwierdzenia &quot;Z&quot; (wykluczanie):</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>git log arguments:</source>
+        <target>Argumenty dziennika git:</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>{0} = from; {1} = to</source>
+        <target>{0} = z; {1} = do</target>
+        
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Sorting: Most recent revisions are listed on top.</source>
+        <target>Sortowanie: Ostatnie rewizje są na górze listy.</target>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Revisions count = </source>
+        <target>Liczba rewizji =</target>
+        
+      </trans-unit>
+      <trans-unit id="label7.Text">
+        <source>(Commit expressions can be commit hashes,
+branch names, tag names)</source>
+        <target>(Formuły zatwierdzeń mogą być numerami
+zatwierdzeń, nazwami gałęzi lub tagów)</target>
+        
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>as is</source>
+        <target>Tak jak jest.</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>separate columns with tabs</source>
+        <target>Rozdziel kolumny tabulatorami.</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRevCount.Text">
+        <source>n/a</source>
+        <target>-</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Release Notes Generator</source>
+        <target>Generator informacji o wydaniu</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="StashPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Create Stash Pull Request</source>
+        <target>Stwórz prośbę łączenia przygotowanych</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="StashPullRequestForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create Pull Request</source>
+        <target>Stwórz prośbę połączenia</target>
+        
+      </trans-unit>
+      <trans-unit id="GridColumnName.HeaderText">
+        <source>Name</source>
+        <target>Nazwa</target>
+        
+      </trans-unit>
+      <trans-unit id="btnApprove.Text">
+        <source>Approve</source>
+        <target>Zatwierdź</target>
+        
+      </trans-unit>
+      <trans-unit id="btnCreate.Text">
+        <source>Create</source>
+        <target>Utwórz</target>
+        
+      </trans-unit>
+      <trans-unit id="btnMerge.Text">
+        <source>Merge</source>
+        <target>Scal</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Source</source>
+        <target>Źródło</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox2.Text">
+        <source>Target</source>
+        <target>Docelowo</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox3.Text">
+        <source>Pull Request Info</source>
+        <target>Informacja o prośbie połączenia</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox4.Text">
+        <source>Source</source>
+        <target>Źródło</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox5.Text">
+        <source>Target</source>
+        <target>Docelowo</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox6.Text">
+        <source>Pull Request Info</source>
+        <target>Informacja o prośbie połączenia</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox9.Text">
+        <source>Information</source>
+        <target>Informacja</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Branch</source>
+        <target>Gałąź</target>
+        
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>Reviewer (approved)</source>
+        <target>Przeglądający (zatwierdzony)</target>
+        
+      </trans-unit>
+      <trans-unit id="label12.Text">
+        <source>Author</source>
+        <target>Autor</target>
+        
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Description</source>
+        <target>Opis</target>
+        
+      </trans-unit>
+      <trans-unit id="label14.Text">
+        <source>Title</source>
+        <target>Nazwa</target>
+        
+      </trans-unit>
+      <trans-unit id="label16.Text">
+        <source>State</source>
+        <target>Stan</target>
+        
+      </trans-unit>
+      <trans-unit id="label17.Text">
+        <source>Repository</source>
+        <target>Repozytorium</target>
+        
+      </trans-unit>
+      <trans-unit id="label18.Text">
+        <source>Branch</source>
+        <target>Gałąź</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Branch</source>
+        <target>Gałąź</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Description</source>
+        <target>Opis</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>Title</source>
+        <target>Nazwa</target>
+        
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Repository</source>
+        <target>Repozytorium</target>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Repository</source>
+        <target>Repozytorium</target>
+        
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>Repository</source>
+        <target>Repozytorium</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>Branch</source>
+        <target>Gałąź</target>
+        
+      </trans-unit>
+      <trans-unit id="lblReviewers.Text">
+        <source>Reviewer(s)</source>
+        <target>Przeglądający</target>
+        
+      </trans-unit>
+      <trans-unit id="tabCreate.Text">
+        <source>Create Pull Request</source>
+        <target>Stwórz prośbę połączenia</target>
+        
+      </trans-unit>
+      <trans-unit id="tabView.Text">
+        <source>View Pull Requests</source>
+        <target>Zobacz prośby połączenia</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="label1.Text">
+        <source>Project name</source>
+        <target>Nazwa projektu</target>
+        
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>TeamCity server URL</source>
+        <target>URL serwera TeamCity</target>
+        
+      </trans-unit>
+      <trans-unit id="labelBuildFilter.Text">
+        <source>Build Id Filter</source>
+        <target>Filtr ID tworzenia</target>
+        
+      </trans-unit>
+      <trans-unit id="labelBuildIdFilter.Text">
+        <source>Regexp</source>
+        <target>RegEx</target>
+        
+      </trans-unit>
+      <trans-unit id="labelProjectNameComment.Text">
+        <source>Several names splitted by | char</source>
+        <target>Rozdzielanie kilku nazw, znakiem |</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="label1.Text">
+        <source>Team collection name</source>
+        <target>Nazwa kolekcji zespołu</target>
+        
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Tfs server (Name or URL)</source>
+        <target>Serwer TFS (Nazwa lub URL)</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Project name</source>
+        <target>Nazwa projektu</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Build definition name
+(use first found if left empty)</source>
+        <target>Nazwa definicji tworzenia
+(gdy puste, używa pierwszego znalezionego)</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

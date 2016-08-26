@@ -140,9 +140,11 @@ namespace GitUI
         {
             if (!remoteUrl.IsNullOrEmpty() && MessageBoxes.CacheHostkey(owner))
             {
+                remoteUrl = GitCommandHelpers.GetPlinkCompatibleUrl(remoteUrl);
+
                 module.RunExternalCmdShowConsole(
                     "cmd.exe",
-                    string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, remoteUrl));
+                    string.Format("/k \"\"{0}\" -T {1}\"", AppSettings.Plink, remoteUrl));
 
                 return true;
             }
@@ -159,8 +161,10 @@ namespace GitUI
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         string remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                        remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
+                        remoteUrl = GitCommandHelpers.GetPlinkCompatibleUrl(remoteUrl);
 
-                        Module.RunExternalCmdShowConsole("cmd.exe", string.Format("/k \"\"{0}\" {1}\"", AppSettings.Plink, string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl));
+                        Module.RunExternalCmdShowConsole("cmd.exe", string.Format("/k \"\"{0}\" {1}\"", AppSettings.Plink, remoteUrl));
 
                         restart = true;
                     }

@@ -1,13 +1,15 @@
 ﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace CreateLocalBranches
 {
     public class CreateLocalBranchesPlugin : GitPluginBase, IGitPluginForRepository
     {
-        public override string Description
+        public CreateLocalBranchesPlugin()
         {
-            get { return "Create local tracking branches"; }
+            Description = "Create local tracking branches";
+            Translate();
         }
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)

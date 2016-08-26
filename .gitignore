@@ -48,7 +48,8 @@ libgit2sharp
 Setup/GitExtensions/
 Setup/GitExtensions*Mono.zip
 Setup/tools/tx.exe
-Bin/Git*.exe
+/Bin/Git*.exe
+/Bin/KDiff3*.exe
 
 # Backup & report files from converting an old project file to a newer
 # Visual Studio version. Backup files are not needed, because we have git ;-)
@@ -61,4 +62,3 @@ UpgradeLog*.htm*
 packages/
 GitExtensions.*.sln.VisualState.xml
 GitExtensions.settings.backup
-Bin/KDiff3*.exe

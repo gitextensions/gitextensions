@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 using GitUI.AutoCompletion;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
@@ -19,7 +20,7 @@ using ResourceManager;
 namespace GitUI.SpellChecker
 {
     [DefaultEvent("TextChanged")]
-    public partial class EditNetSpell : GitExtensionsControl
+    public partial class EditNetSpell : GitModuleControl
     {
         private readonly TranslationString cutMenuItemText = new TranslationString("Cut");
         private readonly TranslationString copyMenuItemText = new TranslationString("Copy");
@@ -38,8 +39,8 @@ namespace GitUI.SpellChecker
         private static WordDictionary _wordDictionary;
 
         private readonly CancellationTokenSource _autoCompleteCancellationTokenSource = new CancellationTokenSource();
-        private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new List<IAutoCompleteProvider>(); 
-        private Task<IEnumerable<AutoCompleteWord>> _autoCompleteListTask; 
+        private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new List<IAutoCompleteProvider>();
+        private Task<IEnumerable<AutoCompleteWord>> _autoCompleteListTask;
         private bool _autoCompleteWasUserActivated;
         private bool _disableAutoCompleteTriggerOnTextUpdate;
         private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new Dictionary<Keys, string>
@@ -76,7 +77,7 @@ namespace GitUI.SpellChecker
             {
                 if (TextBox == null)
                     return string.Empty;
-                
+
                 return IsWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set
@@ -215,6 +216,16 @@ namespace GitUI.SpellChecker
             }
         }
 
+        protected RepoDistSettings Settings
+        {
+            get
+            {
+                return IsUICommandsInitialized ?
+                    Module.EffectiveSettings:
+                    AppSettings.SettingsContainer;
+            }
+        }
+
         public void SelectAll()
         {
             TextBox.SelectAll();
@@ -241,22 +252,22 @@ namespace GitUI.SpellChecker
                 TaskContinuationOptions.NotOnCanceled,
                 TaskScheduler.FromCurrentSynchronizationContext()
             );
-            // 
+            //
             // spelling
-            //             
+            //
             _spelling.ReplacedWord += SpellingReplacedWord;
             _spelling.DeletedWord += SpellingDeletedWord;
             _spelling.MisspelledWord += SpellingMisspelledWord;
 
-            // 
+            //
             // wordDictionary
-            // 
+            //
             LoadDictionary();
         }
 
         private void LoadDictionary()
         {
-            string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), AppSettings.Dictionary), ".dic");
+            string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), Settings.Dictionary), ".dic");
 
             if (_wordDictionary == null || _wordDictionary.DictionaryFile != dictionaryFile)
             {
@@ -453,7 +464,7 @@ namespace GitUI.SpellChecker
 
                 var noDicToolStripMenuItem = new ToolStripMenuItem("None");
                 noDicToolStripMenuItem.Click += DicToolStripMenuItemClick;
-                if (AppSettings.Dictionary == "None")
+                if (Settings.Dictionary == "None")
                     noDicToolStripMenuItem.Checked = true;
 
 
@@ -470,7 +481,7 @@ namespace GitUI.SpellChecker
                     var dicToolStripMenuItem = new ToolStripMenuItem(dic);
                     dicToolStripMenuItem.Click += DicToolStripMenuItemClick;
 
-                    if (AppSettings.Dictionary == dic)
+                    if (Settings.Dictionary == dic)
                         dicToolStripMenuItem.Checked = true;
 
                     toolStripDropDown.Items.Add(dicToolStripMenuItem);
@@ -538,7 +549,15 @@ namespace GitUI.SpellChecker
 
         private void DicToolStripMenuItemClick(object sender, EventArgs e)
         {
-            AppSettings.Dictionary = ((ToolStripItem)sender).Text;
+            RepoDistSettings settings;
+            //if a Module is available, then always change the "repository local" setting
+            //it will set a dictionary only for this Module (repository) localy
+            if (IsUICommandsInitialized)
+                settings = Module.LocalSettings;
+            else
+                settings = Settings;
+
+            settings.Dictionary = ((ToolStripItem)sender).Text;
             LoadDictionary();
             CheckSpelling();
         }
@@ -571,14 +590,14 @@ namespace GitUI.SpellChecker
             if (!IsWatermarkShowing)
             {
                 OnTextChanged(e);
+
+                if (Settings.Dictionary == "None" || TextBox.Text.Length < 4)
+                    return;
+
+                SpellCheckTimer.Enabled = false;
+                SpellCheckTimer.Interval = 250;
+                SpellCheckTimer.Enabled = true;
             }
-
-            if (AppSettings.Dictionary == "None" || TextBox.Text.Length < 4)
-                return;
-
-            SpellCheckTimer.Enabled = false;
-            SpellCheckTimer.Interval = 250;
-            SpellCheckTimer.Enabled = true;
         }
 
         private void TextBoxSizeChanged(object sender, EventArgs e)
@@ -612,7 +631,7 @@ namespace GitUI.SpellChecker
             skipSelectionUndo = false;
         }
 
-        
+
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -683,9 +702,9 @@ namespace GitUI.SpellChecker
         {
             if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
             {
+                IsWatermarkShowing = true;
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;
-                IsWatermarkShowing = true;
                 TextBox.Text = WatermarkText;
             }
         }
@@ -897,7 +916,7 @@ namespace GitUI.SpellChecker
 
                 return;
             }
-            
+
             AutoCompleteToolTipTimer.Stop();
             AutoCompleteToolTip.Hide(TextBox);
 
@@ -934,15 +953,27 @@ namespace GitUI.SpellChecker
 
             var cursorPos = GetCursorPosition();
 
+            var top = cursorPos.Y;
             var height = (sizes.Count + 1) * AutoComplete.ItemHeight;
             var width = sizes.Max(x => x.Width);
-            if (cursorPos.Y + height > TextBox.Height)
+            if (top + height > TextBox.Height)
             {
-                height = TextBox.Height - cursorPos.Y;
+                // if reduced height is not too small then shrink only
+                if (TextBox.Height - top > TextBox.Height / 2)
+                {
+                    height = TextBox.Height - top;
+                }
+                else
+                {
+                    // if shrinking wasn't acceptable, move higher
+                    top = Math.Max(0, TextBox.Height - height);
+                    // and reduce height if moving up wasn't enough
+                    height = Math.Min(TextBox.Height - top, height);
+                }
                 width += SystemInformation.VerticalScrollBarWidth;
             }
 
-            AutoComplete.SetBounds(cursorPos.X, cursorPos.Y, width, height);
+            AutoComplete.SetBounds(cursorPos.X, top, width, height);
 
             AutoComplete.DataSource = list.ToList();
             AutoComplete.Show();
@@ -964,8 +995,11 @@ namespace GitUI.SpellChecker
 
         private void AutoCompleteTimer_Tick (object sender, EventArgs e)
         {
-            UpdateOrShowAutoComplete(false);
-            AutoCompleteTimer.Stop();
+            if (!_customUnderlines.IsImeStartingComposition)
+            {
+                UpdateOrShowAutoComplete(false);
+                AutoCompleteTimer.Stop();
+            }
         }
 
         public void CancelAutoComplete ()
@@ -978,6 +1012,22 @@ namespace GitUI.SpellChecker
         private void AutoCompleteToolTipTimer_Tick (object sender, EventArgs e)
         {
             AutoCompleteToolTip.Hide(TextBox);
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _autoCompleteCancellationTokenSource.Dispose();
+                _customUnderlines.Dispose();
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

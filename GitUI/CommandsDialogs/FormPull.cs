@@ -87,6 +87,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _pruneFromCaption = new TranslationString("Prune remote branches from {0}");
 
+        private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
         #endregion
 
         public bool ErrorOccurred { get; private set; }
@@ -105,6 +106,7 @@ namespace GitUI.CommandsDialogs
             Translate();
 
             helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
 
             if (aCommands != null)
                 Init(defaultRemote);

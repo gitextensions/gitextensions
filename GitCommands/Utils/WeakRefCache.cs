@@ -6,7 +6,7 @@ using System.Timers;
 
 namespace GitCommands.Utils
 {
-    public class WeakRefCache
+    public class WeakRefCache : IDisposable
     {
         private Dictionary<string, WeakReference> weakMap = new Dictionary<string, WeakReference>();
         private readonly Timer _clearTimer = new Timer(60 * 1000);
@@ -63,6 +63,18 @@ namespace GitCommands.Utils
                 foreach (var key in toRemove)
                     weakMap.Remove(key);
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+                _clearTimer.Dispose();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -31,8 +32,8 @@ namespace GitCommands
         public static Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
-        private static SettingsContainer<RepoDistSettings, GitExtSettingsCache> _SettingsContainer;
-        public static SettingsContainer<RepoDistSettings, GitExtSettingsCache> SettingsContainer { get { return _SettingsContainer; } }
+        private static RepoDistSettings _SettingsContainer;
+        public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
 
         static AppSettings()
         {
@@ -50,7 +51,7 @@ namespace GitCommands
             }
             );
 
-            _SettingsContainer = new SettingsContainer<RepoDistSettings, GitExtSettingsCache>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
+            _SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
             GitLog = new CommandLogger();
 
@@ -60,7 +61,7 @@ namespace GitCommands
             }
         }
 
-        public static void UsingContainer(SettingsContainer<RepoDistSettings, GitExtSettingsCache> aSettingsContainer, Action action)
+        public static void UsingContainer(RepoDistSettings aSettingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>
                 {
@@ -346,6 +347,44 @@ namespace GitCommands
             set { _currentTranslation = value; }
         }
 
+
+        private static readonly Dictionary<string, string> _languageCodes =
+            new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "English", "en" },
+            { "Czech", "cs" },
+            { "French", "fr" },
+            { "German", "de" },
+            { "Indonesian", "id" },
+            { "Italian", "it" },
+            { "Japanese", "ja" },
+            { "Korean", "ko" },
+            { "Polish", "pl" },
+            { "Russian", "ru" },
+            { "Portuguese (Brazil)", "pt_BR" },
+            { "Portuguese (Portugal)", "pt_PT" },
+            { "Romanian", "ro" },
+            { "Simplified Chinese", "zh_CN" },
+            { "Spanish", "es" },
+            { "Traditional Chinese", "zh_TW" }
+        };
+
+        public static string CurrentLanguageCode
+        {
+            get
+            {
+                string code;
+                if (_languageCodes.TryGetValue(CurrentTranslation, out code))
+                    return code;
+                return "en";
+            }
+        }
+
+        public static CultureInfo CurrentCultureInfo
+        {
+            get { return CultureInfo.GetCultureInfo(CurrentLanguageCode); }
+        }
+
         public static bool UserProfileHomeDir
         {
             get { return GetBool("userprofilehomedir", false); }
@@ -428,6 +467,12 @@ namespace GitCommands
         {
             get { return GetBool("followrenamesinfilehistory", true); }
             set { SetBool("followrenamesinfilehistory", value); }
+        }
+
+        public static bool FollowRenamesInFileHistoryExactOnly
+        {
+            get { return GetBool("followrenamesinfilehistoryexactonly", false); }
+            set { SetBool("followrenamesinfilehistoryexactonly", value); }
         }
 
         public static bool FullHistoryInFileHistory
@@ -624,8 +669,8 @@ namespace GitCommands
 
         public static string Dictionary
         {
-            get { return GetString("dictionary", "en-US"); }
-            set { SetString("dictionary", value); }
+            get { return SettingsContainer.Dictionary; }
+            set { SettingsContainer.Dictionary = value; }
         }
 
         public static bool ShowGitCommandLine
@@ -867,6 +912,12 @@ namespace GitCommands
             set { SetColor("diffaddedextracolor", value); }
         }
 
+        public static Color AuthoredRevisionsColor
+        {
+            get { return GetColor("authoredrevisionscolor", Color.LightYellow); }
+            set { SetColor("authoredrevisionscolor", value); }
+        }
+
         public static Font DiffFont
         {
             get { return GetFont("difffont", new Font("Courier New", 10)); }
@@ -903,6 +954,12 @@ namespace GitCommands
         {
             get { return GetBool("branchborders", true); }
             set { SetBool("branchborders", value); }
+        }
+
+        public static bool HighlightAuthoredRevisions
+        {
+            get { return GetBool("highlightauthoredrevisions", true); }
+            set { SetBool("highlightauthoredrevisions", value); }
         }
 
         public static string LastFormatPatchDir
@@ -1061,6 +1118,12 @@ namespace GitCommands
         {
             get { return GetDate("LastUpdateCheck", default(DateTime)); }
             set { SetDate("LastUpdateCheck", value); }
+        }
+
+        public static bool CheckForReleaseCandidates
+        {
+            get { return GetBool("CheckForReleaseCandidates", false); }
+            set { SetBool("CheckForReleaseCandidates", value); }
         }
 
         public static string GetGitExtensionsFullPath()

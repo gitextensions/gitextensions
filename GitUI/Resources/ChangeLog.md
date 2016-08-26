@@ -1,5 +1,8 @@
 ﻿Changelog
 =========
+### Version 2.49 (no due date)
+* Cherry pick selected file/selected lines.
+
 ### Version 2.48.05 (16 May 2015)
 * Fixed issue #2493: StartBrowseDialog failed after clone
 * Fixed issue #2783: Fixed crash when right click on blank line in 'File Tree'
@@ -792,7 +795,7 @@ where it is installed on their system
 * Fixed issue 81: when staging a file, all partially staged files are removed from unstaged list
 * Fixed issue 107: alt+f4 not working when revisiongrid has focus
 * Fixed issue 111: Annotated Tags Appear Twice in Push Dialog
-* Fixed issue 113: Statistics: "Lines of Code per type" and "Lines of testcode" fail in empty or non code repo
+* Fixed issue 113: Statistics: "Lines of Code per type" and "Lines of test code" fail in empty or non code repo
 * Fixed issue 114: Adding filter which results in no commits shows "empty repository" UI
 * Fixed issue 119: show files in FileHistory also prior to rename
 * Fixed issue 120: choose branch when adding new submodule doesn't work
@@ -1044,7 +1047,7 @@ where it is installed on their system
 * Added Resharper directories to .gitignore file.
 * Added recursive submode commands. When cloning a submodule containing nested submodules, all nested submodules can be initialized. There are also recursive initialize, update and synchronize commands added to the submodule menu.
 * Added checkout branch to the revision graph context menu.
-* When adding a remote repository the remote branches can be configured automaticly.
+* When adding a remote repository the remote branches can be configured automatically.
 
 ### Version 1.67
 * Fixed exception when AutoCRLF is left empty
@@ -1074,7 +1077,7 @@ where it is installed on their system
 * Added checkout revision context menu in the Browse list
 * Added a Recent Repositories submenu in the File menu
 * Added commit hash to commit info dialogs
-* Close solve mergeconflicts dialog automaticly after all conflicts are solved
+* Close solve mergeconflicts dialog automatically after all conflicts are solved
 * Commit message is now remembered when commit dialog is closed without making the commit
 * Packed with Git-1.6.3
 
@@ -1159,7 +1162,7 @@ where it is installed on their system
 
 ### Version 1.50
 * Added double click on file in diff-tree in browse window
-* Process dialog is can now set to close automaticly when process succeeds
+* Process dialog is can now set to close automatically when process succeeds
 * Added waitcursors
 * Option added to show the Git commandline dialog during a process
 * Revision graph can be disabled in settings
@@ -1212,7 +1215,7 @@ where it is installed on their system
 
 ### Version 1.37
 * Added diff highlighting (+/-) highlighting
-* Auto-fix settings refreshes automaticly
+* Auto-fix settings refreshes automatically
 
 ### Version 1.36
 * Improved performance of commit dialog a lot.

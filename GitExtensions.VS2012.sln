@@ -105,7 +105,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JenkinsIntegration", "Plugi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsIntegration", "Plugins\BuildServerIntegration\TfsIntegration\TfsIntegration.csproj", "{452CBBA1-8AF0-4F3B-8BEB-B8B31DC2B749}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsInterop.Vs2012", "Plugins\BuildServerIntegration\TfsInterop\TfsInterop.Vs2012.csproj", "{699CE23D-8BBD-4C15-82E9-7A628ACCA4C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TfsInterop.Vs2012", "Plugins\BuildServerIntegration\TfsInterop.Vs2012\TfsInterop.Vs2012.csproj", "{699CE23D-8BBD-4C15-82E9-7A628ACCA4C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtUtils", "GitExtUtils\GitExtUtils.csproj", "{0F1F1168-A4B2-4FA2-B17B-735140D17F39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -484,6 +486,14 @@ Global
 		{699CE23D-8BBD-4C15-82E9-7A628ACCA4C6}.ReleaseTC|Any CPU.Build.0 = Release|Any CPU
 		{699CE23D-8BBD-4C15-82E9-7A628ACCA4C6}.ReleaseTC|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{699CE23D-8BBD-4C15-82E9-7A628ACCA4C6}.ReleaseTC|Mixed Platforms.Build.0 = Release|Any CPU
+		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.ReleaseTC|Any CPU.ActiveCfg = Release|Any CPU
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.ReleaseTC|Any CPU.Build.0 = Release|Any CPU
 		{0F1F1168-A4B2-4FA2-B17B-735140D17F39}.ReleaseTC|Mixed Platforms.ActiveCfg = Release|Any CPU

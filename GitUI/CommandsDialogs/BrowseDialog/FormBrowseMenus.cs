@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
     /// This class is intended to have NO dependency to FormBrowse
     ///   (if needed this kind of code should be done in FormBrowseMenuCommands).
     /// </summary>
-    class FormBrowseMenus : ITranslate
+    class FormBrowseMenus : ITranslate, IDisposable
     {
         MenuStrip _menuStrip;
 
@@ -99,7 +99,7 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// inserts 
+        /// inserts
         /// - Navigate (after Repository)
         /// - View (after Navigate)
         /// </summary>
@@ -214,6 +214,21 @@ namespace GitUI.CommandsDialogs
             else
             {
                 throw new ApplicationException("this case is not allowed");
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _navigateToolStripMenuItem.Dispose();
+                _viewToolStripMenuItem.Dispose();
             }
         }
     }

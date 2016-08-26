@@ -1,0 +1,1245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.49a1">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Auto compile SubModules</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MsBuildArguments.Caption">
+        <source>msbuild.exe arguments</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MsBuildEnabled.Caption">
+        <source>Enabled</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MsBuildPath.Caption">
+        <source>Path to msbuild.exe</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_doYouWantBuild.Text">
+        <source>Do you want to build {0}?
+
+{1}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_enterCorrectMsBuildPath.Text">
+        <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en">
+    <body>
+      <trans-unit id="AutoRefresh.Caption">
+        <source>Refresh view after fetch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Periodic background fetch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="FetchAllSubmodules.Caption">
+        <source>Fetch all submodules</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="FetchInterval.Caption">
+        <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GitCommand.Caption">
+        <source>Arguments of git command to run</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create local tracking branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="button1.Text">
+        <source>Create local tracking branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Remote to create tracking branches for</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Create local tracking branches</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Delete obsolete branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Author.HeaderText">
+        <source>Last author</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Close</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="IncludeRemoteBranches.Text">
+        <source>Delete remote branches from</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Message.HeaderText">
+        <source>Last message</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="RefreshBtn.Text">
+        <source>Search branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete {0} selected branches?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_branchesSelected.Text">
+        <source>{0}/{1} branches selected.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cancel.Text">
+        <source>Cancel</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_chooseBrancesToDelete.Text">
+        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_dangerousAction.Text">
+        <source>DANGEROUS ACTION!
+Branches will be deleted on the remote '{0}'. This can not be undone.
+Are you sure you want to continue?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deletingBranches.Text">
+        <source>Deleting branches...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deletingUnmergedBranches.Text">
+        <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pressToSearch.Text">
+        <source>Press '{0}' to search for branches to delete.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_searchBranches.Text">
+        <source>Search branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_selectBranchesToDelete.Text">
+        <source>Select branches to delete using checkboxes in '{0}' column.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonSettings.Text">
+        <source>Settings</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
+        <source>Last activity</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="includeUnmergedBranches.Text">
+        <source>Include unmerged branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Delete branches older than x days</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Delete branches fully merged into branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
+        <source>Name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="regexFilter.Text">
+        <source>/(feature|develop)/</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="useRegexFilter.Text">
+        <source>Use regex to filter branches</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en">
+    <body>
+      <trans-unit id="DaysOlderThan.Caption">
+        <source>Delete obsolete branches older than (days)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Delete obsolete branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MergedInBranch.Caption">
+        <source>Branch where all branches should be merged in</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Find large files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Close</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="CompressedSize.HeaderText">
+        <source>Compressed size</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete the selected files?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
+        <source>Commit count</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
+        <source>Last commit date</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
+        <source>Path</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
+        <source>SHA</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
+        <source>Size</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Find large files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="SizeLargeFile.Caption">
+        <source>Find large files bigger than (Mb)</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Change Submitted</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelSubmitted.Text">
+        <source>Your change has been submitted for review at the following location:</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritDownload" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Download Gerrit Change</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="AddRemote.Text">
+        <source>Manage remotes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Download.Text">
+        <source>&amp;Download</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotGetChangeDetails.Text">
+        <source>Could not retrieve the change details</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_downloadCaption.Text">
+        <source>Download change {0}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_downloadGerritChangeCaption.Text">
+        <source>Download Gerrit Change</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_selectChange.Text">
+        <source>Please enter a change</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_selectRemote.Text">
+        <source>Please select a remote repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelChange.Text">
+        <source>Change:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelEnterChangeIdOrNumber.Text">
+        <source>Enter the Change-Id or the number from the Gerrit URL</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelRemote.Text">
+        <source>Remote:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelTopicBranch.Text">
+        <source>Topic branch:</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritPublish" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Publish Gerrit Change</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="AddRemote.Text">
+        <source>Manage remotes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Publish.Text">
+        <source>&amp;Publish</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="PublishDraft.Text">
+        <source>Submit review as draft</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_publishCaption.Text">
+        <source>Publish change</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_publishGerritChangeCaption.Text">
+        <source>Publish Gerrit Change</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_selectBranch.Text">
+        <source>Please enter a branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_selectRemote.Text">
+        <source>Please select a remote repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelBranch.Text">
+        <source>Branch:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelRemote.Text">
+        <source>Remote:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelTopic.Text">
+        <source>Topic:</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGitReview" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Edit .gitreview</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Save.Text">
+        <source>Save</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotAccessGitreview.Text">
+        <source>Failed to save .gitreview.
+Check if file is accessible.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotAccessGitreviewCaption.Text">
+        <source>Failed to save .gitreview</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
+        <source>.gitreview is only supported when there is a working directory.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
+        <source>No working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_saveFileQuestion.Text">
+        <source>Save changes to .gitreview?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_saveFileQuestionCaption.Text">
+        <source>Save changes?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Provide the configuration for
+.gitreview to setup Gerrit.
+
+Example configuration:
+
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review
+defaultrebase=0</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lnkGitReviewHelp.Text">
+        <source>GitHub page for git-review</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Statistics</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="CommitStatistics.Text">
+        <source>Loading..</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="LinesOfCodePerLanguageText.Text">
+        <source>Loading...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="LinesOfCodePerTypeText.Text">
+        <source>Loading...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="LoadingLabel.Text">
+        <source>Loading...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="TestCodeText.Text">
+        <source>Loading...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="TotalCommits.Text">
+        <source>Total commits</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="TotalLinesOfCode.Text">
+        <source>Total lines of code</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="TotalLinesOfCode2.Text">
+        <source>Total lines of code</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="TotalLinesOfTestCode.Text">
+        <source>Total lines of code</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_blankLinesP.Text">
+        <source>{0} Blank lines ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commentLinesP.Text">
+        <source>{0} Comment lines ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commits.Text">
+        <source>{0} Commits</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commitsBy.Text">
+        <source>{0} Commits by {1}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfCode.Text">
+        <source>{0} Lines of code</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfCodeInFiles.Text">
+        <source>{0} Lines of code in {1} files ({2})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfCodeP.Text">
+        <source>{0} Lines of code ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfDesignerFilesP.Text">
+        <source>{0} Lines in designer files ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfProductionCodeP.Text">
+        <source>{0} Lines of production code ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfTestCode.Text">
+        <source>{0} Lines of test code</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_linesOfTestCodeP.Text">
+        <source>{0} Lines of test code ({1})</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tabPage1.Text">
+        <source>Lines of code per language</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tabPage2.Text">
+        <source>Commits per contributor</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tabPage3.Text">
+        <source>Lines of code per type</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tabPage4.Text">
+        <source>Lines of test code</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormImpact" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Impact</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_authorCommits.Text">
+        <source>{0} ({1} Commits, {2} Changed Lines)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbIncludingSubmodules.Text">
+        <source>Including submodules</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAuthor.Text">
+        <source>Author</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormPluginInformation" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Gerrit Plugin</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="informationLabel.Text">
+        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+
+To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Gerrit Code Review</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_downloadGerritChange.Text">
+        <source>Download Gerrit Change</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_editGitReview.Text">
+        <source>Edit .gitreview</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHook.Text">
+        <source>Install Hook</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookFailed.Text">
+        <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookMessage.Text">
+        <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookShortText.Text">
+        <source>Install commit-msg hook</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_publishGerritChange.Text">
+        <source>Publish Gerrit Change</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritSettings" source-language="en">
+    <body>
+      <trans-unit id="_settingsError.Text">
+        <source>Error loading .gitreview file.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
+        <source>The remote "{0}" specified with the "defaultremote" setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_settingsErrorFileNotFound.Text">
+        <source>Cannot find the ".gitreview" file in the working directory.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_settingsErrorHostNotEntered.Text">
+        <source>The "host" setting in the .gitreview file is mandatory.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_settingsErrorPortNotNumeric.Text">
+        <source>The "port" specified in the .gitreview file may only contain digits.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_settingsErrorProjectNotEntered.Text">
+        <source>The "project" setting in the .gitreview file is mandatory.</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitFlowForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>GitFlow</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitFlowTooltip.Text">
+        <source>A good branch model for your project with Git...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_noBranchExist.Text">
+        <source>No {0} branches exist.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnCreateBranch.Text">
+        <source>Start!</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnFinish.Text">
+        <source>Finish</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnInit.Text">
+        <source>Init GitFlow</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnPublish.Text">
+        <source>Publish</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnPull.Text">
+        <source>Pull</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbBasedOn.Text">
+        <source>based on:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbManage.Text">
+        <source>Manage existing branches:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbStart.Text">
+        <source>Start branch:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>branch:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>Expected name:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>command:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>Remote to pull from :</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblCaptionHead.Text">
+        <source>HEAD:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblHead.Text">
+        <source>ref/...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblPrefixName.Text">
+        <source>[prefix]/</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lnkGitFlow.Text">
+        <source>About GitFlow</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="panel3.Text">
+        <source>Result of git flow command run</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitFlowPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>GitFlow</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="Github3Plugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Github</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Impact Graph</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
+    <body>
+      <trans-unit id="CodeFiles.Caption">
+        <source>Code files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Statistics</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="IgnoreDirectories.Caption">
+        <source>Directories to ignore (EndsWith)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="IgnoreSubmodules.Caption">
+        <source>Ignore submodules</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GourcePlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Gource</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GourceArguments.Caption">
+        <source>Arguments</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GourcePath.Caption">
+        <source>Path to Gource</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_bytesDownloaded.Text">
+        <source>{0} bytes downloaded.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotFindGource.Text">
+        <source>Cannot find Gource.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_currentDirectoryIsNotValidGit.Text">
+        <source>The current directory is not a valid git repository.
+
+Gource can be only be started from a valid git repository.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_doYouWantDownloadGource.Text">
+        <source>There is no path to Gource configured.
+
+Do you want to automatically download Gource?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_download.Text">
+        <source>Download</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_downloadingFailed.Text">
+        <source>Downloading failed.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gource.Text">
+        <source>Gource</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gourceDownloadedAndUnzipped.Text">
+        <source>Gource has been downloaded and unzipped.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_resetConfigPath.Text">
+        <source>Cannot find Gource in the configured path: {0}.
+
+.Do you want to reset the configured path?</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GourceStart" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Gource</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ArgumentsLabel.Text">
+        <source>Arguments</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GourceBrowse.Text">
+        <source>Browse</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="WorkingDirBrowse.Text">
+        <source>Browse</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="button1.Text">
+        <source>Start</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Path to Gource</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="linkLabel1.Text">
+        <source>Gource project</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="linkLabel2.Text">
+        <source>Gource command line</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="label1.Text">
+        <source>Project name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Jenkins server URL</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Proxy Switcher</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ApplyGlobally_CheckBox.Text">
+        <source>Apply globally</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GlobalHttpProxy_Label.Text">
+        <source>Global http.proxy:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="LocalHttpProxy_Label.Text">
+        <source>Local http.proxy:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="SetProxy_Button.Text">
+        <source>Set proxy</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="UnsetProxy_Button.Text">
+        <source>Unset proxy</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pleaseSetProxy.Text">
+        <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pluginDescription.Text">
+        <source>Proxy Switcher</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Proxy Switcher</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Release Notes Generator</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commitLogFrom.Text">
+        <source>Commit log from '{0}' to '{1}' ({2}):</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonCopyAsHtml.Text">
+        <source>as HTML table</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonCopyAsTextTableSpace.Text">
+        <source>as text table (spaces)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonCopyAsTextTableTab.Text">
+        <source>as text table (tabs)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonCopyOrigOutput.Text">
+        <source>original output</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonGenerate.Text">
+        <source>Generate</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Result</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBoxCopy.Text">
+        <source>Copy to clipboard</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Commit expression "To" (including):</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>separate columns with spaces</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label11.Text">
+        <source>Clipboard will contain HTML code (plain text) and HTML format
+which can be pasted to programs like MS Word or LibreOffice Writer.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Commit expression "From" (excluding):</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>git log arguments:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>{0} = from; {1} = to</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Sorting: Most recent revisions are listed on top.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Revisions count = </source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label7.Text">
+        <source>(Commit expressions can be commit hashes,
+branch names, tag names)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>as is</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>separate columns with tabs</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelRevCount.Text">
+        <source>n/a</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Release Notes Generator</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="StashPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Create Stash Pull Request</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="StashPullRequestForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create Pull Request</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GridColumnName.HeaderText">
+        <source>Name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commited.Text">
+        <source>{0} committed
+{1}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInStash.Text">
+        <source>Your repository is not hosted in Stash.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnApprove.Text">
+        <source>Approve</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnCreate.Text">
+        <source>Create</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnMerge.Text">
+        <source>Merge</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Source</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBox2.Text">
+        <source>Target</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBox3.Text">
+        <source>Pull Request Info</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBox4.Text">
+        <source>Source</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBox5.Text">
+        <source>Target</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBox6.Text">
+        <source>Pull Request Info</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBox9.Text">
+        <source>Information</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>Reviewer (approved)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label12.Text">
+        <source>Author</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Description</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label14.Text">
+        <source>Title</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label16.Text">
+        <source>State</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label17.Text">
+        <source>Repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label18.Text">
+        <source>Branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Description</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>Title</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>Repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>Branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblReviewers.Text">
+        <source>Reviewer(s)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tabCreate.Text">
+        <source>Create Pull Request</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tabView.Text">
+        <source>View Pull Requests</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="label1.Text">
+        <source>Project name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>TeamCity server URL</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelBuildFilter.Text">
+        <source>Build Id Filter</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelBuildIdFilter.Text">
+        <source>Regexp</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelProjectNameComment.Text">
+        <source>Several names splitted by | char</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="label1.Text">
+        <source>Team collection name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Tfs server (Name or URL)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Project name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Build definition name
+(use first found if left empty)</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

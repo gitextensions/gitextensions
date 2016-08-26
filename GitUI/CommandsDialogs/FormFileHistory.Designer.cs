@@ -9,20 +9,6 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            _asyncLoader.Cancel();
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -45,6 +31,7 @@ namespace GitUI.CommandsDialogs
             this.cherryPickThisCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.followFileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.followFileHistoryRenamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.ViewTab = new System.Windows.Forms.TabPage();
@@ -125,6 +112,7 @@ namespace GitUI.CommandsDialogs
             this.manipuleerCommitToolStripMenuItem,
             this.toolStripSeparator1,
             this.followFileHistoryToolStripMenuItem,
+            this.followFileHistoryRenamesToolStripMenuItem,
             this.fullHistoryToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
             this.DiffContextMenu.Size = new System.Drawing.Size(264, 184);
@@ -197,6 +185,13 @@ namespace GitUI.CommandsDialogs
             this.followFileHistoryToolStripMenuItem.Size = new System.Drawing.Size(263, 24);
             this.followFileHistoryToolStripMenuItem.Text = "Detect and follow renames";
             this.followFileHistoryToolStripMenuItem.Click += new System.EventHandler(this.followFileHistoryToolStripMenuItem_Click);
+            // 
+            // followFileHistoryRenamesToolStripMenuItem
+            // 
+            this.followFileHistoryRenamesToolStripMenuItem.Name = "followFileHistoryRenamesToolStripMenuItem";
+            this.followFileHistoryRenamesToolStripMenuItem.Size = new System.Drawing.Size(262, 22);
+            this.followFileHistoryRenamesToolStripMenuItem.Text = "Detect and follow - exact renames and copies only";
+            this.followFileHistoryRenamesToolStripMenuItem.Click += new System.EventHandler(this.followFileHistoryRenamesToolStripMenuItem_Click);
             // 
             // fullHistoryToolStripMenuItem
             // 
@@ -455,5 +450,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem loadHistoryOnShowToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem loadBlameOnShowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem followFileHistoryRenamesToolStripMenuItem;
     }
 }

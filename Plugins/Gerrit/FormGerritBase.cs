@@ -1,6 +1,7 @@
 ﻿using System;
 using GitUI;
 using GitUIPluginInterfaces;
+using ResourceManager;
 
 namespace Gerrit
 {

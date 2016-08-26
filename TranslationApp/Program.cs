@@ -61,10 +61,10 @@ namespace TranslationApp
             var translationsNames = Translator.GetAllTranslations();
             foreach (var name in translationsNames)
             {
-                var translation = (Translation)Translator.GetTranslation(name);
-                List<TranslationItemWithCategory> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
+                var translation = Translator.GetTranslation(name);
+                var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
                 filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
-                TranslationHelpers.SaveTranslation(translation.LanguageCode, translateItems, filename);
+                TranslationHelpers.SaveTranslation(translation.First().Value.LanguageCode, translateItems, filename);
             }
             Cursor.Current = Cursors.Default;
         }
@@ -78,9 +78,10 @@ namespace TranslationApp
             var list = new List<KeyValuePair<string, int>>();
             foreach (var name in translationsNames)
             {
-                var translation = (Translation)Translator.GetTranslation(name);
-                List<TranslationItemWithCategory> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
-                int translatedCount = translateItems.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue));
+                var translation = Translator.GetTranslation(name);
+                var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
+                int translatedCount = translateItems
+                    .Sum(p => p.Value.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue)));
                 list.Add(new KeyValuePair<string, int>(name, translatedCount));
             }
             using (var stream = File.CreateText("statistic.csv"))

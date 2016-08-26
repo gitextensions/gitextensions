@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitUI.Hotkey;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -9,6 +10,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     /// </summary>
     public partial class ControlHotkeys : GitExtensionsControl
     {
+        private readonly TranslationString _hotkeyNotSet =
+            new TranslationString("None");
+
         #region Properties
 
         #region Settings
@@ -87,11 +91,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             this.listMappings.Items.Clear();
             if (setting != null)
+            {
                 foreach (var cmd in setting.Commands)
                 {
                     if (cmd != null)
-                        this.listMappings.Items.Add(new ListViewItem(new[] { cmd.Name, cmd.KeyData.ToText() }) { Tag = cmd });
+                    {
+                        var item = new ListViewItem(new[] {cmd.Name, cmd.KeyData.ToText() ?? _hotkeyNotSet.Text});
+                        item.Tag = cmd;
+                        this.listMappings.Items.Add(item);
+                    }
                 }
+            }
         }
 
         private void UpdateTextBox(HotkeyCommand command)

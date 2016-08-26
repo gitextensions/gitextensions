@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
+using GitCommands;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -77,7 +78,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 this.InvokeSync((state) =>
                     {
-                        GitCommands.ExceptionUtils.ShowException(this, ex, string.Empty, true);
+                        ExceptionUtils.ShowException(this, ex, string.Empty, true);
                     }, null);
                 Done();
             }
@@ -87,7 +88,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         void CheckForNewerVersion(string releases)
         {
             var versions = ReleaseVersion.Parse(releases);
-            var updates = versions.Where(version => version.Version.CompareTo(CurrentVersion) > 0);
+            var updates = ReleaseVersion.GetNewerVersions(CurrentVersion, AppSettings.CheckForReleaseCandidates, versions);
 
             var update = updates.OrderBy(version => version.Version).LastOrDefault();
             if (update != null)
@@ -142,10 +143,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
     }
 
+    public enum ReleaseType
+    {
+        Major,
+        HotFix,
+        ReleaseCandidate
+    }
+
     public class ReleaseVersion
     {
         public Version Version;
-        public string ReleaseType;
+        public ReleaseType ReleaseType;
         public string DownloadPage;
 
         public static ReleaseVersion FromSection(ConfigSection section)
@@ -161,12 +169,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return null;
             }
 
-            return new ReleaseVersion()
+            var version = new ReleaseVersion()
             {
                 Version = ver,
-                ReleaseType = section.GetValue("ReleaseType"),
+                ReleaseType = ReleaseType.Major,
                 DownloadPage = section.GetValue("DownloadPage")
             };
+
+            Enum.TryParse<ReleaseType>(section.GetValue("ReleaseType"), true, out version.ReleaseType);
+
+            return version;
 
         }
 
@@ -175,8 +187,22 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ConfigFile cfg = new ConfigFile("", true);
             cfg.LoadFromString(versionsStr);
             var sections = cfg.GetConfigSections("Version");
+            sections = sections.Concat(cfg.GetConfigSections("RCVersion"));
 
             return sections.Select(FromSection).Where(version => version != null);
+        }
+
+        public static IEnumerable<ReleaseVersion> GetNewerVersions(
+            Version currentVersion,
+            bool checkForReleaseCandidates,
+            IEnumerable<ReleaseVersion> availableVersions)
+        {
+            var versions = availableVersions.Where(version =>
+                    version.ReleaseType == ReleaseType.Major ||
+                    version.ReleaseType == ReleaseType.HotFix ||
+                    checkForReleaseCandidates && version.ReleaseType == ReleaseType.ReleaseCandidate);
+
+            return versions.Where(version => version.Version.CompareTo(currentVersion) > 0);
         }
 
     }

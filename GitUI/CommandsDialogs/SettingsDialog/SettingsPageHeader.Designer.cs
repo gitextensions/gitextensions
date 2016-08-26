@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog
+﻿using ResourceManager;
+
+namespace GitUI.CommandsDialogs.SettingsDialog
 {
     partial class SettingsPageHeader : GitExtensionsControl
     {

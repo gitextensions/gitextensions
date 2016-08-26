@@ -55,7 +55,7 @@ namespace GitUI.Hotkey
             var str = key.ToCultureSpecificString();
 
             // Strip the leading 'D' if it's a Decimal Key (D1, D2, ...)
-            if (str.Length == 2 && str[0] == 'D')
+            if (str != null && str.Length == 2 && str[0] == 'D')
                 str = str[1].ToString();
 
             return str;
@@ -63,14 +63,14 @@ namespace GitUI.Hotkey
 
         public static string ToShortcutKeyDisplayString(this Keys key)
         {
-            return key == Keys.None ? string.Empty : key.ToText();
+            return key.ToText() ?? "";
         }
 
         private static string ToCultureSpecificString(this Keys key)
         {
             if (key == Keys.None)
             {
-                return "None"; // TODO: translate this
+                return null;
             }
 
             // var str = key.ToString(); // OLD: this is culture unspecific

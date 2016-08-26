@@ -16,7 +16,15 @@ namespace GitUI.RevisionGridClasses
     {
         #region Delegates
 
-        public delegate void LoadingEventHandler(bool isLoading);
+        public class LoadingEventArgs : EventArgs
+        {
+            public LoadingEventArgs(bool isLoading)
+            {
+                IsLoading = isLoading;
+            }
+
+            public bool IsLoading { get; private set; }
+        }
 
         #endregion
 
@@ -179,6 +187,7 @@ namespace GitUI.RevisionGridClasses
             this.DateColumn.Visible = show;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         [DefaultValue(FilterType.None)]
         [Category("Behavior")]
         public FilterType FilterMode
@@ -280,6 +289,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         protected override void Dispose(bool disposing)
         {
             lock (_backgroundEvent)
@@ -312,7 +322,7 @@ namespace GitUI.RevisionGridClasses
 
         [Description("Loading Handler. NOTE: This will often happen on a background thread so UI operations may not be safe!")]
         [Category("Behavior")]
-        public event LoadingEventHandler Loading;
+        public event EventHandler<LoadingEventArgs> Loading;
 
         public void ShowRevisionGraph()
         {
@@ -348,6 +358,7 @@ namespace GitUI.RevisionGridClasses
             UpdateData();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         public void Clear()
         {
             lock (_backgroundThread)
@@ -462,6 +473,7 @@ namespace GitUI.RevisionGridClasses
             Invalidate(true);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void SetRowCount(int count)
         {
             if (InvokeRequired)
@@ -480,14 +492,24 @@ namespace GitUI.RevisionGridClasses
 
             lock (_backgroundThread)
             {
-                if (CurrentCell == null)
+                UpdatingVisibleRows = true;
+
+                try
                 {
-                    RowCount = count;
-                    CurrentCell = null;
+                    if (CurrentCell == null)
+                    {
+                        RowCount = count;
+                        CurrentCell = null;
+                    }
+                    else
+                    {
+                        RowCount = count;
+                    }
+
                 }
-                else
+                finally
                 {
-                    RowCount = count;
+                    UpdatingVisibleRows = false;
                 }
             }
         }
@@ -546,6 +568,7 @@ namespace GitUI.RevisionGridClasses
             UpdateColumnWidth();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void BackgroundThreadEntry()
         {
             while (_shouldRun)
@@ -582,6 +605,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void UpdateGraph(int curCount, int scrollTo)
         {
             while (curCount < scrollTo)
@@ -629,7 +653,7 @@ namespace GitUI.RevisionGridClasses
                 //rows that the user is viewing
                 if (Loading != null && _graphData.Count > RowCount)// && graphData.Count != RowCount)
                 {
-                    Loading(true);
+                    Loading(this, new LoadingEventArgs(true));
                 }
             }
             else
@@ -638,7 +662,7 @@ namespace GitUI.RevisionGridClasses
                 //animation that is shown. (the event Loading(bool) triggers this!)
                 if (Loading != null)
                 {
-                    Loading(false);
+                    Loading(this, new LoadingEventArgs(false));
                 }
             }
 
@@ -682,6 +706,8 @@ namespace GitUI.RevisionGridClasses
                 }
             }
         }
+
+        public bool UpdatingVisibleRows { get; private set; }
 
         private void UpdateColumnWidth()
         {
@@ -1069,43 +1095,55 @@ namespace GitUI.RevisionGridClasses
                             }
                         }
 
+                        // Precalculate line endpoints
+                        bool singleLane = laneInfo.ConnectLane == lane;
+                        int x0 = mid;
+                        int y0 = top - 1;
+                        int x1 = singleLane ? x0 : mid + (laneInfo.ConnectLane - lane) * _laneWidth;
+                        int y1 = top + _rowHeight;
+
+                        Point p0 = new Point(x0, y0);
+                        Point p1 = new Point(x1, y1);
+
+                        // Precalculate curve control points when needed
+                        Point c0, c1;
+                        if (singleLane)
+                        {
+                            c0 = c1 = Point.Empty;
+                        }
+                        else
+                        {
+                            // Controls the curvature of cross-lane lines (0 = straight line, 1 = 90 degree turns)
+                            const float severity = 0.5f;
+                            c0 = new Point(x0, (int)(y0 * (1.0f - severity) + y1 * severity));
+                            c1 = new Point(x1, (int)(y1 * (1.0f - severity) + y0 * severity));
+                        }
+
                         for (int i = drawBorder ? 0 : 2; i < 3; i++)
                         {
-                            Pen penLine = null;
-                            if (i == 0)
+                            Pen penLine;
+                            switch (i)
                             {
+                              case 0:
                                 penLine = _whiteBorderPen;
-                            }
-                            else if (i == 1)
-                            {
+                                break;
+                              case 1:
                                 penLine = _blackBorderPen;
-                            }
-                            else
-                            {
+                                break;
+                              default:
                                 if (brushLineColorPen == null)
-                                    brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
+                                  brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
                                 penLine = brushLineColorPen;
+                                break;
                             }
 
-                            if (laneInfo.ConnectLane == lane)
+                            if (singleLane)
                             {
-                                wa.DrawLine
-                                    (
-                                        penLine,
-                                        new Point(mid, top - 1),
-                                        new Point(mid, top + _rowHeight + 2)
-                                    );
+                                wa.DrawLine(penLine, p0, p1);
                             }
                             else
                             {
-                                wa.DrawBezier
-                                    (
-                                        penLine,
-                                        new Point(mid, top - 1),
-                                        new Point(mid, top + _rowHeight + 2),
-                                        new Point(mid + (laneInfo.ConnectLane - lane) * _laneWidth, top - 1),
-                                        new Point(mid + (laneInfo.ConnectLane - lane) * _laneWidth, top + _rowHeight + 2)
-                                    );
+                                wa.DrawBezier(penLine, p0, c0, c1, p1);
                             }
                         }
                     }

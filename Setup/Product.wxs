@@ -85,6 +85,9 @@
             <Component Id="GitCommands.dll" Guid="*">
                 <File Source="..\GitCommands\bin\Release\GitCommands.dll" />
             </Component>
+            <Component Id="GitExtUtils.dll" Guid="*">
+                <File Source="..\GitExtUtils\bin\Release\GitExtUtils.dll" />
+            </Component>
             <Component Id="GitUI.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\GitUI.dll" />
             </Component>
@@ -110,7 +113,7 @@
                 <File Source="..\bin\PSTaskDialog.dll" />
             </Component>
             <Component Id="RestSharp.dll" Guid="*">
-                <File Source="..\packages\RestSharp.104.2.0\lib\net4-client\RestSharp.dll" />
+                <File Source="..\GitExtensions\bin\Release\RestSharp.dll" />
             </Component>
             <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.dll" />
@@ -122,7 +125,7 @@
                 <File Source="..\Externals\NBug\NBug\bin\Release\NBug.dll" />
             </Component>
             <Component Id="SmartFormat.dll" Guid="*">
-                <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
+                <File Source="..\GitExtensions\bin\Release\SmartFormat.dll" />
             </Component>
             <Component Id="System.Reactive.Core.dll" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll" />
@@ -232,7 +235,7 @@
                 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll" />
             </Component>
             <Component Id="Newtonsoft.Json.dll" Guid="*">
-                <File Source="..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll" />
+                <File Source="..\GitExtensions\bin\Release\Newtonsoft.Json.dll" />
             </Component>
             <!--Remove unused dll, installed in versions <= 2.31-->
             <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
@@ -254,17 +257,8 @@
             <Component Id="System.Net.Http.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll" />
             </Component>
-            <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.WebRequest.dll" />
-            </Component>
             <Component Id="System.Net.Http.Primitives.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll" />
-            </Component>
-            <Component Id="System.Runtime.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll" />
-            </Component>
-            <Component Id="System.Threading.Tasks.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll" />
             </Component>
             <Component Id="TeamCityIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
@@ -276,10 +270,10 @@
                 <File Source="..\Plugins\BuildServerIntegration\TfsIntegration\bin\Release\TfsIntegration.dll" />
             </Component>
             <Component Id="TfsInterop.Vs2012.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TfsInterop\bin\Release\TfsInterop.Vs2012.dll" />
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2012\bin\Release\TfsInterop.Vs2012.dll" />
             </Component>
             <!-- Component Id="TfsInterop.Vs2013.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TfsInterop\bin\Release\TfsInterop.Vs2013.dll" />
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2013\bin\Release\TfsInterop.Vs2013.dll" />
             </Component -->
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
@@ -344,13 +338,28 @@
             <Component Id="ruRU.dic" Guid="*">
                 <File Source="..\Bin\Dictionaries\ru-RU.dic" />
             </Component>
+            <Component Id="plPL.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\pl-PL.dic" />
+            </Component>
         </DirectoryRef>
         <DirectoryRef Id="TranslationsDir">
             <Component Id="English.gif" Guid="*">
                 <File Source="..\GitUI\Translation\English.gif" />
             </Component>
+            <Component Id="Czech.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Czech.xlf" />
+            </Component>
+            <Component Id="Czech.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Czech.Plugins.xlf" />
+            </Component>
+            <Component Id="Czech.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Czech.gif" />
+            </Component>
             <Component Id="Dutch.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Dutch.xlf" />
+            </Component>
+            <Component Id="Dutch.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Dutch.Plugins.xlf" />
             </Component>
             <Component Id="Dutch.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Dutch.gif" />
@@ -358,11 +367,17 @@
             <Component Id="French.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\French.xlf" />
             </Component>
+            <Component Id="French.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\French.Plugins.xlf" />
+            </Component>
             <Component Id="French.gif" Guid="*">
                 <File Source="..\GitUI\Translation\French.gif" />
             </Component>
             <Component Id="German.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\German.xlf" />
+            </Component>
+            <Component Id="German.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\German.Plugins.xlf" />
             </Component>
             <Component Id="German.gif" Guid="*">
                 <File Source="..\GitUI\Translation\German.gif" />
@@ -370,11 +385,17 @@
             <!--Component Id="Italian.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Italian.xlf" />
             </Component>
+            <Component Id="Italian.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Italian.Plugins.xlf" />
+            </Component>
             <Component Id="Italian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Italian.gif" />
             </Component-->
             <Component Id="Japanese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.xlf" />
+            </Component>
+            <Component Id="Japanese.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Japanese.Plugins.xlf" />
             </Component>
             <Component Id="Japanese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.gif" />
@@ -382,11 +403,26 @@
             <!--Component Id="Korean.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.xlf" />
             </Component>
+            <Component Id="Korean.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Korean.Plugins.xlf" />
+            </Component>
             <Component Id="Korean.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.gif" />
             </Component-->
+            <Component Id="Polish.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Polish.xlf" />
+            </Component>
+            <Component Id="Polish.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Polish.Plugins.xlf" />
+            </Component>
+            <Component Id="Polish.gif" Guid="*">
+                <File Source="..\GitUI\Translation\Polish.gif" />
+            </Component>
             <Component Id="Russian.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.xlf" />
+            </Component>
+            <Component Id="Russian.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Russian.Plugins.xlf" />
             </Component>
             <Component Id="Russian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.gif" />
@@ -394,21 +430,30 @@
             <Component Id="SimplifiedChinese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.xlf" />
             </Component>
+            <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Simplified Chinese.Plugins.xlf" />
+            </Component>
             <Component Id="SimplifiedChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
             </Component>
             <Component Id="Spanish.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Spanish.xlf" />
             </Component>
+            <Component Id="Spanish.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Spanish.Plugins.xlf" />
+            </Component>
             <Component Id="Spanish.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Spanish.gif" />
             </Component>
-            <!--Component Id="TraditionalChinese.xlf" Guid="*">
+            <Component Id="TraditionalChinese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Traditional Chinese.xlf" />
+            </Component>
+            <Component Id="TraditionalChinese.Plugins.xlf" Guid="*">
+                <File Source="..\GitUI\Translation\Traditional Chinese.Plugins.xlf" />
             </Component>
             <Component Id="TraditionalChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Traditional Chinese.gif" />
-            </Component-->
+            </Component>
         </DirectoryRef>
         <DirectoryRef Id="PuttyDir">
             <Component Id="plink.exe" Guid="*">
@@ -549,6 +594,7 @@
             <ComponentRef Id="TranslationApp.exe.config" />
             <ComponentRef Id="Gravatar.dll" />
             <ComponentRef Id="GitCommands.dll" />
+            <ComponentRef Id="GitExtUtils.dll" />
             <ComponentRef Id="GitUI.dll" />
             <ComponentRef Id="ICSharpCode.TextEditor.dll" />
             <ComponentRef Id="PSTaskDialog.dll" />
@@ -631,23 +677,15 @@
                 </Feature>
                 <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
                     <ComponentRef Id="System.Net.Http.dll" />
-                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
                     <ComponentRef Id="System.Net.Http.Primitives.dll" />
-                    <ComponentRef Id="System.Runtime.dll" />
-                    <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="TeamCityIntegration.dll" />
                 </Feature>
                 <Feature Id="JenkinsIntegration" Title="Jenkins integration" Level="1">
                     <ComponentRef Id="System.Net.Http.dll" />
-                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
                     <ComponentRef Id="System.Net.Http.Primitives.dll" />
-                    <ComponentRef Id="System.Runtime.dll" />
-                    <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="JenkinsIntegration.dll" />
                 </Feature>
                 <Feature Id="TfsIntegration" Title="Tfs integration" Level="1">
-                    <ComponentRef Id="System.Runtime.dll" />
-                    <ComponentRef Id="System.Threading.Tasks.dll" />
                     <ComponentRef Id="TfsIntegration.dll" />
                     <ComponentRef Id="TfsInterop.Vs2012.dll" />
                     <!-- ComponentRef Id="TfsInterop.Vs2013.dll" /-->
@@ -702,48 +740,71 @@
                 <Feature Id="ruRU" Title="ru-RU" Level="1">
                     <ComponentRef Id="ruRU.dic" />
                 </Feature>
+                <Feature Id="plPL" Title="pl-PL" Level="1">
+                    <ComponentRef Id="plPL.dic" />
+                </Feature>
             </Feature>
             <Feature Id="Translation" Title="Translations" Level="1">
+                <Feature Id="Czech" Title="Czech" Level="1">
+                    <ComponentRef Id="Czech.xlf" />
+                    <ComponentRef Id="Czech.Plugins.xlf" />
+                    <ComponentRef Id="Czech.gif" />
+                </Feature>
                 <Feature Id="Dutch" Title="Dutch" Level="1">
                     <ComponentRef Id="Dutch.xlf" />
+                    <ComponentRef Id="Dutch.Plugins.xlf" />
                     <ComponentRef Id="Dutch.gif" />
                 </Feature>
                 <Feature Id="French" Title="French" Level="1">
                     <ComponentRef Id="French.xlf" />
+                    <ComponentRef Id="French.Plugins.xlf" />
                     <ComponentRef Id="French.gif" />
                 </Feature>
                 <Feature Id="German" Title="German" Level="1">
                     <ComponentRef Id="German.xlf" />
+                    <ComponentRef Id="German.Plugins.xlf" />
                     <ComponentRef Id="German.gif" />
                 </Feature>
                 <!--Feature Id="Italian" Title="Italian" Level="1">
                     <ComponentRef Id="Italian.xlf" />
+                    <ComponentRef Id="Italian.Plugins.xlf" />
                     <ComponentRef Id="Italian.gif" />
                 </Feature-->
                 <Feature Id="Japanese" Title="Japanese" Level="1">
                     <ComponentRef Id="Japanese.xlf" />
+                    <ComponentRef Id="Japanese.Plugins.xlf" />
                     <ComponentRef Id="Japanese.gif" />
                 </Feature>
                 <!--<Feature Id="Korean" Title="Korean" Level="1">
                     <ComponentRef Id="Korean.xlf" />
+                    <ComponentRef Id="Korean.Plugins.xlf" />
                     <ComponentRef Id="Korean.gif" />
                 </Feature-->
+                <Feature Id="Polish" Title="Polish" Level="1">
+                    <ComponentRef Id="Polish.xlf" />
+                    <ComponentRef Id="Polish.Plugins.xlf" />
+                    <ComponentRef Id="Polish.gif" />
+                </Feature>
                 <Feature Id="Russian" Title="Russian" Level="1">
                     <ComponentRef Id="Russian.xlf" />
+                    <ComponentRef Id="Russian.Plugins.xlf" />
                     <ComponentRef Id="Russian.gif" />
                 </Feature>
                 <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
                     <ComponentRef Id="SimplifiedChinese.xlf" />
+                    <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
                     <ComponentRef Id="SimplifiedChinese.gif" />
                 </Feature>
                 <Feature Id="Spanish" Title="Spanish" Level="1">
                     <ComponentRef Id="Spanish.xlf" />
+                    <ComponentRef Id="Spanish.Plugins.xlf" />
                     <ComponentRef Id="Spanish.gif" />
                 </Feature>
-                <!--Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
+                <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
                     <ComponentRef Id="TraditionalChinese.xlf" />
+                    <ComponentRef Id="TraditionalChinese.Plugins.xlf" />
                     <ComponentRef Id="TraditionalChinese.gif" />
-                </Feature-->
+                </Feature>
             </Feature>
             <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
                 <ComponentRef Id="GitExtensionsShellEx32.dll" />

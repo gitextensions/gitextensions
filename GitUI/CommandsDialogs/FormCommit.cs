@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Utils;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
@@ -25,9 +26,6 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm //, IHotkeyable
     {
-        const string UserNameKey = "user.name";
-        const string UserEmailKey = "user.email";
-
         #region Translation
         private readonly TranslationString _amendCommit =
             new TranslationString("You are about to rewrite history." + Environment.NewLine +
@@ -138,7 +136,6 @@ namespace GitUI.CommandsDialogs
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
         private string _userName = "";
         private string _userEmail = "";
-        private bool RepoUserSettings = false;
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -1278,10 +1275,10 @@ namespace GitUI.CommandsDialogs
                     FormStatus.ProcessStart processStart =
                         form =>
                         {
-                            form.AddMessageLine(string.Format(_stageFiles.Text,
+                            form.AppendMessageCrossThread(string.Format(_stageFiles.Text + "\n",
                                                          files.Count));
                             var output = Module.StageFiles(files, out wereErrors);
-                            form.AddMessageLine(output);
+                            form.AppendMessageCrossThread(output);
                             form.Done(string.IsNullOrEmpty(output));
                         };
                     using (var process = new FormStatus(processStart, null) { Text = _stageDetails.Text })
@@ -1853,8 +1850,8 @@ namespace GitUI.CommandsDialogs
 
         private void GetUserSettings()
         {
-            _userName = Module.GetEffectiveSetting(UserNameKey);
-            _userEmail = Module.GetEffectiveSetting(UserEmailKey);
+            _userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
+            _userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
 
 
@@ -2435,6 +2432,29 @@ namespace GitUI.CommandsDialogs
         private void toolAuthor_Leave(object sender, EventArgs e)
         {
             updateAuthorInfo();
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _unstagedLoader.Cancel();
+                _unstagedLoader.Dispose();
+                if (_interactiveAddBashCloseWaitCts != null)
+                {
+                    _interactiveAddBashCloseWaitCts.Cancel();
+                    _interactiveAddBashCloseWaitCts.Dispose();
+                    _interactiveAddBashCloseWaitCts = null;
+                }
+
+                if (components != null)
+                    components.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 
