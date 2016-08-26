@@ -1,5 +1,7 @@
 # Git Extensions
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 WARNING: Repository rewritten on 2014-08-24 to reduce its size. Please clone it again. |
 -----------
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Issue Stats](http://www.issuestats.com/github/gitextensions/gitextensions/badge/pr?style=flat)](http://www.issuestats.com/github/gitextensions/gitextensions) [![Issue Stats](http://www.issuestats.com/github/gitextensions/gitextensions/badge/issue?style=flat)](http://www.issuestats.com/github/gitextensions/gitextensions) [![SourceForge](https://img.shields.io/sourceforge/dm/gitextensions.svg)](https://sourceforge.net/projects/gitextensions/)
