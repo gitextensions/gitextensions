@@ -921,7 +921,7 @@ namespace GitUI.CommandsDialogs
 
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
 
-                var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage));
+                var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage, noVerifyToolStripMenuItem.Checked));
 
                 UICommands.RepoChangedNotifier.Notify();
 
@@ -929,6 +929,7 @@ namespace GitUI.CommandsDialogs
                     return;
 
                 Amend.Checked = false;
+                noVerifyToolStripMenuItem.Checked = false;
 
                 ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
