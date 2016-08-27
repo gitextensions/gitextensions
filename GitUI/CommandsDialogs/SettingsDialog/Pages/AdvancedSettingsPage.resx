@@ -128,12 +128,4 @@ If no, redirects select strings from stdout/stderr into an edit box. This is the
 
 Turn off if you experience problems with the console emulator.</value>
   </data>
-  <data name="chkAutoNormaliseBranchName.ToolTip" xml:space="preserve">
-    <value>Controls how console programs output is displayed in command progress dialogs, like Clone or Pull.
-
-If yes, embeds the fully functional console emulator. This is experimental and might have side-effects.
-If no, redirects select strings from stdout/stderr into an edit box. This is the classic mode.
-
-Turn off if you experience problems with the console emulator.</value>
-  </data>
 </root>
