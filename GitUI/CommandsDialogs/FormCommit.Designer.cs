@@ -721,7 +721,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.showAssumeUnchangedFilesToolStripMenuItem.Name = "showAssumeUnchangedFilesToolStripMenuItem";
             this.showAssumeUnchangedFilesToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.showAssumeUnchangedFilesToolStripMenuItem.Text = "Show assume unchanged files";
+            this.showAssumeUnchangedFilesToolStripMenuItem.Text = "Show assumed-unchanged files";
             this.showAssumeUnchangedFilesToolStripMenuItem.Click += new System.EventHandler(this.ShowAssumeUnchangedFilesToolStripMenuItemClick);
             // 
             // showUntrackedFilesToolStripMenuItem
