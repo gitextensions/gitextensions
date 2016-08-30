@@ -180,7 +180,11 @@ namespace GitUI.UserControls.RevisionGridClasses
             }
             if (AppSettings.FullHistoryInFileHistory)
             {
-                arg += " --full-history --simplify-by-decoration ";
+                arg += " --full-history ";
+            }
+            if (AppSettings.ShowSimplifyByDecoration)
+            {
+                arg += " --simplify-by-decoration ";
             }
             if (AppSettings.MaxRevisionGraphCommits > 0)
             {

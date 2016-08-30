@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -9,7 +8,7 @@ namespace GitStatistics
     {
         public GitStatisticsPlugin()
         {
-            Description = "Statistics";
+            SetNameAndDescription("Statistics");
             Translate();
         }
 
@@ -32,25 +31,14 @@ namespace GitStatistics
         {
             if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
                 return false;
-
+            bool countSubmodule = !IgnoreSubmodules.ValueOrDefault(Settings);
             using (var formGitStatistics =
-                new FormGitStatistics(gitUIEventArgs.GitModule, CodeFiles[Settings])
+                new FormGitStatistics(gitUIEventArgs.GitModule, CodeFiles.ValueOrDefault(Settings), countSubmodule)
                     {
-                        DirectoriesToIgnore = IgnoreDirectories[Settings]
+                        DirectoriesToIgnore = IgnoreDirectories.ValueOrDefault(Settings)
                     })
             {
-
-                if (IgnoreSubmodules[Settings].Value)
-                {
-                    foreach (var submodule in gitUIEventArgs.GitModule.GetSubmodulesInfo())
-                    {
-                        formGitStatistics.DirectoriesToIgnore += ";";
-                        formGitStatistics.DirectoriesToIgnore += Path.Combine(gitUIEventArgs.GitModule.WorkingDir, submodule.LocalPath);
-                    }
-                }
-
                 formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
-                formGitStatistics.WorkingDir = new DirectoryInfo(gitUIEventArgs.GitModule.WorkingDir);
 
                 formGitStatistics.ShowDialog(gitUIEventArgs.OwnerForm);
             }

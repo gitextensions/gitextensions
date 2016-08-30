@@ -8,11 +8,11 @@ namespace GitCommands.Settings
 {
     public abstract class Setting<T>
     {
-        public readonly ISettingsSource SettingsSource;
+        public readonly SettingsPath SettingsSource;
         public readonly T DefaultValue;
         public readonly string Name;
 
-        public Setting(string aName, ISettingsSource aSettingsSource, T aDefaultValue)
+        public Setting(string aName, SettingsPath aSettingsSource, T aDefaultValue)
         {
             Name = aName;
             SettingsSource = aSettingsSource;
@@ -20,5 +20,13 @@ namespace GitCommands.Settings
         }
 
         public abstract T Value { get; set; }
+
+        public string FullPath
+        {
+            get
+            {
+                return SettingsSource.PathFor(Name);
+            }
+        }
     }
 }

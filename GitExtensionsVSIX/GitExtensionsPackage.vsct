@@ -35,8 +35,8 @@
       <Menu guid="guidGitExtensionsPackageCmdSet" id="gitExtMenu" type="Menu" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_FILEEDITVIEW"/>
         <Strings>
-          <ButtonText>GitExt</ButtonText>
-          <CommandName>GitExt</CommandName>
+          <ButtonText>G&amp;itExt</ButtonText>
+          <CommandName>G&amp;itExt</CommandName>
         </Strings>
       </Menu>
       <Menu guid="guidGitExtensionsPackageCmdSet" id="gitExtToolbar" type="Toolbar" >
@@ -104,7 +104,7 @@
         <Icon guid="guidImages" id="clone"/>
         <Strings>
           <CommandName>GitExt.Clone</CommandName>
-          <ButtonText>Clone &amp;repository</ButtonText>
+          <ButtonText>Clone repositor&amp;y</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtNewCommand" priority="0x0003" type="Button">
@@ -147,7 +147,15 @@
           <ButtonText>Stas&amp;h</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtRemotesCommand" priority="0x0005" type="Button">
+      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtResetFileCommand" priority="0x0005" type="Button">
+        <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuChangesGroup" />
+        <Icon guid="guidImages" id="reset"/>
+        <Strings>
+          <CommandName>GitExt.ResetFile</CommandName>
+          <ButtonText>&amp;Reset File Changes</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtRemotesCommand" priority="0x0006" type="Button">
         <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuChangesGroup" />
         <Icon guid="guidImages" id="remotes"/>
         <Strings>
@@ -155,7 +163,7 @@
           <ButtonText>Manage rem&amp;otes</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtGitIgnoreCommand" priority="0x0006" type="Button">
+      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtGitIgnoreCommand" priority="0x0007" type="Button">
         <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuChangesGroup" />
         <Icon guid="guidImages" id="gitignore"/>
         <Strings>
@@ -173,18 +181,26 @@
       <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtFormatPatchCommand" priority="0x0002" type="Button">
         <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuPatchGroup" />
         <Strings>
-          <CommandName>GitExt.ApplyPatch</CommandName>
-          <ButtonText>&amp;Apply patch</ButtonText>
+          <CommandName>GitExt.FormatPatch</CommandName>
+          <ButtonText>Format patch</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtViewChangesCommand" priority="0x0001" type="Button">
+      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtHistoryCommand" priority="0x0001" type="Button">
+        <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuFindGroup" />
+        <Icon guid="guidImages" id="history"/>
+        <Strings>
+          <CommandName>GitExt.FileHistory</CommandName>
+          <ButtonText>&amp;File history</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtViewChangesCommand" priority="0x0002" type="Button">
         <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuFindGroup" />
         <Strings>
           <CommandName>GitExt.ViewChanges</CommandName>
           <ButtonText>V&amp;iew changes</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtFindFileCommand" priority="0x0002" type="Button">
+      <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtFindFileCommand" priority="0x0003" type="Button">
         <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuFindGroup" />
         <Icon guid="guidImages" id="find"/>
         <Strings>

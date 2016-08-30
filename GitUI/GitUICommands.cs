@@ -12,6 +12,9 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
+
+using JetBrains.Annotations;
+
 using Settings = GitCommands.AppSettings;
 
 namespace GitUI
@@ -153,6 +156,10 @@ namespace GitUI
 
         public event GitUIEventHandler PreBrowseInitialize;
         public event GitUIEventHandler PostBrowseInitialize;
+
+        public event GitUIEventHandler PreSparseWorkingCopy;
+        public event GitUIPostActionEventHandler PostSparseWorkingCopy;
+
         /// <summary>
         /// listeners for changes being made to repository
         /// </summary>
@@ -897,6 +904,24 @@ namespace GitUI
         public bool StartViewPatchDialog()
         {
             return StartViewPatchDialog(null, null);
+        }
+
+        public bool StartSparseWorkingCopyDialog()
+        {
+            return StartSparseWorkingCopyDialog(null);
+        }
+
+        public bool StartSparseWorkingCopyDialog([CanBeNull] IWin32Window owner)
+        {
+            Func<bool> action = () =>
+            {
+                using(var form = new FormSparseWorkingCopy(this))
+                    form.ShowDialog(owner);
+
+                return true;
+            };
+
+            return DoActionOnRepo(owner, true, false, PreSparseWorkingCopy, PostSparseWorkingCopy, action);
         }
 
         public bool StartFormatPatchDialog(IWin32Window owner)
@@ -1882,9 +1907,6 @@ namespace GitUI
                 case "gitignore":
                     StartEditGitIgnoreDialog();
                     return;
-                case "installcredhelper":
-                    InstallCredHelper();
-                    return;
                 case "init":        // [path]
                     RunInitCommand(args);
                     return;
@@ -1956,19 +1978,6 @@ namespace GitUI
             Application.Run(frmCmdLine);
         }
 
-        private void InstallCredHelper()
-        {
-            string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
-            if (!File.Exists(gcsFileName))
-            {
-                return;
-            }
-
-            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
-            configFileGlobalSettings.SetValue("credential.helper", "!\"" + gcsFileName + "\"");
-            configFileGlobalSettings.Save();
-        }
-
         private void Uninstall()
         {
             var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
@@ -1979,11 +1988,6 @@ namespace GitUI
                 configFileGlobalSettings.SetValue("core.editor", "");
             }
 
-            var credentialHelper = configFileGlobalSettings.GetValue("credential.helper");
-            if (credentialHelper.ToLowerInvariant().Contains(AppSettings.GetInstallDir().ToLowerInvariant()))
-            {
-                configFileGlobalSettings.SetValue("credential.helper", "");
-            }
             configFileGlobalSettings.Save();
         }
 
@@ -2068,7 +2072,7 @@ namespace GitUI
             //Remove working directory from filename. This is to prevent filenames that are too
             //long while there is room left when the workingdir was not in the path.
             string fileHistoryFileName = String.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
-                args[2].Replace(Module.WorkingDir, "").Replace('\\', '/');
+                args[2].Replace(Module.WorkingDir, "").ToPosixPath();
 
             StartFileHistoryDialog(fileHistoryFileName);
         }
@@ -2093,7 +2097,7 @@ namespace GitUI
         {
             // Remove working directory from filename. This is to prevent filenames that are too
             // long while there is room left when the workingdir was not in the path.
-            string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").Replace('\\', '/');
+            string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").ToPosixPath();
             StartBlameDialog(filenameFromBlame);
         }
 

@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using GitCommands.Config;
 

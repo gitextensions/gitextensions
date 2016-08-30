@@ -1,18 +1,16 @@
 using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
-using System.Linq;
-using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using TfsInterop.Interface;
+using System.Text.RegularExpressions;
 
 namespace TfsIntegration
 {
@@ -47,7 +45,7 @@ namespace TfsIntegration
         string _tfsServer;
         string _tfsTeamCollectionName;
         string _projectName;
-        string _tfsBuildDefinitionName;
+        Regex _tfsBuildDefinitionNameFilter;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config)
         {
@@ -59,7 +57,13 @@ namespace TfsIntegration
             _tfsServer = config.GetString("TfsServer", null);
             _tfsTeamCollectionName = config.GetString("TfsTeamCollectionName", null);
             _projectName = config.GetString("ProjectName", null);
-            _tfsBuildDefinitionName = config.GetString("TfsBuildDefinitionName", null);
+            var tfsBuildDefinitionNameFilterSetting = config.GetString("TfsBuildDefinitionName", "");
+            if (!BuildServerSettingsHelper.IsRegexValid(tfsBuildDefinitionNameFilterSetting))
+            {
+                return;
+            }
+
+            _tfsBuildDefinitionNameFilter = new Regex(tfsBuildDefinitionNameFilterSetting, RegexOptions.Compiled);
 
             if (!string.IsNullOrEmpty(_tfsServer)
                 && !string.IsNullOrEmpty(_tfsTeamCollectionName)
@@ -86,7 +90,7 @@ namespace TfsIntegration
 
                 if (tfsHelper != null && tfsHelper.IsDependencyOk())
                 {
-                    tfsHelper.ConnectToTfsServer(_tfsServer, _tfsTeamCollectionName, _projectName, _tfsBuildDefinitionName);
+                    tfsHelper.ConnectToTfsServer(_tfsServer, _tfsTeamCollectionName, _projectName, _tfsBuildDefinitionNameFilter);
                     Trace.WriteLine("Connection... OK");
                     return tfsHelper;
                 }

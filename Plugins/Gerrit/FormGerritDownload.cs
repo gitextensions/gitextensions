@@ -160,7 +160,7 @@ namespace Gerrit
         private static string FixPath(string path)
         {
             path = path.Trim();
-            return path.Replace('\\', '/');
+            return path.ToPosixPath();
         }
 
         private JObject LoadReviewInfo()

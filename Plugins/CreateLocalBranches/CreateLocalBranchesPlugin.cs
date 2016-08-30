@@ -8,7 +8,7 @@ namespace CreateLocalBranches
     {
         public CreateLocalBranchesPlugin()
         {
-            Description = "Create local tracking branches";
+            SetNameAndDescription("Create local tracking branches");
             Translate();
         }
 

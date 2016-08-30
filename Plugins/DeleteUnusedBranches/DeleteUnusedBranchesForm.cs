@@ -65,9 +65,9 @@ namespace DeleteUnusedBranches
             ClearResults();
         }
 
-        private static IEnumerable<Branch> GetObsoleteBranches(RefreshContext context)
+        private static IEnumerable<Branch> GetObsoleteBranches(RefreshContext context, string curBranch)
         {
-            foreach (string branchName in GetObsoleteBranchNames(context))
+            foreach (string branchName in GetObsoleteBranchNames(context, curBranch))
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
@@ -81,19 +81,27 @@ namespace DeleteUnusedBranches
             }
         }
 
-        private static IEnumerable<string> GetObsoleteBranchNames(RefreshContext context)
+        private static IEnumerable<string> GetObsoleteBranchNames(RefreshContext context, string curBranch)
         {
-            var regex = string.IsNullOrEmpty(context.RegexFilter) ? null : new Regex(context.RegexFilter, RegexOptions.Compiled);
+            RegexOptions options;
+            if (context.RegexIgnoreCase)
+                options = RegexOptions.Compiled | RegexOptions.IgnoreCase;
+            else
+                options = RegexOptions.Compiled;
 
-            // TODO: skip current branch
-            return context.Commands.RunGitCmd("branch" + (context.IncludeRemotes ? " -r" : "") + (context.IncludeUnmerged ? "" : " --merged " + context.ReferenceBranch))
+            var regex = string.IsNullOrEmpty(context.RegexFilter) ? null : new Regex(context.RegexFilter, options);
+            bool regexMustMatch = !context.RegexDoesNotMatch;
+
+            string[] branches = context.Commands.RunGitCmd("branch" + (context.IncludeRemotes ? " -r" : "") + (context.IncludeUnmerged ? "" : " --merged " + context.ReferenceBranch))
                 .Split('\n')
                 .Where(branchName => !string.IsNullOrEmpty(branchName))
                 .Select(branchName => branchName.Trim('*', ' ', '\n', '\r'))
-                .Where(branchName => branchName != "HEAD" &&
-                                     branchName != context.ReferenceBranch &&
-                                     (!context.IncludeRemotes || branchName.StartsWith(context.RemoteRepositoryName + "/")) &&
-                                     (regex == null || regex.IsMatch(branchName)));
+                .Where(branchName => branchName != "HEAD" && branchName != curBranch &&
+                                   branchName != context.ReferenceBranch)
+                .ToArray();
+
+            return branches.Where(branchName => (!context.IncludeRemotes || branchName.StartsWith(context.RemoteRepositoryName + "/")) &&
+                                   (regex == null || regex.IsMatch(branchName) == regexMustMatch)).ToArray();
         }
 
         private void Delete_Click(object sender, EventArgs e)
@@ -233,10 +241,10 @@ namespace DeleteUnusedBranches
             }
 
             IsRefreshing = true;
-
+            var curBranch = _gitUiCommands.GitModule.GetSelectedBranch();
             var context = new RefreshContext(_gitCommands, IncludeRemoteBranches.Checked, includeUnmergedBranches.Checked, _referenceBranch, _NO_TRANSLATE_Remote.Text,
-                useRegexFilter.Checked ? regexFilter.Text : null, TimeSpan.FromDays(_days), _refreshCancellation.Token);
-            Task.Factory.StartNew(() => GetObsoleteBranches(context).ToList(), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default)
+                useRegexFilter.Checked ? regexFilter.Text : null, useRegexCaseInsensitive.Checked ? useRegexCaseInsensitive.Checked : false, regexDoesNotMatch.Checked ? regexDoesNotMatch.Checked : false, TimeSpan.FromDays(_days), _refreshCancellation.Token);
+            Task.Factory.StartNew(() => GetObsoleteBranches(context, curBranch).ToList(), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default)
                 .ContinueWith(task =>
                 {
                     if (IsDisposed || context.CancellationToken.IsCancellationRequested)
@@ -289,11 +297,14 @@ namespace DeleteUnusedBranches
             private readonly string _referenceBranch;
             private readonly string _remoteRepositoryName;
             private readonly string _regexFilter;
+            private readonly bool _regexIgnoreCase;
+            private readonly bool _regexDoesNotMatch;
             private readonly TimeSpan _obsolescenceDuration;
             private readonly CancellationToken _cancellationToken;
 
             public RefreshContext(IGitModule commands, bool includeRemotes, bool includeUnmerged, string referenceBranch,
-                string remoteRepositoryName, string regexFilter, TimeSpan obsolescenceDuration, CancellationToken cancellationToken)
+                string remoteRepositoryName, string regexFilter, bool regexIgnoreCase, bool regexDoesNotMatch,
+                TimeSpan obsolescenceDuration, CancellationToken cancellationToken)
             {
                 this._commands = commands;
                 this._includeRemotes = includeRemotes;
@@ -301,6 +312,8 @@ namespace DeleteUnusedBranches
                 this._referenceBranch = referenceBranch;
                 this._remoteRepositoryName = remoteRepositoryName;
                 this._regexFilter = regexFilter;
+                this._regexIgnoreCase = regexIgnoreCase;
+                this._regexDoesNotMatch = regexDoesNotMatch;
                 this._obsolescenceDuration = obsolescenceDuration;
                 this._cancellationToken = cancellationToken;
             }
@@ -333,6 +346,16 @@ namespace DeleteUnusedBranches
             public string RegexFilter
             {
                 get { return _regexFilter; }
+            }
+
+            public bool RegexIgnoreCase
+            {
+                get { return _regexIgnoreCase; }
+            }
+
+            public bool RegexDoesNotMatch
+            {
+                get { return _regexDoesNotMatch; }
             }
 
             public TimeSpan ObsolescenceDuration

@@ -53,7 +53,7 @@ namespace GitUIPluginInterfaces
 
         IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
 
-        IList<string> GetSubmodulesLocalPathes(bool recursive = true);
+        IList<string> GetSubmodulesLocalPaths(bool recursive = true);
 
         IGitModule GetSubmodule(string submoduleName);
 
@@ -70,5 +70,7 @@ namespace GitUIPluginInterfaces
         bool IsBareRepository();
 
         bool IsRunningGitProcess();
+
+        ISettingsSource GetEffectiveSettings();
     }
 }

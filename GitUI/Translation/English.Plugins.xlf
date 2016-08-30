@@ -186,8 +186,16 @@ Are you sure you want to continue?</source>
         <source>Name</source>
         <target />
       </trans-unit>
+      <trans-unit id="regexDoesNotMatch.Text">
+        <source>Does not match</source>
+        <target />
+      </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="useRegexCaseInsensitive.Text">
+        <source>Case insensitive</source>
         <target />
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
@@ -849,7 +857,7 @@ Please download Gource and set the path in the plugins settings dialog.</source>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
-.Do you want to reset the configured path?</source>
+Do you want to reset the configured path?</source>
         <target />
       </trans-unit>
     </body>

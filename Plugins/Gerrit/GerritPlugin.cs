@@ -36,7 +36,7 @@ namespace Gerrit
         // public only because of FormTranslate
         public GerritPlugin()
         {
-            Description = "Gerrit Code Review";
+            SetNameAndDescription("Gerrit Code Review");
             Translate();
         }
 

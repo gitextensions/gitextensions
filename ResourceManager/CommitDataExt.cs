@@ -14,9 +14,10 @@ namespace ResourceManager
         {
             if (String.IsNullOrEmpty(author))
                 return "";
-            int ind = author.IndexOf("<") + 1;
+            int ind = author.IndexOf("<");
             if (ind == -1)
                 return "";
+            ++ind;
             return author.Substring(ind, author.LastIndexOf(">") - ind);
         }
 

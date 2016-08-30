@@ -90,9 +90,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             GlobalKeepMergeBackup.SetNullableChecked(CurrentSettings.mergetool.keepBackup.Value);
 
-            globalAutoCrlfFalse.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.False;
-            globalAutoCrlfInput.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.Input;
-            globalAutoCrlfTrue.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.True;
+            globalAutoCrlfFalse.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.@false;
+            globalAutoCrlfInput.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.input;
+            globalAutoCrlfTrue.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.@true;
             globalAutoCrlfNotSet.Checked = !CurrentSettings.core.autocrlf.Value.HasValue;
         }
 
@@ -123,9 +123,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                 CurrentSettings.mergetool.keepBackup.Value = GlobalKeepMergeBackup.GetNullableChecked();
 
-                if (globalAutoCrlfFalse.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.False;
-                if (globalAutoCrlfInput.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.Input;
-                if (globalAutoCrlfTrue.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.True;
+                if (globalAutoCrlfFalse.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.@false;
+                if (globalAutoCrlfInput.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.input;
+                if (globalAutoCrlfTrue.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.@true;
                 if (globalAutoCrlfNotSet.Checked) CurrentSettings.core.autocrlf.Value = null;
             }
         }
@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (!EnvUtils.RunningOnWindows())
                 return;
 
-            CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
+            CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text.Trim()), DifftoolPath.Text.Trim());
             string exeName;
             string exeFile;
             if (!String.IsNullOrEmpty(DifftoolPath.Text))

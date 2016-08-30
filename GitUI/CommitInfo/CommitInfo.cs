@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitCommands.GitExtLinks;
 using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager;
@@ -119,6 +120,8 @@ namespace GitUI.CommitInfo
 
         private string _revisionInfo;
         private string _linksInfo;
+        private IDictionary<string, string> _annotatedTagsMessages;
+        private string _annotatedTagsInfo;
         private List<string> _tags;
         private string _tagInfo;
         private List<string> _branches;
@@ -131,6 +134,7 @@ namespace GitUI.CommitInfo
             showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote;
             showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             showContainedInTagsToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInTags;
+            showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages;
 
             ResetTextAndImage();
 
@@ -158,13 +162,16 @@ namespace GitUI.CommitInfo
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
-            _RevisionHeader.Height = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
+            _RevisionHeader.Height = GetRevisionHeaderHeight();
             _revisionInfo = commitInformation.Body;
             updateText();
             LoadAuthorImage(data.Author ?? data.Committer);
 
             if (AppSettings.CommitInfoShowContainedInBranches)
                 ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision.Guid));
+
+            if (AppSettings.ShowAnnotatedTagsMessages)
+                ThreadPool.QueueUserWorkItem(_ => loadAnnotatedTagInfo(_revision));
 
             if (AppSettings.CommitInfoShowContainedInTags)
                 ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
@@ -200,10 +207,70 @@ namespace GitUI.CommitInfo
             return _revisionHeaderTabStops;
         }
 
+        private int GetRevisionHeaderHeight()
+        {
+            if (EnvUtils.IsMonoRuntime())
+                return (int)(_RevisionHeader.Lines.Length * (0.8 + _RevisionHeader.Font.GetHeight()));
+
+            return _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
+        }
+
         private void loadSortedRefs()
         {
             _sortedRefs = Module.GetSortedRefs();
             this.InvokeAsync(updateText);
+        }
+
+        private void loadAnnotatedTagInfo(GitRevision revision)
+        {
+            _annotatedTagsMessages = GetAnnotatedTagsMessages(revision);
+            this.InvokeAsync(updateText);
+        }
+
+        private IDictionary<string, string> GetAnnotatedTagsMessages(GitRevision revision)
+        {
+            if (revision == null)
+                return null;
+
+            IDictionary<string, string> result = new Dictionary<string, string>();
+
+            foreach (GitRef gitRef in revision.Refs)
+            {
+                #region Note on annotated tags
+                // Notice that for the annotated tags, gitRef's come in pairs because they're produced 
+                // by the "show-ref --dereference" command. GitRef's in such pair have the same Name, 
+                // a bit different CompleteName's, and completely different checksums:
+                //      GitRef_1:
+                //      { 
+                //          Name: "some_tag"
+                //          CompleteName: "refs/tags/some_tag"
+                //          Guid: <some_tag_checksum>
+                //      },
+                //       
+                //      GitRef_2:
+                //      { 
+                //          Name: "some_tag"
+                //          CompleteName: "refs/tags/some_tag^{}"   <- by "^{}", IsDereference is true.
+                //          Guid: <target_object_checksum>
+                //      }
+                //
+                // The 2nd one is a dereference: a link between the tag and the object which it references.
+                // GitRevions.Refs by design contains GitRef's where Guid's are equal to the GitRevision.Guid,
+                // so this collection contains only derefencing GitRef's - just because GitRef_2 has the same 
+                // Guid as the GitRevision, while GitRef_1 doesn't. So annotated tag's GitRef would always be
+                // of 2nd type in GitRevision.Refs collection, i.e. the one that has IsDereference==true.
+                #endregion
+
+                if (gitRef.IsTag && gitRef.IsDereference)
+                {
+                    string content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
+
+                    if (content != null)
+                        result.Add(gitRef.LocalName, content);
+                }
+            }
+
+            return result;
         }
 
         private void loadTagInfo(string revision)
@@ -264,6 +331,23 @@ namespace GitUI.CommitInfo
         {
             if (_sortedRefs != null)
             {
+                if (_annotatedTagsMessages != null &&
+                    _annotatedTagsMessages.Count() > 0 &&
+                    string.IsNullOrEmpty(_annotatedTagsInfo) &&
+                    Revision != null)
+                {
+                    // having both lightweight & annotated tags in thisRevisionTagNames,
+                    // but GetAnnotatedTagsInfo will process annotated only:
+                    List<string> thisRevisionTagNames =
+                        Revision
+                        .Refs
+                        .Where(r => r.IsTag)
+                        .Select(r => r.LocalName)
+                        .ToList();
+
+                    thisRevisionTagNames.Sort(new ItemTpComparer(_sortedRefs, "refs/tags/"));
+                    _annotatedTagsInfo = GetAnnotatedTagsInfo(Revision, thisRevisionTagNames, _annotatedTagsMessages);
+                }
                 if (_tags != null && string.IsNullOrEmpty(_tagInfo))
                 {
                     _tags.Sort(new ItemTpComparer(_sortedRefs, "refs/tags/"));
@@ -288,10 +372,30 @@ namespace GitUI.CommitInfo
                 }
             }
             RevisionInfo.SuspendLayout();
-            RevisionInfo.SetXHTMLText(_revisionInfo + "\n\n" + _linksInfo + _branchInfo + _tagInfo);
+            RevisionInfo.SetXHTMLText(_revisionInfo + "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo);
             RevisionInfo.SelectionStart = 0; //scroll up
             RevisionInfo.ScrollToCaret();    //scroll up
             RevisionInfo.ResumeLayout(true);
+        }
+
+        private static string GetAnnotatedTagsInfo(
+            GitRevision revision,
+            IEnumerable<string> tagNames,
+            IDictionary<string, string> annotatedTagsMessages)
+        {
+            string result = string.Empty;
+
+            foreach (string tag in tagNames)
+            {
+                string annotatedContents;
+                if (annotatedTagsMessages.TryGetValue(tag, out annotatedContents))
+                    result += "<u>" + tag + "</u>: " + annotatedContents + Environment.NewLine;
+            }
+
+            if (result.IsNullOrEmpty())
+                return string.Empty;
+
+            return Environment.NewLine + result;
         }
 
         private void ResetTextAndImage()
@@ -299,8 +403,10 @@ namespace GitUI.CommitInfo
             _revisionInfo = string.Empty;
             _linksInfo = string.Empty;
             _branchInfo = string.Empty;
+            _annotatedTagsInfo = string.Empty;
             _tagInfo = string.Empty;
             _branches = null;
+            _annotatedTagsMessages = null;
             _tags = null;
             updateText();
             gravatar1.LoadImageForEmail("");
@@ -318,7 +424,7 @@ namespace GitUI.CommitInfo
 
         private string GetBranchesWhichContainsThisCommit(IEnumerable<string> branches, bool showBranchesAsLinks)
         {
-            const string remotesPrefix= "remotes/";
+            const string remotesPrefix = "remotes/";
             // Include local branches if explicitly requested or when needed to decide whether to show remotes
             bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
                             AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
@@ -384,13 +490,13 @@ namespace GitUI.CommitInfo
 
             foreach (var link in links)
             {
-               linksString = linksString.Combine(", ", LinkFactory.CreateLink(link.Caption, link.URI));
+                linksString = linksString.Combine(", ", LinkFactory.CreateLink(link.Caption, link.URI));
             }
 
             if (linksString.IsNullOrEmpty())
                 return string.Empty;
             else
-                return WebUtility.HtmlEncode(trsLinksRelatedToRevision.Text) + " " + linksString;
+                return Environment.NewLine + WebUtility.HtmlEncode(trsLinksRelatedToRevision.Text) + " " + linksString;
         }
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -422,6 +528,12 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
+        private void showMessagesOfAnnotatedTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.ShowAnnotatedTagsMessages = !AppSettings.ShowAnnotatedTagsMessages;
+            ReloadCommitInfo();
+        }
+
         private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Module.EditNotes(_revision.Guid);
@@ -447,5 +559,6 @@ namespace GitUI.CommitInfo
                 DoCommandClick("navigateforward", null);
             }
         }
+
     }
 }

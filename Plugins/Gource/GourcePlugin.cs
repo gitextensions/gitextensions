@@ -16,7 +16,7 @@ namespace Gource
         #region Translation
         private readonly TranslationString _currentDirectoryIsNotValidGit = new TranslationString("The current directory is not a valid git repository.\n\n" +
             "Gource can be only be started from a valid git repository.");
-        private readonly TranslationString _resetConfigPath = new TranslationString("Cannot find Gource in the configured path: {0}.\n\n." +
+        private readonly TranslationString _resetConfigPath = new TranslationString("Cannot find Gource in the configured path: {0}.\n\n" +
             "Do you want to reset the configured path?");
         private readonly TranslationString _gource = new TranslationString("Gource");
         private readonly TranslationString _doYouWantDownloadGource = new TranslationString("There is no path to Gource configured.\n\n" +
@@ -32,7 +32,7 @@ namespace Gource
 
         public GourcePlugin()
         {
-            Description = "Gource";
+            SetNameAndDescription("Gource");
             Translate();
         }
 
@@ -58,7 +58,7 @@ namespace Gource
                 return false;
             }
 
-            var pathToGource = GourcePath[Settings];
+            var pathToGource = GourcePath.ValueOrDefault(Settings);
 
             if (!string.IsNullOrEmpty(pathToGource))
             {
@@ -109,7 +109,7 @@ namespace Gource
                 }
             }
 
-            using (var gourceStart = new GourceStart(pathToGource, eventArgs, GourceArguments[Settings]))
+            using (var gourceStart = new GourceStart(pathToGource, eventArgs, GourceArguments.ValueOrDefault(Settings)))
             {
                 gourceStart.ShowDialog(ownerForm);
                 Settings.SetValue<string>(GourceArguments.Name, gourceStart.GourceArguments, s => s);

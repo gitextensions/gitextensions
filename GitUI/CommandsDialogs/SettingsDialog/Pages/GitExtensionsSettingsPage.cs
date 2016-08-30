@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void SettingsToPage()
         {
 
-
+            chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
             chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir;
             chkPlaySpecialStartupSound.Checked = AppSettings.PlaySpecialStartupSound;
@@ -53,6 +53,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
+
+            AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
             AppSettings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
             AppSettings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
             AppSettings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
@@ -121,10 +123,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void DefaultCloneDestinationBrowseClick(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog { SelectedPath = cbDefaultCloneDestination.Text })
+            var userSelectedPath = OsShellUtil.PickFolder(this, cbDefaultCloneDestination.Text);
+
+            if (userSelectedPath != null)
             {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    cbDefaultCloneDestination.Text = dialog.SelectedPath;
+                cbDefaultCloneDestination.Text = userSelectedPath;
             }
         }
     }

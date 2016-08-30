@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using ConEmu.WinForms;
+
 using GitCommands;
 using GitCommands.Repository;
 using GitCommands.Utils;
@@ -21,7 +24,9 @@ using GitUI.Hotkey;
 using GitUI.Plugin;
 using GitUI.Properties;
 using GitUI.Script;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using Microsoft.Win32;
 using ResourceManager;
 using Settings = GitCommands.AppSettings;
 #if !__MonoCS__
@@ -56,6 +61,10 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _noSubmodulesPresent =
             new TranslationString("No submodules");
+        private readonly TranslationString _topProjectModuleFormat =
+            new TranslationString("Top project: {0}");
+        private readonly TranslationString _superprojectModuleFormat =
+            new TranslationString("Superproject: {0}");
 
         private readonly TranslationString _saveFileFilterCurrentFormat =
             new TranslationString("Current format");
@@ -69,6 +78,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _errorCaption =
             new TranslationString("Error");
+        private readonly TranslationString _loading =
+            new TranslationString("Loading...");
 
         private readonly TranslationString _noReposHostPluginLoaded =
             new TranslationString("No repository host plugin loaded.");
@@ -144,6 +155,7 @@ namespace GitUI.CommandsDialogs
         private string _diffTabPageTitleBase = "";
 
         private readonly FormBrowseMenus _formBrowseMenus;
+        ConEmuControl terminal = null;
 #pragma warning disable 0414
         private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
 #pragma warning restore 0414
@@ -174,15 +186,17 @@ namespace GitUI.CommandsDialogs
                 CommitInfoTabControl.TabPages[1].ImageIndex = 1;
                 CommitInfoTabControl.TabPages[2].ImageIndex = 2;
             }
-
+            this.DiffFiles.FilterVisible = true;
             RevisionGrid.UICommandsSource = this;
             Repositories.LoadRepositoryHistoryAsync();
             Task.Factory.StartNew(PluginLoader.Load)
                 .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
             RevisionGrid.GitModuleChanged += SetGitModule;
-            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
-            _filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
-            Translate();
+            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
+            _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
+            toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
+
+            Translate ();
 
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
@@ -197,6 +211,13 @@ namespace GitUI.CommandsDialogs
                 ToolStrip.Items.Remove(toolStripButton1);
                 _toolStripGitStatus.CommitTranslatedString = toolStripButton1.Text;
             }
+
+            if (!EnvUtils.RunningOnWindows())
+            {
+                toolStripSeparator6.Visible = false;
+                PuTTYToolStripMenuItem.Visible = false;
+            }
+
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
             _filterRevisionsHelper.SetFilter(filter);
@@ -236,6 +257,9 @@ namespace GitUI.CommandsDialogs
             _formBrowseMenuCommands = new FormBrowseMenuCommands(this);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
+            SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
+
+			FillTerminalTab();
         }
 
         private new void Translate()
@@ -253,6 +277,11 @@ namespace GitUI.CommandsDialogs
         private GitItemStatus _oldDiffItem;
         private void RefreshRevisions()
         {
+            if (RevisionGrid.IsDisposed || DiffFiles.IsDisposed || IsDisposed || Disposing)
+            {
+                return;
+            }
+
             if (_dashboard == null || !_dashboard.Visible)
             {
                 var revisions = RevisionGrid.GetSelectedRevisions();
@@ -863,8 +892,8 @@ namespace GitUI.CommandsDialogs
                     _rebase = new WarningToolStripItem
                     {
                         Text = Module.InTheMiddleOfRebase()
-                                   ? _warningMiddleOfRebase.Text
-                                   : _warningMiddleOfPatchApply.Text
+                            ? _warningMiddleOfRebase.Text
+                            : _warningMiddleOfPatchApply.Text
                     };
                     _rebase.Click += RebaseClick;
                     statusStrip.Items.Add(_rebase);
@@ -880,32 +909,37 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
-                !Directory.Exists(Module.GetGitDirectory() + "rebase-apply\\"))
-            {
-                if (_warning == null)
+            AsyncLoader.DoAsync(
+                () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
+                      !Directory.Exists(Module.GetGitDirectory() + "rebase-apply\\"),
+                (result) =>
                 {
-                    _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
-                    _warning.Click += WarningClick;
-                    statusStrip.Items.Add(_warning);
-                }
-            }
-            else
-            {
-                if (_warning != null)
-                {
-                    _warning.Click -= WarningClick;
-                    statusStrip.Items.Remove(_warning);
-                    _warning = null;
-                }
-            }
+                    if (result)
+                    {
+                        if (_warning == null)
+                        {
+                            _warning = new WarningToolStripItem {Text = _hintUnresolvedMergeConflicts.Text};
+                            _warning.Click += WarningClick;
+                            statusStrip.Items.Add(_warning);
+                        }
+                    }
+                    else
+                    {
+                        if (_warning != null)
+                        {
+                            _warning.Click -= WarningClick;
+                            statusStrip.Items.Remove(_warning);
+                            _warning = null;
+                        }
+                    }
 
-            //Only show status strip when there are status items on it.
-            //There is always a close (x) button, do not count first item.
-            if (statusStrip.Items.Count > 1)
-                statusStrip.Show();
-            else
-                statusStrip.Hide();
+                    //Only show status strip when there are status items on it.
+                    //There is always a close (x) button, do not count first item.
+                    if (statusStrip.Items.Count > 1)
+                        statusStrip.Show();
+                    else
+                        statusStrip.Hide();
+                });
         }
 
         /// <summary>
@@ -1439,7 +1473,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 bSilent = sender != pullToolStripMenuItem1;
-                RefreshPullIcon();
+
                 Module.LastPullActionToFormPullAction();
             }
 
@@ -1560,7 +1594,14 @@ namespace GitUI.CommandsDialogs
 
         private void SettingsClick(object sender, EventArgs e)
         {
-            SettingsToolStripMenuItem2Click(sender, e);
+            var translation = Settings.Translation;
+            UICommands.StartSettingsDialog(this);
+            if (translation != Settings.Translation)
+                Translate();
+
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            RevisionGrid.ReloadHotkeys();
+            RevisionGrid.ReloadTranslation();
         }
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
@@ -1591,6 +1632,12 @@ namespace GitUI.CommandsDialogs
         private void FormBrowseFormClosing(object sender, FormClosingEventArgs e)
         {
             SaveUserMenuPosition();
+            SaveApplicationSettings();
+        }
+
+        private static void SaveApplicationSettings()
+        {
+            Properties.Settings.Default.Save();
         }
 
         private void SaveUserMenuPosition()
@@ -1602,18 +1649,6 @@ namespace GitUI.CommandsDialogs
         private void EditGitignoreToolStripMenuItem1Click(object sender, EventArgs e)
         {
             UICommands.StartEditGitIgnoreDialog(this);
-        }
-
-        private void SettingsToolStripMenuItem2Click(object sender, EventArgs e)
-        {
-            var translation = Settings.Translation;
-            UICommands.StartSettingsDialog(this);
-            if (translation != Settings.Translation)
-                Translate();
-
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            RevisionGrid.ReloadHotkeys();
-            RevisionGrid.ReloadTranslation();
         }
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
@@ -1721,7 +1756,24 @@ namespace GitUI.CommandsDialogs
 
             IList<GitRevision> items = RevisionGrid.GetSelectedRevisions();
             if (items.Count() == 1)
+            {
                 items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
+
+                if (!string.IsNullOrWhiteSpace(DiffFiles.SelectedItemParent)
+                    && DiffFiles.SelectedItemParent == DiffFiles.CombinedDiff.Text)
+                {
+                    var diffOfConflict = Module.GetCombinedDiffContent(items.First(), DiffFiles.SelectedItem.Name,
+                        DiffText.GetExtraDiffArguments(), DiffText.Encoding);
+
+                    if (string.IsNullOrWhiteSpace(diffOfConflict))
+                    {
+                        diffOfConflict = Strings.GetUninterestingDiffOmitted();
+                    }
+
+                    DiffText.ViewPatch(diffOfConflict);
+                    return;
+                }
+            }
             DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
 
@@ -1826,6 +1878,7 @@ namespace GitUI.CommandsDialogs
             }
 
             SetGitModule(this, new GitModuleEventArgs(module));
+            ChangeTerminalActiveFolder(path);
         }
 
         private void HistoryItemMenuClick(object sender, EventArgs e)
@@ -2127,23 +2180,28 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var fileName = Path.Combine(Module.WorkingDir, (gitItem).FileName);
-            Clipboard.SetText(fileName.Replace('/', '\\'));
+            Clipboard.SetText(fileName.ToNativePath());
         }
 
         private void copyFilenameToClipboardToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (!DiffFiles.SelectedItems.Any())
+            CopyFullPathToClipboard(DiffFiles, Module);
+        }
+
+        public static void CopyFullPathToClipboard(FileStatusList diffFiles, GitModule module)
+        {
+            if (!diffFiles.SelectedItems.Any())
                 return;
 
             var fileNames = new StringBuilder();
-            foreach (var item in DiffFiles.SelectedItems)
+            foreach (var item in diffFiles.SelectedItems)
             {
                 //Only use append line when multiple items are selected.
                 //This to make it easier to use the text from clipboard when 1 file is selected.
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append(Path.Combine(Module.WorkingDir, item.Name).ToNativePath());
+                fileNames.Append(Path.Combine(module.WorkingDir, item.Name).ToNativePath());
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -2468,7 +2526,7 @@ namespace GitUI.CommandsDialogs
                     {
                         string fileName = Path.Combine(Module.WorkingDir, item.FileName);
 
-                        fileList.Add(fileName.Replace('/', '\\'));
+                        fileList.Add(fileName.ToNativePath());
                     }
 
                     DataObject obj = new DataObject();
@@ -2530,12 +2588,17 @@ namespace GitUI.CommandsDialogs
         //
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!DiffFiles.SelectedItems.Any())
+            OpenContainingFolder(DiffFiles, Module);
+        }
+
+        public static void OpenContainingFolder(FileStatusList diffFiles, GitModule module)
+        {
+            if (!diffFiles.SelectedItems.Any())
                 return;
 
-            foreach (var item in DiffFiles.SelectedItems)
+            foreach (var item in diffFiles.SelectedItems)
             {
-                string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(Module, item);
+                string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(module, item);
                 FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
             }
         }
@@ -2558,7 +2621,7 @@ namespace GitUI.CommandsDialogs
             for (int i = 0; i < pathParts.Length; i++)
             {
                 string pathPart = pathParts[i];
-                string diffPathPart = pathPart.Replace("/", "\\");
+                string diffPathPart = pathPart.ToNativePath();
 
                 var currentFoundNode = currentNodes.Cast<TreeNode>().FirstOrDefault(a =>
                 {
@@ -2663,12 +2726,16 @@ namespace GitUI.CommandsDialogs
 
             // disable items that need exactly one selected item
             bool isExcactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            openWithDifftoolToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
-            saveAsToolStripMenuItem1.Enabled = isExcactlyOneItemSelected;
-            cherryPickSelectedDiffFileToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+            var isCombinedDiff = isExcactlyOneItemSelected &&
+                DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
+            var enabled = isExcactlyOneItemSelected && !isCombinedDiff;
+            openWithDifftoolToolStripMenuItem.Enabled = enabled;
+            saveAsToolStripMenuItem1.Enabled = enabled;
+            cherryPickSelectedDiffFileToolStripMenuItem.Enabled = enabled;
             diffShowInFileTreeToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
             fileHistoryDiffToolstripMenuItem.Enabled = isExcactlyOneItemSelected;
             blameToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+            resetFileToToolStripMenuItem.Enabled = !isCombinedDiff;
 
             // openContainingFolderToolStripMenuItem.Enabled or not
             {
@@ -2785,37 +2852,70 @@ namespace GitUI.CommandsDialogs
 
         private void dontSetAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.DonSetAsLastPullAction = !dontSetAsDefaultToolStripMenuItem.Checked;
-            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+            Settings.SetNextPullActionAsDefault = !setNextPullActionAsDefaultToolStripMenuItem.Checked;
+            setNextPullActionAsDefaultToolStripMenuItem.Checked = Settings.SetNextPullActionAsDefault;
+        }
+
+        private void doPullAction(Action action)
+        {
+            var actLactPullAction = Module.LastPullAction;
+            try
+            {
+                action();
+            }
+            finally
+            {
+                if (!Settings.SetNextPullActionAsDefault)
+                {
+                    Module.LastPullAction = actLactPullAction;
+                    Module.LastPullActionToFormPullAction();
+                }
+                Settings.SetNextPullActionAsDefault = false;
+                RefreshPullIcon();
+            }
         }
 
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Module.LastPullAction = Settings.PullAction.Merge;
-            PullToolStripMenuItemClick(sender, e);
+            doPullAction(() =>
+                {
+                    Module.LastPullAction = Settings.PullAction.Merge;
+                    PullToolStripMenuItemClick(sender, e);
+                }
+            );
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Module.LastPullAction = Settings.PullAction.Rebase;
-            PullToolStripMenuItemClick(sender, e);
+            doPullAction(() =>
+            {
+                Module.LastPullAction = Settings.PullAction.Rebase;
+                PullToolStripMenuItemClick(sender, e);
+            }
+            );
         }
 
         private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Module.LastPullAction = Settings.PullAction.Fetch;
-            PullToolStripMenuItemClick(sender, e);
+            doPullAction(() =>
+            {
+                Module.LastPullAction = Settings.PullAction.Fetch;
+                PullToolStripMenuItemClick(sender, e);
+            }
+            );
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
+            if (Settings.SetNextPullActionAsDefault)
                 Module.LastPullAction = Settings.PullAction.None;
             PullToolStripMenuItemClick(sender, e);
 
             //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
+            if (!Settings.SetNextPullActionAsDefault)
                 Module.LastPullActionToFormPullAction();
+
+            Settings.SetNextPullActionAsDefault = false;
         }
 
         private void RefreshPullIcon()
@@ -2851,7 +2951,7 @@ namespace GitUI.CommandsDialogs
 
         private void fetchAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!Settings.DonSetAsLastPullAction)
+            if (Settings.SetNextPullActionAsDefault)
                 Module.LastPullAction = Settings.PullAction.FetchAll;
 
             RefreshPullIcon();
@@ -2860,8 +2960,10 @@ namespace GitUI.CommandsDialogs
             UICommands.StartPullDialog(this, true, out pullCompelted, true);
 
             //restore Settings.FormPullAction value
-            if (Settings.DonSetAsLastPullAction)
+            if (!Settings.SetNextPullActionAsDefault)
                 Module.LastPullActionToFormPullAction();
+
+            Settings.SetNextPullActionAsDefault = false;
         }
 
         private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -2873,7 +2975,7 @@ namespace GitUI.CommandsDialogs
             {
                 resetFileToSelectedToolStripMenuItem.Visible = true;
                 TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
-                resetFileToSelectedToolStripMenuItem.Text += " (" + revisions[0].Message.ShortenTo(50) + ")";
+                resetFileToSelectedToolStripMenuItem.Text += " (" + revisions[0].Subject.ShortenTo(50) + ")";
 
                 if (revisions[0].HasParent())
                 {
@@ -2882,7 +2984,7 @@ namespace GitUI.CommandsDialogs
                     GitRevision parentRev = RevisionGrid.GetRevision(revisions[0].ParentGuids[0]);
                     if (parentRev != null)
                     {
-                        resetFileToParentToolStripMenuItem.Text += " (" + parentRev.Message.ShortenTo(50) + ")";
+                        resetFileToParentToolStripMenuItem.Text += " (" + parentRev.Subject.ShortenTo(50) + ")";
                     }
                 }
                 else
@@ -2900,11 +3002,11 @@ namespace GitUI.CommandsDialogs
             {
                 resetFileToFirstToolStripMenuItem.Visible = true;
                 TranslateItem(resetFileToFirstToolStripMenuItem.Name, resetFileToFirstToolStripMenuItem);
-                resetFileToFirstToolStripMenuItem.Text += " (" + revisions[1].Message.ShortenTo(50) + ")";
+                resetFileToFirstToolStripMenuItem.Text += " (" + revisions[1].Subject.ShortenTo(50) + ")";
 
                 resetFileToSecondToolStripMenuItem.Visible = true;
                 TranslateItem(resetFileToSecondToolStripMenuItem.Name, resetFileToSecondToolStripMenuItem);
-                resetFileToSecondToolStripMenuItem.Text += " (" + revisions[0].Message.ShortenTo(50) + ")";
+                resetFileToSecondToolStripMenuItem.Text += " (" + revisions[0].Subject.ShortenTo(50) + ")";
             }
             else
             {
@@ -3003,7 +3105,17 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
-                RevisionGrid.SetSelectedRevision(new GitRevision(Module, e.Data));
+                var revision = new GitRevision(Module, e.Data);
+                var found = RevisionGrid.SetSelectedRevision(revision);
+
+                // When 'git log --first-parent' filtration is used, user can click on child commit
+                // that is not present in the shown git log. User still wants to see the child commit
+                // and to make it possible we add explicit branch filter and refresh.
+                if (AppSettings.ShowFirstParent && !found)
+                {
+                    _filterBranchHelper.SetBranchFilter(revision.Guid, refresh: true);
+                    RevisionGrid.SetSelectedRevision(revision);
+                }
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
@@ -3024,15 +3136,11 @@ namespace GitUI.CommandsDialogs
 
         private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
         {
-            var button = sender as ToolStripMenuItem;
-
-            if (button == null)
-                return;
-
-            if (button.Tag is GitModule)
-                SetGitModule(this, new GitModuleEventArgs(button.Tag as GitModule));
-            else
-                SetWorkingDir(button.Tag as string);
+            var menuSender = sender as ToolStripMenuItem;
+            if (menuSender != null)
+            {
+                SetWorkingDir(menuSender.Tag as string);
+            }
         }
 
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
@@ -3042,7 +3150,6 @@ namespace GitUI.CommandsDialogs
 
         private void RemoveSubmoduleButtons()
         {
-            _submodulesStatusImagesCTS.Cancel();
             foreach (var item in toolStripButtonLevelUp.DropDownItems)
             {
                 var toolStripButton = item as ToolStripMenuItem;
@@ -3055,19 +3162,24 @@ namespace GitUI.CommandsDialogs
         private string GetModuleBranch(string path)
         {
             string branch = GitModule.GetSelectedBranchFast(path);
-            if (GitModule.IsDetachedHead(branch))
-                return "[no branch]";
-            return "[" + branch + "]";
+            return string.Format("[{0}]", GitModule.IsDetachedHead(branch) ? _noBranchTitle.Text : branch);
         }
 
-        private ToolStripMenuItem AddSubmoduleToMenu(string name, object module)
+        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat)
         {
-            var spmenu = new ToolStripMenuItem(name);
+            var spmenu = new ToolStripMenuItem(string.Format(textFormat, info.Text));
             spmenu.Click += SubmoduleToolStripButtonClick;
             spmenu.Width = 200;
-            spmenu.Tag = module;
-            toolStripButtonLevelUp.DropDownItems.Add(spmenu);
+            spmenu.Tag = info.Path;
+            if (info.Bold)
+                spmenu.Font = new Font(spmenu.Font, FontStyle.Bold);
+            spmenu.Image = GetItemImage(info);
             return spmenu;
+        }
+
+        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info)
+        {
+            return CreateSubmoduleMenuItem(info, "{0}");
         }
 
         DateTime _previousUpdateTime;
@@ -3079,154 +3191,215 @@ namespace GitUI.CommandsDialogs
                 UpdateSubmodulesList();
         }
 
-        private CancellationTokenSource _submodulesStatusImagesCTS = new CancellationTokenSource();
+        private CancellationTokenSource _submodulesStatusCTS = new CancellationTokenSource();
 
-        private static Image GetItemImage(GitSubmoduleStatus gitSubmoduleStatus)
+        /// <summary>Holds submodule information that is gathered asynchronously.</summary>
+        private class SubmoduleInfo
         {
-            if (gitSubmoduleStatus == null)
-                return Resources.IconFolderSubmodule;
-            if (gitSubmoduleStatus.Status == SubmoduleStatus.FastForward)
-                return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
-            if (gitSubmoduleStatus.Status == SubmoduleStatus.Rewind)
-                return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
-            if (gitSubmoduleStatus.Status == SubmoduleStatus.NewerTime)
-                return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionSemiUpDirty : Resources.IconSubmoduleRevisionSemiUp;
-            if (gitSubmoduleStatus.Status == SubmoduleStatus.OlderTime)
-                return gitSubmoduleStatus.IsDirty ? Resources.IconSubmoduleRevisionSemiDownDirty : Resources.IconSubmoduleRevisionSemiDown;
-
-            return !gitSubmoduleStatus.IsDirty ? Resources.Modified : Resources.IconSubmoduleDirty;
+            public string Text; // User-friendly display text
+            public string Path; // Full path to submodule
+            public SubmoduleStatus? Status;
+            public bool IsDirty;
+            public bool Bold;
+        }
+        /// <summary>Complete set of gathered submodule information.</summary>
+        private class SubmoduleInfoResult
+        {
+            public List<SubmoduleInfo> OurSubmodules = new List<SubmoduleInfo>();
+            public List<SubmoduleInfo> SuperSubmodules = new List<SubmoduleInfo>();
+            public SubmoduleInfo TopProject, Superproject;
+            public string CurrentSubmoduleName;
         }
 
-        private Task GetSubmoduleStatusImageAsync(ToolStripMenuItem mi, GitModule module, string submodulePath)
+        private static Image GetItemImage(SubmoduleInfo info)
         {
-            if (String.IsNullOrEmpty(submodulePath))
+            if (info.Status == null)
+                return Resources.IconFolderSubmodule;
+            if (info.Status == SubmoduleStatus.FastForward)
+                return info.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
+            if (info.Status == SubmoduleStatus.Rewind)
+                return info.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
+            if (info.Status == SubmoduleStatus.NewerTime)
+                return info.IsDirty ? Resources.IconSubmoduleRevisionSemiUpDirty : Resources.IconSubmoduleRevisionSemiUp;
+            if (info.Status == SubmoduleStatus.OlderTime)
+                return info.IsDirty ? Resources.IconSubmoduleRevisionSemiDownDirty : Resources.IconSubmoduleRevisionSemiDown;
+
+            return info.IsDirty ? Resources.IconSubmoduleDirty : Resources.Modified;
+        }
+
+        private static void GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
+        {
+            Task.Factory.StartNew(() =>
             {
-                mi.Image = Resources.IconFolderSubmodule;
-                return null;
-            }
-            var token = _submodulesStatusImagesCTS.Token;
-            return Task.Factory.StartNew(() =>
-            {
-                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(module, submodulePath);
+                var submodule = new GitModule(info.Path);
+                var supermodule = submodule.SuperprojectModule;
+                var submoduleName = submodule.GetCurrentSubmoduleLocalPath();
+
+                info.Status = null;
+
+                if (String.IsNullOrEmpty(submoduleName) || supermodule == null)
+                    return;
+
+                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(supermodule, submoduleName);
                 if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                 {
-                    var submodule = submoduleStatus.GetSubmodule(module);
-                    submoduleStatus.CheckSubmoduleStatus(submodule);
+                    submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(supermodule));
                 }
-                return submoduleStatus;
-            }, token)
-                .ContinueWith((task) =>
+                if (submoduleStatus != null)
                 {
-                    mi.Image = GetItemImage(task.Result);
-                    if (task.Result != null)
-                        mi.Text += task.Result.AddedAndRemovedString();
-                },
-                    CancellationToken.None,
-                    TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.FromCurrentSynchronizationContext());
+                    info.Status = submoduleStatus.Status;
+                    info.IsDirty = submoduleStatus.IsDirty;
+                    info.Text += submoduleStatus.AddedAndRemovedString();
+                }
+            }, cancelToken, TaskCreationOptions.AttachedToParent, TaskScheduler.Default);
         }
 
         private void UpdateSubmodulesList()
         {
-            RemoveSubmoduleButtons();
             _previousUpdateTime = DateTime.Now;
-            _submodulesStatusImagesCTS = new CancellationTokenSource();
 
-            foreach (var submodule in Module.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName))
+            // Cancel any previous async activities:
+            _submodulesStatusCTS.Cancel();
+            _submodulesStatusCTS.Dispose();
+            _submodulesStatusCTS = new CancellationTokenSource();
+
+            RemoveSubmoduleButtons();
+            toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
+
+            // Start gathering new submodule information asynchronously.  This makes a significant difference in UI
+            // responsiveness if there are numerous submodules (e.g. > 100).
+            var cancelToken = _submodulesStatusCTS.Token;
+            string thisModuleDir = Module.WorkingDir;
+            // First task: Gather list of submodules on a background thread.
+            var updateTask = Task.Factory.StartNew(() =>
             {
-                var name = submodule;
-                string path = Module.GetSubmoduleFullPath(submodule);
-                if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                    name = name + " " + GetModuleBranch(path);
+                // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
+                GitModule threadModule = new GitModule(thisModuleDir);
+                SubmoduleInfoResult result = new SubmoduleInfoResult();
 
-                var smi = AddSubmoduleToMenu(name, path);
-                var module = Module.GetSubmodule(submodule);
-                var submoduleName = module.GetCurrentSubmoduleLocalPath();
-                GetSubmoduleStatusImageAsync(smi, module.SuperprojectModule, submoduleName);
-            }
-
-            bool containSubmodules = toolStripButtonLevelUp.DropDownItems.Count != 0;
-            if (!containSubmodules)
-                toolStripButtonLevelUp.DropDownItems.Add(_noSubmodulesPresent.Text);
-
-            string currentSubmoduleName = null;
-            if (Module.SuperprojectModule != null)
-            {
-                var superprojectSeparator = new ToolStripSeparator();
-                toolStripButtonLevelUp.DropDownItems.Add(superprojectSeparator);
-
-                GitModule supersuperproject = Module.FindTopProjectModule();
-                if (Module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
+                // Add all submodules inside the current repository:
+                foreach (var submodule in threadModule.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName))
                 {
-                    var name = "Top project: " + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
-                    string path = supersuperproject.WorkingDir;
+                    cancelToken.ThrowIfCancellationRequested();
+                    var name = submodule;
+                    string path = threadModule.GetSubmoduleFullPath(submodule);
                     if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                         name = name + " " + GetModuleBranch(path);
 
-                    var smi = AddSubmoduleToMenu(name, supersuperproject);
-                    smi.Image = Resources.IconFolderSubmodule;
+                    var smi = new SubmoduleInfo { Text = name, Path = path };
+                    result.OurSubmodules.Add(smi);
+                    GetSubmoduleStatusAsync(smi, cancelToken);
                 }
 
+                if (threadModule.SuperprojectModule != null)
                 {
-                    var name = "Superproject: ";
-                    GitModule parentModule = Module.SuperprojectModule;
-                    string localpath = "";
-                    if (Module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
+                    GitModule supersuperproject = threadModule.FindTopProjectModule();
+                    if (threadModule.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
                     {
-                        parentModule = supersuperproject;
-                        localpath = Module.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                        localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
-                        name = name + localpath;
-                    }
-                    else
-                        name = name + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
-                    string path = Module.SuperprojectModule.WorkingDir;
-                    if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                        name = name + " " + GetModuleBranch(path);
-
-                    var smi = AddSubmoduleToMenu(name, Module.SuperprojectModule);
-                    GetSubmoduleStatusImageAsync(smi, parentModule, localpath);
-                }
-
-                var submodules = supersuperproject.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName);
-                if (submodules.Any())
-                {
-                    string localpath = Module.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                    localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
-
-                    foreach (var submodule in submodules)
-                    {
-                        var name = submodule;
-                        string path = supersuperproject.GetSubmoduleFullPath(submodule);
+                        var name = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
+                        string path = supersuperproject.WorkingDir;
                         if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                             name = name + " " + GetModuleBranch(path);
-                        var submenu = AddSubmoduleToMenu(name, path);
-                        if (submodule == localpath)
+
+                        result.TopProject = new SubmoduleInfo { Text = name, Path = supersuperproject.WorkingDir };
+                        GetSubmoduleStatusAsync(result.TopProject, cancelToken);
+                    }
+
+                    {
+                        string name;
+                        GitModule parentModule = threadModule.SuperprojectModule;
+                        string localpath = "";
+                        if (threadModule.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
                         {
-                            currentSubmoduleName = Module.GetCurrentSubmoduleLocalPath();
-                            submenu.Font = new Font(submenu.Font, FontStyle.Bold);
+                            parentModule = supersuperproject;
+                            localpath = threadModule.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
+                            localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
+                            name = localpath;
                         }
-                        var module = supersuperproject.GetSubmodule(submodule);
-                        var submoduleName = module.GetCurrentSubmoduleLocalPath();
-                        GetSubmoduleStatusImageAsync(submenu, module.SuperprojectModule, submoduleName);
+                        else
+                            name = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
+                        string path = threadModule.SuperprojectModule.WorkingDir;
+                        if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
+                            name = name + " " + GetModuleBranch(path);
+
+                        result.Superproject = new SubmoduleInfo { Text = name, Path = threadModule.SuperprojectModule.WorkingDir };
+                        GetSubmoduleStatusAsync(result.Superproject, cancelToken);
+                    }
+
+                    var submodules = supersuperproject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName);
+                    if (submodules.Any())
+                    {
+                        string localpath = threadModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
+                        localpath = PathUtil.GetDirectoryName(localpath.ToPosixPath());
+
+                        foreach (var submodule in submodules)
+                        {
+                            cancelToken.ThrowIfCancellationRequested();
+                            var name = submodule;
+                            string path = supersuperproject.GetSubmoduleFullPath(submodule);
+                            if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
+                                name = name + " " + GetModuleBranch(path);
+                            bool bold = false;
+                            if (submodule == localpath)
+                            {
+                                result.CurrentSubmoduleName = threadModule.GetCurrentSubmoduleLocalPath();
+                                bold = true;
+                            }
+                            var smi = new SubmoduleInfo { Text = name, Path = path, Bold = bold };
+                            result.SuperSubmodules.Add(smi);
+                            GetSubmoduleStatusAsync(smi, cancelToken);
+                        }
                     }
                 }
-            }
+                return result;
+            }, cancelToken);
 
-            var separator = new ToolStripSeparator();
-            toolStripButtonLevelUp.DropDownItems.Add(separator);
-
-            var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
-            mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
-            toolStripButtonLevelUp.DropDownItems.Add(mi);
-
-            if (currentSubmoduleName != null)
+            // Second task: Populate toolbar menu on UI thread.  Note further tasks are created by
+            // CreateSubmoduleMenuItem to update images with submodule status.
+            updateTask.ContinueWith((task) =>
             {
-                var usmi = new ToolStripMenuItem(_updateCurrentSubmodule.Text);
-                usmi.Tag = currentSubmoduleName;
-                usmi.Click += UpdateSubmoduleToolStripMenuItemClick;
-                toolStripButtonLevelUp.DropDownItems.Add(usmi);
-            }
+                if (task.Result == null)
+                    return;
+
+                RemoveSubmoduleButtons();
+                var newItems = new List<ToolStripItem>();
+
+                task.Result.OurSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
+                if (task.Result.OurSubmodules.Count == 0)
+                    newItems.Add(new ToolStripMenuItem(_noSubmodulesPresent.Text));
+
+                if (task.Result.Superproject != null)
+                {
+                    newItems.Add(new ToolStripSeparator());
+                    if (task.Result.TopProject != null)
+                        newItems.Add(CreateSubmoduleMenuItem(task.Result.TopProject, _topProjectModuleFormat.Text));
+                    newItems.Add(CreateSubmoduleMenuItem(task.Result.Superproject, _superprojectModuleFormat.Text));
+                    task.Result.SuperSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
+                }
+
+                newItems.Add(new ToolStripSeparator());
+
+                var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
+                mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
+                newItems.Add(mi);
+
+                if (task.Result.CurrentSubmoduleName != null)
+                {
+                    var usmi = new ToolStripMenuItem(_updateCurrentSubmodule.Text);
+                    usmi.Tag = task.Result.CurrentSubmoduleName;
+                    usmi.Click += UpdateSubmoduleToolStripMenuItemClick;
+                    newItems.Add(usmi);
+                }
+
+                // Using AddRange is critical: if you used Add to add menu items one at a
+                // time, performance would be extremely slow with many submodules (> 100).
+                toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
+
+                _previousUpdateTime = DateTime.Now;
+            },
+                cancelToken,
+                TaskContinuationOptions.OnlyOnRanToCompletion,
+                TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void toolStripButtonLevelUp_ButtonClick(object sender, EventArgs e)
@@ -3321,7 +3494,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
-            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+            setNextPullActionAsDefaultToolStripMenuItem.Checked = Settings.SetNextPullActionAsDefault;
         }
 
         private void FormBrowse_Activated(object sender, EventArgs e)
@@ -3346,6 +3519,78 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+	    /// <summary>
+	    /// Adds a tab with console interface to Git over the current working copy. Recreates the terminal on tab activation if user exits the shell.
+	    /// </summary>
+	    private void FillTerminalTab()
+	    {
+		    if(!EnvUtils.RunningOnWindows() || !Module.EffectiveSettings.Detailed.ShowConEmuTab.ValueOrDefault)
+			    return; // ConEmu only works on WinNT
+		    TabPage tabpage;
+		    string sImageKey = "Resources.IconConsole";
+		    CommitInfoTabControl.ImageList.Images.Add(sImageKey, Resources.IconConsole);
+		    CommitInfoTabControl.Controls.Add(tabpage = new TabPage("Console"));
+		    tabpage.ImageKey = sImageKey; // After adding page
+
+		    // Delay-create the terminal window when the tab is first selected
+		    CommitInfoTabControl.Selecting += (sender, args) =>
+		    {
+			    if(args.TabPage != tabpage)
+				    return;
+			    if(terminal == null) // Lazy-create on first opening the tab
+			    {
+				    tabpage.Controls.Clear();
+				    tabpage.Controls.Add(terminal = new ConEmuControl() {Dock = DockStyle.Fill, AutoStartInfo = null});
+			    }
+			    if(terminal.IsConsoleEmulatorOpen) // If user has typed "exit" in there, restart the shell; otherwise just return
+				    return;
+
+			    // Create the terminal
+			    var startinfo = new ConEmuStartInfo();
+			    startinfo.StartupDirectory = Module.WorkingDir;
+			    startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator;
+
+			    // Choose the console: bash from git with fallback to cmd
+			    string sGitBashFromUsrBin = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), ".."), "git-bash.exe"); // Git bin dir is /usr/bin under git installdir, so go 2x up
+			    string sGitBashFromBinOrCmd = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), "git-bash.exe"); // In case we're running off just /bin or /cmd
+		        var gitDir = Path.GetDirectoryName(AppSettings.GitCommandValue);
+			    string sJustBash = Path.Combine(gitDir, "bash.exe"); // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+			    string sJustSh = Path.Combine(gitDir, "sh.exe"); // Fallback to SH
+			    startinfo.ConsoleProcessCommandLine = new[] {sGitBashFromUsrBin, sGitBashFromBinOrCmd, sJustBash, sJustSh}.Where(File.Exists).FirstOrDefault() ?? ConEmuConstants.DefaultConsoleCommandLine; // Choose whatever exists, or default CMD shell
+                if(startinfo.ConsoleProcessCommandLine != ConEmuConstants.DefaultConsoleCommandLine)
+                {
+                    startinfo.ConsoleProcessCommandLine += " --login -i";
+                }
+
+			    // Set path to git in this window (actually, effective with CMD only)
+			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
+			    {
+				    string dirGit = Path.GetDirectoryName(AppSettings.GitCommand);
+				    if(!string.IsNullOrEmpty(dirGit))
+					    startinfo.SetEnv("PATH", dirGit + ";" + "%PATH%");
+			    }
+
+			    terminal.Start(startinfo);
+		    };
+	    }
+
+        public void ChangeTerminalActiveFolder(string path)
+        {
+            if (terminal == null || terminal.RunningSession == null || string.IsNullOrWhiteSpace(path))
+                return;
+
+            string posixPath;
+            if (PathUtil.TryConvertWindowsPathToPosix(path, out posixPath))
+            {
+                //Clear terminal line by sending 'backspace' characters
+                for (int i = 0; i < 10000; i++)
+                {
+                    terminal.RunningSession.WriteInputText("\b");
+                }
+                terminal.RunningSession.WriteInputText(@"cd " + posixPath + Environment.NewLine);
+            }
+        }
+
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -3362,7 +3607,7 @@ namespace GitUI.CommandsDialogs
                 if (_pullButton != null)
                     _pullButton.Dispose();
 #endif
-                _submodulesStatusImagesCTS.Dispose();
+                _submodulesStatusCTS.Dispose();
                 if (_formBrowseMenus != null)
                     _formBrowseMenus.Dispose();
                 if (_filterRevisionsHelper != null)
@@ -3374,6 +3619,16 @@ namespace GitUI.CommandsDialogs
                     components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
+        {
+            UICommands.StartSparseWorkingCopyDialog(this);
+        }
+
+        private void toolStripBranches_DropDown_ResizeDropDownWidth (object sender, EventArgs e)
+        {
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (toolStripBranchFilterComboBox.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void toolStripButtonFirstParent_Click(object sender, EventArgs e)

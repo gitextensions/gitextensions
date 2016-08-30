@@ -58,7 +58,10 @@ namespace GitUI.CommandsDialogs
             "obj/",
             "[Rr]elease*/",
             "_ReSharper*/",
-            "[Tt]est[Rr]esult*"
+            "[Tt]est[Rr]esult*",
+            ".vs/",
+            "#Nuget packages folder",
+            "packages/"
         };
         #endregion
 
@@ -190,6 +193,11 @@ namespace GitUI.CommandsDialogs
         private void lnkGitIgnorePatterns_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"https://github.com/github/gitignore");
+        }
+
+        private void lnkGitIgnoreGenerate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"https://www.gitignore.io/");
         }
     }
 }

@@ -54,7 +54,7 @@ namespace Github3
         {
             get
             {
-                return Github3Plugin.instance.OAuthToken[Github3Plugin.instance.Settings];
+                return Github3Plugin.instance.OAuthToken.ValueOrDefault(Github3Plugin.instance.Settings);
             }
             set
             {
@@ -73,7 +73,7 @@ namespace Github3
         internal static Client github;
         public Github3Plugin()
         {
-            Description = "Github";
+            SetNameAndDescription("Github");
             Translate();
 
             if (instance == null)

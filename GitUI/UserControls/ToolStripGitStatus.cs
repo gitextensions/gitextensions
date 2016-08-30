@@ -32,6 +32,9 @@ namespace GitUI
         private bool _statusIsUpToDate = true;
         private readonly FileSystemWatcher _workTreeWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher _gitDirWatcher = new FileSystemWatcher();
+        private readonly FileSystemWatcher _globalIgnoreWatcher = new FileSystemWatcher();
+        private string _globalIgnoreFilePath;
+        private bool _ignoredFilesAreStale;
         private string _gitPath;
         private string _submodulesPath;
         private int _nextUpdateTime;
@@ -100,7 +103,53 @@ namespace GitUI
             _gitDirWatcher.Deleted += GitDirChanged;
             _gitDirWatcher.Error += WorkTreeWatcherError;
             _gitDirWatcher.IncludeSubdirectories = true;
-            _gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;            
+            _gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
+
+            // Setup a file watcher to detect changes to the global ignore file. When it
+            // changes, we'll update our status.
+            _globalIgnoreWatcher.EnableRaisingEvents = false;
+            _globalIgnoreWatcher.Changed += GlobalIgnoreChanged;
+            _globalIgnoreWatcher.Created += GlobalIgnoreChanged;
+            _globalIgnoreWatcher.Deleted += GlobalIgnoreChanged;
+            _globalIgnoreWatcher.Renamed += GlobalIgnoreChanged;
+            _globalIgnoreWatcher.Error += WorkTreeWatcherError;
+            _globalIgnoreWatcher.IncludeSubdirectories = false;
+            _workTreeWatcher.NotifyFilter = NotifyFilters.LastWrite;
+        }
+
+        private void GlobalIgnoreChanged(object sender, FileSystemEventArgs e)
+        {
+            if (e.FullPath == _globalIgnoreFilePath)
+            {
+                _ignoredFilesAreStale = true;
+                ScheduleDeferredUpdate();
+            }
+        }
+
+        /// <summary>
+        /// Determine what file contains the global ignores.
+        /// </summary>
+        /// <remarks>
+        /// According to https://git-scm.com/docs/git-config, the following are checked in order:
+        ///  - core.excludesFile configuration,
+        ///  - $XDG_CONFIG_HOME/git/ignore, if XDG_CONFIG_HOME is set and not empty,
+        ///  - $HOME/.config/git/ignore.
+        ///  </remarks>
+        private string DetermineGlobalIgnoreFilePath()
+        {
+            string globalExcludeFile = Module.GetEffectiveSetting("core.excludesFile");
+            if (!string.IsNullOrWhiteSpace(globalExcludeFile))
+            {
+                return Path.GetFullPath(globalExcludeFile);
+            }
+
+            string xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
+            if (!string.IsNullOrWhiteSpace(xdgConfigHome))
+            {
+                return Path.GetFullPath(Path.Combine(xdgConfigHome, "git/ignore"));
+            }
+
+            return Path.GetFullPath(Path.Combine(GitCommandHelpers.GetHomeDir(), ".config/git/ignore"));
         }
 
         private void GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
@@ -156,6 +205,12 @@ namespace GitUI
                 {
                     _workTreeWatcher.Path = workTreePath;
                     _gitDirWatcher.Path = gitDirPath;
+                    _globalIgnoreFilePath = DetermineGlobalIgnoreFilePath();
+                    string globalIgnoreDirectory = Path.GetDirectoryName(_globalIgnoreFilePath);
+                    if (Directory.Exists(globalIgnoreDirectory))
+                    {
+                        _globalIgnoreWatcher.Path = globalIgnoreDirectory;
+                    }
                     _gitPath = Path.GetDirectoryName(gitDirPath);
                     _submodulesPath = Path.Combine(_gitPath, "modules");
                     UpdateIgnoredFiles(true);
@@ -232,7 +287,7 @@ namespace GitUI
 
             AsyncLoader.DoAsync(
                 LoadIgnoredFiles, 
-                (ignoredSet) => { _ignoredFiles = ignoredSet; },
+                (ignoredSet) => { _ignoredFiles = ignoredSet; _ignoredFilesAreStale = false; },
                 (e) => { _ignoredFiles = new HashSet<string>(); }
                 );   
         }
@@ -266,6 +321,10 @@ namespace GitUI
 
                 _commandIsRunning = true;
                 _statusIsUpToDate = true;
+                if (_ignoredFilesAreStale)
+                {
+                    UpdateIgnoredFiles(false);
+                }
                 AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
                 // Always update every 5 min, even if we don't know anything changed
                 ScheduleNextJustInCaseUpdate();
@@ -353,17 +412,20 @@ namespace GitUI
                         timerRefresh.Stop();
                         _workTreeWatcher.EnableRaisingEvents = false;
                         _gitDirWatcher.EnableRaisingEvents = false;
+                        _globalIgnoreWatcher.EnableRaisingEvents = false;
                         Visible = false;
                         return;
                     case WorkingStatus.Paused:
                         timerRefresh.Stop();
                         _workTreeWatcher.EnableRaisingEvents = false;
                         _gitDirWatcher.EnableRaisingEvents = false;
+                        _globalIgnoreWatcher.EnableRaisingEvents = false;
                         return;
                     case WorkingStatus.Started:
                         timerRefresh.Start();
                         _workTreeWatcher.EnableRaisingEvents = true;
                         _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
+                        _globalIgnoreWatcher.EnableRaisingEvents = !string.IsNullOrWhiteSpace(_globalIgnoreWatcher.Path);
                         ScheduleDeferredUpdate();
                         Visible = true;
                         return;
