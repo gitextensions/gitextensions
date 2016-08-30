@@ -277,6 +277,11 @@ namespace GitUI.CommandsDialogs
         private GitItemStatus _oldDiffItem;
         private void RefreshRevisions()
         {
+            if (RevisionGrid.IsDisposed || DiffFiles.IsDisposed || IsDisposed || Disposing)
+            {
+                return;
+            }
+
             if (_dashboard == null || !_dashboard.Visible)
             {
                 var revisions = RevisionGrid.GetSelectedRevisions();
