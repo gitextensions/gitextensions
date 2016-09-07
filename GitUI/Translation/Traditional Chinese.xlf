@@ -4379,13 +4379,16 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target>無法刪除未merge的branch. 除非你使用'強制刪除'模式</target>
         
       </trans-unit>
-      <trans-unit id="labelDeleteBranchWarning.Text">
+		<trans-unit id="labelDeleteBranchWarning.Text">
         <source>You can only delete branches when they are fully merged in HEAD. 
 When you delete a branch the commits can get lost because nothing points to them.
 When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
 </source>
+        <target>在HEAD進行的完全合併，您只能刪除分支。
+當你刪除一個分支後，提交的資料可能會丟失，因為這些提交已經沒有指向。
+當您要刪除一個不完全合併的分支，可以使用“強制刪除”選項進行覆蓋。</target>
         
-      </trans-unit>
+		</trans-unit>
       <trans-unit id="labelSelectBranches.Text">
         <source>Select branches</source>
         <target>選取branches</target>
@@ -6004,7 +6007,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="_noBranchSelectedText.Text">
         <source>Please select a branch</source>
-        <target>請選擇branch</target>
+        <target>請選擇分支</target>
         
       </trans-unit>
       <trans-unit id="_solveConflictsText.Text">
@@ -6054,7 +6057,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="lblCurrent.Text">
         <source>Current branch:</source>
-        <target>當前branch:</target>
+        <target>當前分支:</target>
         
       </trans-unit>
       <trans-unit id="lblRangeFrom.Text">
@@ -6468,7 +6471,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="branchInfo.Text">
         <source>Reset branch '{0}' to revision:</source>
-        <target>Reset Branch '{0}'到版本:</target>
+        <target>Reset 分支 '{0}'到版本:</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
