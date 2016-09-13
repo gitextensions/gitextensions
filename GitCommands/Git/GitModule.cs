@@ -1581,11 +1581,12 @@ namespace GitCommands
 
             string arguments = fetchTags == true ? " --tags" : fetchTags == false ? " --no-tags" : "";
 
+            string pruneArguments = prune ? " --prune" : "";
 
             if(isUnshallow)
                 arguments += " --unshallow";
 
-            return "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments + arguments;
+            return "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments + arguments + pruneArguments;
         }
 
         public string GetRebaseDir()
