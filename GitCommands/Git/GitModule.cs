@@ -1524,7 +1524,7 @@ namespace GitCommands
             return path.Contains(Path.DirectorySeparatorChar) || path.Contains(AppSettings.PosixPathSeparator.ToString());
         }
 
-        public string FetchCmd(string remote, string remoteBranch, string localBranch, bool? fetchTags = false, bool isUnshallow = false)
+        public string FetchCmd(string remote, string remoteBranch, string localBranch, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)
         {
             var progressOption = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
