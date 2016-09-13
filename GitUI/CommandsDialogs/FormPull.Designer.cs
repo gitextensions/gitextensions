@@ -131,7 +131,7 @@
             this.Unshallow.Size = new System.Drawing.Size(126, 17);
             this.Unshallow.TabIndex = 20;
             this.Unshallow.Text = "Download full history";
-            this.Tooltip.SetToolTip(this.Unshallow, resources.GetString("Unshallow.ToolTip"));
+            this.Tooltip.SetToolTip(this.Unshallow, "Fetches as much history from the remote source as possible.\nIf full history is available (if the source is not a shallow clone itself), then this repo will be a shallow clone no more.\n\nActual command line (if checked): --unshallow");
             this.Unshallow.Visible = false;
             // 
             // Pull
