@@ -515,6 +515,8 @@
             this.Prune.Size = new System.Drawing.Size(138, 17);
             this.Prune.TabIndex = 20;
             this.Prune.Text = "Prune remote branches";
+            this.Tooltip.SetToolTip(this.Prune, "Removes remote tracking branches that no longer exist on the remote (e.g. if some" +
+        "one else deleted them).\r\n\r\nActual command line (if checked): --prune\r\n");
             // 
             // FormPull
             // 
