@@ -117,6 +117,7 @@ namespace GitUI.CommandsDialogs
             Fetch.Checked = Settings.FormPullAction == Settings.PullAction.Fetch;
             localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = Settings.AutoStash;
+            Prune.Enabled = Fetch.Checked;
 
             ErrorOccurred = false;
 
@@ -801,6 +802,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
             AllTags.Enabled = false;
+            Prune.Enabled = false;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
         }
@@ -812,6 +814,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;
+            Prune.Enabled = false;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
         }
@@ -822,6 +825,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
+            Prune.Enabled = true;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)
