@@ -1533,7 +1533,7 @@ namespace GitCommands
             if (string.IsNullOrEmpty(remote) && string.IsNullOrEmpty(remoteBranch) && string.IsNullOrEmpty(localBranch))
                 return "fetch " + progressOption;
 
-            return "fetch " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags, isUnshallow);
+            return "fetch " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags, isUnshallow, prune);
         }
 
         public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase, bool? fetchTags = false, bool isUnshallow = false)
@@ -1545,10 +1545,10 @@ namespace GitCommands
             if (rebase)
                 pullArgs = "--rebase".Combine(" ", pullArgs);
 
-            return "pull " + pullArgs + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags, isUnshallow);
+            return "pull " + pullArgs + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags, isUnshallow, false);
         }
 
-        private string GetFetchArgs(string remote, string remoteBranch, string localBranch, bool? fetchTags, bool isUnshallow)
+        private string GetFetchArgs(string remote, string remoteBranch, string localBranch, bool? fetchTags, bool isUnshallow, bool prune)
         {
             remote = remote.ToPosixPath();
 
@@ -1580,6 +1580,7 @@ namespace GitCommands
                 localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch;
 
             string arguments = fetchTags == true ? " --tags" : fetchTags == false ? " --no-tags" : "";
+
 
             if(isUnshallow)
                 arguments += " --unshallow";
