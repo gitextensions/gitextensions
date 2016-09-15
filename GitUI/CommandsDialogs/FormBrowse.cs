@@ -2772,6 +2772,7 @@ namespace GitUI.CommandsDialogs
                 settings.FormBrowse_FileTreeSplitContainer_SplitterDistance = FileTreeSplitContainer.SplitterDistance;
                 settings.FormBrowse_DiffSplitContainer_SplitterDistance = DiffSplitContainer.SplitterDistance;
                 settings.FormBrowse_MainSplitContainer_SplitterDistance = MainSplitContainer.SplitterDistance;
+                settings.FormBrowse_LeftPanel_Collapsed = MainSplitContainer.Panel1Collapsed;
                 settings.Save();
             }
             catch (ConfigurationException)
@@ -3649,7 +3650,7 @@ namespace GitUI.CommandsDialogs
         {
             ComboBoxHelper.ResizeComboBoxDropDownWidth (toolStripBranchFilterComboBox.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
-        
+
         private void toggleLeftPanel_Click(object sender, EventArgs e)
         {
             MainSplitContainer.Panel1Collapsed = !MainSplitContainer.Panel1Collapsed;
@@ -3661,6 +3662,7 @@ namespace GitUI.CommandsDialogs
             FileTreeSplitContainer.SplitterDistance = settings.FormBrowse_FileTreeSplitContainer_SplitterDistance;
             DiffSplitContainer.SplitterDistance = settings.FormBrowse_DiffSplitContainer_SplitterDistance;
             MainSplitContainer.SplitterDistance = settings.FormBrowse_MainSplitContainer_SplitterDistance;
+            MainSplitContainer.Panel1Collapsed = settings.FormBrowse_LeftPanel_Collapsed;
         }
     }
 }
