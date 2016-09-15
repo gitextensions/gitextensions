@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs
             this.splitLeft = new System.Windows.Forms.SplitContainer();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.Loading = new System.Windows.Forms.PictureBox();
-            this.Unstaged = new GitUI.FileStatusList(filterVisible: true);
+            this.Unstaged = new GitUI.FileStatusList();
             this.toolbarUnstaged = new GitUI.ToolStripEx();
             this.toolRefreshItem = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -721,7 +721,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.showAssumeUnchangedFilesToolStripMenuItem.Name = "showAssumeUnchangedFilesToolStripMenuItem";
             this.showAssumeUnchangedFilesToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.showAssumeUnchangedFilesToolStripMenuItem.Text = "Show assume unchanged files";
+            this.showAssumeUnchangedFilesToolStripMenuItem.Text = "Show assumed-unchanged files";
             this.showAssumeUnchangedFilesToolStripMenuItem.Click += new System.EventHandler(this.ShowAssumeUnchangedFilesToolStripMenuItemClick);
             // 
             // showUntrackedFilesToolStripMenuItem

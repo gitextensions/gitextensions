@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs
             this.FileText = new GitUI.Editor.FileViewer();
             this.DiffTabPage = new System.Windows.Forms.TabPage();
             this.DiffSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.DiffFiles = new GitUI.FileStatusList(filterVisible: true);
+            this.DiffFiles = new GitUI.FileStatusList();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -317,8 +317,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripRevisionFilterLabel,
             this.toggleSplitViewLayout,
             this.toolStripRevisionFilterTextBox,
-            this.ShowFirstParent,
-            this.toolStripRevisionFilterDropDownButton});
+            this.toolStripRevisionFilterDropDownButton,
+            this.ShowFirstParent});
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(0, 0);
             this.ToolStrip.Name = "ToolStrip";

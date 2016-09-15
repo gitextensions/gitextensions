@@ -1267,6 +1267,16 @@ namespace GitUI.RevisionGridClasses
             return null;
         }
 
+        public int? TryGetRevisionIndex(string guid)
+        {
+            Node node;
+
+            if (_graphData.Nodes.TryGetValue(guid, out node))
+                return node.Index;
+
+            return null;
+        }
+
         public List<string> GetRevisionChildren(string guid)
         {
             Node node;

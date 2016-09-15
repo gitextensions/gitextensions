@@ -1266,23 +1266,6 @@ namespace GitUI
             }
         }
 
-        internal int TrySearchRevision(string initRevision)
-        {
-            var rows = Revisions
-                .Rows
-                .Cast<DataGridViewRow>();
-            var revisions = rows
-                .Select(row => new { row.Index, GetRevision(row.Index).Guid });
-
-            var idx = revisions.FirstOrDefault(rev => rev.Guid == initRevision);
-            if (idx != null)
-            {
-                return idx.Index;
-            }
-
-            return -1;
-        }
-
         private string[] GetAllParents(string initRevision)
         {
             var revListParams = "rev-list ";
@@ -1298,19 +1281,17 @@ namespace GitUI
 
         private int SearchRevision(string initRevision)
         {
-            int index = TrySearchRevision(initRevision);
-            if (index >= 0)
-                return index;
+            var exactIndex = Revisions.TryGetRevisionIndex(initRevision);
+            if (exactIndex.HasValue)
+                return exactIndex.Value;
 
-            var rows = Revisions
-                .Rows
-                .Cast<DataGridViewRow>();
-            var dict = rows
-                .ToDictionary(row => GetRevision(row.Index).Guid, row => row.Index);
-            var allrevisions = GetAllParents(initRevision);
-            var graphRevision = allrevisions.FirstOrDefault(rev => dict.TryGetValue(rev, out index));
-            if (graphRevision != null)
-                return index;
+            foreach (var parentHash in GetAllParents(initRevision))
+            {
+                var parentIndex = Revisions.TryGetRevisionIndex(parentHash);
+                if (parentIndex.HasValue)
+                    return parentIndex.Value;
+            }
+
             return -1;
         }
 

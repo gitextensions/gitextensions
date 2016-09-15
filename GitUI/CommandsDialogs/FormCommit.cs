@@ -180,6 +180,7 @@ namespace GitUI.CommandsDialogs
             refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshCommitDialogOnFormFocus;
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
+            Unstaged.FilterVisible = true;
             Staged.SetNoFilesText(_noStagedChanges.Text);
 
             Message.Enabled = _useFormCommitMessage;

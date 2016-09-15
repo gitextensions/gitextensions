@@ -35,12 +35,10 @@ namespace GitUI
 
         private bool _filterVisible;
 
-        public FileStatusList(bool filterVisible = false)
+        public FileStatusList()
         {
             InitializeComponent(); Translate();
-            _filterVisible = filterVisible;
-            FilterComboBox.Visible = _filterVisible;
-            FilterWatermarkLabel.Visible = _filterVisible;
+            FilterVisible = false;
 
             selectedIndexChangeSubscription = Observable.FromEventPattern(
                 h => FileStatusListView.SelectedIndexChanged += h,
@@ -101,6 +99,21 @@ namespace GitUI
         public string GetNoFilesText()
         {
             return NoFiles.Text;
+        }
+
+        public bool FilterVisible
+        {
+            get
+            {
+                return _filterVisible;
+            }
+
+            set
+            {
+                _filterVisible = value;
+                FilterComboBox.Visible = _filterVisible;
+                FilterWatermarkLabel.Visible = _filterVisible;
+            }
         }
 
         public override bool Focused

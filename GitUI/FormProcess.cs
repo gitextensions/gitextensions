@@ -180,20 +180,24 @@ namespace GitUI
 
         private void OnExit(int exitcode)
         {
-            bool isError;
 
-            try
+            this.InvokeAsync(() =>
             {
-                isError = exitcode != 0;
-                if (HandleOnExit(ref isError))
-                    return;
-            }
-            catch
-            {
-                isError = true;
-            }
+                bool isError;
+                try
+                {
+                    isError = exitcode != 0;
 
-            Done(!isError);
+                    if (HandleOnExit(ref isError))
+                        return;
+                }
+                catch
+                {
+                    isError = true;
+                }
+
+                Done(!isError);
+            });
         }
 
         protected virtual void DataReceived(object sender, TextEventArgs e)

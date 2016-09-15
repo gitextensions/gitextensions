@@ -18,13 +18,11 @@ namespace GitUI.UserControls
 	{
 		private int _nLastExitCode;
 
-		[NotNull]
-		private readonly ConEmuControl _terminal;
+		private ConEmuControl _terminal;
 
 		public ConsoleEmulatorOutputControl()
 		{
-			Controls.Add(_terminal = new ConEmuControl() {Dock = DockStyle.Fill, AutoStartInfo = null /* don't spawn terminal until we have gotten the command */});
-		}
+        }
 
 		public override int ExitCode
 		{
@@ -64,14 +62,28 @@ namespace GitUI.UserControls
 				session.SendControlCAsync();
 		}
 
-		public override void Reset()
-		{
-			ConEmuSession session = _terminal.RunningSession;
-			if(session != null)
-				session.CloseConsoleEmulator();
-		}
+        public override void Reset()
+        {
+            if (_terminal != null)
+            {
+                KillProcess();
+                Controls.Remove(_terminal);
+                _terminal.Dispose();
+            }
 
-		public override void StartProcess(string command, string arguments, string workdir)
+            Controls.Add(_terminal = new ConEmuControl() { Dock = DockStyle.Fill, AutoStartInfo = null /* don't spawn terminal until we have gotten the command */});
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing && _terminal != null)
+            {
+                _terminal.Dispose();
+            }
+        }
+
+        public override void StartProcess(string command, string arguments, string workdir)
 		{
 			var cmdl = new CommandLineBuilder();
 			cmdl.AppendFileNameIfNotNull(command /* do the escaping for it */);
@@ -87,7 +99,13 @@ namespace GitUI.UserControls
 				_nLastExitCode = args.ExitCode;
 				FireProcessExited();
 			};
-			startinfo.ConsoleEmulatorClosedEventSink = delegate { FireTerminated(); };
+			startinfo.ConsoleEmulatorClosedEventSink = (s, e) =>
+                {
+                    if (s == _terminal.RunningSession)
+                    {
+                        FireTerminated();
+                    }
+                };
 			startinfo.IsEchoingConsoleCommandLine = true;
 
 			_terminal.Start(startinfo);
