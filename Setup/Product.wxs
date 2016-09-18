@@ -76,12 +76,6 @@
             <Component Id="TranslationApp.exe" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\TranslationApp.exe" />
             </Component>
-            <Component Id="System.Windows.Controls.Input.Toolkit.dll" Guid="*">
-                <File Source="..\GitExtensions\bin\Release\System.Windows.Controls.Input.Toolkit.dll" />
-            </Component>
-            <Component Id="WPFToolkit.dll" Guid="*">
-                <File Source="..\GitExtensions\bin\Release\WPFToolkit.dll" />
-            </Component>
             <Component Id="TranslationApp.exe.config" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\TranslationApp.exe.config" />
             </Component>
@@ -614,8 +608,6 @@
             <ComponentRef Id="GitExtensions.exe.config" />
             <ComponentRef Id="TranslationApp.exe" />
             <ComponentRef Id="TranslationApp.exe.config" />
-            <ComponentRef Id="System.Windows.Controls.Input.Toolkit.dll" />
-            <ComponentRef Id="WPFToolkit.dll" />
             <ComponentRef Id="Gravatar.dll" />
             <ComponentRef Id="GitCommands.dll" />
             <ComponentRef Id="GitExtUtils.dll" />
