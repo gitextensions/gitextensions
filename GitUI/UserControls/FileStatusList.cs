@@ -101,6 +101,11 @@ namespace GitUI
             return NoFiles.Text;
         }
 
+        public int getItemsCount()
+        {
+            return FileStatusListView.Items.Count;
+        }
+
         public bool FilterVisible
         {
             get
