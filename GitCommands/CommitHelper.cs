@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
-    public class CommitDto
+    public sealed class CommitDto
     {
         public CommitDto(string message, bool amend)
         {
@@ -16,7 +16,7 @@ namespace GitCommands
         public bool Amend { get; set; }
     }
 
-    public class CommitHelper
+    public sealed class CommitHelper
     {
         public CommitHelper(CommitDto dto)
         {
@@ -35,7 +35,7 @@ namespace GitCommands
 
         public static void SetCommitMessage(GitModule module, string commitMessageText)
         {
-            if (String.IsNullOrEmpty(commitMessageText))
+            if (string.IsNullOrEmpty(commitMessageText))
             {
                 File.Delete(GetCommitMessagePath(module));
                 return;
@@ -47,9 +47,61 @@ namespace GitCommands
             }
         }
 
-        public static string GetCommitMessagePath(GitModule module)
+        public static void SetAmendCommit(GitModule module, bool amendCommit)
+        {
+            var path = GetAmendCommitPath(module);
+            using (var textWriter = new StreamWriter(path, false, module.CommitEncoding))
+            {
+                textWriter.Write(amendCommit);
+            }
+        }
+
+        public static string GetCommitMessage(GitModule module)
+        {
+            var path = GetCommitMessagePath(module);
+
+            var commitMessage = File.ReadAllText(path, module.CommitEncoding);
+
+            return commitMessage;
+        }
+
+        public static bool GetAmendCommit(GitModule module)
+        {
+            var path = GetAmendCommitPath(module);
+
+            var amendCommitAsString = File.ReadAllText(path, module.FilesEncoding);
+            bool amendCommit;
+            bool.TryParse(amendCommitAsString, out amendCommit);
+
+            return amendCommit;
+        }
+
+        public static bool IsCommitMessageSaved(GitModule module)
+        {
+            var path = GetCommitMessagePath(module);
+
+            var isCommitMessageExists = File.Exists(path);
+
+            return isCommitMessageExists;
+        }
+
+        public static bool IsAmendCommitSaved(GitModule module)
+        {
+            var path = GetAmendCommitPath(module);
+
+            var isAmendCommitExists = File.Exists(path);
+
+            return isAmendCommitExists;
+        }
+
+        private static string GetCommitMessagePath(IGitModule module)
         {
             return Path.Combine(module.GetGitDirectory(), "COMMITMESSAGE");
+        }
+
+        private static string GetAmendCommitPath(IGitModule module)
+        {
+            return Path.Combine(module.GetGitDirectory(), "AMENDCOMMIT");
         }
     }
 }
