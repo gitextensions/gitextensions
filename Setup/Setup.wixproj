@@ -11,8 +11,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>GitExtensions</OutputName>
     <OutputType>Package</OutputType>
-<!--    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>-->
-<!--    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>-->
+    <!--    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>-->
+    <!--    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>-->
     <WixInstallPath Condition=" '$(WixInstallPath)' == '' ">$(MSBuildProjectDirectory)\..\packages\WiX.Toolset.3.8.1128.0\tools\wix\</WixInstallPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(WixInstallPath)wix.targets</WixTargetsPath>
     <DefineSolutionProperties>false</DefineSolutionProperties>
@@ -68,6 +68,10 @@
     <Content Include="RegisterShellExtension.wxi" />
   </ItemGroup>
   <ItemGroup>
+    <WixExtension Include="WixVSExtension">
+      <HintPath>$(WixExtDir)\WixVSExtension.dll</HintPath>
+      <Name>WixVSExtension</Name>
+    </WixExtension>
     <WixExtension Include="WixNetFxExtension">
       <HintPath>$(WixExtDir)\WixNetFxExtension.dll</HintPath>
       <Name>WixNetFxExtension</Name>
