@@ -5,7 +5,8 @@ using System.ComponentModel.Design;
 using EnvDTE;
 using EnvDTE80;
 
-using GitPlugin.Commands;
+using GitPluginShared;
+using GitPluginShared.Commands;
 
 using Microsoft.VisualStudio.Shell;
 
@@ -114,7 +115,7 @@ namespace GitExtensionsVSIX
 
         public OutputWindowPane OutputPane
         {
-            get { return _outputPane ?? (_outputPane = AquireOutputPane(_application, Vsix.Name)); }
+            get { return _outputPane ?? (_outputPane = PluginHelpers.AquireOutputPane(_application, Vsix.Name)); }
         }
 
         /// <summary>
@@ -140,28 +141,6 @@ namespace GitExtensionsVSIX
             if (!_commands.TryGetValue(guiCommand.CommandID.ID, out command))
                 return;
             command.OnCommand(_application, OutputPane);
-        }
-
-        private static OutputWindowPane AquireOutputPane(DTE2 app, string name)
-        {
-            try
-            {
-                if (name == "")
-                    return null;
-
-                OutputWindowPane result = Plugin.FindOutputPane(app, name);
-                if (result != null)
-                    return result;
-
-                var outputWindow = (OutputWindow)app.Windows.Item(Constants.vsWindowKindOutput).Object;
-                OutputWindowPanes panes = outputWindow.OutputWindowPanes;
-                return panes.Add(name);
-            }
-            catch (Exception)
-            {
-                //ignore!!
-                return null;
-            }
         }
     }
 }

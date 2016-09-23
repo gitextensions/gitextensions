@@ -513,6 +513,11 @@
                     <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall" />
                     <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
                 </Component>
+                <Component Id="VS$(var.VsVersion)_GitPluginShared.dll" Guid="*">
+                    <File Id="VS$(var.VsVersion)_GitPluginShared.dll" Source="..\GitPlugin\bin\Release\GitPluginShared.dll" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPluginShared.dll" On="uninstall" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPluginShared.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
+                </Component>
                 <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
                     <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
                         <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugin\bin\Release\en-US\GitPlugin.resources.dll" />
@@ -840,6 +845,7 @@
                     <Condition Level="2">NOT VS$(var.VsVersion)INSTFOLDER</Condition>
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
+                    <ComponentRef Id="VS$(var.VsVersion)_GitPluginShared.dll" />
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
                 </Feature>
                 <?endforeach ?>
