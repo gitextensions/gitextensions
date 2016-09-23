@@ -7,7 +7,7 @@ namespace GitExtensionsVSIX
 {
     static class Vsix
     {
-        public const string Id = "3166f76a-2b07-410a-a72a-509d6a2d146c";
+        public const string Id = "GitExtensions..3166f76a-2b07-410a-a72a-509d6a2d146c";
         public const string Name = "GitExtensions";
         public const string Description = @"Git Extensions is a graphical user interface for Git that allows you to control Git without using the command-line";
         public const string Language = "en-US";
