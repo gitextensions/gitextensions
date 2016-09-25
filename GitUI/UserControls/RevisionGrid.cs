@@ -668,20 +668,9 @@ namespace GitUI
         /// <returns>Index of the found revision or -1 if nothing was found</returns>
         private int FindRevisionIndex(string revision)
         {
-            if (string.IsNullOrWhiteSpace(revision))
-            {
-                return -1;
-            }
+            int? revIdx = Revisions.TryGetRevisionIndex(revision);
 
-            for (int i = 0; i < Revisions.RowCount; i++)
-            {
-                if (GetRevision(i).Guid == revision)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
+            return revIdx.HasValue ? revIdx.Value : -1;
         }
 
         public bool SetSelectedRevision(string revision)
