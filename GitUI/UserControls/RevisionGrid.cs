@@ -1192,18 +1192,8 @@ namespace GitUI
             string filtredCurrentCheckout = _filtredCurrentCheckout;
             string[] lastSelectedRows = LastSelectedRows ?? new string[0];
 
-            // When 'git log --first-parent' filtration is applied we can have the following situation:
-            // - user via CommitInfo traverses to a not first parent commit
-            // - branch filter is applied to be able to traverse to this commit
-            // - then user resets this branch filter with ShowFirstParent filter still on
-            //
-            // In such situation selected commits likelly are absent from availabe Revisions and
-            // thus it is not possible to make them selectable. To prevent jumping around to a random commit
-            // in UI we first filter out all unavailable commits from LastSelectedRows.
-            if (AppSettings.ShowFirstParent)
-            {
-                lastSelectedRows = lastSelectedRows.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
-            }
+            //filter out all unavailable commits from LastSelectedRows.
+            lastSelectedRows = lastSelectedRows.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
 
             if (lastSelectedRows.Any())
             {
