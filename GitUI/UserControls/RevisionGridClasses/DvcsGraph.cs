@@ -628,7 +628,7 @@ namespace GitUI.RevisionGridClasses
                     }
 
                     // Update the row (if needed)
-                    if (curCount < _visibleBottom)
+                    if (curCount == Math.Min(scrollTo, _visibleBottom) - 1)
                     {
                         this.InvokeAsync(o => UpdateRow((int)o), curCount);
                     }
