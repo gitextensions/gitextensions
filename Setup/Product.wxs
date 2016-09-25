@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
+    xmlns:VSExtension="http://schemas.microsoft.com/wix/VSExtension">
     <?include Config.wxi?>
     <Product Id="*" UpgradeCode="$(var.UpgradeCode)" Name="$(var.ProductName) $(var.Version)" Manufacturer="$(var.Manufacturer)" Version="$(var.NumericVersion)" Language="1033">
         <Package InstallerVersion="200" Compressed="yes" Description="$(var.ProductName)" />
@@ -53,6 +54,11 @@
             <DirectorySearch Id="VS$(var.VsVersion)DirSearchId" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
         </Property>
         <?endforeach ?>
+        <Property Id="VS2015_VSIX_INSTALLER_PATH" Secure="yes">
+            <RegistrySearch Id="WixVS2015EnvDir" Root="HKLM" Key="SOFTWARE\Microsoft\VisualStudio\14.0\Setup\VS" Name="EnvironmentDirectory" Type="directory">
+                <FileSearch Id="WixVS2015VsixInstaller" Name="VSIXInstaller.exe" />
+            </RegistrySearch>
+        </Property>
         <DirectoryRef Id="INSTALLDIR">
             <Component Id="gitextensions.ico" Guid="*">
                 <File Source="..\bin\logo\git-extensions-logo-final-256.ico" />
@@ -196,6 +202,10 @@
                 <RegistryKey Root="HKCR" Key="github-windows\shell\open\command">
                     <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
                 </RegistryKey>
+            </Component>
+            <Component Id="VS2015_VSIX" Guid="*">
+                <VSExtension:VsixPackage File="GitExtensionsVSIX.vsix" PackageId="GitExtensions..3166f76a-2b07-410a-a72a-509d6a2d146c" Target="community" TargetVersion="14.0" Vital="yes" Permanent="no" VsixInstallerPathProperty="VS2015_VSIX_INSTALLER_PATH" />
+                <File Source="..\GitExtensionsVSIX\bin\Release\GitExtensionsVSIX.vsix" />
             </Component>
         </DirectoryRef>
         <DirectoryRef Id="PluginsDir">
@@ -512,6 +522,11 @@
                     <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll" On="uninstall" />
                     <RemoveFolder Id="VS$(var.VsVersion)_GitPlugin.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
                 </Component>
+                <Component Id="VS$(var.VsVersion)_GitPluginShared.dll" Guid="*">
+                    <File Id="VS$(var.VsVersion)_GitPluginShared.dll" Source="..\GitPlugin\bin\Release\GitPluginShared.dll" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPluginShared.dll" On="uninstall" />
+                    <RemoveFolder Id="VS$(var.VsVersion)_GitPluginShared.dll_Parent" On="uninstall" Directory="VS$(var.VsVersion)" />
+                </Component>
                 <Directory Id="VS$(var.VsVersion)_Addins_enUS" Name="en-US">
                     <Component Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Guid="*">
                         <File Id="VS$(var.VsVersion)_GitPlugin.resources.dll" Source="..\GitPlugin\bin\Release\en-US\GitPlugin.resources.dll" />
@@ -547,7 +562,7 @@
         <CustomAction Id="UninstallGitExtensions"
             FileKey="GitExtensions.exe"
             ExeCommand="uninstall"
-            Return="asyncWait" />
+            Return="check" />
 
         <InstallExecuteSequence>
             <!-- Execute the defined custom actions to remove the add-in commands from Visual Studio. They must execute when
@@ -839,9 +854,14 @@
                     <Condition Level="2">NOT VS$(var.VsVersion)INSTFOLDER</Condition>
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.AddIn" />
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.dll" />
+                    <ComponentRef Id="VS$(var.VsVersion)_GitPluginShared.dll" />
                     <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
                 </Feature>
                 <?endforeach ?>
+                <Feature Id="VS2015FeatureId" Title="Visual Studio 2015 integration" Level="1">
+                    <Condition Level="2">NOT VS2015_VSIX_INSTALLER_PATH</Condition>
+                    <ComponentRef Id="VS2015_VSIX" />
+                </Feature>
             </Feature>
             <Feature Id="Protocol.git" Title="Assign with git://-links" Level="1">
                 <ComponentRef Id="Protocol.git" />
