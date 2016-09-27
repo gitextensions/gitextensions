@@ -1,13 +1,11 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Text;
+using System.Windows.Forms;
 
 using ConEmu.WinForms;
 
 using GitCommands;
 using GitCommands.Utils;
-
-using JetBrains.Annotations;
-
-using Microsoft.Build.Utilities;
 
 namespace GitUI.UserControls
 {
@@ -18,13 +16,20 @@ namespace GitUI.UserControls
 	{
 		private int _nLastExitCode;
 
-		private ConEmuControl _terminal;
+        private Panel _panel;
+        private ConEmuControl _terminal;
 
 		public ConsoleEmulatorOutputControl()
-		{
+        {
+            InitializeComponent();
         }
 
-		public override int ExitCode
+        private void InitializeComponent()
+        {
+            Controls.Add(_panel = new Panel() { Dock = DockStyle.Fill, BorderStyle = BorderStyle.Fixed3D });
+        }
+
+        public override int ExitCode
 		{
 			get
 			{
@@ -67,11 +72,11 @@ namespace GitUI.UserControls
             if (_terminal != null)
             {
                 KillProcess();
-                Controls.Remove(_terminal);
+                _panel.Controls.Remove(_terminal);
                 _terminal.Dispose();
             }
 
-            Controls.Add(_terminal = new ConEmuControl() { Dock = DockStyle.Fill, AutoStartInfo = null /* don't spawn terminal until we have gotten the command */});
+            _panel.Controls.Add(_terminal = new ConEmuControl() { Dock = DockStyle.Fill, AutoStartInfo = null /* don't spawn terminal until we have gotten the command */});
         }
 
         protected override void Dispose(bool disposing)
@@ -84,12 +89,17 @@ namespace GitUI.UserControls
         }
 
         public override void StartProcess(string command, string arguments, string workdir)
-		{
-			var cmdl = new CommandLineBuilder();
-			cmdl.AppendFileNameIfNotNull(command /* do the escaping for it */);
-			cmdl.AppendSwitch(arguments /* expecting to be already escaped */);
+        {
+            var cmdl = new StringBuilder();
+            if (command != null)
+            {
+                cmdl.Append(command.Quote() /* do the escaping for it */);
+                cmdl.Append(" ");
+            }
+            cmdl.Append(arguments /* expecting to be already escaped */);
+            cmdl.Append(" -new_console:P:\"<Solarized Light>\"");
 
-			var startinfo = new ConEmuStartInfo();
+            var startinfo = new ConEmuStartInfo();
 			startinfo.ConsoleProcessCommandLine = cmdl.ToString();
 			startinfo.StartupDirectory = workdir;
 			startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
@@ -99,9 +109,11 @@ namespace GitUI.UserControls
 				_nLastExitCode = args.ExitCode;
 				FireProcessExited();
 			};
-			startinfo.ConsoleEmulatorClosedEventSink = (s, e) =>
+
+            startinfo.ConsoleEmulatorClosedEventSink = (s, e) =>
                 {
-                    if (s == _terminal.RunningSession)
+                    if (!(s as ConEmuSession).IsConsoleProcessExited
+                        && s == _terminal.RunningSession)
                     {
                         FireTerminated();
                     }

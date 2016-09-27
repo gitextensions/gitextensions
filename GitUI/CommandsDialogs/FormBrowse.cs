@@ -3561,9 +3561,10 @@ namespace GitUI.CommandsDialogs
                 {
                     startinfo.ConsoleProcessCommandLine += " --login -i";
                 }
+                startinfo.ConsoleProcessCommandLine += " -new_console:P:\"<Solarized Light>\"";
 
-			    // Set path to git in this window (actually, effective with CMD only)
-			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
+                // Set path to git in this window (actually, effective with CMD only)
+                if (!string.IsNullOrEmpty(AppSettings.GitCommand))
 			    {
 				    string dirGit = Path.GetDirectoryName(AppSettings.GitCommand);
 				    if(!string.IsNullOrEmpty(dirGit))
