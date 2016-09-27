@@ -54,6 +54,7 @@
             <DirectorySearch Id="VS$(var.VsVersion)DirSearchId" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
         </Property>
         <?endforeach ?>
+        <PropertyRef Id="VS2015DEVENV" />
         <DirectoryRef Id="INSTALLDIR">
             <Component Id="gitextensions.ico" Guid="*">
                 <File Source="..\bin\logo\git-extensions-logo-final-256.ico" />
