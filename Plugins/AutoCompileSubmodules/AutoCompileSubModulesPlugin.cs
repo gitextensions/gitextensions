@@ -17,7 +17,7 @@ namespace AutoCompileSubmodules
 
         public AutoCompileSubModulesPlugin()
         {
-            Description = "Auto compile SubModules";
+            SetNameAndDescription("Auto compile SubModules");
             Translate();
         }
 
@@ -58,7 +58,7 @@ namespace AutoCompileSubmodules
             if (string.IsNullOrEmpty(e.GitModule.WorkingDir))
                 return false;
 
-            var msbuildpath = MsBuildPath[Settings];
+            var msbuildpath = MsBuildPath.ValueOrDefault(Settings);
 
             var workingDir = new DirectoryInfo(e.GitModule.WorkingDir);
             var solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
@@ -84,7 +84,7 @@ namespace AutoCompileSubmodules
                 if (string.IsNullOrEmpty(msbuildpath) || !File.Exists(msbuildpath))
                     MessageBox.Show(e.OwnerForm, _enterCorrectMsBuildPath.Text);
                 else
-                    e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + MsBuildArguments[Settings]);
+                    e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + MsBuildArguments.ValueOrDefault(Settings));
             }
             return false;
         }
@@ -96,7 +96,7 @@ namespace AutoCompileSubmodules
         /// </summary>
         private void GitUiCommandsPostUpdateSubmodules(object sender, GitUIPostActionEventArgs e)
         {
-            if (e.ActionDone && MsBuildEnabled[Settings].Value)
+            if (e.ActionDone && MsBuildEnabled.ValueOrDefault(Settings))
                 Execute(e);
         }
 

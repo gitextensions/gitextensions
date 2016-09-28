@@ -180,20 +180,24 @@ namespace GitUI
 
         private void OnExit(int exitcode)
         {
-            bool isError;
 
-            try
+            this.InvokeAsync(() =>
             {
-                isError = exitcode != 0;
-                if (HandleOnExit(ref isError))
-                    return;
-            }
-            catch
-            {
-                isError = true;
-            }
+                bool isError;
+                try
+                {
+                    isError = exitcode != 0;
 
-            Done(!isError);
+                    if (HandleOnExit(ref isError))
+                        return;
+                }
+                catch
+                {
+                    isError = true;
+                }
+
+                Done(!isError);
+            });
         }
 
         protected virtual void DataReceived(object sender, TextEventArgs e)
@@ -211,9 +215,9 @@ namespace GitUI
 			    string line = e.Text.Replace(ansiSuffix, "");
 
 			    if(ConsoleOutput.IsDisplayingFullProcessOutput)
-				    OutputLog.AppendLine(line); // To the log only, display control displays it by itself
+				    OutputLog.Append(line); // To the log only, display control displays it by itself
 			    else
-				    AppendOutputLine(line); // Both to log and display control
+				    AppendOutput(line); // Both to log and display control
 		    }
 
 		    DataReceived(sender, e);
@@ -222,10 +226,10 @@ namespace GitUI
 		/// <summary>
 		/// Appends a line of text (CRLF added automatically) both to the logged output (<see cref="FormStatus.GetOutputString"/>) and to the display console control.
 		/// </summary>
-        public void AppendOutputLine(string line)
+        public void AppendOutput(string line)
         {
 			// To the internal log (which can be then retrieved as full text from this form)
-            OutputLog.AppendLine(line);
+            OutputLog.Append(line);
 
 			// To the display control
             AddMessageLine(line);

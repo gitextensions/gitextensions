@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowCommitAndPush.Checked = AppSettings.ShowCommitAndPush;
             chkShowResetUnstagedChanges.Checked = AppSettings.ShowResetUnstagedChanges;
             chkShowResetAllChanges.Checked = AppSettings.ShowResetAllChanges;
-
+            chkAutocomplete.Checked = AppSettings.ProvideAutocompletion;
         }
 
         protected override void PageToSettings()
@@ -32,6 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowCommitAndPush = chkShowCommitAndPush.Checked;
             AppSettings.ShowResetUnstagedChanges = chkShowResetUnstagedChanges.Checked;
             AppSettings.ShowResetAllChanges = chkShowResetAllChanges.Checked;
+            AppSettings.ProvideAutocompletion = chkAutocomplete.Checked;
         }
     }
 }

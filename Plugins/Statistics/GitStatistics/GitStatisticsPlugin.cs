@@ -8,7 +8,7 @@ namespace GitStatistics
     {
         public GitStatisticsPlugin()
         {
-            Description = "Statistics";
+            SetNameAndDescription("Statistics");
             Translate();
         }
 
@@ -31,11 +31,11 @@ namespace GitStatistics
         {
             if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
                 return false;
-            bool countSubmodule = IgnoreSubmodules[Settings].HasValue && !IgnoreSubmodules[Settings].Value;
+            bool countSubmodule = !IgnoreSubmodules.ValueOrDefault(Settings);
             using (var formGitStatistics =
-                new FormGitStatistics(gitUIEventArgs.GitModule, CodeFiles[Settings], countSubmodule)
+                new FormGitStatistics(gitUIEventArgs.GitModule, CodeFiles.ValueOrDefault(Settings), countSubmodule)
                     {
-                        DirectoriesToIgnore = IgnoreDirectories[Settings]
+                        DirectoriesToIgnore = IgnoreDirectories.ValueOrDefault(Settings)
                     })
             {
                 formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");

@@ -7,7 +7,7 @@ namespace ProxySwitcher
     {
         public ProxySwitcherPlugin()
         {
-            Description = "Proxy Switcher";
+            SetNameAndDescription("Proxy Switcher");
             Translate();
         }
 

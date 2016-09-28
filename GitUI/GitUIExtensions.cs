@@ -88,16 +88,24 @@ namespace GitUI
                 }
                 else
                 {
-                    if (diffKind == DiffWithRevisionKind.DiffALocal)
-                        revisionToCmp = revisions[0].Guid;
-                    else if (diffKind == DiffWithRevisionKind.DiffBLocal)
-                        revisionToCmp = revisions[1].Guid;
-                    else if (diffKind == DiffWithRevisionKind.DiffAParentLocal)
-                        revisionToCmp = revisions[0].ParentGuids.Length == 0 ? null : revisions[0].ParentGuids[0];
-                    else if (diffKind == DiffWithRevisionKind.DiffBLocal)
-                        revisionToCmp = revisions[1].ParentGuids.Length == 0 ? null : revisions[1].ParentGuids[0];
-                    else
-                        revisionToCmp = null;
+                    switch (diffKind)
+                    {
+                        case DiffWithRevisionKind.DiffALocal:
+                            revisionToCmp = revisions[0].Guid;
+                            break;
+                        case DiffWithRevisionKind.DiffBLocal:
+                            revisionToCmp = revisions[1].Guid;
+                            break;
+                        case DiffWithRevisionKind.DiffAParentLocal:
+                            revisionToCmp = revisions[0].ParentGuids.Length == 0 ? null : revisions[0].ParentGuids[0];
+                            break;
+                        case DiffWithRevisionKind.DiffBParentLocal:
+                            revisionToCmp = revisions[1].ParentGuids.Length == 0 ? null : revisions[1].ParentGuids[0];
+                            break;
+                        default:
+                            revisionToCmp = null;
+                            break;
+                    }
                 }
 
                 if (revisionToCmp == null)
@@ -332,24 +340,6 @@ namespace GitUI
 
             if (!control.IsDisposed)
                 UISynchronizationContext.Send(checkDisposedAndInvoke, state);
-        }
-
-        public static bool? GetNullableChecked(this CheckBox chx)
-        {
-            if (chx.CheckState == CheckState.Indeterminate)
-                return null;
-            else
-                return chx.Checked;
-
-        }
-
-        public static void SetNullableChecked(this CheckBox chx, bool? Checked)
-        {
-            if (Checked.HasValue)
-                chx.CheckState = Checked.Value ? CheckState.Checked : CheckState.Unchecked;
-            else
-                chx.CheckState = CheckState.Indeterminate;
-
         }
 
         public static Control FindFocusedControl(this ContainerControl container)

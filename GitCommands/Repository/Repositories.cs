@@ -48,7 +48,7 @@ namespace GitCommands.Repository
                 {
                     if (repo.IsRemote)
                     {
-                        repo.Path = repo.Path.Replace('\\', '/');
+                        repo.Path = repo.Path.ToPosixPath();
                         _remoteRepositoryHistory.AddRepository(repo);
                     }
                 }

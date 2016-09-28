@@ -1476,7 +1476,7 @@ You will have push access. {2}</source>
         <source>Add file(s) to .gitignore</source>
         
       </trans-unit>
-      <trans-unit id="AddToIngore.Text">
+      <trans-unit id="AddToIgnore.Text">
         <source>Ignore</source>
         
       </trans-unit>
@@ -7022,7 +7022,7 @@ This will just checkout on the submodule the commit determined by the superproje
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Fixup commit</source>
+        <source>Create a fixup commit</source>
         
       </trans-unit>
       <trans-unit id="hashCopyToolStripMenuItem.Text">
@@ -7121,7 +7121,7 @@ If this is a central repository (bare repository without a working directory):
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Squash commit</source>
+        <source>Create a squash commit</source>
         
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">

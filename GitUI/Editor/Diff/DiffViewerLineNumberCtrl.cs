@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -15,6 +14,7 @@ namespace GitUI.Editor.Diff
 
         private int _maxValueOfLineNum;
         private bool _visible = true;
+        private Size _lastSize = new Size(0, 0);
 
         public DiffViewerLineNumberCtrl(TextArea textArea) : base(textArea)
         {
@@ -25,25 +25,24 @@ namespace GitUI.Editor.Diff
         {
             get
             {
-                if (!DiffLines.Any() || !_visible)
+                if (!_visible)
                 {
-                    return new Size(0, 0);
+                    _lastSize = new Size(0, 0);
+                } 
+                else if (DiffLines.Any())
+                {
+                    var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);
+                    // Workaround that right most numbers get clipped when using mono.
+                    var monoTextWidthAdjustment = EnvUtils.IsMonoRuntime() ? 10 : 0;
+                    _lastSize = new Size((int)size.Width * 2 + TextHorizontalMargin + monoTextWidthAdjustment, 0);
                 }
 
-                var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);
-                // Workaround that right most numbers get clipped when using mono.
-                var monoTextWidthAdjustment = EnvUtils.IsMonoRuntime()? 10 : 0;
-                return new Size((int)size.Width * 2 + TextHorizontalMargin + monoTextWidthAdjustment, 0);
+                return _lastSize;
             }
         }
 
         public override void Paint(Graphics g, Rectangle rect)
         {
-            if (!DiffLines.Any())
-            {
-                return;
-            }
-
             var totalWidth = Size.Width;
             var leftWidth = (int)(totalWidth/2.0);
             var rightWidth = rect.Width - leftWidth;
@@ -114,14 +113,19 @@ namespace GitUI.Editor.Diff
 
         private Dictionary<int, DiffLineNum> DiffLines { get; set; }
 
-        public void AddDiffLineNum(DiffLineNum diffLineNum)
+        public void DisplayLineNumFor(string diff)
         {
-            DiffLines[diffLineNum.LineNumInDiff] = diffLineNum;
-            _maxValueOfLineNum = Math.Max(diffLineNum.LeftLineNum, diffLineNum.RightLineNum);
+            var result = new DiffLineNumAnalyzer().Analyze(diff);
+            DiffLines = result.LineNumbers;
+            _maxValueOfLineNum = result.MaxLineNumber;
         }
 
-        public void Clear()
+        public void Clear(bool forDiff)
         {
+            if (!forDiff)
+            {
+                _lastSize = new Size(0, 0);
+            }
             DiffLines.Clear();
         }
 

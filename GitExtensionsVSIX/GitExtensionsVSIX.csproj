@@ -66,28 +66,48 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="GitExtCommands.cs" />
+    <Compile Include="GitExtCommandTable.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GitExtCommandTable.vsct</DependentUpon>
+    </Compile>
     <Compile Include="GitExtensionsPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="source.extension.cs">
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\LICENSE.md">
+      <Link>Resources\LICENSE.md</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="source.extension.ico" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
+      <Generator>VsixManifestGenerator</Generator>
+      <LastGenOutput>source.extension.resx</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Bin\Logo\git-extensions-logo-final-256.png">
       <Link>Resources\git-extensions-logo-final-256.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\Bin\Logo\git-extensions-logo-final-32.png">
       <Link>Resources\git-extensions-logo-final-32.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Commands.png" />
-    <VSCTCompile Include="GitExtensionsPackage.vsct">
+    <VSCTCompile Include="GitExtCommandTable.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
+      <Generator>VsctGenerator</Generator>
+      <LastGenOutput>GitExtCommandTable.cs</LastGenOutput>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
@@ -153,15 +173,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="VSPackage.resx">
+    <EmbeddedResource Include="source.extension.resx">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GitPlugin\GitPlugin.csproj">
-      <Project>{e996be2d-b07d-472d-9d74-3ea2d48ef269}</Project>
-      <Name>GitPlugin</Name>
+    <ProjectReference Include="..\GitPluginShared\GitPluginShared.csproj">
+      <Project>{c0a7b025-b7ee-477a-bac7-a6365e7bd893}</Project>
+      <Name>GitPluginShared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

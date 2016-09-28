@@ -84,7 +84,10 @@ namespace GitExtensions
 
             try
             {
-                if (AppSettings.CheckSettings || string.IsNullOrEmpty(AppSettings.GitCommandValue))
+                if (!(args.Length >= 2 && args[1].Equals("uninstall"))
+                    && (AppSettings.CheckSettings 
+                    || string.IsNullOrEmpty(AppSettings.GitCommandValue)
+                    || !File.Exists(AppSettings.GitCommandValue)))
                 {
                     FormSplash.SetAction("Checking settings...");
                     Application.DoEvents();
@@ -97,8 +100,10 @@ namespace GitExtensions
                     {
                         if (!checklistSettingsPage.CheckSettings())
                         {
-                            checkSettingsLogic.AutoSolveAllSettings();
-                            uiCommands.StartSettingsDialog();
+                            if (!checkSettingsLogic.AutoSolveAllSettings())
+                            {
+                                uiCommands.StartSettingsDialog();
+                            }
                         }
                     }
                 }

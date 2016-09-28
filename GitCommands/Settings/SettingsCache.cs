@@ -156,7 +156,14 @@ namespace GitCommands
             LockedAction(() =>
             {
                 SetValue(name, s);
-                ByNameMap[name] = value;
+                if (s == null)
+                {
+                    ByNameMap[name] = null;
+                }
+                else
+                {
+                    ByNameMap[name] = value;
+                }
             });
         }
 

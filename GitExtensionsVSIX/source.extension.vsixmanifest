@@ -1,31 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Vsix Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-    <Identifier Id="GitExtensionsVSIX.3166f76a-2b07-410a-a72a-509d6a2d146c">
-        <Name>GitExtensions</Name>
-        <Author>GitExtensions</Author>
-        <Version>2.49</Version>
-        <Description xml:space="preserve">Integration of GitExtensions in Visual Studio.</Description>
-        <Locale>1033</Locale>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Publisher="GitExt Team" Version="2.48.90" Language="en-US" Id="GitExtensions..3166f76a-2b07-410a-a72a-509d6a2d146c" />
+        <DisplayName>GitExtensions</DisplayName>
+        <Description xml:space="preserve" >Git Extensions is a graphical user interface for Git that allows you to control Git without using the command-line</Description>
+        <MoreInfo>http://gitextensions.github.io/</MoreInfo>
+        <License>Resources\LICENSE.md</License>
+        <GettingStartedGuide>https://git-extensions-documentation.readthedocs.io/en/latest/</GettingStartedGuide>
         <Icon>Resources\git-extensions-logo-final-32.png</Icon>
         <PreviewImage>Resources\git-extensions-logo-final-256.png</PreviewImage>
-        <SupportedProducts>
-            <VisualStudio Version="10.0">
-                <Edition>Pro</Edition>
-            </VisualStudio>
-            <VisualStudio Version="11.0">
-                <Edition>Pro</Edition>
-            </VisualStudio>
-            <VisualStudio Version="12.0">
-                <Edition>Pro</Edition>
-            </VisualStudio>
-            <VisualStudio Version="14.0">
-                <Edition>Pro</Edition>
-            </VisualStudio>
-        </SupportedProducts>
-        <SupportedFrameworkRuntimeEdition MinVersion="4.0" />
-    </Identifier>
+        <Tags>Git, Git Extensions</Tags>
+    </Metadata>
 
-    <Content>
-        <VsPackage>|%CurrentProject%|</VsPackage>
-    </Content>
-</Vsix>
+    <Installation>
+        <InstallationTarget Version="[14.0,15.0)" Id="Microsoft.VisualStudio.Community" />
+    </Installation>
+
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.0" />
+        <Dependency Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" d:Source="Installed" Version="[14.0,15.0)" />
+    </Dependencies>
+
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    </Assets>
+</PackageManifest>

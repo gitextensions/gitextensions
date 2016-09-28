@@ -181,6 +181,8 @@ namespace GitUI.RevisionGridClasses
         /// </summary>
         internal DataGridViewColumn DateColumn { get { return Columns[3]; } }
 
+        internal DataGridViewColumn IdColumn { get { return Columns[4]; } }
+
         public void ShowAuthor(bool show)
         {
             this.AuthorColumn.Visible = show;
@@ -240,6 +242,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public string[] SelectedIds
@@ -268,21 +271,18 @@ namespace GitUI.RevisionGridClasses
                     if (value == null)
                         return;
 
-                    ClearSelection();
-                    CurrentCell = null;
-
                     foreach (string rowItem in value)
                     {
-                        int row = FindRow(rowItem);
-                        if (row >= 0 && Rows.Count > row)
+                        int? row = TryGetRevisionIndex(rowItem);
+                        if (row.HasValue && row.Value >= 0 && Rows.Count > row.Value)
                         {
-                            Rows[row].Selected = true;
+                            Rows[row.Value].Selected = true;
                             if (CurrentCell == null)
                             {
                                 // Set the current cell to the first item. We use cell
                                 // 1 because cell 0 could be hidden if they've chosen to
                                 // not see the graph
-                                CurrentCell = Rows[row].Cells[1];
+                                CurrentCell = Rows[row.Value].Cells[1];
                             }
                         }
                     }
@@ -625,7 +625,7 @@ namespace GitUI.RevisionGridClasses
                     }
 
                     // Update the row (if needed)
-                    if (curCount < _visibleBottom)
+                    if (curCount == Math.Min(scrollTo, _visibleBottom) - 1)
                     {
                         this.InvokeAsync(o => UpdateRow((int)o), curCount);
                     }
@@ -729,7 +729,14 @@ namespace GitUI.RevisionGridClasses
                         }
                     }
 
-                    laneCount = Math.Min(Math.Max(laneCount, width), MaxLanes);
+                    // When 'git log --first-parent' filtration is enabled and when only current 
+                    // branch needed to be rendered (and this filter actually works),
+                    // it is much more readable to limit max lanes to 1.
+                    int maxLanes = 
+                        (AppSettings.ShowFirstParent && 
+                        AppSettings.ShowCurrentBranchOnly && 
+                        AppSettings.BranchFilterEnabled) ? 1: MaxLanes;
+                    laneCount = Math.Min(Math.Max(laneCount, width), maxLanes);
                 }
                 if (GraphColumn.Width != _laneWidth*laneCount && _laneWidth*laneCount > GraphColumn.MinimumWidth)
                     GraphColumn.Width = _laneWidth*laneCount;
@@ -1253,6 +1260,16 @@ namespace GitUI.RevisionGridClasses
 
             if (_graphData.Nodes.TryGetValue(guid, out node))
                 return node.Data;
+
+            return null;
+        }
+
+        public int? TryGetRevisionIndex(string guid)
+        {
+            Node node;
+
+            if (_graphData.Nodes.TryGetValue(guid, out node))
+                return node.Index;
 
             return null;
         }

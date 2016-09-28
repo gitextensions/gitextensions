@@ -8,12 +8,16 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=2.49a1
+set version=2.49RC1
 set normal=GitExtensions-%version%-Mono.zip
 set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
 
 rd /q /s GitExtensions\
 rd /q %normal%
+xcopy /y ..\GitExtensions\bin\Release\ConEmu\* GitExtensions\ConEmu\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitExtensions\bin\Release\ConEmu.WinForms.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\Git.hub.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\GitCommands.dll GitExtensions\

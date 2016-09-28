@@ -42,7 +42,7 @@ namespace GitCommands.Settings
             }
         }
 
-        public T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
+        public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
             T value;
 
@@ -58,7 +58,7 @@ namespace GitCommands.Settings
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <param name="encode"></param>
-        public virtual void SetValue<T>(string name, T value, Func<T, string> encode)
+        public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
             if (LowerPriority == null || SettingsCache.HasValue(name))
                 SettingsCache.SetValue(name, value, encode);

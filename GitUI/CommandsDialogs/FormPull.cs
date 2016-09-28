@@ -10,6 +10,7 @@ using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.Script;
+using GitUI.UserControls;
 using ResourceManager;
 using Settings = GitCommands.AppSettings;
 
@@ -166,6 +167,8 @@ namespace GitUI.CommandsDialogs
             IList<string> remotes = new List<string>(Module.GetRemotes());
             remotes.Insert(0, AllRemotes);
             _NO_TRANSLATE_Remotes.DataSource = remotes;
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (_NO_TRANSLATE_Remotes, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
@@ -234,6 +237,8 @@ namespace GitUI.CommandsDialogs
             //_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
             _heads.Insert(0, GitRef.NoHead(Module));
             Branches.DataSource = _heads;
+
+            ComboBoxHelper.ResizeComboBoxDropDownWidth (Branches, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
             Cursor.Current = Cursors.Default;
         }
@@ -662,7 +667,7 @@ namespace GitUI.CommandsDialogs
                 IEnumerable<string> remotes = (IEnumerable<string>)_NO_TRANSLATE_Remotes.DataSource;
                 foreach (var r in remotes)
                 {
-                    if (!r.Equals(AllRemotes) && !r.IsNullOrWhiteSpace())
+                    if (!r.IsNullOrWhiteSpace() && !r.Equals(AllRemotes))
                         yield return r;
                 }
             }

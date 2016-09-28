@@ -79,11 +79,11 @@ namespace GitUI.CommandsDialogs
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            using (var browseDialog = new FolderBrowserDialog())
-            {
+            var userSelectedPath = OsShellUtil.PickFolder(this);
 
-                if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                    Directory.Text = browseDialog.SelectedPath;
+            if (userSelectedPath != null)
+            {
+                Directory.Text = userSelectedPath;
             }
         }
     }

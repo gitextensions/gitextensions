@@ -624,15 +624,14 @@ namespace GitCommands
             }.ToString();
         }
 
-        public static string PushTagCmd(string path, string tag, bool all, bool force = false)
+        public static string PushTagCmd(string path, string tag, bool all,
+            ForcePushOptions force = ForcePushOptions.DoNotForce)
         {
             path = path.ToPosixPath();
 
             tag = tag.Replace(" ", "");
 
-            var sforce = "";
-            if (force)
-                sforce = "-f ";
+            var sforce = GetForcePushArgument(force);
 
             var sprogressOption = "";
             if (VersionInUse.PushCanAskForProgress)
@@ -646,6 +645,16 @@ namespace GitCommands
                 return "push " + options + "\"" + path.Trim() + "\" tag " + tag;
 
             return "";
+        }
+
+        public static string GetForcePushArgument(ForcePushOptions force)
+        {
+            var sforce = "";
+            if (force == ForcePushOptions.Force)
+                sforce = "-f ";
+            else if (force == ForcePushOptions.ForceWithLease)
+                sforce = "--force-with-lease ";
+            return sforce;
         }
 
         public static string StashSaveCmd(bool untracked, bool keepIndex, string message)

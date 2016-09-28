@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.49a1">
-  <file datatype="plaintext" original="" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Thanks to...</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="AboutBox" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -56,6 +48,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <source>Always show checkout dialog</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkAutoNormaliseBranchName.Text">
+        <source>Auto normalise branch name</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
         <source>Check for release candidate versions</source>
         <target />
@@ -79,6 +75,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen "local changes" action as default action.
 This action will be performed without warning while checking out branch.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Symbol to use:</source>
         <target />
       </trans-unit>
     </body>
@@ -682,6 +682,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Ensure the second line of commit message is empty</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkAutocomplete.Text">
+        <source>Provide auto-completion in commit dialog</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkShowCommitAndPush.Text">
         <source>Commit &amp;&amp; Push</source>
         <target />
@@ -1167,6 +1171,10 @@ Do you want to open it?</source>
         <source>Combined Diff</source>
         <target />
       </trans-unit>
+      <trans-unit id="FilterWatermarkLabel.Text">
+        <source>Filter files...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="NoFiles.Text">
         <source>No changes</source>
         <target />
@@ -1585,7 +1593,7 @@ You will have push access. {2}</source>
         <source>Add file(s) to .gitignore</source>
         <target />
       </trans-unit>
-      <trans-unit id="AddToIngore.Text">
+      <trans-unit id="AddToIgnore.Text">
         <source>Ignore</source>
         <target />
       </trans-unit>
@@ -1838,6 +1846,10 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="RefreshButton.ToolTipText">
         <source>Refresh</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ShowFirstParent.ToolTipText">
+        <source>Show first parents</source>
         <target />
       </trans-unit>
       <trans-unit id="SvnDcommitToolStripMenuItem.Text">
@@ -2112,10 +2124,6 @@ compare with first:</source>
         <source>Commit...</source>
         <target />
       </trans-unit>
-      <trans-unit id="commitToolStripMenuItem1.Text">
-        <source>Commit</source>
-        <target />
-      </trans-unit>
       <trans-unit id="commitcountPerUserToolStripMenuItem.Text">
         <source>Commits per user</source>
         <target />
@@ -2172,10 +2180,6 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="donateToolStripMenuItem.Text">
         <source>Donate</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="dontSetAsDefaultToolStripMenuItem.Text">
-        <source>Don't set as default</source>
         <target />
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
@@ -2454,11 +2458,11 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <source>Save</source>
         <target />
       </trans-unit>
-      <trans-unit id="settingsToolStripMenuItem2.Text">
-        <source>Settings</source>
+      <trans-unit id="setNextPullActionAsDefaultToolStripMenuItem.Text">
+        <source>Set the next selection as default</source>
         <target />
       </trans-unit>
-      <trans-unit id="settingsToolStripMenuItem3.Text">
+      <trans-unit id="settingsToolStripMenuItem.Text">
         <source>Settings</source>
         <target />
       </trans-unit>
@@ -2514,7 +2518,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <source>Branches:</source>
         <target />
       </trans-unit>
-      <trans-unit id="toolStripLabel2.Text">
+      <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
         <target />
       </trans-unit>
@@ -2606,6 +2610,10 @@ Enter valid branch name or select predefined value.</source>
       </trans-unit>
       <trans-unit id="_dontShowAgain.Text">
         <source>Don't show me this message again.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkSetLocalChangesActionAsDefault.Text">
+        <source>Set as default</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -2747,6 +2755,18 @@ revision:</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Find specific commit:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelParents.Text">
+        <source>Parent(s):</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="linkLabelParent.Text">
+        <source>sha parent 1</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="linkLabelParent2.Text">
+        <source>sha parent 2</source>
         <target />
       </trans-unit>
     </body>
@@ -3331,7 +3351,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="showAssumeUnchangedFilesToolStripMenuItem.Text">
-        <source>Show assume unchanged files</source>
+        <source>Show assumed-unchanged files</source>
         <target />
       </trans-unit>
       <trans-unit id="showIgnoredFilesToolStripMenuItem.Text">
@@ -3535,19 +3555,19 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="CheckoutAfterCreate.Text">
-        <source>Checkout after create</source>
+        <source>Checkout &amp;after create</source>
         <target />
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
-        <source>Clear working directory and index</source>
+        <source>Clear &amp;working directory and index</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
-        <source>Create branch</source>
+        <source>&amp;Create branch</source>
         <target />
       </trans-unit>
       <trans-unit id="Orphan.Text">
-        <source>Create orphan</source>
+        <source>Create or&amp;phan</source>
         <target />
       </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
@@ -3567,11 +3587,11 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Branch name</source>
+        <source>&amp;Branch name</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Create branch at this revision</source>
+        <source>Create b&amp;ranch at this revision</source>
         <target />
       </trans-unit>
     </body>
@@ -3888,6 +3908,10 @@ If you are not sure just close this window.</source>
         <source>Diff</source>
         <target />
       </trans-unit>
+      <trans-unit id="ShowFirstParent.ToolTipText">
+        <source>Show first parents</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ViewTab.Text">
         <source>View</source>
         <target />
@@ -3940,7 +3964,7 @@ If you are not sure just close this window.</source>
         <source>Branches:</source>
         <target />
       </trans-unit>
-      <trans-unit id="toolStripLabel2.Text">
+      <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
         <target />
       </trans-unit>
@@ -4236,6 +4260,10 @@ Thumbs.db
 obj/
 [Rr]elease*/
 _ReSharper*/</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lnkGitIgnoreGenerate.Text">
+        <source>Generate a custom gitignore</source>
         <target />
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
@@ -4915,6 +4943,10 @@ Are you sure you want to push this branch?</source>
         <source>Remember my decision.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_forceWithLeaseTooltips.Text">
+        <source>Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_no.Text">
         <source>No</source>
         <target />
@@ -4975,8 +5007,16 @@ Are you sure you want to push this branch?</source>
         <source>The branch {0} does not have a tracking reference. Do you want to add a tracking reference to {1}?</source>
         <target />
       </trans-unit>
+      <trans-unit id="_useForceWithLeaseInstead.Text">
+        <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_yes.Text">
         <source>Yes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ckForceWithLease.Text">
+        <source>Force With &amp;Lease</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -5927,6 +5967,10 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="SimplifyByDecorationCheck.Text">
+        <source>Simplify by decoration</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -7275,6 +7319,10 @@ This will just checkout on the submodule the commit determined by the superproje
         <source>Highlight selected branch (until refresh)</source>
         <target />
       </trans-unit>
+      <trans-unit id="ToggleRevisionCardLayout.Text">
+        <source>Change commit view layout</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_cannotHighlightSelectedBranch.Text">
         <source>Cannot highlight selected branch when revision graph is loading.</source>
         <target />
@@ -7372,7 +7420,11 @@ This will just checkout on the submodule the commit determined by the superproje
         <target />
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Fixup commit</source>
+        <source>Create a fixup commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text">
+        <source>Get help on how to use these features</source>
         <target />
       </trans-unit>
       <trans-unit id="hashCopyToolStripMenuItem.Text">
@@ -7450,8 +7502,16 @@ If this is a central repository (bare repository without a working directory):
         <source>Show author date</source>
         <target />
       </trans-unit>
+      <trans-unit id="showFirstParent.Text">
+        <source>Show first parents</source>
+        <target />
+      </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">
         <source>Show git notes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showIdsToolStripMenuItem.Text">
+        <source>Show SHA1</source>
         <target />
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">
@@ -7475,7 +7535,7 @@ If this is a central repository (bare repository without a working directory):
         <target />
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Squash commit</source>
+        <source>Create a squash commit</source>
         <target />
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
@@ -7858,7 +7918,7 @@ when all items are shown:</source>
         <target />
       </trans-unit>
       <trans-unit id="label18.Text">
-        <source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
+        <source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users,
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </source>

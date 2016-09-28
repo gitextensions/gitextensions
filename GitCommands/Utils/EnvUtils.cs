@@ -18,6 +18,30 @@ namespace GitCommands.Utils
                     return false;
             }
         }
+        
+        public static bool IsWindowsVistaOrGreater()
+        {
+            return Environment.OSVersion.Platform == PlatformID.Win32NT
+                   && Environment.OSVersion.Version.CompareTo(new Version(6, 0)) >= 0;
+        }
+
+        public static bool IsWindows7OrGreater()
+        {
+            return Environment.OSVersion.Platform == PlatformID.Win32NT
+                   && Environment.OSVersion.Version.CompareTo(new Version(6, 1)) >= 0;
+        }
+
+        public static bool IsWindows8OrGreater()
+        {
+            return Environment.OSVersion.Platform == PlatformID.Win32NT
+                   && Environment.OSVersion.Version.CompareTo(new Version(6, 2)) >= 0;
+        }
+
+        public static bool IsWindows8Point1OrGreater()
+        {
+            return Environment.OSVersion.Platform == PlatformID.Win32NT
+                   && Environment.OSVersion.Version.CompareTo(new Version(6, 3)) >= 0;
+        }
 
         public static bool RunningOnUnix()
         {

@@ -48,7 +48,7 @@ namespace ResourceManager.Xliff
         public void AddTranslationCategory(TranslationCategory translationCategory)
         {
             if (string.IsNullOrEmpty(translationCategory.Name))
-                new InvalidOperationException("Cannot add translationCategory without name");
+                throw new InvalidOperationException("Cannot add translationCategory without name");
 
             TranslationCategories.Add(translationCategory);
         }

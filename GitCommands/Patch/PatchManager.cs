@@ -37,7 +37,7 @@ namespace PatchApply
 
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
+            if (body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
                 body = body.Replace("\r", "");
 
             if (header == null || body == null)
@@ -120,7 +120,7 @@ namespace PatchApply
             string body = selectedChunks.ToStagePatch(false, true);
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
+            if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
                 body = body.Replace("\r", "");
 
             if (header == null || body == null)
@@ -449,13 +449,12 @@ namespace PatchApply
                         inPreContext = false;
                         result.AddDiffLine(patchLine, false);
                     }
-                    else if (line.StartsWith("\\"))
+                    else if (line.StartsWith(GitModule.NoNewLineAtTheEnd))
                     {
-                        if (line.Contains("No newline at end of file"))
-                            if (result.CurrentSubChunk.AddedLines.Count > 0 && result.CurrentSubChunk.PostContext.Count == 0)
-                                result.CurrentSubChunk.IsNoNewLineAtTheEnd = line;
-                            else
-                                result.CurrentSubChunk.WasNoNewLineAtTheEnd = line;
+                        if (result.CurrentSubChunk.AddedLines.Count > 0 && result.CurrentSubChunk.PostContext.Count == 0)
+                            result.CurrentSubChunk.IsNoNewLineAtTheEnd = line;
+                        else
+                            result.CurrentSubChunk.WasNoNewLineAtTheEnd = line;
                     }
                     else
                         inPatch = false;
@@ -504,7 +503,7 @@ namespace PatchApply
                 {
                     if (!line.Equals(string.Empty))
                     {
-                        result.CurrentSubChunk.IsNoNewLineAtTheEnd = "\\ No newline at end of file";
+                        result.CurrentSubChunk.IsNoNewLineAtTheEnd = GitModule.NoNewLineAtTheEnd;
                         result.AddDiffLine(patchLine, reset);
                         if (reset && patchLine.Selected)
                         {
@@ -518,7 +517,7 @@ namespace PatchApply
                                 clonedLine.SetOperation("+");
                                 result.CurrentSubChunk.AddedLines.Add(clonedLine);
                             }
-                            result.CurrentSubChunk.WasNoNewLineAtTheEnd = "\\ No newline at end of file";
+                            result.CurrentSubChunk.WasNoNewLineAtTheEnd = GitModule.NoNewLineAtTheEnd;
                         }
                     }
                 }

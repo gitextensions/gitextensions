@@ -44,8 +44,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,8 +53,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -75,6 +71,7 @@
     <Compile Include="BuildServerIntegration\BuildInfo.cs" />
     <Compile Include="BuildServerIntegration\BuildServerAdapterMetadataAttribute.cs" />
     <Compile Include="BuildServerIntegration\BuildServerCredentials.cs" />
+    <Compile Include="BuildServerIntegration\BuildServerSettingsHelper.cs" />
     <Compile Include="BuildServerIntegration\BuildServerSettingsUserControlMetadata.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerAdapter.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerCredentials.cs" />
@@ -128,6 +125,13 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
+      <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
+      <Name>GitExtUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\..\FxCop.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
