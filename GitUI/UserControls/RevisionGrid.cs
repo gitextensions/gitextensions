@@ -1161,7 +1161,7 @@ namespace GitUI
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
-                this.InvokeSync(o =>
+                this.InvokeAsync(o =>
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
@@ -1173,7 +1173,7 @@ namespace GitUI
             else
             {
                 // This has to happen on the UI thread
-                this.InvokeSync(o =>
+                this.InvokeAsync(o =>
                                       {
                                           UpdateGraph(null);
                                           Loading.Visible = false;
