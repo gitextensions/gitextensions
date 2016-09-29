@@ -222,14 +222,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void otherHomeBrowse_Click(object sender, EventArgs e)
         {
-            using (FolderBrowserDialog browseDialog = new FolderBrowserDialog())
-            {
-                browseDialog.SelectedPath = Environment.GetEnvironmentVariable("USERPROFILE");
+            var userSelectedPath = OsShellUtil.PickFolder(this, Environment.GetEnvironmentVariable("USERPROFILE"));
 
-                if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    otherHomeDir.Text = browseDialog.SelectedPath;
-                }
+            if (userSelectedPath != null)
+            {
+                otherHomeDir.Text = userSelectedPath;
             }
         }
     }

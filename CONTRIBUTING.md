@@ -14,13 +14,13 @@ If you do not want to use github, I also accept mailed patches. Just make sure t
 
 The installer is build using WiX. You need to install WiX when you want to build the installer. This can be downloaded here: [http://wixtoolset.org/](http://wixtoolset.org/). If you do not want to build the installer, just open the solution and ignore the warning.
 
-* Open the solution file (GitExtensions.VS2012.sln, or GitExtensions.VS2013.sln, or GitExtensions.VS2015.sln)
+* Open the solution file (GitExtensions.VS2015.sln, or GitExtensions.VS2013.sln, or GitExtensions.VS2012.sln)
 * Hit F5 to compile and run GitExtensions
 
 ## How to create the installer
 
 * Download and install WiX [http://wixtoolset.org/](http://wixtoolset.org/)
-* Run Setup\\BuildInstallers.VS2013.cmd, or Setup\\BuildInstallers.VS2013.cmd, or Setup\\BuildInstallers.VS2015.cmd to build the installers
+* Run Setup\\BuildInstallers.VS2015.cmd, or Setup\\BuildInstallers.VS2013.cmd, or Setup\\BuildInstallers.VS2012.cmd to build the installers
 
 ## Installing Nuget in Monodevelop/Xamarin Studio
 

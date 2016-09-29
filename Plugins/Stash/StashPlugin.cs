@@ -1,6 +1,5 @@
 ﻿using System.Windows.Forms;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace Stash
@@ -9,7 +8,7 @@ namespace Stash
     {
         public StashPlugin()
         {
-            Description = "Create Stash Pull Request";
+            SetNameAndDescription("Create Stash Pull Request");
             Translate();
         }
 

@@ -26,10 +26,23 @@ namespace GitUI
         { }
 
         public FormStatus(bool useDialogSettings)
+            : this(null, useDialogSettings)
+        {
+
+        }
+
+        public FormStatus(ConsoleOutputControl aConsoleOutput, bool useDialogSettings)
             : base(true)
         {
             UseDialogSettings = useDialogSettings;
-            ConsoleOutput = ConsoleOutputControl.CreateInstance();
+            if (aConsoleOutput == null)
+            {
+                ConsoleOutput = ConsoleOutputControl.CreateInstance();
+            }
+            else
+            {
+                ConsoleOutput = aConsoleOutput;
+            }
             ConsoleOutput.Dock = DockStyle.Fill;
             ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
 
@@ -42,7 +55,7 @@ namespace GitUI
         }
 
         public FormStatus(ProcessStart process, ProcessAbort abort)
-            : this()
+            : this(new EditboxBasedConsoleOutputControl(), true)
         {
             ProcessCallback = process;
             AbortCallback = abort;

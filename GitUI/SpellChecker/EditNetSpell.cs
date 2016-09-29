@@ -69,7 +69,8 @@ namespace GitUI.SpellChecker
 
             EnabledChanged += EditNetSpellEnabledChanged;
 
-            InitializeAutoCompleteWordsTask();
+            if(AppSettings.ProvideAutocompletion)
+              InitializeAutoCompleteWordsTask();
         }
 
         public override string Text
@@ -247,12 +248,17 @@ namespace GitUI.SpellChecker
                         IgnoreWordsWithDigits = true
                     };
 
-            _autoCompleteListTask.ContinueWith(
-                w => _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word)),
-                _autoCompleteCancellationTokenSource.Token,
-                TaskContinuationOptions.NotOnCanceled,
-                TaskScheduler.FromCurrentSynchronizationContext()
-            );
+            if(AppSettings.ProvideAutocompletion)
+                _autoCompleteListTask.ContinueWith(
+                w =>
+                {
+                    _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word));
+                    w.Dispose();
+                },
+                    _autoCompleteCancellationTokenSource.Token,
+                    TaskContinuationOptions.NotOnCanceled,
+                    TaskScheduler.FromCurrentSynchronizationContext()
+                );
             //
             // spelling
             //
@@ -834,7 +840,12 @@ namespace GitUI.SpellChecker
                             throw;
                         }
 
-                        return subTasks.SelectMany(t => t.Result).Distinct().ToList();
+                        return subTasks.SelectMany(t =>
+                        {
+                            var res = t.Result;
+                            t.Dispose();
+                            return res;
+                        }).Distinct().ToList();
                     });
         }
 
@@ -907,7 +918,7 @@ namespace GitUI.SpellChecker
 
         private void UpdateOrShowAutoComplete (bool calledByUser)
         {
-            if (_autoCompleteListTask == null)
+            if (_autoCompleteListTask == null || !AppSettings.ProvideAutocompletion)
                 return;
 
             if (!_autoCompleteListTask.IsCompleted)
@@ -1038,6 +1049,10 @@ namespace GitUI.SpellChecker
                 _customUnderlines.Dispose();
                 if (components != null)
                     components.Dispose();
+                if (_autoCompleteListTask != null &&_autoCompleteListTask.Status == TaskStatus.Canceled)
+                {
+                    _autoCompleteListTask.Dispose();
+                }
             }
             base.Dispose(disposing);
         }

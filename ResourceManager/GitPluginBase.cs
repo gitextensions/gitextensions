@@ -14,8 +14,28 @@ namespace ResourceManager
             protected set { _description = value; }
         }
 
+        public string Name
+        {
+            get;
+            protected set;
+        }
+
+        protected void SetNameAndDescription(string aName)
+        {
+            Name = aName;
+            Description = aName;
+        }
+
         //Store settings to use later
-        public ISettingsSource Settings { get; set; }
+        public ISettingsSource Settings
+        {
+            get
+            {
+                return SettingsContainer.GetSettingsSource();
+            }
+        }
+
+        public IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         public virtual IEnumerable<ISetting> GetSettings()
         {
@@ -24,10 +44,12 @@ namespace ResourceManager
 
         public virtual void Register(IGitUICommands gitUiCommands)
         {
+            SettingsContainer.SetSettingsSource(gitUiCommands.GitModule.GetEffectiveSettings());
         }
 
         public virtual void Unregister(IGitUICommands gitUiCommands)
         {
+            SettingsContainer.SetSettingsSource(null);
         }
 
         public abstract bool Execute(GitUIBaseEventArgs gitUiCommands);

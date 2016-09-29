@@ -207,10 +207,11 @@ namespace GitUI.CommandsDialogs
 
         private void FromBrowseClick(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_From.Text })
+            var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
+
+            if (userSelectedPath != null)
             {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    _NO_TRANSLATE_From.Text = dialog.SelectedPath;
+                _NO_TRANSLATE_From.Text = userSelectedPath;
             }
 
             FromTextUpdate(sender, e);
@@ -218,10 +219,11 @@ namespace GitUI.CommandsDialogs
 
         private void ToBrowseClick(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_To.Text })
+            var userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
+
+            if (userSelectedPath != null)
             {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    _NO_TRANSLATE_To.Text = dialog.SelectedPath;
+                _NO_TRANSLATE_To.Text = userSelectedPath;
             }
 
             ToTextUpdate(sender, e);
@@ -374,7 +376,7 @@ namespace GitUI.CommandsDialogs
         {
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
-            _branchListLoader.Load(() => Module.GetRemoteRefs(from, false, true), UpdateBranches);
+            _branchListLoader.Load(() => Module.GetRemoteServerRefs(from, false, true), UpdateBranches);
         }
 
         private void Branches_DropDown(object sender, EventArgs e)

@@ -182,32 +182,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static bool CheckIfFileIsInPath(string fileName)
         {
-            string path = Environment.GetEnvironmentVariable("PATH");
-
-            foreach(string rawdir in path.Split(';'))
-            {
-                string dir = rawdir;
-                dir = dir.Trim();
-                // Usually, paths with spaces are not quoted on %PATH%, but it's well possible, and .NET won't consume a quoted path
-                // This does not handle the full grammar of the %PATH%, but at least prevents Illegal Characters in Path exceptions (see #2924)
-                if((dir.Length >= 2) && (dir[0] == '"') && (dir[dir.Length - 1] == '"'))
-                    dir = dir.Substring(1, dir.Length - 2);
-                if(dir.Length == 0)
-                    continue;
-                try
-                {
-                    if(File.Exists(dir + " \\" + fileName) || File.Exists(Path.Combine(dir, fileName)))
-                        return true;
-                }
-                catch(ArgumentException /* e.g. illegal characters in path — might get any from %PATH% */)
-                {
-                }
-                catch(IOException /* problems checking file existence in FS */)
-                {
-                }
-            }
-
-            return false;
+            string foo;
+            return PathUtil.TryFindFullPath(fileName, out foo);
         }
 
         public bool SolveMergeToolForKDiff()

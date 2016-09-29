@@ -148,7 +148,17 @@ namespace GitUI.CommandsDialogs
 
                 if (oldSelectedRow < ConflictedFiles.FirstDisplayedScrollingRowIndex ||
                     oldSelectedRow > (ConflictedFiles.FirstDisplayedScrollingRowIndex + ConflictedFiles.DisplayedRowCount(false)))
-                    ConflictedFiles.FirstDisplayedScrollingRowIndex = oldSelectedRow;
+                {
+                    try
+                    {
+                        ConflictedFiles.FirstDisplayedScrollingRowIndex = oldSelectedRow;
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        //ignore the exception - setting the row index is not so important to crash the app
+                        //see the #2975 issues for details
+                    }
+                }
             }
 
             InitMergetool();

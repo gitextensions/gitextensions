@@ -14,6 +14,7 @@ namespace GitCommands.Settings
         private DateTime LastFileModificationDate = DateTime.MaxValue;
         private DateTime? LastModificationDate = null;
         private readonly FileSystemWatcher _fileWatcher = new FileSystemWatcher();
+        private bool canEnableFileWatcher = false;
 
         private System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
         private bool _autoSave = true;
@@ -34,12 +35,13 @@ namespace GitCommands.Settings
             _fileWatcher.Changed += _fileWatcher_Changed;
             _fileWatcher.Renamed += _fileWatcher_Renamed;
             _fileWatcher.Created += _fileWatcher_Created;
-            var dir = Path.GetDirectoryName (SettingsFilePath);
-            if (Directory.Exists (dir)) 
+            var dir = Path.GetDirectoryName(SettingsFilePath);
+            if (Directory.Exists(dir))
             {
-                _fileWatcher.Path = Path.GetDirectoryName(SettingsFilePath);
+                _fileWatcher.Path = dir;
                 _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
-                _fileWatcher.EnableRaisingEvents = Directory.Exists(_fileWatcher.Path);            
+                canEnableFileWatcher = true;
+                _fileWatcher.EnableRaisingEvents = canEnableFileWatcher;
             }
             FileChanged();
         }
@@ -145,7 +147,7 @@ namespace GitCommands.Settings
                 LastFileModificationDate = GetLastFileModificationUTC();
                 LastFileRead = DateTime.UtcNow;
                 if (SaveTimer != null)
-                    _fileWatcher.EnableRaisingEvents = true;
+                    _fileWatcher.EnableRaisingEvents = canEnableFileWatcher;
             }
 
             catch (IOException e)
@@ -163,7 +165,7 @@ namespace GitCommands.Settings
                 {
                     ReadSettings(SettingsFilePath);
                     LastFileRead = DateTime.UtcNow;
-                    _fileWatcher.EnableRaisingEvents = true;
+                    _fileWatcher.EnableRaisingEvents = canEnableFileWatcher;
                 }
                 catch (IOException e)
                 {

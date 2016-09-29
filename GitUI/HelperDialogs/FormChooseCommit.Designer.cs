@@ -89,7 +89,6 @@
             this.revisionGrid.MinimumSize = new System.Drawing.Size(250, 125);
             this.revisionGrid.Name = "revisionGrid";
             this.revisionGrid.RevisionGraphDrawStyle = GitUI.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
-            this.revisionGrid.Rewriter = null;
             this.revisionGrid.Size = new System.Drawing.Size(1097, 466);
             this.revisionGrid.TabIndex = 0;
             this.revisionGrid.DoubleClickRevision += new System.EventHandler<GitUI.UserControls.RevisionGridClasses.DoubleClickRevisionEventArgs>(this.revisionGrid_DoubleClickRevision);

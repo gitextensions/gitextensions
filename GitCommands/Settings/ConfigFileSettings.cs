@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using GitCommands.Config;
 
@@ -50,9 +49,15 @@ namespace GitCommands.Settings
 
         public static ConfigFileSettings CreateSystemWide(bool allowCache = true)
         {
-            string configPath = Path.Combine(AppSettings.GitBinDir, "..", "etc", "gitconfig");
+            // Git 2.xx
+            string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Git", "config");
             if (!File.Exists(configPath))
-                return null;
+            {
+                // Git 1.xx
+                configPath = Path.Combine(AppSettings.GitBinDir, "..", "etc", "gitconfig");
+                if (!File.Exists(configPath))
+                    return null;
+            }
 
             return new ConfigFileSettings(null,
                 ConfigFileSettingsCache.Create(configPath, false, allowCache));

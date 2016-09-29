@@ -1,38 +1,80 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCreateBranch : GitModuleForm
     {
-        private readonly TranslationString _noRevisionSelected =
-            new TranslationString("Select 1 revision to create the branch on.");
-        private readonly TranslationString _branchNameIsEmpty =
-            new TranslationString("Enter branch name.");
-        private readonly TranslationString _branchNameIsNotValud =
-            new TranslationString("“{0}” is not valid branch name.");
+        private readonly TranslationString _noRevisionSelected = new TranslationString("Select 1 revision to create the branch on.");
+        private readonly TranslationString _branchNameIsEmpty = new TranslationString("Enter branch name.");
+        private readonly TranslationString _branchNameIsNotValud = new TranslationString("“{0}” is not valid branch name.");
+        private readonly IGitBranchNameNormaliser _branchNameNormaliser;
+        private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
 
-        public FormCreateBranch(GitUICommands aCommands, GitRevision revision)
+
+        public FormCreateBranch(GitUICommands aCommands, GitRevision revision, IGitBranchNameNormaliser branchNameNormaliser = null)
             : base(aCommands)
         {
+            _branchNameNormaliser = branchNameNormaliser ?? new GitBranchNameNormaliser();
+
             InitializeComponent();
             Translate();
 
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
+            {
                 commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
+            }
+        }
+
+
+        private IEnumerable<T> FindControls<T>(Control control) where T : Control
+        {
+            var controls = control.Controls.Cast<Control>().ToList();
+            return controls.SelectMany(FindControls<T>)
+                           .Concat(controls)
+                           .Where(c => c.GetType() == typeof(T))
+                           .Cast<T>();
+        }
+
+
+        private void BranchNameTextBox_Leave(object sender, EventArgs e)
+        {
+            if (!AppSettings.AutoNormaliseBranchName || !BranchNameTextBox.Text.Any(GitBranchNameNormaliser.IsValidChar))
+            {
+                return;
+            }
+
+            var caretPosition = BranchNameTextBox.SelectionStart;
+            var branchName = _branchNameNormaliser.Normalise(BranchNameTextBox.Text, _gitBranchNameOptions);
+            BranchNameTextBox.Text = branchName;
+            BranchNameTextBox.SelectionStart = caretPosition;
         }
 
         private void FormCreateBranch_Shown(object sender, EventArgs e)
         {
+            // ensure all labels are wrapped if required
+            // this must happen only after the label texts have been set
+            foreach (var label in FindControls<Label>(this))
+            {
+                label.AutoSize = true;
+            }
+
             BranchNameTextBox.Focus();
         }
 
         private void OkClick(object sender, EventArgs e)
         {
+            // Ok button set as the "AcceptButton" for the form
+            // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
+            Ok.Focus();
+
             string commitGuid = commitPickerSmallControl1.SelectedCommitHash;
             var branchName = BranchNameTextBox.Text.Trim();
 
@@ -63,7 +105,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    cmd = GitCommandHelpers.BranchCmd(branchName, commitGuid, CheckoutAfterCreate.Checked);
+                    cmd = GitCommandHelpers.BranchCmd(branchName, commitGuid, chkbxCheckoutAfterCreate.Checked);
                 }
 
                 bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
@@ -73,12 +115,12 @@ namespace GitUI.CommandsDialogs
                     FormProcess.ShowDialog(this, cmd);
                 }
 
-                if (CheckoutAfterCreate.Checked)
+                if (wasSuccessFul && chkbxCheckoutAfterCreate.Checked)
                 {
                     UICommands.UpdateSubmodules(this);
                 }
 
-                DialogResult = DialogResult.OK;
+                DialogResult = wasSuccessFul ? DialogResult.OK : DialogResult.None;
             }
             catch (Exception ex)
             {
@@ -86,15 +128,15 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        void Orphan_CheckedChanged(object sender, EventArgs e)
+        private void Orphan_CheckedChanged(object sender, EventArgs e)
         {
             bool isOrphan = Orphan.Checked;
             ClearOrphan.Enabled = isOrphan;
-            
-            CheckoutAfterCreate.Enabled = (isOrphan == false);// auto-checkout for orphan
+
+            chkbxCheckoutAfterCreate.Enabled = (isOrphan == false);// auto-checkout for orphan
             if (isOrphan)
             {
-                CheckoutAfterCreate.Checked = true;
+                chkbxCheckoutAfterCreate.Checked = true;
             }
         }
     }

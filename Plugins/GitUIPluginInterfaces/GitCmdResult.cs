@@ -8,6 +8,14 @@ namespace GitUIPluginInterfaces
         public string StdError;
         public int ExitCode;
 
+        public bool ExitedSuccessfully
+        {
+            get
+            {
+                return ExitCode == 0;
+            }
+        }
+
         public string GetString()
         {
             StringBuilder sb = new StringBuilder();

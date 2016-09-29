@@ -7,7 +7,7 @@ namespace GitFlow
     {
         public GitFlowPlugin()
         {
-            Description = "GitFlow";
+            SetNameAndDescription("GitFlow");
             Translate();
         }
 

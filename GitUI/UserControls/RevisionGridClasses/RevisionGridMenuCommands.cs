@@ -212,6 +212,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowAllBranches";
                 menuCommand.Text = "Show all branches";
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowAllBranches);
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowAllBranches_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => _revisionGrid.ShowAllBranches_ToolStripMenuItemChecked;
 
@@ -222,6 +223,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowCurrentBranchOnly";
                 menuCommand.Text = "Show current branch only";
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowCurrentBranchOnly);
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => _revisionGrid.ShowCurrentBranchOnly_ToolStripMenuItemChecked;
 
@@ -232,6 +234,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowFilteredBranches";
                 menuCommand.Text = "Show filtered branches";
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowFilteredBranches);
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowFilteredBranches_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => _revisionGrid.ShowFilteredBranches_ToolStripMenuItemChecked;
 
@@ -244,6 +247,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowRemoteBranches";
                 menuCommand.Text = "Show remote branches";
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowRemoteBranches);
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowRemoteBranches_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.ShowRemoteBranches;
 
@@ -338,6 +342,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showMergeCommitsToolStripMenuItem";
                 menuCommand.Text = "Show merge commits";
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleShowMergeCommits);
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowMergeCommits_ToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.ShowMergeCommits;
 
@@ -400,13 +405,36 @@ namespace GitUI.UserControls.RevisionGridClasses
                 resultList.Add(menuCommand);
             }
 
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ToggleRevisionCardLayout";
+                menuCommand.Text = "Change commit view layout";
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleRevisionCardLayout);
+                menuCommand.ExecuteAction = () => _revisionGrid.ToggleRevisionCardLayout();
+
+                resultList.Add(menuCommand);
+            }
+
             resultList.Add(MenuCommand.CreateSeparator());
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showFirstParent";
+                menuCommand.Text = "Show first parents";
+                menuCommand.Image = global::GitUI.Properties.Resources.IconShowFirstParent;
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ShowFirstParent);
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowFirstParent_ToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowFirstParent;
+
+                resultList.Add(menuCommand);
+            }
 
             {
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "filterToolStripMenuItem";
                 menuCommand.Text = "Set advanced filter";
                 menuCommand.Image = global::GitUI.Properties.Resources.IconFilter;
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.RevisionFilter);
                 menuCommand.ExecuteAction = () => _revisionGrid.FilterToolStripMenuItemClick(null, null);
 
                 resultList.Add(menuCommand);

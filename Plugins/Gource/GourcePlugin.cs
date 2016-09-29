@@ -32,7 +32,7 @@ namespace Gource
 
         public GourcePlugin()
         {
-            Description = "Gource";
+            SetNameAndDescription("Gource");
             Translate();
         }
 
@@ -58,7 +58,7 @@ namespace Gource
                 return false;
             }
 
-            var pathToGource = GourcePath[Settings];
+            var pathToGource = GourcePath.ValueOrDefault(Settings);
 
             if (!string.IsNullOrEmpty(pathToGource))
             {
@@ -109,7 +109,7 @@ namespace Gource
                 }
             }
 
-            using (var gourceStart = new GourceStart(pathToGource, eventArgs, GourceArguments[Settings]))
+            using (var gourceStart = new GourceStart(pathToGource, eventArgs, GourceArguments.ValueOrDefault(Settings)))
             {
                 gourceStart.ShowDialog(ownerForm);
                 Settings.SetValue<string>(GourceArguments.Name, gourceStart.GourceArguments, s => s);

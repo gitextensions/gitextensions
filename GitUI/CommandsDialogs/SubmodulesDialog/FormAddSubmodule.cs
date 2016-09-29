@@ -22,11 +22,11 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            using (var browseDialog = new FolderBrowserDialog { SelectedPath = Directory.Text })
-            {
+            var userSelectedPath = OsShellUtil.PickFolder(this, Directory.Text);
 
-                if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                    Directory.Text = browseDialog.SelectedPath;
+            if (userSelectedPath != null)
+            {
+                Directory.Text = userSelectedPath;
             }
         }
 
