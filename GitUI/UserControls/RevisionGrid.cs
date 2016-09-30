@@ -1095,7 +1095,7 @@ namespace GitUI
         private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
         {
             // This has to happen on the UI thread
-            this.InvokeSync(o =>
+            this.InvokeAsync(o =>
                                   {
                                       Error.Visible = true;
                                       //Error.BringToFront();
