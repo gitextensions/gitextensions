@@ -7,6 +7,7 @@ using GitCommands.Utils;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using System.Threading.Tasks;
 
 namespace GitExtensions
 {
@@ -57,6 +58,7 @@ namespace GitExtensions
             //Store here SynchronizationContext.Current, because later sometimes it can be null
             //see http://stackoverflow.com/questions/11621372/synchronizationcontext-current-is-null-in-continuation-on-the-main-ui-thread
             GitUIExtensions.UISynchronizationContext = SynchronizationContext.Current;
+            AsyncLoader.DefaultContinuationTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             Application.DoEvents();
 
             AppSettings.LoadSettings();
