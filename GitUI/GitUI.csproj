@@ -103,6 +103,7 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell">
       <HintPath>..\Bin\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
