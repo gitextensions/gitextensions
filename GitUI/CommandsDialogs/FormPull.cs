@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs
             Fetch.Checked = Settings.FormPullAction == Settings.PullAction.Fetch;
             localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = Settings.AutoStash;
-            Prune.Enabled = Fetch.Checked;
+            Prune.Enabled = Settings.FormPullAction == Settings.PullAction.Merge || Settings.FormPullAction == Settings.PullAction.Fetch;
 
             ErrorOccurred = false;
 
