@@ -802,7 +802,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
             AllTags.Enabled = false;
-            Prune.Enabled = false;
+            Prune.Enabled = true;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
         }
