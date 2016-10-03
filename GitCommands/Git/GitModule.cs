@@ -1545,7 +1545,7 @@ namespace GitCommands
             if (rebase)
                 pullArgs = "--rebase".Combine(" ", pullArgs);
 
-            return "pull " + pullArgs + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags, isUnshallow, false);
+            return "pull " + pullArgs + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags, isUnshallow, prune && !rebase);
         }
 
         private string GetFetchArgs(string remote, string remoteBranch, string localBranch, bool? fetchTags, bool isUnshallow, bool prune)
