@@ -1,4 +1,9 @@
-﻿namespace GitUI.Properties
+﻿using System.Globalization;
+using System.Resources;
+using GitCommands;
+using System.Text;
+
+namespace GitUI.Properties
 {
     /// <summary>
     /// DESIGNER USAGE INFO!
@@ -12,6 +17,47 @@
     /// </summary>
     internal partial class Resources
     {
+        static Resources()
+        {
+            var theme = AppSettings.IconTheme;
+            if (theme != AppSettings.DefaultTheme)
+            {
+                resourceMan = new ThemeResourceManager(theme);
+            }
+        }
+
+        private class ThemeResourceManager : System.Resources.ResourceManager
+        {
+            private static string BasePath = "GitUI.Properties.Resources";
+            private static string ResFileExtension = "resources";
+            private readonly System.Resources.ResourceManager resourceManager;
+            private readonly string theme;
+
+            public ThemeResourceManager(string theme)
+                :base(BasePath, typeof(Resources).Assembly)
+            {
+                resourceManager = new global::System.Resources.ResourceManager(BasePath, typeof(Resources).Assembly);
+                this.theme = theme;
+            }
+
+            protected override string GetResourceFileName(CultureInfo culture)
+            {
+                return string.Format("{0}.{1}.{2}", BasePath, theme, ResFileExtension);
+            }
+
+            public override object GetObject(string name, CultureInfo culture)
+            {
+                try
+                {
+                    return base.GetObject(name, culture) ?? resourceManager.GetObject(name, culture);
+                }
+                catch (System.Exception)
+                {
+                    return resourceManager.GetObject(name, culture);
+                }
+            }
+        }
+
         public static System.Drawing.Bitmap loadingpanel
         {
             get

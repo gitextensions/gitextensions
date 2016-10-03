@@ -1,0 +1,530 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+	
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+    <data name="error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/error.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cow_sunglass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/Cow_sunglass.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_71" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/71.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpPullRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/HelpPullRebase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpCommandRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/HelpCommandRebase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="puttygen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/puttygen.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconFolderSubmodule" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconFolderSubmodule.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CommitTemplates" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/27.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSaveAs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSaveAs.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpPullFetch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/HelpPullFetch.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EditItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/24.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Donate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/Donate.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nonprintchar" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/nonprintchar.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="stash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/stash.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bug" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/bug.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpCommandMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/HelpCommandMerge.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpPullMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/HelpPullMerge.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SplitViewLayout" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/SplitViewLayout.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_35" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/35.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="putty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/putty.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ArrowUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/3.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Conflict" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/52.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="double_arrow_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/double_arrow_down.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconStaged" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconStaged.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TranslateProgress" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/53.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_77" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/77.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pageant" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/pageant.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Options" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/26.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="New" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/21.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_50" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/50.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/Cow.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconMixed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconMixed.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconDirtySubmodules" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconDirtySubmodules.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Settings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/77.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="double_arrow_up" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/double_arrow_up.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/4.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pageant_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/pageant_16.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="success" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/success.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WorkingDirChanges" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/90.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="increase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/increase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconClean" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconClean.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rss" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/rss.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="showEntireFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/showEntireFile.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Select" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/90.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/40.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="whitespace" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/whitespace.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Added" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/Added.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="decrease" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/decrease.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrow_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/arrow_refresh.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="history" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/history.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cow_xmass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/Cow_xmass.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/3.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconDirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconDirty.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Copied" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/Copied.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/bash.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Info" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/49.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ArrowDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/4.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="User" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/User.PNG;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrow_refresh_dirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/arrow_refresh_dirty.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_33" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/33.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Modified" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/Modified.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Renamed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/Renamed.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Icon_82" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/82.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Removed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/Removed.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Star" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/14.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="loadingpanel_animated" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/loadingpanel.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="statistic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/statistic.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PullFetch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/PullFetch.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PullMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/PullMerge.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PullRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/PullRebase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PullFetchAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/PullFetchAll.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="loadingpanel_static" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/loadingpanel_static.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBranchCheckout" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/BranchCheckout.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBranchCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/BranchCreate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconArchiveRevision" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconArchiveRevision.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCleanupRepo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/edit_clear_2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconMerge.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconRebase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconRemotes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/folder_remote_2_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RevisionCheckout" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/RevisionCheckout.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconTagCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/TagCreate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBranchDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/BranchDelete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCherryPick" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconCherryPick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconPreview" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconPreview.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconTagDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/TagDelete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="levelUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StatusHourglass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/StatusHourglass.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconResetWorkingDirChanges" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconResetWorkingDirChanges.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconResetCurrentBranchToHere" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconResetCurrentBranchToHere.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconFileHistory" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconFileHistory.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBlame" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconBlame.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCopyToClipboard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconCopyToClipboard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconDiff" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconDiff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconEditFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconEditFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconFind" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconFind.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconRecoverLostObjects" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconRecoverLostObjects.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconViewFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconViewFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCommit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconCommit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconDiffTool" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconDiffTool.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconFileTree" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconFileTree.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconConsole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconConsole.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconFilter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconFilter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCloneRepoGit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconCloneRepoGit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCloneRepoGithub" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconCloneRepoGithub.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconCloneRepoSvn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconCloneRepoSvn.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSave" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSave.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconAddToGitIgnore" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconAddToGitIgnore.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconEditGitIgnore" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconEditGitIgnore.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBrowseFileExplorer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconBrowseFileExplorer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconGotoCommit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconGotoCommit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconResetFileTo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconResetFileTo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSelectBranch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSelectBranch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSelectRevision" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSelectRevision.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconStage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconStage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconStageAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconStageAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmodulesManage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmodulesManage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmodulesSync" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmodulesSync.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmodulesUpdate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmodulesUpdate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconUnstage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconUnstage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconUnstageAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconUnstageAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RecentRepositories" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/RecentRepositories.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconRepoCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconRepoCreate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconRepoOpen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconRepoOpen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmoduleDirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmoduleDirty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmoduleRevisionDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmoduleRevisionDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmoduleRevisionDownDirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmoduleRevisionDownDirty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmoduleRevisionUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmoduleRevisionUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmoduleRevisionUpDirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmoduleRevisionUpDirty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconRevertCommit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconRevertCommit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpCommandMergeFastForward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/HelpCommandMergeFastForward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpPullMergeFastForward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/HelpPullMergeFastForward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BuildCancelled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/BuildCancelled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BuildFailed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/BuildFailed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BuildSuccessful" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/BuildSuccessful.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconGotoManual" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconGotoManual.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconWarning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconWarning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconGotoCurrentRevision" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconGotoCurrentRevision.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconFileStatusUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconFileStatusUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmoduleRevisionSemiDown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmoduleRevisionSemiDown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmoduleRevisionSemiDownDirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmoduleRevisionSemiDownDirty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmoduleRevisionSemiUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmoduleRevisionSemiUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmoduleRevisionSemiUpDirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/vs2015/IconSubmoduleRevisionSemiUpDirty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+</root>

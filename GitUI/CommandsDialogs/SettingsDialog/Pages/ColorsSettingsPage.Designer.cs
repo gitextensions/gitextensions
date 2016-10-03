@@ -71,11 +71,16 @@
             this.label31 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorAddedLineLabel = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.VS2015IconTheme = new System.Windows.Forms.RadioButton();
+            this.DefaultIconTheme = new System.Windows.Forms.RadioButton();
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.IconPreviewSmall)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.IconPreview)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox5
@@ -583,10 +588,54 @@
             this._NO_TRANSLATE_ColorAddedLineLabel.Text = "Red";
             this._NO_TRANSLATE_ColorAddedLineLabel.Click += new System.EventHandler(this.ColorLabel_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.VS2015IconTheme);
+            this.groupBox1.Controls.Add(this.DefaultIconTheme);
+            this.groupBox1.Location = new System.Drawing.Point(402, 288);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(321, 86);
+            this.groupBox1.TabIndex = 16;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Application theme (need to restart)";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(33, 13);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "Icons";
+            // 
+            // VS2015IconTheme
+            // 
+            this.VS2015IconTheme.AutoSize = true;
+            this.VS2015IconTheme.Location = new System.Drawing.Point(111, 55);
+            this.VS2015IconTheme.Name = "VS2015IconTheme";
+            this.VS2015IconTheme.Size = new System.Drawing.Size(112, 17);
+            this.VS2015IconTheme.TabIndex = 7;
+            this.VS2015IconTheme.TabStop = true;
+            this.VS2015IconTheme.Text = "Visual Studio 2015";
+            this.VS2015IconTheme.UseVisualStyleBackColor = true;
+            // 
+            // DefaultIconTheme
+            // 
+            this.DefaultIconTheme.AutoSize = true;
+            this.DefaultIconTheme.Location = new System.Drawing.Point(111, 27);
+            this.DefaultIconTheme.Name = "DefaultIconTheme";
+            this.DefaultIconTheme.Size = new System.Drawing.Size(60, 17);
+            this.DefaultIconTheme.TabIndex = 0;
+            this.DefaultIconTheme.TabStop = true;
+            this.DefaultIconTheme.Text = "Default";
+            this.DefaultIconTheme.UseVisualStyleBackColor = true;
+            // 
             // ColorsSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -600,6 +649,8 @@
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -649,5 +700,9 @@
         private System.Windows.Forms.CheckBox HighlightAuthoredRevisions;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorAuthoredRevisions;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.RadioButton VS2015IconTheme;
+        private System.Windows.Forms.RadioButton DefaultIconTheme;
     }
 }

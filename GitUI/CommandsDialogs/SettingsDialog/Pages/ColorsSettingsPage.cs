@@ -122,6 +122,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             IconStyle.SelectedIndex = GetIconStyleIndex(AppSettings.IconStyle);
 
             ShowIconPreview();
+
+            string iconTheme = AppSettings.IconTheme.ToLower();
+            DefaultIconTheme.Checked = iconTheme == AppSettings.DefaultTheme;
+            VS2015IconTheme.Checked = iconTheme == "vs2015";
         }
 
         protected override void PageToSettings()
@@ -148,6 +152,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.IconColor = GetSelectedApplicationIconColor();
             AppSettings.IconStyle = GetIconStyleString(IconStyle.SelectedIndex);
+            AppSettings.IconTheme = GetIconThemeString();
         }
 
         private string GetSelectedApplicationIconColor()
@@ -167,6 +172,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (RandomIcon.Checked)
                 return "random";
             return "default";
+        }
+
+        private string GetIconThemeString()
+        {
+            if (VS2015IconTheme.Checked)
+                return "vs2015";
+            return AppSettings.DefaultTheme;
         }
 
         private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
