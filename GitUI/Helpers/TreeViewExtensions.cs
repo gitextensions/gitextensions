@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace GitUI
 {
@@ -52,5 +55,45 @@ namespace GitUI
             update();
             tree.EndUpdate();
         }
+
+        /// <summary>Adds <see cref="TreeView"/> checked nodes to a supplied list.</summary>
+        public static void listNodes(this TreeView tree, List<TreeNode> nodes, TreeNode node)
+        {
+
+            if (node.Nodes.Count == 0 && node.Checked)
+            {
+                nodes.Add(node);
+            }
+            else
+            {
+                foreach (TreeNode child in node.Nodes)
+                {
+                    tree.listNodes(nodes, child);
+                }
+            }
+
+        }
+        /// <summary>Switches all <see cref="TreeNode"/> children recursively to a supplied state</summary>
+        public static void CheckAllChildNodes(this TreeNode treeNode, bool nodeChecked)
+        {
+            treeNode.Checked = nodeChecked;
+            foreach (TreeNode node in treeNode.Nodes)
+            {
+                node.CheckAllChildNodes(nodeChecked);
+            }
+        }
+
+        /// <summary>Checks all <see cref="TreeNode"/> ancestors if the have all children checked, unchecks them otherwise</summary>
+        public static void CheckParentNodes(this TreeNode node)
+        {
+            TreeNode parent = node.Parent;
+            while (parent != null)
+            {
+                parent.Checked = parent.Nodes.OfType<TreeNode>().All(tn => tn.Checked);
+                parent = parent.Parent;
+            }
+        }
+
+
     }
 }
