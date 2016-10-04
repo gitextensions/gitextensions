@@ -1,12 +1,14 @@
 <?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile SubModules</source>
+        <target>Automaticky přeložit podmoduly</target>
         
       </trans-unit>
       <trans-unit id="MsBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
+        <target>parametry msbuild.exe</target>
         
       </trans-unit>
       <trans-unit id="MsBuildEnabled.Caption">
@@ -16,80 +18,92 @@
       </trans-unit>
       <trans-unit id="MsBuildPath.Caption">
         <source>Path to msbuild.exe</source>
+        <target>Cesta k msbuild.exe</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
+        <target>Chcete sestavit {0}?
+
+{1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
+        <target>Prosím zadejte správnou cestu k programu MSBuild v nastavení zásuvného modulu a zkuste to znovu.</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en">
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="AutoRefresh.Caption">
         <source>Refresh view after fetch</source>
+        <target>Obnovit náhled po přenesení</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
+        <target>Pravidelné přenášení na pozadí</target>
         
       </trans-unit>
       <trans-unit id="FetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
+        <target>Přenést všechny podmoduly</target>
         
       </trans-unit>
       <trans-unit id="FetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target>Prenášet každych ... sekund (0 = vypnuto)</target>
         
       </trans-unit>
       <trans-unit id="GitCommand.Caption">
         <source>Arguments of git command to run</source>
+        <target>Parametry pro spuštění příkazu git</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en">
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        
-      </trans-unit>
-      <trans-unit id="Remote.Text">
-        <source>origin</source>
+        <target>Vytvořit místní sledovací větve</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
+        <target>Vytvořit místní sledovací větve</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
+        <target>Vzdálený zdroj pro který mám vytvořit větve</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en">
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
+        <target>Vytvořit místní sledovací větve</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en">
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
+        <target>Smazat zastaralé větve</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
+        <target>Poslední autor</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -104,14 +118,81 @@
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
+        <target>Smazat vzdálené větve z</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
+        <target>Poslední zpráva</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
+        <target>Prohledat větve</target>
+        
+      </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete {0} selected branches?</source>
+        <target>Opravdu chcete smazat {0} vybrané větve?</target>
+        
+      </trans-unit>
+      <trans-unit id="_branchesSelected.Text">
+        <source>{0}/{1} branches selected.</source>
+        <target>Větví vybráno {0}/{1}.</target>
+        
+      </trans-unit>
+      <trans-unit id="_cancel.Text">
+        <source>Cancel</source>
+        <target>Storno</target>
+        
+      </trans-unit>
+      <trans-unit id="_chooseBrancesToDelete.Text">
+        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
+        <target>Vyberte větve ke smazání. Smazány mohou být pouze větve které jsou plně sloučeny ve větvi '{0}'. </target>
+        
+      </trans-unit>
+      <trans-unit id="_dangerousAction.Text">
+        <source>DANGEROUS ACTION!
+Branches will be deleted on the remote '{0}'. This can not be undone.
+Are you sure you want to continue?</source>
+        <target>NEBEZPEČNÁ AKCE!
+Tyto větve budou smazány ve vzdáleném zdroji '{0}'. Tato akce nelze vrátit.
+Opravdu chcete pokračovat?</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
+        <source>Delete</source>
+        <target>Smazat</target>
+        
+      </trans-unit>
+      <trans-unit id="_deletingBranches.Text">
+        <source>Deleting branches...</source>
+        <target>Mažu větve...</target>
+        
+      </trans-unit>
+      <trans-unit id="_deletingUnmergedBranches.Text">
+        <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target>Smazání nesloučených větví bude mít za následek &quot;plandavé&quot; odevzdání. Dávejte pozor!</target>
+        
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target>Načítám...</target>
+        
+      </trans-unit>
+      <trans-unit id="_pressToSearch.Text">
+        <source>Press '{0}' to search for branches to delete.</source>
+        <target>Pro vyhledání větví ke smazání zmáčkněte '{0}'.</target>
+        
+      </trans-unit>
+      <trans-unit id="_searchBranches.Text">
+        <source>Search branches</source>
+        <target>Prohledat větve</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectBranchesToDelete.Text">
+        <source>Select branches to delete using checkboxes in '{0}' column.</source>
+        <target>Vyberte větve ke smazání pomocí zatržítek ve sloupci '{0}'.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -121,6 +202,7 @@
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
+        <target>Poslední aktivita</target>
         
       </trans-unit>
       <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
@@ -130,14 +212,17 @@
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
+        <target>Včetně nesloučených větví</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
+        <target>Smazat větve starší než x dní</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
+        <target>Smazat větve plně sloučené do větve</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -145,40 +230,50 @@
         <target>Název</target>
         
       </trans-unit>
-      <trans-unit id="regexFilter.Text">
-        <source>/(feature|develop)/</source>
+      <trans-unit id="regexDoesNotMatch.Text">
+        <source>Does not match</source>
         
       </trans-unit>
-      <trans-unit id="remote.Text">
-        <source>origin</source>
+      <trans-unit id="regexFilter.Text">
+        <source>/(feature|develop)/</source>
+        <target>/(feature|develop)/</target>
+        
+      </trans-unit>
+      <trans-unit id="useRegexCaseInsensitive.Text">
+        <source>Case insensitive</source>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
+        <target>K filtrování větví použít regulérní výraz</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en">
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="DaysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
+        <target>Smazat zastaralé větve starší než (dní)</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
+        <target>Smazat zastaralé větve</target>
         
       </trans-unit>
       <trans-unit id="MergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
+        <target>Větev ve které mají být sloučeny všechny větve</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en">
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
+        <target>Najít velké soubory</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -188,9 +283,20 @@
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
+        <target>Komprimovaná velikost</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target>Smazat</target>
+        
+      </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete the selected files?</source>
+        <target>Opravdu chcete smazat vybrané řádky?</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
         <target>Smazat</target>
         
@@ -207,10 +313,12 @@
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
+        <target>Obnovit místní změny před smazáním souborů. Vyberte soubory ke smazání. Pro nahrazení dat ve vzdáleném repozitáři vynuťte odeslání.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
+        <target>Datum posledního odevzdání</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
@@ -220,27 +328,31 @@
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
         <source>SHA</source>
+        <target>SHA</target>
         
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
+        <target>Velikost</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en">
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>Find large files</source>
+        <target>Najít velké soubory</target>
         
       </trans-unit>
       <trans-unit id="SizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
+        <target>Najít velké soubory větší než (Mb)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en">
+  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Change Submitted</source>
@@ -259,7 +371,7 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en">
+  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Download Gerrit Change</source>
@@ -323,7 +435,7 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en">
+  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Publish Gerrit Change</source>
@@ -382,7 +494,7 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en">
+  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Edit .gitreview</source>
@@ -460,14 +572,16 @@ defaultrebase=0</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en">
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
+        <target>Statistiky</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
+        <target>Načítám...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
@@ -492,46 +606,116 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
+        <target>Celkem odevzdání</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
+        <target>Celkem řádek kódu</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
+        <target>Celkem řádek kódu</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
+        <target>Celkem řádek kódu</target>
+        
+      </trans-unit>
+      <trans-unit id="_blankLinesP.Text">
+        <source>{0} Blank lines ({1})</source>
+        <target>{0} prázdných řádků ({1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_commentLinesP.Text">
+        <source>{0} Comment lines ({1})</source>
+        <target>{0} řádků komentářů ({1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_commits.Text">
+        <source>{0} Commits</source>
+        <target>{0} odevzdání</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitsBy.Text">
+        <source>{0} Commits by {1}</source>
+        <target>{0} odevzdání od {1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCode.Text">
+        <source>{0} Lines of code</source>
+        <target>{0} řádků kódu</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCodeInFiles.Text">
+        <source>{0} Lines of code in {1} files ({2})</source>
+        <target>{0} řádků kódu v {1} souborech ({2})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCodeP.Text">
+        <source>{0} Lines of code ({1})</source>
+        <target>{0} řádků kódu ({1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfDesignerFilesP.Text">
+        <source>{0} Lines in designer files ({1})</source>
+        <target>{0} řádků v souborech návrhu ({1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfProductionCodeP.Text">
+        <source>{0} Lines of production code ({1})</source>
+        <target>{0} řádků produkčního kódu ({1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfTestCode.Text">
+        <source>{0} Lines of test code</source>
+        <target>{0} řádků testovacího kódu</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfTestCodeP.Text">
+        <source>{0} Lines of test code ({1})</source>
+        <target>{0} řádků testovacího kódu ({1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
+        <target>Řádků kódu podle jazyka</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
+        <target>Odevzdání na přispěvatele</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
+        <target>Řádků kódu podle typu</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
-        <source>Lines of testcode</source>
+        <source>Lines of test code</source>
+        <target>Řádků testovacího kódu</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en">
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
+        <target>Vliv</target>
+        
+      </trans-unit>
+      <trans-unit id="_authorCommits.Text">
+        <source>{0} ({1} Commits, {2} Changed Lines)</source>
+        <target>{0} ({1} odevzdání, {2} změněných řádek)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
+        <target>Včetně podmodulů</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
@@ -541,7 +725,7 @@ defaultrebase=0</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en">
+  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Gerrit Plugin</source>
@@ -564,7 +748,7 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en">
+  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>Gerrit Code Review</source>
@@ -608,7 +792,7 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en">
+  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="cs">
     <body>
       <trans-unit id="_settingsError.Text">
         <source>Error loading .gitreview file.</source>
@@ -642,10 +826,26 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowForm" source-language="en">
+  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
+        <target>GitFlow</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitFlowTooltip.Text">
+        <source>A good branch model for your project with Git...</source>
+        <target>Výborný model větvení pro váš Git projekt...</target>
+        
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target>Načítám...</target>
+        
+      </trans-unit>
+      <trans-unit id="_noBranchExist.Text">
+        <source>No {0} branches exist.</source>
+        <target>Neexistují žádné větve {0}.</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
@@ -655,18 +855,22 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
       </trans-unit>
       <trans-unit id="btnCreateBranch.Text">
         <source>Start!</source>
+        <target>Start!</target>
         
       </trans-unit>
       <trans-unit id="btnFinish.Text">
         <source>Finish</source>
+        <target>Konec</target>
         
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
+        <target>Zavést GitFlow</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
         <source>Publish</source>
+        <target>Vydat</target>
         
       </trans-unit>
       <trans-unit id="btnPull.Text">
@@ -676,122 +880,204 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
+        <target>založeno na:</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
+        <target>Spravovat dostupné větve:</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
+        <target>Založit větev:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>branch:</source>
+        <target>větev:</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Expected name:</source>
+        <target>Očekávané jméno:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
+        <target>příkaz:</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
+        <target>Vzdálený zdroj pro stažení:</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
         <source>HEAD:</source>
+        <target>HEAD:</target>
         
       </trans-unit>
       <trans-unit id="lblHead.Text">
         <source>ref/...</source>
+        <target>ref/...</target>
         
       </trans-unit>
       <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
+        <target>[prefix]/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
+        <target>O GitFlow</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
+        <target>Výsledky běhu příkazu git glow</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en">
+  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>GitFlow</source>
+        <target>GitFlow</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="Github3Plugin" source-language="en">
+  <file datatype="plaintext" original="Github3Plugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>Github</source>
+        <target>Github</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en">
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
+        <target>Graf vlivu</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="CodeFiles.Caption">
         <source>Code files</source>
+        <target>Soubory kódu</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
+        <target>Statistiky</target>
         
       </trans-unit>
       <trans-unit id="IgnoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
+        <target>Složky pro ignorování (EndsWith)</target>
         
       </trans-unit>
       <trans-unit id="IgnoreSubmodules.Caption">
         <source>Ignore submodules</source>
+        <target>Podmoduly pro ignorování</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en">
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="GourceArguments.Caption">
         <source>Arguments</source>
+        <target>Parametry</target>
         
       </trans-unit>
       <trans-unit id="GourcePath.Caption">
-        <source>Path to &quot;gource&quot;</source>
+        <source>Path to Gource</source>
+        <target>Cesta ke Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="_bytesDownloaded.Text">
+        <source>{0} bytes downloaded.</source>
+        <target>Staženo {0} bytů.</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotFindGource.Text">
+        <source>Cannot find Gource.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Nemohu najít Gource.
+Prosím stáhněte si Gource a nastavte cestu v dialogu nastavení zásuvného modulu.</target>
+        
+      </trans-unit>
+      <trans-unit id="_currentDirectoryIsNotValidGit.Text">
+        <source>The current directory is not a valid git repository.
+
+Gource can be only be started from a valid git repository.</source>
+        <target>Současná složka není platným git repozitářem.
+
+Gource můžete spustit pouze z platného git repozitáře.</target>
+        
+      </trans-unit>
+      <trans-unit id="_doYouWantDownloadGource.Text">
+        <source>There is no path to Gource configured.
+
+Do you want to automatically download Gource?</source>
+        <target>Gource nemá nastavenou cestu.
+
+Chcete automaticky stáhnout Gource?</target>
+        
+      </trans-unit>
+      <trans-unit id="_download.Text">
+        <source>Download</source>
+        <target>Stáhnout</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadingFailed.Text">
+        <source>Downloading failed.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Stažení nebylo úspěšné.
+Prosím stáhněte Gource ručně a nastavte cestu v dialogu nastavení zásuvného modulu.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gource.Text">
+        <source>Gource</source>
+        <target>Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="_gourceDownloadedAndUnzipped.Text">
+        <source>Gource has been downloaded and unzipped.</source>
+        <target>Gource bylo staženo a rozbaleno.</target>
+        
+      </trans-unit>
+      <trans-unit id="_resetConfigPath.Text">
+        <source>Cannot find Gource in the configured path: {0}.
+
+Do you want to reset the configured path?</source>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourceStart" source-language="en">
+  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
+        <target>Parametry</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
@@ -810,7 +1096,8 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Path to gource</source>
+        <source>Path to Gource</source>
+        <target>Cesta ke Gource</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -819,75 +1106,18 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
-        <source>gource project</source>
+        <source>Gource project</source>
+        <target>Projekt Gource</target>
         
       </trans-unit>
-      <trans-unit id="textBox1.Text">
-        <source>  -h, --help                       Help
-
-  -WIDTHxHEIGHT                    Set window size
-  -f                               Fullscreen
-
-  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)
-      --stop-position  POSITION    Stop at some position
-      --stop-on-idle               Stop on break in activity
-      --stop-at-end                Stop at end of the log
-      --loop                       Loop at the end of the log
-
-  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens
-                                   for a number of seconds (default: 3)
-  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 4)
-      --realtime                   Realtime playback speed
-  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)
-  -e, --elasticity FLOAT           Elasticity of nodes
-  -b, --background FFFFFF          Background colour in hex
-
-  --user-image-dir DIRECTORY       Dir containing images to use as avatars
-  --default-user-image IMAGE       Default user image file
-  --colour-images                  Colourize user images
-
-  --date-format FORMAT             Specify display date string (strftime format)
-  --log-format  FORMAT             Specify format of log (git,cvs,hg,bzr,custom)
-  --git-branch                     Get the git log of a particular branch
-  --git-log-command                Show git log command used by gource
-  --cvs-exp-command                Show cvs-exp.pl log command used by gource
-  --hg-log-command                 Show hg log (Mercurial) command used by gource
-  --bzr-log-command                Show bzr log (Bazaar) command used by gource
-
-  --multi-sampling                 Enable multi-sampling
-  --crop AXIS                      Crop view on an axis (vertical,horizontal)
-
-  --bloom-multiplier               Adjust the amount of bloom (default: 1.0)
-  --bloom-intensity                Adjust the intensity of the bloom (default: 0.75)
-
-  --disable-auto-skip              Disable auto skipping
-  --disable-progress               Disable the progress bar
-  --disable-bloom                  Disable bloom effect
-
-  --hide DISPLAY_ELEMENT           date,users,files,tree,usernames,filenames,dirnames
-
-  --max-files NUMBER               Max number of active files (default: 1000)
-  --max-file-lag SECONDS           Max time files of a commit can take to appear
-
-  --max-user-speed UNITS           Speed users can travel per second (default: 500)
-
-  --user-friction SECONDS          Time users come to a complete hault (default: 0.67)
-  --user-scale SCALE               Change scale of users (default: 1.0)
-
-  --camera-mode MODE               Camera mode (overview,track)
-
-  --follow-user USER               Camera will automatically follow this user
-  --highlight-user USER            Highlight the names of a particular user
-  --highlight-all-users            Highlight the names of all users
-  --file-filter REGEX              Ignore files matching this regexe
-
-  --output-ppm-stream FILE         Write frames as PPM to a file ('-' for STDOUT)
-  --output-framerate FPS           Framerate of output (25,30,60)</source>
+      <trans-unit id="linkLabel2.Text">
+        <source>Gource command line</source>
+        <target>Parametry příkazu Gource</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en">
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="cs">
     <body>
       <trans-unit id="label1.Text">
         <source>Project name</source>
@@ -901,7 +1131,7 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
@@ -945,7 +1175,7 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en">
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
@@ -954,34 +1184,46 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
+        <target>Generátor poznámek k vydání</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitLogFrom.Text">
+        <source>Commit log from '{0}' to '{1}' ({2}):</source>
+        <target>Záznam odevzdání od '{0}' do '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
+        <target>jako HTML tabulka</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
+        <target>jako textová tabulka (mezery)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
+        <target>jako textová tabulka (tabelátory)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
+        <target>původní výstup</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
+        <target>Generovat</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
+        <target>Výsledek</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
@@ -991,49 +1233,61 @@ Pro povolení podpory pro Gerrit musíte v repozitáři vytvořit soubor .gitrev
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
+        <target>Koncové odevzdání (včetně):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
+        <target>oddělovat sloupce mezerami</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
-which can be pasted to programs like MS Word or LibreOffice Writer.
-</source>
+which can be pasted to programs like MS Word or LibreOffice Writer.</source>
+        <target>Do schránky bude zkopírován HTML kód (čistý text) a HTML formát
+který můžete vložit do programů jako MS Word nebo LibreOffice Writer.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>Počáteční odevzdání (mimo):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
+        <target>parametry příkazu git log:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
+        <target>{0} = začátek; {1} = konec</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
+        <target>Třídění: Nejnovější revize jsou navrchu.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
+        <target>Počet revizí =</target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
+        <target>(Výraz může být hash odevzdání,
+název větve, nebo značky)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
+        <target>tak jak je</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
+        <target>oddělit sloupce tabelátory</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
@@ -1043,23 +1297,25 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
+        <target>Generátor poznámek k vydání</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="StashPlugin" source-language="en">
+  <file datatype="plaintext" original="StashPlugin" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Description.Text">
         <source>Create Stash Pull Request</source>
+        <target>Vytvořit žádost o stažení z úschovny</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="StashPullRequestForm" source-language="en">
+  <file datatype="plaintext" original="StashPullRequestForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Create Pull Request</source>
@@ -1071,8 +1327,31 @@ branch names, tag names)</source>
         <target>Název</target>
         
       </trans-unit>
+      <trans-unit id="_commited.Text">
+        <source>{0} committed
+{1}</source>
+        <target>{0} odevzdal
+{1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Chyba</target>
+        
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        <target>Úspěšné</target>
+        
+      </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInStash.Text">
+        <source>Your repository is not hosted in Stash.</source>
+        <target>Váš repozitář není hostován ve Stashi.</target>
+        
+      </trans-unit>
       <trans-unit id="btnApprove.Text">
         <source>Approve</source>
+        <target>Schválit</target>
         
       </trans-unit>
       <trans-unit id="btnCreate.Text">
@@ -1087,30 +1366,37 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Source</source>
+        <target>Zdroj</target>
         
       </trans-unit>
       <trans-unit id="groupBox2.Text">
         <source>Target</source>
+        <target>Cíl</target>
         
       </trans-unit>
       <trans-unit id="groupBox3.Text">
         <source>Pull Request Info</source>
+        <target>Informace o žádosti ke stažení</target>
         
       </trans-unit>
       <trans-unit id="groupBox4.Text">
         <source>Source</source>
+        <target>Zdroj</target>
         
       </trans-unit>
       <trans-unit id="groupBox5.Text">
         <source>Target</source>
+        <target>Cíl</target>
         
       </trans-unit>
       <trans-unit id="groupBox6.Text">
         <source>Pull Request Info</source>
+        <target>Informace o žádosti ke stažení</target>
         
       </trans-unit>
       <trans-unit id="groupBox9.Text">
         <source>Information</source>
+        <target>Informace</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1120,6 +1406,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Reviewer (approved)</source>
+        <target>Kontrolor (schválený)</target>
         
       </trans-unit>
       <trans-unit id="label12.Text">
@@ -1139,6 +1426,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label16.Text">
         <source>State</source>
+        <target>Stav</target>
         
       </trans-unit>
       <trans-unit id="label17.Text">
@@ -1188,6 +1476,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="lblReviewers.Text">
         <source>Reviewer(s)</source>
+        <target>Kontrolor(ři)</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
@@ -1202,57 +1491,22 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en">
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="cs">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        <target>Název projektu</target>
+      <trans-unit id="CheckBoxLogAsGuest.Text">
+        <source>Log as guest to display the build report</source>
         
       </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>TeamCity server URL</source>
-        <target>Adresa serveru TeamCity</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBuildFilter.Text">
-        <source>Build Id Filter</source>
-        <target>Filtr ID sestavení</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBuildIdFilter.Text">
-        <source>Regexp</source>
-        <target>Regulární výraz</target>
-        
-      </trans-unit>
-      <trans-unit id="labelProjectNameComment.Text">
-        <source>Several names splitted by | char</source>
-        <target>Několik názvů oddělených znakem | (roura)</target>
+      <trans-unit id="labelRegexError.Text">
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en">
+  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="cs">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Team collection name</source>
-        <target>Název týmové kolekce</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>Tfs server (Name or URL)</source>
-        <target>TFS server (název nebo adresa)</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Project name</source>
-        <target>Název projektu</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Build definition name
-(use first found if left empty)</source>
-        <target>Definice názvu sestavení
-(pokud necháte prázdné použije se první nalezená)</target>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
         
       </trans-unit>
     </body>

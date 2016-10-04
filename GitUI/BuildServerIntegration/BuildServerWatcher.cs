@@ -51,6 +51,11 @@ namespace GitUI.BuildServerIntegration
             // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
             GetBuildServerAdapter().ContinueWith((Task<IBuildServerAdapter> task) =>
             {
+                if (revisions.IsDisposed)
+                {
+                    return;
+                }
+
                 buildServerAdapter = task.Result;
 
                 UpdateUI();
@@ -247,21 +252,21 @@ namespace GitUI.BuildServerIntegration
 
             foreach (var commitHash in buildInfo.CommitHashList)
             {
-                int row = revisionGrid.TrySearchRevision(commitHash);
-                if (row >= 0)
+                var index = revisions.TryGetRevisionIndex(commitHash);
+                if (index.HasValue)
                 {
-                    var rowData = revisions.GetRowData(row);
+                    var rowData = revisions.GetRowData(index.Value);
                     if (rowData.BuildStatus == null ||
                         buildInfo.StartDate >= rowData.BuildStatus.StartDate)
                     {
                         rowData.BuildStatus = buildInfo;
 
                         if (BuildStatusImageColumnIndex != -1 &&
-                            revisions.Rows[row].Cells[BuildStatusImageColumnIndex].Displayed)
-                            revisions.UpdateCellValue(BuildStatusImageColumnIndex, row);
+                            revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
+                            revisions.UpdateCellValue(BuildStatusImageColumnIndex, index.Value);
                         if (BuildStatusMessageColumnIndex != -1 &&
-                            revisions.Rows[row].Cells[BuildStatusImageColumnIndex].Displayed)
-                            revisions.UpdateCellValue(BuildStatusMessageColumnIndex, row);
+                            revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
+                            revisions.UpdateCellValue(BuildStatusMessageColumnIndex, index.Value);
                     }
                 }
             }

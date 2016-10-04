@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\FxCop.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -85,6 +84,8 @@
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="Git\AuthorEmailEqualityComparer.cs" />
+    <Compile Include="Git\GitBranchNameNormaliser.cs" />
+    <Compile Include="Git\GitBranchNameOptions.cs" />
     <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="RemoteActionResult.cs" />
     <Compile Include="Settings\BasicSettingTypes.cs" />
@@ -197,6 +198,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <Import Project="..\FxCop.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

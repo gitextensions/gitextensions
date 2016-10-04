@@ -186,7 +186,7 @@ namespace GitUI.CommandsDialogs
                 CommitInfoTabControl.TabPages[1].ImageIndex = 1;
                 CommitInfoTabControl.TabPages[2].ImageIndex = 2;
             }
-
+            this.DiffFiles.FilterVisible = true;
             RevisionGrid.UICommandsSource = this;
             Repositories.LoadRepositoryHistoryAsync();
             Task.Factory.StartNew(PluginLoader.Load)
@@ -277,6 +277,11 @@ namespace GitUI.CommandsDialogs
         private GitItemStatus _oldDiffItem;
         private void RefreshRevisions()
         {
+            if (RevisionGrid.IsDisposed || DiffFiles.IsDisposed || IsDisposed || Disposing)
+            {
+                return;
+            }
+
             if (_dashboard == null || !_dashboard.Visible)
             {
                 var revisions = RevisionGrid.GetSelectedRevisions();
@@ -1589,7 +1594,14 @@ namespace GitUI.CommandsDialogs
 
         private void SettingsClick(object sender, EventArgs e)
         {
-            SettingsToolStripMenuItem2Click(sender, e);
+            var translation = Settings.Translation;
+            UICommands.StartSettingsDialog(this);
+            if (translation != Settings.Translation)
+                Translate();
+
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            RevisionGrid.ReloadHotkeys();
+            RevisionGrid.ReloadTranslation();
         }
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
@@ -1637,18 +1649,6 @@ namespace GitUI.CommandsDialogs
         private void EditGitignoreToolStripMenuItem1Click(object sender, EventArgs e)
         {
             UICommands.StartEditGitIgnoreDialog(this);
-        }
-
-        private void SettingsToolStripMenuItem2Click(object sender, EventArgs e)
-        {
-            var translation = Settings.Translation;
-            UICommands.StartSettingsDialog(this);
-            if (translation != Settings.Translation)
-                Translate();
-
-            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            RevisionGrid.ReloadHotkeys();
-            RevisionGrid.ReloadTranslation();
         }
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
@@ -3561,9 +3561,10 @@ namespace GitUI.CommandsDialogs
                 {
                     startinfo.ConsoleProcessCommandLine += " --login -i";
                 }
+                startinfo.ConsoleProcessCommandLine += " -new_console:P:\"<Solarized Light>\"";
 
-			    // Set path to git in this window (actually, effective with CMD only)
-			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
+                // Set path to git in this window (actually, effective with CMD only)
+                if (!string.IsNullOrEmpty(AppSettings.GitCommand))
 			    {
 				    string dirGit = Path.GetDirectoryName(AppSettings.GitCommand);
 				    if(!string.IsNullOrEmpty(dirGit))

@@ -225,13 +225,11 @@ namespace GitUI.CommandsDialogs
 
         private void BrowseDir_Click(object sender, EventArgs e)
         {
-            using (var browseDialog = new FolderBrowserDialog())
-            {
+            var userSelectedPath = OsShellUtil.PickFolder(this);
 
-                if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    PatchDir.Text = browseDialog.SelectedPath;
-                }
+            if (userSelectedPath != null)
+            {
+                PatchDir.Text = userSelectedPath;
             }
         }
 

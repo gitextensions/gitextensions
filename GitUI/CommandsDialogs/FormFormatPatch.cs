@@ -50,10 +50,11 @@ namespace GitUI.CommandsDialogs
 
         private void Browse_Click(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog())
+            var userSelectedPath = OsShellUtil.PickFolder(this);
+
+            if (userSelectedPath != null)
             {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    OutputPath.Text = dialog.SelectedPath;
+                OutputPath.Text = userSelectedPath;
             }
         }
 

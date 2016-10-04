@@ -231,7 +231,7 @@ namespace GitUI
             // IsMessageMultilineDataGridViewColumn
             //
             this.IsMessageMultilineDataGridViewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.IsMessageMultilineDataGridViewColumn.HeaderText = "IsMessageMultiline";
+            this.IsMessageMultilineDataGridViewColumn.HeaderText = "";
             this.IsMessageMultilineDataGridViewColumn.Name = "IsMessageMultiline";
             this.IsMessageMultilineDataGridViewColumn.ReadOnly = true;
             this.IsMessageMultilineDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;

@@ -40,6 +40,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GroupBoxSettingsLayout main = new GroupBoxSettingsLayout(this, "Browse repository window");
             AddSettingsLayout(main);
             main.AddBoolSetting("Show the Console tab", DetailedSettings.ShowConEmuTab);
+            GroupBoxSettingsLayout formPush = new GroupBoxSettingsLayout(this, "Push window");
+            AddSettingsLayout(formPush);
+            formPush.AddBoolSetting("Get remote branches directly from the remote", DetailedSettings.GetRemoteBranchesDirectlyFromRemote);
         }
 
         public static SettingsPageReference GetPageReference()

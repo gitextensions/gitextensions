@@ -40,6 +40,13 @@ namespace GitCommands
         SameTime
     }
 
+    public enum ForcePushOptions
+    {
+        DoNotForce,
+        Force,
+        ForceWithLease,
+    }
+
     public struct ConflictedFileData
     {
         public ConflictedFileData(string hash, string filename)
@@ -1026,6 +1033,12 @@ namespace GitCommands
             }
             else
             {
+                string shellPath;
+                if (TryFindShellPath("git-bash.exe", out shellPath))
+                {
+                    return RunExternalCmdDetachedShowConsole(shellPath, string.Empty);
+                }
+
                 string args;
                 if (string.IsNullOrWhiteSpace(bashCommand))
                 {
@@ -1035,11 +1048,37 @@ namespace GitCommands
                 {
                     args = "--login -i -c \"" + bashCommand.Replace("\"", "\\\"") + "\"";
                 }
+                args = "/c \"\"{0}\" " + args;
 
-                string termCmd = File.Exists(AppSettings.GitBinDir + "bash.exe") ? "bash" : "sh";
-                return RunExternalCmdDetachedShowConsole("cmd.exe",
-                    string.Format("/c \"\"{0}{1}\" {2}", AppSettings.GitBinDir, termCmd, args));
+                if (TryFindShellPath("bash.exe", out shellPath))
+                {
+                    return RunExternalCmdDetachedShowConsole("cmd.exe", string.Format(args, shellPath));
+                }
+
+                if (TryFindShellPath("sh.exe", out shellPath))
+                {
+                    return RunExternalCmdDetachedShowConsole("cmd.exe", string.Format(args, shellPath));
+                }
+
+                return RunExternalCmdDetachedShowConsole("cmd.exe", @"/K echo git bash command not found! :( Please add a folder containing 'bash.exe' to your PATH...");
             }
+        }
+
+        private bool TryFindShellPath(string shell, out string shellPath)
+        {
+            shellPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", shell);
+            if (PathUtil.PathExists(shellPath))
+                return true;
+
+            shellPath = Path.Combine(AppSettings.GitBinDir, shell);
+            if (PathUtil.PathExists(shellPath))
+                return true;
+
+            if (PathUtil.TryFindFullPath(shell, out shellPath))
+                return true;
+
+            shellPath = null;
+            return false;
         }
 
         public string Init(bool bare, bool shared)
@@ -1458,7 +1497,15 @@ namespace GitCommands
 
         public static void StartPageantWithKey(string sshKeyFile)
         {
-            RunExternalCmdDetached(AppSettings.Pageant, "\"" + sshKeyFile + "\"", "");
+            //ensure pageant is loaded, so we can wait for loading a key in the next command
+            //otherwise we'll stuck there waiting until pageant exits
+            var pageantProcName = Path.GetFileNameWithoutExtension(AppSettings.Pageant);
+            if (Process.GetProcessesByName(pageantProcName).Length == 0)
+            {
+                Process pageantProcess = RunExternalCmdDetached(AppSettings.Pageant, "", "");
+                pageantProcess.WaitForInputIdle();
+            }
+            GitCommandHelpers.RunCmd(AppSettings.Pageant, "\"" + sshKeyFile + "\"");
         }
 
         public string GetPuttyKeyFileForRemote(string remote)
@@ -1560,13 +1607,11 @@ namespace GitCommands
         /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
         /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
         /// <returns>'git push' command with the specified parameters.</returns>
-        public string PushAllCmd(string remote, bool force, bool track, int recursiveSubmodules)
+        public string PushAllCmd(string remote, ForcePushOptions force, bool track, int recursiveSubmodules)
         {
             remote = remote.ToPosixPath();
 
-            var sforce = "";
-            if (force)
-                sforce = "-f ";
+            var sforce = GitCommandHelpers.GetForcePushArgument(force);
 
             var strack = "";
             if (track)
@@ -1596,7 +1641,7 @@ namespace GitCommands
         /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
         /// <returns>'git push' command with the specified parameters.</returns>
         public string PushCmd(string remote, string fromBranch, string toBranch,
-            bool force, bool track, int recursiveSubmodules)
+            ForcePushOptions force, bool track, int recursiveSubmodules)
         {
             remote = remote.ToPosixPath();
 
@@ -1610,9 +1655,7 @@ namespace GitCommands
 
             if (toBranch != null) toBranch = toBranch.Replace(" ", "");
 
-            var sforce = "";
-            if (force)
-                sforce = "-f ";
+            var sforce = GitCommandHelpers.GetForcePushArgument(force);
 
             var strack = "";
             if (track)
@@ -2434,7 +2477,12 @@ namespace GitCommands
             return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
         }
 
-        public RemoteActionResult<IList<GitRef>> GetRemoteRefs(string remote, bool tags, bool branches)
+        public IEnumerable<GitRef> GetRemoteBranches()
+        {
+            return GetRefs().Where(r => r.IsRemote);
+        }
+
+        public RemoteActionResult<IList<GitRef>> GetRemoteServerRefs(string remote, bool tags, bool branches)
         {
             RemoteActionResult<IList<GitRef>> result = new RemoteActionResult<IList<GitRef>>()
             {
@@ -2445,8 +2493,9 @@ namespace GitCommands
 
             remote = remote.ToPosixPath();
 
-            var tree = GetTreeFromRemoteRefs(remote, tags, branches);
+            result.CmdResult = GetTreeFromRemoteRefs(remote, tags, branches);
 
+            var tree = result.CmdResult.StdOutput;
             // If the authentication failed because of a missing key, ask the user to supply one.
             if (tree.Contains("FATAL ERROR") && tree.Contains("authentication"))
             {
@@ -2456,7 +2505,7 @@ namespace GitCommands
             {
                 result.HostKeyFail = true;
             }
-            else
+            else if(result.CmdResult.ExitedSuccessfully)
             {
                 result.Result = GetTreeRefs(tree);
             }
@@ -2475,10 +2524,9 @@ namespace GitCommands
             return new CmdResult();
         }
 
-        private string GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
+        private CmdResult GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
         {
-            CmdResult result = GetTreeFromRemoteRefsEx(remote, tags, branches);
-            return result.ExitCode == 0 ? result.StdOutput : "";
+            return GetTreeFromRemoteRefsEx(remote, tags, branches);
         }
 
         public IList<GitRef> GetRefs(bool tags = true, bool branches = true)
@@ -2556,7 +2604,7 @@ namespace GitCommands
             return "";
         }
 
-        private IList<GitRef> GetTreeRefs(string tree)
+        public IList<GitRef> GetTreeRefs(string tree)
         {
             var itemsStrings = tree.Split('\n');
 

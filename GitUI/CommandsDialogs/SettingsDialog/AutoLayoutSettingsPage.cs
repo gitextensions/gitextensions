@@ -199,7 +199,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public GroupBoxSettingsLayout(SettingsLayout aParentLayout, String aGroupBoxCaption)
             : base(aParentLayout, AutoLayoutSettingsPage.CreateDefaultTableLayoutPanel())
         {
-            groupBox = new GroupBox();
+            CreateGroupBox(aGroupBoxCaption);
+        }
+
+        private void CreateGroupBox(String aGroupBoxCaption)
+        {
+            var gbox = new GroupBox();
+            groupBox = gbox;
             groupBox.Text = aGroupBoxCaption;
             groupBox.AutoSize = true;
             groupBox.AutoSizeMode = AutoSizeMode.GrowAndShrink;

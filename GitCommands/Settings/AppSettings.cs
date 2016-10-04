@@ -64,6 +64,30 @@ namespace GitCommands
             }
         }
 
+        public static bool AutoNormaliseBranchName
+        {
+            get { return GetBool("AutoNormaliseBranchName", true); }
+            set { SetBool("AutoNormaliseBranchName", value); }
+        }
+
+        public static string AutoNormaliseSymbol
+        {
+            // when persisted "" is treated as null, so use "+" instead
+            get
+            {
+                var value = GetString("AutoNormaliseSymbol", "_");
+                return (value == "+") ? "" : value;
+            }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    value = "+";
+                }
+                SetString("AutoNormaliseSymbol", value);
+            }
+        }
+
         public static void UsingContainer(RepoDistSettings aSettingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>
@@ -246,8 +270,8 @@ namespace GitCommands
 
         public static bool AddNewlineToCommitMessageWhenMissing
         {
-            get { return GetBool ("addnewlinetocommitmessagewhenmissing", true); }
-            set { SetBool ("addnewlinetocommitmessagewhenmissing", value); }
+            get { return GetBool("addnewlinetocommitmessagewhenmissing", true); }
+            set { SetBool("addnewlinetocommitmessagewhenmissing", value); }
         }
 
         public static string LastCommitMessage
@@ -282,8 +306,8 @@ namespace GitCommands
 
         public static bool ProvideAutocompletion
         {
-          get { return GetBool("provideautocompletion", true); }
-          set { SetBool("provideautocompletion", value); }
+            get { return GetBool("provideautocompletion", true); }
+            set { SetBool("provideautocompletion", value); }
         }
 
         public static string TruncatePathMethod
@@ -851,7 +875,7 @@ namespace GitCommands
             set { SetBool("showdiffforallparents", value); }
         }
 
-		public static string RecentWorkingDir
+        public static string RecentWorkingDir
         {
             get { return GetString("RecentWorkingDir", null); }
             set { SetString("RecentWorkingDir", value); }

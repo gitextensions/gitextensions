@@ -71,6 +71,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void Putty_CheckedChanged(object sender, EventArgs e)
         {
+            groupBox2.Visible = Putty.Checked;
             if (Putty.Checked)
             {
                 AutoFindPuttyPaths();
