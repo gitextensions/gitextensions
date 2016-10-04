@@ -5290,7 +5290,7 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</target>
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .gitignore?</source>
-        <target>Änderungen in .gitignorie speichern?</target>
+        <target>Änderungen in .gitignore speichern?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestionCaption.Text">
