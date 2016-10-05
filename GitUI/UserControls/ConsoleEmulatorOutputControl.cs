@@ -76,7 +76,13 @@ namespace GitUI.UserControls
                 _terminal.Dispose();
             }
 
-            _panel.Controls.Add(_terminal = new ConEmuControl() { Dock = DockStyle.Fill, AutoStartInfo = null /* don't spawn terminal until we have gotten the command */});
+            _panel.Controls.Add(
+                _terminal = new ConEmuControl()
+                {
+                    Dock = DockStyle.Fill,
+                    AutoStartInfo = null, /* don't spawn terminal until we have gotten the command */
+                    IsStatusbarVisible = false
+                });
         }
 
         protected override void Dispose(bool disposing)
