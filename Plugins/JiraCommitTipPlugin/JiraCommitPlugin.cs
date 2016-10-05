@@ -6,9 +6,9 @@ using Atlassian.Jira;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace JiraComminTipPlugin
+namespace JiraCommitTipPlugin
 {
-    public class JiraComminPlugin : GitPluginBase, IGitPluginForRepository
+    public class JiraCommitPlugin : GitPluginBase, IGitPluginForRepository
     {
         private const string description = "Jira Commit Tip";
         private Jira jira;
@@ -18,7 +18,7 @@ namespace JiraComminTipPlugin
         private readonly PasswordSetting password = new PasswordSetting("Jira password", string.Empty);
         private readonly StringSetting filterName = new StringSetting("Filter name", "[Filter should be in your favorites]");
 
-        public JiraComminPlugin()
+        public JiraCommitPlugin()
         {
             Description = description;
         }
