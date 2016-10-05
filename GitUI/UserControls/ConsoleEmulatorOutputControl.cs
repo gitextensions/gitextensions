@@ -103,11 +103,11 @@ namespace GitUI.UserControls
                 cmdl.Append(" ");
             }
             cmdl.Append(arguments /* expecting to be already escaped */);
-            cmdl.Append(" -new_console:P:\"<Solarized Light>\"");
 
             var startinfo = new ConEmuStartInfo();
 			startinfo.ConsoleProcessCommandLine = cmdl.ToString();
-			startinfo.StartupDirectory = workdir;
+            startinfo.ConsoleProcessExtraArgs = " -cur_console:P:\"<Solarized Light>\"";
+            startinfo.StartupDirectory = workdir;
 			startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
 			startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) => FireDataReceived(new TextEventArgs(args.GetText(GitModule.SystemEncoding)));
 			startinfo.ConsoleProcessExitedEventSink = (sender, args) =>
