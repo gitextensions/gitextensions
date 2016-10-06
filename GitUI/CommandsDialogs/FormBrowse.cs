@@ -3540,7 +3540,7 @@ namespace GitUI.CommandsDialogs
 			    if(terminal == null) // Lazy-create on first opening the tab
 			    {
 				    tabpage.Controls.Clear();
-				    tabpage.Controls.Add(terminal = new ConEmuControl() {Dock = DockStyle.Fill, AutoStartInfo = null});
+                    tabpage.Controls.Add(terminal = new ConEmuControl() { IsStatusbarVisible = false, Dock = DockStyle.Fill, AutoStartInfo = null});
 			    }
 			    if(terminal.IsConsoleEmulatorOpen) // If user has typed "exit" in there, restart the shell; otherwise just return
 				    return;
