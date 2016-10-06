@@ -1039,7 +1039,6 @@ namespace GitUI.CommandsDialogs
             if (_currentFilesList != Staged)
                 return;
             Unstage();
-            Unstaged.Focus();
         }
 
         void Staged_DoubleClick(object sender, EventArgs e)
