@@ -1,7 +1,8 @@
+
 Changelog
 =========
 ### Version 2.49RC1-57dc6ee (no due date)
-* Updated Git for Windows to 2.10.0
+* Updated Git for Windows to version 2.10.0
 * VSIX extension for VS2015. PR #2885, #3331
 * ConEmu Console Emulator Control for Running Git Commands in the Real Terminal. PR #3152
 * Highlighting of authored commits. PR #2672
@@ -22,6 +23,8 @@ Changelog
 * Polish translation and dictionary added
 * Czech translation added
 * Romanian dictionary added. PR #2979
+
+
 
 * Added an option to remember the ignore-white-spaces preference for all the diff viewers
 * Option to check for release candidate versions
@@ -223,7 +226,7 @@ Changelog
 * Fixed issue #2250: Shell Extensions: IsValidGitDir UNC path performance bug fix
 * Fixed issue #2240: Allow push by commit hash
 * Fixed issue #2235: Allow the user to pick Git.exe no matter
-where it is installed on their system
+  where it is installed on their system
 * Fixed issue #2142: Fetch in 2.47.3 creating remote ref from remote HEAD using current local branch's name
 * Fixed issue #2140: Fix slow settings load because of UNC paths
 * Fixed issue #2139: Double click on submodule fails to open the submodule in a new instance of GitExtensions
