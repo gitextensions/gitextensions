@@ -71,6 +71,7 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
+        <target>Utilizar la consola para ver el resultado de los comandos</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -630,6 +631,8 @@ Elija no si desea utilizar otra herramienta de fusión.</target>
       <trans-unit id="_solveGitCommandFailed.Text">
         <source>The command to run git could not be determined automatically.
 Please make sure git (Git for Windows or cygwin) is installed or set the correct command manually.</source>
+        <target>El comando para ejecutar git no pudo determinarse automáticamente.
+Por favor asegúrese que git (Git for Windows o cygwin) está instalado o configure el comando correcto manualmente.</target>
         
       </trans-unit>
       <trans-unit id="_solveGitCommandFailedCaption.Text">
@@ -841,10 +844,12 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkAddNewlineToCommitMessageWhenMissing.Text">
         <source>Ensure the second line of commit message is empty</source>
+        <target>Asegúrese de que la segunda línea del mensaje de commit esté vacía</target>
         
       </trans-unit>
       <trans-unit id="chkAutocomplete.Text">
         <source>Provide auto-completion in commit dialog</source>
+        <target>Proporcionar auto completado en la ventana de commit</target>
         
       </trans-unit>
       <trans-unit id="chkShowCommitAndPush.Text">
@@ -5289,6 +5294,30 @@ Thumbs.db
 obj/
 [Rr]elease*/
 _ReSharper*/</source>
+        <target>Especifique patrones de archivos que quiera que ignore git.
+
+Ejemplos:
+#Ignorar miniaturas creadas por Windows
+Thumbs.db
+#Ignorar archivos creados por Visual Studio
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
@@ -8592,6 +8621,7 @@ Dejar en blanco cuando están en el PATH.</target>
       </trans-unit>
       <trans-unit id="label50.Text">
         <source>Git Extensions can use Git for Windows or cygwin to access git repositories. Set the correct paths below.</source>
+        <target>Git Extensions puede utilizar Git for Windows o cygwin para acceder a los repositiorios git. Establezca las rutas correctas debajo</target>
         
       </trans-unit>
       <trans-unit id="label51.Text">
