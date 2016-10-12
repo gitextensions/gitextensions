@@ -9,17 +9,17 @@ using GitCommands.Utils;
 
 namespace GitUI.UserControls
 {
-	/// <summary>
-	/// An output control which inserts a fully-functional console emulator window.
-	/// </summary>
-	public class ConsoleEmulatorOutputControl : ConsoleOutputControl
-	{
-		private int _nLastExitCode;
+    /// <summary>
+    /// An output control which inserts a fully-functional console emulator window.
+    /// </summary>
+    public class ConsoleEmulatorOutputControl : ConsoleOutputControl
+    {
+        private int _nLastExitCode;
 
         private Panel _panel;
         private ConEmuControl _terminal;
 
-		public ConsoleEmulatorOutputControl()
+        public ConsoleEmulatorOutputControl()
         {
             InitializeComponent();
         }
@@ -30,42 +30,42 @@ namespace GitUI.UserControls
         }
 
         public override int ExitCode
-		{
-			get
-			{
-				return _nLastExitCode;
-			}
-		}
+        {
+            get
+            {
+                return _nLastExitCode;
+            }
+        }
 
-		public override bool IsDisplayingFullProcessOutput
-		{
-			get
-			{
-				return true;
-			}
-		}
+        public override bool IsDisplayingFullProcessOutput
+        {
+            get
+            {
+                return true;
+            }
+        }
 
-		public static bool IsSupportedInThisEnvironment
-		{
-			get
-			{
-				return EnvUtils.RunningOnWindows(); // ConEmu only works in WinNT
-			}
-		}
+        public static bool IsSupportedInThisEnvironment
+        {
+            get
+            {
+                return EnvUtils.RunningOnWindows(); // ConEmu only works in WinNT
+            }
+        }
 
-		public override void AppendMessageFreeThreaded(string text)
-		{
-			ConEmuSession session = _terminal.RunningSession;
-			if(session != null)
-				session.WriteOutputText(text);
-		}
+        public override void AppendMessageFreeThreaded(string text)
+        {
+            ConEmuSession session = _terminal.RunningSession;
+            if(session != null)
+                session.WriteOutputText(text);
+        }
 
-		public override void KillProcess()
-		{
-			ConEmuSession session = _terminal.RunningSession;
-			if(session != null)
-				session.SendControlCAsync();
-		}
+        public override void KillProcess()
+        {
+            ConEmuSession session = _terminal.RunningSession;
+            if(session != null)
+                session.SendControlCAsync();
+        }
 
         public override void Reset()
         {
@@ -105,16 +105,16 @@ namespace GitUI.UserControls
             cmdl.Append(arguments /* expecting to be already escaped */);
 
             var startinfo = new ConEmuStartInfo();
-			startinfo.ConsoleProcessCommandLine = cmdl.ToString();
+            startinfo.ConsoleProcessCommandLine = cmdl.ToString();
             startinfo.ConsoleProcessExtraArgs = " -cur_console:P:\"<Solarized Light>\"";
             startinfo.StartupDirectory = workdir;
-			startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
-			startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) => FireDataReceived(new TextEventArgs(args.GetText(GitModule.SystemEncoding)));
-			startinfo.ConsoleProcessExitedEventSink = (sender, args) =>
-			{
-				_nLastExitCode = args.ExitCode;
-				FireProcessExited();
-			};
+            startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
+            startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) => FireDataReceived(new TextEventArgs(args.GetText(GitModule.SystemEncoding)));
+            startinfo.ConsoleProcessExitedEventSink = (sender, args) =>
+            {
+                _nLastExitCode = args.ExitCode;
+                FireProcessExited();
+            };
 
             startinfo.ConsoleEmulatorClosedEventSink = (s, e) =>
                 {
@@ -124,9 +124,9 @@ namespace GitUI.UserControls
                         FireTerminated();
                     }
                 };
-			startinfo.IsEchoingConsoleCommandLine = true;
+            startinfo.IsEchoingConsoleCommandLine = true;
 
-			_terminal.Start(startinfo);
-		}
-	}
+            _terminal.Start(startinfo);
+        }
+    }
 }
