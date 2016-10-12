@@ -11,6 +11,7 @@ set EnableNuGetPackageRestore=true
 
 %nuget% install ..\Plugins\BackgroundFetch\packages.config -OutputDirectory ..\packages
 %nuget% install ..\Plugins\BuildServerIntegration\TeamCityIntegration\packages.config -OutputDirectory ..\packages
+%nuget% install ..\GitExtensionsVSIX\packages.config -OutputDirectory ..\packages
 
 call %msbuild% %project% /t:clean
 call %msbuild% %project% /p:TargetFrameworkProfile="" /p:Platform="Any CPU" /p:Configuration=Release /nologo /v:m
