@@ -9,4 +9,4 @@
 	url = git://github.com/gitextensions/Git.hub.git
 [submodule "Externals/conemu-inside"]
 	path = Externals/conemu-inside
-	url = git@github.com:gitextensions/conemu-inside.git
+	url = git://github.com/gitextensions/conemu-inside.git
