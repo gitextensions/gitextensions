@@ -3560,11 +3560,21 @@ namespace GitUI.CommandsDialogs
 			    // Choose the console: bash from git with fallback to cmd
 			    string sGitBashFromUsrBin = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), ".."), "git-bash.exe"); // Git bin dir is /usr/bin under git installdir, so go 2x up
 			    string sGitBashFromBinOrCmd = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), "git-bash.exe"); // In case we're running off just /bin or /cmd
-		        var gitDir = Path.GetDirectoryName(AppSettings.GitCommandValue);
-			    string sJustBash = Path.Combine(gitDir, "bash.exe"); // Generic bash, should generally be in the git dir, less configured than the specific git-bash
-			    string sJustSh = Path.Combine(gitDir, "sh.exe"); // Fallback to SH
-			    startinfo.ConsoleProcessCommandLine = new[] {sGitBashFromUsrBin, sGitBashFromBinOrCmd, sJustBash, sJustSh}.Where(File.Exists).FirstOrDefault() ?? ConEmuConstants.DefaultConsoleCommandLine; // Choose whatever exists, or default CMD shell
-                if(startinfo.ConsoleProcessCommandLine != ConEmuConstants.DefaultConsoleCommandLine)
+
+                var gitCommandValue = AppSettings.GitCommandValue;
+                if (string.IsNullOrEmpty(gitCommandValue) && File.Exists(gitCommandValue))
+                {
+                    var gitDir = Path.GetDirectoryName(AppSettings.GitCommandValue);
+                    string sJustBash = Path.Combine(gitDir, "bash.exe");
+                        // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+                    string sJustSh = Path.Combine(gitDir, "sh.exe"); // Fallback to SH
+                    startinfo.ConsoleProcessCommandLine =
+                        new[] {sGitBashFromUsrBin, sGitBashFromBinOrCmd, sJustBash, sJustSh}.Where(File.Exists)
+                            .FirstOrDefault() ?? ConEmuConstants.DefaultConsoleCommandLine;
+                        // Choose whatever exists, or default CMD shell
+                }
+
+		        if(startinfo.ConsoleProcessCommandLine != ConEmuConstants.DefaultConsoleCommandLine)
                 {
                     startinfo.ConsoleProcessCommandLine += " --login -i";
                 }
