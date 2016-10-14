@@ -3574,7 +3574,7 @@ namespace GitUI.CommandsDialogs
                         // Choose whatever exists, or default CMD shell
                 }
 
-		        if(startinfo.ConsoleProcessCommandLine != ConEmuConstants.DefaultConsoleCommandLine)
+                if(startinfo.ConsoleProcessCommandLine != ConEmuConstants.DefaultConsoleCommandLine)
                 {
                     startinfo.ConsoleProcessCommandLine += " --login -i";
                 }
