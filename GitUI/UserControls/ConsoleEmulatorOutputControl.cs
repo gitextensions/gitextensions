@@ -62,27 +62,35 @@ namespace GitUI.UserControls
 
         public override void KillProcess()
         {
-            ConEmuSession session = _terminal.RunningSession;
-            if(session != null)
+            KillProcess(_terminal);
+        }
+
+        private static void KillProcess(ConEmuControl terminal)
+        {
+            ConEmuSession session = terminal.RunningSession;
+            if (session != null)
                 session.SendControlCAsync();
         }
 
         public override void Reset()
         {
-            if (_terminal != null)
+            ConEmuControl oldTerminal = _terminal;
+
+            _terminal = new ConEmuControl()
             {
-                KillProcess();
-                _panel.Controls.Remove(_terminal);
-                _terminal.Dispose();
+                Dock = DockStyle.Fill,
+                AutoStartInfo = null, /* don't spawn terminal until we have gotten the command */
+                IsStatusbarVisible = false
+            };
+
+            if (oldTerminal != null)
+            {
+                KillProcess(oldTerminal);
+                _panel.Controls.Remove(oldTerminal);
+                oldTerminal.Dispose();
             }
 
-            _panel.Controls.Add(
-                _terminal = new ConEmuControl()
-                {
-                    Dock = DockStyle.Fill,
-                    AutoStartInfo = null, /* don't spawn terminal until we have gotten the command */
-                    IsStatusbarVisible = false
-                });
+            _panel.Controls.Add(_terminal);
         }
 
         protected override void Dispose(bool disposing)
@@ -118,8 +126,7 @@ namespace GitUI.UserControls
 
             startinfo.ConsoleEmulatorClosedEventSink = (s, e) =>
                 {
-                    if (!(s as ConEmuSession).IsConsoleProcessExited
-                        && s == _terminal.RunningSession)
+                    if (s == _terminal.RunningSession)
                     {
                         FireTerminated();
                     }
