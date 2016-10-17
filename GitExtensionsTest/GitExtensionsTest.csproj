@@ -95,7 +95,6 @@
     <Compile Include="GitUI\AuthorEmailBasedRevisionHighlightingFixture.cs" />
     <Compile Include="GitUI\Editor\Diff\DiffLineNumAnalyzerFixture.cs" />
     <Compile Include="GitUI\Editor\Diff\LinePrefixHelperFixture.cs" />
-    <Compile Include="GitUI\FollowParentRewriterFixture.cs" />
     <Compile Include="GitUI\FormUpdateFixture.cs" />
     <Compile Include="GitUI\HotkeySettingsManagerFixture.cs" />
     <Compile Include="GitUI\SingleHtmlUserManualFixture.cs" />

@@ -80,7 +80,7 @@
             // 
             this.btnInit.Location = new System.Drawing.Point(284, 12);
             this.btnInit.Name = "btnInit";
-            this.btnInit.Size = new System.Drawing.Size(83, 23);
+            this.btnInit.Size = new System.Drawing.Size(130, 23);
             this.btnInit.TabIndex = 0;
             this.btnInit.Text = "Init GitFlow";
             this.btnInit.UseVisualStyleBackColor = true;

@@ -26,7 +26,7 @@ namespace GitUI.UserControls
             var newSelectedRevision = selectedRevisions.FirstOrDefault();
             bool differentRevisionAuthorSelected =
                 !AuthorEmailEqualityComparer.Instance.Equals(_currentSelectedRevision, newSelectedRevision);
- 
+
             if (differentRevisionAuthorSelected)
             {
                 AuthorEmailToHighlight = newSelectedRevision != null

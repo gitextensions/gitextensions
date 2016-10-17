@@ -376,7 +376,7 @@ namespace GitUI.CommandsDialogs
         {
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
-            _branchListLoader.Load(() => Module.GetRemoteRefs(from, false, true), UpdateBranches);
+            _branchListLoader.Load(() => Module.GetRemoteServerRefs(from, false, true), UpdateBranches);
         }
 
         private void Branches_DropDown(object sender, EventArgs e)

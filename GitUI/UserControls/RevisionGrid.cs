@@ -310,9 +310,6 @@ namespace GitUI
             }
         }
 
-        [Browsable(false)]
-        [Description("Object calculating in memory history rewrites")]
-        public FollowParentRewriter Rewriter { get; set; }
 
         public void SetInitialRevision(GitRevision initialSelectedRevision)
         {
@@ -652,7 +649,7 @@ namespace GitUI
             Revisions.Select();
         }
 
-        // Selects row cotaining revision given its revisionId
+        // Selects row containing revision given its revisionId
         // Returns whether the required revision was found and selected
         private bool InternalSetSelectedRevision(string revision)
         {
@@ -663,7 +660,7 @@ namespace GitUI
                 return true;
             }
             else
-            { 
+            {
                 Revisions.ClearSelection();
                 Revisions.Select();
                 return false;
@@ -671,26 +668,15 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Find specified revision in known to the grid revisions 
+        /// Find specified revision in known to the grid revisions
         /// </summary>
         /// <param name="revision">Revision to lookup</param>
         /// <returns>Index of the found revision or -1 if nothing was found</returns>
         private int FindRevisionIndex(string revision)
         {
-            if (string.IsNullOrWhiteSpace(revision))
-            {
-                return -1;
-            }
+            int? revIdx = Revisions.TryGetRevisionIndex(revision);
 
-            for (int i = 0; i < Revisions.RowCount; i++)
-            {
-                if (GetRevision(i).Guid == revision)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
+            return revIdx.HasValue ? revIdx.Value : -1;
         }
 
         public bool SetSelectedRevision(string revision)
@@ -1115,7 +1101,7 @@ namespace GitUI
         private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
         {
             // This has to happen on the UI thread
-            this.InvokeSync(o =>
+            this.InvokeAsync(o =>
                                   {
                                       Error.Visible = true;
                                       //Error.BringToFront();
@@ -1137,15 +1123,7 @@ namespace GitUI
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
         {
             var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEventArgs)e;
-            if (Rewriter != null)
-            {
-                Rewriter.PushRevision(updatedEvent.Revision);
-                Rewriter.Flush(false, UpdateGraph);
-            }
-            else
-            {
-                UpdateGraph(updatedEvent.Revision);
-            }
+            UpdateGraph(updatedEvent.Revision);
         }
 
         internal bool FilterIsApplied(bool inclBranchFilter)
@@ -1183,18 +1161,13 @@ namespace GitUI
 
         private void GitGetCommitsCommandExited(object sender, EventArgs e)
         {
-            if (Rewriter != null)
-            {
-                Rewriter.Flush(true, UpdateGraph);
-            }
-
             _isLoading = false;
 
             if (_revisionGraphCommand.RevisionCount == 0 &&
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
-                this.InvokeSync(o =>
+                this.InvokeAsync(o =>
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
@@ -1206,7 +1179,7 @@ namespace GitUI
             else
             {
                 // This has to happen on the UI thread
-                this.InvokeSync(o =>
+                this.InvokeAsync(o =>
                                       {
                                           UpdateGraph(null);
                                           Loading.Visible = false;
@@ -1225,18 +1198,8 @@ namespace GitUI
             string filtredCurrentCheckout = _filtredCurrentCheckout;
             string[] lastSelectedRows = LastSelectedRows ?? new string[0];
 
-            // When 'git log --first-parent' filtration is applied we can have the following situation:
-            // - user via CommitInfo traverses to a not first parent commit
-            // - branch filter is applied to be able to traverse to this commit
-            // - then user resets this branch filter with ShowFirstParent filter still on
-            //
-            // In such situation selected commits likelly are absent from availabe Revisions and
-            // thus it is not possible to make them selectable. To prevent jumping around to a random commit
-            // in UI we first filter out all unavailable commits from LastSelectedRows.
-            if (AppSettings.ShowFirstParent)
-            {
-                lastSelectedRows = lastSelectedRows.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
-            }
+            //filter out all unavailable commits from LastSelectedRows.
+            lastSelectedRows = lastSelectedRows.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
 
             if (lastSelectedRows.Any())
             {
@@ -1251,7 +1214,7 @@ namespace GitUI
                     if (index >= 0)
                         SetSelectedIndex(index);
                 }
-                else
+                else if (!string.IsNullOrEmpty(filtredCurrentCheckout))
                 {
                     SetSelectedRevision(filtredCurrentCheckout);
                 }
@@ -1737,7 +1700,8 @@ namespace GitUI
             {
                 if (revision.Body == null && !revision.IsArtificial())
                 {
-                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount));
+                    var moduleRef = Module;
+                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount, moduleRef));
                 }
 
                 if (revision.Body != null)
@@ -1762,14 +1726,14 @@ namespace GitUI
         /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
         /// <param name="colIndex"></param>
         /// <param name="rowIndex"></param>
-        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount)
+        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount, GitModule aModule)
         {
             // code taken from CommitInfo.cs
             CommitData commitData = CommitData.CreateFromRevision(revision);
             string error = "";
             if (revision.Body == null)
             {
-                CommitData.UpdateCommitMessage(commitData, Module, revision.Guid, ref error);
+                CommitData.UpdateCommitMessage(commitData, aModule, revision.Guid, ref error);
                 revision.Body = commitData.Body;
             }
 

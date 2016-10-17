@@ -2662,7 +2662,12 @@ namespace GitCommands
             return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
         }
 
-        public RemoteActionResult<IList<GitRef>> GetRemoteRefs(string remote, bool tags, bool branches)
+        public IEnumerable<GitRef> GetRemoteBranches()
+        {
+            return GetRefs().Where(r => r.IsRemote);
+        }
+
+        public RemoteActionResult<IList<GitRef>> GetRemoteServerRefs(string remote, bool tags, bool branches)
         {
             RemoteActionResult<IList<GitRef>> result = new RemoteActionResult<IList<GitRef>>()
             {
@@ -2673,8 +2678,9 @@ namespace GitCommands
 
             remote = remote.ToPosixPath();
 
-            var tree = GetTreeFromRemoteRefs(remote, tags, branches);
+            result.CmdResult = GetTreeFromRemoteRefs(remote, tags, branches);
 
+            var tree = result.CmdResult.StdOutput;
             // If the authentication failed because of a missing key, ask the user to supply one.
             if (tree.Contains("FATAL ERROR") && tree.Contains("authentication"))
             {
@@ -2684,7 +2690,7 @@ namespace GitCommands
             {
                 result.HostKeyFail = true;
             }
-            else
+            else if(result.CmdResult.ExitedSuccessfully)
             {
                 result.Result = GetTreeRefs(tree);
             }
@@ -2703,10 +2709,9 @@ namespace GitCommands
             return new CmdResult();
         }
 
-        private string GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
+        private CmdResult GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
         {
-            CmdResult result = GetTreeFromRemoteRefsEx(remote, tags, branches);
-            return result.ExitCode == 0 ? result.StdOutput : "";
+            return GetTreeFromRemoteRefsEx(remote, tags, branches);
         }
 
         public IList<GitRef> GetRefs(bool tags = true, bool branches = true)
@@ -2784,7 +2789,7 @@ namespace GitCommands
             return "";
         }
 
-        private IList<GitRef> GetTreeRefs(string tree)
+        public IList<GitRef> GetTreeRefs(string tree)
         {
             var itemsStrings = tree.Split('\n');
 

@@ -1,17 +1,15 @@
 # Git Extensions
 
-WARNING: Repository rewritten on 2014-08-24 to reduce its size. Please clone it again. |
------------
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Issue Stats](http://www.issuestats.com/github/gitextensions/gitextensions/badge/pr?style=flat)](http://www.issuestats.com/github/gitextensions/gitextensions) [![Issue Stats](http://www.issuestats.com/github/gitextensions/gitextensions/badge/issue?style=flat)](http://www.issuestats.com/github/gitextensions/gitextensions) [![SourceForge](https://img.shields.io/sourceforge/dm/gitextensions.svg)](https://sourceforge.net/projects/gitextensions/)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![SourceForge](https://img.shields.io/sourceforge/dm/gitextensions.svg)](https://sourceforge.net/projects/gitextensions/) [![Github Releases (by Release)](https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=2592000)](https://github.com/gitextensions/gitextensions/releases/latest)
 
 
 ## Introduction
 
-GitExtensions is a standalone Git repository tool, a Visual Studio 2008 / 2010 / 2012 / 2013 plugin and a shell extension.
+GitExtensions is a standalone Git repository tool, a Visual Studio 2010-2015 plugin and a shell extension.
 
 ## Current status
 
-Build status: master [![Status](http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:GitExtensions_Master\)/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=GitExtensions_Master)
+Build status: master [![TeamCity Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:GitExtensions_Master\)/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=GitExtensions_Master)
 
 Mono Build status: master
 [![Build Status](https://travis-ci.org/gitextensions/gitextensions.svg?branch=master)](https://travis-ci.org/gitextensions/gitextensions)

@@ -421,6 +421,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 // once a check fails, we want bValid to stay false
                 bValid = CheckGitCmdValid();
                 bValid = CheckGlobalUserSettingsValid() && bValid;
+                bValid = CheckEditorTool() && bValid;
                 bValid = CheckMergeTool() && bValid;
                 bValid = CheckDiffToolConfiguration() && bValid;
                 bValid = CheckTranslationConfigSettings() && bValid;
@@ -640,6 +641,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             UserNameSet.Text = _emailSet.Text;
             UserNameSet_Fix.Visible = false;
             return true;
+        }
+
+        private bool CheckEditorTool()
+        {
+            string editor = CommonLogic.GetGlobalEditor();
+            return !string.IsNullOrEmpty(editor);
         }
 
         private bool CheckGitExtensionRegistrySettings()

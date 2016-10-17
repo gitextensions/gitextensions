@@ -271,21 +271,18 @@ namespace GitUI.RevisionGridClasses
                     if (value == null)
                         return;
 
-                    ClearSelection();
-                    CurrentCell = null;
-
                     foreach (string rowItem in value)
                     {
-                        int row = FindRow(rowItem);
-                        if (row >= 0 && Rows.Count > row)
+                        int? row = TryGetRevisionIndex(rowItem);
+                        if (row.HasValue && row.Value >= 0 && Rows.Count > row.Value)
                         {
-                            Rows[row].Selected = true;
+                            Rows[row.Value].Selected = true;
                             if (CurrentCell == null)
                             {
                                 // Set the current cell to the first item. We use cell
                                 // 1 because cell 0 could be hidden if they've chosen to
                                 // not see the graph
-                                CurrentCell = Rows[row].Cells[1];
+                                CurrentCell = Rows[row.Value].Cells[1];
                             }
                         }
                     }
@@ -628,7 +625,7 @@ namespace GitUI.RevisionGridClasses
                     }
 
                     // Update the row (if needed)
-                    if (curCount < _visibleBottom)
+                    if (curCount == Math.Min(scrollTo, _visibleBottom) - 1)
                     {
                         this.InvokeAsync(o => UpdateRow((int)o), curCount);
                     }

@@ -133,11 +133,11 @@ namespace GitUI
 
             try
             {
-				ConsoleOutput.StartProcess(ProcessString, ProcessArguments, WorkingDirectory);
+                ConsoleOutput.StartProcess(ProcessString, ProcessArguments, WorkingDirectory);
 
                 if (!string.IsNullOrEmpty(ProcessInput))
                 {
-					throw new NotSupportedException("No non-NULL usages of ProcessInput are currently expected.");	// Not implemented with all terminal variations, so let's postpone until there's at least one non-null case
+                    throw new NotSupportedException("No non-NULL usages of ProcessInput are currently expected.");	// Not implemented with all terminal variations, so let's postpone until there's at least one non-null case
 /*
                     Thread.Sleep(500);
                     Process.StandardInput.Write(ProcessInput);
@@ -154,7 +154,7 @@ namespace GitUI
 
         private void processAbort(FormStatus form)
         {
-			ConsoleOutput.KillProcess();
+            ConsoleOutput.KillProcess();
         }
 
         protected void KillGitCommand()
@@ -205,33 +205,33 @@ namespace GitUI
 
         }
 
-	    private void DataReceivedCore(object sender, TextEventArgs e)
-	    {
-		    if(e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
-			    SetProgress(e.Text);
-		    else
-		    {
-			    const string ansiSuffix = "\u001B[K";
-			    string line = e.Text.Replace(ansiSuffix, "");
-
-			    if(ConsoleOutput.IsDisplayingFullProcessOutput)
-				    OutputLog.AppendLine(line); // To the log only, display control displays it by itself
-			    else
-				    AppendOutputLine(line); // Both to log and display control
-		    }
-
-		    DataReceived(sender, e);
-	    }
-
-		/// <summary>
-		/// Appends a line of text (CRLF added automatically) both to the logged output (<see cref="FormStatus.GetOutputString"/>) and to the display console control.
-		/// </summary>
-        public void AppendOutputLine(string line)
+        private void DataReceivedCore(object sender, TextEventArgs e)
         {
-			// To the internal log (which can be then retrieved as full text from this form)
-            OutputLog.AppendLine(line);
+            if(e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
+                SetProgress(e.Text);
+            else
+            {
+                const string ansiSuffix = "\u001B[K";
+                string line = e.Text.Replace(ansiSuffix, "");
 
-			// To the display control
+                if(ConsoleOutput.IsDisplayingFullProcessOutput)
+                    OutputLog.Append(line); // To the log only, display control displays it by itself
+                else
+                    AppendOutput(line); // Both to log and display control
+            }
+
+            DataReceived(sender, e);
+        }
+
+        /// <summary>
+        /// Appends a line of text (CRLF added automatically) both to the logged output (<see cref="FormStatus.GetOutputString"/>) and to the display console control.
+        /// </summary>
+        public void AppendOutput(string line)
+        {
+            // To the internal log (which can be then retrieved as full text from this form)
+            OutputLog.Append(line);
+
+            // To the display control
             AddMessageLine(line);
         }
 
