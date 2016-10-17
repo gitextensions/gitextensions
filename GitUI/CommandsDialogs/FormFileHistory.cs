@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using ResourceManager;
-using GitUI.UserControls.RevisionGridClasses;
 
 namespace GitUI.CommandsDialogs
 {
@@ -110,7 +109,6 @@ namespace GitUI.CommandsDialogs
                     return;
                 FileChanges.FixedRevisionFilter = filter.RevisionFilter;
                 FileChanges.FixedPathFilter = filter.PathFilter;
-                FileChanges.Rewriter = filter.Rewriter;
                 FileChanges.FiltredFileName = FileName;
                 FileChanges.AllowGraphWithFilter = true;
                 FileChanges.Load();
@@ -121,7 +119,6 @@ namespace GitUI.CommandsDialogs
         {
             public string RevisionFilter;
             public string PathFilter;
-            public FollowParentRewriter Rewriter;
         }
 
         private FixedFilterTuple BuildFilter(string fileName)
@@ -160,23 +157,44 @@ namespace GitUI.CommandsDialogs
             FileName = fileName;
 
             FixedFilterTuple res = new FixedFilterTuple();
+            res.PathFilter = " \"" + fileName + "\"";
             if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
             {
                 // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
-                FollowParentRewriter hrw = new FollowParentRewriter(fileName, delegate(string arg){
-                    Process p = Module.RunGitCmdDetached(arg);
-                    return p.StandardOutput;
-                });
+                //
+                // But we can take a more complicated path to get reasonable results:
+                //  1. use git log --follow to get all previous filenames of the file we are interested in
+                //  2. use git log "list of files names" to get the history graph 
+                //
+                // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
+                // 
+
+                string arg = "log --format=\"%n\" --name-only --follow "+
+                    GitCommandHelpers.FindRenamesAndCopiesOpts()
+                    + " -- \"" + fileName + "\"";
+                Process p = Module.RunGitCmdDetached(arg);
+
+                // the sequence of (quoted) file names - start with the initial filename for the search.
+                var listOfFileNames = new StringBuilder("\"" + fileName + "\"");
+
+                // keep a set of the file names already seen
+                var setOfFileNames = new HashSet<string> { fileName };
+
+                string line;
+                do
+                {
+                    line = p.StandardOutput.ReadLine();
+
+                    if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
+                    {
+                        listOfFileNames.Append(" \"");
+                        listOfFileNames.Append(line);
+                        listOfFileNames.Append('\"');
+                    }
+                } while (line != null);
                 // here we need --name-only to get the previous filenames in the revision graph
-                if (hrw.RewriteNecessary)
-                {
-                    res.Rewriter = hrw;
-                    res.RevisionFilter = " " + GitCommandHelpers.FindRenamesAndCopiesOpts() + " --name-only --follow";
-                }
-                else
-                {
-                    res.RevisionFilter = " " + GitCommandHelpers.FindRenamesAndCopiesOpts() + " --name-only --parents";
-                }
+                res.PathFilter = listOfFileNames.ToString();
+                res.RevisionFilter += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
             }
             else if (AppSettings.FollowRenamesInFileHistory)
             {
@@ -195,7 +213,6 @@ namespace GitUI.CommandsDialogs
                 res.RevisionFilter = string.Concat(" --full-history ", res.RevisionFilter);
             }
 
-            res.PathFilter = " \"" + fileName + "\"";
 
             return res;
         }

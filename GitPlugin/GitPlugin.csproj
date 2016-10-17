@@ -72,37 +72,6 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Commands\FindFile.cs" />
-    <Compile Include="Commands\OpenWithDifftool.cs" />
-    <Compile Include="Commands\ViewChanges.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Git\GitCommands.cs" />
-    <Compile Include="Commands\About.cs" />
-    <Compile Include="Commands\ApplyPatch.cs" />
-    <Compile Include="Commands\Browse.cs" />
-    <Compile Include="Commands\Cherry.cs" />
-    <Compile Include="Commands\Clone.cs" />
-    <Compile Include="Commands\CommandBase.cs" />
-    <Compile Include="Commands\Commit.cs" />
-    <Compile Include="Commands\CreateBranch.cs" />
-    <Compile Include="Commands\FileHistory.cs" />
-    <Compile Include="Commands\FormatPatch.cs" />
-    <Compile Include="Commands\GitBash.cs" />
-    <Compile Include="Commands\GitIgnore.cs" />
-    <Compile Include="Commands\Init.cs" />
-    <Compile Include="Commands\ItemCommandBase.cs" />
-    <Compile Include="Commands\Merge.cs" />
-    <Compile Include="Commands\Pull.cs" />
-    <Compile Include="Commands\Push.cs" />
-    <Compile Include="Commands\Rebase.cs" />
-    <Compile Include="Commands\Remotes.cs" />
-    <Compile Include="Commands\Revert.cs" />
-    <Compile Include="Commands\Settings.cs" />
-    <Compile Include="Commands\SolveMergeConflicts.cs" />
-    <Compile Include="Commands\Stash.cs" />
-    <Compile Include="Commands\SwitchBranch.cs" />
-    <Compile Include="Commands\ToolbarCommand.cs" />
     <Compile Include="Connect.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -220,6 +189,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GitPluginShared\GitPluginShared.csproj">
+      <Project>{c0a7b025-b7ee-477a-bac7-a6365e7bd893}</Project>
+      <Name>GitPluginShared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\FxCop.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />

@@ -138,11 +138,13 @@ namespace GitCommands.Settings
     public class DetailedGroup : SettingsPath
     {
         public readonly BoolNullableSetting ShowConEmuTab;
+        public readonly BoolNullableSetting GetRemoteBranchesDirectlyFromRemote;
 
         public DetailedGroup(RepoDistSettings container)
             : base(container, "Detailed")
         {
             ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", this, true);
+            GetRemoteBranchesDirectlyFromRemote = new BoolNullableSetting("GetRemoteBranchesDirectlyFromRemote", this, false);
         }
     }
 

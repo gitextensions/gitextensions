@@ -60,10 +60,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ConEmu.WinForms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=00340228797aafb8, processorArchitecture=MSIL">
-      <HintPath>..\packages\ConEmu.Control.WinForms.1.0.20160313.1\lib\net40\ConEmu.WinForms.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="PSTaskDialog">
       <HintPath>..\Bin\PSTaskDialog.dll</HintPath>
     </Reference>
@@ -103,6 +99,7 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell">
       <HintPath>..\Bin\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -300,7 +297,6 @@
     </Compile>
     <Compile Include="UserControls\RevisionGridClasses\CopyToClipboardMenuHelper.cs" />
     <Compile Include="UserControls\RevisionGridClasses\CaptionCustomMenuRenderer.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\FollowParentRewriter.cs" />
     <Compile Include="UserControls\RevisionGridClasses\GitRefListsForRevision.cs" />
     <Compile Include="UserControls\RevisionGridClasses\MenuUtil.cs" />
     <Compile Include="UserControls\RevisionGridClasses\NavigationHistory.cs" />
@@ -1505,6 +1501,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj">
+      <Project>{1dc7d403-484b-43b4-b017-1356397a32cb}</Project>
+      <Name>ConEmuWinForms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Externals\Git.hub\Git.hub\Git.hub.csproj">
       <Project>{f50b1dbf-1c9f-4437-87ec-7aba805cc446}</Project>
       <Name>Git.hub</Name>
@@ -1942,11 +1942,5 @@
   <Import Project="..\FxCop.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
-  <Import Project="..\packages\ConEmu.Core.16.7.10.0\build\ConEmu.Core.Targets" Condition="Exists('..\packages\ConEmu.Core.16.7.10.0\build\ConEmu.Core.Targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\ConEmu.Core.16.7.10.0\build\ConEmu.Core.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ConEmu.Core.16.7.10.0\build\ConEmu.Core.Targets'))" />
-  </Target>
+  <Import Project="..\packages\ConEmu.Core.16.7.10.0\Build\ConEmu.Core.Targets" Condition="Exists('..\packages\ConEmu.Core.16.7.10.0\Build\ConEmu.Core.Targets')" />
 </Project>

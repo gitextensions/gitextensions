@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <file datatype="plaintext" original="AboutBox" source-language="en">
+  <file datatype="plaintext" original="AboutBox" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>About</source>
@@ -17,7 +17,7 @@
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</source>
         <target>Git Extensions je rozšíření pro Visual Studio a Průzkumíka o Git
 
-Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁRUKY; všetně záruky PRODEJNOSTI, nebo VHODNOSTI PRO URČITÝ ÚČEL.</target>
+Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁRUKY; včetně záruky PRODEJNOSTI, nebo VHODNOSTI PRO URČITÝ ÚČEL.</target>
         
       </trans-unit>
       <trans-unit id="thanksTo.Text">
@@ -27,7 +27,7 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en">
+  <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Advanced</source>
@@ -37,6 +37,11 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
       <trans-unit id="CheckoutGB.Text">
         <source>Checkout</source>
         <target>Získat</target>
+        
+      </trans-unit>
+      <trans-unit id="DiffViewerGB.Text">
+        <source>Diff Viewer</source>
+        <target>Prohlížeč rozdílů</target>
         
       </trans-unit>
       <trans-unit id="GeneralGB.Text">
@@ -54,9 +59,18 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
         <target>Vždy zobrazovat dialog získání</target>
         
       </trans-unit>
+      <trans-unit id="chkAutoNormaliseBranchName.Text">
+        <source>Auto normalise branch name</source>
+        
+      </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
         <source>Check for release candidate versions</source>
         <target>Kontrolovat dostupnost nevydaných verzí (release candidate)</target>
+        
+      </trans-unit>
+      <trans-unit id="chkConsoleEmulator.Text">
+        <source>Use Console Emulator for console output in command dialogs</source>
+        <target>Používat Console Emulator pro výstup příkazové řádky v příkazových dialozích</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -64,9 +78,13 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
         <target>Nezobrazovat obrázky nápovědy</target>
         
       </trans-unit>
+      <trans-unit id="chkOmitUninterestingDiff.Text">
+        <source>Omit uninteresting changes from combined diff</source>
+        
+      </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
         <source>Remember the ignore-white-space preference</source>
-
+        
       </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen &quot;local changes&quot; action as default action.
@@ -75,23 +93,53 @@ This action will be performed without warning while checking out branch.</source
 Při získávání větve bude tato akce provedena bez varování.</target>
         
       </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Symbol to use:</source>
+        <target>Symbol k použití:</target>
+        
+      </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AppearanceSettingsPage" source-language="en">
+  <file datatype="plaintext" original="AppearanceSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Appearance</source>
         <target>Vzhled</target>
         
       </trans-unit>
+      <trans-unit id="AuthorImageSize.Item0">
+        <source>Small (80x80)</source>
+        <target>Malá (80x80)</target>
+        
+      </trans-unit>
+      <trans-unit id="AuthorImageSize.Item1">
+        <source>Normal (160x160)</source>
+        <target>Normální (160x160)</target>
+        
+      </trans-unit>
+      <trans-unit id="AuthorImageSize.Item2">
+        <source>Large (240x240)</source>
+        <target>Velká (240x240)</target>
+        
+      </trans-unit>
+      <trans-unit id="AuthorImageSize.Item3">
+        <source>Extra Large (320x320)</source>
+        <target>Extra velká (320x320)</target>
+        
+      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
-        <target>Vyprázdnit obrázkovou cache</target>
+        <target>Vyprázdnit obr. cache</target>
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
         <source>Get author image from gravatar.com</source>
         <target>Získávat obrázek autora z gravatar.com</target>
+        
+      </trans-unit>
+      <trans-unit id="_noDictFile.Text">
+        <source>None</source>
+        <target>Žádný</target>
         
       </trans-unit>
       <trans-unit id="_noDictFilesFound.Text">
@@ -101,7 +149,7 @@ Při získávání větve bude tato akce provedena bez varování.</target>
       </trans-unit>
       <trans-unit id="applicationFontChangeButton.Text">
         <source>font name</source>
-        <target>Název fontu</target>
+        <target>Název písma</target>
         
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
@@ -121,12 +169,12 @@ Při získávání větve bude tato akce provedena bez varování.</target>
       </trans-unit>
       <trans-unit id="commitFontChangeButton.Text">
         <source>font name</source>
-        <target>Název fontu</target>
+        <target>Název písma</target>
         
       </trans-unit>
       <trans-unit id="diffFontChangeButton.Text">
         <source>font name</source>
-        <target>Název fontu</target>
+        <target>Název písma</target>
         
       </trans-unit>
       <trans-unit id="downloadDictionary.Text">
@@ -146,7 +194,7 @@ Při získávání větve bude tato akce provedena bez varování.</target>
       </trans-unit>
       <trans-unit id="groupBox15.Text">
         <source>Fonts</source>
-        <target>Fonty</target>
+        <target>Písma</target>
         
       </trans-unit>
       <trans-unit id="groupBox6.Text">
@@ -204,14 +252,34 @@ Při získávání větve bude tato akce provedena bez varování.</target>
         <target>Písmo kódu</target>
         
       </trans-unit>
-      <trans-unit id="truncatePathMethod.Text">
+      <trans-unit id="truncateLongFilenames.Text">
         <source>Truncate long filenames</source>
         <target>Ořezávat dlouhé názvy souborů</target>
         
       </trans-unit>
+      <trans-unit id="truncatePathMethod.Item0">
+        <source>None</source>
+        <target>Vůbec</target>
+        
+      </trans-unit>
+      <trans-unit id="truncatePathMethod.Item1">
+        <source>Compact</source>
+        <target>Zkrácený</target>
+        
+      </trans-unit>
+      <trans-unit id="truncatePathMethod.Item2">
+        <source>Trim start</source>
+        <target>Oříznout začátek</target>
+        
+      </trans-unit>
+      <trans-unit id="truncatePathMethod.Item3">
+        <source>Filename only</source>
+        <target>Pouze název souboru</target>
+        
+      </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BlameControl" source-language="en">
+  <file datatype="plaintext" original="BlameControl" source-language="en" target-language="cs">
     <body>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
         <source>Blame previous revision</source>
@@ -230,7 +298,7 @@ Při získávání větve bude tato akce provedena bez varování.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BranchComboBox" source-language="en">
+  <file datatype="plaintext" original="BranchComboBox" source-language="en" target-language="cs">
     <body>
       <trans-unit id="_branchCheckoutError.Text">
         <source>Branch '{0}' is not selectable, this branch has been removed from the selection.</source>
@@ -239,11 +307,35 @@ Při získávání větve bude tato akce provedena bez varování.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BuildServerIntegrationSettingsPage" source-language="en">
+  <file datatype="plaintext" original="BranchSelector" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="LocalBranch.Text">
+        <source>Local branch</source>
+        <target>Místní větev</target>
+        
+      </trans-unit>
+      <trans-unit id="Remotebranch.Text">
+        <source>Remote branch</source>
+        <target>Vzdálená větev</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Select branch</source>
+        <target>Vyber větev</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BuildServerIntegrationSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Build server integration</source>
         <target>Integrace se sestavovacím serverem</target>
+        
+      </trans-unit>
+      <trans-unit id="_noneItem.Text">
+        <source>None</source>
+        <target>Žádný</target>
         
       </trans-unit>
       <trans-unit id="checkBoxEnableBuildServerIntegration.Text">
@@ -263,12 +355,12 @@ Při získávání větve bude tato akce provedena bez varování.</target>
       </trans-unit>
       <trans-unit id="labelBuildServerType.Text">
         <source>Build server type</source>
-        <target>Typ sestavovacího serveru</target>
+        <target>Typ serveru</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ChecklistSettingsPage" source-language="en">
+  <file datatype="plaintext" original="ChecklistSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Checklist</source>
@@ -409,9 +501,9 @@ Prosím ujistěte se že je program kdiff3 nainstalován nebo nastavte cestu ru�
       </trans-unit>
       <trans-unit id="_linuxToolsShNotFound.Text">
         <source>The path to linux tools (sh) could not be found automatically.
-Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.</source>
+Please make sure there are linux tools installed (through Git for Windows or cygwin) or set the correct path manually.</source>
         <target>Cesta k linuxovým nástrojům (sh) nemohla být nalezena automaticky.
-Prosím ujistěte se že jsou linuxové nástroje nainstalovány (buď přes msysgit nebo přes cygwin) nebo nastavte cestu ručně.</target>
+Prosím ujistěte se že jsou linuxové nástroje nainstalovány (buď přes Git pro Windows nebo přes cygwin) nebo nastavte cestu ručně.</target>
         
       </trans-unit>
       <trans-unit id="_linuxToolsShNotFoundCaption.Text">
@@ -535,9 +627,8 @@ Zvolte &quot;ne&quot; pokud si sami chcete nastavit jiný nástroj.</target>
       </trans-unit>
       <trans-unit id="_solveGitCommandFailed.Text">
         <source>The command to run git could not be determined automatically.
-Please make sure git (msysgit or cygwin) is installed or set the correct command manually.</source>
-        <target>Příkaz pro spuštění gitu nemohl být automaticky určen.
-Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován nebo nastavte příkaz ručně.</target>
+Please make sure git (Git for Windows or cygwin) is installed or set the correct command manually.</source>
+        <target>Příkaz pro spuštění gitu nemohl být automaticky určen. Prosím ujistěte se že git (Git pro Windows nebo cygwin) je správně nainstalován nebo nastavte příkaz ručně.</target>
         
       </trans-unit>
       <trans-unit id="_solveGitCommandFailedCaption.Text">
@@ -567,7 +658,7 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ColorsSettingsPage" source-language="en">
+  <file datatype="plaintext" original="ColorsSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Colors</source>
@@ -607,6 +698,26 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
       <trans-unit id="HighlightAuthoredRevisions.Text">
         <source>Highlight authored revisions</source>
         <target>Zvýraznit revize jejihž jsem autorem</target>
+        
+      </trans-unit>
+      <trans-unit id="IconStyle.Item0">
+        <source>Default</source>
+        <target>Výchozí</target>
+        
+      </trans-unit>
+      <trans-unit id="IconStyle.Item1">
+        <source>Large</source>
+        <target>Velké</target>
+        
+      </trans-unit>
+      <trans-unit id="IconStyle.Item2">
+        <source>Small</source>
+        <target>Malé</target>
+        
+      </trans-unit>
+      <trans-unit id="IconStyle.Item3">
+        <source>Cow</source>
+        <target>Kráva</target>
         
       </trans-unit>
       <trans-unit id="LightblueIcon.Text">
@@ -721,11 +832,21 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CommitDialogSettingsPage" source-language="en">
+  <file datatype="plaintext" original="CommitDialogSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Commit dialog</source>
         <target>Dialog odevzdání</target>
+        
+      </trans-unit>
+      <trans-unit id="chkAddNewlineToCommitMessageWhenMissing.Text">
+        <source>Ensure the second line of commit message is empty</source>
+        <target>Zajistěte, aby druhá řádka zprávy odevzdání byla prázdná</target>
+        
+      </trans-unit>
+      <trans-unit id="chkAutocomplete.Text">
+        <source>Provide auto-completion in commit dialog</source>
+        <target>Poskytovat automatické doplňování v dialogu odevzdání</target>
         
       </trans-unit>
       <trans-unit id="chkShowCommitAndPush.Text">
@@ -772,7 +893,7 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CommitInfo" source-language="en">
+  <file datatype="plaintext" original="CommitInfo" source-language="en" target-language="cs">
     <body>
       <trans-unit id="addNoteToolStripMenuItem.Text">
         <source>Add notes</source>
@@ -824,6 +945,10 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
         <target>Zobrazit značky obsahující toto odevzdání</target>
         
       </trans-unit>
+      <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
+        <source>Show messages of annotated tags</source>
+        
+      </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
         <source>Related links:</source>
         <target>Příbuzné odkazy:</target>
@@ -831,7 +956,7 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CommitSummaryUserControl" source-language="en">
+  <file datatype="plaintext" original="CommitSummaryUserControl" source-language="en" target-language="cs">
     <body>
       <trans-unit id="_noRevision.Text">
         <source>No revision</source>
@@ -865,7 +990,7 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CommonLogic" source-language="en">
+  <file datatype="plaintext" original="CommonLogic" source-language="en" target-language="cs">
     <body>
       <trans-unit id="_cantReadRegistry.Text">
         <source>GitExtensions has insufficient permissions to check the registry.</source>
@@ -879,7 +1004,7 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ConfirmationsSettingsPage" source-language="en">
+  <file datatype="plaintext" original="ConfirmationsSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Confirmations</source>
@@ -923,8 +1048,13 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ControlHotkeys" source-language="en">
+  <file datatype="plaintext" original="ControlHotkeys" source-language="en" target-language="cs">
     <body>
+      <trans-unit id="_hotkeyNotSet.Text">
+        <source>None</source>
+        <target>Žádná</target>
+        
+      </trans-unit>
       <trans-unit id="bApply.Text">
         <source>Apply</source>
         <target>Použít</target>
@@ -967,7 +1097,7 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreatePullRequestForm" source-language="en">
+  <file datatype="plaintext" original="CreatePullRequestForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Create Pull Request</source>
@@ -1046,7 +1176,7 @@ Prosím ujistěte se že git (msysgit nebo cygwin) je správně nainstalován ne
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="Dashboard" source-language="en">
+  <file datatype="plaintext" original="Dashboard" source-language="en" target-language="cs">
     <body>
       <trans-unit id="CommonActions.Title">
         <source>Common Actions</source>
@@ -1138,7 +1268,7 @@ Chcete jí otevřít?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DashboardCategory" source-language="en">
+  <file datatype="plaintext" original="DashboardCategory" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Title">
         <source>##Title</source>
@@ -1197,7 +1327,7 @@ Chcete jí otevřít?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DashboardEditor" source-language="en">
+  <file datatype="plaintext" original="DashboardEditor" source-language="en" target-language="cs">
     <body>
       <trans-unit id="Add.Text">
         <source>Add</source>
@@ -1256,7 +1386,7 @@ Chcete jí otevřít?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="EditNetSpell" source-language="en">
+  <file datatype="plaintext" original="EditNetSpell" source-language="en" target-language="cs">
     <body>
       <trans-unit id="addToDictionaryText.Text">
         <source>Add to dictionary</source>
@@ -1310,8 +1440,17 @@ Chcete jí otevřít?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FileStatusList" source-language="en">
+  <file datatype="plaintext" original="FileStatusList" source-language="en" target-language="cs">
     <body>
+      <trans-unit id="CombinedDiff.Text">
+        <source>Combined Diff</source>
+        
+      </trans-unit>
+      <trans-unit id="FilterWatermarkLabel.Text">
+        <source>Filter files...</source>
+        <target>Filtrovat soubory ...</target>
+        
+      </trans-unit>
       <trans-unit id="NoFiles.Text">
         <source>No changes</source>
         <target>Žádné změny</target>
@@ -1334,7 +1473,7 @@ Chcete jí otevřít?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FileViewer" source-language="en">
+  <file datatype="plaintext" original="FileViewer" source-language="en" target-language="cs">
     <body>
       <trans-unit id="DecreaseNumberOfLines.ToolTipText">
         <source>Decrease number of visible lines</source>
@@ -1438,7 +1577,7 @@ Chcete jí otevřít?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FileViewerWindows" source-language="en">
+  <file datatype="plaintext" original="FileViewerWindows" source-language="en" target-language="cs">
     <body>
       <trans-unit id="_findAndReplaceForm.Text">
         <source>Find and replace</source>
@@ -1447,7 +1586,7 @@ Chcete jí otevřít?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindAndReplaceForm" source-language="en">
+  <file datatype="plaintext" original="FindAndReplaceForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Find and replace</source>
@@ -1551,7 +1690,7 @@ Chcete jí otevřít?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FolderBrowserButton" source-language="en">
+  <file datatype="plaintext" original="FolderBrowserButton" source-language="en" target-language="cs">
     <body>
       <trans-unit id="buttonBrowse.Text">
         <source>Browse...</source>
@@ -1560,7 +1699,7 @@ Chcete jí otevřít?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ForkAndCloneForm" source-language="en">
+  <file datatype="plaintext" original="ForkAndCloneForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Remote repository fork and clone</source>
@@ -1748,7 +1887,7 @@ Budete moci odesílat. {2}</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormAddFiles" source-language="en">
+  <file datatype="plaintext" original="FormAddFiles" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Add files</source>
@@ -1777,7 +1916,7 @@ Budete moci odesílat. {2}</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormAddSubmodule" source-language="en">
+  <file datatype="plaintext" original="FormAddSubmodule" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Add submodule</source>
@@ -1821,7 +1960,7 @@ Budete moci odesílat. {2}</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormAddToGitIgnore" source-language="en">
+  <file datatype="plaintext" original="FormAddToGitIgnore" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Add file(s) to .gitignore</source>
@@ -1865,7 +2004,7 @@ Budete moci odesílat. {2}</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormApplyPatch" source-language="en">
+  <file datatype="plaintext" original="FormApplyPatch" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Apply patch</source>
@@ -1966,7 +2105,7 @@ Budete moci odesílat. {2}</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormArchive" source-language="en">
+  <file datatype="plaintext" original="FormArchive" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Archive</source>
@@ -2058,7 +2197,7 @@ compare with first:</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormBisect" source-language="en">
+  <file datatype="plaintext" original="FormBisect" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Bisect</source>
@@ -2097,7 +2236,7 @@ compare with first:</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormBlame" source-language="en">
+  <file datatype="plaintext" original="FormBlame" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>File History</source>
@@ -2106,7 +2245,7 @@ compare with first:</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormBrowse" source-language="en">
+  <file datatype="plaintext" original="FormBrowse" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Git Extensions</source>
@@ -2141,6 +2280,11 @@ compare with first:</source>
       <trans-unit id="RefreshButton.ToolTipText">
         <source>Refresh</source>
         <target>Obnovit</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowFirstParent.ToolTipText">
+        <source>Show first parents</source>
+        <target>Zobrazit první rodiče</target>
         
       </trans-unit>
       <trans-unit id="SvnDcommitToolStripMenuItem.Text">
@@ -2216,6 +2360,11 @@ compare with first:</source>
       <trans-unit id="_indexLockNotFound.Text">
         <source>index.lock not found at:</source>
         <target>index.lock nebyl nalezen na:</target>
+        
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target>Načítám...</target>
         
       </trans-unit>
       <trans-unit id="_noBranchTitle.Text">
@@ -2316,6 +2465,15 @@ compare with first:</source>
       <trans-unit id="_stashSingular.Text">
         <source>stash</source>
         <target>úschovna</target>
+        
+      </trans-unit>
+      <trans-unit id="_superprojectModuleFormat.Text">
+        <source>Superproject: {0}</source>
+        <target>Nadřazený projekt: {0}</target>
+        
+      </trans-unit>
+      <trans-unit id="_topProjectModuleFormat.Text">
+        <source>Top project: {0}</source>
         
       </trans-unit>
       <trans-unit id="_updateCurrentSubmodule.Text">
@@ -2468,11 +2626,6 @@ compare with first:</source>
         <target>Odevzdat...</target>
         
       </trans-unit>
-      <trans-unit id="commitToolStripMenuItem1.Text">
-        <source>Commit</source>
-        <target>Odevzdat</target>
-        
-      </trans-unit>
       <trans-unit id="commitcountPerUserToolStripMenuItem.Text">
         <source>Commits per user</source>
         <target>Odevzdání na uživatele</target>
@@ -2545,11 +2698,6 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
       <trans-unit id="donateToolStripMenuItem.Text">
         <source>Donate</source>
         <target>Přispět</target>
-        
-      </trans-unit>
-      <trans-unit id="dontSetAsDefaultToolStripMenuItem.Text">
-        <source>Don't set as default</source>
-        <target>Nenastavovat jako výchozí</target>
         
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
@@ -2707,6 +2855,10 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
         <target>Podmoduly...</target>
         
       </trans-unit>
+      <trans-unit id="menuitemSparse.Text">
+        <source>Sparse Working Copy</source>
+        
+      </trans-unit>
       <trans-unit id="mergeBranchToolStripMenuItem.Text">
         <source>Merge branches...</source>
         <target>Sloučit větve...</target>
@@ -2714,6 +2866,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
         <source>Pull - merge</source>
+        <target>Stáhnout - sloučit</target>
         
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -2783,6 +2936,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
         <source>Open pull dialog...</source>
+        <target>Otevřít dialog stažení ...</target>
         
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
@@ -2797,6 +2951,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
         <source>Pull - rebase</source>
+        <target>Stáhnout - přeskládat</target>
         
       </trans-unit>
       <trans-unit id="recentToolStripMenuItem.Text">
@@ -2889,12 +3044,11 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
         <target>Uložit</target>
         
       </trans-unit>
-      <trans-unit id="settingsToolStripMenuItem2.Text">
-        <source>Settings</source>
-        <target>Nastavení</target>
+      <trans-unit id="setNextPullActionAsDefaultToolStripMenuItem.Text">
+        <source>Set the next selection as default</source>
         
       </trans-unit>
-      <trans-unit id="settingsToolStripMenuItem3.Text">
+      <trans-unit id="settingsToolStripMenuItem.Text">
         <source>Settings</source>
         <target>Nastavení</target>
         
@@ -2964,7 +3118,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
         <target>Větve:</target>
         
       </trans-unit>
-      <trans-unit id="toolStripLabel2.Text">
+      <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
         <target>Filtr:</target>
         
@@ -3016,7 +3170,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormChangeLog" source-language="en">
+  <file datatype="plaintext" original="FormChangeLog" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Change log</source>
@@ -3025,7 +3179,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCheckoutBranch" source-language="en">
+  <file datatype="plaintext" original="FormCheckoutBranch" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Checkout branch</source>
@@ -3080,6 +3234,11 @@ Zadejte platný název větve nebo si vyberte z předdefinovaných.</target>
         <target>Tuto zprávu již nezobrazovat.</target>
         
       </trans-unit>
+      <trans-unit id="chkSetLocalChangesActionAsDefault.Text">
+        <source>Set as default</source>
+        <target>Nastavit jako výchozí</target>
+        
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Select branch</source>
         <target>Vyber větev</target>
@@ -3127,7 +3286,7 @@ Zadejte platný název větve nebo si vyberte z předdefinovaných.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCheckoutRevision" source-language="en">
+  <file datatype="plaintext" original="FormCheckoutRevision" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Checkout revision</source>
@@ -3161,7 +3320,7 @@ Zadejte platný název větve nebo si vyberte z předdefinovaných.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCherryPick" source-language="en">
+  <file datatype="plaintext" original="FormCherryPick" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Cherry pick commit</source>
@@ -3232,7 +3391,7 @@ revizi:</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormChooseCommit" source-language="en">
+  <file datatype="plaintext" original="FormChooseCommit" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Choose Commit</source>
@@ -3254,9 +3413,24 @@ revizi:</target>
         <target>Najít určité odevzdání:</target>
         
       </trans-unit>
+      <trans-unit id="labelParents.Text">
+        <source>Parent(s):</source>
+        <target>Rodič(e):</target>
+        
+      </trans-unit>
+      <trans-unit id="linkLabelParent.Text">
+        <source>sha parent 1</source>
+        <target>sha rodiče 1</target>
+        
+      </trans-unit>
+      <trans-unit id="linkLabelParent2.Text">
+        <source>sha parent 2</source>
+        <target>sha rodiče 2</target>
+        
+      </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormChooseTranslation" source-language="en">
+  <file datatype="plaintext" original="FormChooseTranslation" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Choose language</source>
@@ -3275,7 +3449,7 @@ revizi:</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCleanupRepository" source-language="en">
+  <file datatype="plaintext" original="FormCleanupRepository" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Clean working directory</source>
@@ -3349,7 +3523,7 @@ revizi:</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormClone" source-language="en">
+  <file datatype="plaintext" original="FormClone" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Clone</source>
@@ -3396,6 +3570,14 @@ revizi:</target>
         <target>Procházet (&amp;B)</target>
         
       </trans-unit>
+      <trans-unit id="_branchDefaultRemoteHead.Text">
+        <source>(default: remote HEAD)</source>
+        
+      </trans-unit>
+      <trans-unit id="_branchNone.Text">
+        <source>(none: don't checkout after clone)</source>
+        
+      </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
         <source>(Directory already exists)</source>
         <target>(Složka už existuje)</target>
@@ -3430,6 +3612,11 @@ Chcete nyní otevřít nový repozitář &quot;{0}&quot;?</target>
         <target>Větev (&amp;B):</target>
         
       </trans-unit>
+      <trans-unit id="cbDownloadFullHistory.Text">
+        <source>Download full &amp;history</source>
+        <target>Stáhnout celou historii (&amp;H)</target>
+        
+      </trans-unit>
       <trans-unit id="cbIntializeAllSubmodules.Text">
         <source>Initialize all submodules</source>
         <target>Načíst všechny podmoduly</target>
@@ -3441,8 +3628,8 @@ Chcete nyní otevřít nový repozitář &quot;{0}&quot;?</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>&amp;Repository to clone:</source>
-        <target>Repozitář ke klonování (&amp;R):</target>
+        <source>Repository to &amp;clone:</source>
+        <target>Repozitář ke klonování (&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -3457,7 +3644,7 @@ Chcete nyní otevřít nový repozitář &quot;{0}&quot;?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCommandlineHelp" source-language="en">
+  <file datatype="plaintext" original="FormCommandlineHelp" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Commandline usage</source>
@@ -3473,7 +3660,7 @@ gitex.cmd / gitex (umístěný ve stejné složce jako GitExtensions.exe):</targ
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCommit" source-language="en">
+  <file datatype="plaintext" original="FormCommit" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Commit</source>
@@ -3797,6 +3984,10 @@ Chcete pokračovat?</target>
         <target>Přidat soubor do .gitignore</target>
         
       </trans-unit>
+      <trans-unit id="assumeUnchangedToolStripMenuItem.Text">
+        <source>Assume unchanged</source>
+        
+      </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
         <source>Close dialog when all changes are committed</source>
         <target>Zavřít dialog po odevzdání všech změn</target>
@@ -3855,6 +4046,10 @@ Chcete pokračovat?</target>
       <trans-unit id="deleteSelectedFilesToolStripMenuItem.Text">
         <source>Delete selected files</source>
         <target>Smazat vybrané soubory</target>
+        
+      </trans-unit>
+      <trans-unit id="doNotAssumeUnchangedToolStripMenuItem.Text">
+        <source>Do not assume unchanged</source>
         
       </trans-unit>
       <trans-unit id="editFileToolStripMenuItem.Text">
@@ -3960,6 +4155,10 @@ Chcete pokračovat?</target>
       <trans-unit id="selectionFilterToolStripMenuItem.Text">
         <source>Selection filter</source>
         <target>Filtr výběru</target>
+        
+      </trans-unit>
+      <trans-unit id="showAssumeUnchangedFilesToolStripMenuItem.Text">
+        <source>Show assumed-unchanged files</source>
         
       </trans-unit>
       <trans-unit id="showIgnoredFilesToolStripMenuItem.Text">
@@ -4089,7 +4288,7 @@ Chcete pokračovat?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCommitCount" source-language="en">
+  <file datatype="plaintext" original="FormCommitCount" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Commit count</source>
@@ -4103,7 +4302,7 @@ Chcete pokračovat?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCommitDiff" source-language="en">
+  <file datatype="plaintext" original="FormCommitDiff" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Diff</source>
@@ -4112,7 +4311,7 @@ Chcete pokračovat?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCommitTemplateSettings" source-language="en">
+  <file datatype="plaintext" original="FormCommitTemplateSettings" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Commit template settings</source>
@@ -4186,46 +4385,21 @@ Chcete pokračovat?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormContributors" source-language="en">
+  <file datatype="plaintext" original="FormCompareToBranch" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
-        <source>Contributors</source>
-        <target>Přispěvatelé</target>
+        <source>Compare to branch</source>
+        <target>Porovnat s větví</target>
         
       </trans-unit>
-      <trans-unit id="codersLabel.Text">
-        <source>Coders</source>
-        <target>Programátoři</target>
-        
-      </trans-unit>
-      <trans-unit id="designersLabel.Text">
-        <source>Designers</source>
-        <target>Designéři</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Coders:</source>
-        <target>Programátoři:</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Translators:</source>
-        <target>Překladatelé:</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>Logo design:</source>
-        <target>Návrh loga:</target>
-        
-      </trans-unit>
-      <trans-unit id="translatorsLabel.Text">
-        <source>Translators</source>
-        <target>Překladatelé</target>
+      <trans-unit id="btnCompare.Text">
+        <source>Compare</source>
+        <target>Porovnat</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCreateBranch" source-language="en">
+  <file datatype="plaintext" original="FormCreateBranch" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Create branch</source>
@@ -4233,23 +4407,23 @@ Chcete pokračovat?</target>
         
       </trans-unit>
       <trans-unit id="CheckoutAfterCreate.Text">
-        <source>Checkout after create</source>
-        <target>Po vytvoření přepnout</target>
+        <source>Checkout &amp;after create</source>
+        <target>Po vytvoření přepnout (&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
-        <source>Clear working directory and index</source>
-        <target>Vyčistit pracovní složku a index</target>
+        <source>Clear &amp;working directory and index</source>
+        <target>Vyčistit pracovní složku a index (&amp;W)</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
-        <source>Create branch</source>
-        <target>Vytvořit větev</target>
+        <source>&amp;Create branch</source>
+        <target>Vytvořit větev (&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="Orphan.Text">
-        <source>Create orphan</source>
-        <target>Vytvořit sirotka</target>
+        <source>Create or&amp;phan</source>
+        <target>Vytvořit sirotka (&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
@@ -4273,18 +4447,18 @@ Chcete pokračovat?</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Branch name</source>
-        <target>Název větve</target>
+        <source>&amp;Branch name</source>
+        <target>Název větve (&amp;B)</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Create branch at this revision</source>
-        <target>Vytvořit větev na této revizi</target>
+        <source>Create b&amp;ranch at this revision</source>
+        <target>Vytvořit větev na této revizi (&amp;R)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormCreateTag" source-language="en">
+  <file datatype="plaintext" original="FormCreateTag" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Create tag</source>
@@ -4348,7 +4522,7 @@ Chcete pokračovat?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormDashboardCategoryTitle" source-language="en">
+  <file datatype="plaintext" original="FormDashboardCategoryTitle" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Enter Caption</source>
@@ -4377,7 +4551,7 @@ Chcete pokračovat?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormDashboardEditor" source-language="en">
+  <file datatype="plaintext" original="FormDashboardEditor" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Start Page</source>
@@ -4386,7 +4560,7 @@ Chcete pokračovat?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormDeleteBranch" source-language="en">
+  <file datatype="plaintext" original="FormDeleteBranch" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete branch</source>
@@ -4443,7 +4617,7 @@ Pokud chcete smazat plně nesloučenou větev, tak použijte volbu &quot;vynutit
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormDeleteTag" source-language="en">
+  <file datatype="plaintext" original="FormDeleteTag" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete tag</source>
@@ -4477,16 +4651,103 @@ Pokud chcete smazat plně nesloučenou větev, tak použijte volbu &quot;vynutit
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormDiff" source-language="en">
+  <file datatype="plaintext" original="FormDiff" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Diff</source>
         <target>Rozdíl</target>
         
       </trans-unit>
+      <trans-unit id="aBToolStripMenuItem.Text">
+        <source>A &lt;--&gt; B</source>
+        <target>A &lt;--&gt; B</target>
+        
+      </trans-unit>
+      <trans-unit id="aLocalToolStripMenuItem.Text">
+        <source>A &lt;--&gt; Working directory</source>
+        <target>A &lt;--&gt; Pracovní složka</target>
+        
+      </trans-unit>
+      <trans-unit id="anotherBranchTooltip.Text">
+        <source>Select another branch</source>
+        <target>Vybrat jinou větev</target>
+        
+      </trans-unit>
+      <trans-unit id="anotherCommitTooltip.Text">
+        <source>Select another commit</source>
+        <target>Vybrat jiné odevzdání</target>
+        
+      </trans-unit>
+      <trans-unit id="bLocalToolStripMenuItem.Text">
+        <source>B &lt;--&gt; Working directory</source>
+        <target>B &lt;--&gt; Pracovní složka</target>
+        
+      </trans-unit>
+      <trans-unit id="baseCommitGroup.Text">
+        <source>BASE</source>
+        
+      </trans-unit>
+      <trans-unit id="blameToolStripMenuItem.Text">
+        <source>Blame</source>
+        <target>Obvinit</target>
+        
+      </trans-unit>
+      <trans-unit id="btnSwapTooltip.Text">
+        <source>Swap BASE and Compare commits</source>
+        
+      </trans-unit>
+      <trans-unit id="ckCompareToMergeBase.Text">
+        <source>Compare to merge base</source>
+        
+      </trans-unit>
+      <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
+        <source>Copy full path(s)</source>
+        <target>Kopírovat plnou(é) cestu(y)</target>
+        
+      </trans-unit>
+      <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
+        <source>Show in File tree</source>
+        <target>Ukázat soubor ve stromu</target>
+        
+      </trans-unit>
+      <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
+        <source>File history</source>
+        <target>Historie souboru</target>
+        
+      </trans-unit>
+      <trans-unit id="findInDiffToolStripMenuItem.Text">
+        <source>Find</source>
+        <target>Najít</target>
+        
+      </trans-unit>
+      <trans-unit id="headCommitGroup.Text">
+        <source>Compare</source>
+        <target>Porovnat</target>
+        
+      </trans-unit>
+      <trans-unit id="openContainingFolderToolStripMenuItem.Text">
+        <source>Open containing folder(s)</source>
+        <target>Otevřít nadřazenou složku(y)</target>
+        
+      </trans-unit>
+      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
+        <source>Open with difftool</source>
+        <target>Otevřít nástrojem na rozdíly</target>
+        
+      </trans-unit>
+      <trans-unit id="parentOfALocalToolStripMenuItem.Text">
+        <source>A's parent &lt;--&gt; Working directory</source>
+        <target>Rodič A &lt;--&gt; Pracovní složka</target>
+        
+      </trans-unit>
+      <trans-unit id="parentOfBLocalToolStripMenuItem.Text">
+        <source>B's parent &lt;--&gt; Working directory</source>
+        <target>Rodič B &lt;--&gt; Pracovní složka</target>
+        
+      </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormDonate" source-language="en">
+  <file datatype="plaintext" original="FormDonate" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Donate</source>
@@ -4508,7 +4769,7 @@ Pro získání více informací jak přispět klepněte na tlačítko &quot;Podp
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormEdit" source-language="en">
+  <file datatype="plaintext" original="FormEdit" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>View</source>
@@ -4517,7 +4778,7 @@ Pro získání více informací jak přispět klepněte na tlačítko &quot;Podp
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormEditor" source-language="en">
+  <file datatype="plaintext" original="FormEditor" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Editor</source>
@@ -4565,7 +4826,7 @@ Pokud si nejste jisti, prostě zavřete toto okno.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormFileHistory" source-language="en">
+  <file datatype="plaintext" original="FormFileHistory" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>File History</source>
@@ -4580,6 +4841,11 @@ Pokud si nejste jisti, prostě zavřete toto okno.</target>
       <trans-unit id="DiffTab.Text">
         <source>Diff</source>
         <target>Rozdíl</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowFirstParent.ToolTipText">
+        <source>Show first parents</source>
+        <target>Zobrazit první rodiče</target>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -4647,7 +4913,7 @@ Pokud si nejste jisti, prostě zavřete toto okno.</target>
         <target>Větve:</target>
         
       </trans-unit>
-      <trans-unit id="toolStripLabel2.Text">
+      <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
         <target>Filtr:</target>
         
@@ -4664,7 +4930,7 @@ Pokud si nejste jisti, prostě zavřete toto okno.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormFixHome" source-language="en">
+  <file datatype="plaintext" original="FormFixHome" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Home</source>
@@ -4760,7 +5026,7 @@ Výchozí chování měňte pouze pokud máte problémy.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormFormatPatch" source-language="en">
+  <file datatype="plaintext" original="FormFormatPatch" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Format patch</source>
@@ -4864,7 +5130,7 @@ Výchozí chování měňte pouze pokud máte problémy.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitAttributes" source-language="en">
+  <file datatype="plaintext" original="FormGitAttributes" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Edit .gitattributes</source>
@@ -4945,7 +5211,7 @@ Pro více informací spusťte příkaz
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitIgnore" source-language="en">
+  <file datatype="plaintext" original="FormGitIgnore" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Edit .gitignore</source>
@@ -5050,6 +5316,11 @@ obj/
 _ReSharper*/</target>
         
       </trans-unit>
+      <trans-unit id="lnkGitIgnoreGenerate.Text">
+        <source>Generate a custom gitignore</source>
+        <target>Vytvořit uživatelský gitignore</target>
+        
+      </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
         <source>More gitignore patterns</source>
         <target>Více výrazů .gitignore</target>
@@ -5057,7 +5328,7 @@ _ReSharper*/</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitLog" source-language="en">
+  <file datatype="plaintext" original="FormGitLog" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Log</source>
@@ -5081,7 +5352,7 @@ _ReSharper*/</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGoToCommit" source-language="en">
+  <file datatype="plaintext" original="FormGoToCommit" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Go to commit</source>
@@ -5133,7 +5404,7 @@ _ReSharper*/</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGoToLine" source-language="en">
+  <file datatype="plaintext" original="FormGoToLine" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Go to line</source>
@@ -5157,7 +5428,7 @@ _ReSharper*/</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormInit" source-language="en">
+  <file datatype="plaintext" original="FormInit" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Create new repository</source>
@@ -5223,7 +5494,7 @@ Prosím zvolte si složku.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormMailMap" source-language="en">
+  <file datatype="plaintext" original="FormMailMap" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Edit .mailmap</source>
@@ -5290,7 +5561,7 @@ Pro více informací spusťte příkaz
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormMergeBranch" source-language="en">
+  <file datatype="plaintext" original="FormMergeBranch" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Merge branches</source>
@@ -5410,7 +5681,7 @@ Tato úprava je také provedena na stromě společného předka.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormMergeSubmodule" source-language="en">
+  <file datatype="plaintext" original="FormMergeSubmodule" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Submodule conflict</source>
@@ -5469,7 +5740,7 @@ Tato úprava je také provedena na stromě společného předka.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormModifiedDeletedCreated" source-language="en">
+  <file datatype="plaintext" original="FormModifiedDeletedCreated" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Solve mergeconflict</source>
@@ -5483,7 +5754,7 @@ Tato úprava je také provedena na stromě společného předka.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormOpenDirectory" source-language="en">
+  <file datatype="plaintext" original="FormOpenDirectory" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Open local repository</source>
@@ -5512,7 +5783,7 @@ Tato úprava je také provedena na stromě společného předka.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPull" source-language="en">
+  <file datatype="plaintext" original="FormPull" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Pull</source>
@@ -5582,6 +5853,11 @@ Tato úprava je také provedena na stromě společného předka.</target>
       <trans-unit id="Stash.Text">
         <source>Stash changes</source>
         <target>Uschovat změny</target>
+        
+      </trans-unit>
+      <trans-unit id="Unshallow.Text">
+        <source>Download full history</source>
+        <target>Stáhnout celou historii</target>
         
       </trans-unit>
       <trans-unit id="_allMergeConflictSolvedQuestion.Text">
@@ -5777,7 +6053,7 @@ Tímto rekurzivně inicializujete a aktualizujete všechny podmoduly.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPush" source-language="en">
+  <file datatype="plaintext" original="FormPush" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Push</source>
@@ -5859,6 +6135,21 @@ Tímto rekurzivně inicializujete a aktualizujete všechny podmoduly.</target>
         <target>Adresa</target>
         
       </trans-unit>
+      <trans-unit id="RecursiveSubmodules.Item0">
+        <source>None</source>
+        <target>Žádná</target>
+        
+      </trans-unit>
+      <trans-unit id="RecursiveSubmodules.Item1">
+        <source>Check</source>
+        <target>Zkontrolovat</target>
+        
+      </trans-unit>
+      <trans-unit id="RecursiveSubmodules.Item2">
+        <source>On-demand</source>
+        <target>Na vyžádání</target>
+        
+      </trans-unit>
       <trans-unit id="RemoteColumn.HeaderText">
         <source>Remote Branch</source>
         <target>Vzdálená větev</target>
@@ -5894,6 +6185,10 @@ Opravdu chcete odeslat tuto větev?</target>
       <trans-unit id="_dontShowAgain.Text">
         <source>Remember my decision.</source>
         <target>Zapamatovat si mé rozhodnutí.</target>
+        
+      </trans-unit>
+      <trans-unit id="_forceWithLeaseTooltips.Text">
+        <source>Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository</source>
         
       </trans-unit>
       <trans-unit id="_no.Text">
@@ -5971,9 +6266,17 @@ Opravdu chcete odeslat tuto větev?</target>
         <target>Větev {0} nemá sledovací referenci. Chcete přidat sledovací referenci k {1}?</target>
         
       </trans-unit>
+      <trans-unit id="_useForceWithLeaseInstead.Text">
+        <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
+        
+      </trans-unit>
       <trans-unit id="_yes.Text">
         <source>Yes</source>
         <target>Ano</target>
+        
+      </trans-unit>
+      <trans-unit id="ckForceWithLease.Text">
+        <source>Force With &amp;Lease</source>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -6018,7 +6321,7 @@ Opravdu chcete odeslat tuto větev?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPuttyError" source-language="en">
+  <file datatype="plaintext" original="FormPuttyError" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Authentication error</source>
@@ -6052,7 +6355,7 @@ Opravdu chcete odeslat tuto větev?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormRebase" source-language="en">
+  <file datatype="plaintext" original="FormRebase" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Rebase</source>
@@ -6162,6 +6465,11 @@ Není potřeba nic přeskládávat.</target>
         <target>Konkrétní rozsah</target>
         
       </trans-unit>
+      <trans-unit id="chkStash.Text">
+        <source>Auto stash</source>
+        <target>Auto-uschovat</target>
+        
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Rebase current branch on top of another branch</source>
         <target>Přeskládat současnou větev na vrchol jiné větve</target>
@@ -6194,7 +6502,7 @@ Není potřeba nic přeskládávat.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormRecentReposSettings" source-language="en">
+  <file datatype="plaintext" original="FormRecentReposSettings" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Recent repositories settings</source>
@@ -6283,7 +6591,7 @@ Není potřeba nic přeskládávat.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormRemotes" source-language="en">
+  <file datatype="plaintext" original="FormRemotes" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Remote repositories</source>
@@ -6501,7 +6809,7 @@ Hodnota byla změněna na prázdnou.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormRenameBranch" source-language="en">
+  <file datatype="plaintext" original="FormRenameBranch" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Rename branch</source>
@@ -6525,7 +6833,7 @@ Hodnota byla změněna na prázdnou.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormResetChanges" source-language="en">
+  <file datatype="plaintext" original="FormResetChanges" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Reset changes</source>
@@ -6559,7 +6867,7 @@ Hodnota byla změněna na prázdnou.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormResetCurrentBranch" source-language="en">
+  <file datatype="plaintext" original="FormResetCurrentBranch" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Reset current branch</source>
@@ -6615,7 +6923,7 @@ Hodnota byla změněna na prázdnou.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormResolveConflicts" source-language="en">
+  <file datatype="plaintext" original="FormResolveConflicts" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Resolve merge conflicts</source>
@@ -7091,7 +7399,7 @@ Chcete použít skript na sloučení?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormRevertCommit" source-language="en">
+  <file datatype="plaintext" original="FormRevertCommit" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Revert commit</source>
@@ -7150,7 +7458,7 @@ Chcete použít skript na sloučení?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormRevisionFilter" source-language="en">
+  <file datatype="plaintext" original="FormRevisionFilter" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Filter</source>
@@ -7165,6 +7473,10 @@ Chcete použít skript na sloučení?</target>
       <trans-unit id="Ok.Text">
         <source>OK</source>
         <target>OK</target>
+        
+      </trans-unit>
+      <trans-unit id="SimplifyByDecorationCheck.Text">
+        <source>Simplify by decoration</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -7214,7 +7526,7 @@ Chcete použít skript na sloučení?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormSelectMultipleBranches" source-language="en">
+  <file datatype="plaintext" original="FormSelectMultipleBranches" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Select multiple branches</source>
@@ -7233,7 +7545,7 @@ Chcete použít skript na sloučení?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormSettings" source-language="en">
+  <file datatype="plaintext" original="FormSettings" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Settings</source>
@@ -7295,7 +7607,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormStash" source-language="en">
+  <file datatype="plaintext" original="FormStash" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Stash</source>
@@ -7389,7 +7701,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormStatus" source-language="en">
+  <file datatype="plaintext" original="FormStatus" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Process</source>
@@ -7435,7 +7747,7 @@ Chcete zaregistrovat otisk hostitele a restartovat proces?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormSubmodules" source-language="en">
+  <file datatype="plaintext" original="FormSubmodules" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Submodules</source>
@@ -7519,7 +7831,7 @@ Chcete zaregistrovat otisk hostitele a restartovat proces?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormSvnClone" source-language="en">
+  <file datatype="plaintext" original="FormSvnClone" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Svn Clone</source>
@@ -7615,7 +7927,7 @@ Chcete nyní otevřít nový repozitář &quot;{0}&quot;?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormTranslate" source-language="en">
+  <file datatype="plaintext" original="FormTranslate" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Translate</source>
@@ -7726,7 +8038,7 @@ Chcete nejdříve vybrat kód jazyka?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormUpdates" source-language="en">
+  <file datatype="plaintext" original="FormUpdates" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Check for update</source>
@@ -7765,7 +8077,7 @@ Chcete nejdříve vybrat kód jazyka?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormVerify" source-language="en">
+  <file datatype="plaintext" original="FormVerify" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Verify database</source>
@@ -7919,7 +8231,7 @@ menu na tlačítku Obnovit pro další operace</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormViewPatch" source-language="en">
+  <file datatype="plaintext" original="FormViewPatch" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>View patch file</source>
@@ -7963,7 +8275,7 @@ menu na tlačítku Obnovit pro další operace</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en">
+  <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Git Config</source>
@@ -8108,7 +8420,7 @@ měnit globální nastavení.
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitExtensionsSettingsGroup" source-language="en">
+  <file datatype="plaintext" original="GitExtensionsSettingsGroup" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Title">
         <source>Git Extensions</source>
@@ -8117,7 +8429,7 @@ měnit globální nastavení.
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitExtensionsSettingsPage" source-language="en">
+  <file datatype="plaintext" original="GitExtensionsSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Git Extensions</source>
@@ -8157,6 +8469,10 @@ měnit globální nastavení.
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
         <source>Show current working directory changes in revision graph (slow!)</source>
         <target>Zobrazit změny provedené v pracovní složce v grafu revizí (pomalé!)</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowDiffForAllParents.Text">
+        <source>Show file differences for all parents in browse dialog.</source>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
@@ -8241,7 +8557,7 @@ měnit globální nastavení.
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitSettingsPage" source-language="en">
+  <file datatype="plaintext" original="GitSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Git</source>
@@ -8268,7 +8584,7 @@ měnit globální nastavení.
         <target>HOME je nastaveno na:</target>
         
       </trans-unit>
-      <trans-unit id="downloadMsysgit.Text">
+      <trans-unit id="downloadGitForWindows.Text">
         <source>Download msysgit</source>
         <target>Stáhnout msysgit</target>
         
@@ -8299,8 +8615,8 @@ měnit globální nastavení.
         
       </trans-unit>
       <trans-unit id="label50.Text">
-        <source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</source>
-        <target>Pro přístup k git repozitářům může GitExtensions použít buď msysgit nebo cygwin. Nastavte správnou cestu níže.</target>
+        <source>Git Extensions can use Git for Windows or cygwin to access git repositories. Set the correct paths below.</source>
+        <target>Pro přístup ke git repozitářům může GitExtensions použít buď Git pro Windows, nebo cygwin. Nastavte správnou cestu níže</target>
         
       </trans-unit>
       <trans-unit id="label51.Text">
@@ -8311,7 +8627,122 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GotoUserManualControl" source-language="en">
+  <file datatype="plaintext" original="Globalized" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="Cancel.Text">
+        <source>Cancel</source>
+        <target>Storno</target>
+        
+      </trans-unit>
+      <trans-unit id="CannotLoadTheTextOfTheSparseFile.Text">
+        <source>Cannot load the text of the sparse file.</source>
+        
+      </trans-unit>
+      <trans-unit id="ConfirmDisableGitSparse.Text">
+        <source>You are about to disable Git Sparse feature for this repository, {0}.
+Git won't be able to restore the working copy to its full content this way.
+
+Would you like to have the filter modified so that it allowed for the full working copy?</source>
+        
+      </trans-unit>
+      <trans-unit id="CouldNotSave.Text">
+        <source>Could not save the modified settings and rules.</source>
+        
+      </trans-unit>
+      <trans-unit id="DisableForThisRepository.Text">
+        <source>Disable for this repository</source>
+        
+      </trans-unit>
+      <trans-unit id="DisableGitSparse.Text">
+        <source>Disable Git Sparse</source>
+        
+      </trans-unit>
+      <trans-unit id="EditsTheContentsOfTheGitInfoSparseCheckoutFile.Text">
+        <source>Edits the contents of the “.git/info/sparse-checkout” file.</source>
+        <target>Upravit obsah souboru &quot;.git/info/sparse-checkout&quot;</target>
+        
+      </trans-unit>
+      <trans-unit id="Enable.Text">
+        <source>&amp;Enable</source>
+        <target>Povolit (&amp;E)</target>
+        
+      </trans-unit>
+      <trans-unit id="HeaderDetailsText.Text">
+        <source>Need only a small part of a large repository?
+With sparse checkout, you can skip the rest from being extracted into your working copy.</source>
+        
+      </trans-unit>
+      <trans-unit id="LoadFile.Text">
+        <source>Load File</source>
+        <target>Načíst soubor</target>
+        
+      </trans-unit>
+      <trans-unit id="RefreshWorkingCopyCheckboxHint.Text">
+        <source>As the sparse working copy rules are changed, it might become outdated.
+Refreshes the working copy against the current set of the rules to restore any missing files and remove any extra files.
+
+nActual command line: {0}</source>
+        
+      </trans-unit>
+      <trans-unit id="RefreshWorkingCopyUsingTheCurrentSettingsAndRules.Text">
+        <source>Refresh working copy using the current settings and rules</source>
+        
+      </trans-unit>
+      <trans-unit id="Save.Text">
+        <source>&amp;Save</source>
+        <target>Uložit (&amp;S)</target>
+        
+      </trans-unit>
+      <trans-unit id="SaveFile.Text">
+        <source>Save File</source>
+        <target>Uložit soubor</target>
+        
+      </trans-unit>
+      <trans-unit id="SetsTheGitPropertyToFalseForTheLocalRepository.Text">
+        <source>Sets the Git property “{0}” to False for the local repository.</source>
+        
+      </trans-unit>
+      <trans-unit id="SetsTheGitPropertyToTrueForTheLocalRepository.Text">
+        <source>Sets the Git property “{0}” to True for the local repository.</source>
+        
+      </trans-unit>
+      <trans-unit id="SparseWorkingCopy.Text">
+        <source>Sparse Working Copy</source>
+        
+      </trans-unit>
+      <trans-unit id="SparseWorkingCopySupportHasNotBeenEnabledForThisRepository.Text">
+        <source>Git Sparse feature has not been enabled for this repository.</source>
+        
+      </trans-unit>
+      <trans-unit id="SparseWorkingCopySupportIsEnabled.Text">
+        <source>Git Sparse feature is currently enabled.</source>
+        
+      </trans-unit>
+      <trans-unit id="SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories.Text">
+        <source>Specify the pass-filter rules for files and directories:</source>
+        
+      </trans-unit>
+      <trans-unit id="SpecifyTheRulesForIncludingOrExcludingFilesAndDirectoriesLine2.Text">
+        <source>The rules have the same format as the “.gitignore” file, matched items are included. To exclude, prefix a rule with an exclamation mark “!”.
+“#” comments a line. This is only a filter, so it cannot change the structure like pulling up a deep subfolder to the first level.</source>
+        
+      </trans-unit>
+      <trans-unit id="WithSomeRulesStillInTheSparsePassFilter.Text">
+        <source>with some rules still in the sparse pass-filter</source>
+        
+      </trans-unit>
+      <trans-unit id="WithTheSparsePassFilterEmptyOrMissing.Text">
+        <source>with the sparse pass-filter empty or missing</source>
+        
+      </trans-unit>
+      <trans-unit id="YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem.Text">
+        <source>You have made changes to settings or rules.
+Would you like to save them?</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GotoUserManualControl" source-language="en" target-language="cs">
     <body>
       <trans-unit id="_gotoUserManualControlTooltip.Text">
         <source>Read more about this feature at {0}</source>
@@ -8325,7 +8756,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GravatarControl" source-language="en">
+  <file datatype="plaintext" original="GravatarControl" source-language="en" target-language="cs">
     <body>
       <trans-unit id="clearImagecacheToolStripMenuItem.Text">
         <source>Clear image cache</source>
@@ -8399,7 +8830,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="HelpImageDisplayUserControl" source-language="en">
+  <file datatype="plaintext" original="HelpImageDisplayUserControl" source-language="en" target-language="cs">
     <body>
       <trans-unit id="linkLabelHide.Text">
         <source>Hide help</source>
@@ -8415,7 +8846,7 @@ nápovědu</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="HotkeysSettingsPage" source-language="en">
+  <file datatype="plaintext" original="HotkeysSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Hotkeys</source>
@@ -8424,7 +8855,7 @@ nápovědu</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="MessageBoxes" source-language="en">
+  <file datatype="plaintext" original="MessageBoxes" source-language="en" target-language="cs">
     <body>
       <trans-unit id="_error.Text">
         <source>Error</source>
@@ -8516,7 +8947,7 @@ Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</tar
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="PatchGrid" source-language="en">
+  <file datatype="plaintext" original="PatchGrid" source-language="en" target-language="cs">
     <body>
       <trans-unit id="FileName.HeaderText">
         <source>Name</source>
@@ -8550,7 +8981,7 @@ Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</tar
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="PluginRootIntroductionPage" source-language="en">
+  <file datatype="plaintext" original="PluginRootIntroductionPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Plugins Settings</source>
@@ -8564,7 +8995,7 @@ Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</tar
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="PluginSettingsPage" source-language="en">
+  <file datatype="plaintext" original="PluginSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="labelNoSettings.Text">
         <source>There are no settings available for this plugin.</source>
@@ -8573,7 +9004,7 @@ Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</tar
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="PluginsSettingsGroup" source-language="en">
+  <file datatype="plaintext" original="PluginsSettingsGroup" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Title">
         <source>Plugins</source>
@@ -8582,7 +9013,7 @@ Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</tar
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGrid" source-language="en">
+  <file datatype="plaintext" original="RevisionGrid" source-language="en" target-language="cs">
     <body>
       <trans-unit id="AuthorDataGridViewColumn.HeaderText">
         <source>Author</source>
@@ -8709,6 +9140,10 @@ Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</tar
         <target>Zvýraznit označenou větev (do obnovení)</target>
         
       </trans-unit>
+      <trans-unit id="ToggleRevisionCardLayout.Text">
+        <source>Change commit view layout</source>
+        
+      </trans-unit>
       <trans-unit id="_cannotHighlightSelectedBranch.Text">
         <source>Cannot highlight selected branch when revision graph is loading.</source>
         <target>Nemohu zvýraznit označenou větev při načítání grafu revizí.</target>
@@ -8769,6 +9204,25 @@ Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</tar
         <target>Vybrat nejlepší odevzdání</target>
         
       </trans-unit>
+      <trans-unit id="compareToBaseToolStripMenuItem.Text">
+        <source>Compare to BASE</source>
+        
+      </trans-unit>
+      <trans-unit id="compareToBranchToolStripMenuItem.Text">
+        <source>Compare to branch</source>
+        <target>Porovnat s větví</target>
+        
+      </trans-unit>
+      <trans-unit id="compareToolStripMenuItem.Text">
+        <source>Compare</source>
+        <target>Porovnat</target>
+        
+      </trans-unit>
+      <trans-unit id="compareWithCurrentBranchToolStripMenuItem.Text">
+        <source>Compare with current branch</source>
+        <target>Porovnat se současnou větví</target>
+        
+      </trans-unit>
       <trans-unit id="copyToClipboardToolStripMenuItem.Text">
         <source>Copy to clipboard</source>
         <target>Kopírovat do schránky</target>
@@ -8811,7 +9265,10 @@ Tímto získáte podmodul na odevzdání určeném v nadřazeném projektu.</tar
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
         <source>Create a fixup commit</source>
-        <target>Opravit odevzdání</target>
+        
+      </trans-unit>
+      <trans-unit id="getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text">
+        <source>Get help on how to use these features</source>
         
       </trans-unit>
       <trans-unit id="hashCopyToolStripMenuItem.Text">
@@ -8903,14 +9360,28 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
         <target>Spustit skript</target>
         
       </trans-unit>
+      <trans-unit id="selectAsBaseToolStripMenuItem.Text">
+        <source>Select as BASE to compare</source>
+        
+      </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
         <source>Show author date</source>
         <target>Zobrazit datum vytvoření</target>
         
       </trans-unit>
+      <trans-unit id="showFirstParent.Text">
+        <source>Show first parents</source>
+        <target>Zobrazit první rodiče</target>
+        
+      </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">
         <source>Show git notes</source>
         <target>Zobrazit git poznámky</target>
+        
+      </trans-unit>
+      <trans-unit id="showIdsToolStripMenuItem.Text">
+        <source>Show SHA1</source>
+        <target>Zobrazit SHA1</target>
         
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">
@@ -8940,7 +9411,6 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
         <source>Create a squash commit</source>
-        <target>Slisovat odevzdání</target>
         
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
@@ -8960,7 +9430,7 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionLinksSettingsPage" source-language="en">
+  <file datatype="plaintext" original="RevisionLinksSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Revision links</source>
@@ -9044,7 +9514,7 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ScriptsSettingsPage" source-language="en">
+  <file datatype="plaintext" original="ScriptsSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Scripts</source>
@@ -9074,6 +9544,9 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
         <source>User Input:
 {UserInput}
+
+Working Dir:
+{WorkingDir}
 
 Selected Commits:
 {sHashes}
@@ -9181,7 +9654,7 @@ Current Branch:
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SettingsPageHeader" source-language="en">
+  <file datatype="plaintext" original="SettingsPageHeader" source-language="en" target-language="cs">
     <body>
       <trans-unit id="DistributedRB.Text">
         <source>Distributed with current repository</source>
@@ -9190,7 +9663,7 @@ Current Branch:
       </trans-unit>
       <trans-unit id="EffectiveRB.Text">
         <source>Effective</source>
-        <target>Účinnost</target>
+        <target>Účinné</target>
         
       </trans-unit>
       <trans-unit id="GlobalRB.Text">
@@ -9210,7 +9683,7 @@ Current Branch:
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ShellExtensionSettingsPage" source-language="en">
+  <file datatype="plaintext" original="ShellExtensionSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Shell extension</source>
@@ -9220,6 +9693,96 @@ Current Branch:
       <trans-unit id="cbAlwaysShowAllCommands.Text">
         <source>Always show all commands</source>
         <target>Vždy zobrazovat všechny příkazy</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item0">
+        <source>Add files...</source>
+        <target>Přidat soubory...</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item1">
+        <source>Apply patch...</source>
+        <target>Aplikovat záplatu...</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item10">
+        <source>File history</source>
+        <target>Historie souboru</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item11">
+        <source>Pull...</source>
+        <target>Stáhnout...</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item12">
+        <source>Push...</source>
+        <target>Odeslat</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item13">
+        <source>Reset file changes..</source>
+        <target>Zahodit změny souboru...</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item14">
+        <source>Revert</source>
+        <target>Vrátit</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item15">
+        <source>Settings</source>
+        <target>Nastavení</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item16">
+        <source>View stash</source>
+        <target>Zobrazit úschovnu</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item17">
+        <source>View changes</source>
+        <target>Ukázat změny</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item2">
+        <source>Browse</source>
+        <target>Procházet</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item3">
+        <source>Create branch...</source>
+        <target>Vytvořit větev</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item4">
+        <source>Checkout branch...</source>
+        <target>Získat větev...</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item5">
+        <source>Checkout revision...</source>
+        <target>Získat revizi...</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item6">
+        <source>Clone...</source>
+        <target>Klonovat...</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item7">
+        <source>Commit...</source>
+        <target>Odevzdat...</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item8">
+        <source>Create new repository...</source>
+        <target>Vytvořit nový repozitář...</target>
+        
+      </trans-unit>
+      <trans-unit id="chlMenuEntries.Item9">
+        <source>Open with difftool</source>
+        <target>Otevřít nástrojem na rozdíly</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -9237,7 +9800,7 @@ when all items are shown:</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SshSettingsPage" source-language="en">
+  <file datatype="plaintext" original="SshSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>SSH</source>
@@ -9247,11 +9810,6 @@ when all items are shown:</source>
       <trans-unit id="AutostartPageant.Text">
         <source>Automatically start authentication client when a private key is configured for a remote</source>
         <target>Automaticky zahájit autenfikačního klienta pokud je pro vzdálený zdroj nastaven soukromý klíč</target>
-        
-      </trans-unit>
-      <trans-unit id="BrowseGitCred.Text">
-        <source>Browse</source>
-        <target>Procházet</target>
         
       </trans-unit>
       <trans-unit id="OpenSSH.Text">
@@ -9289,11 +9847,6 @@ when all items are shown:</source>
         <target>Procházet</target>
         
       </trans-unit>
-      <trans-unit id="SuggestGitCred.Text">
-        <source>Suggest</source>
-        <target>Navrhnout</target>
-        
-      </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Specify which ssh client to use</source>
         <target>Určete jakého SSH klienta chcete použít</target>
@@ -9302,11 +9855,6 @@ when all items are shown:</source>
       <trans-unit id="groupBox2.Text">
         <source>Configure PuTTY</source>
         <target>Nastavit PuTTY</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox3.Text">
-        <source>Configure Git credential helper</source>
-        <target>Nastavit Git credential helper</target>
         
       </trans-unit>
       <trans-unit id="label15.Text">
@@ -9325,24 +9873,15 @@ when all items are shown:</source>
         
       </trans-unit>
       <trans-unit id="label18.Text">
-        <source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
+        <source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users,
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </source>
-        <target>OpenSSH je nástroj příkazové řádky. PuTTY je více uživatelsky přívětivější k uživatelům Windows,
-ale vyžaduje aby byl na pozadí spuštěn klient autentifikace.
-Při použití OpenSSH se budou zobrazovat dialogová okna příkazové řádky!
-</target>
-        
-      </trans-unit>
-      <trans-unit id="label48.Text">
-        <source>Command</source>
-        <target>Příkaz</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="StartPageSettingsPage" source-language="en">
+  <file datatype="plaintext" original="StartPageSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>Start Page</source>
@@ -9351,7 +9890,7 @@ Při použití OpenSSH se budou zobrazovat dialogová okna příkazové řádky!
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="Strings" source-language="en">
+  <file datatype="plaintext" original="Strings" source-language="en" target-language="cs">
     <body>
       <trans-unit id="_authorDateText.Text">
         <source>Author date</source>
@@ -9438,6 +9977,10 @@ Při použití OpenSSH se budou zobrazovat dialogová okna příkazové řádky!
         <target>Před {0} {1:sekundou|sekundami}</target>
         
       </trans-unit>
+      <trans-unit id="_uninterestingDiffOmitted.Text">
+        <source>Uninteresting diff hunks are omitted.</source>
+        
+      </trans-unit>
       <trans-unit id="_weeksAgo.Text">
         <source>{0} {1:week|weeks} ago</source>
         <target>Před {0} {1:týdnem|týdny} ago</target>
@@ -9450,7 +9993,7 @@ Při použití OpenSSH se budou zobrazovat dialogová okna příkazové řádky!
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ViewPullRequestsForm" source-language="en">
+  <file datatype="plaintext" original="ViewPullRequestsForm" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
         <source>View Pull Requests</source>

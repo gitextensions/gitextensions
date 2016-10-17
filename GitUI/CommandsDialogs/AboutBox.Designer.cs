@@ -170,7 +170,7 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.thanksTo, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_thanksToTicker, 1, 0);
@@ -189,7 +189,7 @@
             this.thanksTo.Location = new System.Drawing.Point(0, 0);
             this.thanksTo.Margin = new System.Windows.Forms.Padding(0);
             this.thanksTo.Name = "thanksTo";
-            this.thanksTo.Size = new System.Drawing.Size(62, 15);
+            this.thanksTo.Size = new System.Drawing.Size(58, 13);
             this.thanksTo.TabIndex = 27;
             this.thanksTo.Text = "Thanks to:";
             this.thanksTo.Click += new System.EventHandler(this._NO_TRANSLATE_thanksToTicker_Click);

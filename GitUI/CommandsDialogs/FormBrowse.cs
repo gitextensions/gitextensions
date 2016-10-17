@@ -1935,7 +1935,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.48/");
+                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.49/");
             }
             catch (System.ComponentModel.Win32Exception)
             {
@@ -3537,11 +3537,18 @@ namespace GitUI.CommandsDialogs
 		    {
 			    if(args.TabPage != tabpage)
 				    return;
-			    if(terminal == null) // Lazy-create on first opening the tab
-			    {
-				    tabpage.Controls.Clear();
-				    tabpage.Controls.Add(terminal = new ConEmuControl() {Dock = DockStyle.Fill, AutoStartInfo = null});
-			    }
+                if (terminal == null) // Lazy-create on first opening the tab
+                {
+                    tabpage.Controls.Clear();
+                    tabpage.Controls.Add(
+                        terminal = new ConEmuControl()
+                        {
+                            Dock = DockStyle.Fill,
+                            AutoStartInfo = null,
+                            IsStatusbarVisible = false
+                        }
+                    );
+                }
 			    if(terminal.IsConsoleEmulatorOpen) // If user has typed "exit" in there, restart the shell; otherwise just return
 				    return;
 
@@ -3561,9 +3568,10 @@ namespace GitUI.CommandsDialogs
                 {
                     startinfo.ConsoleProcessCommandLine += " --login -i";
                 }
+                startinfo.ConsoleProcessCommandLine += " -new_console:P:\"<Solarized Light>\"";
 
-			    // Set path to git in this window (actually, effective with CMD only)
-			    if(!string.IsNullOrEmpty(AppSettings.GitCommand))
+                // Set path to git in this window (actually, effective with CMD only)
+                if (!string.IsNullOrEmpty(AppSettings.GitCommand))
 			    {
 				    string dirGit = Path.GetDirectoryName(AppSettings.GitCommand);
 				    if(!string.IsNullOrEmpty(dirGit))
