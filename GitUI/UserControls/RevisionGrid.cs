@@ -1208,7 +1208,7 @@ namespace GitUI
                     if (index >= 0)
                         SetSelectedIndex(index);
                 }
-                else if (!string.IsNullOrEmpty(filtredCurrentCheckout))
+                else
                 {
                     SetSelectedRevision(filtredCurrentCheckout);
                 }
