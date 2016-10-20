@@ -1095,7 +1095,7 @@ namespace GitUI
         private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
         {
             // This has to happen on the UI thread
-            this.InvokeSync(o =>
+            this.InvokeAsync(o =>
                                   {
                                       Error.Visible = true;
                                       //Error.BringToFront();
@@ -1161,7 +1161,7 @@ namespace GitUI
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
-                this.InvokeSync(o =>
+                this.InvokeAsync(o =>
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
@@ -1173,7 +1173,7 @@ namespace GitUI
             else
             {
                 // This has to happen on the UI thread
-                this.InvokeSync(o =>
+                this.InvokeAsync(o =>
                                       {
                                           UpdateGraph(null);
                                           Loading.Visible = false;
@@ -1694,7 +1694,8 @@ namespace GitUI
             {
                 if (revision.Body == null && !revision.IsArtificial())
                 {
-                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount, Module));
+                    var moduleRef = Module;
+                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount, moduleRef));
                 }
 
                 if (revision.Body != null)

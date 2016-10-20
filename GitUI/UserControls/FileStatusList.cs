@@ -28,7 +28,7 @@ namespace GitUI
         public readonly TranslationString CombinedDiff =
             new TranslationString("Combined Diff");
 
-        private readonly IDisposable selectedIndexChangeSubscription;
+        private IDisposable selectedIndexChangeSubscription;
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
         private const int ImageSize = 16;
@@ -39,13 +39,6 @@ namespace GitUI
         {
             InitializeComponent(); Translate();
             FilterVisible = false;
-
-            selectedIndexChangeSubscription = Observable.FromEventPattern(
-                h => FileStatusListView.SelectedIndexChanged += h,
-                h => FileStatusListView.SelectedIndexChanged -= h)
-                .Throttle(SelectedIndexChangeThrottleDuration)
-                .ObserveOn(SynchronizationContext.Current)
-                .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
 
             SelectFirstItemOnSetItems = true;
             _noDiffFilesChangesDefaultText = NoFiles.Text;
@@ -84,7 +77,23 @@ namespace GitUI
 
         protected override void DisposeCustomResources()
         {
-            selectedIndexChangeSubscription.Dispose();
+            if (selectedIndexChangeSubscription != null)
+            {
+                selectedIndexChangeSubscription.Dispose();
+            }
+        }
+
+        private void EnsureSelectedIndexChangeSubscription()
+        {
+            if (selectedIndexChangeSubscription == null)
+            {
+                selectedIndexChangeSubscription = Observable.FromEventPattern(
+                    h => FileStatusListView.SelectedIndexChanged += h,
+                    h => FileStatusListView.SelectedIndexChanged -= h)
+                    .Throttle(SelectedIndexChangeThrottleDuration)
+                    .ObserveOn(SynchronizationContext.Current)
+                    .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
+            }
         }
 
         private static ImageList _images;
@@ -590,9 +599,14 @@ namespace GitUI
         private void UpdateFileStatusListView(bool updateCausedByFilter = false)
         {
             if (_itemsDictionary == null || !_itemsDictionary.Any())
+            {
                 HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
+            }
             else
+            {
+                EnsureSelectedIndexChangeSubscription();
                 HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
+            }
             FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
             var previouslySelectedItems = new List<GitItemStatus>();

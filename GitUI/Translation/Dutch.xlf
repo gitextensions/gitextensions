@@ -41,6 +41,7 @@ Deze applicatie is verspreid in de hoop dat deze bruikbaar is voor anderen, maar
       </trans-unit>
       <trans-unit id="DiffViewerGB.Text">
         <source>Diff Viewer</source>
+        <target>Diff Viewer</target>
         
       </trans-unit>
       <trans-unit id="GeneralGB.Text">
@@ -60,6 +61,7 @@ Deze applicatie is verspreid in de hoop dat deze bruikbaar is voor anderen, maar
       </trans-unit>
       <trans-unit id="chkAutoNormaliseBranchName.Text">
         <source>Auto normalise branch name</source>
+        <target>Normaliseer branch naam</target>
         
       </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
@@ -69,6 +71,7 @@ Deze applicatie is verspreid in de hoop dat deze bruikbaar is voor anderen, maar
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
+        <target>Gebruik Console Emulator voor console output</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -78,10 +81,12 @@ Deze applicatie is verspreid in de hoop dat deze bruikbaar is voor anderen, maar
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
         <source>Omit uninteresting changes from combined diff</source>
+        <target>Sla onbelangrijke wijzigingen uit gecomb. diff over.</target>
         
       </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
         <source>Remember the ignore-white-space preference</source>
+        <target>Onthoudt de voorkeur voor negeer-witruimte</target>
         
       </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
@@ -92,6 +97,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Symbol to use:</source>
+        <target>Gebruik symbool:</target>
         
       </trans-unit>
     </body>
@@ -265,6 +271,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="truncatePathMethod.Item2">
         <source>Trim start</source>
+        <target>Slim trimmen</target>
         
       </trans-unit>
       <trans-unit id="truncatePathMethod.Item3">
@@ -497,6 +504,8 @@ Controleer of kdiff3 is geïnstalleerd of vul het handmatig in.</target>
       <trans-unit id="_linuxToolsShNotFound.Text">
         <source>The path to linux tools (sh) could not be found automatically.
 Please make sure there are linux tools installed (through Git for Windows or cygwin) or set the correct path manually.</source>
+        <target>Het pad naar linux tools (sh) werd niet automatisch gevonden.
+Zorg dat de linux tools geïnstalleerd zijn (door Git voor Windows of cygwin) of stel het pad handmatig in.</target>
         
       </trans-unit>
       <trans-unit id="_linuxToolsShNotFoundCaption.Text">
@@ -620,6 +629,8 @@ Kies 'nee' als u een andere tool wilt kiezen.</target>
       <trans-unit id="_solveGitCommandFailed.Text">
         <source>The command to run git could not be determined automatically.
 Please make sure git (Git for Windows or cygwin) is installed or set the correct command manually.</source>
+        <target>Het pad naar git werd niet automatisch gevonden.
+Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad handmatig in.</target>
         
       </trans-unit>
       <trans-unit id="_solveGitCommandFailedCaption.Text">
@@ -688,6 +699,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="HighlightAuthoredRevisions.Text">
         <source>Highlight authored revisions</source>
+        <target>Highlight revisies met auteur</target>
         
       </trans-unit>
       <trans-unit id="IconStyle.Item0">
@@ -762,6 +774,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Color authored revisions</source>
+        <target>Geef revisies met auteur een kleur</target>
         
       </trans-unit>
       <trans-unit id="label25.Text">
@@ -830,10 +843,12 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkAddNewlineToCommitMessageWhenMissing.Text">
         <source>Ensure the second line of commit message is empty</source>
+        <target>Controleer dat de twee regel van het bericht leeg is</target>
         
       </trans-unit>
       <trans-unit id="chkAutocomplete.Text">
         <source>Provide auto-completion in commit dialog</source>
+        <target>Activeer automatisch aanvullen in het commit scherm</target>
         
       </trans-unit>
       <trans-unit id="chkShowCommitAndPush.Text">
@@ -934,6 +949,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
         <source>Show messages of annotated tags</source>
+        <target>Laat tekst zien van tags met aantekening</target>
         
       </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
@@ -1431,10 +1447,12 @@ Wilt u het toch openen?</target>
     <body>
       <trans-unit id="CombinedDiff.Text">
         <source>Combined Diff</source>
+        <target>Gecombineerde Diff</target>
         
       </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files...</source>
+        <target>Filter bestanden...</target>
         
       </trans-unit>
       <trans-unit id="NoFiles.Text">
@@ -1957,6 +1975,7 @@ U heeft rechten om commits te verzenden. {2}
       </trans-unit>
       <trans-unit id="AddToIgnore.Text">
         <source>Ignore</source>
+        <target>Negeer</target>
         
       </trans-unit>
       <trans-unit id="_matchingFilesString.Text">
@@ -2269,6 +2288,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>Laat directe ouder zien</target>
         
       </trans-unit>
       <trans-unit id="SvnDcommitToolStripMenuItem.Text">
@@ -2383,22 +2403,27 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
         <source>Pull - fetch</source>
+        <target>Pullen - fetch</target>
         
       </trans-unit>
       <trans-unit id="_pullFetchAll.Text">
         <source>Pull - fetch all</source>
+        <target>Pullen - fetch alles</target>
         
       </trans-unit>
       <trans-unit id="_pullMerge.Text">
         <source>Pull - merge</source>
+        <target>Pullen - merge</target>
         
       </trans-unit>
       <trans-unit id="_pullOpenDialog.Text">
         <source>Open pull dialog</source>
+        <target>Open pull-scherm</target>
         
       </trans-unit>
       <trans-unit id="_pullRebase.Text">
         <source>Pull - rebase</source>
+        <target>Pullen - rebase</target>
         
       </trans-unit>
       <trans-unit id="_repositoryHostsToolStripMenuItem.Text">
@@ -2413,6 +2438,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_resetFileError.Text">
         <source>Exactly one revision must be selected. Abort.</source>
+        <target>Er mag slechts één revisie zijn geselecteerd. Afgebroken.</target>
         
       </trans-unit>
       <trans-unit id="_resetFileText.Text">
@@ -2447,10 +2473,12 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_superprojectModuleFormat.Text">
         <source>Superproject: {0}</source>
+        <target>Superproject: {0}</target>
         
       </trans-unit>
       <trans-unit id="_topProjectModuleFormat.Text">
         <source>Top project: {0}</source>
+        <target>Bovenste project: {0}</target>
         
       </trans-unit>
       <trans-unit id="_updateCurrentSubmodule.Text">
@@ -2834,6 +2862,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
       </trans-unit>
       <trans-unit id="menuitemSparse.Text">
         <source>Sparse Working Copy</source>
+        <target>Sparse Werkdirectory</target>
         
       </trans-unit>
       <trans-unit id="mergeBranchToolStripMenuItem.Text">
@@ -2843,6 +2872,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
         <source>Pull - merge</source>
+        <target>Pullen - mergen</target>
         
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -2912,6 +2942,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
         <source>Open pull dialog...</source>
+        <target>Open pull-scherm...</target>
         
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
@@ -2926,6 +2957,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
         <source>Pull - rebase</source>
+        <target>Pullen - rebase</target>
         
       </trans-unit>
       <trans-unit id="recentToolStripMenuItem.Text">
@@ -2965,18 +2997,22 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
       </trans-unit>
       <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
         <source>First</source>
+        <target>Eerste</target>
         
       </trans-unit>
       <trans-unit id="resetFileToParentToolStripMenuItem.Text">
         <source>Parent</source>
+        <target>Ouder</target>
         
       </trans-unit>
       <trans-unit id="resetFileToSecondToolStripMenuItem.Text">
         <source>Second</source>
+        <target>Tweede</target>
         
       </trans-unit>
       <trans-unit id="resetFileToSelectedToolStripMenuItem.Text">
         <source>Selected</source>
+        <target>Geselecteerde</target>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
@@ -3016,10 +3052,12 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
       </trans-unit>
       <trans-unit id="setNextPullActionAsDefaultToolStripMenuItem.Text">
         <source>Set the next selection as default</source>
+        <target>Maak de volgende selectie standaard</target>
         
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
         <source>Settings</source>
+        <target>Instellingen</target>
         
       </trans-unit>
       <trans-unit id="startAuthenticationAgentToolStripMenuItem.Text">
@@ -3089,6 +3127,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
       </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
+        <target>Filter:</target>
         
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
@@ -3205,6 +3244,7 @@ Voer een geldige naam in of selecteeer een voorgedefinieerde keuze.</target>
       </trans-unit>
       <trans-unit id="chkSetLocalChangesActionAsDefault.Text">
         <source>Set as default</source>
+        <target>Maak standaard</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -3382,14 +3422,17 @@ revision:</source>
       </trans-unit>
       <trans-unit id="labelParents.Text">
         <source>Parent(s):</source>
+        <target>Ouder(s):</target>
         
       </trans-unit>
       <trans-unit id="linkLabelParent.Text">
         <source>sha parent 1</source>
+        <target>sha ouder 1</target>
         
       </trans-unit>
       <trans-unit id="linkLabelParent2.Text">
         <source>sha parent 2</source>
+        <target>sha ouder 2</target>
         
       </trans-unit>
     </body>
@@ -3536,10 +3579,12 @@ revision:</source>
       </trans-unit>
       <trans-unit id="_branchDefaultRemoteHead.Text">
         <source>(default: remote HEAD)</source>
+        <target>(standaard: remote HEAD)</target>
         
       </trans-unit>
       <trans-unit id="_branchNone.Text">
         <source>(none: don't checkout after clone)</source>
+        <target>(geen: check niets uit na clonen)</target>
         
       </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
@@ -3578,6 +3623,7 @@ Wilt u de nieuwe repository &quot;{0}&quot; openen?</target>
       </trans-unit>
       <trans-unit id="cbDownloadFullHistory.Text">
         <source>Download full &amp;history</source>
+        <target>Download volledige &amp;historie</target>
         
       </trans-unit>
       <trans-unit id="cbIntializeAllSubmodules.Text">
@@ -3592,6 +3638,7 @@ Wilt u de nieuwe repository &quot;{0}&quot; openen?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Repository to &amp;clone:</source>
+        <target>Te &amp;clonen repository:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -3947,6 +3994,7 @@ Weet u zeker dat u wilt doorgaan?</target>
       </trans-unit>
       <trans-unit id="assumeUnchangedToolStripMenuItem.Text">
         <source>Assume unchanged</source>
+        <target>Veronderstel ongewijzigd</target>
         
       </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
@@ -4011,6 +4059,7 @@ Weet u zeker dat u wilt doorgaan?</target>
       </trans-unit>
       <trans-unit id="doNotAssumeUnchangedToolStripMenuItem.Text">
         <source>Do not assume unchanged</source>
+        <target>Veronderstel gewijzigd</target>
         
       </trans-unit>
       <trans-unit id="editFileToolStripMenuItem.Text">
@@ -4120,6 +4169,7 @@ Weet u zeker dat u wilt doorgaan?</target>
       </trans-unit>
       <trans-unit id="showAssumeUnchangedFilesToolStripMenuItem.Text">
         <source>Show assumed-unchanged files</source>
+        <target>Laat verondersteld-ongewijzigde bestanden zien</target>
         
       </trans-unit>
       <trans-unit id="showIgnoredFilesToolStripMenuItem.Text">
@@ -4350,10 +4400,12 @@ Weet u zeker dat u wilt doorgaan?</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Compare to branch</source>
+        <target>Vergelijk met branch</target>
         
       </trans-unit>
       <trans-unit id="btnCompare.Text">
         <source>Compare</source>
+        <target>Vergelijk</target>
         
       </trans-unit>
     </body>
@@ -4367,18 +4419,22 @@ Weet u zeker dat u wilt doorgaan?</target>
       </trans-unit>
       <trans-unit id="CheckoutAfterCreate.Text">
         <source>Checkout &amp;after create</source>
+        <target>Check uit n&amp;a maken</target>
         
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
         <source>Clear &amp;working directory and index</source>
+        <target>Leeg &amp;werk directory en index</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>&amp;Create branch</source>
+        <target>Maak bran&amp;ch</target>
         
       </trans-unit>
       <trans-unit id="Orphan.Text">
         <source>Create or&amp;phan</source>
+        <target>Maak or&amp;phan</target>
         
       </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
@@ -4403,10 +4459,12 @@ Weet u zeker dat u wilt doorgaan?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>&amp;Branch name</source>
+        <target>&amp;Branch naam</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Create b&amp;ranch at this revision</source>
+        <target>Maak b&amp;ranch voor deze revisie</target>
         
       </trans-unit>
     </body>
@@ -4623,10 +4681,12 @@ Als u een niet volledig gemergde branch wilt verwijderen, dan kunt u dat forcere
       </trans-unit>
       <trans-unit id="anotherBranchTooltip.Text">
         <source>Select another branch</source>
+        <target>Selecteer een andere branch</target>
         
       </trans-unit>
       <trans-unit id="anotherCommitTooltip.Text">
         <source>Select another commit</source>
+        <target>Selecteer een andere commit</target>
         
       </trans-unit>
       <trans-unit id="bLocalToolStripMenuItem.Text">
@@ -4636,6 +4696,7 @@ Als u een niet volledig gemergde branch wilt verwijderen, dan kunt u dat forcere
       </trans-unit>
       <trans-unit id="baseCommitGroup.Text">
         <source>BASE</source>
+        <target>BASE</target>
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -4645,10 +4706,12 @@ Als u een niet volledig gemergde branch wilt verwijderen, dan kunt u dat forcere
       </trans-unit>
       <trans-unit id="btnSwapTooltip.Text">
         <source>Swap BASE and Compare commits</source>
+        <target>Wissel BASE en Vergelijk commits om</target>
         
       </trans-unit>
       <trans-unit id="ckCompareToMergeBase.Text">
         <source>Compare to merge base</source>
+        <target>Vergelijk met de merge base</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
@@ -4673,6 +4736,7 @@ Als u een niet volledig gemergde branch wilt verwijderen, dan kunt u dat forcere
       </trans-unit>
       <trans-unit id="headCommitGroup.Text">
         <source>Compare</source>
+        <target>Vergelijk</target>
         
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
@@ -4795,6 +4859,7 @@ Als u twijfelt sluit dan simpelweg dit scherm.</target>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>Laat directe ouder zien</target>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -4814,6 +4879,7 @@ Als u twijfelt sluit dan simpelweg dit scherm.</target>
       </trans-unit>
       <trans-unit id="followFileHistoryRenamesToolStripMenuItem.Text">
         <source>Detect and follow - exact renames and copies only</source>
+        <target>Detecteer en volg - alleen exacte naamwijzigingen en kopieën</target>
         
       </trans-unit>
       <trans-unit id="followFileHistoryToolStripMenuItem.Text">
@@ -4863,6 +4929,7 @@ Als u twijfelt sluit dan simpelweg dit scherm.</target>
       </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
+        <target>Filter:</target>
         
       </trans-unit>
       <trans-unit id="toolStripSplitLoad.ToolTipText">
@@ -5236,10 +5303,35 @@ Thumbs.db
 obj/
 [Rr]elease*/
 _ReSharper*/</source>
+        <target>Specificeer welke bestandspatronen git moet negeren.
+
+Voorbeelden:
+#Negeer Windows miniatuurweergaven
+Thumbs.db
+#Negeer Visual Studio bestanden
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
         <source>Generate a custom gitignore</source>
+        <target>Genereer een aangepaste gitignore</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
@@ -5781,6 +5873,7 @@ De aanpassingen worden ook in gemeenschappelijke oorspronkelijke vertakking uitg
       </trans-unit>
       <trans-unit id="Unshallow.Text">
         <source>Download full history</source>
+        <target>Download volledige historie</target>
         
       </trans-unit>
       <trans-unit id="_allMergeConflictSolvedQuestion.Text">
@@ -6070,6 +6163,7 @@ recursief geïnitialiseerd en geupdate worden.</target>
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item1">
         <source>Check</source>
+        <target>Check</target>
         
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item2">
@@ -6116,6 +6210,7 @@ Weet u zeker dat u deze vertakking wilt verzenden?</target>
       </trans-unit>
       <trans-unit id="_forceWithLeaseTooltips.Text">
         <source>Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository</source>
+        <target>&quot;Forceer met lease&quot; is een veiligere manier om te pushen. Het zorgt ervoor dat je alleen werk kunt overschrijven wat je in je lokale repository ziet</target>
         
       </trans-unit>
       <trans-unit id="_no.Text">
@@ -6195,6 +6290,7 @@ Weet u zeker dat u deze vertakking wilt verzenden?</target>
       </trans-unit>
       <trans-unit id="_useForceWithLeaseInstead.Text">
         <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
+        <target>Forceer push kan de wijzigingen overschrijven sinds de laatste fetch. Wilt u het veiligere &quot;forceer met lease&quot; gebruiken?</target>
         
       </trans-unit>
       <trans-unit id="_yes.Text">
@@ -6204,6 +6300,7 @@ Weet u zeker dat u deze vertakking wilt verzenden?</target>
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
         <source>Force With &amp;Lease</source>
+        <target>Forceer Met &amp;Lease</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -7406,6 +7503,7 @@ Wilt u dit script gebruiken om samen te voegen?</target>
       </trans-unit>
       <trans-unit id="SimplifyByDecorationCheck.Text">
         <source>Simplify by decoration</source>
+        <target>Maak eenvoudiger met decoratie</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -8371,6 +8469,7 @@ te kunnen wijzigen.</target>
       </trans-unit>
       <trans-unit id="chkCheckForUncommittedChangesInCheckoutBranch.Text">
         <source>Check for uncommitted changes in checkout branch dialog</source>
+        <target>Kijk of er niet gecommitte wijzigingen zijn in het checkout branch scherm</target>
         
       </trans-unit>
       <trans-unit id="chkCloseProcessDialog.Text">
@@ -8385,6 +8484,7 @@ te kunnen wijzigen.</target>
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
         <source>Follow exact renames and copies only</source>
+        <target>Volg alleen exacte naamwijzigingen en kopieën</target>
         
       </trans-unit>
       <trans-unit id="chkPlaySpecialStartupSound.Text">
@@ -8394,14 +8494,17 @@ te kunnen wijzigen.</target>
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
         <source>Show current working directory changes in revision graph (slow!)</source>
+        <target>Laat wijzigingen in werk directory zien in de revisie grafiek (langzaam!)</target>
         
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog.</source>
+        <target>Laat verschillen zien voor alle ouders in het browse scherm</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
         <source>Show console window when executing git process</source>
+        <target>Laat het console scherm zien bij het uitvoeren van git</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
@@ -8540,6 +8643,7 @@ te kunnen wijzigen.</target>
       </trans-unit>
       <trans-unit id="label50.Text">
         <source>Git Extensions can use Git for Windows or cygwin to access git repositories. Set the correct paths below.</source>
+        <target>Git Extensions kan Git voor Windows of cygwin gebruiken om git repositories te benaderen. Vul hieronder de correcte paden in.</target>
         
       </trans-unit>
       <trans-unit id="label51.Text">
@@ -8561,6 +8665,7 @@ Verander het standaard gedrag alleen wanneer problemen optreden.</target>
       </trans-unit>
       <trans-unit id="CannotLoadTheTextOfTheSparseFile.Text">
         <source>Cannot load the text of the sparse file.</source>
+        <target>Kan de tekst van het sparse-bestand niet vinden.</target>
         
       </trans-unit>
       <trans-unit id="ConfirmDisableGitSparse.Text">
@@ -8568,35 +8673,47 @@ Verander het standaard gedrag alleen wanneer problemen optreden.</target>
 Git won't be able to restore the working copy to its full content this way.
 
 Would you like to have the filter modified so that it allowed for the full working copy?</source>
+        <target>U staat op het punt om de Git Sparse feature uit te zetten voor deze repository: {0}.
+Hierdoor kan git niet meer automatisch de volledige inhoud van de werkdirectory terugzetten.
+
+Wilt u dat het filter aangepast wordt zodat git weer de volledige werkdirectory uit kan checken?</target>
         
       </trans-unit>
       <trans-unit id="CouldNotSave.Text">
         <source>Could not save the modified settings and rules.</source>
+        <target>Kon de gewijzigde instellingen en regels niet opslaan.</target>
         
       </trans-unit>
       <trans-unit id="DisableForThisRepository.Text">
         <source>Disable for this repository</source>
+        <target>Voor deze repository uitzetten</target>
         
       </trans-unit>
       <trans-unit id="DisableGitSparse.Text">
         <source>Disable Git Sparse</source>
+        <target>Git Sparse uitzetten</target>
         
       </trans-unit>
       <trans-unit id="EditsTheContentsOfTheGitInfoSparseCheckoutFile.Text">
         <source>Edits the contents of the “.git/info/sparse-checkout” file.</source>
+        <target>Bewerkt de inhoud van het &quot;.git/info/sparse-checkout&quot; bestand.</target>
         
       </trans-unit>
       <trans-unit id="Enable.Text">
         <source>&amp;Enable</source>
+        <target>Aanz&amp;etten</target>
         
       </trans-unit>
       <trans-unit id="HeaderDetailsText.Text">
         <source>Need only a small part of a large repository?
 With sparse checkout, you can skip the rest from being extracted into your working copy.</source>
+        <target>Slechts een klein gedeelte van een grote repository nodig?
+Met sparse checkout kun je voorkomen dat de rest in uitgecheckt wordt in je werkdirectory.</target>
         
       </trans-unit>
       <trans-unit id="LoadFile.Text">
         <source>Load File</source>
+        <target>Laad Bestand</target>
         
       </trans-unit>
       <trans-unit id="RefreshWorkingCopyCheckboxHint.Text">
@@ -8604,60 +8721,80 @@ With sparse checkout, you can skip the rest from being extracted into your worki
 Refreshes the working copy against the current set of the rules to restore any missing files and remove any extra files.
 
 nActual command line: {0}</source>
+        <target>Omdat de regels voor sparse-checkout gewijzigd zijn kan de werkdirectory niet meer up to date zijn.
+Ververst de werkdirectory met de nieuwe regels om ontbrekende bestanden te herstellen en extra bestanden te verwijderen.
+
+nHuidige command line: {0}</target>
         
       </trans-unit>
       <trans-unit id="RefreshWorkingCopyUsingTheCurrentSettingsAndRules.Text">
         <source>Refresh working copy using the current settings and rules</source>
+        <target>Ververst de werkdirectory met de nieuwe instellingen en regels</target>
         
       </trans-unit>
       <trans-unit id="Save.Text">
         <source>&amp;Save</source>
+        <target>Op&amp;slaan</target>
         
       </trans-unit>
       <trans-unit id="SaveFile.Text">
         <source>Save File</source>
+        <target>Opslaan</target>
         
       </trans-unit>
       <trans-unit id="SetsTheGitPropertyToFalseForTheLocalRepository.Text">
         <source>Sets the Git property “{0}” to False for the local repository.</source>
+        <target>Zet de Git eigenschap &quot;{0}&quot; op False voor de lokale repository.</target>
         
       </trans-unit>
       <trans-unit id="SetsTheGitPropertyToTrueForTheLocalRepository.Text">
         <source>Sets the Git property “{0}” to True for the local repository.</source>
+        <target>Zet de Git eigenschap &quot;{0}&quot; op True voor de lokale repository.</target>
         
       </trans-unit>
       <trans-unit id="SparseWorkingCopy.Text">
         <source>Sparse Working Copy</source>
+        <target>Sparse Werkdirectory</target>
         
       </trans-unit>
       <trans-unit id="SparseWorkingCopySupportHasNotBeenEnabledForThisRepository.Text">
         <source>Git Sparse feature has not been enabled for this repository.</source>
+        <target>De Git Sparse feature is niet geactiveerd voor deze repository.</target>
         
       </trans-unit>
       <trans-unit id="SparseWorkingCopySupportIsEnabled.Text">
         <source>Git Sparse feature is currently enabled.</source>
+        <target>De Git Sparse feature is geactiveerd.</target>
         
       </trans-unit>
       <trans-unit id="SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories.Text">
         <source>Specify the pass-filter rules for files and directories:</source>
+        <target>Specificeer de regels voor bestanden en directories:</target>
         
       </trans-unit>
       <trans-unit id="SpecifyTheRulesForIncludingOrExcludingFilesAndDirectoriesLine2.Text">
         <source>The rules have the same format as the “.gitignore” file, matched items are included. To exclude, prefix a rule with an exclamation mark “!”.
 “#” comments a line. This is only a filter, so it cannot change the structure like pulling up a deep subfolder to the first level.</source>
+        <target>De regels hebben hetzelfde formaat als het &quot;.gitignore&quot; bestand. Items die matchen worden meegenomen. Om items weg te laten zet een &quot;!&quot; aan het begin.&quot;
+&quot;#&quot; maakt van een regel commentaar. Dit is slechts een filter. Het kan niet de structuur aanpassen, zoals een subdirectory uitchecken in de root.
+</target>
         
       </trans-unit>
       <trans-unit id="WithSomeRulesStillInTheSparsePassFilter.Text">
         <source>with some rules still in the sparse pass-filter</source>
+        <target>met een aantal regels in de sparse pass-filter</target>
         
       </trans-unit>
       <trans-unit id="WithTheSparsePassFilterEmptyOrMissing.Text">
         <source>with the sparse pass-filter empty or missing</source>
+        <target>met een lege of ontbrekende sparse pass-filter</target>
         
       </trans-unit>
       <trans-unit id="YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem.Text">
         <source>You have made changes to settings or rules.
 Would you like to save them?</source>
+        <target>U heeft wijzigingen aangebracht in de instellingen of regels.
+Wilt u deze opslaan?</target>
         
       </trans-unit>
     </body>
@@ -8825,6 +8962,9 @@ help</source>
         <source>The server's host key is not cached in the registry.
 
 Do you want to trust this host key and then try again?</source>
+        <target>De host key van de server is niet gecached in het register.
+
+Wilt u deze host key vertrouwen en het opnieuw proberen?</target>
         
       </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
@@ -8834,6 +8974,7 @@ Do you want to trust this host key and then try again?</source>
       </trans-unit>
       <trans-unit id="_unableGetSVNInformation.Text">
         <source>Unable to determine upstream SVN information.</source>
+        <target>Kan upstream SVN informatie niet bepalen.</target>
         
       </trans-unit>
       <trans-unit id="_unresolvedMergeConflicts.Text">
@@ -8855,6 +8996,9 @@ Do you want to trust this host key and then try again?</source>
         <source>Since this repository has submodules, it's necessary to update them on every checkout.
 
 This will just checkout on the submodule the commit determined by the superproject.</source>
+        <target>Omdat deze repository submodules heeft is het nodig om ze bij elke checkout up te daten.
+
+Dit zal enkel de commit in de submodule uitchecken waar het superproject naar verwijst.</target>
         
       </trans-unit>
     </body>
@@ -8902,6 +9046,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Select one of the subnodes to view or edit the settings of a Git Extensions Plugin.</source>
+        <target>Selecteer één van de subnodes om de instellingen van een Git Extensions Plugin te zien of wijzigen.</target>
         
       </trans-unit>
     </body>
@@ -8953,6 +9098,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="GotoChildCommit.Text">
         <source>Go to child commit</source>
+        <target>Ga naar kind-commit</target>
         
       </trans-unit>
       <trans-unit id="GotoCommit.Text">
@@ -8967,6 +9113,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="GotoParentCommit.Text">
         <source>Go to parent commit</source>
+        <target>Ga naar ouder-commit</target>
         
       </trans-unit>
       <trans-unit id="InitRepository.Text">
@@ -8976,6 +9123,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="IsMessageMultilineDataGridViewColumn.HeaderText">
         <source>IsMessageMultiline</source>
+        <target>IsMessageMultiline</target>
         
       </trans-unit>
       <trans-unit id="MessageDataGridViewColumn.HeaderText">
@@ -9030,30 +9178,37 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="ShowSuperprojectBranches.Text">
         <source>Show superproject branches</source>
+        <target>Laat branches van superproject zien</target>
         
       </trans-unit>
       <trans-unit id="ShowSuperprojectRemoteBranches.Text">
         <source>Show superproject remote branches</source>
+        <target>Laat remote branches van superproject zien</target>
         
       </trans-unit>
       <trans-unit id="ShowSuperprojectTags.Text">
         <source>Show superproject tags</source>
+        <target>Laat tags van superproject zien</target>
         
       </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
         <source>Highlight selected branch (until refresh)</source>
+        <target>Highlight geselecteerde branch (tot refresh)</target>
         
       </trans-unit>
       <trans-unit id="ToggleRevisionCardLayout.Text">
         <source>Change commit view layout</source>
+        <target>Verander de layout van de commit-view</target>
         
       </trans-unit>
       <trans-unit id="_cannotHighlightSelectedBranch.Text">
         <source>Cannot highlight selected branch when revision graph is loading.</source>
+        <target>Kan de geselecteerde branch niet highlighten zolang de revisie grafiek laadt.</target>
         
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">
         <source>For you own protection dropping more than 10 patch files at once is blocked!</source>
+        <target>Voor uw eigen veiligheid is het uitvoeren van meer dan 10 patch files tegelijk geblokkeerd!</target>
         
       </trans-unit>
       <trans-unit id="_noRevisionFoundError.Text">
@@ -9063,6 +9218,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="_quickSearchQuickHelp.Text">
         <source>Start typing in revision grid to start quick search.</source>
+        <target>Begin met typen in de revisie grid voor snel zoeken.</target>
         
       </trans-unit>
       <trans-unit id="_revisionFilter.Text">
@@ -9107,18 +9263,22 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="compareToBaseToolStripMenuItem.Text">
         <source>Compare to BASE</source>
+        <target>Vergelijk met BASE</target>
         
       </trans-unit>
       <trans-unit id="compareToBranchToolStripMenuItem.Text">
         <source>Compare to branch</source>
+        <target>Vergelijk met branch</target>
         
       </trans-unit>
       <trans-unit id="compareToolStripMenuItem.Text">
         <source>Compare</source>
+        <target>Vergelijk</target>
         
       </trans-unit>
       <trans-unit id="compareWithCurrentBranchToolStripMenuItem.Text">
         <source>Compare with current branch</source>
+        <target>Vergelijk met huidige branch</target>
         
       </trans-unit>
       <trans-unit id="copyToClipboardToolStripMenuItem.Text">
@@ -9163,10 +9323,12 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
         <source>Create a fixup commit</source>
+        <target>Maak een fixup commit</target>
         
       </trans-unit>
       <trans-unit id="getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text">
         <source>Get help on how to use these features</source>
+        <target>Ga naar help voor hoe deze features te gebruiken</target>
         
       </trans-unit>
       <trans-unit id="hashCopyToolStripMenuItem.Text">
@@ -9260,6 +9422,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
       </trans-unit>
       <trans-unit id="selectAsBaseToolStripMenuItem.Text">
         <source>Select as BASE to compare</source>
+        <target>Selecteer als BASE om te vergelijken</target>
         
       </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
@@ -9269,6 +9432,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
       </trans-unit>
       <trans-unit id="showFirstParent.Text">
         <source>Show first parents</source>
+        <target>Laat directe ouder zien</target>
         
       </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">
@@ -9278,10 +9442,12 @@ Als dit een centrale opslagplaats is (zonder werk directory)
       </trans-unit>
       <trans-unit id="showIdsToolStripMenuItem.Text">
         <source>Show SHA1</source>
+        <target>Laat SHA1 zien</target>
         
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">
         <source>Show indicator for multiline message</source>
+        <target>Laat indicator zien voor lange berichten</target>
         
       </trans-unit>
       <trans-unit id="showMergeCommitsToolStripMenuItem.Text">
@@ -9306,6 +9472,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
         <source>Create a squash commit</source>
+        <target>Maak een squash commit</target>
         
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
@@ -9329,6 +9496,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
     <body>
       <trans-unit id="$this.Text">
         <source>Revision links</source>
+        <target>Revisie links</target>
         
       </trans-unit>
       <trans-unit id="Add.Text">
@@ -9373,6 +9541,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
       </trans-unit>
       <trans-unit id="URICol.HeaderText">
         <source>URI</source>
+        <target>URI</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewTextBoxColumn1.HeaderText">
@@ -9397,10 +9566,12 @@ Als dit een centrale opslagplaats is (zonder werk directory)
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Links</source>
+        <target>Links</target>
         
       </trans-unit>
       <trans-unit id="nestedPatternLab.Text">
         <source>Nested pattern</source>
+        <target>Genest patroon</target>
         
       </trans-unit>
     </body>
@@ -9429,6 +9600,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
       </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayArgumentsHelp.Text">
         <source>Arguments help</source>
+        <target>Hulp voor argumenten</target>
         
       </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
@@ -9470,6 +9642,44 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
+        <target>Gebruikers Invoer:
+{UserInput}
+
+Werk Directory:
+{WorkingDir}
+
+Geselecteerde Commits:
+{sHashes}
+
+Geselecteerde Branch:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+Huidige Branch:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="addScriptButton.Text">
@@ -9548,6 +9758,7 @@ Current Branch:
     <body>
       <trans-unit id="DistributedRB.Text">
         <source>Distributed with current repository</source>
+        <target>Gedistribueerd met huidige repository</target>
         
       </trans-unit>
       <trans-unit id="EffectiveRB.Text">
@@ -9557,10 +9768,12 @@ Current Branch:
       </trans-unit>
       <trans-unit id="GlobalRB.Text">
         <source>Global for all repositories</source>
+        <target>Globaal voor alle repositories</target>
         
       </trans-unit>
       <trans-unit id="LocalRB.Text">
         <source>Local for current repository</source>
+        <target>Lokaal voor huidige repository</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -9682,6 +9895,8 @@ Wanneer alle elementen worden getoond:</target>
       <trans-unit id="lblMenuEntries.Text">
         <source>Select items to be shown in the cascaded context menu.
 (Unchecked items will be shown top level for direct access.)</source>
+        <target>Selecteer items die weergegeven moeten worden in een submenu.
+(Niet gevinkte items worden rechtstreeks in het context menu weergegeven.)</target>
         
       </trans-unit>
     </body>
@@ -9763,6 +9978,10 @@ Wanneer alle elementen worden getoond:</target>
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </source>
+        <target>OpenSSH is een command line too. PuTTY is gebruiksvriendelijker voor Windows gebruikers,
+maar het vereist dat de PuTTY authentication client op de achtergrond draait.
+Als OpenSSH wordt gebruikt worden command line schermen getoond!
+</target>
         
       </trans-unit>
     </body>
@@ -9865,6 +10084,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_uninterestingDiffOmitted.Text">
         <source>Uninteresting diff hunks are omitted.</source>
+        <target>Oninteressante diff blokken worden weggelaten.</target>
         
       </trans-unit>
       <trans-unit id="_weeksAgo.Text">
@@ -9888,6 +10108,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_addAndFetchBtn.Text">
         <source>Add remote and fetch</source>
+        <target>Voeg remote toe en fetch</target>
         
       </trans-unit>
       <trans-unit id="_chooseRepo.Text">
@@ -9932,18 +10153,22 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_strFailedToClosePullRequest.Text">
         <source>Failed to close pull request!</source>
+        <target>Kon pull request niet sluiten!</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToFetchPullData.Text">
         <source>Failed to fetch pull data!</source>
+        <target>Kon pull data niet fetchen!</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToLoadDiffData.Text">
         <source>Failed to load diff data!</source>
+        <target>Kon diff data niet laden!</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToLoadDiscussionItem.Text">
         <source>Failed to post discussion item!</source>
+        <target>Kon discussie item niet versturen!</target>
         
       </trans-unit>
       <trans-unit id="_strLoading.Text">
@@ -9954,6 +10179,8 @@ When OpenSSH is used, command line dialogs are shown!
       <trans-unit id="_strRemoteAlreadyExist.Text">
         <source>ERROR: Remote with name {0} already exists but it does not point to the same repository!
 Details: Is {1} expected {2}</source>
+        <target>FOUT: De remote met naam {0} bestaat al, maar het verwijst naar een andere repository!
+Details: Is {1}, verwachtte {2}</target>
         
       </trans-unit>
       <trans-unit id="_strUnableUnderstandPatch.Text">
@@ -9978,10 +10205,12 @@ Details: Is {1} expected {2}</source>
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Diffs</source>
+        <target>Diffs</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Comments</source>
+        <target>Commentaar</target>
         
       </trans-unit>
     </body>

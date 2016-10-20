@@ -168,12 +168,12 @@ xcopy /y ..\GitUI\Translation\Spanish.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Spanish.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Traditional Chinese.gif" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Traditional Chinese.xlf" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Traditional Chinese.Plugins.xlf" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Traditional Chinese.gif" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Traditional Chinese.xlf" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Traditional Chinese.Plugins.xlf" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Dictionaries GitExtensions\Dictionaries\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Diff-Scripts\merge-* GitExtensions\Diff-Scripts\

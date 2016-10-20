@@ -71,6 +71,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
+        <target>Использовать Console Emulator для отображения консоли в диалоговом окне</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -80,10 +81,12 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
         <source>Omit uninteresting changes from combined diff</source>
+        <target>Не включать неинтересные изменения в объединенный список изменений</target>
         
       </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
         <source>Remember the ignore-white-space preference</source>
+        <target>Запоминать настройку игнорировать-пробелы</target>
         
       </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
@@ -399,7 +402,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="Rescan.Text">
         <source>Save and rescan</source>
-        <target>Сохранить и пересканировать</target>
+        <target>Сохранить и проверить</target>
         
       </trans-unit>
       <trans-unit id="ShellExtensionsRegistered_Fix.Text">
@@ -847,6 +850,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkAutocomplete.Text">
         <source>Provide auto-completion in commit dialog</source>
+        <target>Предоставить автозавершения в окне коммита</target>
         
       </trans-unit>
       <trans-unit id="chkShowCommitAndPush.Text">
@@ -866,7 +870,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkShowResetUnstagedChanges.Text">
         <source>Reset Unstaged Changes</source>
-        <target>Сбросить не индексированные изменения</target>
+        <target>Отмена неиндексир.-ых</target>
         
       </trans-unit>
       <trans-unit id="chkWriteCommitMessageInCommitWindow.Text">
@@ -3050,6 +3054,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="setNextPullActionAsDefaultToolStripMenuItem.Text">
         <source>Set the next selection as default</source>
+        <target>Установить следующий выбор как выбор по умолчанию</target>
         
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
@@ -3425,10 +3430,12 @@ revision:</source>
       </trans-unit>
       <trans-unit id="linkLabelParent.Text">
         <source>sha parent 1</source>
+        <target>sha родителя 1</target>
         
       </trans-unit>
       <trans-unit id="linkLabelParent2.Text">
         <source>sha parent 2</source>
+        <target>sha родителя 2</target>
         
       </trans-unit>
     </body>
@@ -3575,10 +3582,12 @@ revision:</source>
       </trans-unit>
       <trans-unit id="_branchDefaultRemoteHead.Text">
         <source>(default: remote HEAD)</source>
+        <target>(по умолчанию: HEAD внешнего репозитория)</target>
         
       </trans-unit>
       <trans-unit id="_branchNone.Text">
         <source>(none: don't checkout after clone)</source>
+        <target>(нет: не переключаться после клонирования)</target>
         
       </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
@@ -3602,7 +3611,7 @@ revision:</source>
         <source>The repository has been cloned successfully.
 Do you want to open the new repository &quot;{0}&quot; now?</source>
         <target>Репозиторий успешно склонирован.
-Не желаете открыть новый репозиторий &quot;{0}&quot; сейчас?</target>
+Желаете открыть новый репозиторий &quot;{0}&quot; сейчас?</target>
         
       </trans-unit>
       <trans-unit id="_questionOpenRepoCaption.Text">
@@ -3702,7 +3711,7 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
       </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
         <source>Reset unstaged changes</source>
-        <target>Сбросить не индексированные изменения</target>
+        <target>Отмена неиндексир.-ых</target>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
@@ -3990,6 +3999,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="assumeUnchangedToolStripMenuItem.Text">
         <source>Assume unchanged</source>
+        <target>Предполагать неизмененные</target>
         
       </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
@@ -4054,6 +4064,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="doNotAssumeUnchangedToolStripMenuItem.Text">
         <source>Do not assume unchanged</source>
+        <target>Не предполагать неизмененные</target>
         
       </trans-unit>
       <trans-unit id="editFileToolStripMenuItem.Text">
@@ -4153,7 +4164,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="resetUnstagedChangesToolStripMenuItem.Text">
         <source>Reset unstaged changes</source>
-        <target>Сбросить не индексированные изменения</target>
+        <target>Отмена неиндексир.-ых</target>
         
       </trans-unit>
       <trans-unit id="selectionFilterToolStripMenuItem.Text">
@@ -4163,6 +4174,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="showAssumeUnchangedFilesToolStripMenuItem.Text">
         <source>Show assumed-unchanged files</source>
+        <target>Показывать предполагаемые-неизмененные файлы</target>
         
       </trans-unit>
       <trans-unit id="showIgnoredFilesToolStripMenuItem.Text">
@@ -4689,6 +4701,7 @@ When you want to delete a not-fully merged branch, you can override this using t
       </trans-unit>
       <trans-unit id="baseCommitGroup.Text">
         <source>BASE</source>
+        <target>БАЗА</target>
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -4698,10 +4711,12 @@ When you want to delete a not-fully merged branch, you can override this using t
       </trans-unit>
       <trans-unit id="btnSwapTooltip.Text">
         <source>Swap BASE and Compare commits</source>
+        <target>Сменить БАЗУ и сравнить коммиты</target>
         
       </trans-unit>
       <trans-unit id="ckCompareToMergeBase.Text">
         <source>Compare to merge base</source>
+        <target>Сравнить для слияния базу</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
@@ -5328,6 +5343,7 @@ _ReSharper*/</target>
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
         <source>Generate a custom gitignore</source>
+        <target>Создавать пользовательский gitignore</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
@@ -6202,6 +6218,7 @@ Are you sure you want to push this branch?</source>
       </trans-unit>
       <trans-unit id="_forceWithLeaseTooltips.Text">
         <source>Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository</source>
+        <target>Принудительно с извлечением - это безопасный способ принудительной отправки изменений. Он гарантирует, что перезапишется только та работа, которая была проведена в вашей локальной копии.</target>
         
       </trans-unit>
       <trans-unit id="_no.Text">
@@ -6281,6 +6298,7 @@ Are you sure you want to push this branch?</source>
       </trans-unit>
       <trans-unit id="_useForceWithLeaseInstead.Text">
         <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
+        <target>Принудительная отправка может перезаписать изменения с момента последнего забора изменений. Хотите использовать более безопасную принудительную отправку с извлечением?</target>
         
       </trans-unit>
       <trans-unit id="_yes.Text">
@@ -6290,6 +6308,7 @@ Are you sure you want to push this branch?</source>
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
         <source>Force With &amp;Lease</source>
+        <target>Принудительно с извлечением</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -7494,6 +7513,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="SimplifyByDecorationCheck.Text">
         <source>Simplify by decoration</source>
+        <target>Упростить сокращениями</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -7868,7 +7888,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
         <source>The repository has been cloned successfully.
 Do you want to open the new repository &quot;{0}&quot; now?</source>
         <target>Клонирование репозитория прошло успешно. 
-Не желаете открыть новый репозиторий &quot;{0}&quot; сейчас?</target>
+Желаете открыть новый репозиторий &quot;{0}&quot; сейчас?</target>
         
       </trans-unit>
       <trans-unit id="_questionOpenRepoCaption.Text">
@@ -8490,6 +8510,7 @@ global settings.
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog.</source>
+        <target>Показать различия между файлами для всех родителей в диалоге обзора.</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
@@ -8656,6 +8677,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       </trans-unit>
       <trans-unit id="CannotLoadTheTextOfTheSparseFile.Text">
         <source>Cannot load the text of the sparse file.</source>
+        <target>Не удается загрузить текст разреженного файла.</target>
         
       </trans-unit>
       <trans-unit id="ConfirmDisableGitSparse.Text">
@@ -8663,10 +8685,15 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
 Git won't be able to restore the working copy to its full content this way.
 
 Would you like to have the filter modified so that it allowed for the full working copy?</source>
+        <target>Вы собираетесь отключить возможность частичного использования Git
+для данного репозитория, {0}. В этом случае Git не сможет восстановить рабочую копию в полном объёме.
+
+Хотите чтобы фильтр был изменён для работы с полной рабочей копией?</target>
         
       </trans-unit>
       <trans-unit id="CouldNotSave.Text">
         <source>Could not save the modified settings and rules.</source>
+        <target>Не удалось сохранить измененные настройки и правила.</target>
         
       </trans-unit>
       <trans-unit id="DisableForThisRepository.Text">
@@ -8676,10 +8703,12 @@ Would you like to have the filter modified so that it allowed for the full worki
       </trans-unit>
       <trans-unit id="DisableGitSparse.Text">
         <source>Disable Git Sparse</source>
+        <target>Отключить разреженный Git</target>
         
       </trans-unit>
       <trans-unit id="EditsTheContentsOfTheGitInfoSparseCheckoutFile.Text">
         <source>Edits the contents of the “.git/info/sparse-checkout” file.</source>
+        <target>Отредактировать содержимое файла “.git/info/sparse-checkout”.</target>
         
       </trans-unit>
       <trans-unit id="Enable.Text">
@@ -8690,6 +8719,8 @@ Would you like to have the filter modified so that it allowed for the full worki
       <trans-unit id="HeaderDetailsText.Text">
         <source>Need only a small part of a large repository?
 With sparse checkout, you can skip the rest from being extracted into your working copy.</source>
+        <target>Нужна только малая часть большого репозитория?
+С частичным переключением вы можете пропустить остальное при извлечении в вашу рабочую копию.</target>
         
       </trans-unit>
       <trans-unit id="LoadFile.Text">
@@ -8702,10 +8733,15 @@ With sparse checkout, you can skip the rest from being extracted into your worki
 Refreshes the working copy against the current set of the rules to restore any missing files and remove any extra files.
 
 nActual command line: {0}</source>
+        <target>Правила частичной рабочей копии были изменены, потому она может стать устаревшей.
+Обновление рабочей копии с игнорирование текущих правил для того, чтобы восстановить пропущенные и удалить лишние файлы.
+
+Текущая командная строка: {0}</target>
         
       </trans-unit>
       <trans-unit id="RefreshWorkingCopyUsingTheCurrentSettingsAndRules.Text">
         <source>Refresh working copy using the current settings and rules</source>
+        <target>Обновление рабочей копии с использованием текущих настроек и правил</target>
         
       </trans-unit>
       <trans-unit id="Save.Text">
@@ -8720,10 +8756,12 @@ nActual command line: {0}</source>
       </trans-unit>
       <trans-unit id="SetsTheGitPropertyToFalseForTheLocalRepository.Text">
         <source>Sets the Git property “{0}” to False for the local repository.</source>
+        <target>Устанавливает свойство Git “{0}” в False для локального репозитория.</target>
         
       </trans-unit>
       <trans-unit id="SetsTheGitPropertyToTrueForTheLocalRepository.Text">
         <source>Sets the Git property “{0}” to True for the local repository.</source>
+        <target>Устанавливает свойство Git “{0}” в True для локального репозитория.</target>
         
       </trans-unit>
       <trans-unit id="SparseWorkingCopy.Text">
@@ -8733,32 +8771,41 @@ nActual command line: {0}</source>
       </trans-unit>
       <trans-unit id="SparseWorkingCopySupportHasNotBeenEnabledForThisRepository.Text">
         <source>Git Sparse feature has not been enabled for this repository.</source>
+        <target>Функция разреженного Git'а не включена для этого репозитория</target>
         
       </trans-unit>
       <trans-unit id="SparseWorkingCopySupportIsEnabled.Text">
         <source>Git Sparse feature is currently enabled.</source>
+        <target>Функция разреженного Git сейчас включена.</target>
         
       </trans-unit>
       <trans-unit id="SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories.Text">
         <source>Specify the pass-filter rules for files and directories:</source>
+        <target>Укажите пропускной фильтр правил для файлов и папок:</target>
         
       </trans-unit>
       <trans-unit id="SpecifyTheRulesForIncludingOrExcludingFilesAndDirectoriesLine2.Text">
         <source>The rules have the same format as the “.gitignore” file, matched items are included. To exclude, prefix a rule with an exclamation mark “!”.
 “#” comments a line. This is only a filter, so it cannot change the structure like pulling up a deep subfolder to the first level.</source>
+        <target>Правила имеют тот же формат, что и файл “.gitignore&quot;, указанные элементы включены. Для исключения допишите в начале восклицательный знак &quot;!&quot;.
+“#” закомментирует линию. Это всего лишь фильтр, так что он не может изменить структуры, например вытащить глубокую подпапку на первый уровень.</target>
         
       </trans-unit>
       <trans-unit id="WithSomeRulesStillInTheSparsePassFilter.Text">
         <source>with some rules still in the sparse pass-filter</source>
+        <target>с правилами, которые все ещё есть в частичном пропускном фильтре</target>
         
       </trans-unit>
       <trans-unit id="WithTheSparsePassFilterEmptyOrMissing.Text">
         <source>with the sparse pass-filter empty or missing</source>
+        <target>с пустым или отсутствующим частичным пропускным фильтром</target>
         
       </trans-unit>
       <trans-unit id="YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem.Text">
         <source>You have made changes to settings or rules.
 Would you like to save them?</source>
+        <target>Вы изменили настройки или правила.
+Желаете ли вы их сохранить?</target>
         
       </trans-unit>
     </body>
@@ -9164,6 +9211,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="ToggleRevisionCardLayout.Text">
         <source>Change commit view layout</source>
+        <target>Изменить разметку вида коммита</target>
         
       </trans-unit>
       <trans-unit id="_cannotHighlightSelectedBranch.Text">
@@ -9228,6 +9276,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="compareToBaseToolStripMenuItem.Text">
         <source>Compare to BASE</source>
+        <target>Сравнить с БАЗОЙ</target>
         
       </trans-unit>
       <trans-unit id="compareToBranchToolStripMenuItem.Text">
@@ -9292,6 +9341,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text">
         <source>Get help on how to use these features</source>
+        <target>Получить справку о том, как использовать эти функции</target>
         
       </trans-unit>
       <trans-unit id="hashCopyToolStripMenuItem.Text">
@@ -9385,6 +9435,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="selectAsBaseToolStripMenuItem.Text">
         <source>Select as BASE to compare</source>
+        <target>Выбрать в качестве БАЗЫ для сравнения</target>
         
       </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
@@ -10046,6 +10097,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_uninterestingDiffOmitted.Text">
         <source>Uninteresting diff hunks are omitted.</source>
+        <target>Неинтересные части изменений опущены.</target>
         
       </trans-unit>
       <trans-unit id="_weeksAgo.Text">
