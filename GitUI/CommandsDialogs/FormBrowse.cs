@@ -3559,22 +3559,34 @@ namespace GitUI.CommandsDialogs
                 startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator;
 
                 // Choose the console: bash from git with fallback to cmd
-                string sGitBashFromUsrBin = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), ".."), "git-bash.exe"); // Git bin dir is /usr/bin under git installdir, so go 2x up
-                string sGitBashFromBinOrCmd = "";/*This is not a console program and is not reliable yet, suppress for now.*/ //Path.Combine(Path.Combine(AppSettings.GitBinDir, ".."), "git-bash.exe"); // In case we're running off just /bin or /cmd
-                var gitDir = Path.GetDirectoryName(AppSettings.GitCommandValue);
-                string sJustBash = Path.Combine(gitDir, "bash.exe"); // Generic bash, should generally be in the git dir, less configured than the specific git-bash
-                string sJustSh = Path.Combine(gitDir, "sh.exe"); // Fallback to SH
-                startinfo.ConsoleProcessCommandLine = new[] { sGitBashFromUsrBin, sGitBashFromBinOrCmd, sJustBash, sJustSh }.Where(File.Exists).FirstOrDefault() ?? ConEmuConstants.DefaultConsoleCommandLine; // Choose whatever exists, or default CMD shell
-                if (startinfo.ConsoleProcessCommandLine != ConEmuConstants.DefaultConsoleCommandLine)
+                string sJustBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+                string sJustSh = "sh.exe"; // Fallback to SH
+
+                string cmdPath = new[] { sJustBash, sJustSh }.
+                    Select(shell =>
+                      {
+                          string shellPath;
+                          if (PathUtil.TryFindShellPath(shell, out shellPath))
+                              return shellPath;
+                          return null;
+                      }).
+                      Where(shellPath => shellPath != null).
+                      FirstOrDefault();
+
+                if (cmdPath == null)
                 {
-                    startinfo.ConsoleProcessCommandLine += " --login -i";
+                    startinfo.ConsoleProcessCommandLine = ConEmuConstants.DefaultConsoleCommandLine;
                 }
-                startinfo.ConsoleProcessCommandLine += " -new_console:P:\"<Solarized Light>\"";
+                else
+                {
+                    startinfo.ConsoleProcessCommandLine = cmdPath + " --login -i";
+                }
+                startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"<Solarized Light>\"";
 
                 // Set path to git in this window (actually, effective with CMD only)
-                if (!string.IsNullOrEmpty(AppSettings.GitCommand))
+                if (!string.IsNullOrEmpty(AppSettings.GitCommandValue))
                 {
-                    string dirGit = Path.GetDirectoryName(AppSettings.GitCommand);
+                    string dirGit = Path.GetDirectoryName(AppSettings.GitCommandValue);
                     if (!string.IsNullOrEmpty(dirGit))
                         startinfo.SetEnv("PATH", dirGit + ";" + "%PATH%");
                 }
