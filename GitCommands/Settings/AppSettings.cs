@@ -598,6 +598,12 @@ namespace GitCommands
             set { SetBool("autostash", value); }
         }
 
+        public static bool RebaseAutoStash
+        {
+            get { return GetBool("RebaseAutostash", false); }
+            set { SetBool("RebaseAutostash", value); }
+        }
+
         public static LocalChangesAction CheckoutBranchAction
         {
             get { return GetEnum("checkoutbranchaction", LocalChangesAction.DontChange); }
