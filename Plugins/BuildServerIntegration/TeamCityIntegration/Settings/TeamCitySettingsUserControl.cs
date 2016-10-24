@@ -59,7 +59,7 @@ namespace TeamCityIntegration.Settings
         {
             try
             {
-                var teamCityBuildChooser = new TeamCityBuildChooser(TeamCityServerUrl.Text);
+                var teamCityBuildChooser = new TeamCityBuildChooser(TeamCityServerUrl.Text, TeamCityProjectName.Text, TeamCityBuildIdFilter.Text);
                 var result = teamCityBuildChooser.ShowDialog(this);
 
                 if (result == DialogResult.OK)
