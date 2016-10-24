@@ -60,7 +60,7 @@ namespace TeamCityIntegration.Settings
                     Tag = new Node { IsProject = true, Loaded = false, Name = p, ParentProject = node.Name }
                 }).OrderBy(p => p.Name).ToArray());
 
-                treeNode.Nodes.AddRange(project.Builds.Select(b => new TreeNode(b.Id + ": " + b.Name)
+                treeNode.Nodes.AddRange(project.Builds.Select(b => new TreeNode(b.Name + " (" + b.Id + ")")
                 {
                     Tag = new Node { IsProject = false, Loaded = true, Name = b.Id, ParentProject = node.Name }
                 }).OrderBy(p => p.Name).ToArray());
