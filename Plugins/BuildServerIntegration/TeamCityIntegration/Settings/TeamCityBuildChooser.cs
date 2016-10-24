@@ -35,7 +35,7 @@ namespace TeamCityIntegration.Settings
             treeViewTeamCityProjects.Nodes.AddRange(projects.Select(p => new TreeNode(p)
             {
                 Tag = new Node {IsProject = true, Loaded = false, Name = p},
-            }).ToArray());
+            }).OrderBy(p=>p.Name).ToArray());
 
             foreach (TreeNode node in treeViewTeamCityProjects.Nodes)
             {
@@ -58,11 +58,12 @@ namespace TeamCityIntegration.Settings
                 treeNode.Nodes.AddRange(project.Projects.Select(p => new TreeNode(p)
                 {
                     Tag = new Node { IsProject = true, Loaded = false, Name = p, ParentProject = node.Name }
-                }).ToArray());
+                }).OrderBy(p => p.Name).ToArray());
+
                 treeNode.Nodes.AddRange(project.Builds.Select(b => new TreeNode(b.Id + ": " + b.Name)
                 {
                     Tag = new Node { IsProject = false, Loaded = true, Name = b.Id, ParentProject = node.Name }
-                }).ToArray());
+                }).OrderBy(p => p.Name).ToArray());
             }
         }
 
