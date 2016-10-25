@@ -643,7 +643,7 @@ namespace GitUI
             Revisions.Select();
         }
 
-        // Selects row cotaining revision given its revisionId
+        // Selects row containing revision given its revisionId
         // Returns whether the required revision was found and selected
         private bool InternalSetSelectedRevision(string revision)
         {
@@ -654,7 +654,7 @@ namespace GitUI
                 return true;
             }
             else
-            { 
+            {
                 Revisions.ClearSelection();
                 Revisions.Select();
                 return false;
@@ -662,7 +662,7 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Find specified revision in known to the grid revisions 
+        /// Find specified revision in known to the grid revisions
         /// </summary>
         /// <param name="revision">Revision to lookup</param>
         /// <returns>Index of the found revision or -1 if nothing was found</returns>
@@ -1694,7 +1694,8 @@ namespace GitUI
             {
                 if (revision.Body == null && !revision.IsArtificial())
                 {
-                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount, Module));
+                    var moduleRef = Module;
+                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount, moduleRef));
                 }
 
                 if (revision.Body != null)

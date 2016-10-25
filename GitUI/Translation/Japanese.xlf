@@ -70,6 +70,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
+        <target>コマンドダイアログでコンソール出力にコンソールエミュレータを利用</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -83,6 +84,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
         <source>Remember the ignore-white-space preference</source>
+        <target>ホワイトスペースの無視についての設定を記憶</target>
         
       </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
@@ -1430,6 +1432,7 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files...</source>
+        <target>ファイルのしぼり込み</target>
         
       </trans-unit>
       <trans-unit id="NoFiles.Text">
@@ -1463,6 +1466,7 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
         <source>Cherry pick selected lines</source>
+        <target>選択行をチェリーピック</target>
         
       </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
@@ -1949,6 +1953,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="AddToIgnore.Text">
         <source>Ignore</source>
+        <target>無視</target>
         
       </trans-unit>
       <trans-unit id="_matchingFilesString.Text">
@@ -2261,6 +2266,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>最初の親を表示</target>
         
       </trans-unit>
       <trans-unit id="SvnDcommitToolStripMenuItem.Text">
@@ -2375,22 +2381,27 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
         <source>Pull - fetch</source>
+        <target>Pull - fetch</target>
         
       </trans-unit>
       <trans-unit id="_pullFetchAll.Text">
         <source>Pull - fetch all</source>
+        <target>Pull - すべて fetch</target>
         
       </trans-unit>
       <trans-unit id="_pullMerge.Text">
         <source>Pull - merge</source>
+        <target>Pull - マージ</target>
         
       </trans-unit>
       <trans-unit id="_pullOpenDialog.Text">
         <source>Open pull dialog</source>
+        <target>pull ダイアログを開く</target>
         
       </trans-unit>
       <trans-unit id="_pullRebase.Text">
         <source>Pull - rebase</source>
+        <target>Pull - リベース</target>
         
       </trans-unit>
       <trans-unit id="_repositoryHostsToolStripMenuItem.Text">
@@ -2405,10 +2416,12 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_resetFileError.Text">
         <source>Exactly one revision must be selected. Abort.</source>
+        <target>リビジョンが一つだけ選択されていなければなりません。中断しました。</target>
         
       </trans-unit>
       <trans-unit id="_resetFileText.Text">
         <source>Are you sure you want to reset this file or directory?</source>
+        <target>本当にこのファイルまたはディレクトリをリセットしますか？</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
@@ -2438,6 +2451,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_superprojectModuleFormat.Text">
         <source>Superproject: {0}</source>
+        <target>親プロジェクト: {0}</target>
         
       </trans-unit>
       <trans-unit id="_topProjectModuleFormat.Text">
@@ -2551,6 +2565,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
         <source>Cherry pick file's changes</source>
+        <target>ファイルの変更をチェリーピック</target>
         
       </trans-unit>
       <trans-unit id="cherryPickToolStripMenuItem.Text">
@@ -2832,6 +2847,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
         <source>Pull - merge</source>
+        <target>Pull - マージ</target>
         
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -2915,6 +2931,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
         <source>Pull - rebase</source>
+        <target>Pull - リベース</target>
         
       </trans-unit>
       <trans-unit id="recentToolStripMenuItem.Text">
@@ -4338,10 +4355,12 @@ Do you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Compare to branch</source>
+        <target>ブランチと比較</target>
         
       </trans-unit>
       <trans-unit id="btnCompare.Text">
         <source>Compare</source>
+        <target>比較</target>
         
       </trans-unit>
     </body>
@@ -4661,6 +4680,7 @@ When you want to delete a not-fully merged branch, you can override this using t
       </trans-unit>
       <trans-unit id="headCommitGroup.Text">
         <source>Compare</source>
+        <target>比較</target>
         
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
@@ -4783,6 +4803,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>最初の親を表示</target>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -8627,6 +8648,7 @@ nActual command line: {0}</source>
       <trans-unit id="YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem.Text">
         <source>You have made changes to settings or rules.
 Would you like to save them?</source>
+        <target>設定や規則に変更を行ないました。変更を保存しますか？</target>
         
       </trans-unit>
     </body>
@@ -8951,6 +8973,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="IsMessageMultilineDataGridViewColumn.HeaderText">
         <source>IsMessageMultiline</source>
+        <target>IsMessageMultiline</target>
         
       </trans-unit>
       <trans-unit id="MessageDataGridViewColumn.HeaderText">
@@ -9089,18 +9112,22 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="compareToBaseToolStripMenuItem.Text">
         <source>Compare to BASE</source>
+        <target>BASE と比較</target>
         
       </trans-unit>
       <trans-unit id="compareToBranchToolStripMenuItem.Text">
         <source>Compare to branch</source>
+        <target>ブランチと比較</target>
         
       </trans-unit>
       <trans-unit id="compareToolStripMenuItem.Text">
         <source>Compare</source>
+        <target>比較</target>
         
       </trans-unit>
       <trans-unit id="compareWithCurrentBranchToolStripMenuItem.Text">
         <source>Compare with current branch</source>
+        <target>現在のブランチと比較</target>
         
       </trans-unit>
       <trans-unit id="copyToClipboardToolStripMenuItem.Text">
@@ -9145,6 +9172,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
         <source>Create a fixup commit</source>
+        <target>フィックスアップ コミットの作成</target>
         
       </trans-unit>
       <trans-unit id="getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text">
@@ -9251,6 +9279,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="showFirstParent.Text">
         <source>Show first parents</source>
+        <target>最初の親を表示</target>
         
       </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">
@@ -9260,6 +9289,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="showIdsToolStripMenuItem.Text">
         <source>Show SHA1</source>
+        <target>SHA1 を表示</target>
         
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">
@@ -9289,6 +9319,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
         <source>Create a squash commit</source>
+        <target>スカッシュ コミットの作成</target>
         
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
@@ -9347,6 +9378,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="RemoteBranchChx.Text">
         <source>Remote branch name</source>
+        <target>リモートブランチの名前</target>
         
       </trans-unit>
       <trans-unit id="Remove.Text">
@@ -9599,10 +9631,12 @@ Current Branch:
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item13">
         <source>Reset file changes..</source>
+        <target>ファイルの変更を元に戻す...</target>
         
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item14">
         <source>Revert</source>
+        <target>打ち消し</target>
         
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item15">

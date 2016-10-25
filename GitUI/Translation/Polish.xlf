@@ -17,7 +17,7 @@
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</source>
         <target>Git Extensions - Przeglądarka wizualna i rozszerzenie powłoki dla Git. 
 
-Ten program został stworzony, w nadziei, że będzie przydatny, lecz BEZ JAKIEJKOLWIEK GWARANCJI; nawet bez gwarancji PRZYDATNOŚCI DLA OKREŚLONEGO CELU.</target>
+Ten program jest rozpowszechniany, w nadziei, że będzie przydatny, lecz BEZ JAKIEJKOLWIEK GWARANCJI; nawet bez  GWARANCJI JAKOŚCI LUB RĘKOJMI WYRAŹNEJ, DOROZUMIANEJ LUB USTAWOWEJ, W TYM MIĘDZY INNYMI WSZELKIEJ DOROZUMIANEJ GWARANCJI WARTOŚCI HANDLOWEJ, ZADOWALAJĄCEJ JAKOŚCI, PRZYDATNOŚCI DO OKREŚLONEGO CELU I DOKŁADNOŚCI.</target>
         
       </trans-unit>
       <trans-unit id="thanksTo.Text">
@@ -61,6 +61,7 @@ Ten program został stworzony, w nadziei, że będzie przydatny, lecz BEZ JAKIEJ
       </trans-unit>
       <trans-unit id="chkAutoNormaliseBranchName.Text">
         <source>Auto normalise branch name</source>
+        <target>Automatycznie normalizuj nazwę gałęzi</target>
         
       </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
@@ -97,6 +98,7 @@ Ta akcja będzie wykonywana bez ostrzeżenia podczas przełączania gałęzi.</t
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Symbol to use:</source>
+        <target>Wykorzystywany symbol:</target>
         
       </trans-unit>
     </body>
@@ -848,6 +850,7 @@ Upewnij się, czy jest zainstalowany git (Git dla Windows lub cygwin) lub ustal 
       </trans-unit>
       <trans-unit id="chkAutocomplete.Text">
         <source>Provide auto-completion in commit dialog</source>
+        <target>Włącz funkcję automatycznego uzupełniania w oknie zatwierdzenia</target>
         
       </trans-unit>
       <trans-unit id="chkShowCommitAndPush.Text">
@@ -1451,6 +1454,7 @@ Chcesz go otworzyć?</target>
       </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files...</source>
+        <target>Filtruj pliki...</target>
         
       </trans-unit>
       <trans-unit id="NoFiles.Text">
@@ -2287,6 +2291,7 @@ do porównania:</target>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>Pokaż bezpośrednich rodziców</target>
         
       </trans-unit>
       <trans-unit id="SvnDcommitToolStripMenuItem.Text">
@@ -3411,16 +3416,17 @@ rewizję:</target>
       </trans-unit>
       <trans-unit id="buttonGotoCommit.Text">
         <source>Go to commit...</source>
-        <target>Przejdź do zatwierdzenia...</target>
+        <target>Szukaj...</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Find specific commit:</source>
-        <target>Znajdź zatwierdzenie:</target>
+        <target>Zatwierdzenie:</target>
         
       </trans-unit>
       <trans-unit id="labelParents.Text">
         <source>Parent(s):</source>
+        <target>Rodzice:</target>
         
       </trans-unit>
       <trans-unit id="linkLabelParent.Text">
@@ -3430,6 +3436,7 @@ rewizję:</target>
       </trans-unit>
       <trans-unit id="linkLabelParent2.Text">
         <source>sha parent 2</source>
+        <target>sha rodzica 2</target>
         
       </trans-unit>
     </body>
@@ -4167,6 +4174,7 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="showAssumeUnchangedFilesToolStripMenuItem.Text">
         <source>Show assumed-unchanged files</source>
+        <target>Pokaż pliki traktowane jako niezmieniane</target>
         
       </trans-unit>
       <trans-unit id="showIgnoredFilesToolStripMenuItem.Text">
@@ -4416,18 +4424,22 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="CheckoutAfterCreate.Text">
         <source>Checkout &amp;after create</source>
+        <target>&amp;Przełącz po stworzeniu</target>
         
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
         <source>Clear &amp;working directory and index</source>
+        <target>Wyczyść &amp;katalog roboczy i indeks</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>&amp;Create branch</source>
+        <target>S&amp;twórz gałąź</target>
         
       </trans-unit>
       <trans-unit id="Orphan.Text">
         <source>Create or&amp;phan</source>
+        <target>Stwórz sa&amp;motnika</target>
         
       </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
@@ -4452,10 +4464,12 @@ Chcesz kontynuować?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>&amp;Branch name</source>
+        <target>Nazwa &amp;gałęzi</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Create b&amp;ranch at this revision</source>
+        <target>Stwórz gałąź w tej &amp;rewizji</target>
         
       </trans-unit>
     </body>
@@ -4850,6 +4864,7 @@ Jeżeli nie masz pewności, zamknij to okno.</target>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>Pokaż bezpośrednich rodziców</target>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -5322,6 +5337,7 @@ _ReSharper*/</target>
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
         <source>Generate a custom gitignore</source>
+        <target>Utwórz własny gitignore</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
@@ -7494,6 +7510,7 @@ Chcesz go użyć?</target>
       </trans-unit>
       <trans-unit id="SimplifyByDecorationCheck.Text">
         <source>Simplify by decoration</source>
+        <target>Uprość dekoracje</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -9190,6 +9207,7 @@ To po prostu przełączy zatwierdzenie ustalone przez superprojekt na moduł zal
       </trans-unit>
       <trans-unit id="ToggleRevisionCardLayout.Text">
         <source>Change commit view layout</source>
+        <target>Zmień układ widoku zatwierdzenia</target>
         
       </trans-unit>
       <trans-unit id="_cannotHighlightSelectedBranch.Text">
@@ -9314,10 +9332,12 @@ To po prostu przełączy zatwierdzenie ustalone przez superprojekt na moduł zal
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
         <source>Create a fixup commit</source>
+        <target>Stwórz zatwierdzenie naprawcze</target>
         
       </trans-unit>
       <trans-unit id="getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text">
         <source>Get help on how to use these features</source>
+        <target>Dowiedz się jak korzystać z tych funkcji</target>
         
       </trans-unit>
       <trans-unit id="hashCopyToolStripMenuItem.Text">
@@ -9421,6 +9441,7 @@ Jeżeli to centralne repozytorium (nagie repozytorium - bez katalogu roboczego):
       </trans-unit>
       <trans-unit id="showFirstParent.Text">
         <source>Show first parents</source>
+        <target>Pokaż bezpośrednich rodziców</target>
         
       </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">
@@ -9430,6 +9451,7 @@ Jeżeli to centralne repozytorium (nagie repozytorium - bez katalogu roboczego):
       </trans-unit>
       <trans-unit id="showIdsToolStripMenuItem.Text">
         <source>Show SHA1</source>
+        <target>Pokaż SHA1</target>
         
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">
@@ -9459,6 +9481,7 @@ Jeżeli to centralne repozytorium (nagie repozytorium - bez katalogu roboczego):
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
         <source>Create a squash commit</source>
+        <target>Stwórz zatwierdzenie dołączające</target>
         
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
@@ -9964,6 +9987,10 @@ gdy wszystkie elementy są widoczne:</target>
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </source>
+        <target>OpenSSH jest narzędziem wiersza poleceń. PuTTY jest przyjaźniejszy w użyciu dla użytkowników Windows,
+ale wymaga klienta uwierzytelnienia PuTTy do pracy w tle.
+Gdy jest używane OpenSSH, będą wyświetlane okna wiersza poleceń!
+</target>
         
       </trans-unit>
     </body>

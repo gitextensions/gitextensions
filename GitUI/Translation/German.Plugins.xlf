@@ -32,6 +32,7 @@
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
+        <target>Bitte geben Sie den korrekten MSBuild Pfad in den Einstellungen des Plugin Dialogs ein und probieren Sie es erneut.</target>
         
       </trans-unit>
     </body>
@@ -40,6 +41,7 @@
     <body>
       <trans-unit id="AutoRefresh.Caption">
         <source>Refresh view after fetch</source>
+        <target>Ansicht neu laden nach Fetch</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
@@ -54,10 +56,12 @@
       </trans-unit>
       <trans-unit id="FetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target>Fetch alle x (Sekunden) ausführen - 0 zum abschalten</target>
         
       </trans-unit>
       <trans-unit id="GitCommand.Caption">
         <source>Arguments of git command to run</source>
+        <target>Parameter des Git Befehls zum Ausführen</target>
         
       </trans-unit>
     </body>
@@ -76,6 +80,7 @@
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
+        <target>Remote zu dem Tracking Branches erzeugt werden sollen</target>
         
       </trans-unit>
     </body>
@@ -93,6 +98,7 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
+        <target>Obsolete Branches löschen</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
@@ -112,6 +118,7 @@
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
+        <target>Löschen Remote Branches von</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
@@ -126,6 +133,7 @@
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
+        <target>Sind Sie sich sicher {0} ausgewählte Branches zu löschen?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
@@ -140,12 +148,16 @@
       </trans-unit>
       <trans-unit id="_chooseBrancesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
+        <target>Wählen Sie die Branches zur Löschung aus. Nur Branches die vollständig in '{0}' gemerged wurden, werden gelöscht.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
+        <target>GEFÄHRLICHE AKTION!
+Branches werden auf der Remote '{0}' gelöscht. Dies kann nicht rückgängig gemacht werden.
+Sind Sie sich sicher und wollen damit fortfahren?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -160,6 +172,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target>Nicht germergte Branches zu löschen resultiert in hängenden Commits. Mit Vorsicht verwenden!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -169,6 +182,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
+        <target>Drücken Sie '{0}' um nach Branches für die Löschung zu suchen.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -178,6 +192,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
+        <target>Wählen Sie Branches zur Löschung aus per Checkbox in der Spalte ''{0}.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -197,15 +212,17 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
+        <target>Schließe nicht gemergte Branches ein</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
-        <target>Lösche Zweige älter als x Tage</target>
+        <target>Lösche Branches älter als x Tage</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
+        <target>Lösche Branches die vollständig in den Branch gemerged wurden</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -225,6 +242,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
+        <target>Ohne Beachtung von Groß-/Kleinschreibung.</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
@@ -238,14 +256,17 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="DaysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
+        <target>Lösche obsolete Branches älter als x (Tage)</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
+        <target>Obsolete Branches löschen</target>
         
       </trans-unit>
       <trans-unit id="MergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
+        <target>Branch in dem alle Branches gemerged werden sollen</target>
         
       </trans-unit>
     </body>
@@ -294,6 +315,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
+        <target>Lokale Änderungen zurücksetzen bevor Dateien gelöscht werden. Wählen Sie die Daten zum Löschen aus. Force Push um die Daten auf dem Remote Repository zu ersetzen.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
@@ -562,7 +584,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
-        <target>Lade...</target>
+        <target>Lade..</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
@@ -607,18 +629,22 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0} Blank lines ({1})</source>
+        <target>{0} Leerzeilen ({1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0} Comment lines ({1})</source>
+        <target>{0} Kommentarzeilen ({1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0} Commits</source>
+        <target>{0} Commits</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0} Commits by {1}</source>
+        <target>{0} Commits von {1}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
@@ -628,6 +654,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0} Lines of code in {1} files ({2})</source>
+        <target>{0} Codezeilen in {1} Dateien ({2})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
@@ -637,10 +664,12 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0} Lines in designer files ({1})</source>
+        <target>{0} Zeilen in Designerdateien ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0} Lines of production code ({1})</source>
+        <target>{0} produktiver Code ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
@@ -650,6 +679,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0} Lines of test code ({1})</source>
+        <target>{0} Zeilen Testcode ({1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -659,6 +689,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
+        <target>Commits pro Mitwirkendem</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
@@ -677,6 +708,7 @@ defaultrebase=0</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
+        <target>Einfluss</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
@@ -877,7 +909,7 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
-        <target>Kommando:</target>
+        <target>Befehl:</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
@@ -902,12 +934,12 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
-        <target>About GitFlow</target>
+        <target>Über GitFlow</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
-        <target>Ergebnis vom ausgeführten GitFlow-Kommando:</target>
+        <target>Ergebnis des ausgeführten GitFlow-Befehls:</target>
         
       </trans-unit>
     </body>
@@ -934,6 +966,7 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
+        <target>Darstellung der Abhängigkeiten</target>
         
       </trans-unit>
     </body>
@@ -1207,48 +1240,61 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
+        <target>Commit Ausdruck &quot;To&quot; (einschließend):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
+        <target>Trenne Spalten mit Leerzeichen</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
+        <target>Die Zwischenablage wird HTML Code (Klartext) und HTML Formatierung enthalten.
+Diese kann in Programmen wie MS Word oder LibreOffice Writer eingefügt werden.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>Commit Ausdruck &quot;From&quot; (ausschließend):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
+        <target>git log Parameter:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
+        <target>{0} = von; {1} = zu</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
+        <target>Sortierung: Die aktuellsten Revisionen sind zuoberst.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
+        <target>Revisionszähler =</target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
+        <target>(Commit Ausdrücke können Commit Hahes,
+Branchnamen oder Tag-Namen sein.)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
+        <target>im Original</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
+        <target>Trenne Spalten mit Tabulatoren</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
@@ -1456,6 +1502,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
+        <target>Logge als Gast um den Build Report anzuzeigen</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">

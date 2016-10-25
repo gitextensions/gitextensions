@@ -1491,6 +1491,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj">
+      <Project>{1dc7d403-484b-43b4-b017-1356397a32cb}</Project>
+      <Name>ConEmuWinForms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Externals\Git.hub\Git.hub\Git.hub.csproj">
       <Project>{F50B1DBF-1C9F-4437-87EC-7ABA805CC446}</Project>
       <Name>Git.hub</Name>
@@ -1929,5 +1933,4 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <Import Project="..\packages\ConEmu.Core.16.7.10.0\Build\ConEmu.Core.Targets" Condition="Exists('..\packages\ConEmu.Core.16.7.10.0\Build\ConEmu.Core.Targets')" />
-  <Import Project="..\packages\ConEmu.Core.16.9.14.0\Build\ConEmu.Core.Targets" Condition="Exists('..\packages\ConEmu.Core.16.9.14.0\Build\ConEmu.Core.Targets')" />
 </Project>

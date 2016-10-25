@@ -41,6 +41,7 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
       </trans-unit>
       <trans-unit id="DiffViewerGB.Text">
         <source>Diff Viewer</source>
+        <target>Prohlížeč rozdílů</target>
         
       </trans-unit>
       <trans-unit id="GeneralGB.Text">
@@ -69,6 +70,7 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
+        <target>Používat Console Emulator pro výstup příkazové řádky v příkazových dialozích</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -93,6 +95,7 @@ Při získávání větve bude tato akce provedena bez varování.</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Symbol to use:</source>
+        <target>Symbol k použití:</target>
         
       </trans-unit>
     </body>
@@ -499,6 +502,8 @@ Prosím ujistěte se že je program kdiff3 nainstalován nebo nastavte cestu ru�
       <trans-unit id="_linuxToolsShNotFound.Text">
         <source>The path to linux tools (sh) could not be found automatically.
 Please make sure there are linux tools installed (through Git for Windows or cygwin) or set the correct path manually.</source>
+        <target>Cesta k linuxovým nástrojům (sh) nemohla být nalezena automaticky.
+Prosím ujistěte se že jsou linuxové nástroje nainstalovány (buď přes Git pro Windows nebo přes cygwin) nebo nastavte cestu ručně.</target>
         
       </trans-unit>
       <trans-unit id="_linuxToolsShNotFoundCaption.Text">
@@ -623,6 +628,7 @@ Zvolte &quot;ne&quot; pokud si sami chcete nastavit jiný nástroj.</target>
       <trans-unit id="_solveGitCommandFailed.Text">
         <source>The command to run git could not be determined automatically.
 Please make sure git (Git for Windows or cygwin) is installed or set the correct command manually.</source>
+        <target>Příkaz pro spuštění gitu nemohl být automaticky určen. Prosím ujistěte se že git (Git pro Windows nebo cygwin) je správně nainstalován nebo nastavte příkaz ručně.</target>
         
       </trans-unit>
       <trans-unit id="_solveGitCommandFailedCaption.Text">
@@ -840,6 +846,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkAutocomplete.Text">
         <source>Provide auto-completion in commit dialog</source>
+        <target>Poskytovat automatické doplňování v dialogu odevzdání</target>
         
       </trans-unit>
       <trans-unit id="chkShowCommitAndPush.Text">
@@ -2277,6 +2284,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>Zobrazit první rodiče</target>
         
       </trans-unit>
       <trans-unit id="SvnDcommitToolStripMenuItem.Text">
@@ -2461,6 +2469,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_superprojectModuleFormat.Text">
         <source>Superproject: {0}</source>
+        <target>Nadřazený projekt: {0}</target>
         
       </trans-unit>
       <trans-unit id="_topProjectModuleFormat.Text">
@@ -2927,6 +2936,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
         <source>Open pull dialog...</source>
+        <target>Otevřít dialog stažení ...</target>
         
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
@@ -3410,10 +3420,12 @@ revizi:</target>
       </trans-unit>
       <trans-unit id="linkLabelParent.Text">
         <source>sha parent 1</source>
+        <target>sha rodiče 1</target>
         
       </trans-unit>
       <trans-unit id="linkLabelParent2.Text">
         <source>sha parent 2</source>
+        <target>sha rodiče 2</target>
         
       </trans-unit>
     </body>
@@ -3602,6 +3614,7 @@ Chcete nyní otevřít nový repozitář &quot;{0}&quot;?</target>
       </trans-unit>
       <trans-unit id="cbDownloadFullHistory.Text">
         <source>Download full &amp;history</source>
+        <target>Stáhnout celou historii (&amp;H)</target>
         
       </trans-unit>
       <trans-unit id="cbIntializeAllSubmodules.Text">
@@ -3616,6 +3629,7 @@ Chcete nyní otevřít nový repozitář &quot;{0}&quot;?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Repository to &amp;clone:</source>
+        <target>Repozitář ke klonování (&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -4394,18 +4408,22 @@ Chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="CheckoutAfterCreate.Text">
         <source>Checkout &amp;after create</source>
+        <target>Po vytvoření přepnout (&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
         <source>Clear &amp;working directory and index</source>
+        <target>Vyčistit pracovní složku a index (&amp;W)</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>&amp;Create branch</source>
+        <target>Vytvořit větev (&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="Orphan.Text">
         <source>Create or&amp;phan</source>
+        <target>Vytvořit sirotka (&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
@@ -4430,10 +4448,12 @@ Chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>&amp;Branch name</source>
+        <target>Název větve (&amp;B)</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Create b&amp;ranch at this revision</source>
+        <target>Vytvořit větev na této revizi (&amp;R)</target>
         
       </trans-unit>
     </body>
@@ -4650,10 +4670,12 @@ Pokud chcete smazat plně nesloučenou větev, tak použijte volbu &quot;vynutit
       </trans-unit>
       <trans-unit id="anotherBranchTooltip.Text">
         <source>Select another branch</source>
+        <target>Vybrat jinou větev</target>
         
       </trans-unit>
       <trans-unit id="anotherCommitTooltip.Text">
         <source>Select another commit</source>
+        <target>Vybrat jiné odevzdání</target>
         
       </trans-unit>
       <trans-unit id="bLocalToolStripMenuItem.Text">
@@ -4823,6 +4845,7 @@ Pokud si nejste jisti, prostě zavřete toto okno.</target>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>Zobrazit první rodiče</target>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -5295,6 +5318,7 @@ _ReSharper*/</target>
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
         <source>Generate a custom gitignore</source>
+        <target>Vytvořit uživatelský gitignore</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
@@ -8635,10 +8659,12 @@ Would you like to have the filter modified so that it allowed for the full worki
       </trans-unit>
       <trans-unit id="EditsTheContentsOfTheGitInfoSparseCheckoutFile.Text">
         <source>Edits the contents of the “.git/info/sparse-checkout” file.</source>
+        <target>Upravit obsah souboru &quot;.git/info/sparse-checkout&quot;</target>
         
       </trans-unit>
       <trans-unit id="Enable.Text">
         <source>&amp;Enable</source>
+        <target>Povolit (&amp;E)</target>
         
       </trans-unit>
       <trans-unit id="HeaderDetailsText.Text">
@@ -8664,6 +8690,7 @@ nActual command line: {0}</source>
       </trans-unit>
       <trans-unit id="Save.Text">
         <source>&amp;Save</source>
+        <target>Uložit (&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="SaveFile.Text">
@@ -9344,6 +9371,7 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
       </trans-unit>
       <trans-unit id="showFirstParent.Text">
         <source>Show first parents</source>
+        <target>Zobrazit první rodiče</target>
         
       </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">

@@ -159,7 +159,7 @@ namespace GitUI
         {
             if (Plink)
             {
-                if (e.Text.StartsWith("If you trust this host, enter \"y\" to add the key to"))
+                if (e.Text.Contains("If you trust this host, enter \"y\" to add the key to"))
                 {
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
@@ -170,9 +170,10 @@ namespace GitUI
                         Module.RunExternalCmdShowConsole("cmd.exe", string.Format("/k \"\"{0}\" {1}\"", AppSettings.Plink, remoteUrl));
 
                         restart = true;
+                        Reset();
                     }
-
-                    KillGitCommand();
+                    else
+                        KillGitCommand();
                 }
             }
             base.DataReceived(sender, e);

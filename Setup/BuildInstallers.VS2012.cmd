@@ -17,6 +17,7 @@ set msbuildparams=/p:Configuration=Release /t:Rebuild /nologo /v:m
 %nuget% install ..\Plugins\BackgroundFetch\packages.config -OutputDirectory ..\packages -Source https://nuget.org/api/v2/
 %nuget% install ..\Plugins\BuildServerIntegration\TeamCityIntegration\packages.config -OutputDirectory ..\packages -Source https://nuget.org/api/v2/
 %nuget% install packages.config -OutputDirectory ..\packages -Source https://nuget.org/api/v2/
+%nuget% install ..\Externals\conemu-inside\ConEmuWinForms\packages.config -OutputDirectory ..\packages -Source https://nuget.org/api/v2/
 
 %msbuild% %project% /p:Platform="Any CPU" %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
