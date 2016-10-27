@@ -9,17 +9,17 @@ using GitCommands.Utils;
 
 namespace GitUI.UserControls
 {
-	/// <summary>
-	/// An output control which inserts a fully-functional console emulator window.
-	/// </summary>
-	public class ConsoleEmulatorOutputControl : ConsoleOutputControl
-	{
-		private int _nLastExitCode;
+    /// <summary>
+    /// An output control which inserts a fully-functional console emulator window.
+    /// </summary>
+    public class ConsoleEmulatorOutputControl : ConsoleOutputControl
+    {
+        private int _nLastExitCode;
 
         private Panel _panel;
         private ConEmuControl _terminal;
 
-		public ConsoleEmulatorOutputControl()
+        public ConsoleEmulatorOutputControl()
         {
             InitializeComponent();
         }
@@ -30,53 +30,67 @@ namespace GitUI.UserControls
         }
 
         public override int ExitCode
-		{
-			get
-			{
-				return _nLastExitCode;
-			}
-		}
+        {
+            get
+            {
+                return _nLastExitCode;
+            }
+        }
 
-		public override bool IsDisplayingFullProcessOutput
-		{
-			get
-			{
-				return true;
-			}
-		}
+        public override bool IsDisplayingFullProcessOutput
+        {
+            get
+            {
+                return true;
+            }
+        }
 
-		public static bool IsSupportedInThisEnvironment
-		{
-			get
-			{
-				return EnvUtils.RunningOnWindows(); // ConEmu only works in WinNT
-			}
-		}
+        public static bool IsSupportedInThisEnvironment
+        {
+            get
+            {
+                return EnvUtils.RunningOnWindows(); // ConEmu only works in WinNT
+            }
+        }
 
-		public override void AppendMessageFreeThreaded(string text)
-		{
-			ConEmuSession session = _terminal.RunningSession;
-			if(session != null)
-				session.WriteOutputText(text);
-		}
+        public override void AppendMessageFreeThreaded(string text)
+        {
+            ConEmuSession session = _terminal.RunningSession;
+            if(session != null)
+                session.WriteOutputText(text);
+        }
 
-		public override void KillProcess()
-		{
-			ConEmuSession session = _terminal.RunningSession;
-			if(session != null)
-				session.SendControlCAsync();
-		}
+        public override void KillProcess()
+        {
+            KillProcess(_terminal);
+        }
+
+        private static void KillProcess(ConEmuControl terminal)
+        {
+            ConEmuSession session = terminal.RunningSession;
+            if (session != null)
+                session.SendControlCAsync();
+        }
 
         public override void Reset()
         {
-            if (_terminal != null)
+            ConEmuControl oldTerminal = _terminal;
+
+            _terminal = new ConEmuControl()
             {
-                KillProcess();
-                _panel.Controls.Remove(_terminal);
-                _terminal.Dispose();
+                Dock = DockStyle.Fill,
+                AutoStartInfo = null, /* don't spawn terminal until we have gotten the command */
+                IsStatusbarVisible = false
+            };
+
+            if (oldTerminal != null)
+            {
+                KillProcess(oldTerminal);
+                _panel.Controls.Remove(oldTerminal);
+                oldTerminal.Dispose();
             }
 
-            _panel.Controls.Add(_terminal = new ConEmuControl() { Dock = DockStyle.Fill, AutoStartInfo = null /* don't spawn terminal until we have gotten the command */});
+            _panel.Controls.Add(_terminal);
         }
 
         protected override void Dispose(bool disposing)
@@ -97,30 +111,29 @@ namespace GitUI.UserControls
                 cmdl.Append(" ");
             }
             cmdl.Append(arguments /* expecting to be already escaped */);
-            cmdl.Append(" -new_console:P:\"<Solarized Light>\"");
 
             var startinfo = new ConEmuStartInfo();
-			startinfo.ConsoleProcessCommandLine = cmdl.ToString();
-			startinfo.StartupDirectory = workdir;
-			startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
-			startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) => FireDataReceived(new TextEventArgs(args.GetText(GitModule.SystemEncoding)));
-			startinfo.ConsoleProcessExitedEventSink = (sender, args) =>
-			{
-				_nLastExitCode = args.ExitCode;
-				FireProcessExited();
-			};
+            startinfo.ConsoleProcessCommandLine = cmdl.ToString();
+            startinfo.ConsoleProcessExtraArgs = " -cur_console:P:\"<Solarized Light>\"";
+            startinfo.StartupDirectory = workdir;
+            startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
+            startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) => FireDataReceived(new TextEventArgs(args.GetText(GitModule.SystemEncoding)));
+            startinfo.ConsoleProcessExitedEventSink = (sender, args) =>
+            {
+                _nLastExitCode = args.ExitCode;
+                FireProcessExited();
+            };
 
             startinfo.ConsoleEmulatorClosedEventSink = (s, e) =>
                 {
-                    if (!(s as ConEmuSession).IsConsoleProcessExited
-                        && s == _terminal.RunningSession)
+                    if (s == _terminal.RunningSession)
                     {
                         FireTerminated();
                     }
                 };
-			startinfo.IsEchoingConsoleCommandLine = true;
+            startinfo.IsEchoingConsoleCommandLine = true;
 
-			_terminal.Start(startinfo);
-		}
-	}
+            _terminal.Start(startinfo);
+        }
+    }
 }

@@ -1,8 +1,17 @@
 
 Changelog
 =========
-### Version 2.49RC1-57dc6ee (no due date)
+### Version 2.49RC2 (22 October 2016)
+* Updated Git for Windows to version 2.10.1. PR #3353
+* Updated Putty to version 0.67
+* Fixed issue #3356, #3370, #3357: ConEmu integration issues
+* Fixed issue #2532: Fix encoding of gitext.sh
+* Fixed issue #3364: Prevent crash when encountering a 'tag' in 'recover lost objects' form
+* Fixed issue #3365: Exception when search 'diff contains' has a special character
+
+### Version 2.49RC1 (12 October 2016)
 * Updated Git for Windows to version 2.10.0
+* KDiff3 rolled back to version 0.9.97
 * VSIX extension for VS2015. PR #2885, #3331
 * ConEmu Console Emulator Control for Running Git Commands in the Real Terminal. PR #3152
 * Highlighting of authored commits. PR #2672
@@ -22,6 +31,7 @@ Changelog
 * Added preset for VisualStudio Diff Tool. PR #3034
 * Polish translation and dictionary added
 * Czech translation added
+* Disabled "Traditional Chinese" translation
 * Romanian dictionary added. PR #2979
 
 

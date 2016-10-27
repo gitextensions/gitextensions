@@ -112,7 +112,7 @@ namespace GitUI.UserControls
                         //The process is exited already, but this command waits also until all output is received.
                         //Only WaitForExit when someone is connected to the exited event. For some reason a
                         //null reference is thrown sometimes when staging/unstaging in the commit dialog when
-                        //we wait for exit, probably a timing issue... 
+                        //we wait for exit, probably a timing issue...
                         try
                         {
                             _process.WaitForExit();

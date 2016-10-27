@@ -7,3 +7,6 @@
 [submodule "Externals/Git.hub"]
 	path = Externals/Git.hub
 	url = git://github.com/gitextensions/Git.hub.git
+[submodule "Externals/conemu-inside"]
+	path = Externals/conemu-inside
+	url = git://github.com/gitextensions/conemu-inside.git
