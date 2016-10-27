@@ -174,6 +174,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
 
+            toolPanel.SplitterDistance = ToolStrip.PreferredSize.Height;
+
             // set tab page images
             {
                 var imageList = new ImageList();
