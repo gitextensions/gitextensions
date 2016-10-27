@@ -25,9 +25,9 @@ namespace TeamCityIntegration
 
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class TeamCityIntegrationMetadata : BuildServerAdapterMetadataAttribute
+    public class TeamCityIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
     {
-        public TeamCityIntegrationMetadata(string buildServerType)
+        public TeamCityIntegrationMetadataAttribute(string buildServerType)
             : base(buildServerType)
         {
         }
@@ -56,7 +56,7 @@ namespace TeamCityIntegration
 
         private string httpClientHostSuffix;
 
-        private List<Task<IEnumerable<string>>> getBuildTypesTask = new List<Task<IEnumerable<string>>>();
+        private readonly List<Task<IEnumerable<string>>> getBuildTypesTask = new List<Task<IEnumerable<string>>>();
 
         private CookieContainer _teamCityNtlmAuthCookie;
 
@@ -108,9 +108,7 @@ namespace TeamCityIntegration
 
             if (!string.IsNullOrEmpty(HostName))
             {
-                CreateNewHttpClient(HostName);
-                UpdateHttpClientOptionsGuestAuth();
-                InitializeHttpClient(hostName, () => buildServerWatcher.GetBuildServerCredentials(this, true));
+                InitializeHttpClient(HostName);
                 if (ProjectNames.Length > 0)
                 {
                     getBuildTypesTask.Clear();
@@ -128,22 +126,10 @@ namespace TeamCityIntegration
             }
         }
 
-        public void InitializeHttpClient(string hostName, Func<IBuildServerCredentials> getBuildServerCredentials = null)
+        public void InitializeHttpClient(string hostname)
         {
-            SetHttpClient(hostName);
-            UpdateHttpClientOptions(getBuildServerCredentials != null ? getBuildServerCredentials() : null);
-        }
-
-        private void SetHttpClient(string hostName)
-        {
-            httpClient = new HttpClient
-            {
-                Timeout = TimeSpan.FromMinutes(2),
-                BaseAddress = hostName.Contains("://")
-                    ? new Uri(hostName, UriKind.Absolute)
-                    : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
-            };
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
+            CreateNewHttpClient(hostname);
+            UpdateHttpClientOptionsGuestAuth();
         }
 
         private void CreateNewHttpClient(string hostName)
@@ -467,8 +453,8 @@ namespace TeamCityIntegration
                             return XDocument.Load(responseStream);
                         }
                     },
-                cancellationToken, 
-                TaskContinuationOptions.AttachedToParent, 
+                cancellationToken,
+                TaskContinuationOptions.AttachedToParent,
                 TaskScheduler.Current);
         }
 
