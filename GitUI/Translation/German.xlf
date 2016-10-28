@@ -3225,7 +3225,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
       </trans-unit>
       <trans-unit id="_createBranch.Text">
         <source>Create local branch with the name:</source>
-        <target>Erzeuge Lokalen Branch mit dem Namen:</target>
+        <target>Erzeuge Lokalen Branch mit Namen:</target>
         
       </trans-unit>
       <trans-unit id="_customBranchNameIsEmpty.Text">
@@ -3289,7 +3289,7 @@ Gültigen Branch Namen eingeben oder vordefinierten Wert auswählen.</target>
       </trans-unit>
       <trans-unit id="rbResetBranch.Text">
         <source>Reset local branch with the name:</source>
-        <target>Zurücksetzen des lokalen Branches mit dem Namen:</target>
+        <target>Zurücksetzen des lokalen Branches mit Namen:</target>
         
       </trans-unit>
       <trans-unit id="rbStash.Text">
@@ -3318,7 +3318,7 @@ Gültigen Branch Namen eingeben oder vordefinierten Wert auswählen.</target>
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBox.Text">
         <source>Select 1 revision to checkout.</source>
-        <target>Wählen Sie eine Revision aus, die Sie auschecken möchten.</target>
+        <target>1 Revision zum Auschecken wählen.</target>
         
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBoxCaption.Text">
@@ -3337,12 +3337,12 @@ Gültigen Branch Namen eingeben oder vordefinierten Wert auswählen.</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Cherry pick commit</source>
-        <target>Cherry Pick</target>
+        <target>Cherry Pick Commit</target>
         
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
         <source>Automatically create a commit</source>
-        <target>Automatisch einen Commit erzeugen, wenn keine Merge-Konflikte vorliegen</target>
+        <target>Automatisch einen Commit erzeugen</target>
         
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
@@ -3399,7 +3399,7 @@ Gültigen Branch Namen eingeben oder vordefinierten Wert auswählen.</target>
         <source>Choose another
 revision:</source>
         <target>Andere Revision
-auswählen</target>
+auswählen:</target>
         
       </trans-unit>
     </body>
@@ -3457,7 +3457,7 @@ auswählen</target>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>You can change the language at any time in the settings dialog</source>
-        <target>Sie können die Sprache jederzeit bei den Einstellugen ändern</target>
+        <target>Sie können die Sprache jederzeit in den Einstellugen ändern</target>
         
       </trans-unit>
     </body>
@@ -3516,7 +3516,7 @@ auswählen</target>
       </trans-unit>
       <trans-unit id="checkBoxPathFilter.Text">
         <source>Affect the following path(s) only:</source>
-        <target>Nur die folgenden Pfade einschliessen:</target>
+        <target>Nur folgende(n) Pfad(e) einschließen:</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -3565,7 +3565,7 @@ auswählen</target>
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Clone</source>
-        <target>Jetzt klonen</target>
+        <target>Klonen</target>
         
       </trans-unit>
       <trans-unit id="Personal.Text">
@@ -3575,17 +3575,17 @@ auswählen</target>
       </trans-unit>
       <trans-unit id="PersonalRepository.Text">
         <source>&amp;Personal repository</source>
-        <target>Privates Repository</target>
+        <target>&amp;Privates Repository</target>
         
       </trans-unit>
       <trans-unit id="ToBrowse.Text">
         <source>B&amp;rowse</source>
-        <target>Durchsuchen</target>
+        <target>Du&amp;rchsuchen</target>
         
       </trans-unit>
       <trans-unit id="_branchDefaultRemoteHead.Text">
         <source>(default: remote HEAD)</source>
-        <target>(Standard: remote HEAD)</target>
+        <target>(Standard: Remote HEAD)</target>
         
       </trans-unit>
       <trans-unit id="_branchNone.Text">
@@ -3624,7 +3624,7 @@ Wollen Sie das neue Repository &quot;{0}&quot; jetzt öffnen?</target>
       </trans-unit>
       <trans-unit id="brachLabel.Text">
         <source>&amp;Branch:</source>
-        <target>Branch</target>
+        <target>&amp;Branch:</target>
         
       </trans-unit>
       <trans-unit id="cbDownloadFullHistory.Text">
@@ -3639,22 +3639,22 @@ Wollen Sie das neue Repository &quot;{0}&quot; jetzt öffnen?</target>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Repository type</source>
-        <target>Art des Repositorys</target>
+        <target>Repository Typ</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Repository to &amp;clone:</source>
-        <target>Zu &amp;klonendes Repository</target>
+        <target>Zu &amp;klonendes Repository:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>&amp;Destination:</source>
-        <target>Ziel</target>
+        <target>&amp;Ziel</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>&amp;Subdirectory to create:</source>
-        <target>Zu erstellendes &amp;Unterverzeichnis</target>
+        <target>Zu erstellendes &amp;Unterverzeichnis:</target>
         
       </trans-unit>
     </body>
@@ -3663,14 +3663,14 @@ Wollen Sie das neue Repository &quot;{0}&quot; jetzt öffnen?</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Commandline usage</source>
-        <target>Verwendung der Kommandozeile</target>
+        <target>Befehlszeilenparameter</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Supported commandline arguments for
 gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target>Unterstützte Kommandozeilenparameter für
-gitex.cmd / gitex (befindet sich im gleichen Ordner wie GitExtensions.exe):</target>
+gitex.cmd / gitex (befinden sich im gleichen Ordner wie GitExtensions.exe):</target>
         
       </trans-unit>
     </body>
@@ -3684,7 +3684,7 @@ gitex.cmd / gitex (befindet sich im gleichen Ordner wie GitExtensions.exe):</tar
       </trans-unit>
       <trans-unit id="Amend.Text">
         <source>&amp;Amend Commit</source>
-        <target>Letzen Commit anpassen</target>
+        <target>Letzen Commit &amp;anpassen</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -3699,7 +3699,7 @@ gitex.cmd / gitex (befindet sich im gleichen Ordner wie GitExtensions.exe):</tar
       </trans-unit>
       <trans-unit id="CommitAndPush.Text">
         <source>C&amp;ommit &amp;&amp; push</source>
-        <target>Committen &amp;&amp; &amp;Pushen</target>
+        <target>C&amp;ommitten &amp;&amp; Pushen</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -3720,14 +3720,14 @@ gitex.cmd / gitex (befindet sich im gleichen Ordner wie GitExtensions.exe):</tar
       <trans-unit id="SolveMergeconflicts.Text">
         <source>There are unresolved mergeconflicts
 </source>
-        <target>Es liegen unaufgelöste Merge-Konflikte vor
+        <target>Es liegen ungelöste Mergekonflikte vor
 
 </target>
         
       </trans-unit>
       <trans-unit id="StageInSuperproject.Text">
         <source>Stage in Superproject</source>
-        <target>Im Superprojekt stagen</target>
+        <target>Im übergeordneten Projekt stagen</target>
         
       </trans-unit>
       <trans-unit id="_amendCommit.Text">
