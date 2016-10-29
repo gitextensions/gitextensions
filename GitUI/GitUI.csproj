@@ -1073,6 +1073,9 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\AutoLayoutSettingsPage.resx">
       <DependentUpon>AutoLayoutSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.resx">
+      <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.resx">
       <DependentUpon>RepoDistSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
