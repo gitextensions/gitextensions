@@ -2893,7 +2893,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="manageRemoteRepositoriesToolStripMenuItem1.Text">
         <source>Remote repositories...</source>
-        <target>Внешнее репозиторий...</target>
+        <target>Внешние репозитории...</target>
         
       </trans-unit>
       <trans-unit id="manageSubmodulesToolStripMenuItem.Text">
@@ -3018,7 +3018,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="remoteToolStripMenuItem.Text">
         <source>Remote</source>
-        <target>Внешнее репозиторий</target>
+        <target>Внешний репозиторий</target>
         
       </trans-unit>
       <trans-unit id="repoSettingsToolStripMenuItem.Text">
@@ -5801,7 +5801,7 @@ ancestor tree.</source>
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>Remote:</source>
-        <target>Внешнее репозиторий:</target>
+        <target>Внешний репозиторий:</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
@@ -5908,7 +5908,7 @@ ancestor tree.</source>
       </trans-unit>
       <trans-unit id="PullFromUrl.Text">
         <source>Url</source>
-        <target>Url</target>
+        <target>Ссылка</target>
         
       </trans-unit>
       <trans-unit id="ReachableTags.Text">
@@ -6205,7 +6205,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="PushToUrl.Text">
         <source>Url</source>
-        <target>Url</target>
+        <target>Ссылка</target>
         
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item0">
@@ -6671,7 +6671,7 @@ Nothing to rebase.</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Remote repositories</source>
-        <target>Внешнее репозиторий</target>
+        <target>Внешние репозитории</target>
         
       </trans-unit>
       <trans-unit id="BName.HeaderText">
@@ -6709,7 +6709,7 @@ Nothing to rebase.</source>
         <target>Удалить несуществующие ветки</target>
         
       </trans-unit>
-      <trans-unit id="PuTTYSSH.Text">
+      <trans-unit id="lblMgtPuttyPanelHeader.Text">
         <source>PuTTY SSH</source>
         <target>PuTTY SSH</target>
         
@@ -6726,7 +6726,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
         <source>Save</source>
-        <target>Сохранить</target>
+        <target>Сохранить изменения</target>
         
       </trans-unit>
       <trans-unit id="SshBrowse.Text">
@@ -6744,19 +6744,19 @@ Nothing to rebase.</source>
         <target>Обновить внешние ветки</target>
         
       </trans-unit>
-      <trans-unit id="_hintDelete.Text">
-        <source>Delete</source>
-        <target>Удалить</target>
+      <trans-unit id="_gitMessage.Text">
+        <source>Message</source>
+        <target>Сообщение</target>
         
       </trans-unit>
       <trans-unit id="_labelUrlAsFetch.Text">
         <source>Fetch Url</source>
-        <target>Забрать по Url</target>
+        <target>Забирать по ссылке</target>
         
       </trans-unit>
       <trans-unit id="_labelUrlAsFetchPush.Text">
         <source>Url</source>
-        <target>Url</target>
+        <target>Ссылка</target>
         
       </trans-unit>
       <trans-unit id="_questionAutoPullBehaviour.Text">
@@ -6768,12 +6768,12 @@ Do you want to automatically configure the default push and pull behavior for th
       </trans-unit>
       <trans-unit id="_questionAutoPullBehaviourCaption.Text">
         <source>New remote</source>
-        <target>Новое внешнее репозиторий</target>
+        <target>Новый внешний репозиторий</target>
         
       </trans-unit>
       <trans-unit id="_questionDeleteRemote.Text">
         <source>Are you sure you want to delete this remote?</source>
-        <target>Вы уверены, что хотите удалить это внешнее репозиторий?</target>
+        <target>Вы уверены, что хотите удалить это внешний репозиторий?</target>
         
       </trans-unit>
       <trans-unit id="_questionDeleteRemoteCaption.Text">
@@ -6798,6 +6798,14 @@ Value has been reset to empty value.</source>
         <target>Закрытый ключ (*.ppk)</target>
         
       </trans-unit>
+      <trans-unit id="_gbMgtPanelHeaderNew.Text">
+        <source>Create new remote</source>
+        <target>Создать новый внешний репозиторий</target>
+      </trans-unit>
+      <trans-unit id="_gbMgtPanelHeaderEdit.Text">
+        <source>Edit remote details</source>
+        <target>Изменить внешний репозиторий</target>
+      </trans-unit>
       <trans-unit id="_warningNoKeyEntered.Text">
         <source>No SSH key file entered</source>
         <target>Файл ключа SSH не введен</target>
@@ -6810,27 +6818,17 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="_warningValidRemoteCaption.Text">
         <source>Url needed</source>
-        <target>Необходим Url</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonClose.Text">
-        <source>Close</source>
-        <target>Закрыть</target>
+        <target>Необходима ссылка</target>
         
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
         <source>Separate Push Url</source>
-        <target>Отдельный Url для отправки</target>
+        <target>Отдельная ссылка для отправки</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewTextBoxColumn1.HeaderText">
         <source>Name</source>
         <target>Имя</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Details</source>
-        <target>Подробно</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -6840,7 +6838,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Url</source>
-        <target>Url</target>
+        <target>Ссылка</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -6865,7 +6863,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="labelPushUrl.Text">
         <source>Push Url</source>
-        <target>Url отправки</target>
+        <target>Отправлять по ссылке</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -6875,7 +6873,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Remote repositories</source>
-        <target>Внешние репозитория</target>
+        <target>Внешние репозитории</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
@@ -7815,7 +7813,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
 Это вызывает зависание процесса и поэтому он автоматически останавливается.
 
 При открытии соединения отдельно от Git и GitExtensions, отпечаток пальцев хоста может быть зарегистрирован.
-Кроме того вы можете также вручную добавить отпечаток хоста или запустить &quot;Проверить соединение&quot; из диалогового окна &quot;Внешние репозитория&quot;.
+Кроме того вы можете также вручную добавить отпечаток хоста или запустить &quot;Проверить соединение&quot; из диалогового окна &quot;Внешние репозитории&quot;.
 
 Вы хотите зарегистрировать отпечаток хоста и перезапустить процесс?</target>
         

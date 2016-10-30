@@ -15,6 +15,13 @@ namespace ResourceManager
         /// <summary>Creates a new <see cref="GitExtensionsFormBase"/> indicating position restore.</summary>
         public GitExtensionsFormBase()
         {
+            this.SetStyle(
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.UserPaint |
+                ControlStyles.DoubleBuffer |
+                ControlStyles.OptimizedDoubleBuffer,
+                true);
+
             SetFont();
 
             ShowInTaskbar = Application.OpenForms.Count <= 0;
@@ -22,11 +29,23 @@ namespace ResourceManager
             Load += GitExtensionsFormLoad;
         }
 
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;    // Turn on WS_EX_COMPOSITED
+                return cp;
+            }
+        }
+
         /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>
         protected bool HotkeysEnabled { get; set; }
 
         /// <summary>Gets or sets the hotkeys</summary>
         protected IEnumerable<HotkeyCommand> Hotkeys { get; set; }
+
 
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
