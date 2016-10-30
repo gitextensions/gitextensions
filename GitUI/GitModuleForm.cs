@@ -31,7 +31,7 @@ namespace GitUI
             }
         }
 
-        /// <summary>true if <see cref="UICommands"/> has been initialzed.</summary>
+        /// <summary>true if <see cref="UICommands"/> has been initialized.</summary>
         public bool IsUICommandsInitialized
         {
             get

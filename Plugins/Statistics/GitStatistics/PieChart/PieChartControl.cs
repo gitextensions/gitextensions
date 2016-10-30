@@ -145,7 +145,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Sets pie slice reative height.
+        ///   Sets pie slice relative height.
         /// </summary>
         public void SetSliceRelativeHeight(float value)
         {

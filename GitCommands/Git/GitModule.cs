@@ -330,7 +330,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Encoding for commit header (message, notes, author, commiter, emails)
+        /// Encoding for commit header (message, notes, author, committer, emails)
         /// </summary>
         public Encoding LogOutputEncoding
         {
