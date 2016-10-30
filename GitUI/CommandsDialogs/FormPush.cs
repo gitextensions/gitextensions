@@ -10,6 +10,7 @@ using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Script;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -24,7 +25,7 @@ namespace GitUI.CommandsDialogs
         private string _selectedBranch;
         private string _selectedBranchRemote;
         private string _selectedRemoteBranchName;
-        private IList<GitRef> _gitRefs;
+        private IList<IGitRef> _gitRefs;
 
         public bool ErrorOccurred { get; private set; }
 
@@ -770,12 +771,12 @@ namespace GitUI.CommandsDialogs
             LoadMultiBranchViewData(remote, localHeads);
         }
 
-        private void LoadMultiBranchViewData(string remote, IEnumerable<GitRef> localHeads)
+        private void LoadMultiBranchViewData(string remote, IEnumerable<IGitRef> localHeads)
         {
             Cursor = Cursors.AppStarting;
             try
             {
-                IEnumerable<GitRef> remoteHeads = null;
+                IEnumerable<IGitRef> remoteHeads = null;
                 if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.ValueOrDefault)
                 {
                     EnsurePageant(remote);
@@ -824,7 +825,7 @@ namespace GitUI.CommandsDialogs
             return cmdOutput;
         }
 
-        private void ProcessHeads(string remote, IEnumerable<GitRef> localHeads, IEnumerable<GitRef> remoteHeads)
+        private void ProcessHeads(string remote, IEnumerable<IGitRef> localHeads, IEnumerable<IGitRef> remoteHeads)
         {
             var remoteBranches = remoteHeads.ToHashSet(h => h.LocalName);
             // Add all the local branches.
@@ -852,7 +853,7 @@ namespace GitUI.CommandsDialogs
             // Offer to delete all the left over remote branches.
             foreach (var remoteHead in remoteHeads)
             {
-                GitRef head = remoteHead;
+                var head = remoteHead;
                 if (localHeads.All(h => h.Name != head.LocalName))
                 {
                     DataRow row = _branchTable.NewRow();

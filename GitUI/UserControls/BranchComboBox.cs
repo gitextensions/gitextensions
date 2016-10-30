@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI
@@ -20,8 +21,8 @@ namespace GitUI
             branches.DisplayMember = "Name";
         }
 
-        private IList<GitRef> _branchesToSelect;
-        public IList<GitRef> BranchesToSelect
+        private IList<IGitRef> _branchesToSelect;
+        public IList<IGitRef> BranchesToSelect
         {
             get
             {
@@ -40,11 +41,11 @@ namespace GitUI
                 branches.Items.AddRange(_branchesToSelect.ToArray());
         }
 
-        public IEnumerable<GitRef> GetSelectedBranches()
+        public IEnumerable<IGitRef> GetSelectedBranches()
         {
             foreach (string branch in branches.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                GitRef gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
+                var gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
                 if (gitHead == null)
                     MessageBox.Show(string.Format(_branchCheckoutError.Text, branch));
                 else
@@ -69,7 +70,7 @@ namespace GitUI
         {
             using (FormSelectMultipleBranches formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect))
             {
-                foreach (GitRef branch in GetSelectedBranches())
+                foreach (var branch in GetSelectedBranches())
                     formSelectMultipleBranches.SelectBranch(branch.Name);
                 formSelectMultipleBranches.ShowDialog(this);
                 string branchesText = string.Empty;

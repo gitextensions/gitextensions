@@ -11,8 +11,8 @@ using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using ResourceManager;
-using Settings = GitCommands.AppSettings;
 
 namespace GitUI.CommandsDialogs
 {
@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         public bool ErrorOccurred { get; private set; }
-        private IList<GitRef> _heads;
+        private IList<IGitRef> _heads;
         private string _branch;
         private const string AllRemotes = "[ All ]";
 
@@ -106,17 +106,17 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
+            helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
 
             if (aCommands != null)
                 Init(defaultRemote);
 
-            Merge.Checked = Settings.FormPullAction == Settings.PullAction.Merge;
-            Rebase.Checked = Settings.FormPullAction == Settings.PullAction.Rebase;
-            Fetch.Checked = Settings.FormPullAction == Settings.PullAction.Fetch;
+            Merge.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Merge;
+            Rebase.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Rebase;
+            Fetch.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Fetch;
             localBranch.Enabled = Fetch.Checked;
-            AutoStash.Checked = Settings.AutoStash;
+            AutoStash.Checked = AppSettings.AutoStash;
 
             ErrorOccurred = false;
 
@@ -185,7 +185,7 @@ namespace GitUI.CommandsDialogs
 
         private void MergetoolClick(object sender, EventArgs e)
         {
-            Module.RunExternalCmdShowConsole(Settings.GitCommand, "mergetool");
+            Module.RunExternalCmdShowConsole(AppSettings.GitCommand, "mergetool");
 
             if (MessageBox.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
                                 MessageBoxButtons.YesNo) != DialogResult.Yes)
@@ -221,7 +221,7 @@ namespace GitUI.CommandsDialogs
                     // It only returns the heads that are already known to the repository. This
                     // doesn't return heads that are new on the server. This can be updated using
                     // update branch info in the manage remotes dialog.
-                    _heads = new List<GitRef>();
+                    _heads = new List<IGitRef>();
                     foreach (var head in Module.GetRefs(true, true))
                     {
                         if (!head.IsRemote ||
@@ -294,7 +294,7 @@ namespace GitUI.CommandsDialogs
             if (ErrorOccurred || Module.InTheMiddleOfAction())
                 return;
 
-            bool? messageBoxResult = Settings.AutoPopStashAfterPull;
+            bool? messageBoxResult = AppSettings.AutoPopStashAfterPull;
             if (messageBoxResult == null)
             {
                 DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
@@ -310,7 +310,7 @@ namespace GitUI.CommandsDialogs
                     PSTaskDialog.eSysIcons.Question);
                 messageBoxResult = (res == DialogResult.Yes);
                 if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                    Settings.AutoPopStashAfterPull = messageBoxResult;
+                    AppSettings.AutoPopStashAfterPull = messageBoxResult;
             }
             if ((bool) messageBoxResult)
             {
@@ -406,7 +406,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            if (!Fetch.Checked && Branches.Text == "*")
+            if (!Fetch.Checked && Branches.Text == @"*")
             {
                 MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text);
                 return false;
@@ -645,13 +645,13 @@ namespace GitUI.CommandsDialogs
         private void UpdateSettingsDuringPull()
         {
             if (Merge.Checked)
-                Settings.FormPullAction = Settings.PullAction.Merge;
+                AppSettings.FormPullAction = AppSettings.PullAction.Merge;
             if (Rebase.Checked)
-                Settings.FormPullAction = Settings.PullAction.Rebase;
+                AppSettings.FormPullAction = AppSettings.PullAction.Rebase;
             if (Fetch.Checked)
-                Settings.FormPullAction = Settings.PullAction.Fetch;
+                AppSettings.FormPullAction = AppSettings.PullAction.Fetch;
 
-            Settings.AutoStash = AutoStash.Checked;
+            AppSettings.AutoStash = AutoStash.Checked;
         }
 
         private IEnumerable<string> GetSelectedRemotes()
@@ -685,7 +685,7 @@ namespace GitUI.CommandsDialogs
             if (!GitCommandHelpers.Plink())
                 return;
 
-            if (File.Exists(Settings.Pageant))
+            if (File.Exists(AppSettings.Pageant))
             {
                 HashSet<string> files = new HashSet<string>(PathUtil.CreatePathEqualityComparer());
                 foreach (var remote in GetSelectedRemotes())

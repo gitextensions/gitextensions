@@ -28,16 +28,16 @@ namespace GitCommands
         public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
         public static string ProductVersion { get { return Application.ProductVersion; } }
-        public const string SettingsFileName = "GitExtensions.settings";
+        public static readonly string SettingsFileName = "GitExtensions.settings";
 
-        public static Lazy<string> ApplicationDataPath;
+        public static readonly Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
         private static RepoDistSettings _SettingsContainer;
         public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
 
-        public static int BranchDropDownMinWidth = 300;
-        public static int BranchDropDownMaxWidth = 600;
+        public static readonly int BranchDropDownMinWidth = 300;
+        public static readonly int BranchDropDownMaxWidth = 600;
 
         static AppSettings()
         {

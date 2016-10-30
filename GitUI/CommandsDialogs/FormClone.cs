@@ -7,10 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
-
-using JetBrains.Annotations;
-using GitUI.UserControls;
-
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -339,7 +336,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly AsyncLoader _branchListLoader = new AsyncLoader();
 
-        private void UpdateBranches(RemoteActionResult<IList<GitRef>> branchList)
+        private void UpdateBranches(RemoteActionResult<IList<IGitRef>> branchList)
         {
             Cursor = Cursors.Default;
 
