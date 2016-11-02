@@ -18,6 +18,7 @@ namespace GitUI
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
         public event EventHandler<GitUICommandsSourceEventArgs> GitUICommandsSourceSet;
+
         private IGitUICommandsSource _uiCommandsSource;
 
 
@@ -48,10 +49,7 @@ namespace GitUI
         [Browsable(false)]
         public GitUICommands UICommands
         {
-            get
-            {
-                return UICommandsSource.UICommands;
-            }
+            get { return UICommandsSource.UICommands; }
         }
 
         /// <summary>true if <see cref="UICommands"/> has been initialized.</summary>
@@ -59,7 +57,14 @@ namespace GitUI
         {
             get
             {
-                return UICommandsSource != null;
+                try
+                {
+                    return UICommandsSource != null;
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
             }
         }
         /// <summary>Gets the <see cref="UICommands"/>' <see cref="GitModule"/> reference.</summary>

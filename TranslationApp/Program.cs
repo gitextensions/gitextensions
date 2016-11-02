@@ -64,7 +64,7 @@ namespace TranslationApp
                 var translation = Translator.GetTranslation(name);
                 var translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
                 filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
-                TranslationHelpers.SaveTranslation(translation.First().Value.LanguageCode, translateItems, filename);
+                TranslationHelpers.SaveTranslation(translation.First().Value.TargetLanguage, translateItems, filename);
             }
             Cursor.Current = Cursors.Default;
         }
