@@ -67,7 +67,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (GitModule.PathIsUrl(url) && GitModule.IsValidGitWorkingDir(url))
+            if (GitModule.PathIsUrl(url) || GitModule.IsValidGitWorkingDir(url))
             {
                 _NO_TRANSLATE_From.Text = url;
             }
