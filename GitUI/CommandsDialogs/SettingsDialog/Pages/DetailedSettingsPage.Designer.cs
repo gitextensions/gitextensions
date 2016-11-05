@@ -48,10 +48,11 @@
             this.PushWindowGB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.PushWindowGB.Controls.Add(this.tableLayoutPanel1);
             this.PushWindowGB.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PushWindowGB.Location = new System.Drawing.Point(3, 62);
+            this.PushWindowGB.Location = new System.Drawing.Point(3, 77);
+            this.PushWindowGB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PushWindowGB.Name = "PushWindowGB";
-            this.PushWindowGB.Padding = new System.Windows.Forms.Padding(8);
-            this.PushWindowGB.Size = new System.Drawing.Size(968, 53);
+            this.PushWindowGB.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
+            this.PushWindowGB.Size = new System.Drawing.Size(1297, 65);
             this.PushWindowGB.TabIndex = 1;
             this.PushWindowGB.TabStop = false;
             this.PushWindowGB.Text = "Push window";
@@ -64,7 +65,8 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.chkRemotesFromServer, 0, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(8, 22);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(9, 26);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 6;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -73,7 +75,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(952, 23);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1279, 29);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // chkRemotesFromServer
@@ -81,9 +83,10 @@
             this.chkRemotesFromServer.AutoSize = true;
             this.chkRemotesFromServer.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.chkRemotesFromServer.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chkRemotesFromServer.Location = new System.Drawing.Point(3, 3);
+            this.chkRemotesFromServer.Location = new System.Drawing.Point(3, 4);
+            this.chkRemotesFromServer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkRemotesFromServer.Name = "chkRemotesFromServer";
-            this.chkRemotesFromServer.Size = new System.Drawing.Size(946, 17);
+            this.chkRemotesFromServer.Size = new System.Drawing.Size(1273, 21);
             this.chkRemotesFromServer.TabIndex = 4;
             this.chkRemotesFromServer.Text = "Get remote branches directly from the remote";
             this.chkRemotesFromServer.UseVisualStyleBackColor = true;
@@ -94,10 +97,11 @@
             this.BrowseRepoGB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BrowseRepoGB.Controls.Add(this.tableLayoutPanel3);
             this.BrowseRepoGB.Dock = System.Windows.Forms.DockStyle.Top;
-            this.BrowseRepoGB.Location = new System.Drawing.Point(3, 3);
+            this.BrowseRepoGB.Location = new System.Drawing.Point(3, 4);
+            this.BrowseRepoGB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.BrowseRepoGB.Name = "BrowseRepoGB";
-            this.BrowseRepoGB.Padding = new System.Windows.Forms.Padding(8);
-            this.BrowseRepoGB.Size = new System.Drawing.Size(968, 53);
+            this.BrowseRepoGB.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
+            this.BrowseRepoGB.Size = new System.Drawing.Size(1297, 65);
             this.BrowseRepoGB.TabIndex = 0;
             this.BrowseRepoGB.TabStop = false;
             this.BrowseRepoGB.Text = "Browse repository window";
@@ -110,20 +114,22 @@
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.Controls.Add(this.chkChowConsoleTab, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(8, 22);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(9, 26);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(952, 23);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(1279, 29);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // chkChowConsoleTab
             // 
             this.chkChowConsoleTab.AutoSize = true;
-            this.chkChowConsoleTab.Location = new System.Drawing.Point(3, 3);
+            this.chkChowConsoleTab.Location = new System.Drawing.Point(3, 4);
+            this.chkChowConsoleTab.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkChowConsoleTab.Name = "chkChowConsoleTab";
-            this.chkChowConsoleTab.Size = new System.Drawing.Size(131, 17);
+            this.chkChowConsoleTab.Size = new System.Drawing.Size(164, 21);
             this.chkChowConsoleTab.TabIndex = 0;
             this.chkChowConsoleTab.Text = "Show the Console tab";
             this.chkChowConsoleTab.UseVisualStyleBackColor = true;
@@ -138,21 +144,23 @@
             this.tableLayoutPanel2.Controls.Add(this.PushWindowGB, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(974, 452);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1303, 877);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // DetailedSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel2);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "DetailedSettingsPage";
-            this.Size = new System.Drawing.Size(974, 452);
+            this.Size = new System.Drawing.Size(1303, 877);
             this.PushWindowGB.ResumeLayout(false);
             this.PushWindowGB.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
