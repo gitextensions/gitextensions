@@ -28,12 +28,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void BindSettingsWithControls()
         {
             AddSettingBinding(DetailedSettings.ShowConEmuTab, chkChowConsoleTab);
-            AddSettingBinding(DetailedSettings.GetRemoteBranchesDirectlyFromRemote, chkRemotesFromServer);
+            cboStyle.SelectedItem = DetailedSettings.ConEmuStyle.Value;
+            cboTerminal.SelectedItem = DetailedSettings.ConEmuTerminal.Value;
+            DetailedSettings.ConEmuStyle.Value = cboStyle.SelectedItem.ToString();
+            DetailedSettings.ConEmuTerminal.Value = cboTerminal.SelectedItem.ToString();
         }
 
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(DetailedSettingsPage));
+        }
+
+        private void chkChowConsoleTab_CheckedChanged(object sender, System.EventArgs e)
+        {
+            groupBoxConsoleSettings.Enabled = chkChowConsoleTab.Checked;
         }
     }
 }

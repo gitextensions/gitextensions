@@ -3589,17 +3589,31 @@ namespace GitUI.CommandsDialogs
                     return;
 
                 // Create the terminal
-                var startinfo = new ConEmuStartInfo();
-                startinfo.StartupDirectory = Module.WorkingDir;
-                startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator;
+                var startinfo = new ConEmuStartInfo
+                {
+                    StartupDirectory = Module.WorkingDir,
+                    WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
+                };
 
-                // Choose the console: bash from git with fallback to cmd
-                string sJustBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
-                string sJustSh = "sh.exe"; // Fallback to SH
+                string[] exeList;
+                switch (Module.EffectiveSettings.Detailed.ConEmuTerminal.Value)
+                {
+                    case "cmd":
+                        exeList = new[] { "cmd.exe" };
+                        break;
+                    case "powershell":
+                        exeList = new[] { "powershell.exe" };
+                        break;
+                    default:
+                        // Choose the console: bash from git with fallback to cmd
+                        string sJustBash = "bash.exe"; // Generic bash, should generally be in the git dir, less configured than the specific git-bash
+                        string sJustSh = "sh.exe"; // Fallback to SH
+                        exeList = new[] { sJustBash, sJustSh };
+                        break;
+                }
 
-                string cmdPath = new[] { sJustBash, sJustSh }.
-                    Select(shell =>
-                      {
+                string cmdPath = exeList.
+                      Select(shell => {
                           string shellPath;
                           if (PathUtil.TryFindShellPath(shell, out shellPath))
                               return shellPath;
@@ -3613,9 +3627,16 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    startinfo.ConsoleProcessCommandLine = cmdPath + " --login -i";
+                    if(Module.EffectiveSettings.Detailed.ConEmuTerminal.Value == "bash")
+                        startinfo.ConsoleProcessCommandLine = cmdPath + " --login -i";
+                    else
+                        startinfo.ConsoleProcessCommandLine = cmdPath;
                 }
-                startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"<Solarized Light>\"";
+
+                if (Module.EffectiveSettings.Detailed.ConEmuStyle.Value != "Default")
+                {
+                    startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + Module.EffectiveSettings.Detailed.ConEmuStyle.Value + "\"";
+                }
 
                 // Set path to git in this window (actually, effective with CMD only)
                 if (!string.IsNullOrEmpty(AppSettings.GitCommandValue))
