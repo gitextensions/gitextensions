@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.DirectoryServices;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -2276,6 +2277,8 @@ namespace GitUI
 
             toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
+            openBuildReportToolStripMenuItem.Visible = (revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url));
+
             RefreshOwnScripts();
         }
 
@@ -3193,6 +3196,13 @@ namespace GitUI
         {
             string url = UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature");
             OsShellUtil.OpenUrlInDefaultBrowser(url);
+        }
+
+        private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var revision = this.GetSelectedRevisions().First();
+            if(revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url))
+                Process.Start(revision.BuildStatus.Url); 
         }
     }
 }
