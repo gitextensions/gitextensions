@@ -24,6 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkChowConsoleTab.SetNullableChecked(DetailedSettings.ShowConEmuTab.Value);
             cboStyle.SelectedItem = DetailedSettings.ConEmuStyle.Value;
             cboTerminal.SelectedItem = DetailedSettings.ConEmuTerminal.Value;
+            cboFontSize.Text = DetailedSettings.ConEmuFontSize.Value;
             chkRemotesFromServer.SetNullableChecked(DetailedSettings.GetRemoteBranchesDirectlyFromRemote.Value);
         }
 
@@ -32,6 +33,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             DetailedSettings.ShowConEmuTab.Value = chkChowConsoleTab.GetNullableChecked();
             DetailedSettings.ConEmuStyle.Value = cboStyle.SelectedItem.ToString();
             DetailedSettings.ConEmuTerminal.Value = cboTerminal.SelectedItem.ToString();
+            int newFontSize;
+            if (int.TryParse(cboFontSize.Text, out newFontSize))
+            {
+                DetailedSettings.ConEmuFontSize.Value = newFontSize.ToString();
+            }
             DetailedSettings.GetRemoteBranchesDirectlyFromRemote.Value = chkRemotesFromServer.GetNullableChecked();
         }
 
