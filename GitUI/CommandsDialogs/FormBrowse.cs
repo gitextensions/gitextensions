@@ -3595,6 +3595,20 @@ namespace GitUI.CommandsDialogs
                     WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
                 };
 
+                var startinfoBaseConfiguration = startinfo.BaseConfiguration;
+                if (!string.IsNullOrWhiteSpace(Module.EffectiveSettings.Detailed.ConEmuFontSize.Value))
+                {
+                    int fontSize;
+                    if (int.TryParse(Module.EffectiveSettings.Detailed.ConEmuFontSize.Value, out fontSize))
+                    {
+                        var nodeFontSize =
+                            startinfoBaseConfiguration.SelectSingleNode("/key/key/key/value[@name='FontSize']");
+                        if (nodeFontSize != null)
+                            nodeFontSize.Attributes["data"].Value = fontSize.ToString("X8");
+                    }
+                }
+                startinfo.BaseConfiguration = startinfoBaseConfiguration;
+
                 string[] exeList;
                 switch (Module.EffectiveSettings.Detailed.ConEmuTerminal.Value)
                 {

@@ -34,6 +34,8 @@
             this.BrowseRepoGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBoxConsoleSettings = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cboFontSize = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.cboTerminal = new System.Windows.Forms.ComboBox();
@@ -54,11 +56,11 @@
             this.PushWindowGB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.PushWindowGB.Controls.Add(this.tableLayoutPanel1);
             this.PushWindowGB.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PushWindowGB.Location = new System.Drawing.Point(3, 202);
+            this.PushWindowGB.Location = new System.Drawing.Point(3, 243);
             this.PushWindowGB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PushWindowGB.Name = "PushWindowGB";
             this.PushWindowGB.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.PushWindowGB.Size = new System.Drawing.Size(839, 65);
+            this.PushWindowGB.Size = new System.Drawing.Size(1258, 65);
             this.PushWindowGB.TabIndex = 1;
             this.PushWindowGB.TabStop = false;
             this.PushWindowGB.Text = "Push window";
@@ -81,7 +83,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(821, 29);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1240, 29);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // chkRemotesFromServer
@@ -92,7 +94,7 @@
             this.chkRemotesFromServer.Location = new System.Drawing.Point(3, 4);
             this.chkRemotesFromServer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chkRemotesFromServer.Name = "chkRemotesFromServer";
-            this.chkRemotesFromServer.Size = new System.Drawing.Size(815, 21);
+            this.chkRemotesFromServer.Size = new System.Drawing.Size(1234, 21);
             this.chkRemotesFromServer.TabIndex = 4;
             this.chkRemotesFromServer.Text = "Get remote branches directly from the remote";
             this.chkRemotesFromServer.UseVisualStyleBackColor = true;
@@ -107,7 +109,7 @@
             this.BrowseRepoGB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.BrowseRepoGB.Name = "BrowseRepoGB";
             this.BrowseRepoGB.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.BrowseRepoGB.Size = new System.Drawing.Size(839, 190);
+            this.BrowseRepoGB.Size = new System.Drawing.Size(1258, 231);
             this.BrowseRepoGB.TabIndex = 0;
             this.BrowseRepoGB.TabStop = false;
             this.BrowseRepoGB.Text = "Browse repository window";
@@ -127,7 +129,7 @@
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(821, 154);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(1240, 195);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // groupBoxConsoleSettings
@@ -135,6 +137,8 @@
             this.groupBoxConsoleSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxConsoleSettings.AutoSize = true;
+            this.groupBoxConsoleSettings.Controls.Add(this.label3);
+            this.groupBoxConsoleSettings.Controls.Add(this.cboFontSize);
             this.groupBoxConsoleSettings.Controls.Add(this.label2);
             this.groupBoxConsoleSettings.Controls.Add(this.label1);
             this.groupBoxConsoleSettings.Controls.Add(this.cboTerminal);
@@ -142,10 +146,40 @@
             this.groupBoxConsoleSettings.Location = new System.Drawing.Point(20, 32);
             this.groupBoxConsoleSettings.Margin = new System.Windows.Forms.Padding(20, 3, 3, 3);
             this.groupBoxConsoleSettings.Name = "groupBoxConsoleSettings";
-            this.groupBoxConsoleSettings.Size = new System.Drawing.Size(798, 119);
+            this.groupBoxConsoleSettings.Size = new System.Drawing.Size(1217, 160);
             this.groupBoxConsoleSettings.TabIndex = 3;
             this.groupBoxConsoleSettings.TabStop = false;
             this.groupBoxConsoleSettings.Text = "Console settings (a restart is needed to take effect)";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 114);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(61, 17);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Font size";
+            // 
+            // cboFontSize
+            // 
+            this.cboFontSize.FormattingEnabled = true;
+            this.cboFontSize.Items.AddRange(new object[] {
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "16",
+            "18",
+            "19",
+            "20",
+            "24"});
+            this.cboFontSize.Location = new System.Drawing.Point(138, 114);
+            this.cboFontSize.Name = "cboFontSize";
+            this.cboFontSize.Size = new System.Drawing.Size(305, 24);
+            this.cboFontSize.TabIndex = 6;
             // 
             // label2
             // 
@@ -243,7 +277,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(845, 877);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1264, 877);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // DetailedSettingsPage
@@ -253,7 +287,7 @@
             this.Controls.Add(this.tableLayoutPanel2);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "DetailedSettingsPage";
-            this.Size = new System.Drawing.Size(845, 877);
+            this.Size = new System.Drawing.Size(1264, 877);
             this.PushWindowGB.ResumeLayout(false);
             this.PushWindowGB.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -285,5 +319,7 @@
         private System.Windows.Forms.ComboBox cboStyle;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cboFontSize;
     }
 }

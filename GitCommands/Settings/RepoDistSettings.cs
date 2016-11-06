@@ -141,6 +141,7 @@ namespace GitCommands.Settings
         public readonly StringSetting ConEmuStyle;
         public readonly StringSetting ConEmuTerminal;
         public readonly BoolNullableSetting GetRemoteBranchesDirectlyFromRemote;
+        public readonly StringSetting ConEmuFontSize;
 
         public DetailedGroup(RepoDistSettings container)
             : base(container, "Detailed")
@@ -148,8 +149,10 @@ namespace GitCommands.Settings
             ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", this, true);
             ConEmuStyle = new StringSetting("ConEmuStyle", this, "Default");
             ConEmuTerminal = new StringSetting("ConEmuTerminal", this, "bash");
+            ConEmuFontSize = new StringSetting("ConEmuFontSize", this, string.Empty);
             GetRemoteBranchesDirectlyFromRemote = new BoolNullableSetting("GetRemoteBranchesDirectlyFromRemote", this, false);
         }
+
     }
 
 }
