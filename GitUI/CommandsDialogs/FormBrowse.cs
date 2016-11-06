@@ -3655,16 +3655,35 @@ namespace GitUI.CommandsDialogs
             if (terminal == null || terminal.RunningSession == null || string.IsNullOrWhiteSpace(path))
                 return;
 
-            string posixPath;
-            if (PathUtil.TryConvertWindowsPathToPosix(path, out posixPath))
+            if (Module.EffectiveSettings.Detailed.ConEmuTerminal.Value == "bash")
             {
-                //Clear terminal line by sending 'backspace' characters
-                for (int i = 0; i < 10000; i++)
+                string posixPath;
+                if (PathUtil.TryConvertWindowsPathToPosix(path, out posixPath))
                 {
-                    terminal.RunningSession.WriteInputText("\b");
+                    ClearTerminalCommandLineAndRunCommand("cd " + posixPath);
                 }
-                terminal.RunningSession.WriteInputText(@"cd " + posixPath + Environment.NewLine);
             }
+            else if (Module.EffectiveSettings.Detailed.ConEmuTerminal.Value == "powershell")
+            {
+                ClearTerminalCommandLineAndRunCommand("cd \"" + path + "\"");
+            }
+            else
+            {
+                ClearTerminalCommandLineAndRunCommand("cd /D \"" + path + "\"");
+            }
+        }
+
+        private void ClearTerminalCommandLineAndRunCommand(string command)
+        {
+            if (terminal == null || terminal.RunningSession == null || string.IsNullOrWhiteSpace(command))
+                return;
+
+            //Clear terminal line by sending 'backspace' characters
+            for (int i = 0; i < 10000; i++)
+            {
+                terminal.RunningSession.WriteInputText("\b");
+            }
+            terminal.RunningSession.WriteInputText(command + Environment.NewLine);
         }
 
         /// <summary>
