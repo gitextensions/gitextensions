@@ -287,6 +287,22 @@ namespace GitCommands
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Refs loaded while the latest processing of git log</returns>
+        public IEnumerable<GitRef> LatestRefs()
+        {
+            if (_refs == null)
+            {
+                return Enumerable.Empty<GitRef>();
+            }
+            else
+            {
+                return _refs.Values.Unwrap();
+            }
+        }
+
         private string _previousFileName;
 
         void FinishRevision()
