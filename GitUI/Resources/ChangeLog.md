@@ -1,6 +1,32 @@
 
 Changelog
 =========
+### Version 2.49 (9 November 2016)
+* Updated Git for Windows to version 2.10.1. PR #3353
+* Updated Putty to version 0.67
+* KDiff3 rolled back to version 0.9.97
+* VSIX extension for VS2015. PR #2885, #3331
+* ConEmu Console Emulator Control for Running Git Commands in the Real Terminal. PR #3152
+* Highlighting of authored commits. PR #2672
+* Support sparse checkout. PR #2918
+* Support shallow clone. PR #2911
+* Support no checkout on Clone. PR #2921
+* Stash before rebase. PR #2785
+* Draw smoother Bezier curves in Revision Grid. PR #2662
+* Support for --assume-unchanged. PR #2889
+* Colorful diffs for Linux. PR #2969
+* Comparing to another branch or Commit. PR #3039
+* Support for “View Tag annotations”. PR #2836
+* Support showing the real line number for diff. PR #2988
+* Add force with lease to the advanced push options. PR #2991
+* Diff filtering. PR #3198
+* Cherry pick selected file/selected lines
+* Added preset for VisualStudio Diff Tool. PR #3034
+* Polish translation and dictionary added
+* Czech translation added
+* Disabled "Traditional Chinese" translation
+* Romanian dictionary added. PR #2979
+
 ### Version 2.49RC2 (22 October 2016)
 * Updated Git for Windows to version 2.10.1. PR #3353
 * Updated Putty to version 0.67
