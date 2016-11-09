@@ -1,6 +1,6 @@
 # Git Extensions
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![SourceForge](https://img.shields.io/sourceforge/dm/gitextensions.svg)](https://sourceforge.net/projects/gitextensions/) [![Github Releases (by Release)](https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=2592000)](https://github.com/gitextensions/gitextensions/releases/latest)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  [![SourceForge](https://img.shields.io/sourceforge/dm/gitextensions.svg)](https://sourceforge.net/projects/gitextensions/) [![Github Releases (by Release)](https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=86400)](https://github.com/gitextensions/gitextensions/releases/latest)
 
 
 ## Introduction
