@@ -129,17 +129,17 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                output = Module.AddRemote(RemoteName.Text, Url.Text);
+                output = Module.AddRemote(RemoteName.Text, ConvertRemoteUrl(Url.Text));
 
                 if (checkBoxSepPushUrl.Checked)
                 {
-                    Module.SetPathSetting(string.Format(SettingKeyString.RemotePushUrl, RemoteName.Text), comboBoxPushUrl.Text);
+                    Module.SetPathSetting(string.Format(SettingKeyString.RemotePushUrl, RemoteName.Text), ConvertRemoteUrl(comboBoxPushUrl.Text));
                 }
 
                 if (MessageBox.Show(this, _questionAutoPullBehaviour.Text, _questionAutoPullBehaviourCaption.Text,
                     MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    var remoteUrl = Url.Text;
+                    var remoteUrl = ConvertRemoteUrl(Url.Text);
 
                     if (!string.IsNullOrEmpty(remoteUrl))
                     {
@@ -159,11 +159,11 @@ namespace GitUI.CommandsDialogs
                     output = Module.RenameRemote(_remote, RemoteName.Text);
                 }
 
-                Module.SetPathSetting(string.Format(SettingKeyString.RemoteUrl, RemoteName.Text), Url.Text);
+                Module.SetPathSetting(string.Format(SettingKeyString.RemoteUrl, RemoteName.Text), ConvertRemoteUrl(Url.Text));
                 Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", RemoteName.Text), PuttySshKey.Text);
                 if (checkBoxSepPushUrl.Checked)
                 {
-                    Module.SetPathSetting(string.Format(SettingKeyString.RemotePushUrl, RemoteName.Text), comboBoxPushUrl.Text);
+                    Module.SetPathSetting(string.Format(SettingKeyString.RemotePushUrl, RemoteName.Text), ConvertRemoteUrl(comboBoxPushUrl.Text));
                 }
                 else
                 {
@@ -177,6 +177,20 @@ namespace GitUI.CommandsDialogs
             }
 
             Initialize();
+        }
+
+        private string ConvertRemoteUrl(string url)
+        {
+#if !__MonoCS__
+            if (string.IsNullOrWhiteSpace(url) || !url.StartsWith(@"\"))
+            {
+                return url;
+            }
+
+            return url.Replace(@"\", @"/");
+#else
+            return url;
+#endif
         }
 
         private void ConfigureRemotes()
@@ -257,7 +271,7 @@ namespace GitUI.CommandsDialogs
 
         private void TestConnectionClick(object sender, EventArgs e)
         {
-            string url = GitCommandHelpers.GetPlinkCompatibleUrl(Url.Text);
+            string url = GitCommandHelpers.GetPlinkCompatibleUrl(ConvertRemoteUrl(Url.Text));
 
             Module.RunExternalCmdDetachedShowConsole(
                 "cmd.exe",
