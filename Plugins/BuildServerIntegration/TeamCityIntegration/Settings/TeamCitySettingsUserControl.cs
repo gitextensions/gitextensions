@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.Composition;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -13,6 +14,7 @@ namespace TeamCityIntegration.Settings
     public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {
         private string _defaultProjectName;
+        private TeamCityAdapter _teamCityAdapter = new TeamCityAdapter();
 
         public TeamCitySettingsUserControl()
         {
@@ -84,6 +86,40 @@ namespace TeamCityIntegration.Settings
         private void SetChooseBuildButtonState()
         {
             buttonProjectChooser.Enabled = !string.IsNullOrWhiteSpace(TeamCityServerUrl.Text);
+        }
+
+        Regex teamcityBuildUrlParameters = new Regex(@"(\?|\&)([^=]+)\=([^&]+)");
+        private void lnkExtractDataFromBuildUrlCopiedInTheClipboard_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (Clipboard.ContainsText() && Clipboard.GetText().Contains("buildTypeId="))
+            {
+                var buildUri = new Uri(Clipboard.GetText());
+                var teamCityServerUrl = buildUri.Scheme + "://" + buildUri.Authority;
+                TeamCityServerUrl.Text = teamCityServerUrl;
+                _teamCityAdapter.InitializeHttpClient(teamCityServerUrl);
+
+                var paramResults = teamcityBuildUrlParameters.Matches(buildUri.Query);
+                foreach (Match paramResult in paramResults)
+                {
+                    if (paramResult.Success)
+                    {
+                        if (paramResult.Groups[2].Value == "buildTypeId")
+                        {
+                            var buildType = _teamCityAdapter.GetBuildType(paramResult.Groups[3].Value);
+                            TeamCityProjectName.Text = buildType.ParentProject;
+                            TeamCityBuildIdFilter.Text = buildType.Id;
+                            return;
+                        }
+                    }
+                }
+            }
+
+            MessageBox.Show(this,
+                "The clipboard doesn't contain a valid build url." + Environment.NewLine + Environment.NewLine +
+                "Please copy in the clipboard the url of the build before retrying." + Environment.NewLine +
+                "(Should contains at least the parameter\"buildTypeId\")", "Build url not valid",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
         }
     }
 }

@@ -421,6 +421,11 @@ namespace TeamCityIntegration
             return GetXmlResponseAsync(string.Format("builds/id:{0}", buildId), cancellationToken);
         }
 
+        private Task<XDocument> GetBuildTypeFromIdXmlResponseAsync(string buildId, CancellationToken cancellationToken)
+        {
+            return GetXmlResponseAsync(string.Format("buildTypes/id:{0}", buildId), cancellationToken);
+        }
+
         private Task<XDocument> GetProjectFromNameXmlResponseAsync(string projectName, CancellationToken cancellationToken)
         {
             return GetXmlResponseAsync(string.Format("projects/{0}", projectName), cancellationToken);
@@ -521,6 +526,18 @@ namespace TeamCityIntegration
                 Name = (string) e.Attribute("name"),
                 ParentProject = (string) e.Attribute("projectId")
             }).ToList();
+        }
+
+        public Build GetBuildType(string buildId)
+        {
+            var projectsRootElement = GetBuildTypeFromIdXmlResponseAsync(buildId, CancellationToken.None).Result;
+            var buildType = projectsRootElement.Root;
+            return new Build
+            {
+                Id = buildId,
+                Name = (string) buildType.Attribute("name"),
+                ParentProject = (string) buildType.Attribute("projectId")
+            };
         }
     }
 
