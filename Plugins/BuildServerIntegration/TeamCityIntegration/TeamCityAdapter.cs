@@ -483,39 +483,61 @@ namespace TeamCityIntegration
             }
         }
 
-        public IList<string> GetAllProjects()
+        public Project GetProjectsTree()
         {
             var projectsRootElement = GetProjectsResponseAsync(CancellationToken.None).Result;
-            var projects = projectsRootElement.Root.Elements().Select(e=>(string)e.Attribute("id"));
-            return projects.ToList();
-        }
-
-        public Project GetProjectChildren(string projectId)
-        {
-            var projectsRootElement = GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None).Result;
-            var builds = projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build()
+            var projects = projectsRootElement.Root.Elements().Where(e => (string)e.Attribute("archived") != "true").Select(e=>new Project
             {
                 Id = (string)e.Attribute("id"),
-                Name = (string)e.Attribute("name")
-            }).ToList();
-            var projects = projectsRootElement.Root.Element("projects").Elements().Select(e => (string)e.Attribute("id")).ToList();
-            return new Project
+                Name = (string)e.Attribute("name"),
+                ParentProject = (string)e.Attribute("parentProjectId"),
+                SubProjects = new List<Project>()
+            } ).ToList();
+
+            var projectDictionary = projects.ToDictionary(p => p.Id, p=>p);
+
+            Project rootProject = null;
+            foreach (var project in projects)
             {
-                Builds = builds,
-                Projects = projects
-            };
+                if (project.ParentProject != null)
+                {
+                    projectDictionary[project.ParentProject].SubProjects.Add(project);
+                }
+                else
+                {
+                    rootProject = project;
+                }
+            }
+
+            return rootProject;
+        }
+
+        public List<Build> GetProjectBuilds(string projectId)
+        {
+            var projectsRootElement = GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None).Result;
+            return projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build()
+            {
+                Id = (string) e.Attribute("id"),
+                Name = (string) e.Attribute("name"),
+                ParentProject = (string) e.Attribute("projectId")
+            }).ToList();
         }
     }
 
     public class Project
     {
-        public IList<string> Projects { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string ParentProject { get; set; }
+        public IList<Project> SubProjects { get; set; }
         public IList<Build> Builds { get; set; }
     }
 
     public class Build
     {
+        public string ParentProject { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
+        public string DisplayName { get { return Name + " (" + Id + ")"; } }
     }
 }
