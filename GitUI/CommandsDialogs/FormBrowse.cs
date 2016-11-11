@@ -1131,13 +1131,13 @@ namespace GitUI.CommandsDialogs
                 case 1: // diff "parent" --> "selected revision"
                     var revision = revisions[0];
                     if (revision != null && revision.ParentGuids != null && revision.ParentGuids.Length != 0)
-                        DiffTabPage.Text = _diffParentWithSelection.Text;
+                        DiffTabPage.Text = _diffParentWithSelection.Text + " (" + DiffFiles.getItemsCount() + ")";
                     break;
 
                 case 2: // diff "first clicked revision" --> "second clicked revision"
                     bool artificialRevSelected = revisions[0].IsArtificial() || revisions[1].IsArtificial();
                     if (!artificialRevSelected)
-                        DiffTabPage.Text = _diffTwoSelected.Text;
+                        DiffTabPage.Text = _diffTwoSelected.Text + " (" + DiffFiles.getItemsCount() + ")";
                     break;
 
                 default: // more than 2 revisions selected => no diff

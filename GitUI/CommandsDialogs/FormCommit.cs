@@ -720,6 +720,8 @@ namespace GitUI.CommandsDialogs
 
                 _loadUnstagedOutputFirstTime = false;
             }
+
+            setStagedUnstagedText();
         }
 
         private void SelectStoredNextIndex()
@@ -1211,6 +1213,8 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.RevisionGraphShowWorkingDirChanges)
                 UICommands.RepoChangedNotifier.Notify();
+
+            setStagedUnstagedText();
         }
 
         private void StageClick(object sender, EventArgs e)
@@ -1372,6 +1376,8 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.RevisionGraphShowWorkingDirChanges)
                 UICommands.RepoChangedNotifier.Notify();
+
+            setStagedUnstagedText();
         }
 
         private void ResetSoftClick(object sender, EventArgs e)
@@ -2503,6 +2509,12 @@ namespace GitUI.CommandsDialogs
         private void toolAuthor_Leave(object sender, EventArgs e)
         {
             updateAuthorInfo();
+        }
+
+        private void setStagedUnstagedText()
+        {
+            lblStaged.Text = "Staged Changes (" + Staged.getItemsCount() + ")";
+            lblUnstaged.Text = "Unstaged Changes (" + Unstaged.getItemsCount() + ")";
         }
 
         /// <summary>
