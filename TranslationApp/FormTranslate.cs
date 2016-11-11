@@ -83,10 +83,10 @@ namespace TranslationApp
 
         private void LoadTranslation()
         {
-            if (_translation.Count == 0)
+            if (_translation.Count != 0)
             {
-                var neutralItems = TranslationHelpers.GetItemsDictionary(_translation);
-                translationItems = TranslationHelpers.LoadTranslation(_translation, neutralItems);
+                var items = TranslationHelpers.GetItemsDictionary(_translation);
+                translationItems = TranslationHelpers.LoadTranslation(_translation, items);
             }
             else
             {
@@ -353,14 +353,15 @@ namespace TranslationApp
                 return;
             }
 
+            var languageCode = _translation.First().Value.TargetLanguage;
             try
             {
-                var culture = new CultureInfo(_translation.First().Value.LanguageCode);
+                var culture = new CultureInfo(languageCode);
                 _NO_TRANSLATE_languageCode.Text = string.Concat(culture.TwoLetterISOLanguageName, " (", culture.DisplayName, ")");
             }
             catch
             {
-                _NO_TRANSLATE_languageCode.Text = _translation.First().Value.LanguageCode;
+                _NO_TRANSLATE_languageCode.Text = languageCode;
             }
         }
 

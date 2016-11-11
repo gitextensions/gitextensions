@@ -345,7 +345,7 @@ namespace GitUI
         }
     }
 
-    /// <summary>This class finds occurrances of a search string in a text 
+    /// <summary>This class finds occurrences of a search string in a text 
     /// editor's IDocument... it's like Find box without a GUI.</summary>
     public sealed class TextEditorSearcher : IDisposable
     {

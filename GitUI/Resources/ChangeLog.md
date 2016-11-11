@@ -1,13 +1,175 @@
+
 Changelog
 =========
-### Version 2.49 (no due date)
+### Version 2.49 (9 November 2016)
+* Updated Git for Windows to version 2.10.1. PR #3353
+* Updated Putty to version 0.67
+* KDiff3 rolled back to version 0.9.97
+* VSIX extension for VS2015. PR #2885, #3331
+* ConEmu Console Emulator Control for Running Git Commands in the Real Terminal. PR #3152
+* Highlighting of authored commits. PR #2672
+* Support sparse checkout. PR #2918
+* Support shallow clone. PR #2911
+* Support no checkout on Clone. PR #2921
+* Stash before rebase. PR #2785
+* Draw smoother Bezier curves in Revision Grid. PR #2662
+* Support for --assume-unchanged. PR #2889
+* Colorful diffs for Linux. PR #2969
+* Comparing to another branch or Commit. PR #3039
+* Support for “View Tag annotations”. PR #2836
+* Support showing the real line number for diff. PR #2988
+* Add force with lease to the advanced push options. PR #2991
+* Diff filtering. PR #3198
 * Cherry pick selected file/selected lines
+* Added preset for VisualStudio Diff Tool. PR #3034
+* Polish translation and dictionary added
+* Czech translation added
+* Disabled "Traditional Chinese" translation
+* Romanian dictionary added. PR #2979
+
+### Version 2.49RC2 (22 October 2016)
+* Updated Git for Windows to version 2.10.1. PR #3353
+* Updated Putty to version 0.67
+* Fixed issue #3356, #3370, #3357: ConEmu integration issues
+* Fixed issue #2532: Fix encoding of gitext.sh
+* Fixed issue #3364: Prevent crash when encountering a 'tag' in 'recover lost objects' form
+* Fixed issue #3365: Exception when search 'diff contains' has a special character
+
+### Version 2.49RC1 (12 October 2016)
+* Updated Git for Windows to version 2.10.0
+* KDiff3 rolled back to version 0.9.97
+* VSIX extension for VS2015. PR #2885, #3331
+* ConEmu Console Emulator Control for Running Git Commands in the Real Terminal. PR #3152
+* Highlighting of authored commits. PR #2672
+* Support sparse checkout. PR #2918
+* Support shallow clone. PR #2911
+* Support no checkout on Clone. PR #2921
+* Stash before rebase. PR #2785
+* Draw smoother Bezier curves in Revision Grid. PR #2662
+* Support for --assume-unchanged. PR #2889
+* Colorful diffs for Linux. PR #2969
+* Comparing to another branch or Commit. PR #3039
+* Support for “View Tag annotations”. PR #2836
+* Support showing the real line number for diff. PR #2988
+* Add force with lease to the advanced push options. PR #2991
+* Diff filtering. PR #3198
+* Cherry pick selected file/selected lines
+* Added preset for VisualStudio Diff Tool. PR #3034
+* Polish translation and dictionary added
+* Czech translation added
+* Disabled "Traditional Chinese" translation
+* Romanian dictionary added. PR #2979
+
+
+
 * Added an option to remember the ignore-white-spaces preference for all the diff viewers
+* Option to check for release candidate versions
+* Make dictionary setting configurable for each repository separately
+* Use complete name of the merged/rebased branch to avoid conflict with a remote branch (if named the same).
+* Remember the IgnoreWhitespaceChanges settings for FileViewer. PR #2844
+* Specify Git and PuTTY locations with environment variables. PR #2367
+* Tags in branch list are visible when "Local" is selected. PR #2543, #2545
+* Follow only exact renames setting added. PR #2627
+* Update preview list of ignored files in background. PR #2557
+* Statistics plugin improvements. PR #2707
+* DOS Codepage 852 added into supported encodings. PR #2913
+* {WorkingDir} Parameter for Scripts. PR #2914
+* Multiple tfs build defs. PR #2916
+* Show commit SHA1 in log. PR #2659
+* Allow auto-normalisation of branch name. PR #3233
+* Using Common Item Dialog to select folders. PR #2788
+* Ability to run scripts with several selected commits: {sHashes} argument. PR #2578
+* Use the repository URL from the clipboard if available. PR #2586
+* Enter/Return in file tree acts as double click. PR #2785
+* Add script events: BeforeCheckout, AfterCheckout. PR #3211
+* Clarified wording for Pull dropdown menu, now matches tooltips. PR #2830
+* Manage new format to detect detached HEAD (Git >v2.4). PR #3010
+* Support combined diff for merge commit
+* Per repository plugins settings
+* TeamCity: Add an option to try to display build report logged as a guest. PR #3224
+* Add a popup to easy finding a TeamCity build. PR #3241
+* Improve fixup commits. PR #3264
+* Some changes around .gitignore. PR #3283
+* Search graph row index by commit hash using dictionary. PR #3295
+* FormChooseCommit: Add links helper to find parent(s) of current selected commit. PR #3246
+* --first-parent filtration added, --full-history fixed, hotkeys exposed, context menu in file history window unification. PR #3250
+* Added setting to enable/disable autocompletion in commit dialog. PR #2799
+* Menu entries for improved accessibility. PR #3234
 * Fixed an intermittent bug where ObjectDisposedException occurs on launch
 * Fixed a bug where branch filter throws null reference exception when no repository selected
-* Support combined diff for merge commit
-* Support showing the real line number for diff
-* Per repository plugins settings
+* Fixed issue #2977, #2566, #2712, #2972, #2959, #2958, #2904: Fixes for mono build
+* Fixed issue #3093: Fix height calculation for RevisionHeader in the CommitInfo panel on Linux
+* Fixed issue #3094: Change the default application font for Linux
+* Fixed issue #3267: Linux aware paths
+* Fixed issue #3100: Don't show Putty toolstrip menu item when not running on Windows
+* Fixed issue #2769: GitExtensions slow with many Submodules
+* Fixed issue #3207: Checkout branch dialog is too narrow
+* Fixed issue #3069: "Unsupported commit message encoding" in conemu repo
+* Fixed issue #3274: Honour the AutoSetupMerge git config
+* Fixed issue #2924: "Illegal Characters in Path" if %PATH% Contains Quotes
+* Fixed issue #3262: Fix p4merge diff settings
+* Fixed issue #2759: On Diff/File List pane got exception ArgumentOutOfRangeException InvalidArgument Value of -1 is not valid for index
+* Fixed issue #3297: Unable to use '/' or '.' in branch name when creating a new branch
+* Fixed issue #3271: No need to close the "create branch" dialog if failed to create
+* Fixed issue #3054: Changes to global gitignore do not properly propagate to the Commit button
+* Fixed issue #573: Push Multiple Branches hang if using OpenSSH for key mgmt
+* Fixed issue #3079: Hidden expandable column between message and author
+* Fixed issue #2813: Bisect labels size problems on french version
+* Fixed issue #2965: Config Settings written with upper case True and False
+* Fixed issue #2292: Don't auto-remember the desired action 'Local changes' when checking out a branch
+* Fixed issue #3136: No option to pull request if host is stash/bit bucket but repo (or project) contains
+* Fixed issue #3231: Shouldn't popup the "not on a branch" warning when editing a commit during rebasing
+* Fixed issue #3063: Application crash caused by hotkey CTRL+P
+* Fixed issue #3221: Prevent crash due to invalid Build CI project name regex saved
+* Fixed issue #3014: Ignore web browser script error for TeamCity and GitHub
+* Fixed issue #2654: Jenkins plugin: Incorrectly detects Internet Explorer 'Document Mode'
+* Fixed issue #3055: "Don't set as default" option in Pull menu is ignored for three of the five items in the Pull menu
+* Fixed issue #3006: CryptographicException when attempting to open a repository
+* Fixed issue #3111: Creating branch from empty repo leads to ArgumentOutOfRangeException
+* Fixed issue #2790: Can not assign null value to UICommandsSource
+* Fixed issue #3067: Diff for the root commit is broken in master branch
+* Fixed issue #2993: Do not show password in plain text in Stash plugin options
+* Fixed issue #2860: Unable to open 'periodic background fetch' settings
+* Fixed issue #2954: Git Flow plugin: Fix some combo boxes overlap with labels
+* Fixed issue #2614: Fix a problem with the directory name detected for certain url
+* Fixed issue #2887: Jenkins integration not requesting credentials
+* Fixed issue #3015: Mono: Unable to locate plugins folder
+* Fixed issue #2902: Ampersand (&) in Revision Link URI breaks revision message
+* Fixed issue #2846: Remember check-box states in "Cherry pick commit" dialog
+* Fixed issue #2874: Fix infinite loop bug during undo with auto-wrap
+* Fixed issue #2857: Fails to reset selected lines on new files
+* Fixed issue #2840: Commit filter by number doesn't work
+* Fixed issue #2700, #2822, #2854: Filtering by branch name or commit id doesn't work
+* Fixed issue #2786: Clicking on the branch dropdown before selecting a repository triggers a NPE
+* Fixed issue #2692: Intermittent error "cannot access a disposed object" on launch
+* Fixed issue #2821: Additional hotkeys in Commit Dialog
+* Fixed issue #2822: File history and blame dialogs are empty
+* Fixed issue #2847: Application crashes when an empty string is pasted as a commit message
+* Fixed issue #2739: Turn on Treat Warnings As Errors for all projects
+* Fixed issue #2809: Jenkins plugin: Login with default credentials (single sign on)
+* Fixed issue #2731: Move Microsoft.TeamFoundation.Client references from GAC to NuGet
+* Fixed issue #2761: ArgumentOutOfRangeException is thrown when right clicking of the table header of 'Resolve merge conflicts' window
+* Fixed issue #2154, #2645: Branches with comma in their name cannot be deleted
+* Fixed issue #2686: ssh:// with port not working with Putty
+* Fixed issue #2493: After Clone, GitExt shows "Starting a second message loop on a single thread is not a valid operation. Use Form.ShowDialog instead"
+* Fixed issue #2694: typos in .gitignore template text
+* Fixed issue #2453: Autocomplete Display-Bug
+* Fixed issue #2488: AutoCRLF correction when copying a text from the FileViewer
+* Fixed issue #2301: IME error with Spell checker
+* Fixed issue #2617: Fixed calls of plink for host key caching with invalid urls
+* Fixed issue #2473: Fixes in GitStatistics Plugin
+* Fixed issue #2480: Wrong Gource URL and settings
+* Fixed issue #2584: Cloning from Explorer in a drive root crashes GitExtensions
+* Fixed issue #2597: [VS Plugin] Don't try highlight node when it is not found
+* Fixed issue #2590: [VS Plugin] Allow some commands on all targets
+* Fixed issue #2601, #2587, #2559, #2560: Fix issues with VS Plugin
+* Fixed issue #2591: NullRefernceException in GitPlugin
+* Fixed issue #2620: Fix a couple of exceptions thrown when processing is incorrectly done on error messages
+* Fixed issue #2565: Fix for "init" command line command
+* Fixed issue #2501: Fix for "fatal: Not a valid object name" when displaying a nonexistent blob
+* Fixed issue #2440: Fixed parsing quoted printable for Author field
+* Fixed issue #2422: Fix refresh issue with the branches filter textbox
+* Fixed issue #2409: Display correctly windows end of line in git commit message
 
 ### Version 2.48.05 (16 May 2015)
 * Fixed issue #2493: StartBrowseDialog failed after clone
@@ -100,7 +262,7 @@ Changelog
 * Fixed issue #2250: Shell Extensions: IsValidGitDir UNC path performance bug fix
 * Fixed issue #2240: Allow push by commit hash
 * Fixed issue #2235: Allow the user to pick Git.exe no matter
-where it is installed on their system
+  where it is installed on their system
 * Fixed issue #2142: Fetch in 2.47.3 creating remote ref from remote HEAD using current local branch's name
 * Fixed issue #2140: Fix slow settings load because of UNC paths
 * Fixed issue #2139: Double click on submodule fails to open the submodule in a new instance of GitExtensions

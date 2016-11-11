@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49RC2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="pl">
     <body>
       <trans-unit id="Description.Text">
@@ -958,6 +958,10 @@ Aby aktywować Gerrit dla repozytorium, należy stworzyć plik .gitreview. Możn
         <target>Github</target>
         
       </trans-unit>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="pl">
@@ -1187,6 +1191,26 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
         <target>Przełącznik proxy</target>
         
       </trans-unit>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
+        <target>Proxy HTTP</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
+        <target>Port proxy HTTP</target>
+        
+      </trans-unit>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
+        <target>Hasło</target>
+        
+      </trans-unit>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>Nazwa użytkownika</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="pl">
@@ -1316,6 +1340,23 @@ zatwierdzeń, nazwami gałęzi lub tagów)</target>
       <trans-unit id="Description.Text">
         <source>Create Stash Pull Request</source>
         <target>Stwórz prośbę połączenia przygotowanych</target>
+        
+      </trans-unit>
+      <trans-unit id="StashBaseUrl.Caption">
+        <source>Specify the base URL to Stash</source>
+        
+      </trans-unit>
+      <trans-unit id="StashDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>Wyłącz weryfikację SSL</target>
+        
+      </trans-unit>
+      <trans-unit id="StashPassword.Caption">
+        <source>Stash Password</source>
+        
+      </trans-unit>
+      <trans-unit id="StashUsername.Caption">
+        <source>Stash Username</source>
         
       </trans-unit>
     </body>

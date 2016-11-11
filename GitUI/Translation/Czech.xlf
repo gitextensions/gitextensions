@@ -41,6 +41,7 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
       </trans-unit>
       <trans-unit id="DiffViewerGB.Text">
         <source>Diff Viewer</source>
+        <target>Prohlížeč rozdílů</target>
         
       </trans-unit>
       <trans-unit id="GeneralGB.Text">
@@ -60,6 +61,7 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
       </trans-unit>
       <trans-unit id="chkAutoNormaliseBranchName.Text">
         <source>Auto normalise branch name</source>
+        <target>Auto-normalizovat název větve</target>
         
       </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
@@ -69,6 +71,7 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
+        <target>Používat Console Emulator pro výstup příkazové řádky v příkazových dialozích</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -78,10 +81,12 @@ Tento program je šířen v naději že bude užitečný, ale BEZ JAKÉKOLIV ZÁ
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
         <source>Omit uninteresting changes from combined diff</source>
+        <target>Z kombinovaného rozdílu vypustit nezajímavé změny</target>
         
       </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
         <source>Remember the ignore-white-space preference</source>
+        <target>Zapamatovat nastavení ignorování mezer</target>
         
       </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
@@ -93,6 +98,7 @@ Při získávání větve bude tato akce provedena bez varování.</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Symbol to use:</source>
+        <target>Symbol k použití:</target>
         
       </trans-unit>
     </body>
@@ -499,6 +505,8 @@ Prosím ujistěte se že je program kdiff3 nainstalován nebo nastavte cestu ru�
       <trans-unit id="_linuxToolsShNotFound.Text">
         <source>The path to linux tools (sh) could not be found automatically.
 Please make sure there are linux tools installed (through Git for Windows or cygwin) or set the correct path manually.</source>
+        <target>Cesta k linuxovým nástrojům (sh) nemohla být nalezena automaticky.
+Prosím ujistěte se že jsou linuxové nástroje nainstalovány (buď přes Git pro Windows nebo přes cygwin) nebo nastavte cestu ručně.</target>
         
       </trans-unit>
       <trans-unit id="_linuxToolsShNotFoundCaption.Text">
@@ -623,6 +631,7 @@ Zvolte &quot;ne&quot; pokud si sami chcete nastavit jiný nástroj.</target>
       <trans-unit id="_solveGitCommandFailed.Text">
         <source>The command to run git could not be determined automatically.
 Please make sure git (Git for Windows or cygwin) is installed or set the correct command manually.</source>
+        <target>Příkaz pro spuštění gitu nemohl být automaticky určen. Prosím ujistěte se že git (Git pro Windows nebo cygwin) je správně nainstalován nebo nastavte příkaz ručně.</target>
         
       </trans-unit>
       <trans-unit id="_solveGitCommandFailedCaption.Text">
@@ -840,6 +849,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkAutocomplete.Text">
         <source>Provide auto-completion in commit dialog</source>
+        <target>Poskytovat automatické doplňování v dialogu odevzdání</target>
         
       </trans-unit>
       <trans-unit id="chkShowCommitAndPush.Text">
@@ -940,6 +950,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="showMessagesOfAnnotatedTagsToolStripMenuItem.Text">
         <source>Show messages of annotated tags</source>
+        <target>Zobrazit zprávy značek s poznámkou</target>
         
       </trans-unit>
       <trans-unit id="trsLinksRelatedToRevision.Text">
@@ -1437,6 +1448,7 @@ Chcete jí otevřít?</target>
     <body>
       <trans-unit id="CombinedDiff.Text">
         <source>Combined Diff</source>
+        <target>Kombinovaný rozdíl</target>
         
       </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
@@ -2277,6 +2289,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>Zobrazit první rodiče</target>
         
       </trans-unit>
       <trans-unit id="SvnDcommitToolStripMenuItem.Text">
@@ -2461,10 +2474,12 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_superprojectModuleFormat.Text">
         <source>Superproject: {0}</source>
+        <target>Nadřazený projekt: {0}</target>
         
       </trans-unit>
       <trans-unit id="_topProjectModuleFormat.Text">
         <source>Top project: {0}</source>
+        <target>Vrchní projekt: {0}</target>
         
       </trans-unit>
       <trans-unit id="_updateCurrentSubmodule.Text">
@@ -2848,6 +2863,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
       </trans-unit>
       <trans-unit id="menuitemSparse.Text">
         <source>Sparse Working Copy</source>
+        <target>Řídká pracovní kopie</target>
         
       </trans-unit>
       <trans-unit id="mergeBranchToolStripMenuItem.Text">
@@ -2927,6 +2943,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
         <source>Open pull dialog...</source>
+        <target>Otevřít dialog stažení ...</target>
         
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
@@ -3036,6 +3053,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
       </trans-unit>
       <trans-unit id="setNextPullActionAsDefaultToolStripMenuItem.Text">
         <source>Set the next selection as default</source>
+        <target>Nastavit další výběr jako výchozí</target>
         
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
@@ -3410,10 +3428,12 @@ revizi:</target>
       </trans-unit>
       <trans-unit id="linkLabelParent.Text">
         <source>sha parent 1</source>
+        <target>sha rodiče 1</target>
         
       </trans-unit>
       <trans-unit id="linkLabelParent2.Text">
         <source>sha parent 2</source>
+        <target>sha rodiče 2</target>
         
       </trans-unit>
     </body>
@@ -3560,10 +3580,12 @@ revizi:</target>
       </trans-unit>
       <trans-unit id="_branchDefaultRemoteHead.Text">
         <source>(default: remote HEAD)</source>
+        <target>(výchozí: HEAD vzdáleného)</target>
         
       </trans-unit>
       <trans-unit id="_branchNone.Text">
         <source>(none: don't checkout after clone)</source>
+        <target>(žádná: po klonování nezískávat)</target>
         
       </trans-unit>
       <trans-unit id="_infoDirectoryExists.Text">
@@ -3602,6 +3624,7 @@ Chcete nyní otevřít nový repozitář &quot;{0}&quot;?</target>
       </trans-unit>
       <trans-unit id="cbDownloadFullHistory.Text">
         <source>Download full &amp;history</source>
+        <target>Stáhnout celou historii (&amp;H)</target>
         
       </trans-unit>
       <trans-unit id="cbIntializeAllSubmodules.Text">
@@ -3616,6 +3639,7 @@ Chcete nyní otevřít nový repozitář &quot;{0}&quot;?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Repository to &amp;clone:</source>
+        <target>Repozitář ke klonování (&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -3972,6 +3996,7 @@ Chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="assumeUnchangedToolStripMenuItem.Text">
         <source>Assume unchanged</source>
+        <target>Předpokádat že jsou beze změny</target>
         
       </trans-unit>
       <trans-unit id="closeDialogAfterAllFilesCommittedToolStripMenuItem.Text">
@@ -4036,6 +4061,7 @@ Chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="doNotAssumeUnchangedToolStripMenuItem.Text">
         <source>Do not assume unchanged</source>
+        <target>Nepředpokládat že jsou beze změny</target>
         
       </trans-unit>
       <trans-unit id="editFileToolStripMenuItem.Text">
@@ -4145,6 +4171,7 @@ Chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="showAssumeUnchangedFilesToolStripMenuItem.Text">
         <source>Show assumed-unchanged files</source>
+        <target>Zobrazit předpokládané soubory beze změny</target>
         
       </trans-unit>
       <trans-unit id="showIgnoredFilesToolStripMenuItem.Text">
@@ -4394,18 +4421,22 @@ Chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="CheckoutAfterCreate.Text">
         <source>Checkout &amp;after create</source>
+        <target>Po vytvoření přepnout (&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="ClearOrphan.Text">
         <source>Clear &amp;working directory and index</source>
+        <target>Vyčistit pracovní složku a index (&amp;W)</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>&amp;Create branch</source>
+        <target>Vytvořit větev (&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="Orphan.Text">
         <source>Create or&amp;phan</source>
+        <target>Vytvořit sirotka (&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
@@ -4430,10 +4461,12 @@ Chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>&amp;Branch name</source>
+        <target>Název větve (&amp;B)</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Create b&amp;ranch at this revision</source>
+        <target>Vytvořit větev na této revizi (&amp;R)</target>
         
       </trans-unit>
     </body>
@@ -4650,10 +4683,12 @@ Pokud chcete smazat plně nesloučenou větev, tak použijte volbu &quot;vynutit
       </trans-unit>
       <trans-unit id="anotherBranchTooltip.Text">
         <source>Select another branch</source>
+        <target>Vybrat jinou větev</target>
         
       </trans-unit>
       <trans-unit id="anotherCommitTooltip.Text">
         <source>Select another commit</source>
+        <target>Vybrat jiné odevzdání</target>
         
       </trans-unit>
       <trans-unit id="bLocalToolStripMenuItem.Text">
@@ -4663,6 +4698,7 @@ Pokud chcete smazat plně nesloučenou větev, tak použijte volbu &quot;vynutit
       </trans-unit>
       <trans-unit id="baseCommitGroup.Text">
         <source>BASE</source>
+        <target>ZÁKLAD</target>
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -4672,10 +4708,12 @@ Pokud chcete smazat plně nesloučenou větev, tak použijte volbu &quot;vynutit
       </trans-unit>
       <trans-unit id="btnSwapTooltip.Text">
         <source>Swap BASE and Compare commits</source>
+        <target>Přehodit odevzdání ZÁKLAD a porovnat</target>
         
       </trans-unit>
       <trans-unit id="ckCompareToMergeBase.Text">
         <source>Compare to merge base</source>
+        <target>Porovnat se základem sloučení</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
@@ -4823,6 +4861,7 @@ Pokud si nejste jisti, prostě zavřete toto okno.</target>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>Zobrazit první rodiče</target>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -5295,6 +5334,7 @@ _ReSharper*/</target>
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
         <source>Generate a custom gitignore</source>
+        <target>Vytvořit uživatelský gitignore</target>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
@@ -6165,6 +6205,7 @@ Opravdu chcete odeslat tuto větev?</target>
       </trans-unit>
       <trans-unit id="_forceWithLeaseTooltips.Text">
         <source>Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository</source>
+        <target>Opatrné vynucení je bezpečnější způsob jak vynutit odeslání. Dojde k přepsání pouze té práce, kterou máte v lokálním repozitáři</target>
         
       </trans-unit>
       <trans-unit id="_no.Text">
@@ -6244,6 +6285,7 @@ Opravdu chcete odeslat tuto větev?</target>
       </trans-unit>
       <trans-unit id="_useForceWithLeaseInstead.Text">
         <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
+        <target>Vynucení odeslání může přepsat změny od posledního přenesení. Chcete místo toho použít bezpečnější opatrné vynucení?</target>
         
       </trans-unit>
       <trans-unit id="_yes.Text">
@@ -6253,6 +6295,7 @@ Opravdu chcete odeslat tuto větev?</target>
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
         <source>Force With &amp;Lease</source>
+        <target>Opatrné vynucení (&amp;L)</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -7453,6 +7496,7 @@ Chcete použít skript na sloučení?</target>
       </trans-unit>
       <trans-unit id="SimplifyByDecorationCheck.Text">
         <source>Simplify by decoration</source>
+        <target>Zjednodušit podle dekorace</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -8449,6 +8493,7 @@ měnit globální nastavení.
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog.</source>
+        <target>Zobrazit v dialogu procházení rozdíly pro všechny rodiče.</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
@@ -8612,6 +8657,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       </trans-unit>
       <trans-unit id="CannotLoadTheTextOfTheSparseFile.Text">
         <source>Cannot load the text of the sparse file.</source>
+        <target>Nemohu načíst text řídkého souboru.</target>
         
       </trans-unit>
       <trans-unit id="ConfirmDisableGitSparse.Text">
@@ -8635,10 +8681,12 @@ Would you like to have the filter modified so that it allowed for the full worki
       </trans-unit>
       <trans-unit id="EditsTheContentsOfTheGitInfoSparseCheckoutFile.Text">
         <source>Edits the contents of the “.git/info/sparse-checkout” file.</source>
+        <target>Upravit obsah souboru &quot;.git/info/sparse-checkout&quot;</target>
         
       </trans-unit>
       <trans-unit id="Enable.Text">
         <source>&amp;Enable</source>
+        <target>Povolit (&amp;E)</target>
         
       </trans-unit>
       <trans-unit id="HeaderDetailsText.Text">
@@ -8664,6 +8712,7 @@ nActual command line: {0}</source>
       </trans-unit>
       <trans-unit id="Save.Text">
         <source>&amp;Save</source>
+        <target>Uložit (&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="SaveFile.Text">
@@ -8681,6 +8730,7 @@ nActual command line: {0}</source>
       </trans-unit>
       <trans-unit id="SparseWorkingCopy.Text">
         <source>Sparse Working Copy</source>
+        <target>Řídká pracovní kopie</target>
         
       </trans-unit>
       <trans-unit id="SparseWorkingCopySupportHasNotBeenEnabledForThisRepository.Text">
@@ -9344,6 +9394,7 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
       </trans-unit>
       <trans-unit id="showFirstParent.Text">
         <source>Show first parents</source>
+        <target>Zobrazit první rodiče</target>
         
       </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">
@@ -9552,6 +9603,44 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
+        <target>Uživatelský vstup:
+{UserInput}
+
+Pracovní složka:
+{WorkingDir}
+
+Vybraná odevzdání:
+{sHashes}
+
+Vybraná větev:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+Současná větev:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="addScriptButton.Text">
@@ -9849,6 +9938,10 @@ when all items are shown:</source>
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </source>
+        <target>OpenSSH je nástroj příkazové řádky. PuTTY je více uživatelsky přívětivější k uživatelům Windows,
+ale vyžaduje, aby byl na pozadí spuštěn klient autentifikace.
+Při použití OpenSSH se budou zobrazovat dialogy příkazové řádky!
+</target>
         
       </trans-unit>
     </body>
@@ -9951,6 +10044,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_uninterestingDiffOmitted.Text">
         <source>Uninteresting diff hunks are omitted.</source>
+        <target>Nezajímavé části rozdílu nebudou zobrazeny.</target>
         
       </trans-unit>
       <trans-unit id="_weeksAgo.Text">

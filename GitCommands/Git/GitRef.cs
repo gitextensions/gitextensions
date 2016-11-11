@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using GitCommands.Config;
+using System.Linq;
 using GitCommands.Settings;
 
 namespace GitCommands
@@ -186,6 +186,14 @@ namespace GitCommands
             else
                 //if we don't know ref type then we don't know if '/' is a valid ref character
                 Name = CompleteName.SkipStr("refs/");
+        }
+
+        public static ISet<string> GetAmbiguousRefNames(IEnumerable<GitRef> refs)
+        {
+            return refs.
+                GroupBy(r => r.Name).
+                Where(group => group.Count() > 1).
+                ToHashSet(e => e.Key);
         }
     }
 }

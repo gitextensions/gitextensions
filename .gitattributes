@@ -3,4 +3,4 @@
 *.patch diff -text
 *.cs text diff=csharp
 *.sln text eol=crlf
-
+*.sh text eol=lf

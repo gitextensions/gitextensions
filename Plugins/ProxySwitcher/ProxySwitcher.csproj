@@ -51,7 +51,6 @@
       <DependentUpon>ProxySwitcherForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ProxySwitcherPlugin.cs" />
-    <Compile Include="SettingsKey.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">

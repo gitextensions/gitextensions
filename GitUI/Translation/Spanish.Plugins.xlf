@@ -41,22 +41,27 @@
     <body>
       <trans-unit id="AutoRefresh.Caption">
         <source>Refresh view after fetch</source>
+        <target>Actualizar vista luego de un fetch</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
+        <target>Ejecuta fetch periódicamente en segundo plano</target>
         
       </trans-unit>
       <trans-unit id="FetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
+        <target>Cargar todos los submódulos</target>
         
       </trans-unit>
       <trans-unit id="FetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target>Hacer fetch cada (segundos) - dejar valor en 0 para desactivar</target>
         
       </trans-unit>
       <trans-unit id="GitCommand.Caption">
         <source>Arguments of git command to run</source>
+        <target>Argumentos para el comando de git a ejecutarse</target>
         
       </trans-unit>
     </body>
@@ -89,10 +94,12 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
+        <target>Eliminar ramas obsoletas</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
+        <target>Último autor</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -107,22 +114,27 @@
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
+        <target>Borrar ramas remotas en</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
+        <target>Último mensaje</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
+        <target>Buscar ramas</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
+        <target>Está seguro que quiere eliminar {0} ramas seleccionadas?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
+        <target>{0}/{1} ramas seleccionadas.</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
@@ -132,6 +144,7 @@
       </trans-unit>
       <trans-unit id="_chooseBrancesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
+        <target>Escoja ramas a eliminar. Sólo ramas que hayan sido completamente fusionadas con '{0}' serán borradas.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
@@ -147,6 +160,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
+        <target>Eliminando ramas...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
@@ -160,10 +174,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
+        <target>Presione '{0}' para buscar ramas a borrar.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
+        <target>Buscar ramas</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
@@ -177,6 +193,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
+        <target>Actividad más reciente</target>
         
       </trans-unit>
       <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
@@ -186,6 +203,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
+        <target>Incluir ramas sin fusionar</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -194,6 +212,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
+        <target>Eliminar ramas completamente fusionadas con la rama</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -203,6 +222,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
+        <target>No coincide</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
@@ -211,10 +231,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
+        <target>Insensible a mayúsculas</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
+        <target>Usar regex para filtrar ramas</target>
         
       </trans-unit>
     </body>
@@ -227,10 +249,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
+        <target>Eliminar ramas obsoletas</target>
         
       </trans-unit>
       <trans-unit id="MergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
+        <target>Rama con la que todas las ramas deben ser fusionadas</target>
         
       </trans-unit>
     </body>
@@ -249,6 +273,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
+        <target>Tamaño comprimido</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
@@ -258,6 +283,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
+        <target>Está seguro que quiere eliminar los archivos seleccionados?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -309,7 +335,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="SizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
-        <target>Buscar archivos mayores que (MB)</target>
+        <target>Buscar archivos mayores que (Mb)</target>
         
       </trans-unit>
     </body>
@@ -587,6 +613,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0} Blank lines ({1})</source>
+        <target>{0} Líneas en blanco ({1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
@@ -595,22 +622,27 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0} Commits</source>
+        <target>{0} Commits</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0} Commits by {1}</source>
+        <target>{0} Commits por {1}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0} Lines of code</source>
+        <target>{0} Líneas de código</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0} Lines of code in {1} files ({2})</source>
+        <target>{0} Líneas de código en {1} archivos ({2})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0} Lines of code ({1})</source>
+        <target>{0} Líneas de código ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
@@ -619,30 +651,37 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0} Lines of production code ({1})</source>
+        <target>{0} Líneas de código de producción ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0} Lines of test code</source>
+        <target>{0} Líneas de código de pruebas</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0} Lines of test code ({1})</source>
+        <target>{0} Líneas de código de pruebas ({1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
+        <target>Líneas de código por lenguaje</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
+        <target>Commits por contribuidor</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
+        <target>Líneas de código por tipo</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
+        <target>Líneas de código de pruebas</target>
         
       </trans-unit>
     </body>
@@ -651,14 +690,17 @@ defaultrebase=0</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
+        <target>Impacto</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
+        <target>{0} ({1} Commits, {2} Líneas con cambios)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
+        <target>Incluyendo submódulos</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
@@ -787,6 +829,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="_noBranchExist.Text">
         <source>No {0} branches exist.</source>
+        <target>Ninguna rama {0} existe.</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
@@ -796,10 +839,12 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="btnCreateBranch.Text">
         <source>Start!</source>
+        <target>Iniciar!</target>
         
       </trans-unit>
       <trans-unit id="btnFinish.Text">
         <source>Finish</source>
+        <target>Finalizar</target>
         
       </trans-unit>
       <trans-unit id="btnInit.Text">
@@ -809,6 +854,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="btnPublish.Text">
         <source>Publish</source>
+        <target>Publicar</target>
         
       </trans-unit>
       <trans-unit id="btnPull.Text">
@@ -818,18 +864,22 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
+        <target>basado en:</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
+        <target>Gestionar ramas existentes:</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
+        <target>Iniciar rama:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>branch:</source>
+        <target>rama:</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -838,6 +888,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
+        <target>comando:</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
@@ -846,14 +897,17 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
         <source>HEAD:</source>
+        <target>HEAD:</target>
         
       </trans-unit>
       <trans-unit id="lblHead.Text">
         <source>ref/...</source>
+        <target>ref/...</target>
         
       </trans-unit>
       <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
+        <target>[prefijo]/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
@@ -897,6 +951,7 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
     <body>
       <trans-unit id="CodeFiles.Caption">
         <source>Code files</source>
+        <target>Archivos de código</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
@@ -906,10 +961,12 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
       </trans-unit>
       <trans-unit id="IgnoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
+        <target>Directorios a ignorar (EndsWith)</target>
         
       </trans-unit>
       <trans-unit id="IgnoreSubmodules.Caption">
         <source>Ignore submodules</source>
+        <target>Ignorar submódulos</target>
         
       </trans-unit>
     </body>
@@ -918,18 +975,22 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
     <body>
       <trans-unit id="Description.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="GourceArguments.Caption">
         <source>Arguments</source>
+        <target>Argumentos</target>
         
       </trans-unit>
       <trans-unit id="GourcePath.Caption">
         <source>Path to Gource</source>
+        <target>Ruta a Gource</target>
         
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
+        <target>{0} bytes descargados.</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
@@ -941,6 +1002,9 @@ Please download Gource and set the path in the plugins settings dialog.</source>
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
+        <target>El directorio actual no es un repositorio válido de git.
+
+Gource sólo puede ser iniciado desde un repositorio válido de git.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
@@ -951,6 +1015,7 @@ Do you want to automatically download Gource?</source>
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
+        <target>Descargar</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
@@ -960,10 +1025,12 @@ Please download Gource and set the path in the plugins settings dialog.</source>
       </trans-unit>
       <trans-unit id="_gource.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
+        <target>Gource ha sido descargado y descomprimido.</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
@@ -978,10 +1045,12 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
+        <target>Argumentos</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
@@ -1001,6 +1070,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
+        <target>Ruta a Gource</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -1097,26 +1167,32 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
+        <target>como tabla HTML</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
+        <target>como tabla de texto (espacios)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
+        <target>como tabla de texto (tabulaciones)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
+        <target>resultado original</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
+        <target>Generar</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
+        <target>Resultado</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
@@ -1130,11 +1206,13 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
+        <target>separar columnas con espacios</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
+        <target>El portapapeles tendrá código HTML (texto plano) y formato HTML que puede ser pegado en programas como MS Word o LibreOffice Writer.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -1143,6 +1221,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
+        <target>argumentos para git log</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
@@ -1151,23 +1230,29 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
+        <target>Orden: Las revisiones más recientes aparecen arriba.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
+        <target>Número de revisiones = </target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
+        <target>(Las expresiones de commit pueden ser: hashes de commits,
+nombres de ramas, ó nombres de tags)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
+        <target>sin modificaciones</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
+        <target>separar columnas con tabulaciones</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
@@ -1225,6 +1310,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="btnApprove.Text">
         <source>Approve</source>
+        <target>Aprobar</target>
         
       </trans-unit>
       <trans-unit id="btnCreate.Text">
@@ -1239,10 +1325,12 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Source</source>
+        <target>Fuente</target>
         
       </trans-unit>
       <trans-unit id="groupBox2.Text">
         <source>Target</source>
+        <target>Destino</target>
         
       </trans-unit>
       <trans-unit id="groupBox3.Text">
@@ -1251,10 +1339,12 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="groupBox4.Text">
         <source>Source</source>
+        <target>Fuente</target>
         
       </trans-unit>
       <trans-unit id="groupBox5.Text">
         <source>Target</source>
+        <target>Destino</target>
         
       </trans-unit>
       <trans-unit id="groupBox6.Text">
@@ -1292,6 +1382,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label16.Text">
         <source>State</source>
+        <target>Estado</target>
         
       </trans-unit>
       <trans-unit id="label17.Text">

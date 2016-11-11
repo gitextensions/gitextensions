@@ -1219,7 +1219,7 @@ namespace GitUI.CommandsDialogs
                 return;
             Stage(Unstaged.SelectedItems.ToList());
             if (Unstaged.IsEmpty)
-                Staged.Focus();
+                Message.Focus();
         }
 
         void Unstaged_DoubleClick(object sender, EventArgs e)
@@ -1227,14 +1227,17 @@ namespace GitUI.CommandsDialogs
             _currentFilesList = Unstaged;
             Stage(Unstaged.SelectedItems.ToList());
             if (Unstaged.IsEmpty)
-                Staged.Focus();
+                Message.Focus();
         }
 
         private void StageAllAccordingToFilter()
         {
             Stage(Unstaged.GitItemFilteredStatuses);
             Unstaged.SetFilter(String.Empty);
-            Staged.Focus();
+            if (Unstaged.IsEmpty)
+                Message.Focus();
+            else
+                Staged.Focus();
         }
 
         private void StageAllToolStripMenuItemClick(object sender, EventArgs e)

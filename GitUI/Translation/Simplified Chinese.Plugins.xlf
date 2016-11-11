@@ -1,8 +1,9 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49RC2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile SubModules</source>
+        <target>自动编译子模块</target>
         
       </trans-unit>
       <trans-unit id="MsBuildArguments.Caption">
@@ -861,6 +862,10 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <source>Github</source>
         
       </trans-unit>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="zh-Hans">
@@ -1060,6 +1065,23 @@ Do you want to reset the configured path?</source>
         <target>代理切换</target>
         
       </trans-unit>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
+        
+      </trans-unit>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
+        
+      </trans-unit>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>用户名</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="zh-Hans">
@@ -1166,6 +1188,22 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Create Stash Pull Request</source>
+        
+      </trans-unit>
+      <trans-unit id="StashBaseUrl.Caption">
+        <source>Specify the base URL to Stash</source>
+        
+      </trans-unit>
+      <trans-unit id="StashDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        
+      </trans-unit>
+      <trans-unit id="StashPassword.Caption">
+        <source>Stash Password</source>
+        
+      </trans-unit>
+      <trans-unit id="StashUsername.Caption">
+        <source>Stash Username</source>
         
       </trans-unit>
     </body>

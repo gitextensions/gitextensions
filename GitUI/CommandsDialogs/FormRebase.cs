@@ -81,6 +81,8 @@ namespace GitUI.CommandsDialogs
             // Honor the rebase.autosquash configuration.
             var autosquashSetting = Module.GetEffectiveSetting("rebase.autosquash");
             chkAutosquash.Checked = "true" == autosquashSetting.Trim().ToLower();
+
+            chkStash.Checked = AppSettings.RebaseAutoStash;
         }
 
         private void EnableButtons()
@@ -198,6 +200,8 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _noBranchSelectedText.Text);
                 return;
             }
+
+            AppSettings.RebaseAutoStash = chkStash.Checked;
 
             string rebaseCmd;
             if (chkSpecificRange.Checked && !String.IsNullOrWhiteSpace(txtFrom.Text) && !String.IsNullOrWhiteSpace(cboTo.Text))

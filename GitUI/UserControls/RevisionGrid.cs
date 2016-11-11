@@ -92,6 +92,10 @@ namespace GitUI
         private AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
         private GitRevision _baseCommitToCompare = null;
+        /// <summary>
+        /// Refs loaded while the latest processing of git log
+        /// </summary>
+        private IEnumerable<GitRef> LatestRefs = Enumerable.Empty<GitRef>();
 
         public RevisionGrid()
         {
@@ -643,7 +647,7 @@ namespace GitUI
             Revisions.Select();
         }
 
-        // Selects row cotaining revision given its revisionId
+        // Selects row containing revision given its revisionId
         // Returns whether the required revision was found and selected
         private bool InternalSetSelectedRevision(string revision)
         {
@@ -654,7 +658,7 @@ namespace GitUI
                 return true;
             }
             else
-            { 
+            {
                 Revisions.ClearSelection();
                 Revisions.Select();
                 return false;
@@ -662,7 +666,7 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Find specified revision in known to the grid revisions 
+        /// Find specified revision in known to the grid revisions
         /// </summary>
         /// <param name="revision">Revision to lookup</param>
         /// <returns>Index of the found revision or -1 if nothing was found</returns>
@@ -1143,6 +1147,7 @@ namespace GitUI
         {
             if (_revisionGraphCommand != null)
             {
+                LatestRefs = _revisionGraphCommand.LatestRefs();
                 //Dispose command, it is not needed anymore
                 _revisionGraphCommand.Updated -= GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited -= GitGetCommitsCommandExited;
@@ -1694,7 +1699,8 @@ namespace GitUI
             {
                 if (revision.Body == null && !revision.IsArtificial())
                 {
-                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount, Module));
+                    var moduleRef = Module;
+                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount, moduleRef));
                 }
 
                 if (revision.Body != null)
@@ -2128,6 +2134,16 @@ namespace GitUI
             var renameDropDown = new ContextMenuStrip();
 
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
+            ISet<string> ambiguosuRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
+            Func<GitRef, string> getRefUnambiguousName = (GitRef gitRef) =>
+            {
+                if (ambiguosuRefs.Contains(gitRef.Name))
+                {
+                    return gitRef.CompleteName;
+                }
+
+                return gitRef.Name;
+            };
 
             foreach (var head in gitRefListsForRevision.AllTags)
             {
@@ -2137,7 +2153,7 @@ namespace GitUI
                 deleteTagDropDown.Items.Add(toolStripItem);
 
                 toolStripItem = new ToolStripMenuItem(head.Name);
-                toolStripItem.Tag = head.CompleteName;
+                toolStripItem.Tag = getRefUnambiguousName(head);
                 toolStripItem.Click += ToolStripItemClickMergeBranch;
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
@@ -2156,12 +2172,12 @@ namespace GitUI
                 else
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = head.CompleteName;
+                    toolStripItem.Tag = getRefUnambiguousName(head);
                     toolStripItem.Click += ToolStripItemClickMergeBranch;
                     mergeBranchDropDown.Items.Add(toolStripItem);
 
                     toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = head.CompleteName;
+                    toolStripItem.Tag = getRefUnambiguousName(head);
                     toolStripItem.Click += ToolStripItemClickRebaseBranch;
                     rebaseDropDown.Items.Add(toolStripItem);
                 }

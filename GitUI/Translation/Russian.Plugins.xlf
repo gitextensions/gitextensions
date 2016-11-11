@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49RC2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
@@ -958,6 +958,11 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>Github</target>
         
       </trans-unit>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        <target>OAuth токен</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="ru">
@@ -1026,12 +1031,18 @@ Please download Gource and set the path in the plugins settings dialog.</source>
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
+        <target>Текущий каталог не является допустимым репозиторием git.
+
+Gource может быть запущен только из репозитория git.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
+        <target>Не указан путь для Gource.
+
+Хотите скачать Gource автоматически?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
@@ -1042,6 +1053,8 @@ Do you want to automatically download Gource?</source>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Скачивание не удалось.
+Пожалуйста скачайте Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1058,6 +1071,9 @@ Please download Gource and set the path in the plugins settings dialog.</source>
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
+        <target>Не удалось найти настроенный путь для Gource: {0}
+
+Хотите сбросить настроенный путь?</target>
         
       </trans-unit>
     </body>
@@ -1176,6 +1192,26 @@ Do you want to reset the configured path?</source>
         <target>Переключение прокси</target>
         
       </trans-unit>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
+        <target>HTTP прокси</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
+        <target>HTTP прокси порт</target>
+        
+      </trans-unit>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
+        <target>Пароль</target>
+        
+      </trans-unit>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>Имя пользователя</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="ru">
@@ -1187,6 +1223,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
+        <target>Закоммитить лог из '{0}' в '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1226,6 +1263,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
+        <target>Выражение коммита &quot;To&quot; (включая):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -1236,10 +1274,12 @@ Do you want to reset the configured path?</source>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
+        <target>Буфер обмена будет содержать код HTML (голый текст) и формат HTML, который можно вставить в программы как MS Word или LibreOffice Writer.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>Выражение коммита &quot;From&quot; (исключая):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -1254,6 +1294,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
+        <target>Сортировка: последние ревизии указаны сверху.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
@@ -1264,6 +1305,8 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
+        <target>(Выражения коммита могут быть хешами,
+именами веток, тегами)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
@@ -1297,6 +1340,26 @@ branch names, tag names)</source>
       <trans-unit id="Description.Text">
         <source>Create Stash Pull Request</source>
         <target>Создать запрос на слияние в Stash</target>
+        
+      </trans-unit>
+      <trans-unit id="StashBaseUrl.Caption">
+        <source>Specify the base URL to Stash</source>
+        <target>Укажите основной URL к Stash</target>
+        
+      </trans-unit>
+      <trans-unit id="StashDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>Отключить верификацию SSL</target>
+        
+      </trans-unit>
+      <trans-unit id="StashPassword.Caption">
+        <source>Stash Password</source>
+        <target>Пароль Stash</target>
+        
+      </trans-unit>
+      <trans-unit id="StashUsername.Caption">
+        <source>Stash Username</source>
+        <target>Имя пользователя Stash</target>
         
       </trans-unit>
     </body>
@@ -1481,10 +1544,12 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
+        <target>Залогиниться как гость для отображения отчета сборки</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <target>Регулярное выражение &quot;Build Id Filter&quot; недопустимо и не будет сохранено!</target>
         
       </trans-unit>
     </body>
@@ -1493,6 +1558,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>Регулярное выражение &quot;Build definition name&quot; недопустимо и не будет сохранено!</target>
         
       </trans-unit>
     </body>

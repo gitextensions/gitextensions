@@ -18,6 +18,9 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _asyncLoader;
         private readonly FormBrowseMenus _formBrowseMenus;
 
+        private readonly TranslationString _buildReportTabCaption =
+            new TranslationString("Build Report");
+
         private FormFileHistory()
             : this(null)
         { }
@@ -164,10 +167,10 @@ namespace GitUI.CommandsDialogs
                 //
                 // But we can take a more complicated path to get reasonable results:
                 //  1. use git log --follow to get all previous filenames of the file we are interested in
-                //  2. use git log "list of files names" to get the history graph 
+                //  2. use git log "list of files names" to get the history graph
                 //
                 // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
-                // 
+                //
 
                 string arg = "log --format=\"%n\" --name-only --follow "+
                     GitCommandHelpers.FindRenamesAndCopiesOpts()
@@ -285,14 +288,14 @@ namespace GitUI.CommandsDialogs
 
             if (!EnvUtils.IsMonoRuntime())
             {
-                if (BuildReportTabPageExtension == null)
-                    BuildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1);
+                if (_buildReportTabPageExtension == null)
+                    _buildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1, _buildReportTabCaption.Text);
 
-                BuildReportTabPageExtension.FillBuildReport(selectedRows.Count == 1 ? revision : null);
+                _buildReportTabPageExtension.FillBuildReport(selectedRows.Count == 1 ? revision : null);
             }
         }
 
-        private BuildReportTabPageExtension BuildReportTabPageExtension;
+        private BuildReportTabPageExtension _buildReportTabPageExtension;
 
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {

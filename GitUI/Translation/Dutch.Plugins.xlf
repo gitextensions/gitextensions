@@ -3,10 +3,12 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile SubModules</source>
+        <target>Compileer SubModules automatisch</target>
         
       </trans-unit>
       <trans-unit id="MsBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
+        <target>msbuild.exe argumenten</target>
         
       </trans-unit>
       <trans-unit id="MsBuildEnabled.Caption">
@@ -16,16 +18,21 @@
       </trans-unit>
       <trans-unit id="MsBuildPath.Caption">
         <source>Path to msbuild.exe</source>
+        <target>Pad naar msbuild.exe</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
+        <target>Wil je {0} builden?
+
+{1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
+        <target>Voer a.u.b. het correcte pad naar MSBuild in in het instellingenscherm van de plugin en probeer nogmaals.</target>
         
       </trans-unit>
     </body>
@@ -34,22 +41,27 @@
     <body>
       <trans-unit id="AutoRefresh.Caption">
         <source>Refresh view after fetch</source>
+        <target>Ververs het scherm na iedere fetch</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
+        <target>Fetch periodiek op de achtergrond</target>
         
       </trans-unit>
       <trans-unit id="FetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
+        <target>Fetch alle submodules</target>
         
       </trans-unit>
       <trans-unit id="FetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target>Fetch iedere (seconden) - zet op 0 om uit te schakelen</target>
         
       </trans-unit>
       <trans-unit id="GitCommand.Caption">
         <source>Arguments of git command to run</source>
+        <target>Argumenten voor het git-commando</target>
         
       </trans-unit>
     </body>
@@ -58,14 +70,17 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
+        <target>Maak lokale tracking branches</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
+        <target>Maak lokale tracking branches</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
+        <target>Remote waarvoor tracking branches gemaakt moeten worden</target>
         
       </trans-unit>
     </body>
@@ -74,6 +89,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
+        <target>Maak lokale tracking branches</target>
         
       </trans-unit>
     </body>
@@ -82,10 +98,12 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
+        <target>Verwijder achterhaalde branches</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
+        <target>Laatste auteur</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -100,22 +118,27 @@
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
+        <target>Verwijder remote branches van</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
+        <target>Laatste bericht</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
+        <target>Zoek branches</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
+        <target>Weet je zeker dat je {0} geselecteerde branches wilt verwijderen?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
+        <target>{0}/{1} branches geselecteerd.</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
@@ -125,12 +148,16 @@
       </trans-unit>
       <trans-unit id="_chooseBrancesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
+        <target>Kies branches om te verwijderen. Alleen branches die volledig zijn gemerged in '{0}' worden verwijderd.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
+        <target>GEVAARLIJKE ACTIE
+Branches worden verwijderd op de remote '{0}'. Dit kan niet ongedaan gemaakt worden.
+Weet u zeker dat u door wilt gaan?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -140,10 +167,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
+        <target>Bezig met branches verwijderen...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target>Het verwijderen van niet-gemergde branches zal resulteren in losse commits. Wees voorizchtig!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -153,14 +182,17 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
+        <target>Druk '{0}' om branches te zoeken om te verwijderen.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
+        <target>Zoek branches</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
+        <target>Selecteer branches om te verwijderen met de checkboxes in de '{0}' kolom.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -170,6 +202,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
+        <target>Laatste activiteit</target>
         
       </trans-unit>
       <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
@@ -179,14 +212,17 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
+        <target>Inclusief niet-gemergde branches</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
+        <target>Verwijder branches ouder dan x dagen</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
+        <target>Verwijder branches die volledig gemerged zijn in branch</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -196,18 +232,22 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
+        <target>Matcht niet</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
+        <target>/(feature|develop)/</target>
         
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
+        <target>Niet-hoofdlettergevoelig</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
+        <target>Gebruik regex om branches te filteren</target>
         
       </trans-unit>
     </body>
@@ -216,14 +256,17 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="DaysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
+        <target>Verwijder verouderde branches ouder dan (dagen)</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
+        <target>Verwijder achterhaalde branches</target>
         
       </trans-unit>
       <trans-unit id="MergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
+        <target>De branch waar alle branches in gemerged moeten worden</target>
         
       </trans-unit>
     </body>
@@ -232,6 +275,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
+        <target>Zoek grote bestanden</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -241,6 +285,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
+        <target>Gecomprimeerde grootte</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
@@ -250,6 +295,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
+        <target>Weet u zeker dat u de geselecteerde regels wilt verwijderen?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -269,10 +315,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
+        <target>Reset lokale wijzigingen voor het verwijderen van bestanden. Kies bestanden om te verwijderen. Push geforceerd om data te vervangen op de remote repository.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
+        <target>Laatste commit datum</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
@@ -282,10 +330,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
         <source>SHA</source>
+        <target>SHA</target>
         
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
+        <target>Grootte</target>
         
       </trans-unit>
     </body>
@@ -294,10 +344,12 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Find large files</source>
+        <target>Zoek grote bestanden</target>
         
       </trans-unit>
       <trans-unit id="SizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
+        <target>Zoek bestanden groter dan (Mb)</target>
         
       </trans-unit>
     </body>
@@ -526,10 +578,12 @@ defaultrebase=0</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
+        <target>Statistieken</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
+        <target>Bezig...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
@@ -554,78 +608,97 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
+        <target>Totaal commits</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
+        <target>Totaal regels code</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
+        <target>Totaal regels code</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
+        <target>Totaal regels code</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0} Blank lines ({1})</source>
+        <target>{0} Lege regels ({1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0} Comment lines ({1})</source>
+        <target>{0} Regels commentaar ({1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0} Commits</source>
+        <target>{0} Commits</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0} Commits by {1}</source>
+        <target>{0} Commits door {1}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0} Lines of code</source>
+        <target>{0} Regels code</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0} Lines of code in {1} files ({2})</source>
+        <target>{0} Regels code in {1} bestanden ({2})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0} Lines of code ({1})</source>
+        <target>{0} Regels code ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0} Lines in designer files ({1})</source>
+        <target>{0} Regels in designer-bestanden ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0} Lines of production code ({1})</source>
+        <target>{0} Regels productiecode ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0} Lines of test code</source>
+        <target>{0} Regels testcode</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0} Lines of test code ({1})</source>
+        <target>{0} Regels testcode ({1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
+        <target>Regels code per taal</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
+        <target>Commits per persoon</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
+        <target>Regels code per type</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
+        <target>Regels test code</target>
         
       </trans-unit>
     </body>
@@ -634,14 +707,17 @@ defaultrebase=0</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
+        <target>Impact</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
+        <target>{0} ({1} Commits, {2} Gewijzigde Regels)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
+        <target>Inclusief submodules</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
@@ -756,10 +832,12 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
+        <target>GitFlow</target>
         
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
         <source>A good branch model for your project with Git...</source>
+        <target>Een goed branch model voor je Git project...</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -769,6 +847,7 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
       </trans-unit>
       <trans-unit id="_noBranchExist.Text">
         <source>No {0} branches exist.</source>
+        <target>Er bestaan geen {0} branches.</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
@@ -778,18 +857,22 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
       </trans-unit>
       <trans-unit id="btnCreateBranch.Text">
         <source>Start!</source>
+        <target>Start!</target>
         
       </trans-unit>
       <trans-unit id="btnFinish.Text">
         <source>Finish</source>
+        <target>Finish</target>
         
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
+        <target>Init GitFlow</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
         <source>Publish</source>
+        <target>Publiceer</target>
         
       </trans-unit>
       <trans-unit id="btnPull.Text">
@@ -799,50 +882,62 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
+        <target>gebaseerd op:</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
+        <target>Beheer bestaande branches:</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
+        <target>Start branch:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>branch:</source>
+        <target>branch:</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Expected name:</source>
+        <target>Verwachte naam:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
+        <target>commando:</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
+        <target>Remote om van te pullen:</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
         <source>HEAD:</source>
+        <target>HEAD:</target>
         
       </trans-unit>
       <trans-unit id="lblHead.Text">
         <source>ref/...</source>
+        <target>ref/...</target>
         
       </trans-unit>
       <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
+        <target>[prefix]/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
+        <target>Over GitFlow</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
+        <target>Resultaat van uitvoeren git flow</target>
         
       </trans-unit>
     </body>
@@ -851,6 +946,7 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
     <body>
       <trans-unit id="Description.Text">
         <source>GitFlow</source>
+        <target>GitFlow</target>
         
       </trans-unit>
     </body>
@@ -859,6 +955,7 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
     <body>
       <trans-unit id="Description.Text">
         <source>Github</source>
+        <target>Github</target>
         
       </trans-unit>
     </body>
@@ -867,6 +964,7 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
+        <target>Impact Grafiek</target>
         
       </trans-unit>
     </body>
@@ -875,18 +973,22 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
     <body>
       <trans-unit id="CodeFiles.Caption">
         <source>Code files</source>
+        <target>Code bestanden</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
+        <target>Statistieken</target>
         
       </trans-unit>
       <trans-unit id="IgnoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
+        <target>Te negeren directories (EndsWith)</target>
         
       </trans-unit>
       <trans-unit id="IgnoreSubmodules.Caption">
         <source>Ignore submodules</source>
+        <target>Negeer submodules</target>
         
       </trans-unit>
     </body>
@@ -895,58 +997,78 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
     <body>
       <trans-unit id="Description.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="GourceArguments.Caption">
         <source>Arguments</source>
+        <target>Argumenten</target>
         
       </trans-unit>
       <trans-unit id="GourcePath.Caption">
         <source>Path to Gource</source>
+        <target>Pad naar Gource</target>
         
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
+        <target>{0} bytes gedownload.</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Kan Gource niet vinden.
+Download Gource, a.u.b., en stel het correcte pad in in het plugin instellingen scherm.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
+        <target>De huidige directory is geen geldige git repository.
+
+Gource kan alleen gestart worden in een geldige git repository.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
+        <target>Het pad naar Gource is niet ingesteld.
+
+Wilt u automatisch Gource downloaden?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
+        <target>Downloaden</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Downloaden mislukt.
+Download Gource en stel het pad in in het plugins instellingen scherm.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
+        <target>Gource is gedownload en ge-unzipt.</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
+        <target>Kan Gource niet vinden in het opgegeven pad: {0}.
+
+Wilt het het pad opnieuw instellen?</target>
         
       </trans-unit>
     </body>
@@ -955,10 +1077,12 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
+        <target>Argumenten</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
@@ -978,6 +1102,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
+        <target>Pad naar Gource</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -987,10 +1112,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
+        <target>Gource project</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
+        <target>Gource command line</target>
         
       </trans-unit>
     </body>
@@ -999,10 +1126,12 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="label1.Text">
         <source>Project name</source>
+        <target>Projectnaam</target>
         
       </trans-unit>
       <trans-unit id="label13.Text">
         <source>Jenkins server URL</source>
+        <target>URL van Jenkins server</target>
         
       </trans-unit>
     </body>
@@ -1011,34 +1140,42 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
+        <target>Proxy Switcher</target>
         
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
+        <target>Globaal toepassen</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
+        <target>Globale http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
+        <target>Lokale http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
         <source>Set proxy</source>
+        <target>Proxy instellen</target>
         
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
         <source>Unset proxy</source>
+        <target>Geen proxy</target>
         
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
+        <target>Er is geen proxy ingesteld. Vul de proxy server in in het instellingen scherm van de plugin.</target>
         
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
+        <target>Proxy Switcher</target>
         
       </trans-unit>
     </body>
@@ -1047,6 +1184,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
+        <target>Proxy Switcher</target>
         
       </trans-unit>
     </body>
@@ -1055,34 +1193,42 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
+        <target>Release Notes Generator</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
+        <target>Commit log van '{0}' tot '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
+        <target>als HTML tabel</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
+        <target>als tekst tabel (spaties)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
+        <target>als tekst tabel (tabs)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
+        <target>originele output</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
+        <target>Genereer</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
+        <target>Resultaat</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
@@ -1092,48 +1238,61 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
+        <target>Commit expressie &quot;Naar&quot; (inclusief):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
+        <target>scheid kolommen met spaties</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
+        <target>Het klembord zal HTML code (platte tekst) en HTML formaat bevatten.
+Dit kan geplakt worden in programma's als MS Word en LibreOffice Writer.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>Commit expressie &quot;Van&quot; (exclusief):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
+        <target>git log argumenten:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
+        <target>{0} = van; {1} = naar</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
+        <target>Sortering: Meest recente revisies bovenaan.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
+        <target>Aantal revisies =</target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
+        <target>(Commit expressies kunnen commit hashes,
+branch namen of tag namen zijn)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
+        <target>as is</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
+        <target>scheid kolommen met tabs</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
@@ -1147,6 +1306,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
+        <target>Release Notes Generator</target>
         
       </trans-unit>
     </body>
@@ -1155,6 +1315,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Create Stash Pull Request</source>
+        <target>Maak Pull Request voor Stash</target>
         
       </trans-unit>
     </body>
@@ -1174,6 +1335,8 @@ branch names, tag names)</source>
       <trans-unit id="_commited.Text">
         <source>{0} committed
 {1}</source>
+        <target>{0} gecommit
+{1}</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -1183,14 +1346,17 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
+        <target>Succes</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInStash.Text">
         <source>Your repository is not hosted in Stash.</source>
+        <target>Uw repository wordt niet gehost in Stash.</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
         <source>Approve</source>
+        <target>Goedkeuren</target>
         
       </trans-unit>
       <trans-unit id="btnCreate.Text">
@@ -1205,30 +1371,37 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Source</source>
+        <target>Bron</target>
         
       </trans-unit>
       <trans-unit id="groupBox2.Text">
         <source>Target</source>
+        <target>Doel</target>
         
       </trans-unit>
       <trans-unit id="groupBox3.Text">
         <source>Pull Request Info</source>
+        <target>Pull Request Info</target>
         
       </trans-unit>
       <trans-unit id="groupBox4.Text">
         <source>Source</source>
+        <target>Bron</target>
         
       </trans-unit>
       <trans-unit id="groupBox5.Text">
         <source>Target</source>
+        <target>Doel</target>
         
       </trans-unit>
       <trans-unit id="groupBox6.Text">
         <source>Pull Request Info</source>
+        <target>Pull Request Info</target>
         
       </trans-unit>
       <trans-unit id="groupBox9.Text">
         <source>Information</source>
+        <target>Informatie</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1238,6 +1411,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Reviewer (approved)</source>
+        <target>Reviewer (goedgekeurd)</target>
         
       </trans-unit>
       <trans-unit id="label12.Text">
@@ -1257,6 +1431,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label16.Text">
         <source>State</source>
+        <target>Status</target>
         
       </trans-unit>
       <trans-unit id="label17.Text">
@@ -1306,6 +1481,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="lblReviewers.Text">
         <source>Reviewer(s)</source>
+        <target>Reviewer(s)</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
@@ -1324,10 +1500,12 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
+        <target>Log als gast om het bouw rapport weer te geven</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <target>De regular expressie voor &quot;Bouw Id Filter&quot; is niet geldig en wordt niet opgeslagen!</target>
         
       </trans-unit>
     </body>
@@ -1336,6 +1514,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>De regular expressie voor &quot;Bouw definitienaam&quot; is niet geldig en wordt niet opgeslagen!</target>
         
       </trans-unit>
     </body>

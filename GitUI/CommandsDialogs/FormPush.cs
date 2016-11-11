@@ -239,7 +239,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                EnsurePageant(_NO_TRANSLATE_Remotes.Text);                
+                EnsurePageant(_NO_TRANSLATE_Remotes.Text);
 
                 destination = _NO_TRANSLATE_Remotes.Text;
                 remote = _NO_TRANSLATE_Remotes.Text.Trim();
@@ -529,7 +529,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 bool pullCompleted;
-                UICommands.StartPullDialog(owner, true, null, _selectedBranchRemote, out pullCompleted, false);
+                UICommands.StartPullDialog(owner, true, _selectedRemoteBranchName, _selectedBranchRemote, out pullCompleted, false);
                 if (pullCompleted)
                 {
                     form.Retry();
