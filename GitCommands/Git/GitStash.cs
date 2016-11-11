@@ -19,6 +19,7 @@ namespace GitCommands
         const string NameFormat = "stash@{{{0}}}";
         const string DefaultFormat = "WIP on ";
         const string CustomFormat = "On ";
+        const string AutostashFormat = "autostash";
         static int DefaultFormatLength = DefaultFormat.Length;
         static int CustomFormatLength = CustomFormat.Length;
 
@@ -34,6 +35,7 @@ namespace GitCommands
 
             // "stash@{i}: WIP on {branch}: {PreviousCommitMiniSHA} {PreviousCommitMessage}"
             // "stash@{i}: On {branch}: {Message}"
+            // "stash@{i}: autostash"
 
             _stash = stash;
             Index = i;
@@ -44,7 +46,8 @@ namespace GitCommands
             if (msgStart < stash.Length)
             {
                 Message = stash.Substring(msgStart).Trim();
-                FindBranch();
+                if(Message != AutostashFormat)
+                    FindBranch();
             }
         }
 
