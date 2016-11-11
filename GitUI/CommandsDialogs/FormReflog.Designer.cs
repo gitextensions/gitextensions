@@ -1,4 +1,4 @@
-namespace GitUI.CommandsDialogs.RefLogDialog
+namespace GitUI.CommandsDialogs
 {
     partial class FormReflog
     {
@@ -46,6 +46,7 @@ namespace GitUI.CommandsDialogs.RefLogDialog
             this.copySha1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createABranchOnThisCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetCurrentBranchOnThisCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblDirtyWorkingDirectory = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.branchesPanel.SuspendLayout();
             this.currentBranchPanel.SuspendLayout();
@@ -83,14 +84,16 @@ namespace GitUI.CommandsDialogs.RefLogDialog
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.branchesPanel, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.currentBranchPanel, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.gridReflog, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.branchesPanel, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.currentBranchPanel, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.gridReflog, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.lblDirtyWorkingDirectory, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(782, 555);
@@ -102,7 +105,7 @@ namespace GitUI.CommandsDialogs.RefLogDialog
             this.branchesPanel.Controls.Add(this.label2);
             this.branchesPanel.Controls.Add(this.Branches);
             this.branchesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.branchesPanel.Location = new System.Drawing.Point(4, 4);
+            this.branchesPanel.Location = new System.Drawing.Point(4, 38);
             this.branchesPanel.Margin = new System.Windows.Forms.Padding(4);
             this.branchesPanel.Name = "branchesPanel";
             this.branchesPanel.Size = new System.Drawing.Size(362, 32);
@@ -114,10 +117,10 @@ namespace GitUI.CommandsDialogs.RefLogDialog
             this.currentBranchPanel.Controls.Add(this.linkCurrentBranch);
             this.currentBranchPanel.Controls.Add(this.linkHead);
             this.currentBranchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.currentBranchPanel.Location = new System.Drawing.Point(374, 4);
+            this.currentBranchPanel.Location = new System.Drawing.Point(374, 38);
             this.currentBranchPanel.Margin = new System.Windows.Forms.Padding(4);
             this.currentBranchPanel.Name = "currentBranchPanel";
-            this.currentBranchPanel.Size = new System.Drawing.Size(404, 32);
+            this.currentBranchPanel.Size = new System.Drawing.Size(453, 32);
             this.currentBranchPanel.TabIndex = 8;
             // 
             // label1
@@ -173,13 +176,13 @@ namespace GitUI.CommandsDialogs.RefLogDialog
             this.Message});
             this.tableLayoutPanel1.SetColumnSpan(this.gridReflog, 2);
             this.gridReflog.ContextMenuStrip = this.contextMenuStripReflog;
-            this.gridReflog.Location = new System.Drawing.Point(3, 43);
+            this.gridReflog.Location = new System.Drawing.Point(3, 77);
             this.gridReflog.MultiSelect = false;
             this.gridReflog.Name = "gridReflog";
             this.gridReflog.ReadOnly = true;
             this.gridReflog.RowTemplate.Height = 24;
             this.gridReflog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridReflog.Size = new System.Drawing.Size(776, 509);
+            this.gridReflog.Size = new System.Drawing.Size(825, 509);
             this.gridReflog.TabIndex = 33;
             this.gridReflog.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gridReflog_MouseClick);
             this.gridReflog.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gridReflog_MouseMove);
@@ -224,7 +227,7 @@ namespace GitUI.CommandsDialogs.RefLogDialog
             this.createABranchOnThisCommitToolStripMenuItem,
             this.resetCurrentBranchOnThisCommitToolStripMenuItem});
             this.contextMenuStripReflog.Name = "contextMenuStripReflog";
-            this.contextMenuStripReflog.Size = new System.Drawing.Size(323, 110);
+            this.contextMenuStripReflog.Size = new System.Drawing.Size(323, 82);
             // 
             // copySha1ToolStripMenuItem
             // 
@@ -246,6 +249,22 @@ namespace GitUI.CommandsDialogs.RefLogDialog
             this.resetCurrentBranchOnThisCommitToolStripMenuItem.Size = new System.Drawing.Size(322, 26);
             this.resetCurrentBranchOnThisCommitToolStripMenuItem.Text = "Reset current branch on this commit";
             this.resetCurrentBranchOnThisCommitToolStripMenuItem.Click += new System.EventHandler(this.resetCurrentBranchOnThisCommitToolStripMenuItem_Click);
+            // 
+            // lblDirtyWorkingDirectory
+            // 
+            this.lblDirtyWorkingDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDirtyWorkingDirectory.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.lblDirtyWorkingDirectory, 2);
+            this.lblDirtyWorkingDirectory.ForeColor = System.Drawing.Color.Red;
+            this.lblDirtyWorkingDirectory.Location = new System.Drawing.Point(3, 0);
+            this.lblDirtyWorkingDirectory.Name = "lblDirtyWorkingDirectory";
+            this.lblDirtyWorkingDirectory.Size = new System.Drawing.Size(825, 34);
+            this.lblDirtyWorkingDirectory.TabIndex = 34;
+            this.lblDirtyWorkingDirectory.Text = "Warning: you\'ve got changes in your working directory that could be lost if you w" +
+    "ant to reset the current branch to another commit.\r\nStash them before if you don" +
+    "\'t want to lost them.";
+            this.lblDirtyWorkingDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FormReflog
             // 
@@ -291,5 +310,6 @@ namespace GitUI.CommandsDialogs.RefLogDialog
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel linkCurrentBranch;
         private System.Windows.Forms.LinkLabel linkHead;
+        private System.Windows.Forms.Label lblDirtyWorkingDirectory;
     }
 }

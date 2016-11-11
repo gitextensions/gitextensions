@@ -20,7 +20,6 @@ using GitCommands.Repository;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
-using GitUI.CommandsDialogs.RefLogDialog;
 using GitUI.Hotkey;
 using GitUI.Plugin;
 using GitUI.Properties;

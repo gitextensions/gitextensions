@@ -5,17 +5,20 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ResourceManager;
 
-namespace GitUI.CommandsDialogs.RefLogDialog
+namespace GitUI.CommandsDialogs
 {
     public partial class FormReflog : GitModuleForm
     {
         private readonly TranslationString _continueResetCurrentBranchText = new TranslationString("Are you sure you want to reset the current branch to this commit?");
+        private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new TranslationString("You've got changes in your working directory that will be lost.\n\nAre you sure you want to reset the current branch to this commit?");
         private readonly TranslationString _continueResetCurrentBranchCaptionText = new TranslationString("Reset the current branch to a specific commit.");
 
         private readonly Regex _regexReflog = new Regex("^([^ ]+) ([^:]+): (.+): (.+)$", RegexOptions.Compiled);
 
         private string _currentBranch;
         private bool _isBranchCheckedOut;
+        private bool _isDirtyDir;
+        private int _lastHitRowIndex;
 
         public FormReflog(GitUICommands uiCommands)
             : base(uiCommands)
@@ -26,10 +29,14 @@ namespace GitUI.CommandsDialogs.RefLogDialog
 
         private void FormReflog_Load(object sender, EventArgs e)
         {
+            _isDirtyDir = UICommands.Module.IsDirtyDir();
             _currentBranch = UICommands.Module.GetSelectedBranch();
-            linkCurrentBranch.Text = "current branch (" + _currentBranch + ")";
             _isBranchCheckedOut = _currentBranch != "(no branch)";
-            resetCurrentBranchOnThisCommitToolStripMenuItem.Enabled = UICommands.GitModule.IsDetachedHead();
+            linkCurrentBranch.Text = "current branch (" + _currentBranch + ")";
+            linkCurrentBranch.Visible = _isBranchCheckedOut;
+            _lastHitRowIndex = 0;
+            lblDirtyWorkingDirectory.Visible = _isDirtyDir;
+            resetCurrentBranchOnThisCommitToolStripMenuItem.Enabled = _isBranchCheckedOut;
 
             var branches = new List<string> { "HEAD" };
             branches.AddRange(UICommands.Module.GetRefs(false, true).Select(r => r.Name));
@@ -104,10 +111,24 @@ namespace GitUI.CommandsDialogs.RefLogDialog
 
         private void resetCurrentBranchOnThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, _continueResetCurrentBranchText.Text, _continueResetCurrentBranchCaptionText.Text,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (_isDirtyDir)
             {
-                return;
+                if (MessageBox.Show(this, _continueResetCurrentBranchEvenWithChangesText.Text,
+                        _continueResetCurrentBranchCaptionText.Text,
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                {
+                    return;
+                }
+            }
+            else
+            {
+
+                if (MessageBox.Show(this, _continueResetCurrentBranchText.Text,
+                        _continueResetCurrentBranchCaptionText.Text,
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return;
+                }
             }
 
             UICommands.GitCommand("reset --hard " + GetShaOfRefLine());
@@ -134,7 +155,9 @@ namespace GitUI.CommandsDialogs.RefLogDialog
             DataGridView.HitTestInfo hit = gridReflog.HitTest(e.X, e.Y);
             if (hit.Type == DataGridViewHitTestType.Cell)
             {
-                gridReflog.Rows[hit.RowIndex].Selected = true;
+                gridReflog.Rows[_lastHitRowIndex].Selected = false;
+                _lastHitRowIndex = hit.RowIndex;
+                gridReflog.Rows[_lastHitRowIndex].Selected = true;
             }
         }
 
