@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
@@ -64,7 +65,7 @@ namespace GitCommands
 
         private const string CommitBegin = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
 
-        private Dictionary<string, List<GitRef>> _refs;
+        private Dictionary<string, List<IGitRef>> _refs;
 
         private enum ReadStep
         {
@@ -262,12 +263,12 @@ namespace GitCommands
                 Exited(this, EventArgs.Empty);
         }
 
-        private IList<GitRef> GetRefs()
+        private IList<IGitRef> GetRefs()
         {
             var result = _module.GetRefs(true);
             bool validWorkingDir = _module.IsValidGitWorkingDir();
             _selectedBranchName = validWorkingDir ? _module.GetSelectedBranch() : string.Empty;
-            GitRef selectedRef = result.FirstOrDefault(head => head.Name == _selectedBranchName);
+            var selectedRef = result.FirstOrDefault(head => head.Name == _selectedBranchName);
 
             if (selectedRef != null)
             {
@@ -291,11 +292,11 @@ namespace GitCommands
         /// 
         /// </summary>
         /// <returns>Refs loaded while the latest processing of git log</returns>
-        public IEnumerable<GitRef> LatestRefs()
+        public IEnumerable<IGitRef> LatestRefs()
         {
             if (_refs == null)
             {
-                return Enumerable.Empty<GitRef>();
+                return Enumerable.Empty<IGitRef>();
             }
             else
             {
@@ -352,7 +353,7 @@ namespace GitCommands
 
                     _revision.Guid = lines[1];
                     {
-                        List<GitRef> gitRefs;
+                        List<IGitRef> gitRefs;
                         if (_refs.TryGetValue(_revision.Guid, out gitRefs))
                             _revision.Refs.AddRange(gitRefs);
                     }

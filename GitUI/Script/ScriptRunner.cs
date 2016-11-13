@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Security.Policy;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
 
 namespace GitUI.Script
 {
@@ -90,16 +89,16 @@ namespace GitUI.Script
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
 
-            var selectedLocalBranches = new List<GitRef>();
-            var selectedRemoteBranches = new List<GitRef>();
+            var selectedLocalBranches = new List<IGitRef>();
+            var selectedRemoteBranches = new List<IGitRef>();
             var selectedRemotes = new List<string>();
-            var selectedBranches = new List<GitRef>();
-            var selectedTags = new List<GitRef>();
-            var currentLocalBranches = new List<GitRef>();
-            var currentRemoteBranches = new List<GitRef>();
+            var selectedBranches = new List<IGitRef>();
+            var selectedTags = new List<IGitRef>();
+            var currentLocalBranches = new List<IGitRef>();
+            var currentRemoteBranches = new List<IGitRef>();
             var currentRemote = "";
-            var currentBranches = new List<GitRef>();
-            var currentTags = new List<GitRef>();
+            var currentBranches = new List<IGitRef>();
+            var currentTags = new List<IGitRef>();
 
             foreach (string option in Options)
             {
@@ -340,9 +339,9 @@ namespace GitUI.Script
            
         }
 
-        private static GitRevision CalculateSelectedRevision(RevisionGrid revisionGrid, List<GitRef> selectedRemoteBranches,
-                                                             List<string> selectedRemotes, List<GitRef> selectedLocalBranches,
-                                                             List<GitRef> selectedBranches, List<GitRef> selectedTags)
+        private static GitRevision CalculateSelectedRevision(RevisionGrid revisionGrid, List<IGitRef> selectedRemoteBranches,
+                                                             List<string> selectedRemotes, List<IGitRef> selectedLocalBranches,
+                                                             List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
             GitRevision selectedRevision = revisionGrid.GetRevision(revisionGrid.LastRowIndex);
             foreach (GitRef head in selectedRevision.Refs)
@@ -366,13 +365,13 @@ namespace GitUI.Script
             return selectedRevision;
         }
 
-        private static GitRevision GetCurrentRevision(GitModule aModule, RevisionGrid RevisionGrid, List<GitRef> currentTags, List<GitRef> currentLocalBranches,
-                                                      List<GitRef> currentRemoteBranches, List<GitRef> currentBranches,
+        private static GitRevision GetCurrentRevision(GitModule aModule, RevisionGrid RevisionGrid, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
+                                                      List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches,
                                                       GitRevision currentRevision)
         {
             if (currentRevision == null)
             {
-                IList<GitRef> refs;
+                IList<IGitRef> refs;
 
                 if (RevisionGrid == null)
                 {
@@ -385,7 +384,7 @@ namespace GitUI.Script
                     refs = currentRevision.Refs;
                 }
 
-                foreach (GitRef gitRef in refs)
+                foreach (IGitRef gitRef in refs)
                 {
                     if (gitRef.IsTag)
                         currentTags.Add(gitRef);
@@ -460,7 +459,7 @@ namespace GitUI.Script
             return originalCommand;
         }
 
-        private static string askToSpecify(IEnumerable<GitRef> options, string title)
+        private static string askToSpecify(IEnumerable<IGitRef> options, string title)
         {
             using (var f = new FormRunScriptSpecify(options, title))
             {

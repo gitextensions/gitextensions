@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using JetBrains.Annotations;
 
@@ -20,7 +21,7 @@ namespace GitCommands
 
         public string[] ParentGuids;
         private IList<IGitItem> _subItems;
-        private readonly List<GitRef> _refs = new List<GitRef>();
+        private readonly List<IGitRef> _refs = new List<IGitRef>();
         private readonly GitModule _module;
         private BuildInfo _buildStatus;
 
@@ -31,7 +32,7 @@ namespace GitCommands
             _module = aModule;
         }
 
-        public List<GitRef> Refs { get { return _refs; } }
+        public List<IGitRef> Refs { get { return _refs; } }
 
         public string TreeGuid { get; set; }
 

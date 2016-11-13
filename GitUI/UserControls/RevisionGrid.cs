@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.DirectoryServices;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -12,19 +11,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Config;
 using GitCommands.Git;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.RevisionGridClasses;
 using GitUI.Script;
+using GitUI.UserControls;
+using GitUI.UserControls.RevisionGridClasses;
+using GitUIPluginInterfaces;
 using Gravatar;
 using ResourceManager;
-using GitUI.UserControls.RevisionGridClasses;
-using GitUI.CommandsDialogs.BrowseDialog;
-using GitUI.UserControls;
 
 namespace GitUI
 {
@@ -95,7 +94,7 @@ namespace GitUI
         /// <summary>
         /// Refs loaded while the latest processing of git log
         /// </summary>
-        private IEnumerable<GitRef> LatestRefs = Enumerable.Empty<GitRef>();
+        private IEnumerable<IGitRef> LatestRefs = Enumerable.Empty<IGitRef>();
 
         public RevisionGrid()
         {
@@ -894,7 +893,7 @@ namespace GitUI
             Translate();
         }
 
-        public bool ShowRemoteRef(GitRef r)
+        public bool ShowRemoteRef(IGitRef r)
         {
             if (r.IsTag)
                 return AppSettings.ShowSuperprojectTags;
@@ -1055,10 +1054,10 @@ namespace GitUI
             public string Conflict_Base;
             public string Conflict_Remote;
             public string Conflict_Local;
-            public Dictionary<string, List<GitRef>> Refs;
+            public Dictionary<string, List<IGitRef>> Refs;
         }
 
-        private SuperProjectInfo GetSuperprojectCheckout(Func<GitRef, bool> showRemoteRef)
+        private SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef)
         {
             if (Module.SuperprojectModule == null)
                 return null;
@@ -1338,7 +1337,7 @@ namespace GitUI
                 return;
 
             var spi = SuperprojectCurrentCheckout.IsCompleted ? SuperprojectCurrentCheckout.Result : null;
-            var superprojectRefs = new List<GitRef>();
+            var superprojectRefs = new List<IGitRef>();
             if (spi != null && spi.Refs != null && spi.Refs.ContainsKey(revision.Guid))
             {
                 superprojectRefs.AddRange(spi.Refs[revision.Guid].Where(ShowRemoteRef));
@@ -1758,7 +1757,7 @@ namespace GitUI
                                  cellBounds.Width - (int)offset, cellBounds.Height);
         }
 
-        private static Color GetHeadColor(GitRef gitRef)
+        private static Color GetHeadColor(IGitRef gitRef)
         {
             if (gitRef.IsTag)
                 return AppSettings.TagColor;
@@ -2135,7 +2134,7 @@ namespace GitUI
 
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
             ISet<string> ambiguosuRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
-            Func<GitRef, string> getRefUnambiguousName = (GitRef gitRef) =>
+            Func<IGitRef, string> getRefUnambiguousName = (IGitRef gitRef) =>
             {
                 if (ambiguosuRefs.Contains(gitRef.Name))
                 {
