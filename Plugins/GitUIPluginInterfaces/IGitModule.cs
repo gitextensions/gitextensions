@@ -55,6 +55,9 @@ namespace GitUIPluginInterfaces
         /// <summary>Indicates whether the specified directory contains a git repository.</summary>
         bool IsValidGitWorkingDir();
 
+        /// <summary>Indicates whether the repository is in a 'detached HEAD' state.</summary>
+        bool IsDetachedHead();
+
         /// <summary>Gets the path to the git application executable.</summary>
         string GitCommand { get; }
 
