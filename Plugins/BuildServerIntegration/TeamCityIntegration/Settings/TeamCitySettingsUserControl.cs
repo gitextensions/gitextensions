@@ -14,7 +14,13 @@ namespace TeamCityIntegration.Settings
     public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {
         private string _defaultProjectName;
-        private TeamCityAdapter _teamCityAdapter = new TeamCityAdapter();
+        private readonly TeamCityAdapter _teamCityAdapter = new TeamCityAdapter();
+        private readonly TranslationString _failToLoadProjectMessage = new TranslationString("Fail to load the projects and build list." + Environment.NewLine + "Please verify the server url.");
+        private readonly TranslationString _failToLoadProjectCaption = new TranslationString("Error when loading the projects and build list");
+        private readonly TranslationString _failToExtractDataFromClipboardMessage = new TranslationString( "The clipboard doesn't contain a valid build url." + Environment.NewLine + Environment.NewLine +
+                "Please copy in the clipboard the url of the build before retrying." + Environment.NewLine +
+                "(Should contains at least the parameter\"buildTypeId\")");
+        private readonly TranslationString _failToExtractDataFromClipboardCaption = new TranslationString("Build url not valid");
 
         public TeamCitySettingsUserControl()
         {
@@ -72,9 +78,7 @@ namespace TeamCityIntegration.Settings
             }
             catch (Exception)
             {
-                MessageBox.Show(this,
-                    "Fail to load the projects and build list." + Environment.NewLine + "Please verify the server url.",
-                    "Error when loading the projects and build list", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _failToLoadProjectMessage.Text, _failToLoadProjectCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -88,7 +92,7 @@ namespace TeamCityIntegration.Settings
             buttonProjectChooser.Enabled = !string.IsNullOrWhiteSpace(TeamCityServerUrl.Text);
         }
 
-        Regex teamcityBuildUrlParameters = new Regex(@"(\?|\&)([^=]+)\=([^&]+)");
+        readonly Regex _teamcityBuildUrlParameters = new Regex(@"(\?|\&)([^=]+)\=([^&]+)");
         private void lnkExtractDataFromBuildUrlCopiedInTheClipboard_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (Clipboard.ContainsText() && Clipboard.GetText().Contains("buildTypeId="))
@@ -98,7 +102,7 @@ namespace TeamCityIntegration.Settings
                 TeamCityServerUrl.Text = teamCityServerUrl;
                 _teamCityAdapter.InitializeHttpClient(teamCityServerUrl);
 
-                var paramResults = teamcityBuildUrlParameters.Matches(buildUri.Query);
+                var paramResults = _teamcityBuildUrlParameters.Matches(buildUri.Query);
                 foreach (Match paramResult in paramResults)
                 {
                     if (paramResult.Success)
@@ -114,10 +118,7 @@ namespace TeamCityIntegration.Settings
                 }
             }
 
-            MessageBox.Show(this,
-                "The clipboard doesn't contain a valid build url." + Environment.NewLine + Environment.NewLine +
-                "Please copy in the clipboard the url of the build before retrying." + Environment.NewLine +
-                "(Should contains at least the parameter\"buildTypeId\")", "Build url not valid",
+            MessageBox.Show(this, _failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text,
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
         }
