@@ -1977,11 +1977,14 @@ namespace GitCommands
             return patchFiles;
         }
 
-        public string CommitCmd(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = true)
+        public string CommitCmd(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = true, bool noVerify = false)
         {
             string command = "commit";
             if (amend)
                 command += " --amend";
+
+            if (noVerify)
+                command += " --no-verify";
 
             if (signOff)
                 command += " --signoff";
