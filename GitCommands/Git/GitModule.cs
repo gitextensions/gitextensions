@@ -2584,7 +2584,7 @@ namespace GitCommands
 
             if (branches)
                 return RunGitCmd(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", SystemEncoding);
-            return ""; 
+            return "";
         }
 
         public IList<GitRef> GetTreeRefs(string tree)
