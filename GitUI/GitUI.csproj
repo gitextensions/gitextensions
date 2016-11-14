@@ -1593,8 +1593,12 @@
     <None Include="Translation\Dutch.xlf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Translation\English.Plugins.xlf" />
-    <None Include="Translation\English.xlf" />
+    <None Include="Translation\English.Plugins.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\English.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Translation\en_pseudo.Plugins.xlf" />
     <None Include="Translation\en_pseudo.xlf" />
     <None Include="Translation\French.Plugins.xlf">
