@@ -2583,8 +2583,8 @@ namespace GitCommands
                 return RunGitCmd("show-ref --tags", SystemEncoding);
 
             if (branches)
-                return RunGitCmd("show-ref --dereference --heads", SystemEncoding);
-            return "";
+                return RunGitCmd(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", SystemEncoding);
+            return ""; 
         }
 
         public IList<GitRef> GetTreeRefs(string tree)
