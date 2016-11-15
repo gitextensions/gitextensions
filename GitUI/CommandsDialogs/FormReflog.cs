@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitUI.HelperDialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public partial class FormReflog : GitModuleForm
     {
-        private readonly TranslationString _continueResetCurrentBranchText = new TranslationString("Are you sure you want to reset the current branch to this commit?");
-        private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new TranslationString("You've got changes in your working directory that will be lost.\n\nAre you sure you want to reset the current branch to this commit?");
-        private readonly TranslationString _continueResetCurrentBranchCaptionText = new TranslationString("Reset the current branch to a specific commit.");
+        private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new TranslationString("You've got changes in your working directory that could be lost.\n\nDo you want to continue?");
+        private readonly TranslationString _continueResetCurrentBranchCaptionText = new TranslationString("Changes not committed...");
 
         private readonly Regex _regexReflog = new Regex("^([^ ]+) ([^:]+): (.+): (.+)$", RegexOptions.Compiled);
 
@@ -120,19 +120,12 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
             }
-            else
-            {
 
-                if (MessageBox.Show(this, _continueResetCurrentBranchText.Text,
-                        _continueResetCurrentBranchCaptionText.Text,
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                {
-                    return;
-                }
-            }
-
-            UICommands.GitCommand("reset --hard " + GetShaOfRefLine());
-            ShouldRefresh = true;
+            var gitRevision = UICommands.Module.GetRevision(GetShaOfRefLine());
+            var resetType = _isDirtyDir ? FormResetCurrentBranch.ResetType.Soft : FormResetCurrentBranch.ResetType.Hard;
+            var formResetCurrentBranch = new FormResetCurrentBranch(UICommands, gitRevision, resetType);
+            var result = formResetCurrentBranch.ShowDialog(this);
+            ShouldRefresh = result == DialogResult.OK;
         }
 
         private void copySha1ToolStripMenuItem_Click(object sender, EventArgs e)
