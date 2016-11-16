@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Objects;
 using GitUI.Script;
@@ -123,7 +124,7 @@ namespace GitUI.CommandsDialogs
 
             // refresh registered git remotes
             _gitRemoteController.LoadRemotes();
-            BindRemotesDropDown(_currentBranchName);
+            BindRemotesDropDown(null);
 
             UpdateBranchDropDown();
             UpdateRemoteBranchDropDown();
@@ -165,6 +166,11 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_Remotes.SelectedIndexChanged += RemotesUpdated;
             _NO_TRANSLATE_Remotes.TextUpdate += RemotesUpdated;
+
+            if (selectedRemoteName.IsNullOrEmpty())
+            {
+                selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _currentBranchName));
+            }
 
             _currentBranchRemote = _gitRemoteController.Remotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
             if (_currentBranchRemote != null)

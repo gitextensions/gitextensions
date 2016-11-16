@@ -161,6 +161,11 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
             ComboBoxHelper.ResizeComboBoxDropDownWidth(_NO_TRANSLATE_Remotes, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
+            if (selectedRemoteName.IsNullOrEmpty())
+            {
+                selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _branch));
+            }
+
             var currentBranchRemote = _gitRemoteController.Remotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
             if (currentBranchRemote != null)
             {
