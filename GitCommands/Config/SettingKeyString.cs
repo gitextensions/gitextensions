@@ -8,6 +8,11 @@ namespace GitCommands.Config
     public static class SettingKeyString
     {
         /// <summary>
+        /// "branch.{0}.remote"
+        /// </summary>
+        public static string BranchRemote = "branch.{0}.remote";
+
+        /// <summary>
         /// "remote.{0}.push"
         /// </summary>
         public static string RemotePush = "remote.{0}.push";

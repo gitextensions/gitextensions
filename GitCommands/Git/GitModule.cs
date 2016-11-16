@@ -2451,14 +2451,14 @@ namespace GitCommands
         /// <summary>Gets the remote of the current branch; or "origin" if no remote is configured.</summary>
         public string GetCurrentRemote()
         {
-            string remote = GetSetting(string.Format("branch.{0}.remote", GetSelectedBranch()));
+            string remote = GetSetting(string.Format(SettingKeyString.BranchRemote, GetSelectedBranch()));
             return remote;
         }
 
         /// <summary>Gets the remote branch of the specified local branch; or "" if none is configured.</summary>
         public string GetRemoteBranch(string branch)
         {
-            string remote = GetSetting(string.Format("branch.{0}.remote", branch));
+            string remote = GetSetting(string.Format(SettingKeyString.BranchRemote, branch));
             string merge = GetSetting(string.Format("branch.{0}.merge", branch));
             if (String.IsNullOrEmpty(remote) || String.IsNullOrEmpty(merge))
                 return "";
