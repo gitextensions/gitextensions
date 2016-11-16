@@ -109,12 +109,12 @@ namespace GitUI.Script
                     currentRevision = GetCurrentRevision(aModule, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision);
 
                     if (currentLocalBranches.Count == 1)
-                        currentRemote = aModule.GetSetting(string.Format("branch.{0}.remote", currentLocalBranches[0].Name));
+                        currentRemote = aModule.GetSetting(string.Format(SettingKeyString.BranchRemote, currentLocalBranches[0].Name));
                     else
                     {
                         currentRemote = aModule.GetCurrentRemote();
                         if (string.IsNullOrEmpty(currentRemote))
-                            currentRemote = aModule.GetSetting(string.Format("branch.{0}.remote",
+                            currentRemote = aModule.GetSetting(string.Format(SettingKeyString.BranchRemote,
                                 askToSpecify(currentLocalBranches, "Current Revision Branch")));
                     }
                 }

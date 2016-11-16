@@ -549,7 +549,7 @@ namespace GitUI.CommandsDialogs
                 return true;
             }
 
-            var currentBranchRemote = new Lazy<string>(() => Module.GetSetting(string.Format("branch.{0}.remote", localBranch.Text)));
+            var currentBranchRemote = new Lazy<string>(() => Module.GetSetting(string.Format(SettingKeyString.BranchRemote, localBranch.Text)));
 
             if (_branch == localBranch.Text)
             {

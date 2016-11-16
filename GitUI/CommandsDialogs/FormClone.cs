@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
                 //that the cloned repository is hosted on the same server
                 if (_NO_TRANSLATE_From.Text.IsNullOrWhiteSpace())
                 {
-                    var currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", Module.GetSelectedBranch()));
+                    var currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
                     if (currentBranchRemote.IsNullOrEmpty())
                     {
                         var remotes = Module.GetRemotes();

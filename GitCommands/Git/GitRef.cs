@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GitCommands.Config;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
@@ -101,7 +102,7 @@ namespace GitCommands
         /// <summary>Gets the setting name for a branch's remote.</summary>
         public static string RemoteSettingName(string branch)
         {
-            return String.Format("branch.{0}.remote", branch);
+            return String.Format(SettingKeyString.BranchRemote, branch);
         }
 
         /// <summary>
