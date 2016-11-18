@@ -1,3 +1,8 @@
+[Version "2.49"]
+    DownloadPage = https://github.com/gitextensions/gitextensions/releases/download/v2.49/GitExtensions-2.49-SetupComplete.msi
+    ReleaseType = major
+    ;branch to which bugfixes found in this version should be merged (base for a pull request)
+    BugFixBranch = release/2.49
 [Version "2.48.5"]
     DownloadPage = https://sourceforge.net/projects/gitextensions/files/Git%20Extensions/Version%202.48.05/GitExtensions-2.48.05-SetupComplete.msi/download
     ReleaseType = hotfix
