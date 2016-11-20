@@ -54,13 +54,16 @@ namespace AppVeyorIntegration
         private HashSet<string> _fetchBuilds;
         private string _accountToken;
         private static readonly Dictionary<string, Project> Projects = new Dictionary<string, Project>();
+        private Func<string, bool> IsCommitInRevisionGrid;
         private bool _shouldLoadTestResults;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config,
+            Func<string, bool> isCommitInRevisionGrid)
         {
             if (_buildServerWatcher != null)
                 throw new InvalidOperationException("Already initialized");
 
+            IsCommitInRevisionGrid = isCommitInRevisionGrid;
             var accountName = config.GetString("AppVeyorAccountName", null);
             _accountToken = config.GetString("AppVeyorAccountToken", null);
             _shouldLoadTestResults = config.GetBool("AppVeyorLoadTestsResults", false);
@@ -269,7 +272,9 @@ namespace AppVeyorIntegration
                     _fetchBuilds.Add(build.CommitId);
                 }
             }
-            return filteredBuilds;
+
+            //Prevent to do a http call on a build where the sha1 is no more displayed (rebase, change history)
+            return filteredBuilds.Where(b => IsCommitInRevisionGrid(b.CommitId)).ToList();
         }
 
         private int _buildProgressCount;
