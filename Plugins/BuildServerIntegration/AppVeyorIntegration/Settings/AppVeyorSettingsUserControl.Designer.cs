@@ -37,6 +37,8 @@ namespace AppVeyorIntegration.Settings
             this.AppVeyorProjectName = new System.Windows.Forms.TextBox();
             this.AppVeyorAccountName = new System.Windows.Forms.TextBox();
             this.cbLoadTestResults = new System.Windows.Forms.CheckBox();
+            this.cbGitHubPullRequest = new System.Windows.Forms.CheckBox();
+            this.txtGitHubToken = new System.Windows.Forms.TextBox();
             lblApiToken = new System.Windows.Forms.Label();
             lblAccountName = new System.Windows.Forms.Label();
             lblProjects = new System.Windows.Forms.Label();
@@ -129,10 +131,31 @@ namespace AppVeyorIntegration.Settings
     "nsive!)";
             this.cbLoadTestResults.UseVisualStyleBackColor = true;
             // 
+            // cbGitHubPullRequest
+            // 
+            this.cbGitHubPullRequest.AutoSize = true;
+            this.cbGitHubPullRequest.Location = new System.Drawing.Point(136, 211);
+            this.cbGitHubPullRequest.Name = "cbGitHubPullRequest";
+            this.cbGitHubPullRequest.Size = new System.Drawing.Size(323, 21);
+            this.cbGitHubPullRequest.TabIndex = 6;
+            this.cbGitHubPullRequest.Text = "display github pull requests builds. GithubToken:";
+            this.cbGitHubPullRequest.UseVisualStyleBackColor = true;
+            this.cbGitHubPullRequest.CheckedChanged += new System.EventHandler(this.cbGitHubPullRequest_CheckedChanged);
+            // 
+            // txtGitHubToken
+            // 
+            this.txtGitHubToken.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtGitHubToken.Location = new System.Drawing.Point(454, 210);
+            this.txtGitHubToken.Name = "txtGitHubToken";
+            this.txtGitHubToken.Size = new System.Drawing.Size(268, 23);
+            this.txtGitHubToken.TabIndex = 3;
+            // 
             // AppVeyorSettingsUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cbGitHubPullRequest);
             this.Controls.Add(this.cbLoadTestResults);
             this.Controls.Add(label2);
             this.Controls.Add(label1);
@@ -140,11 +163,12 @@ namespace AppVeyorIntegration.Settings
             this.Controls.Add(this.AppVeyorAccountName);
             this.Controls.Add(lblAccountName);
             this.Controls.Add(lblApiToken);
+            this.Controls.Add(this.txtGitHubToken);
             this.Controls.Add(this.AppVeyorProjectName);
             this.Controls.Add(this.AppVeyorAccountToken);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "AppVeyorSettingsUserControl";
-            this.Size = new System.Drawing.Size(736, 219);
+            this.Size = new System.Drawing.Size(736, 302);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -156,5 +180,7 @@ namespace AppVeyorIntegration.Settings
         private System.Windows.Forms.TextBox AppVeyorProjectName;
         private System.Windows.Forms.TextBox AppVeyorAccountName;
         private System.Windows.Forms.CheckBox cbLoadTestResults;
+        private System.Windows.Forms.CheckBox cbGitHubPullRequest;
+        private System.Windows.Forms.TextBox txtGitHubToken;
     }
 }
