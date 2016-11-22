@@ -11,7 +11,7 @@ Changelog
 * Support sparse checkout. PR #2918
 * Support shallow clone. PR #2911
 * Support no checkout on Clone. PR #2921
-* Stash before rebase. PR #2785
+* Stash before rebase. PR #2770
 * Draw smoother Bezier curves in Revision Grid. PR #2662
 * Support for --assume-unchanged. PR #2889
 * Colorful diffs for Linux. PR #2969
@@ -44,7 +44,7 @@ Changelog
 * Support sparse checkout. PR #2918
 * Support shallow clone. PR #2911
 * Support no checkout on Clone. PR #2921
-* Stash before rebase. PR #2785
+* Stash before rebase. PR #2770
 * Draw smoother Bezier curves in Revision Grid. PR #2662
 * Support for --assume-unchanged. PR #2889
 * Colorful diffs for Linux. PR #2969
