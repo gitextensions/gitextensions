@@ -677,11 +677,11 @@ namespace GitUI.CommandsDialogs
 
             if (IsPullAll())
             {
-                IEnumerable<string> remotes = (IEnumerable<string>)_NO_TRANSLATE_Remotes.DataSource;
+                IEnumerable<GitRemote> remotes = (IEnumerable<GitRemote>)_NO_TRANSLATE_Remotes.DataSource;
                 foreach (var r in remotes)
                 {
-                    if (!r.IsNullOrWhiteSpace() && !r.Equals(AllRemotes))
-                        yield return r;
+                    if (!r.Name.IsNullOrWhiteSpace() && !r.Name.Equals(AllRemotes))
+                        yield return r.Name;
                 }
             }
             else
