@@ -81,6 +81,18 @@ namespace GitCommands
             return String.Format("{0}:{1}", sha, Subject);
         }
 
+        public static string ToShortSha(String sha)
+        {
+            if (sha == null)
+                throw new ArgumentNullException("sha");
+            if (sha.Length > 8)
+            {
+                sha = sha.Substring(0, 8);
+            }
+
+            return sha;
+        }
+
         public bool MatchesSearchString(string searchString)
         {
             if (Refs.Any(gitHead => gitHead.Name.ToLower().Contains(searchString)))
