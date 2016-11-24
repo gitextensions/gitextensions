@@ -862,7 +862,7 @@ namespace GitUI
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
                        (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Body) ||
-                        CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
+                        _ShaFilter != null && CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
