@@ -16,10 +16,10 @@ namespace GitUI.CommandsDialogs
         private readonly string _oldName;
 
 
-        public FormRenameBranch(GitUICommands aCommands, string defaultBranch, IGitBranchNameNormaliser branchNameNormaliser = null)
+        public FormRenameBranch(GitUICommands aCommands, string defaultBranch)
             : base(aCommands)
         {
-            _branchNameNormaliser = branchNameNormaliser ?? new GitBranchNameNormaliser();
+            _branchNameNormaliser = new GitBranchNameNormaliser();
 
             InitializeComponent();
             Translate();

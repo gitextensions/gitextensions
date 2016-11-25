@@ -18,10 +18,10 @@ namespace GitUI.CommandsDialogs
         private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
 
 
-        public FormCreateBranch(GitUICommands aCommands, GitRevision revision, IGitBranchNameNormaliser branchNameNormaliser = null)
+        public FormCreateBranch(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
-            _branchNameNormaliser = branchNameNormaliser ?? new GitBranchNameNormaliser();
+            _branchNameNormaliser = new GitBranchNameNormaliser();
             CheckoutAfterCreation = true;
             UserAbleToChangeRevision = true;
             CouldBeOrphan = true;
