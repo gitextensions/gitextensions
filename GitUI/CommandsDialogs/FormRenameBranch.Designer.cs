@@ -31,7 +31,7 @@
             this.Ok = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
-            this.Branches = new System.Windows.Forms.TextBox();
+            this.BranchNameTextBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,7 +58,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.Ok, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.Branches, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.BranchNameTextBox, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -72,20 +72,21 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(3, 10);
+            this.label1.Location = new System.Drawing.Point(3, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 21);
+            this.label1.Size = new System.Drawing.Size(57, 18);
             this.label1.TabIndex = 3;
             this.label1.Text = "New name";
             this.label1.UseCompatibleTextRendering = true;
             // 
-            // Branches
+            // BranchNameTextBox
             // 
-            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.Branches.Location = new System.Drawing.Point(72, 9);
-            this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(344, 23);
-            this.Branches.TabIndex = 4;
+            this.BranchNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.BranchNameTextBox.Location = new System.Drawing.Point(66, 10);
+            this.BranchNameTextBox.Name = "BranchNameTextBox";
+            this.BranchNameTextBox.Size = new System.Drawing.Size(350, 21);
+            this.BranchNameTextBox.TabIndex = 4;
+            this.BranchNameTextBox.Leave += new System.EventHandler(this.BranchNameTextBox_Leave);
             // 
             // FormRenameBranch
             // 
@@ -111,7 +112,7 @@
         #endregion
 
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.TextBox Branches;
+        private System.Windows.Forms.TextBox BranchNameTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
