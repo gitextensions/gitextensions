@@ -1,6 +1,18 @@
 
 Changelog
 =========
+
+### Version 2.49.02 (no due date)
+* Fixed issue #3464. Background fetch plugin - Not working.
+* Fixed issue #3491. 'Enter commit message' does not disappear when you start typing your message bug reproducible.
+* Fixed issue #3394. Gitext Clone in Explorer Context Menu try to clone in the wrong folder bug.
+* Fixed issue #3142. Comparing A/B/Working directory with diff tool UX.
+* Fixed issue #3589. Option 'Close dialog when all changes are committed' does not work properly bug
+* Fixed issue #3569. Windows OS version string is incorrect for 8, 8.1, and 10.
+* Fixed issue #3539. Non-sequential tab ordering on Settings -> Advanced -> Confirmations page.
+* Fixed issue #3554. Comparing branch form didn't honor the ShowMoreContext toolbar button.
+* Fix problem with incorrect building command line arguments. PR #3551
+
 ### Version 2.49.01 (12 March 2017)
 * Fixed issue #3587. Diff view is blank if git configuration is diff.color=always 
 * Fixed issue #3427. Pushing to a different remote wrongly ask about new branch bug.
