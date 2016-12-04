@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
             var successfullyMerged = FormProcess.ShowDialog(this,
                 GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));
 
-            var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this);
+            var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);
 
             if (successfullyMerged || wasConflict)
             {
