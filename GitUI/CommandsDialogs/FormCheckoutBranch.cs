@@ -44,9 +44,12 @@ namespace GitUI.CommandsDialogs
         private string _remoteName = "";
         private string _newLocalBranchName = "";
         private string _localBranchName = "";
+        private readonly IGitBranchNameNormaliser _branchNameNormaliser;
+        private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
 
         private IEnumerable<IGitRef> _localBranches;
         private IEnumerable<IGitRef> _remoteBranches;
+
 
         private FormCheckoutBranch()
             : this(null)
@@ -56,6 +59,7 @@ namespace GitUI.CommandsDialogs
         internal FormCheckoutBranch(GitUICommands aCommands)
             : base(aCommands)
         {
+            _branchNameNormaliser = new GitBranchNameNormaliser();
             InitializeComponent();
             Translate();
             _rbResetBranchDefaultText = rbResetBranch.Text;
@@ -114,6 +118,7 @@ namespace GitUI.CommandsDialogs
                 _isLoading = false;
             }
         }
+
 
         /// <summary>
         /// This functions applies docking properties of controls in a way
@@ -230,6 +235,10 @@ namespace GitUI.CommandsDialogs
 
         private DialogResult OkClick()
         {
+            // Ok button set as the "AcceptButton" for the form
+            // if the user hits [Enter] at any point, we need to trigger txtCustomBranchName Leave event
+            Ok.Focus();
+
             GitCheckoutBranchCmd cmd = new GitCheckoutBranchCmd(Branches.Text.Trim(), Remotebranch.Checked);
 
             if (Remotebranch.Checked)
@@ -474,6 +483,7 @@ namespace GitUI.CommandsDialogs
             return result.ToList();
         }
 
+
         private void FormCheckoutBranch_Activated(object sender, EventArgs e)
         {
             Branches.Focus();
@@ -486,6 +496,19 @@ namespace GitUI.CommandsDialogs
             {
                 chkSetLocalChangesActionAsDefault.Checked = false;
             }
+        }
+
+        private void txtCustomBranchName_Leave(object sender, EventArgs e)
+        {
+            if (!AppSettings.AutoNormaliseBranchName || !txtCustomBranchName.Text.Any(GitBranchNameNormaliser.IsValidChar))
+            {
+                return;
+            }
+
+            var caretPosition = txtCustomBranchName.SelectionStart;
+            var branchName = _branchNameNormaliser.Normalise(txtCustomBranchName.Text, _gitBranchNameOptions);
+            txtCustomBranchName.Text = branchName;
+            txtCustomBranchName.SelectionStart = caretPosition;
         }
     }
 }
