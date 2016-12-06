@@ -147,9 +147,9 @@ namespace GitCommands.Settings
             : base(container, "Detailed")
         {
             ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", this, true);
-            ConEmuStyle = new StringSetting("ConEmuStyle", this, "Default");
+            ConEmuStyle = new StringSetting("ConEmuStyle", this, "<Solarized Light>");
             ConEmuTerminal = new StringSetting("ConEmuTerminal", this, "bash");
-            ConEmuFontSize = new StringSetting("ConEmuFontSize", this, string.Empty);
+            ConEmuFontSize = new StringSetting("ConEmuFontSize", this, "12");
             GetRemoteBranchesDirectlyFromRemote = new BoolNullableSetting("GetRemoteBranchesDirectlyFromRemote", this, false);
         }
 
