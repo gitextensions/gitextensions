@@ -28,16 +28,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void BindSettingsWithControls()
         {
             AddSettingBinding(DetailedSettings.ShowConEmuTab, chkChowConsoleTab);
-            cboStyle.SelectedItem = DetailedSettings.ConEmuStyle.Value;
-            cboTerminal.SelectedItem = DetailedSettings.ConEmuTerminal.Value;
-            cboFontSize.Text = DetailedSettings.ConEmuFontSize.Value;
-            DetailedSettings.ConEmuStyle.Value = cboStyle.SelectedItem.ToString();
-            DetailedSettings.ConEmuTerminal.Value = cboTerminal.SelectedItem.ToString();
-            int newFontSize;
-            if (int.TryParse(cboFontSize.Text, out newFontSize))
-            {
-                DetailedSettings.ConEmuFontSize.Value = newFontSize.ToString();
-            }
+            AddSettingBinding(DetailedSettings.ConEmuStyle, cboStyle);
+            AddSettingBinding(DetailedSettings.ConEmuTerminal, cboTerminal);
+            AddSettingBinding(DetailedSettings.ConEmuFontSize, cboFontSize);
+            AddSettingBinding(DetailedSettings.GetRemoteBranchesDirectlyFromRemote, chkRemotesFromServer);
         }
 
         public static SettingsPageReference GetPageReference()
