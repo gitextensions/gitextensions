@@ -1,4 +1,5 @@
-﻿using GitCommands.Settings;
+﻿using System;
+using GitCommands.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -9,6 +10,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Detailed";
             Translate();
+        }
+
+        protected override void Init(ISettingsPageHost aPageHost)
+        {
+            base.Init(aPageHost);
+
+            AssignDefaultLabels();
+        }
+
+        private void AssignDefaultLabels()
+        {
+            _NO_TRANSLATE_consolStyleDefaultLable.Text = "(" + DetailedSettings.ConEmuStyle.DefaultValue + ")";
+            _NO_TRANSLATE_ShellToRunLabelDefault.Text = "(" + DetailedSettings.ConEmuTerminal.DefaultValue + ")";
+            _NO_TRANSLATE_FontSizeDefault.Text = "(" + DetailedSettings.ConEmuFontSize.DefaultValue + ")";
         }
 
         private DetailedGroup DetailedSettings
@@ -31,8 +46,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             DetailedSettings.ShowConEmuTab.Value = chkChowConsoleTab.GetNullableChecked();
-            DetailedSettings.ConEmuStyle.Value = cboStyle.SelectedItem.ToString();
-            DetailedSettings.ConEmuTerminal.Value = cboTerminal.SelectedItem.ToString();
+            DetailedSettings.ConEmuStyle.Value = cboStyle.SelectedItem == null ? null : cboStyle.SelectedItem.ToString();
+            DetailedSettings.ConEmuTerminal.Value = cboTerminal.SelectedItem == null ? null : cboTerminal.SelectedItem.ToString();
             int newFontSize;
             if (int.TryParse(cboFontSize.Text, out newFontSize))
             {
