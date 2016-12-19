@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.UserControls
@@ -15,9 +16,9 @@ namespace GitUI.UserControls
         private class TagNode : BaseBranchNode
         {
             private const string ImageKey = "tag.png";
-            private readonly GitRef _tagInfo;
+            private readonly IGitRef _tagInfo;
 
-            public TagNode(Tree aTree, string aFullPath, GitRef tagInfo) : base(aTree, aFullPath)
+            public TagNode(Tree aTree, string aFullPath, IGitRef tagInfo) : base(aTree, aFullPath)
             {
                 _tagInfo = tagInfo;
             }
@@ -83,7 +84,7 @@ namespace GitUI.UserControls
                 FillTagTree(Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByName));
             }
 
-            private void FillTagTree(IEnumerable<GitRef> tags)
+            private void FillTagTree(IEnumerable<IGitRef> tags)
             {
                 var nodes = new Dictionary<string, BaseBranchNode>();
                 var branchFullPaths = new List<string>();

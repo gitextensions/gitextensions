@@ -5,7 +5,6 @@ using System.Xml.Serialization;
 
 namespace ResourceManager.Xliff
 {
-    [DebuggerDisplay("{name}")]
     public class TranslationBody
     {
         public TranslationBody()

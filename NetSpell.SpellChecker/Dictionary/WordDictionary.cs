@@ -730,7 +730,7 @@ namespace NetSpell.SpellChecker.Dictionary
         }
 
         /// <summary>
-        ///     List of characters to use when generating suggestions using the near miss stratigy
+        ///     List of characters to use when generating suggestions using the near miss strategy
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

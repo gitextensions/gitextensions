@@ -11,10 +11,11 @@ namespace ResourceManager.Xliff
         {
         }
 
-        public TranslationCategory(string name, string source)
+        public TranslationCategory(string name, string sourceLanguage, string targetLanguage = null)
         {
-            this._name = name;
-            this._source = source;
+            _name = name;
+            _sourceLanguage = sourceLanguage;
+            _targetLanguage = targetLanguage;
         }
 
         private string _datatype = "plaintext";
@@ -45,18 +46,20 @@ namespace ResourceManager.Xliff
             }
         }
 
-        private string _source;
+        private string _sourceLanguage;
         [XmlAttribute("source-language")]
-        public string Source
+        public string SourceLanguage
         {
-            get
-            {
-                return _source;
-            }
-            set
-            {
-                _source = value;
-            }
+            get { return _sourceLanguage; }
+            set { _sourceLanguage = value; }
+        }
+
+        private string _targetLanguage;
+        [XmlAttribute("target-language")]
+        public string TargetLanguage
+        {
+            get { return _targetLanguage; }
+            set { _targetLanguage = value; }
         }
 
         private TranslationBody _body = new TranslationBody();

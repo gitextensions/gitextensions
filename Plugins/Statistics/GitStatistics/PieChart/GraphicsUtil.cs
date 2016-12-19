@@ -9,7 +9,7 @@ namespace GitStatistics.PieChart
     {
         /// <summary>
         ///   Checks if point is contained within <c>RectangleF</c> structure 
-        ///   and extends rectangle bounds if neccessary to include the point.
+        ///   and extends rectangle bounds if necessary to include the point.
         /// </summary>
         /// <param name = "rect">
         ///   Reference to <c>RectangleF</c> to check.

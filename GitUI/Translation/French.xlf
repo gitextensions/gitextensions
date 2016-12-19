@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49RC2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en" target-language="fr">
     <body>
       <trans-unit id="$this.Text">
@@ -1393,6 +1393,35 @@ Voulez-vous l'ouvrir?</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="DetailedSettingsPage" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Detailed</source>
+        <target>Détaillé</target>
+        
+      </trans-unit>
+      <trans-unit id="BrowseRepoGB.Text">
+        <source>Browse repository window</source>
+        <target>Fenêtre de parcourt du dépôt</target>
+        
+      </trans-unit>
+      <trans-unit id="PushWindowGB.Text">
+        <source>Push window</source>
+        <target>Fenêtre d'envoi</target>
+        
+      </trans-unit>
+      <trans-unit id="chkChowConsoleTab.Text">
+        <source>Show the Console tab</source>
+        <target>Afficher l'onglet de Console</target>
+        
+      </trans-unit>
+      <trans-unit id="chkRemotesFromServer.Text">
+        <source>Get remote branches directly from the remote</source>
+        <target>Obtenir les branches distantes directement depuis le dépôt distant</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="EditNetSpell" source-language="en" target-language="fr">
     <body>
       <trans-unit id="addToDictionaryText.Text">
@@ -2313,9 +2342,19 @@ compare with first:</source>
         <target>Répertoire de travail</target>
         
       </trans-unit>
+      <trans-unit id="_buildReportTabCaption.Text">
+        <source>Build Report</source>
+        <target>Rapport de construction</target>
+        
+      </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
         <source>Configure this menu</source>
         <target>Configurer ce menu</target>
+        
+      </trans-unit>
+      <trans-unit id="_consoleTabCaption.Text">
+        <source>Console</source>
+        <target>Console</target>
         
       </trans-unit>
       <trans-unit id="_createPullRequestsToolStripMenuItem.Text">
@@ -4867,6 +4906,11 @@ Si vous n'êtes pas sûr, fermez seulement la fenêtre.</target>
       <trans-unit id="ViewTab.Text">
         <source>View</source>
         <target>Voir</target>
+        
+      </trans-unit>
+      <trans-unit id="_buildReportTabCaption.Text">
+        <source>Build Report</source>
+        <target>Rapport de construction</target>
         
       </trans-unit>
       <trans-unit id="cherryPickThisCommitToolStripMenuItem.Text">
@@ -9117,11 +9161,6 @@ Cela va juste charger dans le sous module le commit déterminé par le projet su
       <trans-unit id="InitRepository.Text">
         <source>Initialize repository</source>
         <target>Initialiser le dépôt</target>
-        
-      </trans-unit>
-      <trans-unit id="IsMessageMultilineDataGridViewColumn.HeaderText">
-        <source>IsMessageMultiline</source>
-        <target>IsMessageMultiline</target>
         
       </trans-unit>
       <trans-unit id="MessageDataGridViewColumn.HeaderText">

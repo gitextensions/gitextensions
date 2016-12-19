@@ -1268,8 +1268,13 @@ namespace GitUI.RevisionGridClasses
         {
             Node node;
 
-            if (_graphData.Nodes.TryGetValue(guid, out node))
-                return node.Index;
+            if (guid != null)
+            {
+                if (_graphData.Nodes.TryGetValue(guid, out node))
+                {
+                    return node.Index;
+                }
+            }
 
             return null;
         }

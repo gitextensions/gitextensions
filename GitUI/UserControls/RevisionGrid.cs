@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.DirectoryServices;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -12,19 +11,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Config;
 using GitCommands.Git;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.RevisionGridClasses;
 using GitUI.Script;
+using GitUI.UserControls;
+using GitUI.UserControls.RevisionGridClasses;
+using GitUIPluginInterfaces;
 using Gravatar;
 using ResourceManager;
-using GitUI.UserControls.RevisionGridClasses;
-using GitUI.CommandsDialogs.BrowseDialog;
-using GitUI.UserControls;
 
 namespace GitUI
 {
@@ -93,6 +92,10 @@ namespace GitUI
         private AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
         private GitRevision _baseCommitToCompare = null;
+        /// <summary>
+        /// Refs loaded while the latest processing of git log
+        /// </summary>
+        private IEnumerable<IGitRef> LatestRefs = Enumerable.Empty<IGitRef>();
 
         public RevisionGrid()
         {
@@ -864,7 +867,7 @@ namespace GitUI
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
                        (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Body) ||
-                        CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
+                        _ShaFilter != null && CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
@@ -896,7 +899,7 @@ namespace GitUI
             Translate();
         }
 
-        public bool ShowRemoteRef(GitRef r)
+        public bool ShowRemoteRef(IGitRef r)
         {
             if (r.IsTag)
                 return AppSettings.ShowSuperprojectTags;
@@ -1057,10 +1060,10 @@ namespace GitUI
             public string Conflict_Base;
             public string Conflict_Remote;
             public string Conflict_Local;
-            public Dictionary<string, List<GitRef>> Refs;
+            public Dictionary<string, List<IGitRef>> Refs;
         }
 
-        private SuperProjectInfo GetSuperprojectCheckout(Func<GitRef, bool> showRemoteRef)
+        private SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef)
         {
             if (Module.SuperprojectModule == null)
                 return null;
@@ -1149,6 +1152,7 @@ namespace GitUI
         {
             if (_revisionGraphCommand != null)
             {
+                LatestRefs = _revisionGraphCommand.LatestRefs();
                 //Dispose command, it is not needed anymore
                 _revisionGraphCommand.Updated -= GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited -= GitGetCommitsCommandExited;
@@ -1214,7 +1218,7 @@ namespace GitUI
                     if (index >= 0)
                         SetSelectedIndex(index);
                 }
-                else if (!string.IsNullOrEmpty(filtredCurrentCheckout))
+                else
                 {
                     SetSelectedRevision(filtredCurrentCheckout);
                 }
@@ -1339,7 +1343,7 @@ namespace GitUI
                 return;
 
             var spi = SuperprojectCurrentCheckout.IsCompleted ? SuperprojectCurrentCheckout.Result : null;
-            var superprojectRefs = new List<GitRef>();
+            var superprojectRefs = new List<IGitRef>();
             if (spi != null && spi.Refs != null && spi.Refs.ContainsKey(revision.Guid))
             {
                 superprojectRefs.AddRange(spi.Refs[revision.Guid].Where(ShowRemoteRef));
@@ -1759,7 +1763,7 @@ namespace GitUI
                                  cellBounds.Width - (int)offset, cellBounds.Height);
         }
 
-        private static Color GetHeadColor(GitRef gitRef)
+        private static Color GetHeadColor(IGitRef gitRef)
         {
             if (gitRef.IsTag)
                 return AppSettings.TagColor;
@@ -2135,6 +2139,16 @@ namespace GitUI
             var renameDropDown = new ContextMenuStrip();
 
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
+            ISet<string> ambiguosuRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
+            Func<IGitRef, string> getRefUnambiguousName = (IGitRef gitRef) =>
+            {
+                if (ambiguosuRefs.Contains(gitRef.Name))
+                {
+                    return gitRef.CompleteName;
+                }
+
+                return gitRef.Name;
+            };
 
             foreach (var head in gitRefListsForRevision.AllTags)
             {
@@ -2144,7 +2158,7 @@ namespace GitUI
                 deleteTagDropDown.Items.Add(toolStripItem);
 
                 toolStripItem = new ToolStripMenuItem(head.Name);
-                toolStripItem.Tag = head.CompleteName;
+                toolStripItem.Tag = getRefUnambiguousName(head);
                 toolStripItem.Click += ToolStripItemClickMergeBranch;
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
@@ -2163,12 +2177,12 @@ namespace GitUI
                 else
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = head.CompleteName;
+                    toolStripItem.Tag = getRefUnambiguousName(head);
                     toolStripItem.Click += ToolStripItemClickMergeBranch;
                     mergeBranchDropDown.Items.Add(toolStripItem);
 
                     toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = head.CompleteName;
+                    toolStripItem.Tag = getRefUnambiguousName(head);
                     toolStripItem.Click += ToolStripItemClickRebaseBranch;
                     rebaseDropDown.Items.Add(toolStripItem);
                 }

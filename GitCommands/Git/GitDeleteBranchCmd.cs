@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
     public sealed class GitDeleteBranchCmd : GitCommand
     {
-        private readonly ICollection<GitRef> branches;
+        private readonly ICollection<IGitRef> branches;
         private readonly bool force;
 
-        public GitDeleteBranchCmd(IEnumerable<GitRef> branches, bool force)
+        public GitDeleteBranchCmd(IEnumerable<IGitRef> branches, bool force)
         {
             if (branches == null)
                 throw new ArgumentNullException("branches");

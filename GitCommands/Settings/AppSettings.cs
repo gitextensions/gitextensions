@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -27,16 +28,16 @@ namespace GitCommands
         public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
         public static string ProductVersion { get { return Application.ProductVersion; } }
-        public const string SettingsFileName = "GitExtensions.settings";
+        public static readonly string SettingsFileName = "GitExtensions.settings";
 
-        public static Lazy<string> ApplicationDataPath;
+        public static readonly Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
         private static RepoDistSettings _SettingsContainer;
         public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
 
-        public static int BranchDropDownMinWidth = 300;
-        public static int BranchDropDownMaxWidth = 600;
+        public static readonly int BranchDropDownMinWidth = 300;
+        public static readonly int BranchDropDownMaxWidth = 600;
 
         static AppSettings()
         {
@@ -389,24 +390,25 @@ namespace GitCommands
 
         private static readonly Dictionary<string, string> _languageCodes =
             new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
-        {
-            { "English", "en" },
-            { "Czech", "cs" },
-            { "French", "fr" },
-            { "German", "de" },
-            { "Indonesian", "id" },
-            { "Italian", "it" },
-            { "Japanese", "ja" },
-            { "Korean", "ko" },
-            { "Polish", "pl" },
-            { "Russian", "ru" },
-            { "Portuguese (Brazil)", "pt_BR" },
-            { "Portuguese (Portugal)", "pt_PT" },
-            { "Romanian", "ro" },
-            { "Simplified Chinese", "zh_CN" },
-            { "Spanish", "es" },
-            { "Traditional Chinese", "zh_TW" }
-        };
+            {
+                {"Czech", "cs"},
+                {"Dutch", "nl"},
+                {"English", "en"},
+                {"French", "fr"},
+                {"German", "de"},
+                {"Indonesian", "id"},
+                {"Italian", "it"},
+                {"Japanese", "ja"},
+                {"Korean", "ko"},
+                {"Polish", "pl"},
+                {"Portuguese (Brazil)", "pt-BR"},
+                {"Portuguese (Portugal)", "pt-PT"},
+                {"Romanian", "ro"},
+                {"Russian", "ru"},
+                {"Simplified Chinese", "zh-CN"},
+                {"Spanish", "es"},
+                {"Traditional Chinese", "zh-TW"}
+            };
 
         public static string CurrentLanguageCode
         {
@@ -421,7 +423,19 @@ namespace GitCommands
 
         public static CultureInfo CurrentCultureInfo
         {
-            get { return CultureInfo.GetCultureInfo(CurrentLanguageCode); }
+            get
+            {
+                try
+                {
+                    return CultureInfo.GetCultureInfo(CurrentLanguageCode);
+
+                }
+                catch (System.Globalization.CultureNotFoundException)
+                {
+                    Debug.WriteLine("Culture {0} not found", CurrentLanguageCode);
+                    return CultureInfo.GetCultureInfo("en");
+                }
+            }
         }
 
         public static bool UserProfileHomeDir
@@ -596,6 +610,12 @@ namespace GitCommands
         {
             get { return GetBool("autostash", false); }
             set { SetBool("autostash", value); }
+        }
+
+        public static bool RebaseAutoStash
+        {
+            get { return GetBool("RebaseAutostash", false); }
+            set { SetBool("RebaseAutostash", value); }
         }
 
         public static LocalChangesAction CheckoutBranchAction

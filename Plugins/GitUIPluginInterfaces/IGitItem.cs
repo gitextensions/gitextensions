@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GitCommands
+namespace GitUIPluginInterfaces
 {
     public interface IGitItem
     {

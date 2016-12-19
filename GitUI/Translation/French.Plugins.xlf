@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49RC2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="fr">
     <body>
       <trans-unit id="Description.Text">
@@ -959,6 +959,11 @@ Pour activer le support de Gerrit pour un dépôt, un fichier .gitreview doit ê
         <target>Github</target>
         
       </trans-unit>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        <target>Jeton OAuth</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="fr">
@@ -1188,6 +1193,26 @@ Voulez-vous réinitialiser le chemin configuré?</target>
         <target>Changeur de proxy</target>
         
       </trans-unit>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
+        <target>Proxy HTTP</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
+        <target>Port du proxy HTTP</target>
+        
+      </trans-unit>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
+        <target>Mot de passe</target>
+        
+      </trans-unit>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>Nom de l'utilisateur</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="fr">
@@ -1317,6 +1342,26 @@ noms de branche, noms de tag)</target>
       <trans-unit id="Description.Text">
         <source>Create Stash Pull Request</source>
         <target>Créer une demande d'importation de la réserve</target>
+        
+      </trans-unit>
+      <trans-unit id="StashBaseUrl.Caption">
+        <source>Specify the base URL to Stash</source>
+        <target>Spécifier l'URL de base de Stash</target>
+        
+      </trans-unit>
+      <trans-unit id="StashDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>Désactiver la vérification SSL</target>
+        
+      </trans-unit>
+      <trans-unit id="StashPassword.Caption">
+        <source>Stash Password</source>
+        <target>Mot de passe Stash</target>
+        
+      </trans-unit>
+      <trans-unit id="StashUsername.Caption">
+        <source>Stash Username</source>
+        <target>Utilisateur Stash</target>
         
       </trans-unit>
     </body>
