@@ -3658,5 +3658,15 @@ namespace GitUI.CommandsDialogs
         {
             ComboBoxHelper.ResizeComboBoxDropDownWidth(toolStripBranchFilterComboBox.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
+
+        private void toolStripMenuItemReflog_Click(object sender, EventArgs e)
+        {
+            var formReflog = new FormReflog(this.UICommands);
+            formReflog.ShowDialog();
+            if (formReflog.ShouldRefresh)
+            {
+                RefreshRevisions();
+            }
+        }
     }
 }

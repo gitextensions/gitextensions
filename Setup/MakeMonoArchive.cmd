@@ -102,6 +102,10 @@ xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll 
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\English.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\English.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\English.Plugins.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Czech.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Czech.xlf GitExtensions\Translation\

@@ -163,8 +163,14 @@ namespace GitUI
                 {
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
-                        remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
+                        string remoteUrl;
+                        if (string.IsNullOrEmpty(UrlTryingToConnect))
+                        {
+                            remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                            remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
+                        }
+                        else
+                            remoteUrl = UrlTryingToConnect;
                         remoteUrl = GitCommandHelpers.GetPlinkCompatibleUrl(remoteUrl);
 
                         Module.RunExternalCmdShowConsole("cmd.exe", string.Format("/k \"\"{0}\" {1}\"", AppSettings.Plink, remoteUrl));

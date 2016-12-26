@@ -5341,7 +5341,7 @@ Nothing to rebase.</source>
         <source>Prune remote branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="PuTTYSSH.Text">
+      <trans-unit id="lblMgtPuttyPanelHeader.Text">
         <source>PuTTY SSH</source>
         <target />
       </trans-unit>
@@ -5355,7 +5355,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
         <source>Save</source>
-        <target />
+        <target>Save changes</target>
       </trans-unit>
       <trans-unit id="SshBrowse.Text">
         <source>Browse</source>
@@ -5369,8 +5369,8 @@ Nothing to rebase.</source>
         <source>Update all remote branch info</source>
         <target />
       </trans-unit>
-      <trans-unit id="_hintDelete.Text">
-        <source>Delete</source>
+      <trans-unit id="_gitMessage.Text">
+        <source>Message</source>
         <target />
       </trans-unit>
       <trans-unit id="_labelUrlAsFetch.Text">
@@ -5411,6 +5411,14 @@ Value has been reset to empty value.</source>
         <source>Private key (*.ppk)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_gbMgtPanelHeaderNew.Text">
+        <source>Create new remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gbMgtPanelHeaderEdit.Text">
+        <source>Edit remote details</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_warningNoKeyEntered.Text">
         <source>No SSH key file entered</source>
         <target />
@@ -5421,10 +5429,6 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="_warningValidRemoteCaption.Text">
         <source>Url needed</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="buttonClose.Text">
-        <source>Close</source>
         <target />
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
@@ -6252,10 +6256,6 @@ Do you want to register the host's fingerprint and restart the process?</source>
       </trans-unit>
       <trans-unit id="_removeSelectedSubmoduleCaption.Text">
         <source>Remove</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Details</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">

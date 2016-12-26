@@ -141,7 +141,6 @@
     <Compile Include="Git\GitStash.cs" />
     <Compile Include="Git\GitSubmoduleInfo.cs" />
     <Compile Include="Git\GitVersion.cs" />
-    <Compile Include="Git\IGitItem.cs" />
     <Compile Include="Patch\Patch.cs" />
     <Compile Include="Patch\PatchFile.cs" />
     <Compile Include="Patch\PatchManager.cs" />

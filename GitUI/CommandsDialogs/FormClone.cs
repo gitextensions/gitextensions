@@ -7,10 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
-
-using JetBrains.Annotations;
-using GitUI.UserControls;
-
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -99,7 +96,7 @@ namespace GitUI.CommandsDialogs
                 //that the cloned repository is hosted on the same server
                 if (_NO_TRANSLATE_From.Text.IsNullOrWhiteSpace())
                 {
-                    var currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", Module.GetSelectedBranch()));
+                    var currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
                     if (currentBranchRemote.IsNullOrEmpty())
                     {
                         var remotes = Module.GetRemotes();
@@ -339,7 +336,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly AsyncLoader _branchListLoader = new AsyncLoader();
 
-        private void UpdateBranches(RemoteActionResult<IList<GitRef>> branchList)
+        private void UpdateBranches(RemoteActionResult<IList<IGitRef>> branchList)
         {
             Cursor = Cursors.Default;
 

@@ -212,5 +212,36 @@ namespace GitExtensionsTest.Git
             outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
             Assert.AreEqual("\"" + inUrl + "\"", outUrl);
         }
+
+		[TestMethod]
+		public void GetSubmoduleNamesFromDiffTest()
+		{
+			GitModule testModule = new GitModule("D:\\Test\\SuperProject");
+
+			// Submodule name without spaces in the name
+
+			string text = "diff --git a/Externals/conemu-inside b/Externals/conemu-inside\nindex a17ea0c..b5a3d51 160000\n--- a/Externals/conemu-inside\n+++ b/Externals/conemu-inside\n@@ -1 +1 @@\n-Subproject commit a17ea0c8ebe9d8cd7e634ba44559adffe633c11d\n+Subproject commit b5a3d51777c85a9aeee534c382b5ccbb86b485d3\n";
+			string fileName = "Externals/conemu-inside";
+
+			GitSubmoduleStatus status = GitCommandHelpers.GetSubmoduleStatus(text, testModule, fileName);
+
+			Assert.AreEqual(status.Commit, "b5a3d51777c85a9aeee534c382b5ccbb86b485d3");
+			Assert.AreEqual(status.Name, fileName);
+			Assert.AreEqual(status.OldCommit, "a17ea0c8ebe9d8cd7e634ba44559adffe633c11d");
+			Assert.AreEqual(status.OldName, fileName);
+
+			// Submodule name with spaces in the name
+
+			text = "diff --git a/Assets/Core/Vehicle Physics core assets b/Assets/Core/Vehicle Physics core assets\nindex 2fb8851..0cc457d 160000\n--- a/Assets/Core/Vehicle Physics core assets\t\n+++ b/Assets/Core/Vehicle Physics core assets\t\n@@ -1 +1 @@\n-Subproject commit 2fb88514cfdc37a2708c24f71eca71c424b8d402\n+Subproject commit 0cc457d030e92f804569407c7cd39893320f9740\n";
+			fileName = "Assets/Core/Vehicle Physics core assets";
+
+			status = GitCommandHelpers.GetSubmoduleStatus(text, testModule, fileName);
+
+			Assert.AreEqual(status.Commit, "0cc457d030e92f804569407c7cd39893320f9740");
+			Assert.AreEqual(status.Name, fileName);
+			Assert.AreEqual(status.OldCommit, "2fb88514cfdc37a2708c24f71eca71c424b8d402");
+			Assert.AreEqual(status.OldName, fileName);
+
+		}
     }
 }
