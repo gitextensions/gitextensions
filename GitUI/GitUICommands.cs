@@ -428,7 +428,7 @@ namespace GitUI
         /// </summary>
         /// <param name="requiresValidWorkingDir">If action requires valid working directory</param>
         /// <param name="owner">Owner window</param>
-        /// <param name="changesRepo">if successfuly done action changes repo state</param>
+        /// <param name="changesRepo">if successfully done action changes repo state</param>
         /// <param name="preEvent">Event invoked before performing action</param>
         /// <param name="postEvent">Event invoked after performing action</param>
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>

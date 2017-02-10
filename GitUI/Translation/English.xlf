@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.49a1">
+<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.49RC2">
   <file datatype="plaintext" original="AboutBox" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -1121,6 +1121,30 @@ Do you want to open it?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="DetailedSettingsPage" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Detailed</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="BrowseRepoGB.Text">
+        <source>Browse repository window</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="PushWindowGB.Text">
+        <source>Push window</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkChowConsoleTab.Text">
+        <source>Show the Console tab</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkRemotesFromServer.Text">
+        <source>Get remote branches directly from the remote</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="EditNetSpell" source-language="en">
     <body>
       <trans-unit id="addToDictionaryText.Text">
@@ -1868,8 +1892,16 @@ compare with first:</source>
         <source>File tree</source>
         <target />
       </trans-unit>
+      <trans-unit id="_buildReportTabCaption.Text">
+        <source>Build Report</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
         <source>Configure this menu</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_consoleTabCaption.Text">
+        <source>Console</source>
         <target />
       </trans-unit>
       <trans-unit id="_createPullRequestsToolStripMenuItem.Text">
@@ -3916,6 +3948,10 @@ If you are not sure just close this window.</source>
         <source>View</source>
         <target />
       </trans-unit>
+      <trans-unit id="_buildReportTabCaption.Text">
+        <source>Build Report</source>
+        <target />
+      </trans-unit>
       <trans-unit id="cherryPickThisCommitToolStripMenuItem.Text">
         <source>Cherry pick commit</source>
         <target />
@@ -5305,7 +5341,7 @@ Nothing to rebase.</source>
         <source>Prune remote branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="PuTTYSSH.Text">
+      <trans-unit id="lblMgtPuttyPanelHeader.Text">
         <source>PuTTY SSH</source>
         <target />
       </trans-unit>
@@ -5319,7 +5355,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
         <source>Save</source>
-        <target />
+        <target>Save changes</target>
       </trans-unit>
       <trans-unit id="SshBrowse.Text">
         <source>Browse</source>
@@ -5333,8 +5369,8 @@ Nothing to rebase.</source>
         <source>Update all remote branch info</source>
         <target />
       </trans-unit>
-      <trans-unit id="_hintDelete.Text">
-        <source>Delete</source>
+      <trans-unit id="_gitMessage.Text">
+        <source>Message</source>
         <target />
       </trans-unit>
       <trans-unit id="_labelUrlAsFetch.Text">
@@ -5375,6 +5411,14 @@ Value has been reset to empty value.</source>
         <source>Private key (*.ppk)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_gbMgtPanelHeaderNew.Text">
+        <source>Create new remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gbMgtPanelHeaderEdit.Text">
+        <source>Edit remote details</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_warningNoKeyEntered.Text">
         <source>No SSH key file entered</source>
         <target />
@@ -5385,10 +5429,6 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="_warningValidRemoteCaption.Text">
         <source>Url needed</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="buttonClose.Text">
-        <source>Close</source>
         <target />
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
@@ -6216,10 +6256,6 @@ Do you want to register the host's fingerprint and restart the process?</source>
       </trans-unit>
       <trans-unit id="_removeSelectedSubmoduleCaption.Text">
         <source>Remove</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Details</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -7257,10 +7293,6 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="InitRepository.Text">
         <source>Initialize repository</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="IsMessageMultilineDataGridViewColumn.HeaderText">
-        <source>IsMessageMultiline</source>
         <target />
       </trans-unit>
       <trans-unit id="MessageDataGridViewColumn.HeaderText">

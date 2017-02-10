@@ -81,8 +81,10 @@
     <Compile Include="GitCmdResult.cs" />
     <Compile Include="GitUIPostActionEventArgs.cs" />
     <Compile Include="IBrowseRepo.cs" />
+    <Compile Include="IGitItem.cs" />
     <Compile Include="IGitPluginForRepository.cs" />
     <Compile Include="IGitModule.cs" />
+    <Compile Include="IGitRef.cs" />
     <Compile Include="IGitRemoteCommand.cs" />
     <Compile Include="ILockableNotifier.cs" />
     <Compile Include="Settings\BoolSetting.cs" />

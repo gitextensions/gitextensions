@@ -5,6 +5,7 @@ using GitCommands;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using ResourceManager;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -16,8 +17,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         string _selectedRevision;
 
         // these two are used to prepare for _selectedRevision
-        GitRef _selectedTag;
-        GitRef _selectedBranch;
+        IGitRef _selectedTag;
+        IGitRef _selectedBranch;
 
         private readonly AsyncLoader _tagsLoader;
         private readonly AsyncLoader _branchesLoader;
@@ -91,7 +92,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 list =>
                 {
                     comboBoxTags.Text = string.Empty;
-                    comboBoxTags.DataSource = list;
+                    GitRefsToDataSource(comboBoxTags, list);
                     comboBoxTags.DisplayMember = "LocalName";
                     SetSelectedRevisionByFocusedControl();
                 }
@@ -106,11 +107,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 list =>
                 {
                     comboBoxBranches.Text = string.Empty;
-                    comboBoxBranches.DataSource = list;
+                    GitRefsToDataSource(comboBoxBranches, list);
                     comboBoxBranches.DisplayMember = "LocalName";
                     SetSelectedRevisionByFocusedControl();
                 }
             );
+        }
+
+        private static void GitRefsToDataSource(ComboBox cb, IList<IGitRef> refs)
+        {
+            cb.DataSource = refs;
+        }
+
+        private static IList<IGitRef> DataSourceToGitRefs(ComboBox cb)
+        {
+            return (IList<IGitRef>)cb.DataSource;
         }
 
         private void comboBoxTags_Enter(object sender, EventArgs e)
@@ -160,7 +171,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            _selectedTag = ((List<GitRef>)comboBoxTags.DataSource).FirstOrDefault(a => a.LocalName == comboBoxTags.Text);
+            _selectedTag = DataSourceToGitRefs(comboBoxTags).FirstOrDefault(a => a.LocalName == comboBoxTags.Text);
             SetSelectedRevisionByFocusedControl();
         }
 
@@ -171,7 +182,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            _selectedBranch = ((List<GitRef>)comboBoxBranches.DataSource).FirstOrDefault(a => a.LocalName == comboBoxBranches.Text);
+            _selectedBranch = DataSourceToGitRefs(comboBoxBranches).FirstOrDefault(a => a.LocalName == comboBoxBranches.Text);
             SetSelectedRevisionByFocusedControl();
         }
 
@@ -182,7 +193,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            _selectedTag = (GitRef)comboBoxTags.SelectedValue;
+            _selectedTag = (IGitRef)comboBoxTags.SelectedValue;
             SetSelectedRevisionByFocusedControl();
             Go();
         }
@@ -194,7 +205,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            _selectedBranch = (GitRef)comboBoxBranches.SelectedValue;
+            _selectedBranch = (IGitRef)comboBoxBranches.SelectedValue;
             SetSelectedRevisionByFocusedControl();
             Go();
         }

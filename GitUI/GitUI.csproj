@@ -145,6 +145,12 @@
     <Compile Include="CommandsDialogs\FormDiff.Designer.cs">
       <DependentUpon>FormDiff.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\FormReflog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormReflog.Designer.cs">
+      <DependentUpon>FormReflog.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\FormSparseWorkingCopyViewModel.cs" />
     <Compile Include="CommandsDialogs\FormMergeSubmodule.cs">
       <SubType>Form</SubType>
@@ -248,6 +254,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
+    <Compile Include="Objects\GitRemote.cs" />
+    <Compile Include="Objects\GitRemoteController.cs" />
+    <Compile Include="Objects\GitRemoteSaveResult.cs" />
     <Compile Include="RepoHosts.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">
@@ -1052,6 +1061,10 @@
       <DependentUpon>FormMergeSubmodule.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\FormReflog.resx">
+      <DependentUpon>FormReflog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.resx">
       <DependentUpon>CreatePullRequestForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1072,6 +1085,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\AutoLayoutSettingsPage.resx">
       <DependentUpon>AutoLayoutSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.resx">
+      <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.resx">
       <DependentUpon>RepoDistSettingsPage.cs</DependentUpon>
@@ -1502,7 +1518,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj">
-      <Project>{1dc7d403-484b-43b4-b017-1356397a32cb}</Project>
+      <Project>{1DC7D403-484B-43B4-B017-1356397A32CB}</Project>
       <Name>ConEmuWinForms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Externals\Git.hub\Git.hub\Git.hub.csproj">
@@ -1577,6 +1593,14 @@
     <None Include="Translation\Dutch.xlf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Translation\English.Plugins.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\English.xlf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Translation\en_pseudo.Plugins.xlf" />
+    <None Include="Translation\en_pseudo.xlf" />
     <None Include="Translation\French.Plugins.xlf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1658,6 +1682,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Icons\IconShowFirstParent.png" />
+    <Content Include="Resources\Icons\86.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1886,7 +1911,6 @@
     <None Include="Resources\Icons\IconWarning.png" />
     <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
     <None Include="Resources\Icons\IconFileStatusUnknown.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionDown2.png" />
     <None Include="Resources\Icons\IconSubmoduleRevisionSemiDown.png" />
     <None Include="Resources\Icons\IconSubmoduleRevisionSemiDownDirty.png" />
     <None Include="Resources\Icons\IconSubmoduleRevisionSemiUp.png" />

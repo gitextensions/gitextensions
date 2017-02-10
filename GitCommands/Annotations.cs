@@ -135,7 +135,7 @@ namespace JetBrains.Annotations
     /// <item>Value    ::= true | false | null | notnull | canbenull</item>
     /// </list>
     /// If method has single input parameter, it's name could be omitted. <br/>
-    /// Using "halt" (or "void"/"nothing", which is the same) for method output means that methos doesn't return normally. <br/>
+    /// Using "halt" (or "void"/"nothing", which is the same) for method output means that method doesn't return normally. <br/>
     /// "canbenull" annotation is only applicable for output parameters. <br/>
     /// You can use multiple [ContractAnnotation] for each FDT row, or use single attribute with rows separated by semicolon. <br/>
     /// </syntax>

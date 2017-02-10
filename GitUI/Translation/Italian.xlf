@@ -2232,6 +2232,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>Mostra primo genitore</target>
         
       </trans-unit>
       <trans-unit id="SvnDcommitToolStripMenuItem.Text">
@@ -2348,6 +2349,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_pullOpenDialog.Text">
         <source>Open pull dialog</source>
+        <target>Apri pannello pull</target>
         
       </trans-unit>
       <trans-unit id="_pullRebase.Text">
@@ -2892,6 +2894,7 @@ Vuoi rimuoverlo dalla lista dei repository recenti?</target>
       </trans-unit>
       <trans-unit id="reportAnIssueToolStripMenuItem.Text">
         <source>Report an issue</source>
+        <target>Segnala un problema</target>
         
       </trans-unit>
       <trans-unit id="repositoryToolStripMenuItem.Text">
@@ -2901,18 +2904,22 @@ Vuoi rimuoverlo dalla lista dei repository recenti?</target>
       </trans-unit>
       <trans-unit id="resetFileToFirstToolStripMenuItem.Text">
         <source>First</source>
+        <target>Primo</target>
         
       </trans-unit>
       <trans-unit id="resetFileToParentToolStripMenuItem.Text">
         <source>Parent</source>
+        <target>Genitore</target>
         
       </trans-unit>
       <trans-unit id="resetFileToSecondToolStripMenuItem.Text">
         <source>Second</source>
+        <target>Secondo</target>
         
       </trans-unit>
       <trans-unit id="resetFileToSelectedToolStripMenuItem.Text">
         <source>Selected</source>
+        <target>Selezionato</target>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
@@ -2956,6 +2963,7 @@ Vuoi rimuoverlo dalla lista dei repository recenti?</target>
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
         <source>Settings</source>
+        <target>Impostazioni</target>
         
       </trans-unit>
       <trans-unit id="startAuthenticationAgentToolStripMenuItem.Text">
@@ -3024,6 +3032,7 @@ Vuoi rimuoverlo dalla lista dei repository recenti?</target>
       </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
+        <target>Filtro:</target>
         
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
@@ -3250,6 +3259,7 @@ Inserisci un nome branch valido o seleziona il valore predefinito.</target>
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
+        <target>Nessun genitore è selezionato!</target>
         
       </trans-unit>
       <trans-unit id="_noneParentSelectedTextCaption.Text">
@@ -3314,6 +3324,7 @@ revisione:</target>
       </trans-unit>
       <trans-unit id="labelParents.Text">
         <source>Parent(s):</source>
+        <target>Genitore(i)</target>
         
       </trans-unit>
       <trans-unit id="linkLabelParent.Text">
@@ -3733,7 +3744,7 @@ Are you sure you want to commit?</source>
       </trans-unit>
       <trans-unit id="_noFilesStagedAndNothingToCommit.Text">
         <source>There are no files staged for this commit.</source>
-        <target>Non ci sono file in staged per questo commit</target>
+        <target>Non ci sono file nello stage per questo commit</target>
         
       </trans-unit>
       <trans-unit id="_noFilesStagedButSuggestToCommitAllUnstaged.Text">
@@ -3903,6 +3914,7 @@ Vuoi continuare?</target>
       </trans-unit>
       <trans-unit id="copyFolderNameMenuItem.Text">
         <source>Copy folder name</source>
+        <target>Copia nome cartells</target>
         
       </trans-unit>
       <trans-unit id="deleteAllUntrackedFilesToolStripMenuItem.Text">
@@ -4182,6 +4194,7 @@ Vuoi continuare?</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Commit template settings</source>
+        <target>Modello impostazioni commit</target>
         
       </trans-unit>
       <trans-unit id="_emptyTemplate.Text">
@@ -4277,6 +4290,7 @@ Vuoi continuare?</target>
       </trans-unit>
       <trans-unit id="Orphan.Text">
         <source>Create or&amp;phan</source>
+        <target>Crea or&amp;fano</target>
         
       </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
@@ -4675,6 +4689,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="ShowFirstParent.ToolTipText">
         <source>Show first parents</source>
+        <target>Mostra primo genitore</target>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -4739,6 +4754,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
+        <target>Filtro:</target>
         
       </trans-unit>
       <trans-unit id="toolStripSplitLoad.ToolTipText">
@@ -4878,6 +4894,7 @@ Cambia il comportamento default solo in caso di problemi.</target>
       </trans-unit>
       <trans-unit id="_noGitMailConfigured.Text">
         <source>There is no email address configured in the settings dialog.</source>
+        <target>Non c'è l'indirizzo email configurato nel pannello impostazioni.</target>
         
       </trans-unit>
       <trans-unit id="_noOutputPathEnteredText.Text">
@@ -4910,6 +4927,7 @@ Cambia il comportamento default solo in caso di problemi.</target>
       </trans-unit>
       <trans-unit id="_wrongSmtpSettingsText.Text">
         <source>You need to enter a valid smtp in the settings dialog.</source>
+        <target>Devi inserire un smtp valido nel pannello impostazioni.</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -5786,6 +5804,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="LocalColumn.HeaderText">
         <source>Local Branch</source>
+        <target>Branch locale</target>
         
       </trans-unit>
       <trans-unit id="MultipleBranchTab.Text">
@@ -5837,6 +5856,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="RemoteColumn.HeaderText">
         <source>Remote Branch</source>
+        <target>Branch remoto</target>
         
       </trans-unit>
       <trans-unit id="ReplaceTrackingReference.Text">
@@ -5845,6 +5865,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="ShowOptions.Text">
         <source>Show options</source>
+        <target>Mostra opzioni</target>
         
       </trans-unit>
       <trans-unit id="TagTab.Text">
@@ -5883,6 +5904,7 @@ Sei sicuro di volerne effettuare il push?</target>
       </trans-unit>
       <trans-unit id="_pullActionMerge.Text">
         <source>merge</source>
+        <target>Merge</target>
         
       </trans-unit>
       <trans-unit id="_pullActionNone.Text">
@@ -5891,6 +5913,7 @@ Sei sicuro di volerne effettuare il push?</target>
       </trans-unit>
       <trans-unit id="_pullActionRebase.Text">
         <source>rebase</source>
+        <target>ri-basa</target>
         
       </trans-unit>
       <trans-unit id="_pullRepository.Text">
@@ -6059,6 +6082,7 @@ Sei sicuro di volerne effettuare il push?</target>
       </trans-unit>
       <trans-unit id="ShowOptions.Text">
         <source>Show options</source>
+        <target>Mostra opzioni</target>
         
       </trans-unit>
       <trans-unit id="Skip.Text">
@@ -6089,6 +6113,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="_continueRebaseText2.Text">
         <source>&gt;Continue rebase&lt;</source>
+        <target>&gt;Continua ri-basa&lt;</target>
         
       </trans-unit>
       <trans-unit id="_hoverShowImageLabelText.Text">
@@ -6106,6 +6131,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="_solveConflictsText2.Text">
         <source>&gt;Solve conflicts&lt;</source>
+        <target>&gt;Risolvi conflitti&lt;</target>
         
       </trans-unit>
       <trans-unit id="chkAutosquash.Text">
@@ -6164,6 +6190,7 @@ Nothing to rebase.</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Recent repositories settings</source>
+        <target>Configurazioni recenti repositories</target>
         
       </trans-unit>
       <trans-unit id="Abort.Text">
@@ -6446,6 +6473,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Rename</source>
+        <target>Rinomina</target>
         
       </trans-unit>
       <trans-unit id="_branchRenameFailed.Text">
@@ -6454,6 +6482,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>New name</source>
+        <target>Nuovo nome</target>
         
       </trans-unit>
     </body>
@@ -6995,7 +7024,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
         <source>Automatically create a commit</source>
-        <target>Crea automaticamente un commit quando non ci sono conflitti di merge</target>
+        <target>Crea automaticamente un commit</target>
         
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
@@ -7015,6 +7044,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
         <source>None parent is selected!</source>
+        <target>Nessun genitore è selezionato!</target>
         
       </trans-unit>
       <trans-unit id="_noneParentSelectedTextCaption.Text">
@@ -7443,6 +7473,7 @@ Vuoi aprire il nuovo repository &quot;{0}&quot; subito?</target>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Advanced settings</source>
+        <target>Impostazioni avanzate</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -8036,6 +8067,7 @@ globali.</target>
       </trans-unit>
       <trans-unit id="groupBoxEmailSettings.Text">
         <source>Email settings for sending patches</source>
+        <target>Configurazione email per invio patches</target>
         
       </trans-unit>
       <trans-unit id="groupBoxPerformance.Text">
@@ -8474,6 +8506,7 @@ This will just checkout on the submodule the commit determined by the superproje
     <body>
       <trans-unit id="$this.Text">
         <source>Plugins Settings</source>
+        <target>Impostazioni plugins</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -8825,6 +8858,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="showFirstParent.Text">
         <source>Show first parents</source>
+        <target>Mostra primo genitore</target>
         
       </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">
@@ -8842,6 +8876,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="showMergeCommitsToolStripMenuItem.Text">
         <source>Show merge commits</source>
+        <target>Mostra merge commits</target>
         
       </trans-unit>
       <trans-unit id="showRelativeDateToolStripMenuItem.Text">
@@ -8856,6 +8891,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="showTagsToolStripMenuItem.Text">
         <source>Show tags</source>
+        <target>Mostra tags</target>
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">

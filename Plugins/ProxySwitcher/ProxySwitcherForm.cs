@@ -10,8 +10,9 @@ namespace ProxySwitcher
 {
     public partial class ProxySwitcherForm : GitExtensionsFormBase
     {
-        private readonly ISettingsSource settings;
-        private readonly IGitModule gitCommands;
+        private readonly ProxySwitcherPlugin _plugin;
+        private readonly ISettingsSource _settings;
+        private readonly IGitModule _gitCommands;
 
         #region Translation
         private readonly TranslationString _pluginDescription = new TranslationString("Proxy Switcher");
@@ -28,19 +29,20 @@ namespace ProxySwitcher
             InitializeComponent();
         }
 
-        public ProxySwitcherForm(ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
+        public ProxySwitcherForm(ProxySwitcherPlugin plugin, ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();
 
-            this.Text = _pluginDescription.Text;
-            this.settings = settings;
-            this.gitCommands = gitUiCommands.GitModule;
+            Text = _pluginDescription.Text;
+            _plugin = plugin;
+            _settings = settings;
+            _gitCommands = gitUiCommands.GitModule;
         }
 
         private void ProxySwitcherForm_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(SettingsKey.HttpProxy.ValueOrDefault(settings)))
+            if (string.IsNullOrEmpty(_plugin.HttpProxy.ValueOrDefault(_settings)))
             {
                 MessageBox.Show(this, _pleaseSetProxy.Text, this.Text, MessageBoxButtons.OK);
                 this.Close();
@@ -53,8 +55,8 @@ namespace ProxySwitcher
 
         private void RefreshProxy()
         {
-            LocalHttpProxy_TextBox.Text = HidePassword(gitCommands.RunGitCmd("config --get http.proxy"));
-            GlobalHttpProxy_TextBox.Text = HidePassword(gitCommands.RunGitCmd("config --global --get http.proxy"));
+            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.RunGitCmd("config --get http.proxy"));
+            GlobalHttpProxy_TextBox.Text = HidePassword(_gitCommands.RunGitCmd("config --global --get http.proxy"));
             ApplyGlobally_CheckBox.Checked = string.Equals(LocalHttpProxy_TextBox.Text, GlobalHttpProxy_TextBox.Text);
         }
 
@@ -67,10 +69,10 @@ namespace ProxySwitcher
         {
             var sb = new StringBuilder();
             sb.Append("\"");
-            var username = SettingsKey.Username.ValueOrDefault(settings);
+            var username = _plugin.Username.ValueOrDefault(_settings);
             if (!string.IsNullOrEmpty(username))
             {
-                var password = SettingsKey.Password.ValueOrDefault(settings);
+                var password = _plugin.Password.ValueOrDefault(_settings);
                 sb.Append(username);
                 if(!string.IsNullOrEmpty(password))
                 {
@@ -79,8 +81,8 @@ namespace ProxySwitcher
                 }
                 sb.Append("@");
             }
-            sb.Append(SettingsKey.HttpProxy.ValueOrDefault(settings));
-            var port = SettingsKey.HttpProxyPort.ValueOrDefault(settings);
+            sb.Append(_plugin.HttpProxy.ValueOrDefault(_settings));
+            var port = _plugin.HttpProxyPort.ValueOrDefault(_settings);
             if (!string.IsNullOrEmpty(port))
             {
                 sb.Append(":");
@@ -95,11 +97,11 @@ namespace ProxySwitcher
             var httpproxy = BuildHttpProxy();
             if (ApplyGlobally_CheckBox.Checked)
             {
-                gitCommands.RunGitCmd("config --global http.proxy " + httpproxy);
+                _gitCommands.RunGitCmd("config --global http.proxy " + httpproxy);
             }
             else
             {
-                gitCommands.RunGitCmd("config http.proxy " + httpproxy);
+                _gitCommands.RunGitCmd("config http.proxy " + httpproxy);
             }
             RefreshProxy();
         }
@@ -108,11 +110,11 @@ namespace ProxySwitcher
         {
             if (ApplyGlobally_CheckBox.Checked)
             {
-                gitCommands.RunGitCmd("config --global --unset http.proxy");
+                _gitCommands.RunGitCmd("config --global --unset http.proxy");
             }
             else
             {
-                gitCommands.RunGitCmd("config --unset http.proxy");
+                _gitCommands.RunGitCmd("config --unset http.proxy");
             }
             RefreshProxy();
         }

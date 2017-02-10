@@ -89,6 +89,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
 
+            Dictionary.Items.Clear();
+            Dictionary.Items.Add(_noDictFile.Text);
             if (AppSettings.Dictionary.Equals("none", StringComparison.InvariantCultureIgnoreCase))
                 Dictionary.SelectedIndex = 0;
             else
@@ -99,7 +101,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SetCurrentApplicationFont(AppSettings.Font);
             SetCurrentDiffFont(AppSettings.DiffFont);
             SetCurrentCommitFont(AppSettings.CommitFont);
-
         }
 
         protected override void PageToSettings()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using ResourceManager.Xliff;
 
 namespace ResourceManager
@@ -28,6 +29,8 @@ namespace ResourceManager
                     var name = Path.GetFileNameWithoutExtension(file).Substring(translationName.Length);
                     var t = TranslationSerializer.Deserialize(file) ??
                             new TranslationFile();
+                    t.SourceLanguage = t.TranslationCategories.FirstOrDefault()?.SourceLanguage;
+                    t.TargetLanguage = t.TranslationCategories.FirstOrDefault()?.TargetLanguage;
                     _translation[name] = t;
                 }
             }

@@ -1,17 +1,15 @@
-﻿using GitCommands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
+using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
     class GitRefListsForRevision
     {
-        private GitRef[] _allBranches;
-        private GitRef[] _localBranches;
-        private GitRef[] _branchesWithNoIdenticalRemotes;
-        private GitRef[] _tags;
+        private readonly IGitRef[] _allBranches;
+        private readonly IGitRef[] _localBranches;
+        private readonly IGitRef[] _branchesWithNoIdenticalRemotes;
+        private readonly IGitRef[] _tags;
 
         public GitRefListsForRevision(GitRevision revision)
         {
@@ -23,22 +21,22 @@ namespace GitUI.UserControls.RevisionGridClasses
             _tags = revision.Refs.Where(h => h.IsTag).ToArray();
         }
 
-        public GitRef[] AllBranches
+        public IGitRef[] AllBranches
         {
             get { return _allBranches; }
         }
 
-        public GitRef[] LocalBranches
+        public IGitRef[] LocalBranches
         {
             get { return _localBranches; }
         }
 
-        public GitRef[] BranchesWithNoIdenticalRemotes
+        public IGitRef[] BranchesWithNoIdenticalRemotes
         {
             get { return _branchesWithNoIdenticalRemotes; }
         }
 
-        public GitRef[] AllTags
+        public IGitRef[] AllTags
         {
             get { return _tags; }
         }

@@ -67,7 +67,7 @@ namespace Github3
 
     public class Github3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
-        public StringSetting OAuthToken = new StringSetting("OAuth Token", "");
+        public readonly StringSetting OAuthToken = new StringSetting("OAuth Token", "");
 
         internal static Github3Plugin instance;
         internal static Client github;

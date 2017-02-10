@@ -182,7 +182,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
-        <target>Drücken Sie '{0}' um nach Branches für die Löschung zu suchen.</target>
+        <target>Drücken Sie '{0}', um nach Branches für die Löschung zu suchen.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">

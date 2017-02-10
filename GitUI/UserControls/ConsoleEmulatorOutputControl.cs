@@ -117,7 +117,13 @@ namespace GitUI.UserControls
             startinfo.ConsoleProcessExtraArgs = " -cur_console:P:\"<Solarized Light>\"";
             startinfo.StartupDirectory = workdir;
             startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
-            startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) => FireDataReceived(new TextEventArgs(args.GetText(GitModule.SystemEncoding)));
+            startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) =>
+            {
+                var text = args.GetText(GitModule.SystemEncoding);
+                if (EnvUtils.RunningOnWindows())
+                    text = text.Replace("\n", Environment.NewLine);
+                FireDataReceived(new TextEventArgs(text));
+            };
             startinfo.ConsoleProcessExitedEventSink = (sender, args) =>
             {
                 _nLastExitCode = args.ExitCode;

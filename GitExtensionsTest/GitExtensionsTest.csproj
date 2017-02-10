@@ -97,6 +97,7 @@
     <Compile Include="GitUI\Editor\Diff\LinePrefixHelperFixture.cs" />
     <Compile Include="GitUI\FormUpdateFixture.cs" />
     <Compile Include="GitUI\HotkeySettingsManagerFixture.cs" />
+    <Compile Include="GitUI\Objects\GitRemoteControllerTests.cs" />
     <Compile Include="GitUI\SingleHtmlUserManualFixture.cs" />
     <Compile Include="GitUI\StandardHtmlUserManualFixture.cs" />
     <Compile Include="Plugins\ReleaseNotesGenerator\MainFixture.cs" />

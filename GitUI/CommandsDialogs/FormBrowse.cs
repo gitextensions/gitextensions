@@ -134,6 +134,11 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Are you sure you want to reset this file or directory?");
         private readonly TranslationString _resetFileError =
             new TranslationString("Exactly one revision must be selected. Abort.");
+
+        private readonly TranslationString _buildReportTabCaption =
+            new TranslationString("Build Report");
+        private readonly TranslationString _consoleTabCaption =
+            new TranslationString("Console");
         #endregion
 
         private Dashboard _dashboard;
@@ -173,6 +178,8 @@ namespace GitUI.CommandsDialogs
             : base(true, aCommands)
         {
             InitializeComponent();
+
+            toolPanel.SplitterDistance = ToolStrip.PreferredSize.Height;
 
             // set tab page images
             {
@@ -1169,7 +1176,7 @@ namespace GitUI.CommandsDialogs
             var revision = selectedRevisions.Count == 1 ? selectedRevisions.Single() : null;
 
             if (BuildReportTabPageExtension == null)
-                BuildReportTabPageExtension = new BuildReportTabPageExtension(CommitInfoTabControl);
+                BuildReportTabPageExtension = new BuildReportTabPageExtension(CommitInfoTabControl, _buildReportTabCaption.Text);
 
             BuildReportTabPageExtension.FillBuildReport(revision);
         }
@@ -3530,7 +3537,7 @@ namespace GitUI.CommandsDialogs
             TabPage tabpage;
             string sImageKey = "Resources.IconConsole";
             CommitInfoTabControl.ImageList.Images.Add(sImageKey, Resources.IconConsole);
-            CommitInfoTabControl.Controls.Add(tabpage = new TabPage("Console"));
+            CommitInfoTabControl.Controls.Add(tabpage = new TabPage(_consoleTabCaption.Text));
             tabpage.ImageKey = sImageKey; // After adding page
 
             // Delay-create the terminal window when the tab is first selected
@@ -3650,6 +3657,16 @@ namespace GitUI.CommandsDialogs
         private void toolStripBranches_DropDown_ResizeDropDownWidth(object sender, EventArgs e)
         {
             ComboBoxHelper.ResizeComboBoxDropDownWidth(toolStripBranchFilterComboBox.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+        }
+
+        private void toolStripMenuItemReflog_Click(object sender, EventArgs e)
+        {
+            var formReflog = new FormReflog(this.UICommands);
+            formReflog.ShowDialog();
+            if (formReflog.ShouldRefresh)
+            {
+                RefreshRevisions();
+            }
         }
     }
 }

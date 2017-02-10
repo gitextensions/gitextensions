@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace ResourceManager.Xliff
@@ -14,11 +15,12 @@ namespace ResourceManager.Xliff
             TranslationCategories = new List<TranslationCategory>();
         }
 
-        public TranslationFile(string gitExVersion, string languageCode)
+        public TranslationFile(string gitExVersion, string sourceLanguage, string targetLanguage)
             : this()
         {
             GitExVersion = gitExVersion;
-            _languageCode = languageCode;
+            _sourceLanguage = sourceLanguage;
+            _targetLanguage = targetLanguage;
         }
 
         [XmlAttribute("version")]
@@ -27,9 +29,21 @@ namespace ResourceManager.Xliff
         [XmlAttribute("GitExVersion")]
         public string GitExVersion { get; set; }
 
-        private string _languageCode;
-        [XmlAttribute("LanguageCode")]
-        public string LanguageCode { get { return _languageCode; } }
+        private string _sourceLanguage;
+        [XmlIgnore()]
+        public string SourceLanguage
+        {
+            get { return _sourceLanguage; }
+            set { _sourceLanguage = value; }
+        }
+
+        private string _targetLanguage;
+        [XmlIgnore()]
+        public string TargetLanguage
+        {
+            get { return _targetLanguage; }
+            set { _targetLanguage = value; }
+        }
 
         [XmlElement(ElementName = "file")]
         public List<TranslationCategory> TranslationCategories { get; set; }
@@ -39,7 +53,7 @@ namespace ResourceManager.Xliff
             TranslationCategory tc = GetTranslationCategory(translationCategory);
             if (tc == null)
             {
-                tc = new TranslationCategory(translationCategory, "en");
+                tc = new TranslationCategory(translationCategory, SourceLanguage, TargetLanguage);
                 AddTranslationCategory(tc);
             }
             return tc;

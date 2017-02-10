@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI.HelperDialogs
 {
     public partial class FormRunScriptSpecify : Form
     {
-        public FormRunScriptSpecify(IEnumerable<GitRef> options, string label)
+        public FormRunScriptSpecify(IEnumerable<IGitRef> options, string label)
         {
             InitializeComponent();
             specifyLabel.Text = "Specify '" + label+"':";
-            foreach (GitRef head in options)
+            foreach (var head in options)
             {
                 branchesListView.Items.Add(head.Name);
             }
