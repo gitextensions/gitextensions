@@ -28,7 +28,7 @@ namespace GitExtensionsTest.GitCommands.Git
         }
 
 
-        // They can include slash / for hierarchical (directory) grouping, 
+        // They can include slash / for hierarchical (directory) grouping,
         // but no slash-separated component can begin with a dot . or end with the sequence .lock.
         [TestCase(".test", "_test")]
         [TestCase("hierarchy/.test", "hierarchy/_test")]
@@ -67,7 +67,7 @@ namespace GitExtensionsTest.GitCommands.Git
             _gitBranchNameNormaliser.Rule03(input, _gitBranchNameOptions).Should().Be(expected);
         }
 
-        // Branch name cannot have ASCII control characters (i.e. bytes whose values are lower than \040, or \127 'DEL'), 
+        // Branch name cannot have ASCII control characters (i.e. bytes whose values are lower than \040, or \127 'DEL'),
         // space, tilde '~', caret '^', or colon ':' anywhere.
         [TestCase("test:test", "test_test")]
         [TestCase("test test", "test_test")]
@@ -75,9 +75,9 @@ namespace GitExtensionsTest.GitCommands.Git
         [TestCase("test~test", "test_test")]
         [TestCase("hier archy:sher~lok/fo^o", "hier_archy_sher_lok/fo_o")]
         [TestCase("błąd", "błąd")]
-        [TestCase("привет, ё-маё!", "привет,_ё-маё_")]
+        [TestCase("привет, ё-маё!", "привет,_ё-маё!")]
         [TestCase("Pokémon 195", "Pokémon_195")]
-        [TestCase("Anhörung`!@#$%", "Anhörung`_@___")]
+        [TestCase("Anhörung`!@#$%", "Anhörung`!@#$%")]
         public void Normalise_rule04(string input, string expected)
         {
             _gitBranchNameNormaliser.Rule04(input, _gitBranchNameOptions).Should().Be(expected);
