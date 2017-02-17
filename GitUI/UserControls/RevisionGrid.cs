@@ -52,6 +52,8 @@ namespace GitUI
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
         private readonly TranslationString _cannotHighlightSelectedBranch = new TranslationString("Cannot highlight selected branch when revision graph is loading.");
         private readonly TranslationString _noRevisionFoundError = new TranslationString("No revision found.");
+        private readonly TranslationString _baseForCompareNotSelectedError = new TranslationString("Base commit for compare is not selected.");
+        private readonly TranslationString _strError = new TranslationString("Error");
 
         private const int NodeDimension = 8;
         private const int LaneWidth = 13;
@@ -3176,6 +3178,12 @@ namespace GitUI
 
         private void compareToBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if(_baseCommitToCompare == null)
+            {
+                MessageBox.Show(this, _baseForCompareNotSelectedError.Text, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var headCommit = GetSelectedRevisions().First();
             using (var diffForm = new FormDiff(UICommands, this, _baseCommitToCompare.Guid, headCommit.Guid,
                 _baseCommitToCompare.Subject, headCommit.Subject))
