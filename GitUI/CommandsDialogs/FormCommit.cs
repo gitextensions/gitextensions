@@ -2358,10 +2358,18 @@ namespace GitUI.CommandsDialogs
 
         private void LoadCommitTemplates()
         {
-            CommitTemplateItem[] commitTemplates = CommitTemplateItem.LoadFromSettings();
-
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
+            CommitTemplateItem[] commitTemplates = CommitTemplateItem.LoadFromRegistrated();
+
+            if (commitTemplates.Length > 0)
+            {
+                foreach (CommitTemplateItem item in commitTemplates)
+                    AddTemplateCommitMessageToMenu(item, item.Name);
+                commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            }
+
+            commitTemplates = CommitTemplateItem.LoadFromSettings();
             if (null != commitTemplates)
             {
                 for (int i = 0; i < commitTemplates.Length; i++)
@@ -2369,9 +2377,9 @@ namespace GitUI.CommandsDialogs
                     if (!commitTemplates[i].Name.IsNullOrEmpty())
                         AddTemplateCommitMessageToMenu(commitTemplates[i], commitTemplates[i].Name);
                 }
+                if (commitTemplates.Any(i => !i.Name.IsNullOrEmpty()))
+                    commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
             }
-
-            commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
 
             var toolStripItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
             toolStripItem.Click += commitTemplatesConfigtoolStripMenuItem_Click;
@@ -2527,19 +2535,6 @@ namespace GitUI.CommandsDialogs
                     components.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        public void AddInfoButton(string title, Func<string> addingText)
-        {
-            var button = new ToolStripButton
-            {
-                ImageAlign = ContentAlignment.MiddleLeft,
-                Margin = new Padding(1, 3, 3, 3),
-                Size = new Size(171, 26),
-                Text = title
-            };
-            button.Click += (sender, args) => { Message.Text += addingText(); };
-            toolbarCommit.Items.Add(button);
         }
     }
 

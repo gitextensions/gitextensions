@@ -42,6 +42,7 @@ namespace JiraCommitTipPlugin
             base.Register(gitUiCommands);
             gitUiCommands.PostSettings += gitUiCommands_PostSettings;
             gitUiCommands.PreCommit += gitUiCommands_PreCommit;
+            gitUiCommands.PostRepositoryChanged += gitUiCommands_PostRepositoryChanged;
             UpdateJiraSettings();
         }
 
@@ -70,11 +71,17 @@ namespace JiraCommitTipPlugin
             base.Unregister(gitUiCommands);
             gitUiCommands.PreCommit -= gitUiCommands_PreCommit;
             gitUiCommands.PostSettings -= gitUiCommands_PostSettings;
+            gitUiCommands.PostRepositoryChanged -= gitUiCommands_PostRepositoryChanged;
         }
 
         private void gitUiCommands_PreCommit(object sender, GitUIBaseEventArgs e)
         {
-           e.GitUICommands.AddFormCommitInfoButton(description, GetMessageToCommit);
+           e.GitUICommands.AddCommitTemplate(description, GetMessageToCommit);
+        }
+
+        private void gitUiCommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
+        {
+            e.GitUICommands.RemoveCommitTemplate(description);
         }
 
         private string GetMessageToCommit()

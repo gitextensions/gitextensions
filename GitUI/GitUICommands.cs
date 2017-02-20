@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
@@ -675,21 +676,17 @@ namespace GitUI
             return DoActionOnRepo(action);
         }
 
-        private FormCommit formCommit;
-
         public bool StartCommitDialog(IWin32Window owner, bool showOnlyWhenChanges)
         {
-            formCommit = new FormCommit(this);
             Func<bool> action = () =>
             {
+                using (var form = new FormCommit(this))
                 {
                     if (showOnlyWhenChanges)
-                        formCommit.ShowDialogWhenChanges(owner);
+                        form.ShowDialogWhenChanges(owner);
                     else
-                        formCommit.ShowDialog(owner);
+                        form.ShowDialog(owner);
                 }
-                formCommit.Dispose();
-                formCommit = null;
                 return true;
             };
 
@@ -928,11 +925,14 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreSparseWorkingCopy, PostSparseWorkingCopy, action);
         }
 
-        public void AddFormCommitInfoButton(string title, Func<string> addingText)
+        public void AddCommitTemplate(string key, Func<string> addingText)
         {
-         if (formCommit == null )
-             return;
-         formCommit.AddInfoButton(title, addingText);
+            CommitTemplateItem.TryRegistrate(key, addingText);
+        }
+
+        public void RemoveCommitTemplate(string key)
+        {
+            CommitTemplateItem.UnRegistrate(key);
         }
 
         public bool StartFormatPatchDialog(IWin32Window owner)

@@ -156,6 +156,7 @@ namespace GitUIPluginInterfaces
         bool StartVerifyDatabaseDialog();
         bool StartViewPatchDialog();
         bool StartSparseWorkingCopyDialog();
-        void AddFormCommitInfoButton(string title, Func<string> addingText);
+        void AddCommitTemplate(string key, Func<string> addingText);
+        void RemoveCommitTemplate(string key);
     }
 }
