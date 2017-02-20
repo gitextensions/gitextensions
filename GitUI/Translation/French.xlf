@@ -8571,7 +8571,7 @@ global settings.
       </trans-unit>
       <trans-unit id="chkUseFastChecks.Text">
         <source>Use FileSystemWatcher to check if index is changed</source>
-        <target>Utiliser FileSystemWatcher to vérifier si l'index a changé</target>
+        <target>Utiliser FileSystemWatcher pour vérifier si l'index a changé</target>
         
       </trans-unit>
       <trans-unit id="chkUsePatienceDiffAlgorithm.Text">
