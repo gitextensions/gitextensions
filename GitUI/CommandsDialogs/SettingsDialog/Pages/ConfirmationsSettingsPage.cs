@@ -15,6 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void SettingsToPage()
         {
             chkAmend.Checked = AppSettings.DontConfirmAmend;
+            chkCommitIfNoBranch.Checked = AppSettings.DontConfirmCommitIfNoBranch;
             chkAutoPopStashAfterPull.CheckState = AppSettings.AutoPopStashAfterPull.ToCheckboxState();
             chkAutoPopStashAfterCheckout.CheckState = AppSettings.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
             chkPushNewBranch.Checked = AppSettings.DontConfirmPushNewBranch;
@@ -25,6 +26,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             AppSettings.DontConfirmAmend = chkAmend.Checked;
+            AppSettings.DontConfirmCommitIfNoBranch = chkCommitIfNoBranch.Checked;
             AppSettings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();
             AppSettings.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
             AppSettings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
