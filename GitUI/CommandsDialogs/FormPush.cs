@@ -625,18 +625,22 @@ namespace GitUI.CommandsDialogs
 
                     if (branch != null)
                     {
-                        string defaultRemote = _gitRemoteController.GetDefaultPushRemote(_selectedRemote, branch.Name);
-                        if (!defaultRemote.IsNullOrEmpty())
+                        if (_selectedRemote != null)
                         {
-                            RemoteBranch.Text = defaultRemote;
-                            return;
-                        }
-
-                        if (branch.TrackingRemote.Equals(_selectedRemote.Name, StringComparison.OrdinalIgnoreCase))
-                        {
-                            RemoteBranch.Text = branch.MergeWith;
-                            if (!string.IsNullOrEmpty(RemoteBranch.Text))
+                            string defaultRemote = _gitRemoteController.GetDefaultPushRemote(_selectedRemote,
+                                branch.Name);
+                            if (!defaultRemote.IsNullOrEmpty())
+                            {
+                                RemoteBranch.Text = defaultRemote;
                                 return;
+                            }
+
+                            if (branch.TrackingRemote.Equals(_selectedRemote.Name, StringComparison.OrdinalIgnoreCase))
+                            {
+                                RemoteBranch.Text = branch.MergeWith;
+                                if (!string.IsNullOrEmpty(RemoteBranch.Text))
+                                    return;
+                            }
                         }
                     }
                 }
