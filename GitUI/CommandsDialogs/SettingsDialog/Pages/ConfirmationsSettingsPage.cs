@@ -20,6 +20,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkPushNewBranch.Checked = AppSettings.DontConfirmPushNewBranch;
             chkAddTrackingRef.Checked = AppSettings.DontConfirmAddTrackingRef;
             chkUpdateModules.CheckState = AppSettings.UpdateSubmodulesOnCheckout.ToCheckboxState();
+            chkCheckForDiffViewerSelectedFilesLimitNumber.Checked = AppSettings.CheckForDiffViewerSelectedFilesLimitNumber;
+            upDownDiffViewerSelectedFilesLimitNumber.Enabled = AppSettings.CheckForDiffViewerSelectedFilesLimitNumber;
+            upDownDiffViewerSelectedFilesLimitNumber.Value = AppSettings.DiffViewerSelectedFilesLimitNumber;
         }
 
         protected override void PageToSettings()
@@ -30,11 +33,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
             AppSettings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
             AppSettings.UpdateSubmodulesOnCheckout = chkUpdateModules.CheckState.ToBoolean();
+            AppSettings.CheckForDiffViewerSelectedFilesLimitNumber = chkCheckForDiffViewerSelectedFilesLimitNumber.Checked;
+            AppSettings.DiffViewerSelectedFilesLimitNumber = (int)upDownDiffViewerSelectedFilesLimitNumber.Value;
         }
 
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(ConfirmationsSettingsPage));
+        }
+
+        private void chkCheckForDiffViewerSelectedFilesLimitNumber_CheckedChanged(object sender, System.EventArgs e)
+        {
+            upDownDiffViewerSelectedFilesLimitNumber.Enabled = chkCheckForDiffViewerSelectedFilesLimitNumber.Checked;
         }
     }
 

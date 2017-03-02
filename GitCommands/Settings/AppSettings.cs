@@ -1261,6 +1261,18 @@ namespace GitCommands
             set { SetBool("UseConsoleEmulatorForCommands", value); }
         }
 
+        public static bool CheckForDiffViewerSelectedFilesLimitNumber
+        {
+            get { return GetBool("CheckForDiffViewerSelectedFilesLimitNumber", true); }
+            set { SetBool("CheckForDiffViewerSelectedFilesLimitNumber", value); }
+        }
+
+        public static int DiffViewerSelectedFilesLimitNumber
+        {
+            get { return GetInt("DiffViewerSelectedFilesLimitNumber", 10); }
+            set { SetInt("DiffViewerSelectedFilesLimitNumber", value); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return Application.ExecutablePath;
