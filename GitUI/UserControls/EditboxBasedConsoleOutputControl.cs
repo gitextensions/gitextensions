@@ -157,10 +157,10 @@ namespace GitUI.UserControls
             //if not disposed
             if (!IsDisposed)
             {
+                _editbox.Visible = true;
                 _editbox.Text += text;
                 _editbox.SelectionStart = _editbox.Text.Length;
                 _editbox.ScrollToCaret();
-                _editbox.Visible = true;
             }
         }
 
