@@ -31,12 +31,12 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.CheckoutGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.chkUpdateModules = new System.Windows.Forms.CheckBox();
             this.chkAmend = new System.Windows.Forms.CheckBox();
             this.chkAutoPopStashAfterPull = new System.Windows.Forms.CheckBox();
+            this.chkAutoPopStashAfterCheckout = new System.Windows.Forms.CheckBox();
             this.chkAddTrackingRef = new System.Windows.Forms.CheckBox();
             this.chkPushNewBranch = new System.Windows.Forms.CheckBox();
-            this.chkAutoPopStashAfterCheckout = new System.Windows.Forms.CheckBox();
+            this.chkUpdateModules = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.CheckoutGB.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -76,12 +76,12 @@
             this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.Controls.Add(this.chkUpdateModules, 0, 5);
             this.tableLayoutPanel3.Controls.Add(this.chkAmend, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.chkAutoPopStashAfterPull, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.chkAddTrackingRef, 0, 3);
-            this.tableLayoutPanel3.Controls.Add(this.chkPushNewBranch, 0, 4);
-            this.tableLayoutPanel3.Controls.Add(this.chkAutoPopStashAfterCheckout, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.chkAutoPopStashAfterPull, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.chkAutoPopStashAfterCheckout, 0, 3);
+            this.tableLayoutPanel3.Controls.Add(this.chkAddTrackingRef, 0, 4);
+            this.tableLayoutPanel3.Controls.Add(this.chkPushNewBranch, 0, 5);
+            this.tableLayoutPanel3.Controls.Add(this.chkUpdateModules, 0, 6);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(6, 22);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 6;
@@ -94,24 +94,13 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(483, 150);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
-            // cbUpdateModules
-            // 
-            this.chkUpdateModules.AutoSize = true;
-            this.chkUpdateModules.Location = new System.Drawing.Point(3, 128);
-            this.chkUpdateModules.Name = "cbUpdateModules";
-            this.chkUpdateModules.Size = new System.Drawing.Size(201, 19);
-            this.chkUpdateModules.TabIndex = 6;
-            this.chkUpdateModules.Text = "Update submodules on checkout";
-            this.chkUpdateModules.UseVisualStyleBackColor = true;
-            this.chkUpdateModules.ThreeState = true;
-            // 
             // chkAmend
             // 
             this.chkAmend.AutoSize = true;
             this.chkAmend.Location = new System.Drawing.Point(3, 3);
             this.chkAmend.Name = "chkAmend";
             this.chkAmend.Size = new System.Drawing.Size(131, 19);
-            this.chkAmend.TabIndex = 0;
+            this.chkAmend.TabIndex = 1;
             this.chkAmend.Text = "Amend last commit";
             this.chkAmend.UseVisualStyleBackColor = true;
             // 
@@ -121,10 +110,22 @@
             this.chkAutoPopStashAfterPull.Location = new System.Drawing.Point(3, 28);
             this.chkAutoPopStashAfterPull.Name = "chkAutoPopStashAfterPull";
             this.chkAutoPopStashAfterPull.Size = new System.Drawing.Size(448, 19);
-            this.chkAutoPopStashAfterPull.TabIndex = 1;
+            this.chkAutoPopStashAfterPull.TabIndex = 2;
             this.chkAutoPopStashAfterPull.Text = "Apply stashed changes after successful pull (stash will be popped automatically)";
             this.chkAutoPopStashAfterPull.ThreeState = true;
             this.chkAutoPopStashAfterPull.UseVisualStyleBackColor = true;
+            // 
+            // chkAutoPopStashAfterCheckout
+            // 
+            this.chkAutoPopStashAfterCheckout.AutoSize = true;
+            this.chkAutoPopStashAfterCheckout.Location = new System.Drawing.Point(3, 53);
+            this.chkAutoPopStashAfterCheckout.Name = "chkAutoPopStashAfterCheckout";
+            this.chkAutoPopStashAfterCheckout.Size = new System.Drawing.Size(477, 19);
+            this.chkAutoPopStashAfterCheckout.TabIndex = 3;
+            this.chkAutoPopStashAfterCheckout.Text = "Apply stashed changes after successful checkout (stash will be popped automatical" +
+    "ly)";
+            this.chkAutoPopStashAfterCheckout.ThreeState = true;
+            this.chkAutoPopStashAfterCheckout.UseVisualStyleBackColor = true;
             // 
             // chkAddTrackingRef
             // 
@@ -142,21 +143,20 @@
             this.chkPushNewBranch.Location = new System.Drawing.Point(3, 103);
             this.chkPushNewBranch.Name = "chkPushNewBranch";
             this.chkPushNewBranch.Size = new System.Drawing.Size(205, 19);
-            this.chkPushNewBranch.TabIndex = 3;
+            this.chkPushNewBranch.TabIndex = 5;
             this.chkPushNewBranch.Text = "Push a new branch for the remote";
             this.chkPushNewBranch.UseVisualStyleBackColor = true;
             // 
-            // chkAutoPopStashAfterCheckout
+            // chkUpdateModules
             // 
-            this.chkAutoPopStashAfterCheckout.AutoSize = true;
-            this.chkAutoPopStashAfterCheckout.Location = new System.Drawing.Point(3, 53);
-            this.chkAutoPopStashAfterCheckout.Name = "chkAutoPopStashAfterCheckout";
-            this.chkAutoPopStashAfterCheckout.Size = new System.Drawing.Size(477, 19);
-            this.chkAutoPopStashAfterCheckout.TabIndex = 5;
-            this.chkAutoPopStashAfterCheckout.Text = "Apply stashed changes after successful checkout (stash will be popped automatical" +
-    "ly)";
-            this.chkAutoPopStashAfterCheckout.ThreeState = true;
-            this.chkAutoPopStashAfterCheckout.UseVisualStyleBackColor = true;
+            this.chkUpdateModules.AutoSize = true;
+            this.chkUpdateModules.Location = new System.Drawing.Point(3, 128);
+            this.chkUpdateModules.Name = "chkUpdateModules";
+            this.chkUpdateModules.Size = new System.Drawing.Size(201, 19);
+            this.chkUpdateModules.TabIndex = 6;
+            this.chkUpdateModules.Text = "Update submodules on checkout";
+            this.chkUpdateModules.ThreeState = true;
+            this.chkUpdateModules.UseVisualStyleBackColor = true;
             // 
             // ConfirmationsSettingsPage
             // 
