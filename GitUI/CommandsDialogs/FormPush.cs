@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs
 
         private bool IsBranchKnownToRemote(string remote, string branch)
         {
-            var remoteRefs = _gitRefs.Where(r => r.IsRemote && r.LocalName == branch && r.Remote == remote);
+            var remoteRefs = GetRemoteBranches(remote).Where(r => r.LocalName == branch);
             if (remoteRefs.Any())
                 return true;
 
@@ -594,6 +594,11 @@ namespace GitUI.CommandsDialogs
             return _gitRefs.Where(r => r.IsHead);
         }
 
+        public IEnumerable<IGitRef> GetRemoteBranches(String remoteName)
+        {
+            return _gitRefs.Where(r => r.IsRemote && r.Remote == remoteName);
+        }
+
         private void PullClick(object sender, EventArgs e)
         {
             UICommands.StartPullDialog(this);
@@ -601,15 +606,21 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateRemoteBranchDropDown()
         {
-            RemoteBranch.DisplayMember = "Name";
             RemoteBranch.Items.Clear();
 
             if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
                 RemoteBranch.Items.Add(_NO_TRANSLATE_Branch.Text);
 
-            foreach (var head in GetLocalBranches())
-                if (!RemoteBranch.Items.Contains(head))
-                    RemoteBranch.Items.Add(head);
+            foreach (var head in GetRemoteBranches(_selectedRemote.Name))
+                if (_NO_TRANSLATE_Branch.Text != head.LocalName)
+                    RemoteBranch.Items.Add(head.LocalName);
+
+            var remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).ToHashSet(b => b.LocalName);
+            var onlyLocalBranches = GetLocalBranches().Where(b => !remoteBranchesSet.Contains(b.LocalName));
+
+            foreach (var head in onlyLocalBranches)
+                if (_NO_TRANSLATE_Branch.Text != head.LocalName)
+                    RemoteBranch.Items.Add(head.LocalName);
 
             ComboBoxHelper.ResizeComboBoxDropDownWidth(RemoteBranch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
