@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
 
         private void Init()
         {
-            _gitRefs = Module.GetRefs(false, true);
+            _gitRefs = Module.GetRefs(true, true);
             if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
             {
                 RecursiveSubmodules.Enabled = true;
@@ -562,12 +562,17 @@ namespace GitUI.CommandsDialogs
                     curBranch = HeadText;
             }
 
-            foreach (var head in _gitRefs)
+            foreach (var head in GetLocalBranches())
                 _NO_TRANSLATE_Branch.Items.Add(head);
 
             _NO_TRANSLATE_Branch.Text = curBranch;
 
             ComboBoxHelper.ResizeComboBoxDropDownWidth (_NO_TRANSLATE_Branch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+        }
+
+        public IEnumerable<GitRef> GetLocalBranches()
+        {
+            return _gitRefs.Where(r => r.IsHead);
         }
 
         private void PullClick(object sender, EventArgs e)
@@ -583,7 +588,7 @@ namespace GitUI.CommandsDialogs
             if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
                 RemoteBranch.Items.Add(_NO_TRANSLATE_Branch.Text);
 
-            foreach (var head in _gitRefs)
+            foreach (var head in GetLocalBranches())
                 if (!RemoteBranch.Items.Contains(head))
                     RemoteBranch.Items.Add(head);
 
@@ -766,11 +771,10 @@ namespace GitUI.CommandsDialogs
             if (remote == "")
                 return;
 
-            var localHeads = _gitRefs.Where(r => r.IsHead);
-            LoadMultiBranchViewData(remote, localHeads);
+            LoadMultiBranchViewData(remote);
         }
 
-        private void LoadMultiBranchViewData(string remote, IEnumerable<GitRef> localHeads)
+        private void LoadMultiBranchViewData(string remote)
         {
             Cursor = Cursors.AppStarting;
             try
@@ -803,7 +807,7 @@ namespace GitUI.CommandsDialogs
                     //use remote branches from the git's local database if there were problems with receiving branches from the remote server
                     remoteHeads = Module.GetRemoteBranches().Where(r => r.Remote == remote);
                 }
-                ProcessHeads(remote, localHeads, remoteHeads);
+                ProcessHeads(remote, remoteHeads);
             }
             finally
             {
@@ -824,8 +828,9 @@ namespace GitUI.CommandsDialogs
             return cmdOutput;
         }
 
-        private void ProcessHeads(string remote, IEnumerable<GitRef> localHeads, IEnumerable<GitRef> remoteHeads)
+        private void ProcessHeads(string remote, IEnumerable<GitRef> remoteHeads)
         {
+            IEnumerable<GitRef> localHeads = GetLocalBranches();
             var remoteBranches = remoteHeads.ToHashSet(h => h.LocalName);
             // Add all the local branches.
             foreach (var head in localHeads)
