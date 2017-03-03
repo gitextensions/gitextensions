@@ -911,20 +911,20 @@ namespace GitCommands
 
         public static string Plink
         {
-            get { return GetString("plink", ReadStringRegValue("plink", "")); }
-            set { SetString("plink", value); }
+            get { return GetString("plink", Environment.GetEnvironmentVariable("GITEXT_PLINK") ?? ReadStringRegValue("plink", "")); }
+            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PLINK")) SetString("plink", value); }
         }
         public static string Puttygen
         {
-            get { return GetString("puttygen", ReadStringRegValue("puttygen", "")); }
-            set { SetString("puttygen", value); }
+            get { return GetString("puttygen", Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN") ?? ReadStringRegValue("puttygen", "")); }
+            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN")) SetString("puttygen", value); }
         }
 
         /// <summary>Gets the path to Pageant (SSH auth agent).</summary>
         public static string Pageant
         {
-            get { return GetString("pageant", ReadStringRegValue("pageant", "")); }
-            set { SetString("pageant", value); }
+            get { return GetString("pageant", Environment.GetEnvironmentVariable("GITEXT_PAGEANT") ?? ReadStringRegValue("pageant", "")); }
+            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PAGEANT")) SetString("pageant", value); }
         }
 
         public static bool AutoStartPageant
