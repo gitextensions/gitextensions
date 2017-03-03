@@ -50,7 +50,7 @@ namespace GitUI.Editor
                 (sender, args) =>
                 {
                     ResetForText(null);
-                    _internalFileViewer.SetText("Unsupported file: \n\n" + args.Exception.Message);
+                    _internalFileViewer.SetText("Unsupported file: \n\n" + args.Exception.ToString());
                     if (TextLoaded != null)
                         TextLoaded(this, null);
                 };
