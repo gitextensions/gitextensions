@@ -59,16 +59,16 @@ namespace GitUI.CommandsDialogs
             var selectedHead = Module.GetSelectedBranch();
             Currentbranch.Text = selectedHead;
 
-            Branches.DisplayMember = "Name";
             Branches.DataSource = Module.GetRefs(true, true);
+            Branches.DisplayMember = "LocalName";
 
             if (_defaultBranch != null)
                 Branches.Text = _defaultBranch;
 
             Branches.Select();
 
-            cboTo.DisplayMember = "Name";
             cboTo.DataSource = Module.GetRefs(false, true);
+            cboTo.DisplayMember = "LocalName";
 
             if (_defaultToBranch != null)
                 cboTo.Text = _defaultToBranch;
