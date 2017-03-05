@@ -12,7 +12,7 @@
 
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
     <application>
-      <!-- A list of all Windows versions that this application is designed to work with. 
+      <!-- A list of all Windows versions that this application is designed to work with.
       Windows will automatically select the most compatible environment.-->
 
       <!-- Windows Vista -->
@@ -26,6 +26,9 @@
 
       <!-- Windows 8.1 -->
       <supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}"/>
+
+      <!-- Windows 10-->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
     </application>
   </compatibility>
 
