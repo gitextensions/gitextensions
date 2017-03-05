@@ -34,6 +34,8 @@
             this.tableLayoutPanelForDiffViewer = new System.Windows.Forms.TableLayoutPanel();
             this.chkOmitUninterestingDiff = new System.Windows.Forms.CheckBox();
             this.chkRememberIgnoreWhiteSpacePreference = new System.Windows.Forms.CheckBox();
+            this.chkRememberShowNonPrintingCharsPreference = new System.Windows.Forms.CheckBox();
+            this.chkRememberShowEntireFilePreference = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel2.SuspendLayout();
             this.DiffViewerGB.SuspendLayout();
@@ -77,17 +79,18 @@
             this.tableLayoutPanelForDiffViewer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanelForDiffViewer.ColumnCount = 1;
             this.tableLayoutPanelForDiffViewer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOmitUninterestingDiff, 0, 0);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberIgnoreWhiteSpacePreference, 0, 0);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberShowNonPrintingCharsPreference, 0, 1);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberShowEntireFilePreference, 0, 2);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOmitUninterestingDiff, 0, 3);
             this.tableLayoutPanelForDiffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelForDiffViewer.Location = new System.Drawing.Point(8, 22);
             this.tableLayoutPanelForDiffViewer.Name = "tableLayoutPanelForDiffViewer";
-            this.tableLayoutPanelForDiffViewer.RowCount = 1;
+            this.tableLayoutPanelForDiffViewer.RowCount = 4;
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.Size = new System.Drawing.Size(1454, 46);
             this.tableLayoutPanelForDiffViewer.TabIndex = 1;
             // 
@@ -97,7 +100,7 @@
             this.chkOmitUninterestingDiff.Location = new System.Drawing.Point(3, 26);
             this.chkOmitUninterestingDiff.Name = "chkOmitUninterestingDiff";
             this.chkOmitUninterestingDiff.Size = new System.Drawing.Size(249, 17);
-            this.chkOmitUninterestingDiff.TabIndex = 6;
+            this.chkOmitUninterestingDiff.TabIndex = 7;
             this.chkOmitUninterestingDiff.Text = "Omit uninteresting changes from combined diff";
             this.chkOmitUninterestingDiff.UseVisualStyleBackColor = true;
             // 
@@ -108,8 +111,28 @@
             this.chkRememberIgnoreWhiteSpacePreference.Name = "chkRememberIgnoreWhiteSpacePreference";
             this.chkRememberIgnoreWhiteSpacePreference.Size = new System.Drawing.Size(247, 17);
             this.chkRememberIgnoreWhiteSpacePreference.TabIndex = 4;
-            this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the ignore-white-space preference";
+            this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the 'ignore-white-space' preference";
             this.chkRememberIgnoreWhiteSpacePreference.UseVisualStyleBackColor = true;
+            // 
+            // chkRememberShowNonPrintableCharsPreference
+            // 
+            this.chkRememberShowNonPrintingCharsPreference.AutoSize = true;
+            this.chkRememberShowNonPrintingCharsPreference.Location = new System.Drawing.Point(3, 3);
+            this.chkRememberShowNonPrintingCharsPreference.Name = "chkRememberShowNonPrintingCharsPreference";
+            this.chkRememberShowNonPrintingCharsPreference.Size = new System.Drawing.Size(247, 17);
+            this.chkRememberShowNonPrintingCharsPreference.TabIndex = 5;
+            this.chkRememberShowNonPrintingCharsPreference.Text = "Remember the 'Show nonprinting characters' preference";
+            this.chkRememberShowNonPrintingCharsPreference.UseVisualStyleBackColor = true;
+            // 
+            // chkRememberShowEntireFilePreference
+            // 
+            this.chkRememberShowEntireFilePreference.AutoSize = true;
+            this.chkRememberShowEntireFilePreference.Location = new System.Drawing.Point(3, 3);
+            this.chkRememberShowEntireFilePreference.Name = "chkRememberShowEntireFilePreference";
+            this.chkRememberShowEntireFilePreference.Size = new System.Drawing.Size(247, 17);
+            this.chkRememberShowEntireFilePreference.TabIndex = 6;
+            this.chkRememberShowEntireFilePreference.Text = "Remember the 'Show entire file' preference";
+            this.chkRememberShowEntireFilePreference.UseVisualStyleBackColor = true;
             // 
             // tooltip
             // 
@@ -140,6 +163,8 @@
         private System.Windows.Forms.GroupBox DiffViewerGB;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelForDiffViewer;
         private System.Windows.Forms.CheckBox chkRememberIgnoreWhiteSpacePreference;
+        private System.Windows.Forms.CheckBox chkRememberShowNonPrintingCharsPreference;
+        private System.Windows.Forms.CheckBox chkRememberShowEntireFilePreference;
         private System.Windows.Forms.CheckBox chkOmitUninterestingDiff;
         private System.Windows.Forms.ToolTip tooltip;
     }

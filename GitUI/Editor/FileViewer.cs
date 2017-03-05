@@ -57,6 +57,16 @@ namespace GitUI.Editor
 
             IgnoreWhitespaceChanges = AppSettings.IgnoreWhitespaceChanges;
             ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
+            ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
+
+            ShowEntireFile = AppSettings.ShowEntireFile;
+            showEntireFileButton.Checked = ShowEntireFile;
+            showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
+
+            showNonPrintChars.Checked = AppSettings.ShowNonPrintingChars;
+            showNonprintableCharactersToolStripMenuItem.Checked = AppSettings.ShowNonPrintingChars;
+            ToggleNonPrintingChars(AppSettings.ShowNonPrintingChars);
+
 
             IsReadOnly = true;
 
@@ -664,7 +674,6 @@ namespace GitUI.Editor
             IgnoreWhitespaceChanges = !IgnoreWhitespaceChanges;
             ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
             ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
-
             AppSettings.IgnoreWhitespaceChanges = IgnoreWhitespaceChanges;
             OnExtraDiffArgumentsChanged();
         }
@@ -686,10 +695,10 @@ namespace GitUI.Editor
 
         private void ShowEntireFileToolStripMenuItemClick(object sender, EventArgs e)
         {
-            showEntireFileToolStripMenuItem.Checked = !showEntireFileToolStripMenuItem.Checked;
-            showEntireFileButton.Checked = showEntireFileToolStripMenuItem.Checked;
-
-            ShowEntireFile = showEntireFileToolStripMenuItem.Checked;
+            ShowEntireFile = !ShowEntireFile;
+            showEntireFileButton.Checked = ShowEntireFile;
+            showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
+            AppSettings.ShowEntireFile = ShowEntireFile;
             OnExtraDiffArgumentsChanged();
         }
 
@@ -892,9 +901,15 @@ namespace GitUI.Editor
             showNonprintableCharactersToolStripMenuItem.Checked = !showNonprintableCharactersToolStripMenuItem.Checked;
             showNonPrintChars.Checked = showNonprintableCharactersToolStripMenuItem.Checked;
 
-            _internalFileViewer.ShowEOLMarkers = showNonprintableCharactersToolStripMenuItem.Checked;
-            _internalFileViewer.ShowSpaces = showNonprintableCharactersToolStripMenuItem.Checked;
-            _internalFileViewer.ShowTabs = showNonprintableCharactersToolStripMenuItem.Checked;
+            ToggleNonPrintingChars(show: showNonprintableCharactersToolStripMenuItem.Checked);
+            AppSettings.ShowNonPrintingChars = showNonPrintChars.Checked;
+        }
+
+        private void ToggleNonPrintingChars(bool show)
+        {
+            _internalFileViewer.ShowEOLMarkers = show;
+            _internalFileViewer.ShowSpaces = show;
+            _internalFileViewer.ShowTabs = show;
         }
 
         private void FindToolStripMenuItemClick(object sender, EventArgs e)

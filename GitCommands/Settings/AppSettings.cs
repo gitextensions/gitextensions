@@ -1074,8 +1074,50 @@ namespace GitCommands
 
         public static bool RememberIgnoreWhiteSpacePreference
         {
-            get { return GetBool("rememberIgnoreWhiteSpacePreference", false); }
+            get { return GetBool("rememberIgnoreWhiteSpacePreference", true); }
             set { SetBool("rememberIgnoreWhiteSpacePreference", value); }
+        }
+
+        public static bool ShowNonPrintingChars
+        {
+            get
+            {
+                return RememberShowNonPrintingCharsPreference && GetBool("ShowNonPrintingChars", false);
+            }
+            set
+            {
+                if (RememberShowNonPrintingCharsPreference)
+                {
+                    SetBool("ShowNonPrintingChars", value);
+                }
+            }
+        }
+
+        public static bool RememberShowNonPrintingCharsPreference
+        {
+            get { return GetBool("RememberShowNonPrintableCharsPreference", false); }
+            set { SetBool("RememberShowNonPrintableCharsPreference", value); }
+        }
+
+        public static bool ShowEntireFile
+        {
+            get
+            {
+                return RememberShowEntireFilePreference && GetBool("ShowEntireFile", false);
+            }
+            set
+            {
+                if (RememberShowEntireFilePreference)
+                {
+                    SetBool("ShowEntireFile", value);
+                }
+            }
+        }
+
+        public static bool RememberShowEntireFilePreference
+        {
+            get { return GetBool("RememberShowEntireFilePreference", false); }
+            set { SetBool("RememberShowEntireFilePreference", value); }
         }
 
         public static string GetDictionaryDir()

@@ -15,12 +15,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             chkRememberIgnoreWhiteSpacePreference.Checked = AppSettings.RememberIgnoreWhiteSpacePreference;
             chkOmitUninterestingDiff.Checked = AppSettings.OmitUninterestingDiff;
+            chkRememberShowEntireFilePreference.Checked = AppSettings.RememberShowEntireFilePreference;
+            chkRememberShowNonPrintingCharsPreference.Checked = AppSettings.RememberShowNonPrintingCharsPreference;
         }
 
         protected override void PageToSettings()
         {
             AppSettings.RememberIgnoreWhiteSpacePreference = chkRememberIgnoreWhiteSpacePreference.Checked;
             AppSettings.OmitUninterestingDiff = chkOmitUninterestingDiff.Checked;
+            AppSettings.RememberShowEntireFilePreference = chkRememberShowEntireFilePreference.Checked;
+            AppSettings.RememberShowNonPrintingCharsPreference = chkRememberShowNonPrintingCharsPreference.Checked;
         }
 
         public static SettingsPageReference GetPageReference()
