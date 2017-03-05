@@ -31,7 +31,7 @@ namespace GitUI.Editor
         {
             TreatAllFilesAsText = false;
             ShowEntireFile = false;
-            NumberOfVisibleLines = 3;
+            NumberOfVisibleLines = AppSettings.NumberOfContextLines;
             InitializeComponent();
             Translate();
 
@@ -682,6 +682,7 @@ namespace GitUI.Editor
         private void IncreaseNumberOfLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             NumberOfVisibleLines++;
+            AppSettings.NumberOfContextLines = NumberOfVisibleLines;
             OnExtraDiffArgumentsChanged();
         }
 
@@ -691,6 +692,7 @@ namespace GitUI.Editor
                 NumberOfVisibleLines--;
             else
                 NumberOfVisibleLines = 0;
+            AppSettings.NumberOfContextLines = NumberOfVisibleLines;
             OnExtraDiffArgumentsChanged();
         }
 

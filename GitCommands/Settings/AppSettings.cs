@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -1118,6 +1119,28 @@ namespace GitCommands
         {
             get { return GetBool("RememberShowEntireFilePreference", false); }
             set { SetBool("RememberShowEntireFilePreference", value); }
+        }
+
+        public static int NumberOfContextLines
+        {
+            get
+            {
+                const int defaultValue = 3;
+                return RememberNumberOfContextLines ? GetInt("NumberOfContextLines", defaultValue) : defaultValue;
+            }
+            set
+            {
+                if (RememberNumberOfContextLines)
+                {
+                    SetInt("NumberOfContextLines", value);
+                }
+            }
+        }
+
+        public static bool RememberNumberOfContextLines
+        {
+            get { return GetBool("RememberNumberOfContextLines", false); }
+            set { SetBool("RememberNumberOfContextLines", value); }
         }
 
         public static string GetDictionaryDir()

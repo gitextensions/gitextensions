@@ -36,6 +36,7 @@
             this.chkRememberIgnoreWhiteSpacePreference = new System.Windows.Forms.CheckBox();
             this.chkRememberShowNonPrintingCharsPreference = new System.Windows.Forms.CheckBox();
             this.chkRememberShowEntireFilePreference = new System.Windows.Forms.CheckBox();
+            this.chkRememberNumberOfContextLines = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel2.SuspendLayout();
             this.DiffViewerGB.SuspendLayout();
@@ -82,11 +83,13 @@
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberIgnoreWhiteSpacePreference, 0, 0);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberShowNonPrintingCharsPreference, 0, 1);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberShowEntireFilePreference, 0, 2);
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOmitUninterestingDiff, 0, 3);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberNumberOfContextLines, 0, 3);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOmitUninterestingDiff, 0, 4);
             this.tableLayoutPanelForDiffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelForDiffViewer.Location = new System.Drawing.Point(8, 22);
             this.tableLayoutPanelForDiffViewer.Name = "tableLayoutPanelForDiffViewer";
-            this.tableLayoutPanelForDiffViewer.RowCount = 4;
+            this.tableLayoutPanelForDiffViewer.RowCount = 5;
+            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -100,7 +103,7 @@
             this.chkOmitUninterestingDiff.Location = new System.Drawing.Point(3, 26);
             this.chkOmitUninterestingDiff.Name = "chkOmitUninterestingDiff";
             this.chkOmitUninterestingDiff.Size = new System.Drawing.Size(249, 17);
-            this.chkOmitUninterestingDiff.TabIndex = 7;
+            this.chkOmitUninterestingDiff.TabIndex = 8;
             this.chkOmitUninterestingDiff.Text = "Omit uninteresting changes from combined diff";
             this.chkOmitUninterestingDiff.UseVisualStyleBackColor = true;
             // 
@@ -134,6 +137,16 @@
             this.chkRememberShowEntireFilePreference.Text = "Remember the 'Show entire file' preference";
             this.chkRememberShowEntireFilePreference.UseVisualStyleBackColor = true;
             // 
+            // chkRememberNumberOfContextLines
+            // 
+            this.chkRememberNumberOfContextLines.AutoSize = true;
+            this.chkRememberNumberOfContextLines.Location = new System.Drawing.Point(3, 3);
+            this.chkRememberNumberOfContextLines.Name = "chkRememberNumberOfContextLines";
+            this.chkRememberNumberOfContextLines.Size = new System.Drawing.Size(247, 17);
+            this.chkRememberNumberOfContextLines.TabIndex = 7;
+            this.chkRememberNumberOfContextLines.Text = "Remember the 'Number of context lines' preference";
+            this.chkRememberNumberOfContextLines.UseVisualStyleBackColor = true;
+            // 
             // tooltip
             // 
             this.tooltip.AutoPopDelay = 30000;
@@ -165,6 +178,7 @@
         private System.Windows.Forms.CheckBox chkRememberIgnoreWhiteSpacePreference;
         private System.Windows.Forms.CheckBox chkRememberShowNonPrintingCharsPreference;
         private System.Windows.Forms.CheckBox chkRememberShowEntireFilePreference;
+        private System.Windows.Forms.CheckBox chkRememberNumberOfContextLines;
         private System.Windows.Forms.CheckBox chkOmitUninterestingDiff;
         private System.Windows.Forms.ToolTip tooltip;
     }
