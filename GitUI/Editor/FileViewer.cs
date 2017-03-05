@@ -13,6 +13,7 @@ using GitUI.Hotkey;
 using ICSharpCode.TextEditor.Util;
 using PatchApply;
 using GitCommands.Settings;
+using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
 using ResourceManager;
 
@@ -1124,6 +1125,11 @@ namespace GitUI.Editor
                     components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void settingsButton_Click(object sender, EventArgs e)
+        {
+            UICommands.StartSettingsDialog(this.ParentForm, DiffViewerSettingsPage.GetPageReference());
         }
     }
 }
