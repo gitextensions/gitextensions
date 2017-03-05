@@ -1967,5 +1967,4 @@
   <Import Project="..\FxCop.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
-  <Import Project="..\packages\ConEmu.Core.16.7.10.0\Build\ConEmu.Core.Targets" Condition="Exists('..\packages\ConEmu.Core.16.7.10.0\Build\ConEmu.Core.Targets')" />
 </Project>
