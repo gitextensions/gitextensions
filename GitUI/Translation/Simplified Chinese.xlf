@@ -38,12 +38,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <source>Checkout</source>
         <target>登出</target>
         
-      </trans-unit>
-      <trans-unit id="DiffViewerGB.Text">
-        <source>Diff Viewer</source>
-        <target>差异查看工具</target>
-        
-      </trans-unit>
+      </trans-unit>      
       <trans-unit id="GeneralGB.Text">
         <source>General</source>
         <target>通用</target>
@@ -78,17 +73,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <source>Don't show help images</source>
         <target>不显示帮助示图</target>
         
-      </trans-unit>
-      <trans-unit id="chkOmitUninterestingDiff.Text">
-        <source>Omit uninteresting changes from combined diff</source>
-        <target>在合并的差异中忽略不重要的变化</target>
-        
-      </trans-unit>
-      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
-        <source>Remember the ignore-white-space preference</source>
-        <target>记住忽略空白(ignore-white-space)选项</target>
-        
-      </trans-unit>
+      </trans-unit>      
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen &quot;local changes&quot; action as default action.
 This action will be performed without warning while checking out branch.</source>
@@ -1388,6 +1373,34 @@ Do you want to open it?</source>
         <source>Path</source>
         <target>路径</target>
         
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DiffViewerSettingsPage" source-language="en" target-language="zh-Hans">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Diff Viewer</source>
+        <target>差异查看工具</target>
+        
+      </trans-unit>
+      <trans-unit id="chkOmitUninterestingDiff.Text">
+        <source>Omit uninteresting changes from combined diff</source>
+        <target>在合并的差异中忽略不重要的变化</target>
+        
+      </trans-unit>
+      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
+        <source>Remember the 'ignore-white-space' preference</source>
+        <target>记住忽略空白(ignore-white-space)选项</target>
+        
+      </trans-unit>
+      <trans-unit id="chkRememberNumberOfContextLines.Text">
+        <source>Remember the 'Number of context lines' preference</source>
+      </trans-unit>
+      <trans-unit id="chkRememberShowEntireFilePreference.Text">
+        <source>Remember the 'Show entire file' preference</source>
+      </trans-unit>
+      <trans-unit id="chkRememberShowNonPrintingCharsPreference.Text">
+        <source>Remember the 'Show nonprinting characters' preference</source>
       </trans-unit>
     </body>
   </file>

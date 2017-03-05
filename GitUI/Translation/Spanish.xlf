@@ -39,11 +39,6 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
         <target>Checkout</target>
         
       </trans-unit>
-      <trans-unit id="DiffViewerGB.Text">
-        <source>Diff Viewer</source>
-        <target>Visor de Diferencias</target>
-        
-      </trans-unit>
       <trans-unit id="GeneralGB.Text">
         <source>General</source>
         <target>General</target>
@@ -78,17 +73,7 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
         <source>Don't show help images</source>
         <target>No mostrar imágenes de ayuda</target>
         
-      </trans-unit>
-      <trans-unit id="chkOmitUninterestingDiff.Text">
-        <source>Omit uninteresting changes from combined diff</source>
-        <target>Omir cambios irrelevantes de la diferencia combinada</target>
-        
-      </trans-unit>
-      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
-        <source>Remember the ignore-white-space preference</source>
-        <target>Recordar la preferencia &quot;ignorar espacios en blanco&quot;</target>
-        
-      </trans-unit>
+      </trans-unit>      
       <trans-unit id="chkUseLocalChangesAction.Text">
         <source>Use last chosen &quot;local changes&quot; action as default action.
 This action will be performed without warning while checking out branch.</source>
@@ -1386,6 +1371,34 @@ Do you want to open it?</source>
         <source>Path</source>
         <target>Ruta</target>
         
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DiffViewerSettingsPage" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Diff Viewer</source>
+        <target>Visor de Diferencias</target>
+        
+      </trans-unit>
+      <trans-unit id="chkOmitUninterestingDiff.Text">
+        <source>Omit uninteresting changes from combined diff</source>
+        <target>Omir cambios irrelevantes de la diferencia combinada</target>
+        
+      </trans-unit>
+      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
+        <source>Remember the 'ignore-white-space' preference</source>
+        <target>Recordar la preferencia &quot;ignorar espacios en blanco&quot;</target>
+        
+      </trans-unit>
+      <trans-unit id="chkRememberNumberOfContextLines.Text">
+        <source>Remember the 'Number of context lines' preference</source>
+      </trans-unit>
+      <trans-unit id="chkRememberShowEntireFilePreference.Text">
+        <source>Remember the 'Show entire file' preference</source>
+      </trans-unit>
+      <trans-unit id="chkRememberShowNonPrintingCharsPreference.Text">
+        <source>Remember the 'Show nonprinting characters' preference</source>
       </trans-unit>
     </body>
   </file>
