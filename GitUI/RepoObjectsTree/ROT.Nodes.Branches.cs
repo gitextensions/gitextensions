@@ -385,19 +385,6 @@ namespace GitUI.UserControls
 
                 TreeViewNode.Text = string.Format("{0} ({1})", Strings.branches, Nodes.Count);
 
-                if (SelectedBranch != null)
-                {
-                    selectedNode =
-                        Nodes.DepthEnumerator<BranchNode>()
-                            .Where(b => b.FullPath.Equals(SelectedBranch))
-                            .FirstOrDefault();
-                    if (selectedNode != null)
-                    {
-                        selectedNode.Select();
-                        return;
-                    }
-                }
-
                 var activeBranch = Nodes.DepthEnumerator<BranchNode>().Where(b => b.IsActive).FirstOrDefault();
                 if (activeBranch == null)
                 {
@@ -405,7 +392,6 @@ namespace GitUI.UserControls
                 }
                 else
                 {
-                    activeBranch.Select();
                     SelectedBranch = activeBranch.FullPath;
                 }
             }
