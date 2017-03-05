@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -504,14 +505,10 @@ namespace GitUI.CommandsDialogs
                 {
                     if (!form.ProcessArguments.Contains(" -f ") && !form.ProcessArguments.Contains(" --force"))
                     {
-                        if (GitCommandHelpers.VersionInUse.SupportPushForceWithLease)
-                        {
-                            form.ProcessArguments = form.ProcessArguments.Replace("push", "push --force-with-lease");
-                        }
-                        else
-                        {
-                            form.ProcessArguments = form.ProcessArguments.Replace("push", "push -f");
-                        }
+                        Trace.Assert(form.ProcessArguments.StartsWith("push "), "Arguments should start with 'push' command");
+
+                        string forceArg = GitCommandHelpers.VersionInUse.SupportPushForceWithLease ? " --force-with-lease" : " -f";
+                        form.ProcessArguments = form.ProcessArguments.Insert("push".Length, forceArg);
                     }
                     form.Retry();
                     return true;
