@@ -153,7 +153,7 @@ namespace GitUI.BuildServerIntegration
                         catch (CryptographicException)
                         {
                             // As per MSDN, the ProtectedData.Unprotect method is per user,
-                            // it will throw the CryptographicException if the current user 
+                            // it will throw the CryptographicException if the current user
                             // is not the one who protected the data.
 
                             // Set this variable to false so the user can reset the credentials.
@@ -227,6 +227,7 @@ namespace GitUI.BuildServerIntegration
                                                      AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                                                      Width = 16,
                                                      ReadOnly = true,
+                                                     Resizable = DataGridViewTriState.False,
                                                      SortMode = DataGridViewColumnSortMode.NotSortable
                                                  };
                 BuildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
@@ -238,6 +239,7 @@ namespace GitUI.BuildServerIntegration
                                                 {
                                                     AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                                                     ReadOnly = true,
+                                                    FillWeight = 50,
                                                     SortMode = DataGridViewColumnSortMode.NotSortable
                                                 };
 

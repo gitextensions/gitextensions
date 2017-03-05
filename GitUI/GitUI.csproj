@@ -311,6 +311,7 @@
     <Compile Include="UserControls\RevisionGridClasses\NavigationHistory.cs" />
     <Compile Include="UserControls\RevisionGridClasses\ParentChildNavigationHistory.cs" />
     <Compile Include="UserControls\AuthorEmailBasedRevisionHighlighting.cs" />
+    <Compile Include="UserControls\RevisionGridUtils.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\WebBrowserCtrl.cs">
       <SubType>Component</SubType>
