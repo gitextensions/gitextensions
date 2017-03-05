@@ -227,6 +227,7 @@ namespace GitUI
             this.MessageDataGridViewColumn.Name = "Message";
             this.MessageDataGridViewColumn.ReadOnly = true;
             this.MessageDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.MessageDataGridViewColumn.FillWeight = 80;
             //
             // IsMessageMultilineDataGridViewColumn
             //
@@ -254,12 +255,13 @@ namespace GitUI
             //
             // Id
             //
+            this.IdDataGridViewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.IdDataGridViewColumn.HeaderText = "SHA1";
             this.IdDataGridViewColumn.Name = "ID";
             this.IdDataGridViewColumn.ReadOnly = true;
             this.IdDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.IdDataGridViewColumn.Width = 62;
             this.IdDataGridViewColumn.Visible = false;
+            this.IdDataGridViewColumn.FillWeight = 20f;
             // 
             // mainContextMenu
             // 
