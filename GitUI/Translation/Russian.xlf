@@ -1818,7 +1818,7 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="_strCouldNotAddRemote.Text">
         <source>Could not add remote</source>
-        <target>Невозможно добавить внешнее репозиторий</target>
+        <target>Невозможно добавить внешний репозиторий</target>
         
       </trans-unit>
       <trans-unit id="_strCouldNotFetchReposOfUser.Text">
@@ -1878,7 +1878,7 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="_strWillBeAddedAsARemote.Text">
         <source>&quot;{0}&quot; will be added as a remote.</source>
-        <target>&quot;{0}&quot; будет добавлен как внешнее репозиторий.</target>
+        <target>&quot;{0}&quot; будет добавлен как внешний репозиторий.</target>
         
       </trans-unit>
       <trans-unit id="_strWillCloneInfo.Text">
@@ -1917,7 +1917,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Add remote as:</source>
-        <target>Добавить внешнее репозиторий как:</target>
+        <target>Добавить внешний репозиторий как:</target>
         
       </trans-unit>
     </body>
@@ -9427,7 +9427,7 @@ If this is a central repository (bare repository without a working directory):
       </trans-unit>
       <trans-unit id="mergeBranchToolStripMenuItem.Text">
         <source>Merge into current branch</source>
-        <target>Слить текущую ветку в</target>
+        <target>Слить в текущую ветку</target>
         
       </trans-unit>
       <trans-unit id="messageCopyToolStripMenuItem.Text">
@@ -10158,7 +10158,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_addAndFetchBtn.Text">
         <source>Add remote and fetch</source>
-        <target>Добавить внешнее репозиторий и забрать его</target>
+        <target>Добавить внешний репозиторий и забрать его</target>
         
       </trans-unit>
       <trans-unit id="_chooseRepo.Text">
@@ -10188,7 +10188,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_strCouldNotAddRemote.Text">
         <source>Could not add remote with name {0} and URL {1}</source>
-        <target>Не удалось добавить внешнее репозиторий с именем {0} и URL {1}</target>
+        <target>Не удалось добавить внешний репозиторий с именем {0} и URL {1}</target>
         
       </trans-unit>
       <trans-unit id="_strCouldNotLoadDiscussion.Text">
