@@ -69,7 +69,7 @@
             this.chkRememberIgnoreWhiteSpacePreference.Name = "chkRememberIgnoreWhiteSpacePreference";
             this.chkRememberIgnoreWhiteSpacePreference.Size = new System.Drawing.Size(251, 17);
             this.chkRememberIgnoreWhiteSpacePreference.TabIndex = 4;
-            this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the \'ignore-white-space\' preference";
+            this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the \'Ignore whitespaces\' preference";
             this.chkRememberIgnoreWhiteSpacePreference.UseVisualStyleBackColor = true;
             // 
             // chkRememberShowNonPrintingCharsPreference

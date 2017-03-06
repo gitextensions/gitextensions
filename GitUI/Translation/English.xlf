@@ -1144,7 +1144,7 @@ Do you want to open it?</source>
         <target />
       </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
-        <source>Remember the 'ignore-white-space' preference</source>
+        <source>Remember the 'Ignore whitespaces' preference</source>
         <target />
       </trans-unit>
       <trans-unit id="chkRememberNumberOfContextLines.Text">
