@@ -2738,8 +2738,9 @@ namespace GitUI.CommandsDialogs
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
             var isCombinedDiff = isExactlyOneItemSelected &&
                 DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
+            var isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
             var enabled = isExactlyOneItemSelected && !isCombinedDiff;
-            openWithDifftoolToolStripMenuItem.Enabled = !isCombinedDiff;
+            openWithDifftoolToolStripMenuItem.Enabled = !isAnyCombinedDiff;
             saveAsToolStripMenuItem1.Enabled = enabled;
             cherryPickSelectedDiffFileToolStripMenuItem.Enabled = enabled;
             diffShowInFileTreeToolStripMenuItem.Enabled = isExactlyOneItemSelected;

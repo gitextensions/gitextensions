@@ -415,6 +415,18 @@ namespace GitUI
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public IEnumerable<string> SelectedItemParents
+        {
+            get
+            {
+                return FileStatusListView.SelectedItems.Cast<ListViewItem>()
+                    .Where(i => i.Group != null)
+                    .Select(i => (string)i.Group.Tag);
+            }
+        }
+
         public void ClearSelected()
         {
             foreach (ListViewItem item in FileStatusListView.SelectedItems)
