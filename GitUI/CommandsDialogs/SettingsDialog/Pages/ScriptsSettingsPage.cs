@@ -336,5 +336,14 @@ Current Branch:
 
             helpDisplayDialog.ShowDialog();
         }
+
+        private void argumentsTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.Control && e.KeyCode == Keys.V) || (e.Shift && e.KeyCode == Keys.Insert))
+            {
+                ((RichTextBox)sender).Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
+                e.Handled = true;
+            }
+        }
     }
 }
