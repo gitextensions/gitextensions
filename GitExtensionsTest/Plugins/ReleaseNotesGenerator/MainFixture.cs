@@ -19,14 +19,15 @@ namespace GitExtensionsTest.Plugins.ReleaseNotesGenerator
             var dataObject = HtmlFragment.CreateHtmlFormatClipboardDataObject("<p>Hallo</p>");
             dataObject.GetFormats().Length.Should().Be(2);
             dataObject.GetText().Should().Be("<p>Hallo</p>");
-            ((string)dataObject.GetData("HTML Format")).Should().Be(@"Version:0.9
-StartHTML:00000097
-EndHTML:00000177
-StartFragment:00000131
-EndFragment:00000143
-<html><body>
-<!--StartFragment--><p>Hallo</p><!--EndFragment-->
-</body></html>");
+            ((string)dataObject.GetData("HTML Format")).Should().Be(
+                "Version:0.9\r\n"+
+                "StartHTML:00000097\r\n" +
+                "EndHTML:00000177\r\n" +
+                "StartFragment:00000131\r\n" +
+                "EndFragment:00000143\r\n" +
+                "<html><body>\r\n" +
+                "<!--StartFragment--><p>Hallo</p><!--EndFragment-->\r\n" +
+                "</body></html>");
         }
 
         [Test, RequiresSTA]
