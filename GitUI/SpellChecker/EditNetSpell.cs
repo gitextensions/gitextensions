@@ -679,7 +679,7 @@ namespace GitUI.SpellChecker
             {
                 UndoHighlighting();
             }
-            else if (e.Control && !e.Alt && e.KeyCode == Keys.Space)
+            else if (e.Control && !e.Alt && e.KeyCode == Keys.Space && AppSettings.ProvideAutocompletion)
             {
                 UpdateOrShowAutoComplete(true);
                 e.Handled = true;
