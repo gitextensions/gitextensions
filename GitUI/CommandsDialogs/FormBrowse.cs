@@ -1979,10 +1979,11 @@ namespace GitUI.CommandsDialogs
                 diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAB;
             }
 
-            string parentGuid = RevisionGrid.GetSelectedRevisions().Count() == 1 ? DiffFiles.SelectedItemParent : null;
-
-            foreach (var selectedItem in DiffFiles.SelectedItems)
+            foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
+                GitItemStatus selectedItem = itemWithParent.Item1;
+                string parentGuid = RevisionGrid.GetSelectedRevisions().Count() == 1 ? itemWithParent.Item2 : null;
+
                 RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, parentGuid);
             }
         }
