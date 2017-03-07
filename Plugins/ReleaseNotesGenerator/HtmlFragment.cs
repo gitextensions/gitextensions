@@ -214,16 +214,18 @@ namespace ReleaseNotesGenerator
             }
             int startHtml = sb.Length;
 
-            const string pre = @"<html><body>
-<!--StartFragment-->";
+            const string pre =
+                "<html><body>\r\n" +
+                "<!--StartFragment-->";
             sb.Append(pre);
             int fragmentStart = sb.Length;
 
             sb.Append(htmlFragment);
             int fragmentEnd = sb.Length;
 
-            const string post = @"<!--EndFragment-->
-</body></html>";
+            const string post = 
+                "<!--EndFragment-->\r\n" +
+                "</body></html>";
             sb.Append(post);
             int endHtml = sb.Length;
 
