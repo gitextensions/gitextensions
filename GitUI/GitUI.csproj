@@ -180,6 +180,12 @@
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\DiffViewerSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\DiffViewerSettingsPage.Designer.cs">
+      <DependentUpon>DiffViewerSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1077,6 +1083,9 @@
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.resx">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DiffViewerSettingsPage.resx">
+      <DependentUpon>DiffViewerSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.resx">
       <DependentUpon>BuildServerIntegrationSettingsPage.cs</DependentUpon>
