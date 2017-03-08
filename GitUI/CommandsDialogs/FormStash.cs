@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
         {
             IList<GitStash> stashedItems = Module.GetStashes();
 
-            currentWorkingDirStashItem = new GitStash
+            currentWorkingDirStashItem = new GitStash("currentWorkingDirStashItem")
             {
                 Name = currentWorkingDirChanges.Text,
                 Message = currentWorkingDirChanges.Text
