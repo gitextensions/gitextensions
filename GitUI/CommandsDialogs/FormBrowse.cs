@@ -1964,7 +1964,6 @@ namespace GitUI.CommandsDialogs
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            var selectedItem = DiffFiles.SelectedItem;
             GitUIExtensions.DiffWithRevisionKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
@@ -1981,9 +1980,13 @@ namespace GitUI.CommandsDialogs
                 diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAB;
             }
 
-            string parentGuid = RevisionGrid.GetSelectedRevisions().Count() == 1 ? DiffFiles.SelectedItemParent : null;
+            foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
+            {
+                GitItemStatus selectedItem = itemWithParent.Item1;
+                string parentGuid = RevisionGrid.GetSelectedRevisions().Count() == 1 ? itemWithParent.Item2 : null;
 
-            RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, parentGuid);
+                RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, parentGuid);
+            }
         }
 
         private void AddWorkingdirDropDownItem(Repository repo, string caption)
@@ -2734,16 +2737,17 @@ namespace GitUI.CommandsDialogs
                 artificialRevSelected = artificialRevSelected || selectedRevisions[selectedRevisions.Count - 1].IsArtificial();
 
             // disable items that need exactly one selected item
-            bool isExcactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            var isCombinedDiff = isExcactlyOneItemSelected &&
+            bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
+            var isCombinedDiff = isExactlyOneItemSelected &&
                 DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
-            var enabled = isExcactlyOneItemSelected && !isCombinedDiff;
-            openWithDifftoolToolStripMenuItem.Enabled = enabled;
+            var isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
+            var enabled = isExactlyOneItemSelected && !isCombinedDiff;
+            openWithDifftoolToolStripMenuItem.Enabled = !isAnyCombinedDiff;
             saveAsToolStripMenuItem1.Enabled = enabled;
             cherryPickSelectedDiffFileToolStripMenuItem.Enabled = enabled;
-            diffShowInFileTreeToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
-            fileHistoryDiffToolstripMenuItem.Enabled = isExcactlyOneItemSelected;
-            blameToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+            diffShowInFileTreeToolStripMenuItem.Enabled = isExactlyOneItemSelected;
+            fileHistoryDiffToolstripMenuItem.Enabled = isExactlyOneItemSelected;
+            blameToolStripMenuItem.Enabled = isExactlyOneItemSelected;
             resetFileToToolStripMenuItem.Enabled = !isCombinedDiff;
 
             // openContainingFolderToolStripMenuItem.Enabled or not
