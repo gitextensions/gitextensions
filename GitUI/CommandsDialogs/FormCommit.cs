@@ -1816,20 +1816,25 @@ namespace GitUI.CommandsDialogs
             Clipboard.SetText(fileNames.ToString());
         }
 
-        private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
+        private void OpenFilesWithDiffTool(IEnumerable<GitItemStatus> items, bool staged)
         {
-            if (!Unstaged.SelectedItems.Any())
-                return;
-
-            var item = Unstaged.SelectedItem;
-            var fileName = item.Name;
-
-            var cmdOutput = Module.OpenWithDifftool(fileName);
-
-            if (!string.IsNullOrEmpty(cmdOutput))
-                MessageBox.Show(this, cmdOutput);
+            Cursor.Current = Cursors.WaitCursor;
+            foreach (var item in items)
+            {
+                string output = Module.OpenWithDifftool(item.Name, null, null, null, staged? "--cached" : "");
+                if (!string.IsNullOrEmpty(output))
+                    MessageBox.Show(this, output);
+            }
+            // From the time user invokes this to the time the external diff tool opens can be long,
+            // so we inject an artifical delay so that the wait cursor is visible as feedback.
+            Thread.Sleep(500);
+            Cursor.Current = Cursors.Default;
         }
 
+        private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            OpenFilesWithDiffTool(Unstaged.SelectedItems, false);
+        }
 
         private void ResetPartOfFileToolStripMenuItemClick(object sender, EventArgs e)
         {
@@ -2440,12 +2445,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripMenuItem9_Click(object sender, EventArgs e)
         {
-            foreach (var item in Staged.SelectedItems)
-            {
-                string output = Module.OpenWithDifftool(item.Name, null, null, null, "--cached");
-                if (!string.IsNullOrEmpty(output))
-                    MessageBox.Show(this, output);
-            }
+            OpenFilesWithDiffTool(Staged.SelectedItems, true);
         }
 
         private void toolStripMenuItem10_Click(object sender, EventArgs e)
