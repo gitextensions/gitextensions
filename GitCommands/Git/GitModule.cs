@@ -88,7 +88,7 @@ namespace GitCommands
         private readonly object _lock = new object();
 
         public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
-        private const string DiffCommandWithStandardArgs = "diff ";
+        private const string DiffCommandWithStandardArgs = "diff --no-color ";
 
         public GitModule(string workingdir)
         {
