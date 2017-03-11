@@ -1916,9 +1916,11 @@ namespace GitCommands
 
             if (todoCommits != null)
             {
+                string commentChar = EffectiveConfigFile.GetString("core.commentChar", "#");
+
                 foreach (string todoCommit in todoCommits)
                 {
-                    if (todoCommit.StartsWith("#"))
+                    if (todoCommit.StartsWith(commentChar))
                         continue;
 
                     string[] parts = todoCommit.Split(' ');

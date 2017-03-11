@@ -607,7 +607,6 @@ namespace GitUI
                 EnsureSelectedIndexChangeSubscription();
                 HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             }
-            FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
             var previouslySelectedItems = new List<GitItemStatus>();
             if (updateCausedByFilter)
@@ -617,6 +616,8 @@ namespace GitUI
                     previouslySelectedItems.Add((GitItemStatus)Item.Tag);
                 }
             }
+
+            FileStatusListView.Scrollable = false;
 
             FileStatusListView.BeginUpdate();
             FileStatusListView.ShowGroups = _itemsDictionary != null && _itemsDictionary.Count > 1;
@@ -681,6 +682,7 @@ namespace GitUI
             FileStatusListView_SizeChanged(null, null);
             FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
             FileStatusListView.EndUpdate();
+            FileStatusListView.Scrollable = true;
         }
 
         [DefaultValue(true)]

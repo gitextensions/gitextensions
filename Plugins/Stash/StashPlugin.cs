@@ -6,14 +6,14 @@ namespace Stash
 {
     public class StashPlugin : GitPluginBase
     {
-        public readonly StringSetting StashUsername = new StringSetting("Stash Username", string.Empty);
-        public readonly PasswordSetting StashPassword = new PasswordSetting("Stash Password", string.Empty);
-        public readonly StringSetting StashBaseUrl = new StringSetting("Specify the base URL to Stash", "https://example.stash.com");
+        public readonly StringSetting StashUsername = new StringSetting("Bitbucket Username", string.Empty);
+        public readonly PasswordSetting StashPassword = new PasswordSetting("Bitbucket Password", string.Empty);
+        public readonly StringSetting StashBaseUrl = new StringSetting("Specify the base URL to Bitbucket", "https://example.stash.com");
         public readonly BoolSetting StashDisableSsl = new BoolSetting("Disable SSL verification", false);
 
         public StashPlugin()
         {
-            SetNameAndDescription("Create Stash Pull Request");
+            SetNameAndDescription("Create Bitbucket Pull Request");
             Translate();
         }
 

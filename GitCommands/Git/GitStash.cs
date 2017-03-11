@@ -24,20 +24,23 @@ namespace GitCommands
         static int CustomFormatLength = CustomFormat.Length;
 
         /// <summary>Initializes a new <see cref="GitStash"/> with all properties null.</summary>
-        public GitStash() { }
-
-        public GitStash(string stash, int i)
+        public GitStash(string stash)
         {
             if (string.IsNullOrWhiteSpace(stash))
             {
                 throw new ArgumentException("Stash has NO characters.", "stash");
             }
+            _stash = stash;
+        }
+
+        public GitStash(string stash, int i)
+            : this(stash)
+        {
 
             // "stash@{i}: WIP on {branch}: {PreviousCommitMiniSHA} {PreviousCommitMessage}"
             // "stash@{i}: On {branch}: {Message}"
             // "stash@{i}: autostash"
 
-            _stash = stash;
             Index = i;
 
             Name = string.Format(NameFormat, Index);

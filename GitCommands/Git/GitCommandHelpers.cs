@@ -1139,7 +1139,7 @@ namespace GitCommands
             return string.Empty;
         }
 
-        public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy)
+        public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories)
         {
             StringBuilder command = new StringBuilder("merge");
 
@@ -1154,6 +1154,8 @@ namespace GitCommands
                 command.Append(" --squash");
             if (noCommit)
                 command.Append(" --no-commit");
+            if (allowUnrelatedHistories)
+                command.Append(" --allow-unrelated-histories");
 
             command.Append(" ");
             command.Append(branch);

@@ -46,6 +46,7 @@
 			this.Currentbranch = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.helpImageDisplayUserControl1 = new GitUI.Help.HelpImageDisplayUserControl();
+			this.allowUnrelatedHistories = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -103,6 +104,7 @@
 			this.groupBox1.Controls.Add(this.Ok);
 			this.groupBox1.Controls.Add(this.Currentbranch);
 			this.groupBox1.Controls.Add(this.label2);
+			this.groupBox1.Controls.Add(this.allowUnrelatedHistories);
 			this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.groupBox1.Location = new System.Drawing.Point(596, 6);
 			this.groupBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
@@ -282,6 +284,16 @@
 			// FormMergeBranch
 			// 
 			this.AcceptButton = this.Ok;
+            // 
+            // allowUnrelatedHistories
+            // 
+            this.allowUnrelatedHistories.AutoSize = true;
+            this.allowUnrelatedHistories.Location = new System.Drawing.Point(26, 576);
+            this.allowUnrelatedHistories.Name = "allowUnrelatedHistories";
+            this.allowUnrelatedHistories.Size = new System.Drawing.Size(145, 17);
+            this.allowUnrelatedHistories.TabIndex = 10;
+            this.allowUnrelatedHistories.Text = "Allow Unrelated Histories";
+            this.allowUnrelatedHistories.UseVisualStyleBackColor = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.ClientSize = new System.Drawing.Size(1408, 714);
@@ -320,5 +332,6 @@
         private BranchComboBox Branches;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;
+        private System.Windows.Forms.CheckBox allowUnrelatedHistories;
     }
 }
