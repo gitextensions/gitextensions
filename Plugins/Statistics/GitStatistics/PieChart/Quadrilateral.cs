@@ -9,7 +9,7 @@ namespace GitStatistics.PieChart
     public class Quadrilateral
     {
         /// <summary>
-        ///   <c>PathPointType</c>s decribing the <c>GraphicsPath</c> points.
+        ///   <c>PathPointType</c>s describing the <c>GraphicsPath</c> points.
         /// </summary>
         private static readonly byte[] QuadrilateralPointTypes =
             new[]

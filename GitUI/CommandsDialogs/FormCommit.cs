@@ -180,6 +180,7 @@ namespace GitUI.CommandsDialogs
             refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshCommitDialogOnFormFocus;
 
             Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
+            Unstaged.FilterVisible = true;
             Staged.SetNoFilesText(_noStagedChanges.Text);
 
             Message.Enabled = _useFormCommitMessage;
@@ -861,7 +862,7 @@ namespace GitUI.CommandsDialogs
                     // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
                     if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                         return;
-                    StageAll();
+                    StageAllAccordingToFilter();
                     // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
                     if (Staged.IsEmpty)
                         return;
@@ -887,7 +888,7 @@ namespace GitUI.CommandsDialogs
             if (_useFormCommitMessage && !ValidCommitMessage())
                 return;
 
-            if (Module.IsDetachedHead())
+            if (Module.IsDetachedHead() && !Module.InTheMiddleOfRebase())
             {
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
                                                         _notOnBranchCaption.Text,
@@ -920,7 +921,7 @@ namespace GitUI.CommandsDialogs
 
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
 
-                var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage));
+                var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage, noVerifyToolStripMenuItem.Checked));
 
                 UICommands.RepoChangedNotifier.Notify();
 
@@ -928,6 +929,7 @@ namespace GitUI.CommandsDialogs
                     return;
 
                 Amend.Checked = false;
+                noVerifyToolStripMenuItem.Checked = false;
 
                 ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
@@ -1218,7 +1220,7 @@ namespace GitUI.CommandsDialogs
                 return;
             Stage(Unstaged.SelectedItems.ToList());
             if (Unstaged.IsEmpty)
-                Staged.Focus();
+                Message.Focus();
         }
 
         void Unstaged_DoubleClick(object sender, EventArgs e)
@@ -1226,18 +1228,22 @@ namespace GitUI.CommandsDialogs
             _currentFilesList = Unstaged;
             Stage(Unstaged.SelectedItems.ToList());
             if (Unstaged.IsEmpty)
-                Staged.Focus();
+                Message.Focus();
         }
 
-        private void StageAll()
+        private void StageAllAccordingToFilter()
         {
-            Stage(Unstaged.GitItemStatuses);
-            Staged.Focus();
+            Stage(Unstaged.GitItemFilteredStatuses);
+            Unstaged.SetFilter(String.Empty);
+            if (Unstaged.IsEmpty)
+                Message.Focus();
+            else
+                Staged.Focus();
         }
 
         private void StageAllToolStripMenuItemClick(object sender, EventArgs e)
         {
-            StageAll();
+            StageAllAccordingToFilter();
         }
 
         private void StagedSelectionChanged(object sender, EventArgs e)
@@ -1266,7 +1272,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Stage(IList<GitItemStatus> gitItemStatusses)
+        private void Stage(IList<GitItemStatus> gitItemStatuses)
         {
             EnableStageButtons(false);
             try
@@ -1278,12 +1284,12 @@ namespace GitUI.CommandsDialogs
                 Cursor.Current = Cursors.WaitCursor;
                 Unstaged.StoreNextIndexToSelect();
                 toolStripProgressBar1.Visible = true;
-                toolStripProgressBar1.Maximum = gitItemStatusses.Count() * 2;
+                toolStripProgressBar1.Maximum = gitItemStatuses.Count() * 2;
                 toolStripProgressBar1.Value = 0;
 
                 var files = new List<GitItemStatus>();
 
-                foreach (var gitItemStatus in gitItemStatusses)
+                foreach (var gitItemStatus in gitItemStatuses)
                 {
                     toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
                     if (gitItemStatus.Name.EndsWith("/"))

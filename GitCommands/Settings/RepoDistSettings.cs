@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace GitCommands.Settings
 {
     /// <summary>
     /// Settings that can be distributed with repository
-    /// they can be overriden for a particular repository
+    /// they can be overridden for a particular repository
     /// </summary>
     public class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
     {
@@ -19,6 +16,7 @@ namespace GitCommands.Settings
             : base(aLowerPriority, aSettingsCache)
         {
             BuildServer = new BuildServer(this);
+            Detailed = new DetailedGroup(this);
         }
 
         #region CreateXXX
@@ -97,7 +95,8 @@ namespace GitCommands.Settings
         }
 
         public readonly BuildServer BuildServer;
-        
+        public readonly DetailedGroup Detailed;
+
         public bool NoFastForwardMerge
         {
             get { return this.GetBool("NoFastForwardMerge", false); }
@@ -133,6 +132,19 @@ namespace GitCommands.Settings
             {
                 return new SettingsPath(this, Type.Value);
             }
+        }
+    }
+
+    public class DetailedGroup : SettingsPath
+    {
+        public readonly BoolNullableSetting ShowConEmuTab;
+        public readonly BoolNullableSetting GetRemoteBranchesDirectlyFromRemote;
+
+        public DetailedGroup(RepoDistSettings container)
+            : base(container, "Detailed")
+        {
+            ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", this, true);
+            GetRemoteBranchesDirectlyFromRemote = new BoolNullableSetting("GetRemoteBranchesDirectlyFromRemote", this, false);
         }
     }
 

@@ -19,7 +19,6 @@ namespace GitUIPluginInterfaces
             Values = values;
             if (DefaultValue == null && values.Count != 0)
                 DefaultValue = values[0];
-            _controlBinding = new ComboBoxBinding(this);
         }
 
         public string Name { get; private set; }
@@ -27,21 +26,17 @@ namespace GitUIPluginInterfaces
         public string DefaultValue { get; set; }
         public List<string> Values { get; set; }
 
-        private ISettingControlBinding _controlBinding;
-        public ISettingControlBinding ControlBinding
+        public ISettingControlBinding CreateControlBinding()
         {
-            get { return _controlBinding; }
-        }
+            return new ComboBoxBinding(this);
+    }
 
-        private class ComboBoxBinding : SettingControlBinding<ComboBox>
+        private class ComboBoxBinding : SettingControlBinding<ChoiceSetting, ComboBox>
         {
-
-            ChoiceSetting Setting;
 
             public ComboBoxBinding(ChoiceSetting aSetting)
-            {
-                Setting = aSetting;
-            }
+                : base(aSetting)
+            { }
 
             public override ComboBox CreateControl()
             {
@@ -50,9 +45,19 @@ namespace GitUIPluginInterfaces
                 return comboBox;
             }
 
-            public override void LoadSetting(ISettingsSource settings, ComboBox control)
+            public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, ComboBox control)
             {
-                control.SelectedIndex = Setting.Values.IndexOf(Setting[settings]);
+                string settingVal;
+                if (areSettingsEffective)
+                {
+                    settingVal = Setting.ValueOrDefault(settings);
+                }
+                else
+                {
+                    settingVal = Setting[settings];
+                }
+
+                control.SelectedIndex = Setting.Values.IndexOf(settingVal);
             }
 
             public override void SaveSetting(ISettingsSource settings, ComboBox control)
@@ -61,21 +66,21 @@ namespace GitUIPluginInterfaces
             }
         }
 
+        public string ValueOrDefault(ISettingsSource settings)
+        {
+            return this[settings] ?? DefaultValue;
+        }
+
         public string this[ISettingsSource settings]
         {
             get
             {
-                return settings.GetValue(Name, DefaultValue, s =>
-                {
-                    if (string.IsNullOrEmpty(s))
-                        return DefaultValue;
-                    return s;
-                });
+                return settings.GetString(Name, null);
             }
 
             set
             {
-                settings.SetValue(Name, value, s => { return s; });
+                settings.SetString(Name, value);
             }
         }
     }

@@ -1,31 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
 using GitCommands;
 using GitUIPluginInterfaces;
 
 namespace GitUI
 {
-    public class GitPluginSettingsContainer : ISettingsSource
+    public class GitPluginSettingsContainer : ISettingsSource, IGitPluginSettingsContainer
     {
         private readonly string pluginName;
+        private ISettingsSource _settingsSource;
+
         public GitPluginSettingsContainer(string pluginName)
         {
             this.pluginName = pluginName;
         }
 
-        public T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
+        public ISettingsSource GetSettingsSource()
         {
-            var value = AppSettings.GetString(pluginName + name, null);
-
-            if (value == null)
-                return defaultValue;
-
-            return decode(value);
+            return this;
         }
 
-        public void SetValue<T>(string name, T value, Func<T, string> encode)
+        public void SetSettingsSource(ISettingsSource settingsSource)
         {
-            AppSettings.SetString(pluginName + name, encode(value));
+            _settingsSource = settingsSource;
+        }
+
+        private ISettingsSource ExternalSettings
+        {
+            get
+            {
+                return _settingsSource ?? AppSettings.SettingsContainer;
+            }
+        }
+
+        public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
+        {
+            return ExternalSettings.GetValue(pluginName + name, defaultValue, decode);
+        }
+
+        public override void SetValue<T>(string name, T value, Func<T, string> encode)
+        {
+            ExternalSettings.SetValue(pluginName + name, value, encode);
         }
     }
 }

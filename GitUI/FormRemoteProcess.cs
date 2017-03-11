@@ -159,20 +159,27 @@ namespace GitUI
         {
             if (Plink)
             {
-                if (e.Text.StartsWith("If you trust this host, enter \"y\" to add the key to"))
+                if (e.Text.Contains("If you trust this host, enter \"y\" to add the key to"))
                 {
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
-                        remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
+                        string remoteUrl;
+                        if (string.IsNullOrEmpty(UrlTryingToConnect))
+                        {
+                            remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                            remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
+                        }
+                        else
+                            remoteUrl = UrlTryingToConnect;
                         remoteUrl = GitCommandHelpers.GetPlinkCompatibleUrl(remoteUrl);
 
                         Module.RunExternalCmdShowConsole("cmd.exe", string.Format("/k \"\"{0}\" {1}\"", AppSettings.Plink, remoteUrl));
 
                         restart = true;
+                        Reset();
                     }
-
-                    KillGitCommand();
+                    else
+                        KillGitCommand();
                 }
             }
             base.DataReceived(sender, e);

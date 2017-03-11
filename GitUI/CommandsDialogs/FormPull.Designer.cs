@@ -352,20 +352,22 @@
             // 
             // localBranch
             // 
+            this.localBranch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.localBranch.Location = new System.Drawing.Point(188, 18);
             this.localBranch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.localBranch.Name = "localBranch";
-            this.localBranch.Size = new System.Drawing.Size(368, 27);
+            this.localBranch.Size = new System.Drawing.Size(379, 27);
             this.localBranch.TabIndex = 9;
             this.localBranch.Leave += new System.EventHandler(this.localBranch_Leave);
             // 
             // Branches
             // 
+            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(188, 58);
             this.Branches.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(368, 28);
+            this.Branches.Size = new System.Drawing.Size(379, 28);
             this.Branches.TabIndex = 6;
             this.Branches.DropDown += new System.EventHandler(this.BranchesDropDown);
             // 

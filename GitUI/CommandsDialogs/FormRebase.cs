@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
@@ -59,16 +60,18 @@ namespace GitUI.CommandsDialogs
             var selectedHead = Module.GetSelectedBranch();
             Currentbranch.Text = selectedHead;
 
+            var refs = Module.GetRefs(true, true).OfType<GitRef>().ToList();
+            Branches.DataSource = refs;
             Branches.DisplayMember = "Name";
-            Branches.DataSource = Module.GetRefs(true, true);
 
             if (_defaultBranch != null)
                 Branches.Text = _defaultBranch;
 
             Branches.Select();
 
+            refs = Module.GetRefs(true, true).OfType<GitRef>().ToList();
+            cboTo.DataSource = refs;
             cboTo.DisplayMember = "Name";
-            cboTo.DataSource = Module.GetRefs(false, true);
 
             if (_defaultToBranch != null)
                 cboTo.Text = _defaultToBranch;
@@ -81,6 +84,8 @@ namespace GitUI.CommandsDialogs
             // Honor the rebase.autosquash configuration.
             var autosquashSetting = Module.GetEffectiveSetting("rebase.autosquash");
             chkAutosquash.Checked = "true" == autosquashSetting.Trim().ToLower();
+
+            chkStash.Checked = AppSettings.RebaseAutoStash;
         }
 
         private void EnableButtons()
@@ -198,6 +203,8 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _noBranchSelectedText.Text);
                 return;
             }
+
+            AppSettings.RebaseAutoStash = chkStash.Checked;
 
             string rebaseCmd;
             if (chkSpecificRange.Checked && !String.IsNullOrWhiteSpace(txtFrom.Text) && !String.IsNullOrWhiteSpace(cboTo.Text))

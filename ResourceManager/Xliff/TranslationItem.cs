@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace ResourceManager.Xliff
 {
-    [DebuggerDisplay("{name}.{property}={value}")]
+    [DebuggerDisplay("{_name}.{_property}={_value}")]
     public class TranslationItem : IComparable<TranslationItem>, ICloneable
     {
         public TranslationItem()
@@ -29,7 +29,7 @@ namespace ResourceManager.Xliff
 
         private string _name;
         [XmlIgnore]
-        public string Name 
+        public string Name
         {
             get
             {
@@ -86,7 +86,7 @@ namespace ResourceManager.Xliff
 
         private string _value;
         [XmlElement("target")]
-        public string Value 
+        public string Value
         {
             get
             {

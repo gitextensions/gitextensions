@@ -133,17 +133,20 @@ namespace GitCommands.GitExtLinks
             for (var i = 0; i < matches.Count; i++)
             {
                 var match = matches[i];
-                if (NestedSearchPattern.IsNullOrEmpty())
+                if (match.Success)
                 {
-                    allMatches.Add(match);
-                }
-                else if (NestedSearchPatternRegex.Value != null)
-                {
-                    MatchCollection nestedMatches = NestedSearchPatternRegex.Value.Matches(match.Value);
-
-                    for (var n = 0; n < nestedMatches.Count; n++)
+                    if (NestedSearchPattern.IsNullOrEmpty())
                     {
-                        allMatches.Add(nestedMatches[n]);
+                        allMatches.Add(match);
+                    }
+                    else if (NestedSearchPatternRegex.Value != null && match.Value != null)
+                    {
+                        MatchCollection nestedMatches = NestedSearchPatternRegex.Value.Matches(match.Value);
+
+                        for (var n = 0; n < nestedMatches.Count; n++)
+                        {
+                            allMatches.Add(nestedMatches[n]);
+                        }
                     }
                 }
             }

@@ -17,7 +17,8 @@ namespace ResourceManager
 
         public static void AddTranslationItemsFromFields(string category, object obj, ITranslation translation)
         {
-            Xliff.TranslationUtl.AddTranslationItemsFromFields(category, obj, translation);
+            if (!String.IsNullOrEmpty(category))
+                Xliff.TranslationUtl.AddTranslationItemsFromFields(category, obj, translation);
         }
 
         public static void AddTranslationItemsFromList(string category, ITranslation translation, IEnumerable<Tuple<string, object>> items)
@@ -37,7 +38,8 @@ namespace ResourceManager
 
         public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
         {
-            Xliff.TranslationUtl.TranslateItemsFromFields(category, obj, translation);
+            if (!String.IsNullOrEmpty(category))
+                Xliff.TranslationUtl.TranslateItemsFromFields(category, obj, translation);
         }
     }
 }

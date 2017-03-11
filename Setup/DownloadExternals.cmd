@@ -2,8 +2,8 @@
 
 REM Also update in Product.wxs and UI\RequiredSoftwareDlg.wxs
 
-IF NOT EXIST "%~p0\..\bin\Git-2.8.1-32-bit.exe" (
-    "%~p0\tools\curl.exe" -L -k -o ..\bin\Git-2.8.1-32-bit.exe https://github.com/git-for-windows/git/releases/download/v2.8.1.windows.1/Git-2.8.1-32-bit.exe
+IF NOT EXIST "%~p0\..\bin\Git-2.10.1-32-bit.exe" (
+    "%~p0\tools\curl.exe" -L -k -o ..\bin\Git-2.10.1-32-bit.exe https://github.com/git-for-windows/git/releases/download/v2.10.1.windows.1/Git-2.10.1-32-bit.exe
     IF ERRORLEVEL 1 EXIT /B 1
 )
 

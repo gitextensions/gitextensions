@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 gitpath = possibleNewPath.Trim();
             }
 
-            foreach (var toolsPath in new[] { @"usr\bin\", @"bin\" })
+            foreach (var toolsPath in new[] { @"bin\", @"usr\bin\" })
             {
                 gitpath = gitpath.Replace(@"\cmd\git.exe", @"\" + toolsPath)
                     .Replace(@"\cmd\git.cmd", @"\" + toolsPath)
@@ -120,6 +120,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             yield return @"C:\msysgit\";
             // cygwin has old git version on windows and bash has a lot of bugs
             yield return @"C:\cygwin\";
+            yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Programs", "Git\\");
         }
 
         private IEnumerable<string> GetWindowsCommandLocations(string possibleNewPath = null)
@@ -180,9 +182,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static bool CheckIfFileIsInPath(string fileName)
         {
-            string path = Environment.GetEnvironmentVariable("PATH");
-
-            return path.Split(';').Any(dir => File.Exists(dir + " \\" + fileName) || File.Exists(Path.Combine(dir, fileName)));
+            string foo;
+            return PathUtil.TryFindFullPath(fileName, out foo);
         }
 
         public bool SolveMergeToolForKDiff()

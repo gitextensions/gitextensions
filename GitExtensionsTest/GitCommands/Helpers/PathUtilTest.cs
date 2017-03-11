@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
-using GitCommands;
 using NUnit.Framework;
+using GitCommands;
 using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GitExtensionsTest
 {
@@ -90,6 +92,70 @@ namespace GitExtensionsTest
 
             Assert.AreEqual(PathUtil.GetRepositoryName(""), "");
             Assert.AreEqual(PathUtil.GetRepositoryName(null), "");
+        }
+
+        [TestMethod]
+        public void IsValidPathTest()
+        {
+            Assert.IsTrue(PathUtil.IsValidPath("\\\\my-pc\\Work\\GitExtensions\\"), "\\\\my-pc\\Work\\GitExtensions");
+            Assert.IsTrue(PathUtil.IsValidPath("C:\\Work\\GitExtensions\\"), "C:\\Work\\GitExtensions");
+            Assert.IsTrue(PathUtil.IsValidPath("C:\\Work\\"), "C:\\Work");
+            Assert.IsTrue(PathUtil.IsValidPath("C:\\"), "");
+            Assert.IsTrue(PathUtil.IsValidPath("C:"), "");
+            Assert.IsFalse(PathUtil.IsValidPath(""), "");
+            Assert.IsFalse(PathUtil.IsValidPath("\"C:\\Work\\GitExtensions\\"), "C:\\Work\\GitExtensions\"");
+        }
+
+        [TestMethod]
+        public void GetEnvironmentPathsTest()
+        {
+            string pathVariable = string.Join(";", GetValidPaths().Concat(GetInvalidPaths()));
+            var paths = PathUtil.GetEnvironmentPaths(pathVariable);
+            var validEnvPaths = PathUtil.GetValidPaths(paths);
+            CollectionAssert.AreEqual(validEnvPaths, GetValidPaths());
+        }
+
+        [TestMethod]
+        public void GetEnvironmentPathsQuotedTest()
+        {
+            var paths = GetValidPaths().Concat(GetInvalidPaths());
+            var quotedPaths = paths.Select(path => path.Quote(" ")).Select(path => path.Quote());
+            string pathVariable = string.Join(";", quotedPaths);
+            var envPaths = PathUtil.GetEnvironmentPaths(pathVariable);
+            var validEnvPaths = PathUtil.GetValidPaths(envPaths);
+            CollectionAssert.AreEqual(validEnvPaths, GetValidPaths());
+        }
+
+        [TestMethod]
+        public void ExistingPathsTest()
+        {
+            Assert.IsTrue(PathUtil.PathExists(GetType().Assembly.Location));
+        }
+
+        [TestMethod]
+        public void NonExistingPathsTest()
+        {
+            GetInvalidPaths().ForEach((path) =>
+            {
+                Assert.IsFalse(PathUtil.PathExists(path));
+            });
+            Assert.IsFalse(PathUtil.PathExists("c:\\94fc5ae63a6c5ed7c110219ade20374ea4d237b9.xyz"));
+        }
+
+        private static IEnumerable<string> GetValidPaths()
+        {
+            yield return @"c:\work";
+            yield return @"c:\work\";
+            yield return @"c:\Program Files(86)\";
+            yield return @"c:\Program Files(86)\Git";
+        }
+
+        private static IEnumerable<string> GetInvalidPaths()
+        {
+            yield return @"c::\word";
+            yield return "\"c:\\word\t\\\"";
+            yield return @".c:\Programs\";
+            yield return "c:\\Programs\\Get\"\\";
         }
     }
 }

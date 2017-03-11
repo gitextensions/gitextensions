@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GitCommands.Config;
-using GitCommands.Settings;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
-    public class GitRef : IGitItem
+    public class GitRef : IGitRef
     {
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
@@ -19,13 +20,15 @@ namespace GitCommands
         public static readonly string RefsRemotesPrefix = "refs/remotes/";
         /// <summary>"refs/bisect/"</summary>
         public static readonly string RefsBisectPrefix = "refs/bisect/";
+        /// <summary>"^{}"</summary>
+        public static readonly string TagDereferenceSuffix = "^{}";
        
-        public GitModule Module { get; private set; }
+        public IGitModule Module { get; private set; }
 
-        public GitRef(GitModule module, string guid, string completeName)
+        public GitRef(IGitModule module, string guid, string completeName)
             : this(module, guid, completeName, string.Empty) { }
 
-        public GitRef(GitModule module, string guid, string completeName, string remote)
+        public GitRef(IGitModule module, string guid, string completeName, string remote)
         {
             Module = module;
             Guid = guid;
@@ -33,6 +36,7 @@ namespace GitCommands
             CompleteName = completeName;
             Remote = remote;
             IsTag = CompleteName.StartsWith(RefsTagsPrefix);
+            IsDereference = CompleteName.EndsWith(TagDereferenceSuffix);
             IsHead = CompleteName.StartsWith(RefsHeadsPrefix);
             IsRemote = CompleteName.StartsWith(RefsRemotesPrefix);
             IsBisect = CompleteName.StartsWith(RefsBisectPrefix);
@@ -55,6 +59,13 @@ namespace GitCommands
         public bool IsHead { get; private set; }
         public bool IsRemote { get; private set; }
         public bool IsBisect { get; private set; }
+
+        /// <summary>
+        /// True when Guid is a checksum of an object (e.g. commit) to which another object 
+        /// with Name (e.g. annotated tag) is applied. 
+        /// <para>False when Name and Guid are denoting the same object.</para>
+        /// </summary>
+        public bool IsDereference { get; private set; }
 
         public bool IsOther
         {
@@ -91,7 +102,7 @@ namespace GitCommands
         /// <summary>Gets the setting name for a branch's remote.</summary>
         public static string RemoteSettingName(string branch)
         {
-            return String.Format("branch.{0}.remote", branch);
+            return String.Format(SettingKeyString.BranchRemote, branch);
         }
 
         /// <summary>
@@ -99,7 +110,7 @@ namespace GitCommands
         /// every time it is accessed. This method accepts a config file what makes it faster when loading
         /// the revision graph.
         /// </summary>
-        public string GetTrackingRemote(ConfigFileSettings configFile)
+        public string GetTrackingRemote(ISettingsValueGetter configFile)
         {
             return configFile.GetValue(_remoteSettingName);
         }
@@ -124,7 +135,7 @@ namespace GitCommands
         /// every time it is accessed. This method accepts a configfile what makes it faster when loading
         /// the revisiongraph.
         /// </summary>
-        public string GetMergeWith(ConfigFileSettings configFile)
+        public string GetMergeWith(ISettingsValueGetter configFile)
         {
             string merge = configFile.GetValue(_mergeSettingName);
             return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;
@@ -163,8 +174,8 @@ namespace GitCommands
             {
                 // we need the one containing ^{}, because it contains the reference
                 var temp =
-                    CompleteName.Contains("^{}")
-                        ? CompleteName.Substring(0, CompleteName.Length - 3)
+                    CompleteName.Contains(TagDereferenceSuffix)
+                        ? CompleteName.Substring(0, CompleteName.Length - TagDereferenceSuffix.Length)
                         : CompleteName;
 
                 Name = temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
@@ -176,6 +187,14 @@ namespace GitCommands
             else
                 //if we don't know ref type then we don't know if '/' is a valid ref character
                 Name = CompleteName.SkipStr("refs/");
+        }
+
+        public static ISet<string> GetAmbiguousRefNames(IEnumerable<IGitRef> refs)
+        {
+            return refs.
+                GroupBy(r => r.Name).
+                Where(group => group.Count() > 1).
+                ToHashSet(e => e.Key);
         }
     }
 }

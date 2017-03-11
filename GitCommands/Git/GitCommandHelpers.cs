@@ -562,9 +562,23 @@ namespace GitCommands
 
         public static string BranchCmd(string branchName, string revision, bool checkout)
         {
+            string cmd = null;
             if (checkout)
-                return string.Format("checkout -b \"{0}\" \"{1}\"", branchName.Trim(), revision);
-            return string.Format("branch \"{0}\" \"{1}\"", branchName.Trim(), revision);
+            {
+                cmd = string.Format("checkout -b \"{0}\"", branchName.Trim());
+            }
+            else
+            {
+                cmd = string.Format("branch \"{0}\"", branchName.Trim());
+            }
+            if (revision.IsNullOrWhiteSpace())
+            {
+                return cmd;
+            }
+            else
+            {
+                return cmd + string.Format(" \"{0}\"", revision);
+            }
         }
 
         public static string MergedBranches()
@@ -610,15 +624,14 @@ namespace GitCommands
             }.ToString();
         }
 
-        public static string PushTagCmd(string path, string tag, bool all, bool force = false)
+        public static string PushTagCmd(string path, string tag, bool all,
+            ForcePushOptions force = ForcePushOptions.DoNotForce)
         {
             path = path.ToPosixPath();
 
             tag = tag.Replace(" ", "");
 
-            var sforce = "";
-            if (force)
-                sforce = "-f ";
+            var sforce = GetForcePushArgument(force);
 
             var sprogressOption = "";
             if (VersionInUse.PushCanAskForProgress)
@@ -632,6 +645,16 @@ namespace GitCommands
                 return "push " + options + "\"" + path.Trim() + "\" tag " + tag;
 
             return "";
+        }
+
+        public static string GetForcePushArgument(ForcePushOptions force)
+        {
+            var sforce = "";
+            if (force == ForcePushOptions.Force)
+                sforce = "-f ";
+            else if (force == ForcePushOptions.ForceWithLease)
+                sforce = "--force-with-lease ";
+            return sforce;
         }
 
         public static string StashSaveCmd(bool untracked, bool keepIndex, string message)
@@ -890,7 +913,7 @@ namespace GitCommands
 
                 if (line != null)
                 {
-                    var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
+                    var match = Regex.Match(line, @"diff --git a/(.+)\sb/(.+)");
                     if (match.Groups.Count > 1)
                     {
                         status.Name = match.Groups[1].Value;
@@ -898,7 +921,7 @@ namespace GitCommands
                     }
                     else
                     {
-                        match = Regex.Match(line, @"diff --cc (\S+)");
+                        match = Regex.Match(line, @"diff --cc (.+)");
                         if (match.Groups.Count > 1)
                         {
                             status.Name = match.Groups[1].Value;
@@ -944,7 +967,7 @@ namespace GitCommands
         }
 
         /*
-               source: C:\Program Files\msysgit\doc\git\html\git-status.html
+               source: https://git-scm.com/docs/git-status
         */
         public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff = false)
         {
@@ -975,7 +998,7 @@ namespace GitCommands
             }
 
             // Doesn't work with removed submodules
-            IList<string> Submodules = module.GetSubmodulesLocalPathes();
+            IList<string> Submodules = module.GetSubmodulesLocalPaths();
 
             //Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
             var files = trimmedStatus.Split(new char[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1115,7 +1138,7 @@ namespace GitCommands
             return string.Empty;
         }
 
-        public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy)
+        public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories)
         {
             StringBuilder command = new StringBuilder("merge");
 
@@ -1130,6 +1153,8 @@ namespace GitCommands
                 command.Append(" --squash");
             if (noCommit)
                 command.Append(" --no-commit");
+            if (allowUnrelatedHistories)
+                command.Append(" --allow-unrelated-histories");
 
             command.Append(" ");
             command.Append(branch);

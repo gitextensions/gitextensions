@@ -57,7 +57,7 @@ namespace GitCommands.Config
             if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
                 return path;
 
-            return path.Replace('\\', '/');
+            return path.ToPosixPath();
         }
 
         public bool HasValue(string key)

@@ -11,7 +11,7 @@ namespace BackgroundFetch
     {
         public BackgroundFetchPlugin()
         {
-            Description = "Periodic background fetch";
+            SetNameAndDescription("Periodic background fetch");
             Translate();
         }
 
@@ -51,24 +51,35 @@ namespace BackgroundFetch
         {
             CancelBackgroundOperation();
 
-            int fetchInterval = FetchInterval[Settings];
+            int fetchInterval = FetchInterval.ValueOrDefault(Settings);
 
             var gitModule = currentGitUiCommands.GitModule;
             if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir())
             {
                 cancellationToken =
                     Observable.Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
-                              .SkipWhile(i => gitModule.IsRunningGitProcess())
+                              .SelectMany(i => {
+                                // if git not runing - start fetch immediately
+                                if (!gitModule.IsRunningGitProcess())
+                                    return Observable.Return(i);
+
+                                // in other case - every 5 seconds check if git still runnnig
+                                return Observable
+                                    .Interval(TimeSpan.FromSeconds(5))
+                                    .SkipWhile(ii => gitModule.IsRunningGitProcess())
+                                    .FirstAsync()
+                                ;
+                              })
                               .Repeat()
                               .ObserveOn(ThreadPoolScheduler.Instance)
                               .Subscribe(i =>
                                   {
-                                      if (FetchAllSubmodules[Settings].HasValue && FetchAllSubmodules[Settings].Value)
+                                      if (FetchAllSubmodules.ValueOrDefault(Settings))
                                           currentGitUiCommands.GitCommand("submodule foreach --recursive git fetch --all");
 
-                                      var gitCmd = GitCommand[Settings].Trim();
+                                      var gitCmd = GitCommand.ValueOrDefault(Settings).Trim();
                                       var msg = currentGitUiCommands.GitCommand(gitCmd);
-                                      if (AutoRefresh[Settings].HasValue && AutoRefresh[Settings].Value)
+                                      if (AutoRefresh.ValueOrDefault(Settings))
                                       {
                                           if (gitCmd.StartsWith("fetch", StringComparison.InvariantCultureIgnoreCase))
                                           {

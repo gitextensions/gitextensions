@@ -8,7 +8,7 @@
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GitExtensions")]
 [assembly: AssemblyProduct("GitExtensions")]
-[assembly: AssemblyCopyright("Copyright © 2008-2014 Henk Westhuis")]
+[assembly: AssemblyCopyright("Copyright © 2008-2016 GitExt Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,4 +21,4 @@
 //
 [assembly: AssemblyVersion("2.49.00")]
 [assembly: AssemblyFileVersion("2.49.00")]
-[assembly: AssemblyInformationalVersion("2.49a1")]
+[assembly: AssemblyInformationalVersion("2.49")]

@@ -16,11 +16,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using Microsoft.Win32;
 
 namespace TeamCityIntegration
 {
@@ -46,8 +44,6 @@ namespace TeamCityIntegration
         }
     }
 
-
-
     [Export(typeof(IBuildServerAdapter))]
     [TeamCityIntegrationMetadata("TeamCity")]
     [PartCreationPolicy(CreationPolicy.NonShared)]
@@ -65,7 +61,9 @@ namespace TeamCityIntegration
 
         private Regex BuildIdFilter { get; set; }
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config)
+        public string LogAsGuestUrlParameter { get; set; }
+
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
             if (this.buildServerWatcher != null)
                 throw new InvalidOperationException("Already initialized");
@@ -73,22 +71,19 @@ namespace TeamCityIntegration
             this.buildServerWatcher = buildServerWatcher;
 
             ProjectNames = config.GetString("ProjectName", "").Split(new char[]{'|'}, StringSplitOptions.RemoveEmptyEntries);
-            BuildIdFilter = new Regex(config.GetString("BuildIdFilter", ""), RegexOptions.Compiled);
+
+            var buildIdFilerSetting = config.GetString("BuildIdFilter", "");
+            if (!BuildServerSettingsHelper.IsRegexValid(buildIdFilerSetting))
+            {
+                return;
+            }
+            BuildIdFilter = new Regex(buildIdFilerSetting, RegexOptions.Compiled);
             var hostName = config.GetString("BuildServerUrl", null);
+            LogAsGuestUrlParameter = config.GetBool("LogAsGuest", false) ? "&guest=1" : string.Empty;
+
             if (!string.IsNullOrEmpty(hostName))
             {
-                httpClient = new HttpClient
-                    {
-                        Timeout = TimeSpan.FromMinutes(2),
-                        BaseAddress = hostName.Contains("://")
-                                          ? new Uri(hostName, UriKind.Absolute)
-                                          : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
-                    };
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
-
-                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
-
-                UpdateHttpClientOptions(buildServerCredentials);
+                InitializeHttpClient(hostName, () => buildServerWatcher.GetBuildServerCredentials(this, true));
 
                 if (ProjectNames.Length > 0)
                 {
@@ -102,9 +97,26 @@ namespace TeamCityIntegration
                                    select element.Attribute("id").Value,
                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
                     }
-
                 }
             }
+        }
+
+        public void InitializeHttpClient(string hostName, Func<IBuildServerCredentials> getBuildServerCredentials = null)
+        {
+            SetHttpClient(hostName);
+            UpdateHttpClientOptions(getBuildServerCredentials != null ? getBuildServerCredentials() : null);
+        }
+
+        private void SetHttpClient(string hostName)
+        {
+            httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromMinutes(2),
+                BaseAddress = hostName.Contains("://")
+                    ? new Uri(hostName, UriKind.Absolute)
+                    : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
+            };
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
         }
 
         /// <summary>
@@ -252,14 +264,14 @@ namespace TeamCityIntegration
             return false;
         }
 
-        private static BuildInfo CreateBuildInfo(XDocument buildXmlDocument)
+        private BuildInfo CreateBuildInfo(XDocument buildXmlDocument)
         {
             var buildXElement = buildXmlDocument.Element("build");
             var idValue = buildXElement.Attribute("id").Value;
             var statusValue = buildXElement.Attribute("status").Value;
             var startDateText = buildXElement.Element("startDate").Value;
             var statusText = buildXElement.Element("statusText").Value;
-            var webUrl = buildXElement.Attribute("webUrl").Value;
+            var webUrl = buildXElement.Attribute("webUrl").Value + LogAsGuestUrlParameter;
             var revisionsElements = buildXElement.XPathSelectElements("revisions/revision");
             var commitHashList = revisionsElements.Select(x => x.Attribute("version").Value).ToArray();
             var runningAttribute = buildXElement.Attribute("running");
@@ -409,9 +421,19 @@ namespace TeamCityIntegration
             return GetXmlResponseAsync(string.Format("builds/id:{0}", buildId), cancellationToken);
         }
 
+        private Task<XDocument> GetBuildTypeFromIdXmlResponseAsync(string buildId, CancellationToken cancellationToken)
+        {
+            return GetXmlResponseAsync(string.Format("buildTypes/id:{0}", buildId), cancellationToken);
+        }
+
         private Task<XDocument> GetProjectFromNameXmlResponseAsync(string projectName, CancellationToken cancellationToken)
         {
             return GetXmlResponseAsync(string.Format("projects/{0}", projectName), cancellationToken);
+        }
+
+        private Task<XDocument> GetProjectsResponseAsync(CancellationToken cancellationToken)
+        {
+            return GetXmlResponseAsync("projects", cancellationToken);
         }
 
         private Task<XDocument> GetFilteredBuildsXmlResponseAsync(string buildTypeId, CancellationToken cancellationToken, DateTime? sinceDate = null, bool? running = null)
@@ -465,5 +487,74 @@ namespace TeamCityIntegration
                 httpClient.Dispose();
             }
         }
+
+        public Project GetProjectsTree()
+        {
+            var projectsRootElement = GetProjectsResponseAsync(CancellationToken.None).Result;
+            var projects = projectsRootElement.Root.Elements().Where(e => (string)e.Attribute("archived") != "true").Select(e=>new Project
+            {
+                Id = (string)e.Attribute("id"),
+                Name = (string)e.Attribute("name"),
+                ParentProject = (string)e.Attribute("parentProjectId"),
+                SubProjects = new List<Project>()
+            } ).ToList();
+
+            var projectDictionary = projects.ToDictionary(p => p.Id, p=>p);
+
+            Project rootProject = null;
+            foreach (var project in projects)
+            {
+                if (project.ParentProject != null)
+                {
+                    projectDictionary[project.ParentProject].SubProjects.Add(project);
+                }
+                else
+                {
+                    rootProject = project;
+                }
+            }
+
+            return rootProject;
+        }
+
+        public List<Build> GetProjectBuilds(string projectId)
+        {
+            var projectsRootElement = GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None).Result;
+            return projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build()
+            {
+                Id = (string) e.Attribute("id"),
+                Name = (string) e.Attribute("name"),
+                ParentProject = (string) e.Attribute("projectId")
+            }).ToList();
+        }
+
+        public Build GetBuildType(string buildId)
+        {
+            var projectsRootElement = GetBuildTypeFromIdXmlResponseAsync(buildId, CancellationToken.None).Result;
+            var buildType = projectsRootElement.Root;
+            return new Build
+            {
+                Id = buildId,
+                Name = (string) buildType.Attribute("name"),
+                ParentProject = (string) buildType.Attribute("projectId")
+            };
+        }
+    }
+
+    public class Project
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string ParentProject { get; set; }
+        public IList<Project> SubProjects { get; set; }
+        public IList<Build> Builds { get; set; }
+    }
+
+    public class Build
+    {
+        public string ParentProject { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string DisplayName { get { return Name + " (" + Id + ")"; } }
     }
 }

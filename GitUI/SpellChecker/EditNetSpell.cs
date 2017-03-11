@@ -69,7 +69,8 @@ namespace GitUI.SpellChecker
 
             EnabledChanged += EditNetSpellEnabledChanged;
 
-            InitializeAutoCompleteWordsTask();
+            if(AppSettings.ProvideAutocompletion)
+              InitializeAutoCompleteWordsTask();
         }
 
         public override string Text
@@ -247,12 +248,17 @@ namespace GitUI.SpellChecker
                         IgnoreWordsWithDigits = true
                     };
 
-            _autoCompleteListTask.ContinueWith(
-                w => _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word)),
-                _autoCompleteCancellationTokenSource.Token,
-                TaskContinuationOptions.NotOnCanceled,
-                TaskScheduler.FromCurrentSynchronizationContext()
-            );
+            if(AppSettings.ProvideAutocompletion)
+                _autoCompleteListTask.ContinueWith(
+                w =>
+                {
+                    _spelling.AddAutoCompleteWords(w.Result.Select(x => x.Word));
+                    w.Dispose();
+                },
+                    _autoCompleteCancellationTokenSource.Token,
+                    TaskContinuationOptions.NotOnCanceled,
+                    TaskScheduler.FromCurrentSynchronizationContext()
+                );
             //
             // spelling
             //
@@ -660,26 +666,20 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            if (e.Control && e.KeyCode == Keys.V)
+            // handle paste from clipboard (Ctrl+V, Shift+Ins)
+            if((e.Control && e.KeyCode == Keys.V) || (e.Shift && e.KeyCode == Keys.Insert))
             {
-                if (!Clipboard.ContainsText())
-                {
-                    e.Handled = true;
-                    return;
-                }
-                // remove image data from clipboard
-                var text = Clipboard.GetText();
-                // Clipboard.SetText throws exception when text is null or empty. See https://msdn.microsoft.com/en-us/library/ydby206k.aspx
-                if (!string.IsNullOrEmpty(text))
-                {
-                    Clipboard.SetText(text);
-                }
+                // insert only text
+                ((RichTextBox)sender).Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
+                e.Handled = true;
+                return;
             }
-            else if (e.Control && !e.Alt && e.KeyCode == Keys.Z)
+
+            if (e.Control && !e.Alt && e.KeyCode == Keys.Z)
             {
                 UndoHighlighting();
             }
-            else if (e.Control && !e.Alt && e.KeyCode == Keys.Space)
+            else if (e.Control && !e.Alt && e.KeyCode == Keys.Space && AppSettings.ProvideAutocompletion)
             {
                 UpdateOrShowAutoComplete(true);
                 e.Handled = true;
@@ -834,7 +834,12 @@ namespace GitUI.SpellChecker
                             throw;
                         }
 
-                        return subTasks.SelectMany(t => t.Result).Distinct().ToList();
+                        return subTasks.SelectMany(t =>
+                        {
+                            var res = t.Result;
+                            t.Dispose();
+                            return res;
+                        }).Distinct().ToList();
                     });
         }
 
@@ -907,7 +912,7 @@ namespace GitUI.SpellChecker
 
         private void UpdateOrShowAutoComplete (bool calledByUser)
         {
-            if (_autoCompleteListTask == null)
+            if (_autoCompleteListTask == null || !AppSettings.ProvideAutocompletion)
                 return;
 
             if (!_autoCompleteListTask.IsCompleted)
@@ -1038,6 +1043,10 @@ namespace GitUI.SpellChecker
                 _customUnderlines.Dispose();
                 if (components != null)
                     components.Dispose();
+                if (_autoCompleteListTask != null &&_autoCompleteListTask.Status == TaskStatus.Canceled)
+                {
+                    _autoCompleteListTask.Dispose();
+                }
             }
             base.Dispose(disposing);
         }

@@ -29,7 +29,15 @@
       <string>BuildServer.TeamCity.BuildServerUrl</string>
     </key>
     <value>
-      <string>teamcity.codebetter.com</string>
+      <string>https://teamcity.jetbrains.com</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>BuildServer.TeamCity.LogAsGuest</string>
+    </key>
+    <value>
+      <string>true</string>
     </value>
   </item>
   <item>
@@ -37,7 +45,7 @@
       <string>BuildServer.TeamCity.ProjectName</string>
     </key>
     <value>
-      <string>Git Extensions</string>
+      <string>cb_GitExtensions</string>
     </value>
   </item>
   <item>

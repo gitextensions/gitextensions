@@ -42,6 +42,7 @@
             this.showEntireFileButton = new System.Windows.Forms.ToolStripButton();
             this.showNonPrintChars = new System.Windows.Forms.ToolStripButton();
             this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
+            this.settingsButton = new System.Windows.Forms.ToolStripButton();
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.PictureBox = new System.Windows.Forms.PictureBox();
             this.contextMenu.SuspendLayout();
@@ -189,7 +190,8 @@
             this.showEntireFileButton,
             this.showNonPrintChars,
             this.ignoreWhiteSpaces,
-            this.encodingToolStripComboBox});
+            this.encodingToolStripComboBox,
+            this.settingsButton});
             this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.fileviewerToolbar.Location = new System.Drawing.Point(535, 0);
             this.fileviewerToolbar.Name = "fileviewerToolbar";
@@ -278,6 +280,16 @@
             this.ignoreWhiteSpaces.ToolTipText = "Ignore whitespaces";
             this.ignoreWhiteSpaces.Click += new System.EventHandler(this.ignoreWhiteSpaces_Click);
             // 
+            // settingsButton
+            // 
+            this.settingsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.settingsButton.Image = global::GitUI.Properties.Resources.Settings;
+            this.settingsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.settingsButton.Name = "settingsButton";
+            this.settingsButton.Size = new System.Drawing.Size(23, 20);
+            this.settingsButton.ToolTipText = "Settings";
+            this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
+            // 
             // encodingToolStripComboBox
             // 
             this.encodingToolStripComboBox.Name = "encodingToolStripComboBox";
@@ -339,6 +351,7 @@
         private System.Windows.Forms.ToolStripButton showNonPrintChars;
         private System.Windows.Forms.ToolStripMenuItem showNonprintableCharactersToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton ignoreWhiteSpaces;
+        private System.Windows.Forms.ToolStripButton settingsButton;
         private System.Windows.Forms.PictureBox PictureBox;
         private System.Windows.Forms.ToolStripComboBox encodingToolStripComboBox;
         private System.Windows.Forms.ToolStripMenuItem goToLineToolStripMenuItem;

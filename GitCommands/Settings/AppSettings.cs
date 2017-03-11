@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -27,13 +29,16 @@ namespace GitCommands
         public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
         public static string ProductVersion { get { return Application.ProductVersion; } }
-        public const string SettingsFileName = "GitExtensions.settings";
+        public static readonly string SettingsFileName = "GitExtensions.settings";
 
-        public static Lazy<string> ApplicationDataPath;
+        public static readonly Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
         private static RepoDistSettings _SettingsContainer;
         public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
+
+        public static readonly int BranchDropDownMinWidth = 300;
+        public static readonly int BranchDropDownMaxWidth = 600;
 
         static AppSettings()
         {
@@ -58,6 +63,30 @@ namespace GitCommands
             if (!File.Exists(SettingsFilePath))
             {
                 ImportFromRegistry();
+            }
+        }
+
+        public static bool AutoNormaliseBranchName
+        {
+            get { return GetBool("AutoNormaliseBranchName", true); }
+            set { SetBool("AutoNormaliseBranchName", value); }
+        }
+
+        public static string AutoNormaliseSymbol
+        {
+            // when persisted "" is treated as null, so use "+" instead
+            get
+            {
+                var value = GetString("AutoNormaliseSymbol", "_");
+                return (value == "+") ? "" : value;
+            }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    value = "+";
+                }
+                SetString("AutoNormaliseSymbol", value);
             }
         }
 
@@ -99,7 +128,7 @@ namespace GitCommands
             string debugPath = @"GitExtensions\bin\Debug";
             int len = debugPath.Length;
             var path = gitExtDir.Substring(gitExtDir.Length - len);
-            if (debugPath.Replace('\\', '/').Equals(path.Replace('\\', '/')))
+            if (debugPath.ToPosixPath().Equals(path.ToPosixPath()))
             {
                 string projectPath = gitExtDir.Substring(0, gitExtDir.Length - len);
                 return Path.Combine(projectPath, "Bin");
@@ -243,8 +272,8 @@ namespace GitCommands
 
         public static bool AddNewlineToCommitMessageWhenMissing
         {
-            get { return GetBool ("addnewlinetocommitmessagewhenmissing", true); }
-            set { SetBool ("addnewlinetocommitmessagewhenmissing", value); }
+            get { return GetBool("addnewlinetocommitmessagewhenmissing", true); }
+            set { SetBool("addnewlinetocommitmessagewhenmissing", value); }
         }
 
         public static string LastCommitMessage
@@ -275,6 +304,12 @@ namespace GitCommands
         {
             get { return GetBool("showresetallchanges", true); }
             set { SetBool("showresetallchanges", value); }
+        }
+
+        public static bool ProvideAutocompletion
+        {
+            get { return GetBool("provideautocompletion", true); }
+            set { SetBool("provideautocompletion", value); }
         }
 
         public static string TruncatePathMethod
@@ -356,24 +391,25 @@ namespace GitCommands
 
         private static readonly Dictionary<string, string> _languageCodes =
             new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
-        {
-            { "English", "en" },
-            { "Czech", "cs" },
-            { "French", "fr" },
-            { "German", "de" },
-            { "Indonesian", "id" },
-            { "Italian", "it" },
-            { "Japanese", "ja" },
-            { "Korean", "ko" },
-            { "Polish", "pl" },
-            { "Russian", "ru" },
-            { "Portuguese (Brazil)", "pt_BR" },
-            { "Portuguese (Portugal)", "pt_PT" },
-            { "Romanian", "ro" },
-            { "Simplified Chinese", "zh_CN" },
-            { "Spanish", "es" },
-            { "Traditional Chinese", "zh_TW" }
-        };
+            {
+                {"Czech", "cs"},
+                {"Dutch", "nl"},
+                {"English", "en"},
+                {"French", "fr"},
+                {"German", "de"},
+                {"Indonesian", "id"},
+                {"Italian", "it"},
+                {"Japanese", "ja"},
+                {"Korean", "ko"},
+                {"Polish", "pl"},
+                {"Portuguese (Brazil)", "pt-BR"},
+                {"Portuguese (Portugal)", "pt-PT"},
+                {"Romanian", "ro"},
+                {"Russian", "ru"},
+                {"Simplified Chinese", "zh-CN"},
+                {"Spanish", "es"},
+                {"Traditional Chinese", "zh-TW"}
+            };
 
         public static string CurrentLanguageCode
         {
@@ -388,7 +424,19 @@ namespace GitCommands
 
         public static CultureInfo CurrentCultureInfo
         {
-            get { return CultureInfo.GetCultureInfo(CurrentLanguageCode); }
+            get
+            {
+                try
+                {
+                    return CultureInfo.GetCultureInfo(CurrentLanguageCode);
+
+                }
+                catch (System.Globalization.CultureNotFoundException)
+                {
+                    Debug.WriteLine("Culture {0} not found", CurrentLanguageCode);
+                    return CultureInfo.GetCultureInfo("en");
+                }
+            }
         }
 
         public static bool UserProfileHomeDir
@@ -535,10 +583,10 @@ namespace GitCommands
             set { SetEnum("FormPullAction", value); }
         }
 
-        public static bool DonSetAsLastPullAction
+        public static bool SetNextPullActionAsDefault
         {
-            get { return GetBool("DonSetAsLastPullAction", true); }
-            set { SetBool("DonSetAsLastPullAction", value); }
+            get { return !GetBool("DonSetAsLastPullAction", true); }
+            set { SetBool("DonSetAsLastPullAction", !value); }
         }
 
         public static string SmtpServer
@@ -563,6 +611,12 @@ namespace GitCommands
         {
             get { return GetBool("autostash", false); }
             set { SetBool("autostash", value); }
+        }
+
+        public static bool RebaseAutoStash
+        {
+            get { return GetBool("RebaseAutostash", false); }
+            set { SetBool("RebaseAutostash", value); }
         }
 
         public static LocalChangesAction CheckoutBranchAction
@@ -715,6 +769,12 @@ namespace GitCommands
             set { SetBool("showindicatorformultilinemessage", value); }
         }
 
+        public static bool ShowAnnotatedTagsMessages
+        {
+            get { return GetBool("showannotatedtagsmessages", true); }
+            set { SetBool("showannotatedtagsmessages", value); }
+        }
+
         public static bool ShowMergeCommits
         {
             get { return GetBool("showmergecommits", true); }
@@ -725,6 +785,12 @@ namespace GitCommands
         {
             get { return GetBool("showtags", true); }
             set { SetBool("showtags", value); }
+        }
+
+        public static bool ShowIds
+        {
+            get { return GetBool("showids", false); }
+            set { SetBool("showids", value); }
         }
 
         public static int RevisionGraphLayout
@@ -751,10 +817,22 @@ namespace GitCommands
             set { SetBool("showcurrentbranchonly", value); }
         }
 
+        public static bool ShowSimplifyByDecoration
+        {
+            get { return GetBool("showsimplifybydecoration", false); }
+            set { SetBool("showsimplifybydecoration", value); }
+        }
+
         public static bool BranchFilterEnabled
         {
             get { return GetBool("branchfilterenabled", false); }
             set { SetBool("branchfilterenabled", value); }
+        }
+
+        public static bool ShowFirstParent
+        {
+            get { return GetBool("showfirstparent", false); }
+            set { SetBool("showfirstparent", value); }
         }
 
         public static int CommitDialogSplitter
@@ -818,7 +896,7 @@ namespace GitCommands
             set { SetBool("showdiffforallparents", value); }
         }
 
-		public static string RecentWorkingDir
+        public static string RecentWorkingDir
         {
             get { return GetString("RecentWorkingDir", null); }
             set { SetString("RecentWorkingDir", value); }
@@ -834,20 +912,20 @@ namespace GitCommands
 
         public static string Plink
         {
-            get { return GetString("plink", ReadStringRegValue("plink", "")); }
-            set { SetString("plink", value); }
+            get { return GetString("plink", Environment.GetEnvironmentVariable("GITEXT_PLINK") ?? ReadStringRegValue("plink", "")); }
+            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PLINK")) SetString("plink", value); }
         }
         public static string Puttygen
         {
-            get { return GetString("puttygen", ReadStringRegValue("puttygen", "")); }
-            set { SetString("puttygen", value); }
+            get { return GetString("puttygen", Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN") ?? ReadStringRegValue("puttygen", "")); }
+            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PUTTYGEN")) SetString("puttygen", value); }
         }
 
         /// <summary>Gets the path to Pageant (SSH auth agent).</summary>
         public static string Pageant
         {
-            get { return GetString("pageant", ReadStringRegValue("pageant", "")); }
-            set { SetString("pageant", value); }
+            get { return GetString("pageant", Environment.GetEnvironmentVariable("GITEXT_PAGEANT") ?? ReadStringRegValue("pageant", "")); }
+            set { if (value != Environment.GetEnvironmentVariable("GITEXT_PAGEANT")) SetString("pageant", value); }
         }
 
         public static bool AutoStartPageant
@@ -997,8 +1075,72 @@ namespace GitCommands
 
         public static bool RememberIgnoreWhiteSpacePreference
         {
-            get { return GetBool("rememberIgnoreWhiteSpacePreference", false); }
+            get { return GetBool("rememberIgnoreWhiteSpacePreference", true); }
             set { SetBool("rememberIgnoreWhiteSpacePreference", value); }
+        }
+
+        public static bool ShowNonPrintingChars
+        {
+            get
+            {
+                return RememberShowNonPrintingCharsPreference && GetBool("ShowNonPrintingChars", false);
+            }
+            set
+            {
+                if (RememberShowNonPrintingCharsPreference)
+                {
+                    SetBool("ShowNonPrintingChars", value);
+                }
+            }
+        }
+
+        public static bool RememberShowNonPrintingCharsPreference
+        {
+            get { return GetBool("RememberShowNonPrintableCharsPreference", false); }
+            set { SetBool("RememberShowNonPrintableCharsPreference", value); }
+        }
+
+        public static bool ShowEntireFile
+        {
+            get
+            {
+                return RememberShowEntireFilePreference && GetBool("ShowEntireFile", false);
+            }
+            set
+            {
+                if (RememberShowEntireFilePreference)
+                {
+                    SetBool("ShowEntireFile", value);
+                }
+            }
+        }
+
+        public static bool RememberShowEntireFilePreference
+        {
+            get { return GetBool("RememberShowEntireFilePreference", false); }
+            set { SetBool("RememberShowEntireFilePreference", value); }
+        }
+
+        public static int NumberOfContextLines
+        {
+            get
+            {
+                const int defaultValue = 3;
+                return RememberNumberOfContextLines ? GetInt("NumberOfContextLines", defaultValue) : defaultValue;
+            }
+            set
+            {
+                if (RememberNumberOfContextLines)
+                {
+                    SetInt("NumberOfContextLines", value);
+                }
+            }
+        }
+
+        public static bool RememberNumberOfContextLines
+        {
+            get { return GetBool("RememberNumberOfContextLines", false); }
+            set { SetBool("RememberNumberOfContextLines", value); }
         }
 
         public static string GetDictionaryDir()
@@ -1170,6 +1312,12 @@ namespace GitCommands
         {
             get { return GetBool("CheckForReleaseCandidates", false); }
             set { SetBool("CheckForReleaseCandidates", value); }
+        }
+
+        public static bool OmitUninterestingDiff
+        {
+            get { return GetBool("OmitUninterestingDiff", false); }
+            set { SetBool("OmitUninterestingDiff", value); }
         }
 
         public static bool UseConsoleEmulatorForCommands

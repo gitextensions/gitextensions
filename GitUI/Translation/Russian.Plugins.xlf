@@ -1,12 +1,14 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
+<?xml version="1.0" ?><xliff GitExVersion="2.49RC2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile SubModules</source>
+        <target>Авто скомпилировать субмодули</target>
         
       </trans-unit>
       <trans-unit id="MsBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
+        <target>msbuild.exe аргументы</target>
         
       </trans-unit>
       <trans-unit id="MsBuildEnabled.Caption">
@@ -16,80 +18,92 @@
       </trans-unit>
       <trans-unit id="MsBuildPath.Caption">
         <source>Path to msbuild.exe</source>
+        <target>Путь к msbuild.exe</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
+        <target>Вы хотите собрать {0}?
+
+{1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
+        <target>Пожалуйста введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en">
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="AutoRefresh.Caption">
         <source>Refresh view after fetch</source>
+        <target>Обновить вид после получения</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
+        <target>Периодически забирать в фоне</target>
         
       </trans-unit>
       <trans-unit id="FetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
+        <target>Забрать все субмодули</target>
         
       </trans-unit>
       <trans-unit id="FetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target>Забирать каждый (секунд) - установите в 0 чтобы отключить</target>
         
       </trans-unit>
       <trans-unit id="GitCommand.Caption">
         <source>Arguments of git command to run</source>
+        <target>Аргументы команды git для запуска</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en">
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        
-      </trans-unit>
-      <trans-unit id="Remote.Text">
-        <source>origin</source>
+        <target>Создать локальные отслеживающие ветки</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
+        <target>Создать локальные отслеживающие ветки</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
+        <target>Внешний репозиторий для которого создать отслеживающую ветку</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en">
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
+        <target>Создать локальные отслеживающие ветки</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en">
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
+        <target>Удалить устаревшие ветки</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
+        <target>Последний автор</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -104,14 +118,81 @@
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
+        <target>Удалить внешние ветки из</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
+        <target>Последнее сообщение</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
+        <target>Выбрать ветки</target>
+        
+      </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete {0} selected branches?</source>
+        <target>Вы уверены, что хотите {0} удалить выбранные ветки?</target>
+        
+      </trans-unit>
+      <trans-unit id="_branchesSelected.Text">
+        <source>{0}/{1} branches selected.</source>
+        <target>{0}/{1} веток выбрано.</target>
+        
+      </trans-unit>
+      <trans-unit id="_cancel.Text">
+        <source>Cancel</source>
+        <target>Отмена</target>
+        
+      </trans-unit>
+      <trans-unit id="_chooseBrancesToDelete.Text">
+        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
+        <target>Выберите ветки которые хотите удалить. Только полностью слитые ветки в '{0}' будут удалены. </target>
+        
+      </trans-unit>
+      <trans-unit id="_dangerousAction.Text">
+        <source>DANGEROUS ACTION!
+Branches will be deleted on the remote '{0}'. This can not be undone.
+Are you sure you want to continue?</source>
+        <target>ОПАСНОЕ ДЕЙСТВИЕ!
+Ветки будут удалены из внешнего репозитория '{0}'. Это действие не может быть отменено.
+Вы уверены, что хотите продолжить?</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
+        <source>Delete</source>
+        <target>Удалить</target>
+        
+      </trans-unit>
+      <trans-unit id="_deletingBranches.Text">
+        <source>Deleting branches...</source>
+        <target>Удаление веток...</target>
+        
+      </trans-unit>
+      <trans-unit id="_deletingUnmergedBranches.Text">
+        <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target>Удаление не слитых веток привет к висячим коммитам. Используйте с осторожностью!</target>
+        
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target>Загрузка...</target>
+        
+      </trans-unit>
+      <trans-unit id="_pressToSearch.Text">
+        <source>Press '{0}' to search for branches to delete.</source>
+        <target>Нажмите '{0}' чтобы найти ветки для удаления.</target>
+        
+      </trans-unit>
+      <trans-unit id="_searchBranches.Text">
+        <source>Search branches</source>
+        <target>Выбрать ветки</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectBranchesToDelete.Text">
+        <source>Select branches to delete using checkboxes in '{0}' column.</source>
+        <target>Установить флажок в колонке '{0}' чтобы удалить ветку.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -121,6 +202,7 @@
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
+        <target>Последняя активность</target>
         
       </trans-unit>
       <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
@@ -130,14 +212,17 @@
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
+        <target>Включить не слитые ветки</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
+        <target>Удалить ветки старше чем x дней</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
+        <target>Удалить ветки полностью слитые в ветку</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -145,40 +230,52 @@
         <target>Имя</target>
         
       </trans-unit>
-      <trans-unit id="regexFilter.Text">
-        <source>/(feature|develop)/</source>
+      <trans-unit id="regexDoesNotMatch.Text">
+        <source>Does not match</source>
+        <target>Не совпадает</target>
         
       </trans-unit>
-      <trans-unit id="remote.Text">
-        <source>origin</source>
+      <trans-unit id="regexFilter.Text">
+        <source>/(feature|develop)/</source>
+        <target>/(feature|develop)/</target>
+        
+      </trans-unit>
+      <trans-unit id="useRegexCaseInsensitive.Text">
+        <source>Case insensitive</source>
+        <target>Без учета регистра</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
+        <target>Использовать regex чтобы отфильтровать ветки</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en">
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="DaysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
+        <target>Удалить устаревшие ветки старше чем (дней)</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
+        <target>Удалить устаревшие ветки</target>
         
       </trans-unit>
       <trans-unit id="MergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
+        <target>Ветка в которую все ветки должны быть слиты</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en">
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
+        <target>Найти большие файлы</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -188,9 +285,20 @@
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
+        <target>Сжатый размер</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target>Удалить</target>
+        
+      </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete the selected files?</source>
+        <target>Вы уверены, что хотите удалить выбранные файлы?</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
         <target>Удалить</target>
         
@@ -207,10 +315,12 @@
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
+        <target>Сбросте локальные изменения перед удалением. Выберите файлы для удаления. Принудительно заменить данные в удалённом репозитории после отправки.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
+        <target>Дата последнего коммита</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
@@ -220,27 +330,31 @@
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
         <source>SHA</source>
+        <target>SHA</target>
         
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
+        <target>Размер</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en">
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>Find large files</source>
+        <target>Найти большие файлы</target>
         
       </trans-unit>
       <trans-unit id="SizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
+        <target>Найти большие файлы больше чем (Мб)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en">
+  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Change Submitted</source>
@@ -254,12 +368,12 @@
       </trans-unit>
       <trans-unit id="labelSubmitted.Text">
         <source>Your change has been submitted for review at the following location:</source>
-        <target>Ваши изменения были отправлены на рассмотрение по следующему адресу:</target>
+        <target>Ваши изменения были отправлены на рецензирование по следующему адресу:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en">
+  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Download Gerrit Change</source>
@@ -323,7 +437,7 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en">
+  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Publish Gerrit Change</source>
@@ -342,7 +456,7 @@
       </trans-unit>
       <trans-unit id="PublishDraft.Text">
         <source>Submit review as draft</source>
-        <target>Отправить ревью как черновик</target>
+        <target>Отправить рецензию как черновик</target>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -382,7 +496,7 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en">
+  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Edit .gitreview</source>
@@ -397,13 +511,13 @@
       <trans-unit id="_cannotAccessGitreview.Text">
         <source>Failed to save .gitreview.
 Check if file is accessible.</source>
-        <target>Неудалось сохранить .gitreview.
+        <target>Не удалось сохранить .gitreview.
 Проверьте, что файл доступен.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitreviewCaption.Text">
         <source>Failed to save .gitreview</source>
-        <target>Неудалось сохранить .gitreview</target>
+        <target>Не удалось сохранить .gitreview</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
@@ -460,14 +574,16 @@ defaultrebase=0</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en">
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
+        <target>Статистика</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
+        <target>Загрузка..</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
@@ -492,46 +608,116 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
+        <target>Всего коммитов</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
+        <target>Всего строк кода</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
+        <target>Всего строк кода</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
+        <target>Всего строк кода</target>
+        
+      </trans-unit>
+      <trans-unit id="_blankLinesP.Text">
+        <source>{0} Blank lines ({1})</source>
+        <target>{0} Пустых строк ({1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_commentLinesP.Text">
+        <source>{0} Comment lines ({1})</source>
+        <target>{0} Строк с комментариями ({1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_commits.Text">
+        <source>{0} Commits</source>
+        <target>{0} Коммитов</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitsBy.Text">
+        <source>{0} Commits by {1}</source>
+        <target>{0} Коммитов {1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCode.Text">
+        <source>{0} Lines of code</source>
+        <target>{0} Строк кода</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCodeInFiles.Text">
+        <source>{0} Lines of code in {1} files ({2})</source>
+        <target>{0} Строк кода в {1} {1:файл|файла|файлов} ({2})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCodeP.Text">
+        <source>{0} Lines of code ({1})</source>
+        <target>{0} Строк кода ({1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfDesignerFilesP.Text">
+        <source>{0} Lines in designer files ({1})</source>
+        <target>{0} Строк в файлах дизайнера ({1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfProductionCodeP.Text">
+        <source>{0} Lines of production code ({1})</source>
+        <target>{0} Строк производственного кода ({1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfTestCode.Text">
+        <source>{0} Lines of test code</source>
+        <target>{0} Строк тестового кода</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfTestCodeP.Text">
+        <source>{0} Lines of test code ({1})</source>
+        <target>{0} Строк тестового кода ({1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
+        <target>Срок кода на язык</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
+        <target>Коммитов на разработчика</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
+        <target>Строк кода на тип</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
-        <source>Lines of testcode</source>
+        <source>Lines of test code</source>
+        <target>Строк тестового кода</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en">
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
+        <target>Воздействие</target>
+        
+      </trans-unit>
+      <trans-unit id="_authorCommits.Text">
+        <source>{0} ({1} Commits, {2} Changed Lines)</source>
+        <target>{0} ({1} коммитов, {2} измененных строк)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
+        <target>Включая субмодули</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
@@ -541,7 +727,7 @@ defaultrebase=0</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en">
+  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Gerrit Plugin</source>
@@ -564,11 +750,11 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en">
+  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>Gerrit Code Review</source>
-        <target>Проверки кода Gerrit</target>
+        <target>Рецензирование кода в Gerrit</target>
         
       </trans-unit>
       <trans-unit id="_downloadGerritChange.Text">
@@ -608,7 +794,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en">
+  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="ru">
     <body>
       <trans-unit id="_settingsError.Text">
         <source>Error loading .gitreview file.</source>
@@ -642,10 +828,26 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowForm" source-language="en">
+  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
+        <target>GitFlow</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitFlowTooltip.Text">
+        <source>A good branch model for your project with Git...</source>
+        <target>Хороший модель ветвления для проекта с Git ...</target>
+        
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target>Загрузка...</target>
+        
+      </trans-unit>
+      <trans-unit id="_noBranchExist.Text">
+        <source>No {0} branches exist.</source>
+        <target>Не существует {0} веток.</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
@@ -655,18 +857,22 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="btnCreateBranch.Text">
         <source>Start!</source>
+        <target>Начать!</target>
         
       </trans-unit>
       <trans-unit id="btnFinish.Text">
         <source>Finish</source>
+        <target>Завершить</target>
         
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
+        <target>Инициализировать GitFlow</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
         <source>Publish</source>
+        <target>Опубликовать</target>
         
       </trans-unit>
       <trans-unit id="btnPull.Text">
@@ -676,122 +882,212 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
+        <target>основан на:</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
+        <target>Управление существующими ветками:</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
+        <target>Начальная ветка:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>branch:</source>
+        <target>ветка:</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Expected name:</source>
+        <target>Ожидаемое имя:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
+        <target>команда:</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
+        <target>Репозиторий из которого получить:</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
         <source>HEAD:</source>
+        <target>HEAD:</target>
         
       </trans-unit>
       <trans-unit id="lblHead.Text">
         <source>ref/...</source>
+        <target>ref/...</target>
         
       </trans-unit>
       <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
+        <target>[префикс]/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
+        <target>О GitFlow</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
+        <target>Результат запуска команды git flow</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en">
+  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>GitFlow</source>
+        <target>GitFlow</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="Github3Plugin" source-language="en">
+  <file datatype="plaintext" original="Github3Plugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>Github</source>
+        <target>Github</target>
+        
+      </trans-unit>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        <target>OAuth токен</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en">
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
+        <target>Граф воздействия</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="CodeFiles.Caption">
         <source>Code files</source>
+        <target>Файлов с кодом</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
+        <target>Статистика</target>
         
       </trans-unit>
       <trans-unit id="IgnoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
+        <target>Игнорируемые каталоги (заканчивающиеся на)</target>
         
       </trans-unit>
       <trans-unit id="IgnoreSubmodules.Caption">
         <source>Ignore submodules</source>
+        <target>Исключить субмодули</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en">
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="GourceArguments.Caption">
         <source>Arguments</source>
+        <target>Аргументы</target>
         
       </trans-unit>
       <trans-unit id="GourcePath.Caption">
-        <source>Path to &quot;gource&quot;</source>
+        <source>Path to Gource</source>
+        <target>Путь к Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="_bytesDownloaded.Text">
+        <source>{0} bytes downloaded.</source>
+        <target>{0} байт загружено.</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotFindGource.Text">
+        <source>Cannot find Gource.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Не могу найти Gource.
+Пожалуйста загрузите Gource и установите путь в окне настроек плагинов.</target>
+        
+      </trans-unit>
+      <trans-unit id="_currentDirectoryIsNotValidGit.Text">
+        <source>The current directory is not a valid git repository.
+
+Gource can be only be started from a valid git repository.</source>
+        <target>Текущий каталог не является допустимым репозиторием git.
+
+Gource может быть запущен только из репозитория git.</target>
+        
+      </trans-unit>
+      <trans-unit id="_doYouWantDownloadGource.Text">
+        <source>There is no path to Gource configured.
+
+Do you want to automatically download Gource?</source>
+        <target>Не указан путь для Gource.
+
+Хотите скачать Gource автоматически?</target>
+        
+      </trans-unit>
+      <trans-unit id="_download.Text">
+        <source>Download</source>
+        <target>Загрузить</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadingFailed.Text">
+        <source>Downloading failed.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Скачивание не удалось.
+Пожалуйста скачайте Gource и установите путь в окне настроек плагинов.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gource.Text">
+        <source>Gource</source>
+        <target>Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="_gourceDownloadedAndUnzipped.Text">
+        <source>Gource has been downloaded and unzipped.</source>
+        <target>Gource был загружен и распакован.</target>
+        
+      </trans-unit>
+      <trans-unit id="_resetConfigPath.Text">
+        <source>Cannot find Gource in the configured path: {0}.
+
+Do you want to reset the configured path?</source>
+        <target>Не удалось найти настроенный путь для Gource: {0}
+
+Хотите сбросить настроенный путь?</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourceStart" source-language="en">
+  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
+        <target>Аргументы</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
@@ -810,7 +1106,8 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Path to gource</source>
+        <source>Path to Gource</source>
+        <target>Путь к Gource</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -819,75 +1116,18 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
-        <source>gource project</source>
+        <source>Gource project</source>
+        <target>Gource проект</target>
         
       </trans-unit>
-      <trans-unit id="textBox1.Text">
-        <source>  -h, --help                       Help
-
-  -WIDTHxHEIGHT                    Set window size
-  -f                               Fullscreen
-
-  -p, --start-position POSITION    Begin at some position in the log (0.0-1.0)
-      --stop-position  POSITION    Stop at some position
-      --stop-on-idle               Stop on break in activity
-      --stop-at-end                Stop at end of the log
-      --loop                       Loop at the end of the log
-
-  -a, --auto-skip-seconds SECONDS  Auto skip to next entry if nothing happens
-                                   for a number of seconds (default: 3)
-  -s, --seconds-per-day SECONDS    Speed in seconds per day (default: 4)
-      --realtime                   Realtime playback speed
-  -i, --file-idle-time SECONDS     Time files remain idle (default: 60)
-  -e, --elasticity FLOAT           Elasticity of nodes
-  -b, --background FFFFFF          Background colour in hex
-
-  --user-image-dir DIRECTORY       Dir containing images to use as avatars
-  --default-user-image IMAGE       Default user image file
-  --colour-images                  Colourize user images
-
-  --date-format FORMAT             Specify display date string (strftime format)
-  --log-format  FORMAT             Specify format of log (git,cvs,hg,bzr,custom)
-  --git-branch                     Get the git log of a particular branch
-  --git-log-command                Show git log command used by gource
-  --cvs-exp-command                Show cvs-exp.pl log command used by gource
-  --hg-log-command                 Show hg log (Mercurial) command used by gource
-  --bzr-log-command                Show bzr log (Bazaar) command used by gource
-
-  --multi-sampling                 Enable multi-sampling
-  --crop AXIS                      Crop view on an axis (vertical,horizontal)
-
-  --bloom-multiplier               Adjust the amount of bloom (default: 1.0)
-  --bloom-intensity                Adjust the intensity of the bloom (default: 0.75)
-
-  --disable-auto-skip              Disable auto skipping
-  --disable-progress               Disable the progress bar
-  --disable-bloom                  Disable bloom effect
-
-  --hide DISPLAY_ELEMENT           date,users,files,tree,usernames,filenames,dirnames
-
-  --max-files NUMBER               Max number of active files (default: 1000)
-  --max-file-lag SECONDS           Max time files of a commit can take to appear
-
-  --max-user-speed UNITS           Speed users can travel per second (default: 500)
-
-  --user-friction SECONDS          Time users come to a complete hault (default: 0.67)
-  --user-scale SCALE               Change scale of users (default: 1.0)
-
-  --camera-mode MODE               Camera mode (overview,track)
-
-  --follow-user USER               Camera will automatically follow this user
-  --highlight-user USER            Highlight the names of a particular user
-  --highlight-all-users            Highlight the names of all users
-  --file-filter REGEX              Ignore files matching this regexe
-
-  --output-ppm-stream FILE         Write frames as PPM to a file ('-' for STDOUT)
-  --output-framerate FPS           Framerate of output (25,30,60)</source>
+      <trans-unit id="linkLabel2.Text">
+        <source>Gource command line</source>
+        <target>Командная строка Gource</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en">
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="ru">
     <body>
       <trans-unit id="label1.Text">
         <source>Project name</source>
@@ -901,7 +1141,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
@@ -945,43 +1185,75 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en">
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
         <target>Переключение прокси</target>
         
       </trans-unit>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
+        <target>HTTP прокси</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
+        <target>HTTP прокси порт</target>
+        
+      </trans-unit>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
+        <target>Пароль</target>
+        
+      </trans-unit>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>Имя пользователя</target>
+        
+      </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
+        <target>Генератор Release Notes</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitLogFrom.Text">
+        <source>Commit log from '{0}' to '{1}' ({2}):</source>
+        <target>Закоммитить лог из '{0}' в '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
+        <target>как HTML таблица</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
+        <target>как текстовая таблица (пробелы)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
+        <target>как текстовая таблица (табы)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
+        <target>исходный вывод</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
+        <target>Генерировать</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
+        <target>Результат</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
@@ -991,49 +1263,60 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
+        <target>Выражение коммита &quot;To&quot; (включая):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
+        <target>разделить колонки пробелами</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
-which can be pasted to programs like MS Word or LibreOffice Writer.
-</source>
+which can be pasted to programs like MS Word or LibreOffice Writer.</source>
+        <target>Буфер обмена будет содержать код HTML (голый текст) и формат HTML, который можно вставить в программы как MS Word или LibreOffice Writer.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>Выражение коммита &quot;From&quot; (исключая):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
+        <target>аргументы git log:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
+        <target>{0} = из; {1} = в</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
+        <target>Сортировка: последние ревизии указаны сверху.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
+        <target>Кол-во ревизий</target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
+        <target>(Выражения коммита могут быть хешами,
+именами веток, тегами)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
+        <target>как</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
+        <target>отдельные колонки с табами</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
@@ -1043,23 +1326,45 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
+        <target>Генератор Release Notes</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="StashPlugin" source-language="en">
+  <file datatype="plaintext" original="StashPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
         <source>Create Stash Pull Request</source>
+        <target>Создать запрос на слияние в Stash</target>
+        
+      </trans-unit>
+      <trans-unit id="StashBaseUrl.Caption">
+        <source>Specify the base URL to Stash</source>
+        <target>Укажите основной URL к Stash</target>
+        
+      </trans-unit>
+      <trans-unit id="StashDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>Отключить верификацию SSL</target>
+        
+      </trans-unit>
+      <trans-unit id="StashPassword.Caption">
+        <source>Stash Password</source>
+        <target>Пароль Stash</target>
+        
+      </trans-unit>
+      <trans-unit id="StashUsername.Caption">
+        <source>Stash Username</source>
+        <target>Имя пользователя Stash</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="StashPullRequestForm" source-language="en">
+  <file datatype="plaintext" original="StashPullRequestForm" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Create Pull Request</source>
@@ -1071,8 +1376,31 @@ branch names, tag names)</source>
         <target>Имя</target>
         
       </trans-unit>
+      <trans-unit id="_commited.Text">
+        <source>{0} committed
+{1}</source>
+        <target>{0} автор коммита
+{1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Ошибка</target>
+        
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        <target>Завершено успешно</target>
+        
+      </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInStash.Text">
+        <source>Your repository is not hosted in Stash.</source>
+        <target>Ваш репозиторий не находится в Stash.</target>
+        
+      </trans-unit>
       <trans-unit id="btnApprove.Text">
         <source>Approve</source>
+        <target>Подтвержден</target>
         
       </trans-unit>
       <trans-unit id="btnCreate.Text">
@@ -1087,30 +1415,37 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Source</source>
+        <target>Источник</target>
         
       </trans-unit>
       <trans-unit id="groupBox2.Text">
         <source>Target</source>
+        <target>Назначение</target>
         
       </trans-unit>
       <trans-unit id="groupBox3.Text">
         <source>Pull Request Info</source>
+        <target>Информация запроса на слияние</target>
         
       </trans-unit>
       <trans-unit id="groupBox4.Text">
         <source>Source</source>
+        <target>Источник</target>
         
       </trans-unit>
       <trans-unit id="groupBox5.Text">
         <source>Target</source>
+        <target>Назначение</target>
         
       </trans-unit>
       <trans-unit id="groupBox6.Text">
         <source>Pull Request Info</source>
+        <target>Информация запроса на слияние</target>
         
       </trans-unit>
       <trans-unit id="groupBox9.Text">
         <source>Information</source>
+        <target>Информация</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1120,6 +1455,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Reviewer (approved)</source>
+        <target>Рецензент (подтвержден)</target>
         
       </trans-unit>
       <trans-unit id="label12.Text">
@@ -1139,6 +1475,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label16.Text">
         <source>State</source>
+        <target>Состояние</target>
         
       </trans-unit>
       <trans-unit id="label17.Text">
@@ -1188,6 +1525,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="lblReviewers.Text">
         <source>Reviewer(s)</source>
+        <target>Рецензент(ы)</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
@@ -1202,57 +1540,25 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en">
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        <target>Имя проекта</target>
+      <trans-unit id="CheckBoxLogAsGuest.Text">
+        <source>Log as guest to display the build report</source>
+        <target>Залогиниться как гость для отображения отчета сборки</target>
         
       </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>TeamCity server URL</source>
-        <target>URL сервера TeamCity</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBuildFilter.Text">
-        <source>Build Id Filter</source>
-        <target>Фильтр Id сборки</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBuildIdFilter.Text">
-        <source>Regexp</source>
-        <target>Regexp</target>
-        
-      </trans-unit>
-      <trans-unit id="labelProjectNameComment.Text">
-        <source>Several names splitted by | char</source>
-        <target>Несколько имен разделенных символом |</target>
+      <trans-unit id="labelRegexError.Text">
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <target>Регулярное выражение &quot;Build Id Filter&quot; недопустимо и не будет сохранено!</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en">
+  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Team collection name</source>
-        <target>Имя коллекции команды</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>Tfs server (Name or URL)</source>
-        <target>Tfs  сервер (имя или URL)</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Project name</source>
-        <target>Имя проекта</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Build definition name
-(use first found if left empty)</source>
-        <target>Имя определения сборки
-(используется первый найденный если пустой)</target>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>Регулярное выражение &quot;Build definition name&quot; недопустимо и не будет сохранено!</target>
         
       </trans-unit>
     </body>

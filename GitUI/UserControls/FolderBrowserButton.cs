@@ -20,8 +20,8 @@ namespace GitUI.UserControls
         public Control PathShowingControl { get; set; }
 
         /// <summary>
-        /// Opens a a FolderBrowserDialog with the path in "getter" preselected and
-        /// if the DialogResult.OK is returned uses "setter" to set the path
+        /// Opens a a folder picker dialog with the path in "getter" preselected and
+        /// if OK is returned uses "setter" to set the path
         /// </summary>
         /// <param name="getter"></param>
         /// <param name="setter"></param>
@@ -37,18 +37,15 @@ namespace GitUI.UserControls
                 // since the DirectoryInfo stuff is for convenience we swallow exceptions
             }
 
-            using (var dialog = new FolderBrowserDialog
+            // if we do not use the DirectoryInfo then a path with slashes instead of backslashes won't work
+            if (directoryInfoPath == null) directoryInfoPath = getter();
+
+            // TODO: do we need ParentForm or is "this" ok?
+            var userSelectedPath = OsShellUtil.PickFolder(ParentForm, directoryInfoPath);
+
+            if (userSelectedPath != null)
             {
-                RootFolder = Environment.SpecialFolder.Desktop,
-                // if we do not use the DirectoryInfo then a path with slashes instead of backslashes won't work
-                SelectedPath = directoryInfoPath ?? getter()
-            })
-            {
-                // TODO: do we need ParentForm or is "this" ok?
-                if (dialog.ShowDialog(ParentForm) == DialogResult.OK)
-                {
-                    setter(dialog.SelectedPath);
-                }
+                setter(userSelectedPath);
             }
         }
 

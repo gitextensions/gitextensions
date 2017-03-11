@@ -4,9 +4,11 @@ namespace GitUIPluginInterfaces
 {
     public interface IGitPlugin
     {
+        string Name { get; }
+
         string Description { get; }
 
-        ISettingsSource Settings { get; set; }
+        IGitPluginSettingsContainer SettingsContainer { get; set; }
 
         IEnumerable<ISetting> GetSettings();
 

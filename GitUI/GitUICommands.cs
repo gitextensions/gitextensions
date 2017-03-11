@@ -428,7 +428,7 @@ namespace GitUI
         /// </summary>
         /// <param name="requiresValidWorkingDir">If action requires valid working directory</param>
         /// <param name="owner">Owner window</param>
-        /// <param name="changesRepo">if successfuly done action changes repo state</param>
+        /// <param name="changesRepo">if successfully done action changes repo state</param>
         /// <param name="preEvent">Event invoked before performing action</param>
         /// <param name="postEvent">Event invoked after performing action</param>
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
@@ -1907,9 +1907,6 @@ namespace GitUI
                 case "gitignore":
                     StartEditGitIgnoreDialog();
                     return;
-                case "installcredhelper":
-                    InstallCredHelper();
-                    return;
                 case "init":        // [path]
                     RunInitCommand(args);
                     return;
@@ -1981,19 +1978,6 @@ namespace GitUI
             Application.Run(frmCmdLine);
         }
 
-        private void InstallCredHelper()
-        {
-            string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
-            if (!File.Exists(gcsFileName))
-            {
-                return;
-            }
-
-            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
-            configFileGlobalSettings.SetValue("credential.helper", "!\"" + gcsFileName + "\"");
-            configFileGlobalSettings.Save();
-        }
-
         private void Uninstall()
         {
             var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
@@ -2004,11 +1988,6 @@ namespace GitUI
                 configFileGlobalSettings.SetValue("core.editor", "");
             }
 
-            var credentialHelper = configFileGlobalSettings.GetValue("credential.helper");
-            if (credentialHelper.ToLowerInvariant().Contains(AppSettings.GetInstallDir().ToLowerInvariant()))
-            {
-                configFileGlobalSettings.SetValue("credential.helper", "");
-            }
             configFileGlobalSettings.Save();
         }
 
@@ -2093,7 +2072,7 @@ namespace GitUI
             //Remove working directory from filename. This is to prevent filenames that are too
             //long while there is room left when the workingdir was not in the path.
             string fileHistoryFileName = String.IsNullOrEmpty(Module.WorkingDir) ? args[2] :
-                args[2].Replace(Module.WorkingDir, "").Replace('\\', '/');
+                args[2].Replace(Module.WorkingDir, "").ToPosixPath();
 
             StartFileHistoryDialog(fileHistoryFileName);
         }
@@ -2118,7 +2097,7 @@ namespace GitUI
         {
             // Remove working directory from filename. This is to prevent filenames that are too
             // long while there is room left when the workingdir was not in the path.
-            string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").Replace('\\', '/');
+            string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").ToPosixPath();
             StartBlameDialog(filenameFromBlame);
         }
 

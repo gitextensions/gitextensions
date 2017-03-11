@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using GitCommands.Utils;
 
@@ -70,6 +71,16 @@ namespace GitCommands
             return fileName;
         }
 
+        public static bool TryConvertWindowsPathToPosix(string path, out string posixPath)
+        {
+            posixPath = null;
+            var directoryInfo = new DirectoryInfo(path);
+            if (!directoryInfo.Exists)
+                return false;
+            posixPath = "/" + directoryInfo.FullName.ToPosixPath().Remove(1, 1);
+            return true;
+        }
+
         public static bool Equal(string path1, string path2)
         {
             path1 = Path.GetFullPath(path1).TrimEnd('\\');
@@ -120,5 +131,103 @@ namespace GitCommands
 
             return name;
         }
+
+        public static IEnumerable<string> GetEnvironmentValidPaths()
+        {
+            return GetValidPaths(GetEnvironmentPaths());
+        }
+
+        public static IEnumerable<string> GetValidPaths(IEnumerable<string> paths)
+        {
+            return paths.Where(aPath => IsValidPath(aPath));
+        }
+
+        static IEnumerable<string> GetEnvironmentPaths()
+        {
+            string pathVariable = Environment.GetEnvironmentVariable("PATH");
+            return GetEnvironmentPaths(pathVariable);
+        }
+
+        public static IEnumerable<string> GetEnvironmentPaths(string aPathVariable)
+        {
+            if (aPathVariable.IsNullOrWhiteSpace())
+                yield break;
+
+            foreach (string rawdir in aPathVariable.Split(';'))
+            {
+                string dir = rawdir;
+                // Usually, paths with spaces are not quoted on %PATH%, but it's well possible, and .NET won't consume a quoted path
+                // This does not handle the full grammar of the %PATH%, but at least prevents Illegal Characters in Path exceptions (see #2924)
+                dir = dir.Trim(new char[] { ' ', '"', '\t' });
+                if (dir.Length == 0)
+                    continue;
+                yield return dir;
+            }
+        }
+
+        public static bool IsValidPath(string aPath)
+        {
+            FileInfo fi = null;
+            try
+            {
+                fi = new FileInfo(aPath);
+            }
+            catch (ArgumentException) { }
+            catch (PathTooLongException) { }
+            catch (NotSupportedException) { }
+
+            return fi != null;
+        }
+                
+        public static bool PathExists(string aPath)
+        {
+            FileInfo fi = null;
+            try
+            {
+                fi = new FileInfo(aPath);
+            }
+            catch (ArgumentException) { }
+            catch (PathTooLongException) { }
+            catch (NotSupportedException) { }
+
+            return fi != null && fi.Exists;
+        }
+
+        public static bool TryFindFullPath(string aFileName, out string fullPath)
+        {
+            if (PathUtil.PathExists(aFileName))
+            {
+                fullPath = Path.GetFullPath(aFileName);
+                return true;
+            }
+
+            foreach (var path in PathUtil.GetEnvironmentValidPaths())
+            {
+                fullPath = Path.Combine(path, aFileName);
+                if (PathUtil.PathExists(fullPath))
+                    return true;
+            }
+
+            fullPath = null;
+            return false;
+        }
+
+        public static bool TryFindShellPath(string shell, out string shellPath)
+        {
+            shellPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", shell);
+            if (PathUtil.PathExists(shellPath))
+                return true;
+
+            shellPath = Path.Combine(AppSettings.GitBinDir, shell);
+            if (PathUtil.PathExists(shellPath))
+                return true;
+
+            if (PathUtil.TryFindFullPath(shell, out shellPath))
+                return true;
+
+            shellPath = null;
+            return false;
+        }
+
     }
 }

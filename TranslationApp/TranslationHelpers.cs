@@ -74,7 +74,8 @@ namespace TranslationApp
             return list;
         }
 
-        public static IDictionary<string, List<TranslationItemWithCategory>> LoadTranslation(IDictionary<string, TranslationFile> translation, IDictionary<string, List<TranslationItemWithCategory>> neutralItems)
+        public static IDictionary<string, List<TranslationItemWithCategory>> LoadTranslation(
+            IDictionary<string, TranslationFile> translation, IDictionary<string, List<TranslationItemWithCategory>> neutralItems)
         {
             var translateItems = new Dictionary<string, List<TranslationItemWithCategory>>();
 
@@ -142,13 +143,13 @@ namespace TranslationApp
             return translateItems;
         }
 
-        public static void SaveTranslation(string languageCode,
+        public static void SaveTranslation(string targetLanguageCode,
             IDictionary<string, List<TranslationItemWithCategory>> items, string filename)
         {
             var ext = Path.GetExtension(filename);
             foreach (var pair in items)
             {
-                var foreignTranslation = new TranslationFile(GitCommands.AppSettings.ProductVersion, languageCode);
+                var foreignTranslation = new TranslationFile(GitCommands.AppSettings.ProductVersion, "en", targetLanguageCode);
                 foreach (var translateItem in pair.Value)
                 {
                     var item = translateItem.GetTranslationItem();

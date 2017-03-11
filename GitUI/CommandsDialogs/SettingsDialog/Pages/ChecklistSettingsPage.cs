@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private readonly TranslationString _solveGitCommandFailed =
             new TranslationString("The command to run git could not be determined automatically." + Environment.NewLine +
-                "Please make sure git (msysgit or cygwin) is installed or set the correct command manually.");
+                "Please make sure git (Git for Windows or cygwin) is installed or set the correct command manually.");
 
         private readonly TranslationString _shellExtRegistered =
             new TranslationString("Shell extensions registered properly.");
@@ -142,7 +142,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private readonly TranslationString _linuxToolsShNotFound =
             new TranslationString("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
-                "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.");
+                "Please make sure there are linux tools installed (through Git for Windows or cygwin) or set the correct path manually.");
 
         private readonly TranslationString _linuxToolsShNotFoundCaption =
             new TranslationString("Locate linux tools");
@@ -427,6 +427,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 // once a check fails, we want bValid to stay false
                 bValid = CheckGitCmdValid();
                 bValid = CheckGlobalUserSettingsValid() && bValid;
+                bValid = CheckEditorTool() && bValid;
                 bValid = CheckMergeTool() && bValid;
                 bValid = CheckDiffToolConfiguration() && bValid;
                 bValid = CheckTranslationConfigSettings() && bValid;
@@ -646,6 +647,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             UserNameSet.Text = _emailSet.Text;
             UserNameSet_Fix.Visible = false;
             return true;
+        }
+
+        private bool CheckEditorTool()
+        {
+            string editor = CommonLogic.GetGlobalEditor();
+            return !string.IsNullOrEmpty(editor);
         }
 
         private bool CheckGitExtensionRegistrySettings()

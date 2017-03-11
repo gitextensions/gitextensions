@@ -11,6 +11,7 @@ namespace GitCommands
         private static readonly GitVersion v1_7_11 = new GitVersion("1.7.11");
         private static readonly GitVersion v1_8_5 = new GitVersion("1.8.5");
         private static readonly GitVersion v2_0_1 = new GitVersion("2.0.1");
+        private static readonly GitVersion v2_9_0 = new GitVersion("2.9.0");
 
         public static readonly GitVersion LastSupportedVersion = v1_7_0;
 
@@ -66,6 +67,11 @@ namespace GitCommands
         public bool RaceConditionWhenGitStatusIsUpdatingIndex
         {
             get { return this < v2_0_1; }
+        }
+
+        public bool SupportMergeUnrelatedHistory
+        {
+            get { return this >= v2_9_0; }
         }
 
         public bool IsUnknown
@@ -176,7 +182,11 @@ namespace GitCommands
 
         public override string ToString()
         {
-            return Full.Replace(".msysgit.0", "").Replace(".msysgit.1", "");
+            return Full
+                .Replace(".msysgit.0", "")
+                .Replace(".msysgit.1", "")
+                .Replace(".windows.0", "")
+                .Replace(".windows.1", "");
         }
     }
 }

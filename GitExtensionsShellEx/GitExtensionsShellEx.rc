@@ -69,10 +69,10 @@ BEGIN
             VALUE "FileDescription", "Git Extensions"
             VALUE "FileVersion", "2.49.00"
             VALUE "InternalName", "Git Extensions"
-            VALUE "LegalCopyright", "Copyright 2015"
+            VALUE "LegalCopyright", "Copyright 2008-2016"
             VALUE "OriginalFilename", "GitExtensionsShellEx.dll"
             VALUE "ProductName", "Git Extensions"
-            VALUE "ProductVersion", "2.49a1"
+            VALUE "ProductVersion", "2.49"
         END
     END
     BLOCK "VarFileInfo"

@@ -23,12 +23,12 @@ namespace GitCommands.Settings
             return PathName + PathSep + subPath;
         }
 
-        public T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
+        public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
             return Parent.GetValue(PathFor(name), defaultValue, decode);
         }
 
-        public void SetValue<T>(string name, T value, Func<T, string> encode)
+        public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
             Parent.SetValue(PathFor(name), value, encode);
         }

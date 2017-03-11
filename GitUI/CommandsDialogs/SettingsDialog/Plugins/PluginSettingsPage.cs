@@ -4,14 +4,14 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using GitCommands.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 {
-    public partial class PluginSettingsPage : SettingsPageWithHeader
+    public partial class PluginSettingsPage : AutoLayoutSettingsPage
     {
         private IGitPlugin _gitPlugin;
-        private readonly IList<string> _autoGenKeywords = new List<string>();
-        private bool pageInited = false;
+        private GitPluginSettingsContainer settingsCointainer;
 
         public PluginSettingsPage()
         {
@@ -19,11 +19,35 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             Translate();
         }
 
+        private void CreateSettingsControls()
+        {
+            var settings = GetSettings();
+
+            foreach (var setting in settings)
+            {
+               this.AddSetting(setting);
+            }
+        }
+
+        private void Init(IGitPlugin _gitPlugin)
+        {
+            this._gitPlugin = _gitPlugin;
+            settingsCointainer = new GitPluginSettingsContainer(_gitPlugin.Name);
+            CreateSettingsControls();
+            Translate();
+        }
+
         public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost aPageHost, IGitPlugin gitPlugin)
         {
             var result = SettingsPageBase.Create<PluginSettingsPage>(aPageHost);
-            result._gitPlugin = gitPlugin;
+            result.Init(gitPlugin);
             return result;
+        }
+
+        protected override ISettingsSource GetCurrentSettings()
+        {
+            settingsCointainer.SetSettingsSource(base.GetCurrentSettings());
+            return settingsCointainer;
         }
 
         public override string GetTitle()
@@ -31,35 +55,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             return _gitPlugin == null ? string.Empty : _gitPlugin.Description;
         }
 
-        protected override string GetCommaSeparatedKeywordList()
-        {
-            return string.Join(",", _autoGenKeywords);
-        }
-
-        public override void OnPageShown()
-        {
-            if (pageInited)
-                return;
-
-            pageInited = true;
-            CreateAndInitPluginSettingsControls();
-        }
-
-        protected override void SettingsToPage()
+        private IEnumerable<ISetting> GetSettings()
         {
             if (_gitPlugin == null)
                 throw new ApplicationException();
 
-            foreach (var setting in _gitPlugin.GetSettings())
-            {
-                setting.ControlBinding.GetControl();
-                setting.ControlBinding.LoadSetting(_gitPlugin.Settings);
-            }
-        }
-
-        protected override void PageToSettings()
-        {
-            SavePluginSettingsFromGeneratedControls();
+            return _gitPlugin.GetSettings();
         }
 
         public override SettingsPageReference PageReference
@@ -67,68 +68,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             get { return new SettingsPageReferenceByType(_gitPlugin.GetType()); }
         }
 
-        /// <summary>
-        /// from FormPluginSettings.LoadSettings()
-        /// </summary>
-        private void CreateAndInitPluginSettingsControls()
+        protected override SettingsLayout CreateSettingsLayout()
         {
-            const int xLabelStart = 20;
-            const int xEditStart = 300;
+            labelNoSettings.Visible = !GetSettings().Any();
 
-            var yStart = 20;
+            var layout = base.CreateSettingsLayout();
 
-            panelAutoGenControls.Controls.Clear();
+            this.tableLayoutPanel1.Controls.Add(layout.GetControl(), 0, 1);
 
-            if (_gitPlugin == null)
-                throw new ApplicationException();
-
-            var settings = _gitPlugin.GetSettings();
-
-            bool hasSettings = settings.Any();
-
-            labelNoSettings.Visible = !hasSettings;
-
-            _autoGenKeywords.Clear();
-
-            LoadSettings();
-
-            foreach (var setting in settings)
-            {                
-                _autoGenKeywords.Add(setting.Caption);
-
-                var label =
-                    new Label
-                    {
-                        Text = setting.Caption,
-                        Location = new Point(xLabelStart, yStart),
-                        Size = new Size(xEditStart - 30, 20)
-                    };
-                panelAutoGenControls.Controls.Add(label);
-
-                var controlBinding = setting.ControlBinding;
-                var control = controlBinding.UserControl;
-                control.Location = new Point(xEditStart, yStart);
-                control.Size = new Size(panelAutoGenControls.Width - xEditStart - 20, 20);
-                //TODO associate control with controlBinding
-
-                panelAutoGenControls.Controls.Add(control);
-
-                yStart += 25;
-            }
-        }
-
-        /// <summary>
-        /// from FormPluginSettings.SaveSettings()
-        /// </summary>
-        private void SavePluginSettingsFromGeneratedControls()
-        {
-            if (_gitPlugin == null)
-                throw new ApplicationException();
-
-            foreach (var setting in _gitPlugin.GetSettings())
-            {
-                setting.ControlBinding.SaveSetting(_gitPlugin.Settings);
-            }
+            return layout;
         }
     }
 }

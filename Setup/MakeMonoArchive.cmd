@@ -8,12 +8,16 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=2.49a1
+set version=2.49
 set normal=GitExtensions-%version%-Mono.zip
 set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
 
 rd /q /s GitExtensions\
 rd /q %normal%
+xcopy /y ..\GitExtensions\bin\Release\ConEmu\* GitExtensions\ConEmu\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitExtensions\bin\Release\ConEmu.WinForms.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\Git.hub.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\GitCommands.dll GitExtensions\
@@ -98,6 +102,10 @@ xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll 
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\English.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\English.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitUI\Translation\English.Plugins.xlf GitExtensions\Translation\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Czech.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Czech.xlf GitExtensions\Translation\
@@ -164,12 +172,12 @@ xcopy /y ..\GitUI\Translation\Spanish.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Spanish.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Traditional Chinese.gif" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Traditional Chinese.xlf" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Traditional Chinese.Plugins.xlf" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Traditional Chinese.gif" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Traditional Chinese.xlf" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Traditional Chinese.Plugins.xlf" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Dictionaries GitExtensions\Dictionaries\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Diff-Scripts\merge-* GitExtensions\Diff-Scripts\
@@ -181,8 +189,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\plink.exe GitExtensions\PuTTY\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\puttygen.exe GitExtensions\PuTTY\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\bin\git-credential-winstore.exe GitExtensions\GitCredentialWinStore\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Logo\git-extensions-logo-final-256.ico GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1

@@ -9,6 +9,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Advanced";
             Translate();
+
+            var autoNormaliseSymbols = new[] {
+                new { Key =  "_", Value = "_" },
+                new { Key =  "-", Value = "-" },
+                new { Key =  "(none)", Value = "" },
+            };
+            cboAutoNormaliseSymbol.DataSource = autoNormaliseSymbols;
+            cboAutoNormaliseSymbol.SelectedIndex = 0;
         }
 
         protected override void SettingsToPage()
@@ -18,8 +26,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkDontSHowHelpImages.Checked = AppSettings.DontShowHelpImages;
             chkAlwaysShowAdvOpt.Checked = AppSettings.AlwaysShowAdvOpt;
             chkCheckForRCVersions.Checked = AppSettings.CheckForReleaseCandidates;
-            chkRememberIgnoreWhiteSpacePreference.Checked = AppSettings.RememberIgnoreWhiteSpacePreference;
             chkConsoleEmulator.Checked = AppSettings.UseConsoleEmulatorForCommands;
+            chkAutoNormaliseBranchName.Checked = AppSettings.AutoNormaliseBranchName;
+            cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
+            cboAutoNormaliseSymbol.SelectedValue = AppSettings.AutoNormaliseSymbol;
         }
 
         protected override void PageToSettings()
@@ -29,13 +39,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
             AppSettings.AlwaysShowAdvOpt = chkAlwaysShowAdvOpt.Checked;
             AppSettings.CheckForReleaseCandidates = chkCheckForRCVersions.Checked;
-            AppSettings.RememberIgnoreWhiteSpacePreference = chkRememberIgnoreWhiteSpacePreference.Checked;
             AppSettings.UseConsoleEmulatorForCommands = chkConsoleEmulator.Checked;
+            AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.Checked;
+            AppSettings.AutoNormaliseSymbol = (string)cboAutoNormaliseSymbol.SelectedValue;
         }
 
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(AdvancedSettingsPage));
-        }        
+        }
+
+
+        private void chkAutoNormaliseBranchName_CheckedChanged(object sender, System.EventArgs e)
+        {
+            cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
+        }
     }
 }

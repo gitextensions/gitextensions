@@ -37,14 +37,14 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this._diffViewer = new GitUI.Editor.FileViewer();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this._discussionWB = new System.Windows.Forms.WebBrowser();
+            this._discussionWB = new GitUI.UserControls.WebBrowserCtrl();
             this._postCommentText = new GitUI.SpellChecker.EditNetSpell();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this._refreshCommentsBtn = new System.Windows.Forms.Button();
             this._postComment = new System.Windows.Forms.Button();
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-#endif
+
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -54,9 +54,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.flowLayoutPanel3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-#endif
+
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -397,9 +397,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.Load += new System.EventHandler(this.ViewPullRequestsForm_Load);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-#endif
+
             this.splitContainer2.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
@@ -411,9 +411,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.tabPage1.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
-#if !__MonoCS__ || Mono212Released //waiting for mono 2.12
+
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-#endif
+
             this.splitContainer3.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -431,7 +431,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private Editor.FileViewer _diffViewer;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.WebBrowser _discussionWB;
+        private GitUI.UserControls.WebBrowserCtrl _discussionWB;
         private SpellChecker.EditNetSpell _postCommentText;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button _refreshCommentsBtn;

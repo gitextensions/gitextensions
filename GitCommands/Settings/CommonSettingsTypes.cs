@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
 namespace GitCommands.Settings
 {
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum AutoCRLFType
     {
-        True,
-        Input,
-        False
+        @true,
+        input,
+        @false
     }
 
     public enum SettingsKind
