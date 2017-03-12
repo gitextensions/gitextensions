@@ -1,6 +1,20 @@
 
 Changelog
 =========
+### Version 2.49.01 (12 March 2017)
+* Fixed issue #3587. Diff view is blank if git configuration is diff.color=always 
+* Fixed issue #3427. Pushing to a different remote wrongly ask about new branch bug.
+* Fixed issue #3560. GitExtensions doesn't respect core.commentChar setting in interactive rebase.
+* Fixed issue #3507. Branch normalization strips valid characters from the branch name.
+* Fixed issue #3372. Create tag: set focus to tag name first feature-request UX.
+* Fixed issue #3441. Prompt to commit after resolving merge conflicts even when "Do not commit" is checked bug.
+* Fixed issue #3445. "Reset file(s) to" functionality doesn't work bug.
+* Fixed issue #2679. "Unsupported file" error with submodules
+* Fixed issue #3434. Filtering commits by unicode search text fails bug
+* Fixed issue #3412. Fix reset file menu item text.
+* Fix "Host Fingerprint not registered" Plink handling on clone. PR #3405
+* Fix crash when one of the stash is an autostash. PR #3410
+
 ### Version 2.49 (9 November 2016)
 * Updated Git for Windows to version 2.10.1. PR #3353
 * Updated Putty to version 0.67
