@@ -91,16 +91,16 @@ namespace GitUI
                     switch (diffKind)
                     {
                         case DiffWithRevisionKind.DiffALocal:
-                            revisionToCmp = revisions[0].Guid;
-                            break;
-                        case DiffWithRevisionKind.DiffBLocal:
                             revisionToCmp = revisions[1].Guid;
                             break;
+                        case DiffWithRevisionKind.DiffBLocal:
+                            revisionToCmp = revisions[0].Guid;
+                            break;
                         case DiffWithRevisionKind.DiffAParentLocal:
-                            revisionToCmp = revisions[0].ParentGuids.Length == 0 ? null : revisions[0].ParentGuids[0];
+                            revisionToCmp = revisions[1].ParentGuids.Length == 0 ? null : revisions[1].ParentGuids[0];
                             break;
                         case DiffWithRevisionKind.DiffBParentLocal:
-                            revisionToCmp = revisions[1].ParentGuids.Length == 0 ? null : revisions[1].ParentGuids[0];
+                            revisionToCmp = revisions[0].ParentGuids.Length == 0 ? null : revisions[0].ParentGuids[0];
                             break;
                         default:
                             revisionToCmp = null;
