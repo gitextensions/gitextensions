@@ -67,7 +67,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (GitModule.PathIsUrl(url) || GitModule.IsValidGitWorkingDir(url))
+            if (CanBeGitURL(url) || GitModule.IsValidGitWorkingDir(url))
             {
                 _NO_TRANSLATE_From.Text = url;
             }
@@ -82,10 +82,7 @@ namespace GitUI.CommandsDialogs
                         string text = Clipboard.GetText(TextDataFormat.Text) ?? string.Empty;
 
                         // See if it's a valid URL.
-                        string lowerText = text.ToLowerInvariant();
-                        if (lowerText.StartsWith("http") ||
-                            lowerText.StartsWith("git") ||
-                            lowerText.StartsWith("ssh"))
+                        if (CanBeGitURL(text))
                         {
                             _NO_TRANSLATE_From.Text = text;
                         }
@@ -137,6 +134,16 @@ namespace GitUI.CommandsDialogs
                 _NO_TRANSLATE_To.Text = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
 
             FromTextUpdate(null, null);
+        }
+
+        private bool CanBeGitURL(string anURL)
+        {
+            string anURLLowered = anURL.ToLowerInvariant();
+
+            return (anURLLowered.StartsWith("http") ||
+                anURLLowered.StartsWith("git") ||
+                anURLLowered.StartsWith("ssh"));
+
         }
 
         private void OkClick(object sender, EventArgs e)
