@@ -70,7 +70,7 @@ namespace AppVeyorIntegration
             IsCommitInRevisionGrid = isCommitInRevisionGrid;
             var accountName = config.GetString("AppVeyorAccountName", null);
             _accountToken = config.GetString("AppVeyorAccountToken", null);
-            if (string.IsNullOrEmpty(accountName) || string.IsNullOrEmpty(_accountToken))
+            if (string.IsNullOrEmpty(accountName))
                 return;
 
             _shouldLoadTestResults = config.GetBool("AppVeyorLoadTestsResults", false);
@@ -94,41 +94,62 @@ namespace AppVeyorIntegration
             if (Projects.Count == 0 ||
                 (!useAllProjets && Projects.Keys.Intersect(projectNames).Count() != projectNames.Length))
             {
-                GetResponseAsync(_httpClientAppVeyor, ApiBaseUrl, CancellationToken.None)
-                    .ContinueWith(
-                        task =>
-                        {
-                            var projects = JArray.Parse(task.Result);
-                            foreach (var project in projects)
+                if (_accountToken.IsNullOrWhiteSpace())
+                {
+                    FillProjectsFromSettings(accountName, projectNames);
+                }
+                else
+                {
+                    GetResponseAsync(_httpClientAppVeyor, ApiBaseUrl, CancellationToken.None)
+                        .ContinueWith(
+                            task =>
                             {
-                                var projectId = project["slug"].ToString();
-                                var projectName = project["name"].ToString();
-                                if (useAllProjets)
+                                var projects = JArray.Parse(task.Result);
+                                foreach (var project in projects)
                                 {
-                                    Projects.Add(projectName, new Project
+                                    var projectId = project["slug"].ToString();
+                                    var projectName = project["name"].ToString();
+                                    if (useAllProjets)
                                     {
-                                        Name = projectName,
-                                        Id = projectId,
-                                        QueryUrl = BuildQueryUrl(accountName, projectId)
-                                    });
+                                        Projects.Add(projectName, new Project
+                                        {
+                                            Name = projectName,
+                                            Id = projectId,
+                                            QueryUrl = BuildQueryUrl(accountName, projectId)
+                                        });
+                                    }
+                                    else
+                                    {
+                                        if (projectNames.Contains(projectName))
+                                            Projects.Add(projectName,
+                                                new Project
+                                                {
+                                                    Name = projectName,
+                                                    Id = projectId,
+                                                    QueryUrl = BuildQueryUrl(accountName, projectId)
+                                                });
+                                    }
                                 }
-                                else
-                                {
-                                    if (projectNames.Contains(projectName))
-                                        Projects.Add(projectName,
-                                            new Project
-                                            {
-                                                Name = projectName,
-                                                Id = projectId,
-                                                QueryUrl = BuildQueryUrl(accountName, projectId)
-                                            });
-                                }
-                            }
-                        }).Wait();
+                            }).Wait();
+                }
             }
             var builds = Projects.Where(p => useAllProjets || projectNames.Contains(p.Value.Name)).Select(p => p.Value);
             _allBuilds =
                 FilterBuilds(builds.SelectMany(project => QueryBuildsResults(accountName, project.Id, project.QueryUrl)));
+        }
+
+        private void FillProjectsFromSettings(string accountName, string[] projectNames)
+        {
+            foreach (var projectName in projectNames)
+            {
+                var projectId = projectName;
+                Projects.Add(projectName, new Project
+                {
+                    Name = projectName,
+                    Id = projectId,
+                    QueryUrl = BuildQueryUrl(accountName, projectId)
+                });
+            }
         }
 
         HttpClient GetHttpClient(string baseUrl, string accountToken)
@@ -138,7 +159,10 @@ namespace AppVeyorIntegration
                 Timeout = TimeSpan.FromMinutes(2),
                 BaseAddress = new Uri(baseUrl, UriKind.Absolute),
             };
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accountToken);
+            if (accountToken.IsNotNullOrWhitespace())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accountToken);
+            }
             return httpClient;
         }
 
