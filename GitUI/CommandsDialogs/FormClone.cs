@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (url.IsNotNullOrWhitespace())
+            if (GitModule.PathIsUrl(url) || GitModule.IsValidGitWorkingDir(url))
             {
                 _NO_TRANSLATE_From.Text = url;
             }
@@ -113,19 +113,25 @@ namespace GitUI.CommandsDialogs
                         pushUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentBranchRemote));
                     }
 
-
                     _NO_TRANSLATE_From.Text = pushUrl;
+
+                    try
+                    {
+                        // If the from directory is filled with the pushUrl from current working directory, set the destination directory to the parent
+                        if (pushUrl.IsNotNullOrWhitespace() && _NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+                            _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
+
+                    }
+                    catch (Exception)
+                    {
+                        // Exceptions on setting the destination directory can be ingnored
+                    }
                 }
             }
 
-            try
-            {
-                //if there is no destination directory, then use the parent directory of the current repository
-                if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
-                    _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
-            }
-            catch (Exception)
-            { }
+            //if there is no destination directory, then use current working directory
+            if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+                _NO_TRANSLATE_To.Text = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
 
             FromTextUpdate(null, null);
         }
