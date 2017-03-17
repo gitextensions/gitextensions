@@ -372,7 +372,7 @@ namespace GitCommands
 
         public static string GravatarCachePath
         {
-            get { return ApplicationDataPath.Value + "Images\\"; }
+            get { return Path.Combine(ApplicationDataPath.Value, "Images\\"); }
         }
 
         public static string Translation
