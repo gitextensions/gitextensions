@@ -20,6 +20,7 @@ using GitCommands.Repository;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Hotkey;
 using GitUI.Plugin;
 using GitUI.Properties;
@@ -267,6 +268,19 @@ namespace GitUI.CommandsDialogs
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
 
             FillTerminalTab();
+            ManageWorktreeSupport();
+        }
+
+        private void ManageWorktreeSupport()
+        {
+            if (!GitCommandHelpers.VersionInUse.SupportWorktree)
+            {
+                createWorktreeToolStripMenuItem.Enabled = false;
+            }
+            if (!GitCommandHelpers.VersionInUse.SupportWorktreeList)
+            {
+                manageWorktreeToolStripMenuItem.Enabled = false;
+            }
         }
 
         private new void Translate()
@@ -2046,7 +2060,7 @@ namespace GitUI.CommandsDialogs
 
         }
 
-        private void SetWorkingDir(string path)
+        public void SetWorkingDir(string path)
         {
             SetGitModule(this, new GitModuleEventArgs(new GitModule(path)));
         }
@@ -3671,6 +3685,24 @@ namespace GitUI.CommandsDialogs
             if (formReflog.ShouldRefresh)
             {
                 RefreshRevisions();
+            }
+        }
+
+        private void manageWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            var formManageWorktree = new FormManageWorktree(UICommands);
+            formManageWorktree.ShowDialog(this);
+        }
+
+        private void createWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var formCreateWorktree = new FormCreateWorktree(UICommands);
+            var dialogResult = formCreateWorktree.ShowDialog(this);
+            if (dialogResult == DialogResult.OK && formCreateWorktree.OpenWorktree)
+            {
+                var newModule = new GitModule(formCreateWorktree.WorktreeDirectory);
+                SetGitModule(this, new GitModuleEventArgs(newModule));
             }
         }
     }
