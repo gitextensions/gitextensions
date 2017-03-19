@@ -104,6 +104,9 @@ namespace AppVeyorIntegration
                         .ContinueWith(
                             task =>
                             {
+                                if (task.Result.IsNullOrWhiteSpace())
+                                    return;
+
                                 var projects = JArray.Parse(task.Result);
                                 foreach (var project in projects)
                                 {
