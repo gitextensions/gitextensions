@@ -15,7 +15,6 @@ rem %~p0 = dir to location of this cmd file
 rem cd /d "%~p0"
 
 set msbuild="%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
-IF %vs_solution_version% == VS2012 SET msbuild="C:\Program Files (x86)\MSBuild\12.0\Bin\MSBuild.exe"
 IF %vs_solution_version% == VS2015 SET msbuild="C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"
 
 set project="%~p0\..\GitExtensions.%vs_solution_version%.sln"
