@@ -617,7 +617,6 @@ namespace GitUI.SpellChecker
 
         private void TextBoxLeave(object sender, EventArgs e)
         {
-            ShowWatermark();
             if (ActiveControl != AutoComplete)
                 CloseAutoComplete();
         }
@@ -703,11 +702,6 @@ namespace GitUI.SpellChecker
                 SelectionChanged(sender, e);
         }
 
-        private void TextBox_Enter(object sender, EventArgs e)
-        {
-            HideWatermark();
-        }
-
         private void ShowWatermark()
         {
             if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
@@ -730,10 +724,14 @@ namespace GitUI.SpellChecker
             }
         }
 
-        public new bool Focus()
+         private void TextBox_LostFocus(object sender, EventArgs e)
+        {
+            ShowWatermark();
+        }
+
+        private void TextBox_GotFocus(object sender, EventArgs e)
         {
             HideWatermark();
-            return base.Focus();
         }
 
         private void CutMenuItemClick(object sender, EventArgs e)

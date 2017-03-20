@@ -59,11 +59,12 @@
             this.TextBox.SelectionChanged += new System.EventHandler(this.TextBox_SelectionChanged);
             this.TextBox.SizeChanged += new System.EventHandler(this.TextBoxSizeChanged);
             this.TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
-            this.TextBox.Enter += new System.EventHandler(this.TextBox_Enter);
             this.TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
             this.TextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             this.TextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyUp);
             this.TextBox.Leave += new System.EventHandler(this.TextBoxLeave);
+            this.TextBox.GotFocus += TextBox_GotFocus;
+            this.TextBox.LostFocus += TextBox_LostFocus;
             // 
             // AutoComplete
             // 
