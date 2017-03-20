@@ -56,7 +56,7 @@ namespace GitUI
         private readonly TranslationString _baseForCompareNotSelectedError = new TranslationString("Base commit for compare is not selected.");
         private readonly TranslationString _strError = new TranslationString("Error");
 
-        private const int NodeDimension = 8;
+        private const int NodeDimension = 10;
         private const int LaneWidth = 13;
         private const int LaneLineWidth = 2;
         private const int MaxSuperprojectRefs = 4;
@@ -1366,7 +1366,16 @@ namespace GitUI
             }
             else
             {
-                e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+                if (e.RowIndex % 2 == 0)
+                {
+                    e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+                }
+                else
+                {
+                    Brush brush = new SolidBrush(Color.FromArgb(255, 240, 240, 240));
+                    e.Graphics.FillRectangle(brush, e.CellBounds);
+                }
+                    
             }
 
             Color foreColor;

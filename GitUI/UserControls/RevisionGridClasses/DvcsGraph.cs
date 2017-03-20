@@ -52,7 +52,7 @@ namespace GitUI.RevisionGridClasses
 
         #endregion
 
-        private int _nodeDimension = 8;
+        private int _nodeDimension = 10;
         private int _laneWidth = 13;
         private int _laneLineWidth = 2;
         private const int MaxLanes = 40;
@@ -130,7 +130,7 @@ namespace GitUI.RevisionGridClasses
             RowHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
             RowTemplate.DefaultCellStyle.Font = SystemFonts.DefaultFont;
 
-            _whiteBorderPen = new Pen(Brushes.White, _laneLineWidth + 2);
+            _whiteBorderPen = new Pen(Brushes.White, _laneLineWidth);
             _blackBorderPen = new Pen(Brushes.Black, _laneLineWidth + 1);
 
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
@@ -539,8 +539,9 @@ namespace GitUI.RevisionGridClasses
             if ((e.State & DataGridViewElementStates.Visible) == 0 || e.ColumnIndex != 0)
                 return;
 
+            var standardBrush = (e.RowIndex % 2 == 0) ? Brushes.White : new SolidBrush(Color.FromArgb(255, 240, 240, 240));
             var brush = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
-                            ? _selectionBrush : Brushes.White;
+                            ? _selectionBrush : standardBrush;
             e.Graphics.FillRectangle(brush, e.CellBounds);
 
             Rectangle srcRect = DrawGraph(e.RowIndex);
@@ -1298,8 +1299,6 @@ namespace GitUI.RevisionGridClasses
 
             return childrenIds;
         }
-
-
 
         private void dataGrid_Resize(object sender, EventArgs e)
         {
