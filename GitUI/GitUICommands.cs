@@ -1690,11 +1690,11 @@ namespace GitUI
             return StartBlameDialog(owner, fileName, null);
         }
 
-        private bool StartBlameDialog(IWin32Window owner, string fileName, GitRevision revision)
+        private bool StartBlameDialog(IWin32Window owner, string fileName, GitRevision revision, int? initialLine = null)
         {
             return DoActionOnRepo(owner, true, false, PreBlame, PostBlame, () =>
                 {
-                    using (var frm = new FormBlame(this, fileName, revision))
+                    using (var frm = new FormBlame(this, fileName, revision, initialLine))
                         frm.ShowDialog(owner);
 
                     return true;
@@ -1702,9 +1702,9 @@ namespace GitUI
             );
         }
 
-        public bool StartBlameDialog(string fileName)
+        public bool StartBlameDialog(string fileName, int? initialLine = null)
         {
-            return StartBlameDialog(null, fileName, null);
+            return StartBlameDialog(null, fileName, null, initialLine);
         }
 
         private bool StartBlameDialog(string fileName, GitRevision revision)
@@ -2098,7 +2098,18 @@ namespace GitUI
             // Remove working directory from filename. This is to prevent filenames that are too
             // long while there is room left when the workingdir was not in the path.
             string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").ToPosixPath();
-            StartBlameDialog(filenameFromBlame);
+
+            int? initialLine = null;
+            if( args.Length >= 4 )
+            {
+                int temp;
+                if( int.TryParse( args[3], out temp ) )
+                {
+                    initialLine = temp;
+                }
+            }
+
+            StartBlameDialog(filenameFromBlame, initialLine);
         }
 
         private void RunMergeToolOrConflictCommand(Dictionary<string, string> arguments)
