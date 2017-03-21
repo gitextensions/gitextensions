@@ -1276,7 +1276,8 @@ namespace GitUI.CommandsDialogs
 
 		private void Staged_DataSourceChanged(object sender, EventArgs e)
 		{
-			commitStagedCount.Text = this.Staged.AllItems.Count().ToString();
+            int totalFilesCount = Staged.UnfilteredItemsCount() + Unstaged.UnfilteredItemsCount();
+            commitStagedCount.Text = Staged.UnfilteredItemsCount().ToString() + "/" + totalFilesCount.ToString();
 		}
         private void Staged_Enter(object sender, EventArgs e)
         {

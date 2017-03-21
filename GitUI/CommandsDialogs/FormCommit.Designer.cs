@@ -653,6 +653,7 @@ namespace GitUI.CommandsDialogs
             this.Unstaged.SelectFirstItemOnSetItems = false;
             this.Unstaged.Size = new System.Drawing.Size(397, 249);
             this.Unstaged.TabIndex = 1;
+            this.Unstaged.DataSourceChanged += new System.EventHandler(this.Staged_DataSourceChanged);
             this.Unstaged.SelectedIndexChanged += new System.EventHandler(this.UnstagedSelectionChanged);
             this.Unstaged.DoubleClick += new System.EventHandler(this.Unstaged_DoubleClick);
             this.Unstaged.Enter += new System.EventHandler(this.Unstaged_Enter);

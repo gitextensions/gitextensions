@@ -324,6 +324,18 @@ namespace GitUI
         }
 #endif
 
+        public int UnfilteredItemsCount()
+        {
+            if (_itemsDictionary == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return _itemsDictionary.Select(pair => pair.Value).Unwrap().Count();
+            }
+        }
+
         [Browsable(false)]
         public IEnumerable<GitItemStatus> AllItems
         {
