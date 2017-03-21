@@ -219,6 +219,18 @@
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="FormStatusOutputLog.cs" />
+    <Compile Include="CommandsDialogs\WorktreeDialog\FormCreateWorktree.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\WorktreeDialog\FormCreateWorktree.Designer.cs">
+      <DependentUpon>FormCreateWorktree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\WorktreeDialog\FormManageWorktree.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\WorktreeDialog\FormManageWorktree.Designer.cs">
+      <DependentUpon>FormManageWorktree.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\Diff\CombinedDiffHighlightService.cs" />
     <Compile Include="Editor\Diff\DiffHighlightService.cs" />
     <Compile Include="Editor\Diff\DiffLineNumAnalyzer.cs" />
@@ -1162,6 +1174,14 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.resx">
       <DependentUpon>RepoDistSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\WorktreeDialog\FormCreateWorktree.resx">
+      <DependentUpon>FormCreateWorktree.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\WorktreeDialog\FormManageWorktree.resx">
+      <DependentUpon>FormManageWorktree.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="HelperDialogs\FormBuildServerCredentials.resx">
       <DependentUpon>FormBuildServerCredentials.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1759,6 +1779,7 @@
   <ItemGroup>
     <None Include="Resources\Icons\IconShowFirstParent.png" />
     <Content Include="Resources\Icons\86.png" />
+    <None Include="Resources\Icons\IconBlank.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

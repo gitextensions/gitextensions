@@ -46,6 +46,12 @@ namespace GitUI
                     _authoredRevisionsBrush.Dispose();
                     _authoredRevisionsBrush = null;
                 }
+
+                if (_fontOfSHAColumn != null)
+                {
+                    _fontOfSHAColumn.Dispose();
+                    _fontOfSHAColumn = null;
+                }
             }
 
             if (disposing && (components != null))

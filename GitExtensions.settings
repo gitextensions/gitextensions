@@ -2,6 +2,38 @@
 <dictionary>
   <item>
     <key>
+      <string>BuildServer.AppVeyor.AppVeyorAccountName</string>
+    </key>
+    <value>
+      <string>jbialobr</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>BuildServer.AppVeyor.AppVeyorDisplayGitHubPullRequests</string>
+    </key>
+    <value>
+      <string>false</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>BuildServer.AppVeyor.AppVeyorLoadTestsResults</string>
+    </key>
+    <value>
+      <string>false</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>BuildServer.AppVeyor.AppVeyorProjectName</string>
+    </key>
+    <value>
+      <string>gitextensions</string>
+    </value>
+  </item>
+  <item>
+    <key>
       <string>BuildServer.EnableIntegration</string>
     </key>
     <value>
@@ -53,7 +85,7 @@
       <string>BuildServer.Type</string>
     </key>
     <value>
-      <string>TeamCity</string>
+      <string>AppVeyor</string>
     </value>
   </item>
   <item>

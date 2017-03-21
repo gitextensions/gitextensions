@@ -324,6 +324,18 @@ namespace GitUI
         }
 #endif
 
+        public int UnfilteredItemsCount()
+        {
+            if (_itemsDictionary == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return _itemsDictionary.Select(pair => pair.Value).Unwrap().Count();
+            }
+        }
+
         [Browsable(false)]
         public IEnumerable<GitItemStatus> AllItems
         {
@@ -412,6 +424,30 @@ namespace GitUI
                 foreach (ListViewItem item in FileStatusListView.SelectedItems)
                     return item.Group != null ? (string)item.Group.Tag : null;
                 return null;
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public IEnumerable<string> SelectedItemParents
+        {
+            get
+            {
+                return FileStatusListView.SelectedItems.Cast<ListViewItem>()
+                    .Where(i => i.Group != null)
+                    .Select(i => (string)i.Group.Tag);
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public IEnumerable<Tuple<GitItemStatus, string>> SelectedItemsWithParent
+        {
+            get
+            {
+                return FileStatusListView.SelectedItems.Cast<ListViewItem>()
+                    .Where(i => i.Group != null) // Or maybe return null parents?
+                    .Select(i => new Tuple<GitItemStatus, string>((GitItemStatus)i.Tag, (string)i.Group.Tag));
             }
         }
 
@@ -607,6 +643,7 @@ namespace GitUI
                 EnsureSelectedIndexChangeSubscription();
                 HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             }
+            FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
             var previouslySelectedItems = new List<GitItemStatus>();
             if (updateCausedByFilter)
@@ -615,9 +652,10 @@ namespace GitUI
                 {
                     previouslySelectedItems.Add((GitItemStatus)Item.Tag);
                 }
-            }
 
-            FileStatusListView.Scrollable = false;
+                if (DataSourceChanged != null)
+                    DataSourceChanged(this, new EventArgs());
+            }
 
             FileStatusListView.BeginUpdate();
             FileStatusListView.ShowGroups = _itemsDictionary != null && _itemsDictionary.Count > 1;
@@ -682,7 +720,6 @@ namespace GitUI
             FileStatusListView_SizeChanged(null, null);
             FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
             FileStatusListView.EndUpdate();
-            FileStatusListView.Scrollable = true;
         }
 
         [DefaultValue(true)]
