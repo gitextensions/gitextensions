@@ -361,6 +361,7 @@ namespace GitCommands.Config
             }
 
             private bool _escapedSection = false;
+            private bool _quotedStringInSection = false;
 
             private ParsePart ReadSection(char c)
             {
@@ -383,14 +384,21 @@ namespace GitCommands.Config
                 }
                 else
                 {
+                    // closing square bracket not in quoted section lead to start new section
+                    if(c == ']' && !_quotedStringInSection)
+                    {
+                        NewSection();
+                        return ReadUnknown;
+                    }
+
+                    if (c == '"')
+                        _quotedStringInSection = !_quotedStringInSection;
+
                     switch (c)
                     {
                         case '\\':
                             _escapedSection = true;
                             return ReadSection;
-                        case ']':
-                            NewSection();
-                            return ReadUnknown;
                         default:
                             token.Append(c);
                             return ReadSection;

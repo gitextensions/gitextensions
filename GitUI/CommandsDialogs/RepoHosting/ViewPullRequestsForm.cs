@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             Translate();
             loader.LoadingError += (sender, ex) =>
                 {
-                    MessageBox.Show(this, ex.Exception.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, ex.Exception.ToString(), _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.UnMask();
                 };
         }
@@ -148,7 +148,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 _selectHostedRepoCB.SelectedItem = hostedRemote;
             }
         }
-        
+
         private void SelectNextHostedRepository()
         {
             if (_selectHostedRepoCB.Items.Count == 0)
@@ -308,7 +308,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (_currentPullRequestInfo == null)
                 return;
-            
+
             UICommands.RepoChangedNotifier.Lock();
             try
             {

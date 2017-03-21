@@ -9,7 +9,7 @@ GitExtensions is a standalone Git repository tool, a Visual Studio 2010-2015 plu
 
 ## Current status
 
-Build status: master [![TeamCity Build Status](http://teamcity.jetbrains.com/app/rest/builds/buildType:\(id:GitExtensions_Master\)/statusIcon)](http://teamcity.jetbrains.com/viewType.html?buildTypeId=GitExtensions_Master)
+Build status: master [![TeamCity Build Status](http://teamcity.jetbrains.com/app/rest/builds/buildType:\(id:GitExtensions_Master\)/statusIcon)](http://teamcity.jetbrains.com/viewType.html?buildTypeId=GitExtensions_Master) [![Build status](https://ci.appveyor.com/api/projects/status/v736qwg7p40m025g/branch/master?svg=true)](https://ci.appveyor.com/project/jbialobr/gitextensions/branch/master)
 
 Mono Build status: master
 [![Build Status](https://travis-ci.org/gitextensions/gitextensions.svg?branch=master)](https://travis-ci.org/gitextensions/gitextensions)

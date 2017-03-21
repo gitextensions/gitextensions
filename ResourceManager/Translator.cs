@@ -23,15 +23,19 @@ namespace ResourceManager
             else if (!translationName.Equals(_name))
             {
                 _translation = new Dictionary<string, TranslationFile>();
-                var result = Directory.EnumerateFiles(GetTranslationDir(), translationName + "*.xlf");
-                foreach (var file in result)
+                string translationsDir = GetTranslationDir();
+                if (Directory.Exists(translationsDir))
                 {
-                    var name = Path.GetFileNameWithoutExtension(file).Substring(translationName.Length);
-                    var t = TranslationSerializer.Deserialize(file) ??
-                            new TranslationFile();
-                    t.SourceLanguage = t.TranslationCategories.FirstOrDefault()?.SourceLanguage;
-                    t.TargetLanguage = t.TranslationCategories.FirstOrDefault()?.TargetLanguage;
-                    _translation[name] = t;
+                    var result = Directory.EnumerateFiles(translationsDir, translationName + "*.xlf");
+                    foreach (var file in result)
+                    {
+                        var name = Path.GetFileNameWithoutExtension(file).Substring(translationName.Length);
+                        var t = TranslationSerializer.Deserialize(file) ??
+                                new TranslationFile();
+                        t.SourceLanguage = t.TranslationCategories.FirstOrDefault()?.SourceLanguage;
+                        t.TargetLanguage = t.TranslationCategories.FirstOrDefault()?.TargetLanguage;
+                        _translation[name] = t;
+                    }
                 }
             }
             _name = translationName;

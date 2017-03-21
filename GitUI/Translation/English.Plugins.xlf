@@ -1079,11 +1079,11 @@ branch names, tag names)</source>
   <file datatype="plaintext" original="StashPlugin" source-language="en">
     <body>
       <trans-unit id="Description.Text">
-        <source>Create Stash Pull Request</source>
+        <source>Create Bitbucket Pull Request</source>
         <target />
       </trans-unit>
       <trans-unit id="StashBaseUrl.Caption">
-        <source>Specify the base URL to Stash</source>
+        <source>Specify the base URL to Bitbucket</source>
         <target />
       </trans-unit>
       <trans-unit id="StashDisableSsl.Caption">
@@ -1091,11 +1091,11 @@ branch names, tag names)</source>
         <target />
       </trans-unit>
       <trans-unit id="StashPassword.Caption">
-        <source>Stash Password</source>
+        <source>Bitbucket Password</source>
         <target />
       </trans-unit>
       <trans-unit id="StashUsername.Caption">
-        <source>Stash Username</source>
+        <source>Bitbucket Username</source>
         <target />
       </trans-unit>
     </body>
@@ -1124,7 +1124,7 @@ branch names, tag names)</source>
         <target />
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInStash.Text">
-        <source>Your repository is not hosted in Stash.</source>
+        <source>Your repository is not hosted in Bitbucket.</source>
         <target />
       </trans-unit>
       <trans-unit id="btnApprove.Text">

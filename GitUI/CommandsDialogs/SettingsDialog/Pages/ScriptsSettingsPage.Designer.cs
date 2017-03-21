@@ -393,6 +393,7 @@
             this.argumentsTextBox.Size = new System.Drawing.Size(773, 43);
             this.argumentsTextBox.TabIndex = 16;
             this.argumentsTextBox.Text = "";
+            this.argumentsTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.argumentsTextBox_KeyDown);
             this.argumentsTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // labelOnEvent

@@ -32,10 +32,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <source>Checkout</source>
         <target />
       </trans-unit>
-      <trans-unit id="DiffViewerGB.Text">
-        <source>Diff Viewer</source>
-        <target />
-      </trans-unit>
       <trans-unit id="GeneralGB.Text">
         <source>General</source>
         <target />
@@ -62,14 +58,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
         <source>Don't show help images</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkOmitUninterestingDiff.Text">
-        <source>Omit uninteresting changes from combined diff</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
-        <source>Remember the ignore-white-space preference</source>
         <target />
       </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
@@ -1145,6 +1133,34 @@ Do you want to open it?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="DiffViewerSettingsPage" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Diff Viewer</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkOmitUninterestingDiff.Text">
+        <source>Omit uninteresting changes from combined diff</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
+        <source>Remember the 'Ignore whitespaces' preference</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkRememberNumberOfContextLines.Text">
+        <source>Remember the 'Number of context lines' preference</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkRememberShowEntireFilePreference.Text">
+        <source>Remember the 'Show entire file' preference</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkRememberShowNonPrintingCharsPreference.Text">
+        <source>Remember the 'Show nonprinting characters' preference</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="EditNetSpell" source-language="en">
     <body>
       <trans-unit id="addToDictionaryText.Text">
@@ -1796,7 +1812,7 @@ revision:</source>
         <target />
       </trans-unit>
       <trans-unit id="lblChooseDiffRevision.Text">
-        <source>Choose revision to 
+        <source>Choose revision to
 compare with first:</source>
         <target />
       </trans-unit>
@@ -3744,7 +3760,7 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="labelDeleteBranchWarning.Text">
-        <source>You can only delete branches when they are fully merged in HEAD. 
+        <source>You can only delete branches when they are fully merged in HEAD.
 When you delete a branch the commits can get lost because nothing points to them.
 When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
 </source>
@@ -3873,7 +3889,7 @@ When you want to delete a not-fully merged branch, you can override this using t
       <trans-unit id="richTextBox1.Text">
         <source>Donate
 
-You can help by making a financial contribution to the project. Donations will be used to cover the costs of hosting a website and to get the resources needed to keep the project running. 
+You can help by making a financial contribution to the project. Donations will be used to cover the costs of hosting a website and to get the resources needed to keep the project running.
 
 Click on the "Support this project" button to get more information about making a donation.</source>
         <target />
@@ -4065,8 +4081,8 @@ Do you want Git Extensions to help locate the correct folder?</source>
         <target />
       </trans-unit>
       <trans-unit id="label51.Text">
-        <source>The global config file located in the location stored environment variable %HOME%. 
-By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty. 
+        <source>The global config file located in the location stored environment variable %HOME%.
+By default %HOME% will be set to %HOMEDRIVE%%HOMEPATH% if empty.
 Change the default behaviour only if you experience problems.</source>
         <target />
       </trans-unit>
@@ -4513,28 +4529,28 @@ command "git help shortlog"</source>
         <target />
       </trans-unit>
       <trans-unit id="_strategyTooltipText.Text">
-        <source>resolve 
+        <source>resolve
 This can only resolve two heads (i.e. the current branch and another branch you pulled from) using a 3-way merge algorithm.
-It tries to carefully detect criss-cross merge ambiguities and is considered generally safe and fast. 
+It tries to carefully detect criss-cross merge ambiguities and is considered generally safe and fast.
 
-recursive 
-This can only resolve two heads using a 3-way merge algorithm. When there is more than one common ancestor that can be 
+recursive
+This can only resolve two heads using a 3-way merge algorithm. When there is more than one common ancestor that can be
 used for 3-way merge, it creates a merged tree of the common ancestors and uses that as the reference tree for the 3-way
-merge. Additionally this can detect and handle merges involving renames. This is the default merge strategy when pulling or 
-merging one branch. 
+merge. Additionally this can detect and handle merges involving renames. This is the default merge strategy when pulling or
+merging one branch.
 
-octopus 
-This resolves cases with more than two heads, but refuses to do a complex merge that needs manual resolution. It is 
-primarily meant to be used for bundling topic branch heads together. This is the default merge strategy when pulling or 
-merging more than one branch. 
+octopus
+This resolves cases with more than two heads, but refuses to do a complex merge that needs manual resolution. It is
+primarily meant to be used for bundling topic branch heads together. This is the default merge strategy when pulling or
+merging more than one branch.
 
-ours 
-This resolves any number of heads, but the resulting tree of the merge is always that of the current branch head, effectively 
+ours
+This resolves any number of heads, but the resulting tree of the merge is always that of the current branch head, effectively
 ignoring all changes from all other branches. It is meant to be used to supersede old development history of side branches.
 
-subtree 
-This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to 
-match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
+subtree
+This is a modified recursive strategy. When merging trees A and B, if B corresponds to a subtree of A, B is first adjusted to
+match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common
 ancestor tree.</source>
         <target />
       </trans-unit>
@@ -6101,14 +6117,14 @@ Do you want to set the correct command now? If not Global and Local Settings wil
         <target />
       </trans-unit>
       <trans-unit id="label10.Text">
-        <source>You need to set the correct path to 
+        <source>You need to set the correct path to
 git.cmd before you can change
 any global setting.
 </source>
         <target />
       </trans-unit>
       <trans-unit id="labelInstantSaveNotice.Text">
-        <source>Changes on the selected page will be saved instantly. 
+        <source>Changes on the selected page will be saved instantly.
 Therefore the Cancel button does NOT revert any changes made.</source>
         <target />
       </trans-unit>
@@ -6497,13 +6513,13 @@ Do you want to select a language code first?</source>
         <target />
       </trans-unit>
       <trans-unit id="FullCheck.Text">
-        <source>Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), 
+        <source>Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects),
 but also the ones found in alternate object pools.
 </source>
         <target />
       </trans-unit>
       <trans-unit id="NoReflogs.Text">
-        <source>Do not consider commits that are referenced only by an entry in a 
+        <source>Do not consider commits that are referenced only by an entry in a
 reflog to be reachable.</source>
         <target />
       </trans-unit>
@@ -6520,7 +6536,7 @@ reflog to be reachable.</source>
         <target />
       </trans-unit>
       <trans-unit id="Unreachable.Text">
-        <source>Print out objects that exist but that aren't readable from any of the reference 
+        <source>Print out objects that exist but that aren't readable from any of the reference
 nodes.
 </source>
         <target />
@@ -6572,7 +6588,7 @@ Do not forget to delete these tags when finished.</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>By default only unreferenced objects that are older than 
+        <source>By default only unreferenced objects that are older than
 2 weeks are removed when cleaning up the database. All
 other object are only deleted when you run "Remove all
 dangling objects"
@@ -6746,7 +6762,7 @@ Context menu for additional operations</source>
         <target />
       </trans-unit>
       <trans-unit id="label9.Text">
-        <source>You need to set the correct path to 
+        <source>You need to set the correct path to
 git before you can change
 global settings.
 </source>
@@ -6917,7 +6933,7 @@ global settings.
         <target />
       </trans-unit>
       <trans-unit id="label51.Text">
-        <source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
+        <source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</source>
         <target />
       </trans-unit>

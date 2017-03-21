@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.DirectoryServices;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -52,8 +53,10 @@ namespace GitUI
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
         private readonly TranslationString _cannotHighlightSelectedBranch = new TranslationString("Cannot highlight selected branch when revision graph is loading.");
         private readonly TranslationString _noRevisionFoundError = new TranslationString("No revision found.");
+        private readonly TranslationString _baseForCompareNotSelectedError = new TranslationString("Base commit for compare is not selected.");
+        private readonly TranslationString _strError = new TranslationString("Error");
 
-        private const int NodeDimension = 8;
+        private const int NodeDimension = 10;
         private const int LaneWidth = 13;
         private const int LaneLineWidth = 2;
         private const int MaxSuperprojectRefs = 4;
@@ -216,7 +219,8 @@ namespace GitUI
                 _normalFont = value;
                 MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
-                IdDataGridViewColumn.DefaultCellStyle.Font = new Font("Consolas", _normalFont.SizeInPoints);
+                _fontOfSHAColumn = new Font("Consolas", _normalFont.SizeInPoints);
+                IdDataGridViewColumn.DefaultCellStyle.Font = _fontOfSHAColumn;
                 IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
 
                 RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
@@ -1362,7 +1366,16 @@ namespace GitUI
             }
             else
             {
-                e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+                if (e.RowIndex % 2 == 0)
+                {
+                    e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+                }
+                else
+                {
+                    Brush brush = new SolidBrush(Color.FromArgb(255, 240, 240, 240));
+                    e.Graphics.FillRectangle(brush, e.CellBounds);
+                }
+                    
             }
 
             Color foreColor;
@@ -1498,7 +1511,7 @@ namespace GitUI
 
                     var text = (string)e.FormattedValue;
                     var bounds = AdjustCellBounds(e.CellBounds, offset);
-                    DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
+                    RevisionGridUtils.DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
 
                     if (IsCardLayout())
                     {
@@ -1561,8 +1574,9 @@ namespace GitUI
                     if (!revision.IsArtificial())
                     {
                         var text = revision.Guid;
-                        e.Graphics.DrawString(text, new Font("Consolas", rowFont.SizeInPoints), foreBrush,
-                                              new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                        var rect = RevisionGridUtils.GetCellRectangle(e);
+                        RevisionGridUtils.DrawColumnText(e.Graphics, text, _fontOfSHAColumn,
+                            foreColor, rect);
                     }
                 }
                 else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
@@ -1571,7 +1585,7 @@ namespace GitUI
                 }
                 else if (columnIndex == BuildServerWatcher.BuildStatusMessageColumnIndex)
                 {
-                    BuildInfoDrawingLogic.BuildStatusMessageCellPainting(e, revision, foreBrush, rowFont);
+                    BuildInfoDrawingLogic.BuildStatusMessageCellPainting(e, revision, foreColor, rowFont);
                 }
                 else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
                 {
@@ -1637,7 +1651,7 @@ namespace GitUI
                     headBounds.Offset((int)(extraOffset + 1), 0);
                 }
 
-                DrawColumnText(drawRefArgs.Graphics, headName, drawRefArgs.RefsFont, textColor, headBounds);
+                RevisionGridUtils.DrawColumnText(drawRefArgs.Graphics, headName, drawRefArgs.RefsFont, textColor, headBounds);
             }
 
             return offset;
@@ -1744,11 +1758,6 @@ namespace GitUI
                 }
                 Revisions.InvalidateCell(colIndex, rowIndex);
             });
-        }
-
-        private void DrawColumnText(Graphics gc, string text, Font font, Color color, Rectangle bounds)
-        {
-            TextRenderer.DrawText(gc, text, font, bounds, color, TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
         }
 
         private static Rectangle AdjustCellBounds(Rectangle cellBounds, float offset)
@@ -1931,10 +1940,12 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Any(rev => !GitRevision.IsArtificial(rev.Guid)))
             {
-                using (var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid))
+                Func<Form> provideForm = () =>
                 {
-                    form.ShowDialog(this);
-                }
+                    return new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
+                };
+
+                UICommands.ShowModelessForm(this, false, null, null, provideForm);
             }
             else if (!selectedRevisions.Any())
             {
@@ -2275,6 +2286,8 @@ namespace GitUI
             manipulateCommitToolStripMenuItem.Enabled = !bareRepository;
 
             toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
+
+            openBuildReportToolStripMenuItem.Visible = (revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url));
 
             RefreshOwnScripts();
         }
@@ -2629,6 +2642,7 @@ namespace GitUI
         }
 
         private bool _settingsLoaded;
+        private Font _fontOfSHAColumn;
 
         private void RunScript(object sender, EventArgs e)
         {
@@ -3176,6 +3190,12 @@ namespace GitUI
 
         private void compareToBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if(_baseCommitToCompare == null)
+            {
+                MessageBox.Show(this, _baseForCompareNotSelectedError.Text, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var headCommit = GetSelectedRevisions().First();
             using (var diffForm = new FormDiff(UICommands, this, _baseCommitToCompare.Guid, headCommit.Guid,
                 _baseCommitToCompare.Subject, headCommit.Subject))
@@ -3193,6 +3213,13 @@ namespace GitUI
         {
             string url = UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature");
             OsShellUtil.OpenUrlInDefaultBrowser(url);
+        }
+
+        private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var revision = this.GetSelectedRevisions().First();
+            if(revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url))
+                Process.Start(revision.BuildStatus.Url); 
         }
     }
 }

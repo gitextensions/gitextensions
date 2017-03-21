@@ -46,6 +46,12 @@ namespace GitUI
                     _authoredRevisionsBrush.Dispose();
                     _authoredRevisionsBrush = null;
                 }
+
+                if (_fontOfSHAColumn != null)
+                {
+                    _fontOfSHAColumn.Dispose();
+                    _fontOfSHAColumn = null;
+                }
             }
 
             if (disposing && (components != null))
@@ -123,6 +129,7 @@ namespace GitUI
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showMergeCommitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openBuildReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -227,6 +234,7 @@ namespace GitUI
             this.MessageDataGridViewColumn.Name = "Message";
             this.MessageDataGridViewColumn.ReadOnly = true;
             this.MessageDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.MessageDataGridViewColumn.FillWeight = 80;
             //
             // IsMessageMultilineDataGridViewColumn
             //
@@ -254,12 +262,13 @@ namespace GitUI
             //
             // Id
             //
+            this.IdDataGridViewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.IdDataGridViewColumn.HeaderText = "SHA1";
             this.IdDataGridViewColumn.Name = "ID";
             this.IdDataGridViewColumn.ReadOnly = true;
             this.IdDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.IdDataGridViewColumn.Width = 62;
             this.IdDataGridViewColumn.Visible = false;
+            this.IdDataGridViewColumn.FillWeight = 20f;
             // 
             // mainContextMenu
             // 
@@ -293,7 +302,8 @@ namespace GitUI
             this.toolStripSeparator1,
             this.navigateToolStripMenuItem,
             this.viewToolStripMenuItem,
-            this.runScriptToolStripMenuItem});
+            this.runScriptToolStripMenuItem,
+            this.openBuildReportToolStripMenuItem});
             this.mainContextMenu.Name = "CreateTag";
             this.mainContextMenu.Size = new System.Drawing.Size(265, 620);
             this.mainContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuOpening);
@@ -615,6 +625,13 @@ namespace GitUI
             this.runScriptToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.runScriptToolStripMenuItem.Text = "Run script";
             // 
+            // openBuildReportToolStripMenuItem
+            // 
+            this.openBuildReportToolStripMenuItem.Name = "openBuildReportToolStripMenuItem";
+            this.openBuildReportToolStripMenuItem.Size = new System.Drawing.Size(301, 26);
+            this.openBuildReportToolStripMenuItem.Text = "Open build report in the browser";
+            this.openBuildReportToolStripMenuItem.Click += new System.EventHandler(this.openBuildReportToolStripMenuItem_Click);
+            // 
             // showMergeCommitsToolStripMenuItem
             // 
             this.showMergeCommitsToolStripMenuItem.Name = "showMergeCommitsToolStripMenuItem";
@@ -864,5 +881,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem compareToBaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectAsBaseToolStripMenuItem;
         private ToolStripMenuItem getHelpOnHowToUseTheseFeaturesToolStripMenuItem;
+        private ToolStripMenuItem openBuildReportToolStripMenuItem;
     }
 }

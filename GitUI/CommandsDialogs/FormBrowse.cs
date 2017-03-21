@@ -20,6 +20,7 @@ using GitCommands.Repository;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Hotkey;
 using GitUI.Plugin;
 using GitUI.Properties;
@@ -267,6 +268,19 @@ namespace GitUI.CommandsDialogs
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
 
             FillTerminalTab();
+            ManageWorktreeSupport();
+        }
+
+        private void ManageWorktreeSupport()
+        {
+            if (!GitCommandHelpers.VersionInUse.SupportWorktree)
+            {
+                createWorktreeToolStripMenuItem.Enabled = false;
+            }
+            if (!GitCommandHelpers.VersionInUse.SupportWorktreeList)
+            {
+                manageWorktreeToolStripMenuItem.Enabled = false;
+            }
         }
 
         private new void Translate()
@@ -1644,6 +1658,7 @@ namespace GitUI.CommandsDialogs
 
         private static void SaveApplicationSettings()
         {
+            AppSettings.SaveSettings();
             Properties.Settings.Default.Save();
         }
 
@@ -1963,7 +1978,6 @@ namespace GitUI.CommandsDialogs
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            var selectedItem = DiffFiles.SelectedItem;
             GitUIExtensions.DiffWithRevisionKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
@@ -1980,9 +1994,13 @@ namespace GitUI.CommandsDialogs
                 diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAB;
             }
 
-            string parentGuid = RevisionGrid.GetSelectedRevisions().Count() == 1 ? DiffFiles.SelectedItemParent : null;
+            foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
+            {
+                GitItemStatus selectedItem = itemWithParent.Item1;
+                string parentGuid = RevisionGrid.GetSelectedRevisions().Count() == 1 ? itemWithParent.Item2 : null;
 
-            RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, parentGuid);
+                RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, parentGuid);
+            }
         }
 
         private void AddWorkingdirDropDownItem(Repository repo, string caption)
@@ -2042,7 +2060,7 @@ namespace GitUI.CommandsDialogs
 
         }
 
-        private void SetWorkingDir(string path)
+        public void SetWorkingDir(string path)
         {
             SetGitModule(this, new GitModuleEventArgs(new GitModule(path)));
         }
@@ -2733,16 +2751,17 @@ namespace GitUI.CommandsDialogs
                 artificialRevSelected = artificialRevSelected || selectedRevisions[selectedRevisions.Count - 1].IsArtificial();
 
             // disable items that need exactly one selected item
-            bool isExcactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            var isCombinedDiff = isExcactlyOneItemSelected &&
+            bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
+            var isCombinedDiff = isExactlyOneItemSelected &&
                 DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
-            var enabled = isExcactlyOneItemSelected && !isCombinedDiff;
-            openWithDifftoolToolStripMenuItem.Enabled = enabled;
+            var isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
+            var enabled = isExactlyOneItemSelected && !isCombinedDiff;
+            openWithDifftoolToolStripMenuItem.Enabled = !isAnyCombinedDiff;
             saveAsToolStripMenuItem1.Enabled = enabled;
             cherryPickSelectedDiffFileToolStripMenuItem.Enabled = enabled;
-            diffShowInFileTreeToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
-            fileHistoryDiffToolstripMenuItem.Enabled = isExcactlyOneItemSelected;
-            blameToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+            diffShowInFileTreeToolStripMenuItem.Enabled = isExactlyOneItemSelected;
+            fileHistoryDiffToolstripMenuItem.Enabled = isExactlyOneItemSelected;
+            blameToolStripMenuItem.Enabled = isExactlyOneItemSelected;
             resetFileToToolStripMenuItem.Enabled = !isCombinedDiff;
 
             // openContainingFolderToolStripMenuItem.Enabled or not
@@ -3666,6 +3685,24 @@ namespace GitUI.CommandsDialogs
             if (formReflog.ShouldRefresh)
             {
                 RefreshRevisions();
+            }
+        }
+
+        private void manageWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            var formManageWorktree = new FormManageWorktree(UICommands);
+            formManageWorktree.ShowDialog(this);
+        }
+
+        private void createWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var formCreateWorktree = new FormCreateWorktree(UICommands);
+            var dialogResult = formCreateWorktree.ShowDialog(this);
+            if (dialogResult == DialogResult.OK && formCreateWorktree.OpenWorktree)
+            {
+                var newModule = new GitModule(formCreateWorktree.WorktreeDirectory);
+                SetGitModule(this, new GitModuleEventArgs(newModule));
             }
         }
     }

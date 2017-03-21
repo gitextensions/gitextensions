@@ -30,8 +30,11 @@ namespace GitUI.HelperDialogs
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ret = branchesListView.SelectedItems[0].Text;
-            Close();
+            if (branchesListView.SelectedItems.Count > 0)
+            {
+                ret = branchesListView.SelectedItems[0].Text;
+                Close();
+            }
         }
     }
 }

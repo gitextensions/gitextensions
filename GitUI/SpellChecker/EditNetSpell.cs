@@ -617,7 +617,6 @@ namespace GitUI.SpellChecker
 
         private void TextBoxLeave(object sender, EventArgs e)
         {
-            ShowWatermark();
             if (ActiveControl != AutoComplete)
                 CloseAutoComplete();
         }
@@ -666,26 +665,20 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            if (e.Control && e.KeyCode == Keys.V)
+            // handle paste from clipboard (Ctrl+V, Shift+Ins)
+            if((e.Control && e.KeyCode == Keys.V) || (e.Shift && e.KeyCode == Keys.Insert))
             {
-                if (!Clipboard.ContainsText())
-                {
-                    e.Handled = true;
-                    return;
-                }
-                // remove image data from clipboard
-                var text = Clipboard.GetText();
-                // Clipboard.SetText throws exception when text is null or empty. See https://msdn.microsoft.com/en-us/library/ydby206k.aspx
-                if (!string.IsNullOrEmpty(text))
-                {
-                    Clipboard.SetText(text);
-                }
+                // insert only text
+                ((RichTextBox)sender).Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
+                e.Handled = true;
+                return;
             }
-            else if (e.Control && !e.Alt && e.KeyCode == Keys.Z)
+
+            if (e.Control && !e.Alt && e.KeyCode == Keys.Z)
             {
                 UndoHighlighting();
             }
-            else if (e.Control && !e.Alt && e.KeyCode == Keys.Space)
+            else if (e.Control && !e.Alt && e.KeyCode == Keys.Space && AppSettings.ProvideAutocompletion)
             {
                 UpdateOrShowAutoComplete(true);
                 e.Handled = true;
@@ -707,11 +700,6 @@ namespace GitUI.SpellChecker
 
             if (SelectionChanged != null)
                 SelectionChanged(sender, e);
-        }
-
-        private void TextBox_Enter(object sender, EventArgs e)
-        {
-            HideWatermark();
         }
 
         private void ShowWatermark()
@@ -736,10 +724,14 @@ namespace GitUI.SpellChecker
             }
         }
 
-        public new bool Focus()
+         private void TextBox_LostFocus(object sender, EventArgs e)
+        {
+            ShowWatermark();
+        }
+
+        private void TextBox_GotFocus(object sender, EventArgs e)
         {
             HideWatermark();
-            return base.Focus();
         }
 
         private void CutMenuItemClick(object sender, EventArgs e)
