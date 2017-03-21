@@ -6,7 +6,7 @@
 namespace GitExtensionsVSIX
 {
     using System;
-    
+
     /// <summary>
     /// Helper class that exposes all GUIDs used across VS Package.
     /// </summary>
@@ -59,6 +59,7 @@ namespace GitExtensionsVSIX
         public const int gitExtBashCommand = 0x1116;
         public const int gitExtSettingsCommand = 0x1117;
         public const int gitExtAboutCommand = 0x1118;
+        public const int gitExtBlameCommand = 0x1119;
         public const int edit = 0x0001;
         public const int configure = 0x0002;
         public const int stash = 0x0003;

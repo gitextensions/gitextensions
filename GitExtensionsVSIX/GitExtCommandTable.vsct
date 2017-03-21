@@ -200,6 +200,13 @@
                     <ButtonText>V&amp;iew changes</ButtonText>
                 </Strings>
             </Button>
+            <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtBlameCommand" priority="0x0002" type="Button">
+                <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuFindGroup" />
+                <Strings>
+                    <CommandName>GitExt.Blame</CommandName>
+                    <ButtonText>Blame</ButtonText>
+                </Strings>
+            </Button>
             <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtFindFileCommand" priority="0x0003" type="Button">
                 <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuFindGroup" />
                 <Icon guid="guidImages" id="find"/>
@@ -384,6 +391,7 @@
             <IDSymbol name="gitExtBashCommand" value="0x1116" />
             <IDSymbol name="gitExtSettingsCommand" value="0x1117" />
             <IDSymbol name="gitExtAboutCommand" value="0x1118" />
+            <IDSymbol name="gitExtBlameCommand" value="0x1119"/>
         </GuidSymbol>
 
         <GuidSymbol name="guidImages" value="{8bcce2c8-daec-4814-878e-e9c346d42f24}" >
