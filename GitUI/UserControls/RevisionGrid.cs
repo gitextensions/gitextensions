@@ -1030,6 +1030,7 @@ namespace GitUI
                     revGraphIMF = filterBarIMF;
 
                 _revisionGraphCommand = new RevisionGraph(Module) {
+                    FirstParent = UICommandsSource is FormBrowse && AppSettings.FirstParent,
                     BranchFilter = BranchFilter,
                     RefsOptions = _refsOptions,
                     RevisionFilter = _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
@@ -2057,6 +2058,7 @@ namespace GitUI
                 return;
 
             AppSettings.BranchFilterEnabled = false;
+            AppSettings.FirstParent = false;
 
             SetShowBranches();
             ForceRefreshRevisions();
@@ -2082,10 +2084,17 @@ namespace GitUI
         private void SetShowBranches()
         {
             _showAllBranchesToolStripMenuItemChecked = !AppSettings.BranchFilterEnabled;
-            _showCurrentBranchOnlyToolStripMenuItemChecked =
-                AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
-            _showFilteredBranchesToolStripMenuItemChecked =
-                AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly;
+            _showCurrentBranchOnlyToolStripMenuItemChecked = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
+            _showFilteredBranchesToolStripMenuItemChecked = AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly;
+
+            try
+            {
+                ((FormBrowse)UICommandsSource).toolStripButtonFirstParent.Enabled = AppSettings.BranchFilterEnabled;
+                ((FormBrowse)UICommandsSource).toolStripButtonFirstParent.Checked &= AppSettings.BranchFilterEnabled;
+            }
+            catch
+            {
+            }
 
             BranchFilter = _revisionFilter.GetBranchFilter();
 

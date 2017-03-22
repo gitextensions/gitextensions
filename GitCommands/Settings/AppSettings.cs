@@ -817,6 +817,12 @@ namespace GitCommands
             set { SetBool("showcurrentbranchonly", value); }
         }
 
+        public static bool FirstParent
+        {
+            get { return GetBool("showcurrentbranchonlyfirstparent", false); }
+            set { SetBool("showcurrentbranchonlyfirstparent", value); }
+        }
+		
         public static bool ShowSimplifyByDecoration
         {
             get { return GetBool("showsimplifybydecoration", false); }

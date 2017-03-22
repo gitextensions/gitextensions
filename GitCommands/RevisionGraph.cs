@@ -104,6 +104,7 @@ namespace GitCommands
         }
 
         public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+        public bool FirstParent = false;
         public string RevisionFilter = String.Empty;
         public string PathFilter = String.Empty;
         public string BranchFilter = String.Empty;
@@ -187,12 +188,13 @@ namespace GitCommands
                 branchFilter = "--branches=" + BranchFilter;
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {2} --pretty=format:\"{1}\" {0} {3} -- {4}",
+                "log {5} -z {2} --pretty=format:\"{1}\" {0} {3} -- {4}",
                 logParam,
                 formatString,
                 branchFilter,
                 RevisionFilter,
-                PathFilter);
+                PathFilter,
+                FirstParent ? "--first-parent" : string.Empty);
 
             Process p = _module.RunGitCmdDetached(arguments, GitModule.LosslessEncoding);
 

@@ -3705,5 +3705,11 @@ namespace GitUI.CommandsDialogs
                 SetGitModule(this, new GitModuleEventArgs(newModule));
             }
         }
+
+        private void toolStripButtonFirstParent_Click(object sender, EventArgs e)
+        {
+          AppSettings.FirstParent = toolStripButtonFirstParent.Checked;
+          RevisionGrid.ForceRefreshRevisions();
+        }
     }
 }
