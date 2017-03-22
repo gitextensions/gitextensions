@@ -260,6 +260,10 @@ namespace GitUI.RevisionGridClasses
             }
             set
             {
+                string[] currentSelection = SelectedIds;
+                if (value != null && currentSelection != null && value.SequenceEqual(currentSelection))
+                    return;
+
                 lock (_backgroundEvent)
                 lock (_graphData)
                 {
