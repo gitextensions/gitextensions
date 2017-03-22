@@ -41,6 +41,8 @@ namespace GitUI.Script
 
         public bool RunInBackground { get; set; }
 
+        public bool IsPowerShell { get; set; }
+
         public int HotkeyCommandIdentifier { get; set; }
         /// <summary>
         /// Gets or sets the icon name.
