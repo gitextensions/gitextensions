@@ -2,7 +2,7 @@
 Changelog
 =========
 
-### Version 2.49.02 (no due date)
+### Version 2.49.02 (22 March 2017)
 * Fixed issue #3464. Background fetch plugin - Not working.
 * Fixed issue #3491. 'Enter commit message' does not disappear when you start typing your message bug reproducible.
 * Fixed issue #3394. Gitext Clone in Explorer Context Menu try to clone in the wrong folder bug.
