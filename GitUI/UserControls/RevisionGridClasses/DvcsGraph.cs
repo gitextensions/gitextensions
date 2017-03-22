@@ -56,7 +56,6 @@ namespace GitUI.RevisionGridClasses
         private int _laneWidth = 13;
         private int _laneLineWidth = 2;
         private const int MaxLanes = 40;
-        private Brush _selectionBrush;
 
         private Pen _whiteBorderPen;
         private Pen _blackBorderPen;
@@ -97,13 +96,12 @@ namespace GitUI.RevisionGridClasses
         private int _visibleBottom;
         private int _visibleTop;
 
-        public void SetDimensions(int nodeDimension, int laneWidth, int laneLineWidth, int rowHeight, Brush selectionBrush)
+        public void SetDimensions(int nodeDimension, int laneWidth, int laneLineWidth, int rowHeight)
         {
             RowTemplate.Height = rowHeight;
             _nodeDimension = nodeDimension;
             _laneWidth = laneWidth;
             _laneLineWidth = laneLineWidth;
-            this._selectionBrush = selectionBrush;
 
             dataGrid_Resize(null, null);
         }
@@ -134,7 +132,6 @@ namespace GitUI.RevisionGridClasses
             _blackBorderPen = new Pen(Brushes.Black, _laneLineWidth + 1);
 
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            CellPainting += dataGrid_CellPainting;
             ColumnWidthChanged += dataGrid_ColumnWidthChanged;
             Scroll += dataGrid_Scroll;
             _graphData.Updated += graphData_Updated;
@@ -526,7 +523,7 @@ namespace GitUI.RevisionGridClasses
                 });
         }
 
-        private void dataGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        public void dataGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex < 0)
                 return;
@@ -538,11 +535,6 @@ namespace GitUI.RevisionGridClasses
 
             if ((e.State & DataGridViewElementStates.Visible) == 0 || e.ColumnIndex != 0)
                 return;
-
-            var standardBrush = (e.RowIndex % 2 == 0) ? Brushes.White : new SolidBrush(Color.FromArgb(255, 240, 240, 240));
-            var brush = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
-                            ? _selectionBrush : standardBrush;
-            e.Graphics.FillRectangle(brush, e.CellBounds);
 
             Rectangle srcRect = DrawGraph(e.RowIndex);
             if (!srcRect.IsEmpty)

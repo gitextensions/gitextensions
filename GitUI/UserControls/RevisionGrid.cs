@@ -1324,12 +1324,6 @@ namespace GitUI
             int idColIndex = IdDataGridViewColumn.Index;
             int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
 
-            // The graph column is handled by the DvcsGraph
-            if (e.ColumnIndex == graphColIndex)
-            {
-                return;
-            }
-
             if (e.RowIndex < 0 || (e.State & DataGridViewElementStates.Visible) == 0)
                 return;
 
@@ -1376,6 +1370,12 @@ namespace GitUI
                     e.Graphics.FillRectangle(brush, e.CellBounds);
                 }
                     
+            }
+
+            if (e.ColumnIndex == graphColIndex)
+            {
+                Revisions.dataGrid_CellPainting(sender, e);
+                return;
             }
 
             Color foreColor;
@@ -2863,7 +2863,7 @@ namespace GitUI
                 _selectedItemBrush = _filledItemBrush;
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth, _selectedItemBrush);
+                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
 
             }
             else
@@ -2891,7 +2891,7 @@ namespace GitUI
                 }
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth, _selectedItemBrush);
+                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
             }
 
             //Hide graph column when there it is disabled OR when a filter is active
