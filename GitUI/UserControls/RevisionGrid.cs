@@ -322,6 +322,7 @@ namespace GitUI
             _initialSelectedRevision = initialSelectedRevision != null ? initialSelectedRevision.Guid : null;
         }
 
+        private bool _isRefreshingRevisions = false;
         private bool _isLoading;
         private void RevisionsLoading(object sender, DvcsGraph.LoadingEventArgs e)
         {
@@ -711,7 +712,16 @@ namespace GitUI
             _parentChildNavigationHistory.RevisionsSelectionChanged();
 
             if (Revisions.SelectedRows.Count > 0)
+            {
                 LastRowIndex = Revisions.SelectedRows[0].Index;
+                //if there was selected a new revision while data is being loaded
+                //then don't change the new selection when restoring selected revisions after data is loaded
+                if (_isRefreshingRevisions && !Revisions.UpdatingVisibleRows)
+                {
+                    LastSelectedRows = Revisions.SelectedIds;
+                }
+
+            }
 
             SelectionTimer.Enabled = false;
             SelectionTimer.Stop();
@@ -994,6 +1004,7 @@ namespace GitUI
                 Loading.Visible = true;
                 Loading.BringToFront();
                 _isLoading = true;
+                _isRefreshingRevisions = true;
                 base.Refresh();
 
                 IndexWatcher.Reset();
@@ -1176,6 +1187,7 @@ namespace GitUI
                                           //NoCommits.BringToFront();
                                           Revisions.Visible = false;
                                           Loading.Visible = false;
+                                          _isRefreshingRevisions = false;
                                       }, this);
             }
             else
@@ -1185,8 +1197,8 @@ namespace GitUI
                                       {
                                           UpdateGraph(null);
                                           Loading.Visible = false;
+                                          _isRefreshingRevisions = false;
                                           SelectInitialRevision();
-                                          _isLoading = false;
                                           if (ShowBuildServerInfo)
                                               BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
                                       }, this);
