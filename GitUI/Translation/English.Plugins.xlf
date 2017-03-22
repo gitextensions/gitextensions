@@ -918,26 +918,6 @@ Do you want to reset the configured path?</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en">
-    <body>
-      <trans-unit id="Username.Caption">
-        <source>Username</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Password.Caption">
-        <source>Password</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="HttpProxy.Caption">
-        <source>HTTP proxy</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="HttpProxyPort.Caption">
-        <source>HTTP proxy port/source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
     <body>
       <trans-unit id="$this.Text">
