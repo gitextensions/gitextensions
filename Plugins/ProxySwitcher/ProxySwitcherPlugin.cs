@@ -1,4 +1,4 @@
-﻿using GitUIPluginInterfaces;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace ProxySwitcher
@@ -15,7 +15,14 @@ namespace ProxySwitcher
             SetNameAndDescription("Proxy Switcher");
             Translate();
         }
+        
+        private StringSetting Username = new StringSetting("Username", "");
+        private StringSetting Password = new StringSetting("Password", "");
+        private StringSetting HttpProxy= new StringSetting("HTTP proxy", "");
+        private StringSetting HttpProxyPort = new StringSetting("HTTP proxy port", "8080");
 
+        #region IGitPlugin Members
+        
         public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()
         {
             yield return Username;
@@ -32,5 +39,7 @@ namespace ProxySwitcher
             }
             return false;
         }
+        
+        #endregion IGitPlugin Members
     }
 }
