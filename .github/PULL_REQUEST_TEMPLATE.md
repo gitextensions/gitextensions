@@ -4,8 +4,13 @@ Changes proposed in this pull request:
  - 
  - 
  - 
+ 
+Screenshots before and after (if PR changes UI):
+-
+-
+-
 
-How to test this code:
+How did I test this code:
  - 
  - 
  - 
