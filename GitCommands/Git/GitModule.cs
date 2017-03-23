@@ -84,6 +84,7 @@ namespace GitCommands
     public sealed class GitModule : IGitModule
     {
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
+        private static readonly Regex AnsiCodePattern = new Regex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private readonly object _lock = new object();
 
@@ -522,6 +523,12 @@ namespace GitCommands
             return startProcess;
         }
 
+        public string StripAnsiCodes(string input)
+        {
+            // The following does return the original string if no ansi codes are found
+            return AnsiCodePattern.Replace(input, "");
+        }
+
         /// <summary>
         /// Run command, console window is visible
         /// </summary>
@@ -602,13 +609,13 @@ namespace GitCommands
 
             byte[] cmdout, cmderr;
             if (GitCommandCache.TryGet(arguments, out cmdout, out cmderr))
-                return EncodingHelper.DecodeString(cmdout, cmderr, ref encoding);
+                return StripAnsiCodes(EncodingHelper.DecodeString(cmdout, cmderr, ref encoding));
 
             GitCommandHelpers.RunCmdByte(cmd, arguments, _workingDir, null, out cmdout, out cmderr);
 
             GitCommandCache.Add(arguments, cmdout, cmderr);
 
-            return EncodingHelper.DecodeString(cmdout, cmderr, ref encoding);
+            return StripAnsiCodes(EncodingHelper.DecodeString(cmdout, cmderr, ref encoding));
         }
 
         /// <summary>
@@ -623,8 +630,8 @@ namespace GitCommands
                 encoding = SystemEncoding;
             return new CmdResult
             {
-                StdOutput = output == null ? string.Empty : encoding.GetString(output),
-                StdError = error == null ? string.Empty : encoding.GetString(error),
+                StdOutput = output == null ? string.Empty : StripAnsiCodes(encoding.GetString(output)),
+                StdError = error == null ? string.Empty : StripAnsiCodes(encoding.GetString(error)),
                 ExitCode = exitCode
             };
         }
