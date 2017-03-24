@@ -394,6 +394,7 @@ namespace GitCommands
                     {
                         // Git adds \n between the format string (ends with \0 in our case) 
                         // and the first file name. So, we need to remove it from the file name.
+                        data = GitModule.ReEncodeFileNameFromLossless(data);
                         _revision.Name = data.TrimStart(new char[] { '\n' });
                     }
                     break;

@@ -3082,6 +3082,11 @@ namespace GitCommands
 
         public static string UnquoteFileName(string fileName)
         {
+            if (fileName.IsNullOrWhiteSpace())
+            {
+                return fileName;
+            }
+
             char[] chars = fileName.ToCharArray();
             IList<byte> blist = new List<byte>();
             int i = 0;
