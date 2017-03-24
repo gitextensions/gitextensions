@@ -175,7 +175,7 @@ namespace GitUI.CommandsDialogs
                 string arg = "log --format=\"%n\" --name-only --follow "+
                     GitCommandHelpers.FindRenamesAndCopiesOpts()
                     + " -- \"" + fileName + "\"";
-                Process p = Module.RunGitCmdDetached(arg);
+                Process p = Module.RunGitCmdDetached(arg, GitModule.LosslessEncoding);
 
                 // the sequence of (quoted) file names - start with the initial filename for the search.
                 var listOfFileNames = new StringBuilder("\"" + fileName + "\"");
@@ -187,6 +187,7 @@ namespace GitUI.CommandsDialogs
                 do
                 {
                     line = p.StandardOutput.ReadLine();
+                    line = GitModule.ReEncodeFileNameFromLossless(line);
 
                     if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
                     {
