@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs
 
             Branches.Select();
 
-            refs = Module.GetRefs(true, true).OfType<GitRef>().ToList();
+            refs = Module.GetRefs(false, true).OfType<GitRef>().ToList();
             cboTo.DataSource = refs;
             cboTo.DisplayMember = "Name";
 
