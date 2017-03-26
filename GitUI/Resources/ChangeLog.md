@@ -1,6 +1,9 @@
 
 Changelog
 =========
+### Version 2.49.03 (26 March 2017)
+* Fixed issue #3605. NullReferenceException from CanBeGitUrl when trying to clone git repository from dashboard.
+* Fixed issue #3578. File history and blame not show when path to file contain cyrilic chars bug reproducible.
 
 ### Version 2.49.02 (22 March 2017)
 * Fixed issue #3464. Background fetch plugin - Not working.
