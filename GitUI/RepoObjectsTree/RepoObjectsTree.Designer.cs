@@ -45,6 +45,8 @@ namespace GitUI.UserControls
             this.mnuBtnCheckoutLocal = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnBranchDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnBranchDeleteForce = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnFilterRemoteBranchInRevisionGrid = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnFilterLocalBranchInRevisionGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnBranchCheckout = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSubmodules = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuTags = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -182,7 +184,8 @@ namespace GitUI.UserControls
             this.menuBranch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuBtnCheckoutLocal,
             this.mnubtnBranchDelete,
-            this.mnubtnBranchDeleteForce});
+            this.mnubtnBranchDeleteForce,
+            this.mnubtnFilterLocalBranchInRevisionGrid});
             this.menuBranch.Name = "contextmenuBranch";
             this.menuBranch.Size = new System.Drawing.Size(140, 70);
             // 
@@ -209,6 +212,20 @@ namespace GitUI.UserControls
             this.mnubtnBranchDeleteForce.Size = new System.Drawing.Size(139, 22);
             this.mnubtnBranchDeleteForce.Text = "Force Delete";
             this.mnubtnBranchDeleteForce.ToolTipText = "Delete the branch, regardless of its merged status";
+            // 
+            // mnubtnFilterRemoteBranchInRevisionGrid
+            // 
+            this.mnubtnFilterRemoteBranchInRevisionGrid.Image = global::GitUI.Properties.Resources.IconFilter;
+            this.mnubtnFilterRemoteBranchInRevisionGrid.Name = "mnubtnFilterRemoteBranchInRevisionGrid";
+            this.mnubtnFilterRemoteBranchInRevisionGrid.Size = new System.Drawing.Size(139, 22);
+            this.mnubtnFilterRemoteBranchInRevisionGrid.Text = "Show this branch only";
+            // 
+            // mnubtnFilterLocalBranchInRevisionGrid
+            // 
+            this.mnubtnFilterLocalBranchInRevisionGrid.Image = global::GitUI.Properties.Resources.IconFilter;
+            this.mnubtnFilterLocalBranchInRevisionGrid.Name = "mnubtnFilterLocalBranchInRevisionGrid";
+            this.mnubtnFilterLocalBranchInRevisionGrid.Size = new System.Drawing.Size(139, 22);
+            this.mnubtnFilterLocalBranchInRevisionGrid.Text = "Show this branch only";
             // 
             // mnubtnBranchCheckout
             // 
@@ -279,7 +296,8 @@ namespace GitUI.UserControls
             this.mnubtnNewCreateBranch,
             this.toolStripSeparator2,
             this.mnubtnNewFetch,
-            this.mnubtnRemoteRemove});
+            this.mnubtnRemoteRemove,
+            this.mnubtnFilterRemoteBranchInRevisionGrid});
             this.menuRemote.Name = "contextmenuRemote";
             this.menuRemote.Size = new System.Drawing.Size(165, 214);
             // 
@@ -706,6 +724,8 @@ namespace GitUI.UserControls
         private ToolStripMenuItem mnubtnBranchCheckout;
         private ToolStripMenuItem mnubtnBranchDelete;
         private ToolStripMenuItem mnubtnBranchDeleteForce;
+        private ToolStripMenuItem mnubtnFilterLocalBranchInRevisionGrid;
+        private ToolStripMenuItem mnubtnFilterRemoteBranchInRevisionGrid;
         private ContextMenuStrip menuSubmodules;
         private ContextMenuStrip menuTags;
         private ContextMenuStrip menuStashes;

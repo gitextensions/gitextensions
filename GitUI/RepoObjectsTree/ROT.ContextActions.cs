@@ -51,6 +51,7 @@ namespace GitUI.UserControls
             RegisterClick<BranchNode>(mnuBtnCheckoutLocal, branch => branch.Checkout());
             RegisterClick<BranchNode>(mnubtnBranchDelete, branch => branch.Delete());
             RegisterClick<BranchNode>(mnubtnBranchDeleteForce, branch => branch.DeleteForce());
+            RegisterClick<BranchNode>(mnubtnFilterLocalBranchInRevisionGrid, branch => FilterInRevisionGrid(branch));
             Node.RegisterContextMenu(typeof (BranchNode), menuBranch);
 
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
@@ -84,6 +85,7 @@ RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
             RegisterClick<RemoteBranchNode>(mnubtnMergeBranch, remoteBranch => remoteBranch.Merge());
             RegisterClick<RemoteBranchNode>(mnubtnRebase, remoteBranch => remoteBranch.Rebase());
             RegisterClick<RemoteBranchNode>(mnubtnReset, remoteBranch => remoteBranch.Reset());
+            RegisterClick<RemoteBranchNode>(mnubtnFilterRemoteBranchInRevisionGrid, remoteBranch => FilterInRevisionGrid(remoteBranch));
             RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchFetchAndCheckout, b =>
             {
                 b.Fetch();
@@ -101,6 +103,11 @@ RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
 
             RegisterClick(mnuBtnManageRemotesFromRootNode, PopupManageRemotesForm);
+        }
+
+        private void FilterInRevisionGrid(BaseBranchNode branch)
+        {
+            FilterBranchHelper.SetBranchFilter(branch.FullPath, refresh: true);
         }
 
         private void PopupManageRemotesForm()

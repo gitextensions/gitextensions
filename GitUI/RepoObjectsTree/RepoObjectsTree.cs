@@ -13,6 +13,11 @@ namespace GitUI.UserControls
     /// <summary>Tree-like structure for a repo's objects.</summary>
     public partial class RepoObjectsTree : GitModuleControl
     {
+        private readonly TranslationString showBranchOnly =
+            new TranslationString("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
+
+        public FilterBranchHelper FilterBranchHelper { private get; set; }
+
         List<Tree> rootNodes = new List<Tree>();
         /// <summary>Image key for a head branch.</summary>
         static readonly string headBranchKey = Guid.NewGuid().ToString();
@@ -35,6 +40,8 @@ namespace GitUI.UserControls
             treeMain.HideSelection = false;
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
+            mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText = showBranchOnly.Text;
+            mnubtnFilterLocalBranchInRevisionGrid.ToolTipText = showBranchOnly.Text;
         }
 
         private void InitiliazeSearchBox()
