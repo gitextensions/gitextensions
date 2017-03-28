@@ -227,30 +227,6 @@ namespace GitUI.UserControls
             }
         }
 
-        //    /// <summary>Name of the remote for this remote branch. <example>"origin"</example></summary>
-        //    public string Remote { get; private set; }
-        //    /// <summary>Full name of the branch, excluding the remote name. <example>"issues/issue1344"</example></summary>
-        //    public string FullBranchName { get; private set; }
-
-        //    public RemoteBranchNode(GitUICommands uiCommands,
-        //        string remote, string branch, int level, string activeBranchPath = null, BranchPathNode parent = null)
-        //        : base(uiCommands, branch, level, activeBranchPath, parent, isLocal: false)
-        //    {
-        //        Remote = remote;
-        //        FullBranchName = FullPath.Substring(FullPath.IndexOf(BranchesNode.Separator));
-        //    }
-
-        //!if (targetBranch.IsRemote)
-        //{// local branch -> remote branch = push
-        //    uiCommands.StartPushDialog(
-        //        new GitPushAction(
-        //            ((RemoteBranchNode)targetBranch).Remote,
-        //            draggedBranch.FullPath,
-        //            targetBranch.FullPath));
-        //}
-        //}
-
-
         private class BranchTree : Tree
         {
             public const char PathSeparator = '/';

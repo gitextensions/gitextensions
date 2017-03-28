@@ -36,96 +36,6 @@ namespace GitUI.UserControls
         static readonly string remoteBranchNewKey = Guid.NewGuid().ToString();
         static readonly string remoteBranchUnTrackedKey = Guid.NewGuid().ToString();
 
-        /*
-        /// <summary>Reloads the remotes.</summary>
-        static void OnReloadRemotes(ICollection<RemoteNode> remotes, Tree<RemoteNode> remotesNode)
-        {
-            remotesNode.TreeNode.Text = string.Format("{0} ({1})", Strings.remotes, remotes.Count);
-        }
-
-        /// <summary>Adds the specified <paramref name="remoteNode"/> to the remotes tree.</summary>
-        TreeNode OnAddRemote(TreeNodeCollection nodes, RemoteNode remoteNode)
-        {
-            RemoteInfo remote = remoteNode.Value;
-            bool hasSameURLs = remote.PushUrls.Count() == 1 && Equals(remote.PushUrls.First(), remote.FetchUrl);
-
-            string remoteImgKey = remote.IsMirror ? remotePushMirrorKey : remoteKey;
-
-            string remoteTip;
-            if (remote.IsMirror)
-            {// setup as push mirror
-                remoteTip = string.Format(Strings.RemoteMirrorsTipFormat.Text,
-                    hasSameURLs
-                        ? remote.FetchUrl
-                        : remote.PushUrls.First());
-            }
-            else
-            {
-                remoteTip = hasSameURLs
-                    ? remote.FetchUrl
-                    : Strings.RemoteDifferingUrlsTip.Text;
-            }
-
-            TreeNode treeNode = new TreeNode(remote.Name)
-            {
-                //Name = string.Format("remotes{0}", remote.Name),TODO: branch name may have invalid chars for Control.Name
-                ToolTipText = remoteTip,
-                ContextMenuStrip = menuRemote,
-                ImageKey = remoteImgKey,
-                SelectedImageKey = remoteImgKey,
-            };
-            nodes.Add(treeNode);
-            treeNode.Nodes.AddRange(remoteNode.Children.Select(child =>
-            {
-                RemoteInfo.RemoteTrackingBranch remoteTrackingBranch = child.Value;
-                string imgKey = branchKey;
-                string toolTip = remoteTrackingBranch.Name;//Module.CompareCommits();
-                ContextMenuStrip menu = menuRemoteBranchTracked;
-                if (remoteTrackingBranch.IsHead)
-                {
-                    imgKey = headBranchKey;
-                }
-                else if (remoteTrackingBranch.Status == RemoteInfo.RemoteTrackingBranch.State.Stale)
-                {
-                    imgKey = remoteBranchStaleKey;
-                    toolTip = string.Format(Strings.RemoteBranchStaleTipFormat.Text, remoteTrackingBranch.Name);
-                    menu = menuRemoteBranchStale;
-                }
-                else if (remoteTrackingBranch.Status == RemoteInfo.RemoteTrackingBranch.State.New)
-                {
-                    imgKey = remoteBranchNewKey;
-                    toolTip = string.Format(Strings.RemoteBranchNewTipFormat.Text, remoteTrackingBranch.Name);
-                    menu = menuRemoteBranchNew;
-                }
-                else
-                {// explicitly UN-tracked -> grey, sort to bottom of list
-                    // need to parse from settings
-                    imgKey = remoteBranchUnTrackedKey;
-                    menu = menuRemoteBranchUnTracked;
-                    throw new NotImplementedException();
-                }
-                TreeNode childTreeNode = new TreeNode(remoteTrackingBranch.Name)
-                {
-                    ContextMenuStrip = menu,
-                    ImageKey = imgKey,
-                    SelectedImageKey = imgKey,
-                    ToolTipText = toolTip,
-                };
-                child.TreeNode = childTreeNode;
-                return childTreeNode;
-            }).ToArray());
-
-            return treeNode;
-        }
-
-        /// <summary><see cref="Node"/> for a remote repo.</summary>
-        sealed class RemoteNode : ParentNode<RemoteInfo, RemoteBranchNode>
-        {
-            public RemoteNode(RemoteInfo remote, GitUICommands uiCommands)
-                : base(uiCommands, remote, remote.RemoteTrackingBranches.Select(b => new RemoteBranchNode(uiCommands, b))) { }
-        }
-        */
-
         private class RemoteBranchTree : Tree
         {
             public RemoteBranchTree(TreeNode aTreeNode, IGitUICommandsSource uiCommands) : base(aTreeNode, uiCommands)
@@ -290,21 +200,6 @@ namespace GitUI.UserControls
             public void CreateBranch()
             {
                 UICommands.StartCreateBranchDialog(this.TreeViewNode.TreeView, new GitRevision(Module, FullPath));
-            }
-
-            /// <summary>Un-track the remote branch and remove the local copy.</summary>
-            public void UnTrack()
-            {
-                throw new NotImplementedException();
-                //string error = Module.RemoteCmd(GitRemote.UnTrack(Value.Remote, Value));
-                //GC.KeepAlive(error);
-                //bool isSuccess = true;
-                //if (isSuccess)
-                //{
-                //    TreeNode.Parent.Nodes.Remove(TreeNode);
-                //    Value.Remote.UnTrack(Value);
-                //}
-                //throw new NotImplementedException("this one actually works, but need to change UI state and more testing");
             }
 
             /// <summary>Delete the branch on the remote repository.</summary>
