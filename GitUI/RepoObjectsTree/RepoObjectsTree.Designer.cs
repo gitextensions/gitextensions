@@ -96,7 +96,7 @@ namespace GitUI.UserControls
             this.menuRemoteRepoNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnManageRemotes = new System.Windows.Forms.ToolStripMenuItem();
             this.repoTreePanel = new System.Windows.Forms.TableLayoutPanel();
-            this.branchFilterPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.branchSearchPanel = new System.Windows.Forms.TableLayoutPanel();
             this.lblSearchBranch = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
@@ -115,7 +115,7 @@ namespace GitUI.UserControls
             this.menuRemoteBranchUnTracked.SuspendLayout();
             this.menuRemoteRepoNode.SuspendLayout();
             this.repoTreePanel.SuspendLayout();
-            this.branchFilterPanel.SuspendLayout();
+            this.branchSearchPanel.SuspendLayout();
             this.menuSettings.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -606,7 +606,7 @@ namespace GitUI.UserControls
             this.repoTreePanel.ColumnCount = 1;
             this.repoTreePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.repoTreePanel.Controls.Add(this.treeMain, 0, 1);
-            this.repoTreePanel.Controls.Add(this.branchFilterPanel, 0, 0);
+            this.repoTreePanel.Controls.Add(this.branchSearchPanel, 0, 0);
             this.repoTreePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.repoTreePanel.Location = new System.Drawing.Point(0, 0);
             this.repoTreePanel.Name = "repoTreePanel";
@@ -616,25 +616,25 @@ namespace GitUI.UserControls
             this.repoTreePanel.Size = new System.Drawing.Size(300, 350);
             this.repoTreePanel.TabIndex = 4;
             // 
-            // branchFilterPanel
+            // branchSearchPanel
             // 
-            this.branchFilterPanel.AutoSize = true;
-            this.branchFilterPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.branchFilterPanel.BackColor = System.Drawing.SystemColors.Control;
-            this.branchFilterPanel.ColumnCount = 4;
-            this.branchFilterPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.branchFilterPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.branchFilterPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.branchFilterPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.branchFilterPanel.Controls.Add(this.lblSearchBranch, 0, 0);
-            this.branchFilterPanel.Controls.Add(this.btnSearch, 2, 0);
-            this.branchFilterPanel.Controls.Add(this.btnSettings, 3, 0);
-            this.branchFilterPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.branchFilterPanel.Location = new System.Drawing.Point(3, 3);
-            this.branchFilterPanel.Name = "branchFilterPanel";
-            this.branchFilterPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.branchFilterPanel.Size = new System.Drawing.Size(294, 32);
-            this.branchFilterPanel.TabIndex = 4;
+            this.branchSearchPanel.AutoSize = true;
+            this.branchSearchPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.branchSearchPanel.BackColor = System.Drawing.SystemColors.Control;
+            this.branchSearchPanel.ColumnCount = 4;
+            this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.branchSearchPanel.Controls.Add(this.lblSearchBranch, 0, 0);
+            this.branchSearchPanel.Controls.Add(this.btnSearch, 2, 0);
+            this.branchSearchPanel.Controls.Add(this.btnSettings, 3, 0);
+            this.branchSearchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.branchSearchPanel.Location = new System.Drawing.Point(3, 3);
+            this.branchSearchPanel.Name = "branchSearchPanel";
+            this.branchSearchPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.branchSearchPanel.Size = new System.Drawing.Size(294, 32);
+            this.branchSearchPanel.TabIndex = 4;
             // 
             // lblSearchBranch
             // 
@@ -710,8 +710,8 @@ namespace GitUI.UserControls
             this.menuRemoteRepoNode.ResumeLayout(false);
             this.repoTreePanel.ResumeLayout(false);
             this.repoTreePanel.PerformLayout();
-            this.branchFilterPanel.ResumeLayout(false);
-            this.branchFilterPanel.PerformLayout();
+            this.branchSearchPanel.ResumeLayout(false);
+            this.branchSearchPanel.PerformLayout();
             this.menuSettings.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -771,7 +771,7 @@ namespace GitUI.UserControls
         private ToolStripMenuItem mnubtnCreateBranchForTag;
         private ToolStripMenuItem mnubtnDeleteTag;
         private TableLayoutPanel repoTreePanel;
-        private TableLayoutPanel branchFilterPanel;
+        private TableLayoutPanel branchSearchPanel;
         private Label lblSearchBranch;
         private Button btnSearch;
         private Button btnSettings;
