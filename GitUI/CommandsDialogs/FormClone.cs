@@ -135,6 +135,11 @@ namespace GitUI.CommandsDialogs
 
         private bool CanBeGitURL(string anURL)
         {
+            if (anURL == null)
+            {
+                return false;
+            }
+
             string anURLLowered = anURL.ToLowerInvariant();
 
             return (anURLLowered.StartsWith("http") ||

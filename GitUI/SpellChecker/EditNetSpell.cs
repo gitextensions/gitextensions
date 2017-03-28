@@ -668,8 +668,7 @@ namespace GitUI.SpellChecker
             // handle paste from clipboard (Ctrl+V, Shift+Ins)
             if((e.Control && e.KeyCode == Keys.V) || (e.Shift && e.KeyCode == Keys.Insert))
             {
-                // insert only text
-                ((RichTextBox)sender).Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
+                PasteTextFromClipboard();
                 e.Handled = true;
                 return;
             }
@@ -687,6 +686,12 @@ namespace GitUI.SpellChecker
             }
 
             OnKeyDown(e);
+        }
+
+        private void PasteTextFromClipboard()
+        {
+            // insert only text
+            TextBox.Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
         }
 
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -748,11 +753,7 @@ namespace GitUI.SpellChecker
         private void PasteMenuItemClick(object sender, EventArgs e)
         {
             if (!Clipboard.ContainsText()) return;
-            // remove image data from clipboard
-            string text = Clipboard.GetText();
-            Clipboard.SetText(text);
-
-            TextBox.Paste();
+            PasteTextFromClipboard();
             CheckSpelling();
         }
 

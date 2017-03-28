@@ -847,6 +847,12 @@ namespace GitCommands
             set { SetInt("commitdialogrightsplitter", value); }
         }
 
+        public static bool CommitDialogSelectionFilter 
+        {
+            get { return GetBool("commitdialogselectionfilter", false); }
+            set { SetBool("commitdialogselectionfilter", value); }
+        }
+
         public static string DefaultCloneDestinationPath
         {
             get { return GetString("defaultclonedestinationpath", string.Empty); }
