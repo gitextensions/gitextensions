@@ -124,6 +124,7 @@ namespace GitUI.CommandsDialogs
             Fetch.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Fetch;
             localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = AppSettings.AutoStash;
+            Prune.Enabled = AppSettings.FormPullAction == AppSettings.PullAction.Merge || AppSettings.FormPullAction == AppSettings.PullAction.Fetch;
 
             ErrorOccurred = false;
 
@@ -482,12 +483,12 @@ namespace GitUI.CommandsDialogs
         {
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked));
+                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked));
             }
 
             Debug.Assert(Merge.Checked || Rebase.Checked);
 
-            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked))
+            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
                        {
                            HandleOnExitCallback = HandlePullOnExit
                        };
@@ -808,6 +809,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
             AllTags.Enabled = false;
+            Prune.Enabled = true;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
         }
@@ -819,6 +821,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;
+            Prune.Enabled = false;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
         }
@@ -829,6 +832,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
+            Prune.Enabled = true;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)
