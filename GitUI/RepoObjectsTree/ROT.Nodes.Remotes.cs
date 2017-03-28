@@ -242,33 +242,6 @@ namespace GitUI.UserControls
         {
             public RemoteBranchNode(Tree aTree, string aFullPath) : base(aTree, aFullPath)
             {
-                IsDraggable = false;
-            }
-
-            protected override IEnumerable<DragDropAction> CreateDragDropActions()
-            {
-                throw new NotImplementedException();
-                // (local) Branch onto this RemoteBranch -> push
-                //var dropLocalBranch = new DragDropAction<BranchNode>(
-                //    branch => Value.PushConfig != null && Equals(Value.PushConfig.LocalBranch, branch.FullPath),
-                //    branch =>
-                //    {
-                //        GitPush push = Value.CreatePush(branch.FullPath);
-
-                //        if (Module.CompareCommits(branch.FullPath, Value.FullPath).State == BranchCompareStatus.AheadPublishable)
-                //        {
-                //            // local is ahead and publishable (remote has NOT diverged)
-                //            Module.Push(push);
-                //            throw new NotImplementedException("tell user about fail or success.");
-                //            // if fail because remote diverged since Git.CompareCommits conditional (unlikely) -> tell user to fetch/merge or pull
-                //        }
-                //        else
-                //        {
-                //            throw new NotImplementedException("tell user to fetch/merge or pull");
-                //        }
-                //    });
-
-                //return new[] { dropLocalBranch, };
             }
 
             internal override void OnSelected()

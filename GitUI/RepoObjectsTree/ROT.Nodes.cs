@@ -191,10 +191,7 @@ namespace GitUI.UserControls
             {
                 Nodes = new Nodes(aTree, this);
                 //Notifier = NotificationManager.Get(UICommands);
-                IsDraggable = false;
-                AllowDrop = false;
                 ParentNode = aParentNode;
-                dragDropActions = new Lazy<IEnumerable<DragDropAction>>(CreateDragDropActions);
             }
 
             TreeNode _TreeViewNode;
@@ -267,70 +264,6 @@ namespace GitUI.UserControls
             internal virtual void OnClick() { }
             /// <summary>Occurs when the <see cref="Node"/> is double-clicked.</summary>
             internal virtual void OnDoubleClick() { }
-
-            #region Drag/Drop
-            /// <summary>true if the <see cref="Node"/> is draggable.</summary>
-            public virtual bool IsDraggable { get; protected set; }
-            /// <summary>true if the <see cref="Node"/> will accept a dropped object.</summary>
-            public virtual bool AllowDrop { get; protected set; }
-            /// <summary>true if the <see cref="Node"/> will accept the specified <paramref name="dragged"/> object.</summary>
-            public bool Accepts(Node dragged)
-            {
-                return dragDropActions.Value.Any(dda => dda.Drag(dragged));
-            }
-            /// <summary>Drops the object onto this <see cref="Node"/>.</summary>
-            public void Drop(object droppedObject)
-            {
-                if (dragDropActions.Value.Select(dda => dda.Drop(droppedObject)).Any(r => r)) { }
-            }
-
-            /// <summary>Gets the valid <see cref="DragDropAction"/>s.</summary>
-            protected virtual IEnumerable<DragDropAction> CreateDragDropActions() { return new DragDropAction[0]; }
-            Lazy<IEnumerable<DragDropAction>> dragDropActions;
-
-            /// <summary>Valid drag-drop action.</summary>
-            protected class DragDropAction
-            {
-                Func<object, bool> _canDrop;
-                Action<object> _onDrop;
-
-                protected DragDropAction(Func<object, bool> canDrop, Action<object> onDrop)
-                {
-                    _canDrop = canDrop;
-                    _onDrop = onDrop;
-                }
-
-                /// <summary>Execute a drag, which indicates whether a drop is allowed.</summary>
-                public bool Drag(object draggedObject)
-                {
-                    return _canDrop(draggedObject);
-                }
-
-                /// <summary>Execute the drop, with a validity check.</summary>
-                public bool Drop(object droppedObject)
-                {
-                    if (_canDrop(droppedObject))
-                    {
-                        _onDrop(droppedObject);
-                        return true;
-                    }
-                    return false;
-                }
-            }
-
-            /// <summary><see cref="DragDropAction"/> with safe type-casting.</summary>
-            /// <typeparam name="TDragged">Type of the dragged/dropped object.</typeparam>
-            protected class DragDropAction<TDragged> : DragDropAction
-                where TDragged : class
-            {
-                public DragDropAction(Func<TDragged, bool> canDrop, Action<TDragged> onDrop)
-                    : base(obj =>
-                    {
-                        TDragged t = obj as TDragged;
-                        return (t != null) && canDrop(t);
-                    }, obj => onDrop(obj as TDragged)) { }
-            }
-            #endregion Drag/Drop
 
             protected INotifier Notifier { get; private set; }
 

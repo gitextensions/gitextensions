@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Config;
-using GitUI.CommandsDialogs;
-using GitUIPluginInterfaces.Notifications;
 using ResourceManager;
 
 namespace GitUI.UserControls
@@ -117,8 +113,6 @@ namespace GitUI.UserControls
             public BranchNode(Tree aTree, string aFullPath)
                 : base(aTree, aFullPath.TrimStart(GitModule.ActiveBranchIndicator))
             {
-                IsDraggable = false;
-                AllowDrop = false;
                 IsActive = aFullPath.StartsWith(GitModule.ActiveBranchIndicator.ToString());
             }
 
@@ -170,51 +164,6 @@ namespace GitUI.UserControls
                 base.OnSelected();
 
                 SelectRevision();
-            }
-
-            protected override IEnumerable<DragDropAction> CreateDragDropActions()
-            {
-                /*
-                var stashDD = new DragDropAction<StashNode>(
-                    (draggedStash) => IsActive,
-                    (draggedStash) =>
-                    {
-                        // normal -> Pop
-                        // Alt -> Apply
-                        UICommands.StartStashDialog();
-                    });
-                */
-                var branchDD = new DragDropAction<BranchNode>(draggedBranch =>
-                {
-                    string activeBranch = UICommands.Module.GetSelectedBranch();
-                    if (Equals(FullPath, activeBranch))
-                    {
-// target is active -> merge dropped
-                        return true;
-                    }
-                    if (Equals(draggedBranch.FullPath, activeBranch))
-                    {
-// dragged is active -> merge dragged
-                        return true;
-                    }
-                    return false;
-                }, draggedBranch =>
-                {
-                    string activeBranch = UICommands.Module.GetSelectedBranch();
-                    if (Equals(FullPath, activeBranch))
-                    {
-// target is active -> merge dropped
-                        UICommands.StartMergeBranchDialog(draggedBranch.FullPath);
-                    }
-                    if (Equals(draggedBranch.FullPath, activeBranch))
-                    {
-// dropped is active -> merge target
-                        UICommands.StartMergeBranchDialog(FullPath);
-                    }
-                });
-
-
-                return new DragDropAction[] {/*stashDD,*/ branchDD};
             }
 
             public void Checkout()

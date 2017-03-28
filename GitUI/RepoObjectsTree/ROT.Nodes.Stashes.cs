@@ -45,7 +45,6 @@ namespace GitUI.UserControls
                 : base(aTree, aParentNode)
             {
                 Stash = aStash;
-                IsDraggable = true;
             }
 
             internal override void OnSelected()

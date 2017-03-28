@@ -86,8 +86,6 @@ namespace GitUI.UserControls
 
             CancelBackgroundTasks();
 
-            DragDrops();
-
             var localBranchesRootNode = new TreeNode(Strings.branches.Text)
             {
                 ImageKey = "RemoteRepo.png",
@@ -315,6 +313,27 @@ namespace GitUI.UserControls
                 OnBtnSearchClicked(null, null);
                 e.Handled = true;
             }
+        }
+
+        /// <summary>Occurs when a <see cref="TreeNode"/> is selected.</summary>
+        void OnNodeSelected(object sender, TreeViewEventArgs e)
+        {
+            Node.OnNode<Node>(e.Node, node => node.OnSelected());
+        }
+
+        /// <summary>Occurs when a <see cref="TreeNode"/> is clicked.</summary>
+        void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            treeMain.SelectedNode = e.Node;
+            Node.OnNode<Node>(e.Node, node => node.OnClick());
+        }
+
+        /// <summary>Occurs when a <see cref="TreeNode"/> is double-clicked.
+        /// <remarks>Expand/Collapse still executes for any node with children.</remarks></summary>
+        void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            // When folding/unfolding a node, e.Node won't be the one you double clicked, but a child node instead
+            Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnDoubleClick());
         }
     }
 }
