@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -226,6 +227,7 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.CommitDialogRightSplitter != -1)
                 splitRight.SplitterDistance = AppSettings.CommitDialogRightSplitter;
 
+            SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
             Reset.Visible = AppSettings.ShowResetAllChanges;
             ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
@@ -249,6 +251,7 @@ namespace GitUI.CommandsDialogs
 
             AppSettings.CommitDialogSplitter = splitMain.SplitterDistance;
             AppSettings.CommitDialogRightSplitter = splitRight.SplitterDistance;
+            AppSettings.CommitDialogSelectionFilter = toolbarSelectionFilter.Visible;
         }
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -386,9 +389,19 @@ namespace GitUI.CommandsDialogs
 
         private bool ToggleSelectionFilter()
         {
-            selectionFilterToolStripMenuItem.Checked = !selectionFilterToolStripMenuItem.Checked;
-            toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
+            var visible = !selectionFilterToolStripMenuItem.Checked;
+            SetVisibilityOfSelectionFilter(visible);
+            if (visible)
+                selectionFilter.Focus();
+            else if (selectionFilter.Focused)
+                Unstaged.Focus();
             return true;
+        }
+
+        private void SetVisibilityOfSelectionFilter(bool visible)
+        {
+            selectionFilterToolStripMenuItem.Checked = visible;
+            toolbarSelectionFilter.Visible = visible;
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -823,7 +836,7 @@ namespace GitUI.CommandsDialogs
         private void ClearDiffViewIfNoFilesLeft()
         {
             llShowPreview.Hide();
-            if (Staged.IsEmpty && Unstaged.IsEmpty)
+            if ((Staged.IsEmpty && Unstaged.IsEmpty) || (!Unstaged.SelectedItems.Any() && !Staged.SelectedItems.Any()))
                 SelectedDiff.Clear();
         }
 

@@ -3523,20 +3523,8 @@ namespace GitUI.CommandsDialogs
         }
 
         private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string issueData = "--- GitExtensions";
-            try
-            {
-                issueData += Settings.ProductVersion;
-                issueData += ", Git " + GitCommandHelpers.VersionInUse.Full;
-                issueData += ", " + Environment.OSVersion;
-                var monoVersion = GetMonoVersion();
-                if (monoVersion != null)
-                    issueData += ", Mono " + monoVersion;
-            }
-            catch (Exception) { }
-
-            Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new?body=" + WebUtility.HtmlEncode(issueData));
+        {            
+            Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new");
         }
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {

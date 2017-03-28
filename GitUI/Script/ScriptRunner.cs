@@ -321,15 +321,20 @@ namespace GitUI.Script
             }
             command = ExpandCommandVariables(command,aModule);
 
-            if (!scriptInfo.RunInBackground)
-                FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
-            else
+            if (scriptInfo.IsPowerShell)
             {
-                if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
-                    Process.Start(argument);
+                PowerShellHelper.RunPowerShell(command, argument, aModule.WorkingDir, scriptInfo.RunInBackground);
+                return false;
+            } else
+                if (!scriptInfo.RunInBackground)
+                    FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
                 else
-                    aModule.RunExternalCmdDetached(command, argument);
-            }
+                {
+                    if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
+                        Process.Start(argument);
+                    else
+                        aModule.RunExternalCmdDetached(command, argument);
+                }
             return !scriptInfo.RunInBackground;
         }
 
