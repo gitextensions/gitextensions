@@ -279,6 +279,30 @@
             <!-- Component Id="TfsInterop.Vs2013.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2013\bin\Release\TfsInterop.Vs2013.dll" />
             </Component -->
+            <Component Id="TfsInterop.Vs2015.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\TfsInterop.Vs2015.dll" />
+            </Component>
+            <Component Id="Microsoft.VisualStudio.Services.WebApi.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.VisualStudio.Services.WebApi.dll" />
+            </Component>
+            <Component Id="Microsoft.TeamFoundation.Build2.WebApi.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.TeamFoundation.Build2.WebApi.dll" />
+            </Component>
+            <Component Id="Microsoft.TeamFoundation.Common.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.TeamFoundation.Common.dll" />
+            </Component>
+            <Component Id="Microsoft.TeamFoundation.Core.WebApi.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.TeamFoundation.Core.WebApi.dll" />
+            </Component>
+            <Component Id="Microsoft.VisualStudio.Services.Client.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.VisualStudio.Services.Client.dll" />
+            </Component>
+            <Component Id="Microsoft.VisualStudio.Services.Common.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.VisualStudio.Services.Common.dll" />
+            </Component>
+            <Component Id="System.Net.Http.Formatting.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\System.Net.Http.Formatting.dll" />
+            </Component>
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
             <Component Id="Blue.ico" Guid="*">
@@ -725,6 +749,14 @@
                     <ComponentRef Id="TfsIntegration.dll" />
                     <ComponentRef Id="TfsInterop.Vs2012.dll" />
                     <!-- ComponentRef Id="TfsInterop.Vs2013.dll" /-->
+                    <ComponentRef Id="TfsInterop.Vs2015.dll" />
+                    <ComponentRef Id="Microsoft.TeamFoundation.Build2.WebApi.dll" />
+                    <ComponentRef Id="Microsoft.TeamFoundation.Common.dll" />                  
+                    <ComponentRef Id="Microsoft.TeamFoundation.Core.WebApi.dll" />
+                    <ComponentRef Id="Microsoft.VisualStudio.Services.Client.dll" />
+                    <ComponentRef Id="Microsoft.VisualStudio.Services.Common.dll" />
+                    <ComponentRef Id="Microsoft.VisualStudio.Services.WebApi.dll" />
+                    <ComponentRef Id="System.Net.Http.Formatting.dll" />
                 </Feature>
             </Feature>
             <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">

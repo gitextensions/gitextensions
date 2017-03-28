@@ -20,6 +20,7 @@ namespace GitUI.CommandsDialogs
         private TabPage buildReportTabPage;
         private WebBrowserCtrl buildReportWebBrowser;
         private GitRevision selectedGitRevision;
+        private String url;
 
         public BuildReportTabPageExtension(TabControl tabControl, string caption)
         {
@@ -54,7 +55,8 @@ namespace GitUI.CommandsDialogs
 
                     if (isFavIconMissing || tabControl.SelectedTab == buildReportTabPage)
                     {
-                        buildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+                        url = revision.BuildStatus.Url;
+                        buildReportWebBrowser.Navigate("about:blank");
 
                         if (isFavIconMissing)
                         {
@@ -145,6 +147,7 @@ namespace GitUI.CommandsDialogs
                         },
                     TaskScheduler.FromCurrentSynchronizationContext());
             }
+            buildReportWebBrowser.Document.Write("<HTML><a href=\"" + url + "\" target=\"_blank\">Open report</a></HTML>");
         }
 
         private string DetermineFavIconUrl(HtmlDocument htmlDocument)
