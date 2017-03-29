@@ -16,6 +16,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void FormChangeLog1Load(object sender, EventArgs e)
         {
             ChangeLog.Text = Resources.ChangeLog;
+            ChangeLog.ReadOnly = true;
         }
     }
 }

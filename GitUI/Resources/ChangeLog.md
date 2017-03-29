@@ -88,9 +88,6 @@ Changelog
 * Czech translation added
 * Disabled "Traditional Chinese" translation
 * Romanian dictionary added. PR #2979
-
-
-
 * Added an option to remember the ignore-white-spaces preference for all the diff viewers
 * Option to check for release candidate versions
 * Make dictionary setting configurable for each repository separately
