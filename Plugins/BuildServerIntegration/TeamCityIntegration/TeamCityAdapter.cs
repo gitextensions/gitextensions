@@ -60,30 +60,39 @@ namespace TeamCityIntegration
 
         private CookieContainer _teamCityNtlmAuthCookie;
 
-        private CookieContainer TeamCityNtlmAuthCookie
-        {
-            get
-            {
-                return _teamCityNtlmAuthCookie ?? (_teamCityNtlmAuthCookie = GetTeamCityNtlmAuthCookie(httpClient.BaseAddress.AbsoluteUri));
-            }
-        }
-
         private string HostName { get; set; }
 
         private string[] ProjectNames { get; set; }
 
         private Regex BuildIdFilter { get; set; }
 
-        private CookieContainer GetTeamCityNtlmAuthCookie (string serverUrl)
+        private CookieContainer GetTeamCityNtlmAuthCookie (string serverUrl, IBuildServerCredentials buildServerCredentials)
         {
+            if (_teamCityNtlmAuthCookie != null)
+            {
+                return _teamCityNtlmAuthCookie;
+            }
+
             string url = serverUrl + "ntlmLogin.html";
             var cookieContainer = new CookieContainer();
             var request = (HttpWebRequest)HttpWebRequest.Create (url);
             request.CookieContainer = cookieContainer;
-            request.Credentials = CredentialCache.DefaultCredentials;
+
+            if (buildServerCredentials != null
+                && !String.IsNullOrEmpty(buildServerCredentials.Username)
+                && !String.IsNullOrEmpty(buildServerCredentials.Password))
+            {
+                request.Credentials = new NetworkCredential(buildServerCredentials.Username, buildServerCredentials.Password);
+            }
+            else
+            {
+                request.Credentials = CredentialCache.DefaultCredentials;
+            }
             request.PreAuthenticate = true;
             request.GetResponse();
-            return cookieContainer;
+
+            _teamCityNtlmAuthCookie = cookieContainer;
+            return _teamCityNtlmAuthCookie;
         }
 
         public string LogAsGuestUrlParameter { get; set; }
@@ -391,7 +400,7 @@ namespace TeamCityIntegration
                 }
                 else
                 {
-                    UpdateHttpClientOptionsNtlmAuth();
+                    UpdateHttpClientOptionsNtlmAuth(buildServerCredentials);
                     return GetStreamAsync (restServicePath, cancellationToken);
                 }
 
@@ -404,7 +413,7 @@ namespace TeamCityIntegration
 #endif
         }
 
-        public void UpdateHttpClientOptionsNtlmAuth()
+        public void UpdateHttpClientOptionsNtlmAuth(IBuildServerCredentials buildServerCredentials)
         {
             try
             {
@@ -413,7 +422,7 @@ namespace TeamCityIntegration
 
                 httpClientHostSuffix = "httpAuth";
                 CreateNewHttpClient (HostName);
-                httpClientHandler.CookieContainer = TeamCityNtlmAuthCookie;
+                httpClientHandler.CookieContainer = GetTeamCityNtlmAuthCookie(httpClient.BaseAddress.AbsoluteUri, buildServerCredentials);
             }
             catch (Exception exception)
             {
