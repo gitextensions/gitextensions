@@ -389,7 +389,7 @@ namespace TeamCityIntegration
 
             if (unauthorized)
             {
-                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, false);
+                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
                 var useBuildServerCredentials = buildServerCredentials != null
                                                 && !buildServerCredentials.UseGuestAccess
                                                 && (string.IsNullOrWhiteSpace(buildServerCredentials.Username) && string.IsNullOrWhiteSpace(buildServerCredentials.Password));
