@@ -4,6 +4,3 @@ os: linux
 
 install:
   - nuget restore GitExtensionsMono.sln
-
-script:
-  - xbuild /p:TargetFrameworkProfile="" ./GitExtensionsMono.sln
