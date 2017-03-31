@@ -10,6 +10,8 @@ TestResults/
 *.sdf
 *.opensdf
 *.ipch
+.idea/
+*.iml
 
 */obj
 Plugins/*/obj
