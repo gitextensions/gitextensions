@@ -80,7 +80,11 @@ RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
             RegisterClick<RemoteBranchNode>(mnubtnRemoteRemove, remoteBranch => remoteBranch.Delete());
             RegisterClick<RemoteBranchNode>(mnubtnBranchCheckout, branch => branch.Checkout());
             RegisterClick<RemoteBranchNode>(mnubtnNewFetch, remoteBranch => remoteBranch.Fetch());
-            RegisterClick<RemoteBranchNode>(toolbtnRemotePull, remoteBranch => remoteBranch.Pull());
+            RegisterClick<RemoteBranchNode>(toolbtnRemotePull, remoteBranch =>
+            {
+                remoteBranch.Fetch();
+                remoteBranch.Merge();
+            });
             RegisterClick<RemoteBranchNode>(mnubtnNewCreateBranch, remoteBranch => remoteBranch.CreateBranch());
             RegisterClick<RemoteBranchNode>(mnubtnMergeBranch, remoteBranch => remoteBranch.Merge());
             RegisterClick<RemoteBranchNode>(mnubtnRebase, remoteBranch => remoteBranch.Rebase());
@@ -90,6 +94,16 @@ RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
             {
                 b.Fetch();
                 b.Checkout();
+            });
+            RegisterClick<RemoteBranchNode>(mnubtnFetchCreateBranch, b =>
+            {
+                b.Fetch();
+                b.CreateBranch();
+            });
+            RegisterClick<RemoteBranchNode>(mnubtnFetchRebase, b =>
+            {
+                b.Fetch();
+                b.Rebase();
             });
             Node.RegisterContextMenu(typeof(RemoteBranchNode), menuRemote);
 
