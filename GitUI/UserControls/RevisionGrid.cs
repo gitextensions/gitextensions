@@ -2990,6 +2990,7 @@ namespace GitUI
             NavigateForward,
             SelectAsBaseToCompare,
             CompareToBase,
+            CreateFixupCommit,
             ToggleLeftPanel,
         }
 
@@ -3024,6 +3025,7 @@ namespace GitUI
                 case Commands.NavigateForward: NavigateForward(); break;
                 case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
                 case Commands.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
+                case Commands.CreateFixupCommit: FixupCommitToolStripMenuItemClick(null, null); break;
                 case Commands.ToggleLeftPanel: ToggleLeftPanel(); break;
                 default:
                     {
