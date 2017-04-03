@@ -7,7 +7,9 @@ using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
 using GitCommands;
+using GitCommands.Utils;
 using ResourceManager;
+using RestSharp;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -24,6 +26,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public Version CurrentVersion;
         public bool UpdateFound;
         public string UpdateUrl;
+        private string _releasePageUrl;
         public string NewVersion;
 
         public FormUpdates(Version currentVersion)
@@ -34,6 +37,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             progressBar1.Visible = true;
             CurrentVersion = currentVersion;
             UpdateUrl = "";
+            _releasePageUrl = "";
             NewVersion = "";
             progressBar1.Style = ProgressBarStyle.Marquee;
         }
@@ -51,28 +55,34 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 ShowDialog(aOwnerWindow);
         }
 
+        private class GitHubReleaseInfo
+        {
+            public string HtmlUrl { get; set; }
+            public string TagName { get; set; }
+        }
+
+        private static GitHubReleaseInfo GetLatestGitExtensionsRelease()
+        {
+            var client = new RestClient("https://api.github.com") {UserAgent = "mabako/Git.hub"};
+
+            var request = new RestRequest("/repos/gitextensions/gitextensions/releases/latest");
+
+            return client.Get<GitHubReleaseInfo>(request).Data;
+        }
+
         private void SearchForUpdates()
         {
             try
             {
-                Client github = new Client();
-                Repository gitExtRepo = github.getRepository("gitextensions", "gitextensions");
+                var github = new Client();
+                var gitExtRepo = github.getRepository("gitextensions", "gitextensions");
                 if (gitExtRepo == null)
                     return;
 
-                var configData = gitExtRepo.GetRef("heads/configdata");
+                var configData = GetLatestGitExtensionsRelease();
                 if (configData == null)
                     return;
-
-                var tree = configData.GetTree();
-                if (tree == null)
-                    return;
-
-                var releases = tree.Tree.Where(entry => "GitExtensions.releases".Equals(entry.Path, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-                if (releases != null && releases.Blob.Value != null)
-                {
-                    CheckForNewerVersion(releases.Blob.Value.GetContent());
-                }
+                CheckForNewerVersion(configData);
             }
             catch (Exception ex)
             {
@@ -88,23 +98,44 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         }
 
-        void CheckForNewerVersion(string releases)
+        void CheckForNewerVersion(GitHubReleaseInfo release)
         {
-            var versions = ReleaseVersion.Parse(releases);
-            var updates = ReleaseVersion.GetNewerVersions(CurrentVersion, AppSettings.CheckForReleaseCandidates, versions);
-
-            var update = updates.OrderBy(version => version.Version).LastOrDefault();
-            if (update != null)
+            Version newVersion = null;
+            try
             {
-                UpdateFound = true;
-                UpdateUrl = update.DownloadPage;
-                NewVersion = update.Version.ToString();
-                Done();
-                return;
+                newVersion = new Version(release.TagName);
             }
-            UpdateUrl = "";
-            UpdateFound = false;
-            Done();
+            catch
+            {
+                // ignored
+            }
+            if (newVersion == null)
+            {
+                UpdateFound = false;
+            }
+            else
+            {
+                UpdateFound = CurrentVersion < newVersion;
+            }
+            if (UpdateFound)
+            {
+                _releasePageUrl = release.HtmlUrl;
+                var downloadUrlFormat = "https://github.com/gitextensions/gitextensions/releases/download/{0}/GitExtensions-{0}-Setup.msi";
+                if (EnvUtils.IsMonoRuntime())
+                {
+                    downloadUrlFormat =
+                        "https://github.com/gitextensions/gitextensions/releases/download/{0}/GitExtensions-{0}-Mono.zip";
+                }
+                UpdateUrl = string.Format(downloadUrlFormat, release.TagName);
+                NewVersion = release.TagName;
+                Done();
+            }
+            else
+            {
+                _releasePageUrl = "";
+                UpdateUrl = "";
+                Done();
+            }
         }
 
         private void Done()
@@ -131,7 +162,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void linkChangeLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
+            Process.Start(_releasePageUrl);
         }
 
         private void btnDownloadNow_Click(object sender, EventArgs e)
