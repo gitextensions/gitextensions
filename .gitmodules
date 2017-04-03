@@ -1,3 +1,4 @@
+# Remember to modify remotes.sh to update the script to update urls
 [submodule "GitExtensionsDoc"]
 	path = GitExtensionsDoc
 	url = ../GitExtensionsDoc.git
