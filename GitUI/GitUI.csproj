@@ -1715,6 +1715,8 @@
     <None Include="Resources\Icons\IconShowFirstParent.png" />
     <Content Include="Resources\Icons\86.png" />
     <None Include="Resources\Icons\IconBlank.png" />
+    <None Include="Resources\Icons\light-bulb-icon-on-16.png" />
+    <None Include="Resources\Icons\light-bulb-icon-off-16.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

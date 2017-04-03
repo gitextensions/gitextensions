@@ -99,9 +99,23 @@ namespace GitCommands.Settings
             return SettingsCache.GetConfigSections();
         }
 
-        public void RemoveConfigSection(string configSectionName)
+        /// <summary>
+        /// Adds the specific configuration section to the .git/config file.
+        /// </summary>
+        /// <param name="configSection">The configuration section.</param>
+        public void AddConfigSection(IConfigSection configSection)
         {
-            SettingsCache.RemoveConfigSection(configSectionName);
+            SettingsCache.AddConfigSection(configSection);
+        }
+
+        /// <summary>
+        /// Removes the specific configuration section from the .git/config file.
+        /// </summary>
+        /// <param name="configSectionName">The name of the configuration section.</param>
+        /// <param name="performSave">If <see langword="true"/> the configuration changes will be saved immediately.</param>
+        public void RemoveConfigSection(string configSectionName, bool performSave = false)
+        {
+            SettingsCache.RemoveConfigSection(configSectionName, performSave);
         }
 
         public Encoding FilesEncoding
