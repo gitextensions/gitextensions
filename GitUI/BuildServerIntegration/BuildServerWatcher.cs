@@ -134,7 +134,7 @@ namespace GitUI.BuildServerIntegration
                                     credentialsConfig.LoadFromString(textReader.ReadToEnd());
                                 }
 
-                                ConfigSection section = credentialsConfig.FindConfigSection(CredentialsConfigName);
+                                var section = credentialsConfig.FindConfigSection(CredentialsConfigName);
 
                                 if (section != null)
                                 {
@@ -170,7 +170,7 @@ namespace GitUI.BuildServerIntegration
                     {
                         ConfigFile credentialsConfig = new ConfigFile("", true);
 
-                        ConfigSection section = credentialsConfig.FindOrCreateConfigSection(CredentialsConfigName);
+                        var section = credentialsConfig.FindOrCreateConfigSection(CredentialsConfigName);
 
                         section.SetValueAsBool(UseGuestAccessKey, buildServerCredentials.UseGuestAccess);
                         section.SetValue(UsernameKey, buildServerCredentials.Username);

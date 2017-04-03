@@ -1,6 +1,7 @@
 ﻿using GitCommands.Config;
 using System;
 using System.Collections.Generic;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
@@ -80,7 +81,7 @@ namespace GitCommands.Settings
             });
         }
 
-        public IList<ConfigSection> GetConfigSections()
+        public IList<IConfigSection> GetConfigSections()
         {
             return LockedAction(() =>
             {

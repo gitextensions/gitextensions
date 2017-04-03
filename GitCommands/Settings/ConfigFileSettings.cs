@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using GitCommands.Config;
@@ -8,7 +8,7 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
-    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, ISettingsValueGetter
+    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, IConfigFileSettings
     {
         public ConfigFileSettings(ConfigFileSettings aLowerPriority, ConfigFileSettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
@@ -94,7 +94,7 @@ namespace GitCommands.Settings
             SetValue(setting, ConfigSection.FixPath(value));
         }
 
-        public IList<ConfigSection> GetConfigSections()
+        public IList<IConfigSection> GetConfigSections()
         {
             return SettingsCache.GetConfigSections();
         }
@@ -162,7 +162,6 @@ namespace GitCommands.Settings
         {
             SetValue(settingName, encoding == null ? null : encoding.HeaderName);
         }
-
     }
 
     public class CorePath : SettingsPath

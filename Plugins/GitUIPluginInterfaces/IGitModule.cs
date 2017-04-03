@@ -8,7 +8,7 @@ namespace GitUIPluginInterfaces
     /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule
     {
-        ISettingsValueGetter LocalConfigFile { get; }
+        IConfigFileSettings LocalConfigFile { get; }
 
         string AddRemote(string name, string path);
         IList<IGitRef> GetRefs(bool tags = true, bool branches = true);
