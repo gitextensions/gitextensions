@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GitCommands;
 using GitCommands.Config;
@@ -27,7 +29,8 @@ namespace GitUI.Objects
         /// <summary>
         /// Loads the remotes from the .git/config.
         /// </summary>
-        void LoadRemotes();
+        /// <param name="loadDisabled"></param>
+        void LoadRemotes(bool loadDisabled);
 
         /// <summary>
         /// Removes the specified remote from .git/config file.
@@ -52,10 +55,19 @@ namespace GitUI.Objects
         /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
         /// <returns>Result of the operation.</returns>
         GitRemoteSaveResult SaveRemote(GitRemote remote, string remoteName, string remoteUrl, string remotePushUrl, string remotePuttySshKey);
+
+        /// <summary>
+        ///  Marks the remote as enabled or disabled in .git/config file.
+        /// </summary>
+        /// <param name="remoteName">The name of the remote.</param>
+        /// <param name="disabled"></param>
+        void ToggleRemoteState(string remoteName, bool disabled);
     }
 
     public class GitRemoteController : IGitRemoteController
     {
+        internal static readonly string DisabledSectionPrefix = "-";
+        internal static readonly string SectionRemote = "remote";
         private static readonly object SyncRoot = new object();
         private readonly IGitModule _module;
 
@@ -74,6 +86,7 @@ namespace GitUI.Objects
 
 
         // TODO: moved verbatim from FormRemotes.cs, perhaps needs refactoring
+        [SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
         public void ConfigureRemotes(string remoteName)
         {
             var localConfig = _module.LocalConfigFile;
@@ -130,10 +143,21 @@ namespace GitUI.Objects
         }
 
         /// <summary>
+        /// Retrieves disabled remotes from the .git/config file.
+        /// </summary>
+        public string[] GetDisabledRemotes()
+        {
+            return _module.LocalConfigFile.GetConfigSections()
+                                          .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
+                                          .Select(s => s.SubSection)
+                                          .ToArray();
+        }
+
+        /// <summary>
         /// Loads the remotes from the .git/config.
         /// </summary>
         // TODO: candidate for Async implementations
-        public void LoadRemotes()
+        public void LoadRemotes(bool loadDisabled)
         {
             if (_module == null)
             {
@@ -144,18 +168,15 @@ namespace GitUI.Objects
             {
                 Remotes.Clear();
 
-                var gitRemotes = _module.GetRemotes().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-                if (gitRemotes.Any())
+                var remotes = new List<GitRemote>();
+                GetRemotes(remotes, true);
+                if (loadDisabled)
                 {
-                    var remotes = gitRemotes.Select(remote => new GitRemote
-                    {
-                        Name = remote,
-                        Url = _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote)),
-                        Push = _module.GetSettings(string.Format(SettingKeyString.RemotePush, remote)).ToList(),
-                        PushUrl = _module.GetSetting(string.Format(SettingKeyString.RemotePushUrl, remote)),
-                        PuttySshKey = _module.GetSetting(string.Format(SettingKeyString.RemotePuttySshKey, remote)),
-                    }).ToList();
+                    GetRemotes(remotes, false);
+                }
 
+                if (remotes.Count > 0)
+                {
                     Remotes.AddAll(remotes.OrderBy(x => x.Name));
                 }
             }
@@ -165,14 +186,22 @@ namespace GitUI.Objects
         /// Removes the specified remote from .git/config file.
         /// </summary>
         /// <param name="remote">Remote to remove.</param>
-        /// <returns>Output of <see cref="IGitModule.RemoveRemote"/> operation.</returns>
+        /// <returns>Output of <see cref="IGitModule.RemoveRemote"/> operation, if the remote is active; otherwise <see cref="string.Empty"/>.</returns>
         public string RemoveRemote(GitRemote remote)
         {
             if (remote == null)
             {
-                throw new ArgumentNullException("remote");
+                throw new ArgumentNullException(nameof(remote));
             }
-            return _module.RemoveRemote(remote.Name);
+
+            if (!remote.Disabled)
+            {
+                return _module.RemoveRemote(remote.Name);
+            }
+
+            var sectionName = $"{DisabledSectionPrefix}{SectionRemote}.{remote.Name}";
+            _module.LocalConfigFile.RemoveConfigSection(sectionName, true);
+            return string.Empty;
         }
 
         /// <summary>
@@ -194,7 +223,7 @@ namespace GitUI.Objects
         {
             if (string.IsNullOrWhiteSpace(remoteName))
             {
-                throw new ArgumentNullException("remoteName");
+                throw new ArgumentNullException(nameof(remoteName));
             }
 
             remoteName = remoteName.Trim();
@@ -205,6 +234,7 @@ namespace GitUI.Objects
             var output = string.Empty;
 
             bool creatingNew = remote == null;
+            bool remoteDisabled = false;
             if (creatingNew)
             {
                 output = _module.AddRemote(remoteName, remoteUrl);
@@ -212,6 +242,15 @@ namespace GitUI.Objects
             }
             else
             {
+                if (remote.Disabled)
+                {
+                    // disabled branches can't updated as it poses to many problems, i.e. 
+                    // - verify that the branch name is valid, and 
+                    // - it does not duplicate an active branch name etc.
+                    return new GitRemoteSaveResult(null, false);
+                }
+
+                remoteDisabled = remote.Disabled;
                 if (!string.Equals(remote.Name, remoteName, StringComparison.OrdinalIgnoreCase))
                 {
                     // the name of the remote changed - perform rename
@@ -225,23 +264,99 @@ namespace GitUI.Objects
                 }
             }
 
-            UpdateSettings(string.Format(SettingKeyString.RemoteUrl, remoteName), remoteUrl);
-            UpdateSettings(string.Format(SettingKeyString.RemotePushUrl, remoteName), remotePushUrl);
-            UpdateSettings(string.Format(SettingKeyString.RemotePuttySshKey, remoteName), remotePuttySshKey);
+            UpdateSettings(remoteName, remoteDisabled, SettingKeyString.RemoteUrl, remoteUrl);
+            UpdateSettings(remoteName, remoteDisabled, SettingKeyString.RemotePushUrl, remotePushUrl);
+            UpdateSettings(remoteName, remoteDisabled, SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
 
             return new GitRemoteSaveResult(output, updateRemoteRequired);
         }
 
-
-        private void UpdateSettings(string settingName, string value)
+        /// <summary>
+        ///  Marks the remote as enabled or disabled in .git/config file.
+        /// </summary>
+        /// <param name="remoteName">An existing remote instance.</param>
+        /// <param name="disabled">The new state of the remote. <see langword="true"/> to disable the remote; otherwise <see langword="false"/>.</param>
+        public void ToggleRemoteState(string remoteName, bool disabled)
         {
-            if (!string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(remoteName))
             {
-                _module.SetSetting(settingName, value);
+                throw new ArgumentNullException(nameof(remoteName));
+            }
+
+            // disabled is the new state, so if the new state is 'false' (=enabled), then the existing state is 'true' (=disabled, i.e. '-remote')
+            var sectionName = (disabled ? "" : DisabledSectionPrefix) + SectionRemote;
+
+            var sections = _module.LocalConfigFile.GetConfigSections();
+            var section = sections.FirstOrDefault(s => s.SectionName == sectionName && s.SubSection == remoteName);
+            if (section == null)
+            {
+                // we didn't find it, nothing we can do
+                return;
+            }
+
+            if (disabled)
+            {
+                _module.RemoveRemote(remoteName);
             }
             else
             {
-                _module.UnsetSetting(settingName);
+                _module.LocalConfigFile.RemoveConfigSection($"{sectionName}.{remoteName}");
+            }
+
+            // rename the remote
+            section.SectionName = (disabled ? DisabledSectionPrefix : "") + SectionRemote;
+
+            _module.LocalConfigFile.AddConfigSection(section);
+            _module.LocalConfigFile.Save();
+        }
+
+
+        private void GetRemotes(List<GitRemote> allRemotes, bool enabled)
+        {
+            Func<string[]> func;
+            if (enabled)
+            {
+                func = _module.GetRemotes;
+            }
+            else
+            {
+                func = GetDisabledRemotes;
+            }
+
+
+            var gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+            if (gitRemotes.Any())
+            {
+                allRemotes.AddRange(gitRemotes.Select(remote => new GitRemote
+                {
+                    Disabled = !enabled,
+                    Name = remote,
+                    Url = _module.GetSetting(GetSettingKey(SettingKeyString.RemoteUrl, remote, enabled)),
+                    Push = _module.GetSettings(GetSettingKey(SettingKeyString.RemotePush, remote, enabled)).ToList(),
+                    PushUrl = _module.GetSetting(GetSettingKey(SettingKeyString.RemotePushUrl, remote, enabled)),
+                    PuttySshKey = _module.GetSetting(GetSettingKey(SettingKeyString.RemotePuttySshKey, remote, enabled)),
+                }));
+            }
+        }
+
+        private string GetSettingKey(string settingKey, string remoteName, bool remoteEnabled)
+        {
+            var key = string.Format(settingKey, remoteName);
+            return remoteEnabled ? key : DisabledSectionPrefix + key;
+        }
+
+        private void UpdateSettings(string remoteName, bool remoteDisabled, string settingName, string value)
+        {
+            var preffix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
+            var fullSettingName = preffix + string.Format(settingName, remoteName);
+
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                _module.SetSetting(fullSettingName, value);
+            }
+            else
+            {
+                _module.UnsetSetting(fullSettingName);
             }
         }
     }

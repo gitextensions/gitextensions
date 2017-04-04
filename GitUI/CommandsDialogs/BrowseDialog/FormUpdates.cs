@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
 using GitCommands;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -159,7 +160,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public ReleaseType ReleaseType;
         public string DownloadPage;
 
-        public static ReleaseVersion FromSection(ConfigSection section)
+        public static ReleaseVersion FromSection(IConfigSection section)
         {
             Version ver;
             try

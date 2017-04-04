@@ -154,7 +154,7 @@ namespace GitUI.CommandsDialogs
         private void BindRemotesDropDown(string selectedRemoteName)
         {
             // refresh registered git remotes
-            _gitRemoteController.LoadRemotes();
+            _gitRemoteController.LoadRemotes(false);
 
             _NO_TRANSLATE_Remotes.Sorted = false;
             _NO_TRANSLATE_Remotes.DataSource = new[] { new GitRemote { Name = AllRemotes } }.Union(_gitRemoteController.Remotes).ToList();

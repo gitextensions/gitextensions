@@ -124,7 +124,7 @@ namespace GitUI.CommandsDialogs
             _currentBranchName = Module.GetSelectedBranch();
 
             // refresh registered git remotes
-            _gitRemoteController.LoadRemotes();
+            _gitRemoteController.LoadRemotes(false);
             BindRemotesDropDown(null);
 
             UpdateBranchDropDown();
@@ -681,7 +681,7 @@ namespace GitUI.CommandsDialogs
             UICommands.StartRemotesDialog(this, selectedRemoteName);
 
             // coming back from the dialog, update the remotes list
-            _gitRemoteController.LoadRemotes();
+            _gitRemoteController.LoadRemotes(false);
             BindRemotesDropDown(selectedRemoteName);
         }
 

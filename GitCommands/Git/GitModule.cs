@@ -264,7 +264,7 @@ namespace GitCommands
             get { return new ConfigFileSettings(null, EffectiveConfigFile.SettingsCache); }
         }
 
-        ISettingsValueGetter IGitModule.LocalConfigFile
+        IConfigFileSettings IGitModule.LocalConfigFile
         {
             get { return LocalConfigFile; }
         }
@@ -455,14 +455,14 @@ namespace GitCommands
         public IList<string> GetSubmodulesLocalPaths(bool recursive = true)
         {
             var configFile = GetSubmoduleConfigFile();
-            var submodules = configFile.ConfigSections.Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
+            var submodules = configFile.ConfigSections.Select(configSection => configSection.GetValue("path").Trim()).ToList();
             if (recursive)
             {
                 for (int i = 0; i < submodules.Count; i++)
                 {
                     var submodule = GetSubmodule(submodules[i]);
                     var submoduleConfigFile = submodule.GetSubmoduleConfigFile();
-                    var subsubmodules = submoduleConfigFile.ConfigSections.Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
+                    var subsubmodules = submoduleConfigFile.ConfigSections.Select(configSection => configSection.GetValue("path").Trim()).ToList();
                     for (int j = 0; j < subsubmodules.Count; j++)
                         subsubmodules[j] = submodules[i] + '/' + subsubmodules[j];
                     submodules.InsertRange(i + 1, subsubmodules);
@@ -1230,7 +1230,7 @@ namespace GitCommands
         public string GetSubmoduleNameByPath(string localPath)
         {
             var configFile = GetSubmoduleConfigFile();
-            var submodule = configFile.ConfigSections.FirstOrDefault(configSection => configSection.GetPathValue("path").Trim() == localPath);
+            var submodule = configFile.ConfigSections.FirstOrDefault(configSection => configSection.GetValue("path").Trim() == localPath);
             if (submodule != null)
                 return submodule.SubSection.Trim();
             return null;
@@ -1354,7 +1354,7 @@ namespace GitCommands
                 var configFile = new ConfigFile(superprojectPath + ".gitmodules", true);
                 foreach (ConfigSection configSection in configFile.ConfigSections)
                 {
-                    if (configSection.GetPathValue("path") == submodulePath.ToPosixPath())
+                    if (configSection.GetValue("path") == submodulePath.ToPosixPath())
                     {
                         submoduleName = configSection.SubSection;
                         return superprojectPath;
@@ -2013,14 +2013,23 @@ namespace GitCommands
             return command;
         }
 
-        public string RemoveRemote(string name)
+        /// <summary>
+        /// Removes the registered remote by running <c>git remote rm</c> command.
+        /// </summary>
+        /// <param name="remoteName">The remote name.</param>
+        public string RemoveRemote(string remoteName)
         {
-            return RunGitCmd("remote rm \"" + name + "\"");
+            return RunGitCmd("remote rm \"" + remoteName + "\"");
         }
 
-        public string RenameRemote(string name, string newName)
+        /// <summary>
+        /// Renames the registered remote by running <c>git remote rename</c> command.
+        /// </summary>
+        /// <param name="remoteName">The current remote name.</param>
+        /// <param name="newName">The new remote name.</param>
+        public string RenameRemote(string remoteName, string newName)
         {
-            return RunGitCmd("remote rename \"" + name + "\" \"" + newName + "\"");
+            return RunGitCmd("remote rename \"" + remoteName + "\" \"" + newName + "\"");
         }
 
         public string RenameBranch(string name, string newName)
@@ -2041,7 +2050,21 @@ namespace GitCommands
                     : RunGitCmd(string.Format("remote add \"{0}\" \"{1}\"", name, location));
         }
 
-        public string[] GetRemotes(bool allowEmpty = true)
+        /// <summary>
+        /// Retrieves registered remotes by running <c>git remote show</c> command.
+        /// </summary>
+        /// <returns>Registered remotes.</returns>
+        public string[] GetRemotes()
+        {
+            return GetRemotes(true);
+        }
+
+        /// <summary>
+        /// Retrieves registered remotes by running <c>git remote show</c> command.
+        /// </summary>
+        /// <param name="allowEmpty"></param>
+        /// <returns>Registered remotes.</returns>
+        public string[] GetRemotes(bool allowEmpty)
         {
             string remotes = RunGitCmd("remote show");
             return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
