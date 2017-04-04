@@ -42,7 +42,7 @@
             // Delete
             // 
             this.Delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Delete.ForeColor = System.Drawing.Color.Black;
+            this.Delete.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Delete.Image = global::GitUI.Properties.Resources.IconBranchDelete;
             this.Delete.Location = new System.Drawing.Point(439, 65);
             this.Delete.Name = "Delete";

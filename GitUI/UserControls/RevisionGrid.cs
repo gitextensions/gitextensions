@@ -16,6 +16,7 @@ using GitCommands.Git;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Editor; // For ColorHelper
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.RevisionGridClasses;
@@ -1362,36 +1363,62 @@ namespace GitUI
 
             drawRefArgs.IsRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
 
+            // Determine background colour for cell
+            Brush cellBackgroundBrush;
             if (drawRefArgs.IsRowSelected /*&& !showRevisionCards*/)
             {
-                e.Graphics.FillRectangle(_selectedItemBrush, e.CellBounds);
+                cellBackgroundBrush = _selectedItemBrush;
             }
             else if (ShouldHighlightRevisionByAuthor(revision))
             {
-                e.Graphics.FillRectangle(_authoredRevisionsBrush, e.CellBounds);
+                cellBackgroundBrush = _authoredRevisionsBrush;
             }
             else
             {
                 if (e.RowIndex % 2 == 0)
                 {
-                    e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+                    //e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+                    cellBackgroundBrush = new SolidBrush(e.CellStyle.BackColor);
                 }
                 else
                 {
-                    Brush brush = new SolidBrush(Color.FromArgb(255, 240, 240, 240));
-                    e.Graphics.FillRectangle(brush, e.CellBounds);
+                    //Brush brush = new SolidBrush(Color.FromArgb(255, 240, 240, 240));
+                    //e.Graphics.FillRectangle(brush, e.CellBounds);
+                    cellBackgroundBrush = new SolidBrush( ColorHelper.MakeColorDarker(e.CellStyle.BackColor) );
+                    // TODO if default background is nearly black, we should make it lighter instead
                 }
-                    
             }
+            // Draw cell background
+            e.Graphics.FillRectangle(cellBackgroundBrush, e.CellBounds);
+            Color backColor = (cellBackgroundBrush as SolidBrush).Color;
 
+            // Draw graphics column
             if (e.ColumnIndex == graphColIndex)
             {
                 Revisions.dataGrid_CellPainting(sender, e);
                 return;
             }
 
+            // Determine cell foreground (text) colour for other columns
             Color foreColor;
-
+            if( drawRefArgs.IsRowSelected )
+            {
+                foreColor = SystemColors.HighlightText;
+            }
+            else if( AppSettings.RevisionGraphDrawNonRelativesTextGray && !Revisions.RowIsRelative(e.RowIndex) )
+            {
+                foreColor = Color.Gray;
+                // TODO: If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast.
+                while( ColorHelper.GetColorBrightnessDifference(foreColor, backColor) < 125 )
+                {
+                    foreColor = ColorHelper.IsLightColor(backColor)? ColorHelper.MakeColorDarker(foreColor) : ColorHelper.MakeColorLighter(foreColor);
+                }
+            }
+            else
+            {
+                foreColor = ColorHelper.GetForeColorForBackColor(backColor);
+            }
+            /*
             if (!AppSettings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
             {
                 foreColor = drawRefArgs.IsRowSelected && IsFilledBranchesLayout()
@@ -1402,6 +1429,7 @@ namespace GitUI
             {
                 foreColor = drawRefArgs.IsRowSelected ? SystemColors.HighlightText : Color.Gray;
             }
+            */
 
             using (Brush foreBrush = new SolidBrush(foreColor))
             {
