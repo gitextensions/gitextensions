@@ -43,7 +43,7 @@
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.ForeColor = System.Drawing.Color.Black;
+            this.Ok.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Ok.Location = new System.Drawing.Point(369, 10);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 25);
