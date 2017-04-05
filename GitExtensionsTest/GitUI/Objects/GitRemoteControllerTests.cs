@@ -150,6 +150,7 @@ namespace GitExtensionsTest.GitUI.Objects
             var result = _controller.SaveRemote(null, remoteName, remoteUrl, remotePushUrl, remotePuttySshKey);
 
             result.UserMessage.Should().Be(output);
+            result.ShouldUpdateRemote.Should().BeTrue();
             _module.Received(1).SetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName), remoteUrl);
             _module.Received(1).SetSetting(string.Format(SettingKeyString.RemotePushUrl, remoteName), remotePushUrl);
             _module.Received(1).UnsetSetting(string.Format(SettingKeyString.RemotePuttySshKey, remoteName));
