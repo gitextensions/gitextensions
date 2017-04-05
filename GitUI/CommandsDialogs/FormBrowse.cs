@@ -1760,6 +1760,7 @@ namespace GitUI.CommandsDialogs
             FillDiff();
             FillCommitInfo();
             FillBuildReport();
+            FillTerminalTab();
         }
 
         private void DiffFilesSelectedIndexChanged(object sender, EventArgs e)
@@ -3540,12 +3541,32 @@ namespace GitUI.CommandsDialogs
         private void FillTerminalTab()
         {
             if (!EnvUtils.RunningOnWindows() || !Module.EffectiveSettings.Detailed.ShowConEmuTab.ValueOrDefault)
+            {
                 return; // ConEmu only works on WinNT
+            }
+
+            if (terminal != null)
+            {
+                // if terminal is already created, then give it focus
+                terminal.Focus();
+                return;
+            }
+
+            var tabpageCaption = _consoleTabCaption.Text;
+            var tabpageCreated = CommitInfoTabControl.TabPages.ContainsKey(tabpageCaption);
             TabPage tabpage;
-            string sImageKey = "Resources.IconConsole";
-            CommitInfoTabControl.ImageList.Images.Add(sImageKey, Resources.IconConsole);
-            CommitInfoTabControl.Controls.Add(tabpage = new TabPage(_consoleTabCaption.Text));
-            tabpage.ImageKey = sImageKey; // After adding page
+            if (tabpageCreated)
+            {
+                tabpage = CommitInfoTabControl.TabPages[tabpageCaption];
+            }
+            else
+            {
+                const string imageKey = "Resources.IconConsole";
+                CommitInfoTabControl.ImageList.Images.Add(imageKey, Resources.IconConsole);
+                CommitInfoTabControl.Controls.Add(tabpage = new TabPage(tabpageCaption));
+                tabpage.Name = tabpageCaption;
+                tabpage.ImageKey = imageKey;
+            }
 
             // Delay-create the terminal window when the tab is first selected
             CommitInfoTabControl.Selecting += (sender, args) =>
@@ -3584,8 +3605,7 @@ namespace GitUI.CommandsDialogs
                               return shellPath;
                           return null;
                       }).
-                      Where(shellPath => shellPath != null).
-                      FirstOrDefault();
+                      FirstOrDefault(shellPath => shellPath != null);
 
                 if (cmdPath == null)
                 {
