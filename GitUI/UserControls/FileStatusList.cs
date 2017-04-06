@@ -297,11 +297,19 @@ namespace GitUI
             //TOOLTIP
             if (listView != null)
             {
-                var point = new Point(e.X, e.Y);
-                var hover = listView.HitTest(point);
-                if (hover.Item != null)
+                ListViewItem hoveredItem;
+                try
                 {
-                    var gitItemStatus = (GitItemStatus)hover.Item.Tag;
+                    var point = new Point(e.X, e.Y);
+                    hoveredItem = listView.HitTest(point).Item;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    hoveredItem = null;
+                }
+                if (hoveredItem != null)
+                {
+                    var gitItemStatus = (GitItemStatus)hoveredItem.Tag;
 
                     string text;
                     if (gitItemStatus.IsRenamed || gitItemStatus.IsCopied)
@@ -312,13 +320,13 @@ namespace GitUI
                     float fTextWidth = listView.CreateGraphics().MeasureString(text, listView.Font).Width + 17;
 
                     //Use width-itemheight because the icon drawn in front of the text is the itemheight
-                    if (fTextWidth > (FileStatusListView.Width - FileStatusListView.GetItemRect(hover.Item.Index).Height))
+                    if (fTextWidth > (FileStatusListView.Width - FileStatusListView.GetItemRect(hoveredItem.Index).Height))
                     {
-                        if (!hover.Item.ToolTipText.Equals(gitItemStatus.ToString()))
-                            hover.Item.ToolTipText = gitItemStatus.ToString();
+                        if (!hoveredItem.ToolTipText.Equals(gitItemStatus.ToString()))
+                            hoveredItem.ToolTipText = gitItemStatus.ToString();
                     }
                     else
-                        hover.Item.ToolTipText = "";
+                        hoveredItem.ToolTipText = "";
                 }
             }
         }
