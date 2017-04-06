@@ -20,5 +20,6 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         public string Description { get; set; }
         public string[] CommitHashList { get; set; }
         public string Url { get; set; }
+        public bool ShowInBuildReportTab { get; set; } = true;
     }
 }

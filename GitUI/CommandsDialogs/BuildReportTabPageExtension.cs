@@ -55,8 +55,16 @@ namespace GitUI.CommandsDialogs
 
                     if (isFavIconMissing || tabControl.SelectedTab == buildReportTabPage)
                     {
-                        url = revision.BuildStatus.Url;
-                        buildReportWebBrowser.Navigate("about:blank");
+                        if (revision.BuildStatus.ShowInBuildReportTab)
+                        {
+                            url = null;
+                            buildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+                        }
+                        else
+                        {
+                            url = revision.BuildStatus.Url;
+                            buildReportWebBrowser.Navigate("about:blank");
+                        }
 
                         if (isFavIconMissing)
                         {
@@ -147,7 +155,10 @@ namespace GitUI.CommandsDialogs
                         },
                     TaskScheduler.FromCurrentSynchronizationContext());
             }
-            buildReportWebBrowser.Document.Write("<HTML><a href=\"" + url + "\" target=\"_blank\">Open report</a></HTML>");
+            if (url != null)
+            {
+                buildReportWebBrowser.Document.Write("<HTML><a href=\"" + url + "\" target=\"_blank\">Open report</a></HTML>");
+            }
         }
 
         private string DetermineFavIconUrl(HtmlDocument htmlDocument)
