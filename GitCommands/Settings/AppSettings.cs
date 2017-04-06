@@ -649,6 +649,12 @@ namespace GitCommands
             set { SetBool("DontConfirmAmend", value); }
         }
 
+        public static bool DontConfirmCommitIfNoBranch
+        {
+            get { return GetBool("DontConfirmCommitIfNoBranch", false); }
+            set { SetBool("DontConfirmCommitIfNoBranch", value); }
+        }
+
         public static bool? AutoPopStashAfterPull
         {
             get { return GetBool("AutoPopStashAfterPull"); }
