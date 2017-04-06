@@ -376,7 +376,10 @@ namespace GitUI.CommandsDialogs
 
         private void RemoteBranchCheckedChanged(object sender, EventArgs e)
         {
+            MaximumSize = new Size(0, 0);
+            MinimumSize = new Size(0, 0);
             BranchTypeChanged();
+            RecalculateSizeConstraints();
             Branches_SelectedIndexChanged(sender, e);
         }
 
@@ -487,6 +490,14 @@ namespace GitUI.CommandsDialogs
         private void FormCheckoutBranch_Activated(object sender, EventArgs e)
         {
             Branches.Focus();
+            RecalculateSizeConstraints();
+        }
+
+        private void RecalculateSizeConstraints()
+        {
+            Height = Screen.PrimaryScreen.Bounds.Height;
+            MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, tableLayoutPanel1.PreferredSize.Height + 40);
+            MinimumSize = new Size(tableLayoutPanel1.PreferredSize.Width + 40, MaximumSize.Height);
         }
 
         private void rbReset_CheckedChanged(object sender, EventArgs e)

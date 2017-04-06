@@ -414,12 +414,9 @@ namespace GitUI.CommandsDialogs
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(581, 249);
+            this.ClientSize = new System.Drawing.Size(487, 216);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormCheckoutBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
