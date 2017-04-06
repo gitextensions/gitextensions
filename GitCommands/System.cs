@@ -96,7 +96,7 @@ namespace System
         /// <returns></returns>
         public static string QuoteNE(this string s)
         {
-            return s.IsNullOrEmpty() ? s : s.Quote("\"");
+            return s.IsNullOrEmpty() ? (s ?? string.Empty) : s.Quote("\"");
         }
 
         /// <summary>
