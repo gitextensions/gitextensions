@@ -10,6 +10,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GitCommands;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -162,7 +163,7 @@ namespace AppVeyorIntegration
                 Timeout = TimeSpan.FromMinutes(2),
                 BaseAddress = new Uri(baseUrl, UriKind.Absolute),
             };
-            if (accountToken.IsNotNullOrWhitespace())
+            if (!accountToken.IsNullOrWhiteSpace())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accountToken);
             }

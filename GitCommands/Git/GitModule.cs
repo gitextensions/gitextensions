@@ -877,7 +877,7 @@ namespace GitCommands
 
             var list = new List<ConflictData>();
 
-            var unmerged = RunGitCmd("ls-files -z --unmerged " + filename.QuoteNE()).Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var unmerged = RunGitCmd("ls-files -z --unmerged " + filename.Quote(false)).Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             var item = new ConflictedFileData[3];
 
@@ -2965,7 +2965,7 @@ namespace GitCommands
             if (!oldFileName.IsNullOrEmpty())
                 oldFileName = oldFileName.Quote();
 
-            string args = string.Join(" ", extraDiffArguments, revision2.QuoteNE(), revision1.QuoteNE(), "--", filename, oldFileName);
+            string args = string.Join(" ", extraDiffArguments, revision2.Quote(false), revision1.Quote(false), "--", filename, oldFileName);
             RunGitCmdDetached("difftool --gui --no-prompt " + args);
             return output;
         }

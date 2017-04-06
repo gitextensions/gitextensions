@@ -154,7 +154,7 @@
     <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="SynchronizedProcessReader.cs" />
-    <Compile Include="System.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="Utils\JsonSerializer.cs" />
     <Compile Include="Utils\RFC2047Decoder.cs" />
     <Compile Include="Utils\WeakRefCache.cs" />

@@ -122,7 +122,7 @@ namespace GitCommands
             }
         }
 
-	    public static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
+        public static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
             return new ProcessStartInfo
             {
@@ -162,7 +162,7 @@ namespace GitCommands
             return startProcess;
         }
 
-	    public static bool UseSsh(string arguments)
+        public static bool UseSsh(string arguments)
         {
             var x = !Plink() && GetArgumentsRequiresSsh(arguments);
             return x || arguments.Contains("plink");
@@ -664,7 +664,7 @@ namespace GitCommands
                 cmd += " -u";
             if (keepIndex)
                 cmd += " --keep-index";
-            cmd = cmd.Combine(" ", message.QuoteNE());
+            cmd = cmd.Combine(" ", message.Quote(false));
 
             return cmd;
         }

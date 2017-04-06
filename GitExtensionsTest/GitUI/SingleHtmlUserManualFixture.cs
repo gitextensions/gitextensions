@@ -2,6 +2,7 @@
 using GitUI.UserManual;
 using NUnit.Framework;
 using FluentAssertions;
+using GitCommands;
 
 namespace GitExtensionsTest.GitUI
 {

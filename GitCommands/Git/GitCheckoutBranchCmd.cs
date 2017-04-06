@@ -56,7 +56,7 @@ namespace GitCommands.Git
                     yield return "-B " + NewBranchName.Quote();
             }
 
-            yield return BranchName.QuoteNE();
+            yield return BranchName.Quote(false);
         }
 
         public override bool AccessesRemote()

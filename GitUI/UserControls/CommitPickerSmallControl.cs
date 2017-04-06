@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI.HelperDialogs;
 
 namespace GitUI.UserControls

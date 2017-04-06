@@ -69,7 +69,7 @@ namespace GitUI
                 if (fileName.Equals(oldFileName))
                     oldFileName = null;
 
-                return fileName.Combine(" ", oldFileName.AddParenthesesNE());
+                return fileName.Combine(" ", oldFileName.AddParentheses());
             }
 
             if ((!truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) || !EnvUtils.RunningOnWindows()) &&

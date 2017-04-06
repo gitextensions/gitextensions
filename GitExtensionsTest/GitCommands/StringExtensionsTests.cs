@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using GitCommands;
 using NUnit.Framework;
 
 namespace GitExtensionsTest.GitCommands
@@ -7,32 +8,50 @@ namespace GitExtensionsTest.GitCommands
     [TestFixture]
     public class StringExtensionsTests
     {
-        [TestCase(null, "")]
-        [TestCase("", "\"\"")]
-        [TestCase(" ", "\" \"")]
-        public void Quote_default(string s, string expected)
+        [TestCase(null, null, "")]
+        [TestCase(null, true, "")]
+        [TestCase(null, false, "")]
+        [TestCase("", null, "\"\"")]
+        [TestCase("", true, "\"\"")]
+        [TestCase("", false, "")]
+        [TestCase(" ", null, "\" \"")]
+        [TestCase(" ", true, "\" \"")]
+        [TestCase(" ", false, "\" \"")]
+        public void Quote(string s, bool? quoteEmptyString, string expected)
         {
-            var result = s.Quote();
+            string result;
+            if (!quoteEmptyString.HasValue)
+            {
+                result = s.Quote();
+            }
+            else
+            {
+                result = s.Quote(quoteEmptyString.Value);
+            }
 
             result.Should().Be(expected);
         }
 
-        [TestCase(null, "'", "")]
-        [TestCase("", "'", "''")]
-        [TestCase(" ", "'", "' '")]
-        public void Quote(string s, string quote, string expected)
+        [TestCase(null, "'", null, "")]
+        [TestCase(null, "'", true, "")]
+        [TestCase(null, "'", false, "")]
+        [TestCase("", "'", null, "''")]
+        [TestCase("", "'", true, "''")]
+        [TestCase("", "'", false, "")]
+        [TestCase(" ", "'", null, "' '")]
+        [TestCase(" ", "'", true, "' '")]
+        [TestCase(" ", "'", false, "' '")]
+        public void Quote(string s, string quote, bool? quoteEmptyString, string expected)
         {
-            var result = s.Quote(quote);
-
-            result.Should().Be(expected);
-        }
-
-        [TestCase(null, "")]
-        [TestCase("", "")]
-        [TestCase(" ", "\" \"")]
-        public void QuoteNE(string s, string expected)
-        {
-            var result = s.QuoteNE();
+            string result;
+            if (!quoteEmptyString.HasValue)
+            {
+                result = s.Quote(quote);
+            }
+            else
+            {
+                result = s.Quote(quote, quoteEmptyString.Value);
+            }
 
             result.Should().Be(expected);
         }
