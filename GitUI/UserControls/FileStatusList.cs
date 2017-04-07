@@ -803,6 +803,26 @@ namespace GitUI
             return SelectFiles(RegexForSelecting(selectionFilter));
         }
 
+        public void SelectAll()
+        {
+            try
+            {
+                SuspendLayout();
+
+                var items = AllItems;
+                int i = 0;
+                foreach (var item in items)
+                {
+                    FileStatusListView.Items[i].Selected = true;
+                    i++;
+                }
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
+        }
+
         private static Regex RegexForSelecting(string value)
         {
             return string.IsNullOrEmpty(value)

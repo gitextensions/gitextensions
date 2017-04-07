@@ -1089,7 +1089,15 @@ namespace GitUI.CommandsDialogs
 
             OnStageAreaLoaded += stageAreaLoaded;
 
-            Module.ResetMixed("HEAD");
+            if (IsMergeCommit)
+            {
+                Staged.SelectAll();
+                Unstage(canUseUnstageAll: false);
+            }
+            else
+            {
+                Module.ResetMixed("HEAD");
+            }
             Initialize();
         }
 
@@ -1127,9 +1135,11 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Unstage()
+        private void Unstage(bool canUseUnstageAll = true)
         {
-            if (Staged.GitItemStatuses.Count() > 10 && Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count())
+            if (canUseUnstageAll && 
+                Staged.GitItemStatuses.Count() > 10 && 
+                Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count())
             {
                 UnstageAllToolStripMenuItemClick(null, null);
                 return;
