@@ -6,7 +6,15 @@ namespace GitPluginShared.Commands
     {
         protected override void OnExecute (SelectedItem item, string fileName, OutputWindowPane pane)
         {
-            RunGitEx ("blame", fileName);
+            string[] arguments = null;
+
+            var textSelection = item.DTE.ActiveDocument.Selection as TextSelection;
+            if( textSelection != null )
+            {
+                arguments = new string[] { textSelection.CurrentLine.ToString() };
+            }
+
+            RunGitEx ("blame", fileName, arguments);
         }
 
         protected override CommandTarget SupportedTargets
