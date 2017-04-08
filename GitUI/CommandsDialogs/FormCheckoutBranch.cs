@@ -110,6 +110,7 @@ namespace GitUI.CommandsDialogs
 
                 localChangesGB.Visible = IsThereUncommittedChanges();
                 ChangesMode = AppSettings.CheckoutBranchAction;
+                rbCreateBranchWithCustomName.Checked = AppSettings.CreateLocalBranchForRemote;
 
                 FinishFormLayout();
             }
@@ -177,6 +178,16 @@ namespace GitUI.CommandsDialogs
 
         private void Initialize()
         {
+            if (!_isLoading)
+            {
+                PopulateBranches();
+            }
+
+            remoteOptionsPanel.Visible = Remotebranch.Checked;
+        }
+
+        private void PopulateBranches()
+        {
             Branches.Items.Clear();
 
             if (_containRevisons == null)
@@ -199,9 +210,6 @@ namespace GitUI.CommandsDialogs
                 Branches.SelectedIndex = 0;
             else
                 Branches.Text = null;
-            remoteOptionsPanel.Visible = Remotebranch.Checked;
-
-            rbCreateBranchWithCustomName.Checked = AppSettings.CreateLocalBranchForRemote;
         }
 
         private LocalChangesAction ChangesMode
@@ -358,14 +366,11 @@ namespace GitUI.CommandsDialogs
 
         private void BranchTypeChanged()
         {
-            if (!_isLoading)
-            {
-                Initialize();
-                if (LocalBranch.Checked)
-                    this.Height -= tableLayoutPanel1.GetRowHeights().Last();
-                else
-                    this.Height += remoteOptionsPanel.Height;
-            }
+            Initialize();
+            if (LocalBranch.Checked)
+                this.Height -= tableLayoutPanel1.GetRowHeights().Last();
+            else
+                this.Height += remoteOptionsPanel.Height;
         }
 
         private void LocalBranchCheckedChanged(object sender, EventArgs e)
