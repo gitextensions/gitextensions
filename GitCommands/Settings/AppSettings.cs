@@ -12,6 +12,7 @@ using GitCommands.Logging;
 using GitCommands.Repository;
 using GitCommands.Settings;
 using Microsoft.Win32;
+using System.Linq;
 
 namespace GitCommands
 {
@@ -1162,6 +1163,7 @@ namespace GitCommands
 
         public static void SaveSettings()
         {
+            SaveEncodings();
             try
             {
                 SettingsContainer.LockedAction(() =>
@@ -1178,13 +1180,7 @@ namespace GitCommands
 
         public static void LoadSettings()
         {
-            Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
-            addEncoding(Encoding.Default);
-            addEncoding(new ASCIIEncoding());
-            addEncoding(new UnicodeEncoding());
-            addEncoding(new UTF7Encoding());
-            addEncoding(new UTF8Encoding(false));
-            addEncoding(System.Text.Encoding.GetEncoding("CP852"));
+            LoadEncodings();
 
             try
             {
@@ -1488,6 +1484,39 @@ namespace GitCommands
         public static string GetString(string name, string defaultValue)
         {
             return SettingsContainer.GetString(name, defaultValue);
+        }
+
+        private static void LoadEncodings()
+        {
+            Action<Encoding> addEncoding = delegate (Encoding e) { AvailableEncodings[e.HeaderName] = e; };
+
+            string[] availableEncodings = GetString("AvailableEncodings", "").Split(';');
+            if (availableEncodings == null || availableEncodings.Length == 0 || string.IsNullOrWhiteSpace(availableEncodings[0]))
+            {
+                // Default encoding set
+                addEncoding(Encoding.Default);
+                addEncoding(new ASCIIEncoding());
+                addEncoding(new UnicodeEncoding());
+                addEncoding(new UTF7Encoding());
+                addEncoding(new UTF8Encoding(false));
+                addEncoding(Encoding.GetEncoding("CP852"));
+            }
+            else
+            {
+                foreach(var encoding in availableEncodings)
+                {
+                    if (encoding.GetType() == typeof(UTF8Encoding))
+                        addEncoding(new UTF8Encoding(false));
+                    else
+                        addEncoding(Encoding.GetEncoding(encoding));
+                }
+            }
+        }
+
+        private static void SaveEncodings()
+        {
+            string availableEncodings = AvailableEncodings.Values.Select(e => e.HeaderName).Join(";");
+            SetString("AvailableEncodings", availableEncodings);
         }
 
     }
