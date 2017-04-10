@@ -45,43 +45,60 @@ namespace GitUI.CommitInfo
             try
             {
                 var url = e.LinkText;
-                var data = url.Split(new[] { '#' }, 2);
-
-                try
+                var count = url.Count(c => c == '#');
+                if (count == 1)
                 {
-                    if (data.Length > 1)
+                    var link = url.Substring(url.IndexOf('#') + 1);
+                    HandleLink(link, sender);
+                }
+                else
+                {
+                    var schemes = new[] { "http://", "https://", "gitext://", "mailto:" };
+                    int indexLink = -1;
+                    foreach (var scheme in schemes)
                     {
-                        var result = new Uri(data[1]);
-                        if (result.Scheme == "gitext")
-                        {
-                            if (CommandClick != null)
-                            {
-                                string path = result.AbsolutePath.TrimStart('/');
-                                CommandClick(sender, new CommandEventArgs(result.Host, path));
-                            }
-                            return;
-                        }
-                        else
-                        {
-                            url = result.AbsoluteUri;
-                        }
+                        indexLink = url.IndexOf("#" + scheme);
+                        if (indexLink != -1)
+                            break;
                     }
-                }
-                catch (UriFormatException)
-                {
 
+                    string link = (indexLink != -1)
+                        ? url.Substring(indexLink + 1)
+                        : url.Split(new[] { '#' }, 2)[1];
+                    HandleLink(link, sender);
                 }
-
-                using (var process = new Process
-                    {
-                        EnableRaisingEvents = false,
-                        StartInfo = { FileName = url }
-                    })
-                    process.Start();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void HandleLink(string link, object sender)
+        {
+            try
+            {
+                var result = new Uri(link);
+                if (result.Scheme == "gitext")
+                {
+                    if (CommandClick != null)
+                    {
+                        string path = result.AbsolutePath.TrimStart('/');
+                        CommandClick(sender, new CommandEventArgs(result.Host, path));
+                    }
+                }
+                else
+                {
+                    using (var process = new Process
+                    {
+                        EnableRaisingEvents = false,
+                        StartInfo = { FileName = result.AbsoluteUri }
+                    })
+                        process.Start();
+                }
+            }
+            catch (UriFormatException)
+            {
             }
         }
 
