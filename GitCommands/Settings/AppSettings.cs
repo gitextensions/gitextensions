@@ -1503,10 +1503,15 @@ namespace GitCommands
             }
             else
             {
+                var utf8 = new UTF8Encoding(false);
                 foreach(var encoding in availableEncodings)
                 {
-                    if (encoding.GetType() == typeof(UTF8Encoding))
-                        addEncoding(new UTF8Encoding(false));
+                    // create utf-8 without BOM
+                    if (encoding == utf8.HeaderName)
+                        addEncoding(utf8);
+                    // default encoding
+                    else if (encoding == "Default")
+                        addEncoding(Encoding.Default);
                     else
                         addEncoding(Encoding.GetEncoding(encoding));
                 }
@@ -1516,6 +1521,7 @@ namespace GitCommands
         private static void SaveEncodings()
         {
             string availableEncodings = AvailableEncodings.Values.Select(e => e.HeaderName).Join(";");
+            availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
             SetString("AvailableEncodings", availableEncodings);
         }
 
