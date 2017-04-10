@@ -73,5 +73,29 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 ListIncludedEncodings.Items.RemoveAt(indx);
             }
         }
+
+        private void ListIncludedEncodings_SelectedValueChanged(object sender, EventArgs e)
+        {
+            // Get selected encoding
+            var encoding = ListIncludedEncodings.SelectedItem as Encoding;
+            Type encodingType = null;
+            // Get type if exists
+            if (encoding != null)
+                encodingType = encoding.GetType();
+            // If selected encoding and encoding not default list
+            ToRight.Enabled = encoding != null && 
+                !(
+                    encodingType == typeof(ASCIIEncoding) ||
+                    encodingType == typeof(UnicodeEncoding) ||
+                    encodingType == typeof(UTF8Encoding) ||
+                    encodingType == typeof(UTF7Encoding) ||
+                    encoding == Encoding.Default
+                );
+        }
+
+        private void ListAvailableEncodings_SelectedValueChanged(object sender, EventArgs e)
+        {
+            ToLeft.Enabled = ListAvailableEncodings.SelectedItem != null;
+        }
     }
 }

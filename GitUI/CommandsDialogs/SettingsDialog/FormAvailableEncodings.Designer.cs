@@ -74,6 +74,7 @@
             this.ListIncludedEncodings.Name = "ListIncludedEncodings";
             this.ListIncludedEncodings.Size = new System.Drawing.Size(266, 252);
             this.ListIncludedEncodings.TabIndex = 0;
+            this.ListIncludedEncodings.SelectedValueChanged += new System.EventHandler(this.ListIncludedEncodings_SelectedValueChanged);
             // 
             // ListAvailableEncodings
             // 
@@ -83,6 +84,7 @@
             this.ListAvailableEncodings.Name = "ListAvailableEncodings";
             this.ListAvailableEncodings.Size = new System.Drawing.Size(287, 252);
             this.ListAvailableEncodings.TabIndex = 1;
+            this.ListAvailableEncodings.SelectedValueChanged += new System.EventHandler(this.ListAvailableEncodings_SelectedValueChanged);
             // 
             // tableLayoutPanel2
             // 
@@ -104,6 +106,7 @@
             // ToRight
             // 
             this.ToRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ToRight.Enabled = false;
             this.ToRight.Location = new System.Drawing.Point(3, 99);
             this.ToRight.Name = "ToRight";
             this.ToRight.Size = new System.Drawing.Size(28, 24);
@@ -115,6 +118,7 @@
             // ToLeft
             // 
             this.ToLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ToLeft.Enabled = false;
             this.ToLeft.Location = new System.Drawing.Point(3, 129);
             this.ToLeft.Name = "ToLeft";
             this.ToLeft.Size = new System.Drawing.Size(28, 24);
