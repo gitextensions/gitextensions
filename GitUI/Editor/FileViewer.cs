@@ -267,7 +267,7 @@ namespace GitUI.Editor
         private void UpdateEncodingCombo()
         {
             if (Encoding != null)
-            encodingToolStripComboBox.Text = Encoding.EncodingName;
+                encodingToolStripComboBox.Text = Encoding.EncodingName;
         }
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
