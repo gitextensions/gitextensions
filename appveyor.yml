@@ -1,0 +1,6 @@
+version: 2.49.{build}
+install:
+- cmd: git submodule update --init --recursive
+build:
+  project: GitExtensions.VS2015.sln
+  verbosity: minimal
