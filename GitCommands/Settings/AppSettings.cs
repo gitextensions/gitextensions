@@ -1499,7 +1499,7 @@ namespace GitCommands
                 addEncoding(new UnicodeEncoding());
                 addEncoding(new UTF7Encoding());
                 addEncoding(new UTF8Encoding(false));
-                addEncoding(Encoding.GetEncoding("CP852"));
+                addEncoding(Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage));
             }
             else
             {
