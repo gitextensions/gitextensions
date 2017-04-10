@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using GitCommands;
 
@@ -33,6 +34,31 @@ namespace ResourceManager
                 return "<a href='gitext://gotocommit/" + guid + "'>" + Strings.GetCurrentIndex() + "</a>";
             else
                 return "<a href='gitext://gotocommit/" + guid + "'>" + guid.Substring(0, 10) + "</a>";
+        }
+
+        public static string ParseLink(string aLinkText)
+        {
+            var count = aLinkText.Count(c => c == '#');
+            if (count == 1)
+            {
+                return aLinkText.Substring(aLinkText.IndexOf('#') + 1);
+            }
+            else
+            {
+                var schemes = new[] { "http://", "https://", "gitext://", "mailto:" };
+                int indexLink = -1;
+                foreach (var scheme in schemes)
+                {
+                    indexLink = aLinkText.IndexOf("#" + scheme);
+                    if (indexLink != -1)
+                        break;
+                }
+
+                return (indexLink != -1)
+                    ? aLinkText.Substring(indexLink + 1)
+                    : aLinkText.Split(new[] { '#' }, 2)[1];
+            }
+
         }
     }
 }

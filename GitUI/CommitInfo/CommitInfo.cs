@@ -42,36 +42,8 @@ namespace GitUI.CommitInfo
 
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            try
-            {
-                var url = e.LinkText;
-                var count = url.Count(c => c == '#');
-                if (count == 1)
-                {
-                    var link = url.Substring(url.IndexOf('#') + 1);
-                    HandleLink(link, sender);
-                }
-                else
-                {
-                    var schemes = new[] { "http://", "https://", "gitext://", "mailto:" };
-                    int indexLink = -1;
-                    foreach (var scheme in schemes)
-                    {
-                        indexLink = url.IndexOf("#" + scheme);
-                        if (indexLink != -1)
-                            break;
-                    }
-
-                    string link = (indexLink != -1)
-                        ? url.Substring(indexLink + 1)
-                        : url.Split(new[] { '#' }, 2)[1];
-                    HandleLink(link, sender);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            string link = LinkFactory.ParseLink(e.LinkText);
+            HandleLink(link, sender);
         }
 
         private void HandleLink(string link, object sender)
@@ -94,7 +66,9 @@ namespace GitUI.CommitInfo
                         EnableRaisingEvents = false,
                         StartInfo = { FileName = result.AbsoluteUri }
                     })
+                    {
                         process.Start();
+                    }
                 }
             }
             catch (UriFormatException)
