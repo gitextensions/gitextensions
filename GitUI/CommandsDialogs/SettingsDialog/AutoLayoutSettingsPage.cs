@@ -12,30 +12,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         internal readonly IList<string> _autoGenKeywords = new List<string>();
         private SettingsLayout settingsLayout;
-        internal List<ISettingControlBinding> controlBindings = new List<ISettingControlBinding>();
 
         protected override string GetCommaSeparatedKeywordList()
         {
             return string.Join(",", _autoGenKeywords);
         }
 
-        protected override void SettingsToPage()
-        {
-            foreach (var cb in controlBindings)
-            {
-                cb.LoadSetting(GetCurrentSettings(), AreEffectiveSettingsSet);
-            }
-        }
-
-        protected override void PageToSettings()
-        {
-            foreach (var cb in controlBindings)
-            {
-                cb.SaveSetting(GetCurrentSettings());
-            }
-        }
-
-        protected virtual ISettingsSource GetCurrentSettings()
+        protected override ISettingsSource GetCurrentSettings()
         {
             return CurrentSettings;
         }
@@ -90,11 +73,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public void AddKeyword(string aKeyword)
         {
             _autoGenKeywords.Add(aKeyword);
-        }
-
-        public void AddControlBinding(ISettingControlBinding controlBinding)
-        {
-            controlBindings.Add(controlBinding);
         }
 
         public void AddSettingsLayout(SettingsLayout aLayout)

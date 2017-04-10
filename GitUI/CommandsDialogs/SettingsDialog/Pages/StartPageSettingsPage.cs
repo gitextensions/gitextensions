@@ -1,4 +1,7 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿using GitCommands;
+using GitUIPluginInterfaces;
+
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class StartPageSettingsPage : SettingsPageWithHeader
     {
@@ -24,7 +27,5 @@
         protected override void PageToSettings()
         {
         }
-
-
     }
 }

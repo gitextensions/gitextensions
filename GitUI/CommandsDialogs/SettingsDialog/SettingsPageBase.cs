@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager;
+using GitUIPluginInterfaces;
+using GitCommands.Settings;
+using System.Linq;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
     /// <summary>
     /// set Text property in derived classes to set the title
     /// </summary>
-    public class SettingsPageBase : GitExtensionsControl, ISettingsPage
+    public abstract class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
+        private List<ISettingControlBinding> _controlBindings = new List<ISettingControlBinding>();
         private ISettingsPageHost _PageHost;
         protected ISettingsPageHost PageHost
         {
@@ -85,10 +89,38 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected virtual void SettingsToPage()
         {
+            foreach (var cb in _controlBindings)
+            {
+                cb.LoadSetting(GetCurrentSettings(), AreEffectiveSettings);
+            }
         }
 
         protected virtual void PageToSettings()
         {
+            foreach (var cb in _controlBindings)
+            {
+                cb.SaveSetting(GetCurrentSettings(), AreEffectiveSettings);
+            }
+        }
+
+        protected abstract ISettingsSource GetCurrentSettings();
+        protected abstract bool AreEffectiveSettings { get; }
+
+        public void AddControlBinding(ISettingControlBinding aBinding)
+        {
+            _controlBindings.Add(aBinding);
+        }
+
+        protected void AddSettingBinding(BoolNullableSetting aSetting, CheckBox aCheckBox)
+        {
+            var adapter = new BoolCheckBoxAdapter(aSetting, aCheckBox);
+            AddControlBinding(adapter.CreateControlBinding());
+        }
+
+        protected void AddSettingBinding(GitCommands.Settings.StringSetting aSetting, ComboBox aComboBox)
+        {
+            var adapter = new StringComboBoxAdapter(aSetting, aComboBox);
+            AddControlBinding(adapter.CreateControlBinding());
         }
 
         IList<string> childrenText;
@@ -141,4 +173,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             get { return new SettingsPageReferenceByType(GetType()); }
         }
     }
+
+    public class BoolCheckBoxAdapter : GitUIPluginInterfaces.BoolSetting
+    {
+        public BoolCheckBoxAdapter(BoolNullableSetting aSetting, CheckBox aCheckBox)
+            : base(aSetting.FullPath, aSetting.DefaultValue.Value)
+        {
+            CustomControl = aCheckBox;
+        }
+    }
+
+    public class StringComboBoxAdapter : GitUIPluginInterfaces.ChoiceSetting
+    {
+        public StringComboBoxAdapter(GitCommands.Settings.StringSetting aSetting, ComboBox aComboBox)
+            : base(aSetting.FullPath, aComboBox.Items.Cast<string>().ToList(), aSetting.DefaultValue)
+        {
+            CustomControl = aComboBox;
+        }
+    }
+    
 }

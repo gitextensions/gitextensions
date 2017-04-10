@@ -14,7 +14,7 @@ namespace GitCommands.Settings
         {
             get
             {
-                return SettingsSource.GetString(Name, DefaultValue);
+                return SettingsSource.GetString(Name, null);
             }
 
             set
@@ -43,17 +43,13 @@ namespace GitCommands.Settings
             }
         }
 
-        public bool ValueOrDefault
+        public new bool ValueOrDefault
         {
             get
             {
-                if (Value.HasValue)
-                    return Value.Value;
-
-                return DefaultValue.Value;
+                return base.ValueOrDefault.Value;
             }
         }
-
     }
 
     public class BoolSetting : Setting<bool>

@@ -1,4 +1,7 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿using GitCommands;
+using GitUIPluginInterfaces;
+
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class PluginRootIntroductionPage : SettingsPageBase
     {
@@ -15,6 +18,12 @@
 
         protected override void PageToSettings()
         {
+        }
+
+        protected override bool AreEffectiveSettings => true;
+        protected override ISettingsSource GetCurrentSettings()
+        {
+            return AppSettings.SettingsContainer;
         }
     }
 }

@@ -130,7 +130,7 @@ namespace GitCommands.Settings
         {
             get
             {
-                return new SettingsPath(this, Type.Value);
+                return new SettingsPath(this, Type.ValueOrDefault);
             }
         }
     }

@@ -61,8 +61,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _populateBuildServerTypeTask.ContinueWith(
                 task =>
                 {
-                    checkBoxEnableBuildServerIntegration.SetNullableChecked(CurrentSettings.BuildServer.EnableIntegration.Value);
-                    checkBoxShowBuildSummary.SetNullableChecked(CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value);
+                    checkBoxEnableBuildServerIntegration.SetNullableChecked((bool?)CurrentSettings.BuildServer.EnableIntegration.Value);
+                    checkBoxShowBuildSummary.SetNullableChecked((bool?)CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value);
 
                     BuildServerType.SelectedItem = CurrentSettings.BuildServer.Type.Value ?? _noneItem.Text;
                 },

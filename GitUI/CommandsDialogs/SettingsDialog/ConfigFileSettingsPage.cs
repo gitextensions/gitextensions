@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GitCommands.Settings;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -16,6 +17,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             base.Init(aPageHost);
 
             CurrentSettings = CommonLogic.ConfigFileSettingsSet.EffectiveSettings;
+        }
+
+        protected override bool AreEffectiveSettings
+        {
+            get { return CurrentSettings == ConfigFileSettingsSet.EffectiveSettings; }
+        }
+
+        protected override ISettingsSource GetCurrentSettings()
+        {
+            return CurrentSettings;
         }
 
         public void SetEffectiveSettings()
