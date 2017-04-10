@@ -9,7 +9,7 @@ GitExtensions is a standalone Git repository tool, a Visual Studio 2010-2015 plu
 
 ## Current status
 
-Build on Windows: [![Build status](https://ci.appveyor.com/api/projects/status/v736qwg7p40m025g/branch/master?svg=true)](https://ci.appveyor.com/project/jbialobr/gitextensions/branch/master)
+Build on Windows: [![Build status](https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true)](https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master)
 
 Build on Linux: [![Build Status](https://travis-ci.org/gitextensions/gitextensions.svg?branch=master)](https://travis-ci.org/gitextensions/gitextensions)
 
