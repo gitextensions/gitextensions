@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     return 1;
                 case "trimstart":
                     return 2;
-                case "fileNameOnly":
+                case "filenameonly":
                     return 3;
                 default:
                     return 0;
