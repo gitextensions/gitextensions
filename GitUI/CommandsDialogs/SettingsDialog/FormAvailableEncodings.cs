@@ -22,20 +22,39 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private void LoadEncoding()
         {
             var includedEncoding = AppSettings.AvailableEncodings;
-            ListIncludedEncodings.Items.AddRange(includedEncoding.Values.ToArray());
-            ListIncludedEncodings.DisplayMember = "EncodingName";
+            ListIncludedEncodings.BeginUpdate();
+            try
+            {
+                ListIncludedEncodings.Items.AddRange(includedEncoding.Values.ToArray());
+                ListIncludedEncodings.DisplayMember = "EncodingName";
+            }
+            finally
+            {
+                ListIncludedEncodings.EndUpdate();
+            }
 
             var availableEncoding = System.Text.Encoding.GetEncodings()
                 .Select(ei => ei.GetEncoding())
-                .Where(e => !includedEncoding.ContainsKey(e.HeaderName)).ToList();
+                .Where(e => !includedEncoding.ContainsKey(e.HeaderName))
+                .ToList();
+            // If exists utf-8, then replace to utf-8 without BOM
             var utf8 = availableEncoding.Where(e => typeof(UTF8Encoding) == e.GetType()).FirstOrDefault();
             if (utf8 != null)
             {
                 availableEncoding.Remove(utf8);
                 availableEncoding.Add(new UTF8Encoding(false));
             }
-            ListAvailableEncodings.Items.AddRange(availableEncoding.OrderBy(e => e.HeaderName).ToArray());
-            ListAvailableEncodings.DisplayMember = "EncodingName";
+
+            ListAvailableEncodings.BeginUpdate();
+            try
+            {
+                ListAvailableEncodings.Items.AddRange(availableEncoding.ToArray());
+                ListAvailableEncodings.DisplayMember = "EncodingName";
+            }
+            finally
+            {
+                ListAvailableEncodings.EndUpdate();
+            }
         }
 
         private void ToLeft_Click(object sender, EventArgs e)

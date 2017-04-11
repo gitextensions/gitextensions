@@ -83,6 +83,7 @@
             this.ListAvailableEncodings.Location = new System.Drawing.Point(315, 23);
             this.ListAvailableEncodings.Name = "ListAvailableEncodings";
             this.ListAvailableEncodings.Size = new System.Drawing.Size(287, 252);
+            this.ListAvailableEncodings.Sorted = true;
             this.ListAvailableEncodings.TabIndex = 1;
             this.ListAvailableEncodings.SelectedValueChanged += new System.EventHandler(this.ListAvailableEncodings_SelectedValueChanged);
             // 
