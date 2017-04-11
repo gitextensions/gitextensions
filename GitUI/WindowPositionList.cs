@@ -24,6 +24,7 @@ namespace GitUI
     {
         protected WindowPosition()
         {
+            DeviceDpi = 96;
         }
 
         public WindowPosition(Rectangle rect, int deviceDpi, FormWindowState state, string name)
