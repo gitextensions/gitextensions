@@ -26,4 +26,3 @@ build_script:
     & Setup\BuildInstallers.$env:IdeVersion.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
     Get-ChildItem Setup\GitExtensions-*-Mono.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-    Get-ChildItem Setup\GitExtensions-*-Setup.msi | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
