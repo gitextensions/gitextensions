@@ -67,6 +67,7 @@
             this.globalAutoCrlfFalse = new System.Windows.Forms.RadioButton();
             this.globalAutoCrlfNotSet = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanelGitConfig = new System.Windows.Forms.TableLayoutPanel();
+            this.ConfigureEncoding = new System.Windows.Forms.Button();
             this.InvalidGitPathGlobal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxLineEndings.SuspendLayout();
@@ -181,7 +182,7 @@
             this.DifftoolPath.Size = new System.Drawing.Size(897, 23);
             this.DifftoolPath.TabIndex = 10;
             // 
-            // GlobalDiffTool
+            // _NO_TRANSLATE_GlobalDiffTool
             // 
             this._NO_TRANSLATE_GlobalDiffTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this._NO_TRANSLATE_GlobalDiffTool.FormattingEnabled = true;
@@ -312,7 +313,7 @@
             this.BrowseMergeTool.UseVisualStyleBackColor = true;
             this.BrowseMergeTool.Click += new System.EventHandler(this.BrowseMergeTool_Click);
             // 
-            // GlobalMergeTool
+            // _NO_TRANSLATE_GlobalMergeTool
             // 
             this._NO_TRANSLATE_GlobalMergeTool.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this._NO_TRANSLATE_GlobalMergeTool.FormattingEnabled = true;
@@ -510,6 +511,7 @@
             this.tableLayoutPanelGitConfig.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelGitConfig.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelGitConfig.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelGitConfig.Controls.Add(this.ConfigureEncoding, 2, 12);
             this.tableLayoutPanelGitConfig.Controls.Add(this.label3, 0, 0);
             this.tableLayoutPanelGitConfig.Controls.Add(this.label60, 0, 12);
             this.tableLayoutPanelGitConfig.Controls.Add(this.groupBoxLineEndings, 0, 11);
@@ -561,6 +563,17 @@
             this.tableLayoutPanelGitConfig.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelGitConfig.Size = new System.Drawing.Size(1310, 778);
             this.tableLayoutPanelGitConfig.TabIndex = 81;
+            // 
+            // ConfigureEncoding
+            // 
+            this.ConfigureEncoding.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConfigureEncoding.Location = new System.Drawing.Point(537, 434);
+            this.ConfigureEncoding.Name = "ConfigureEncoding";
+            this.ConfigureEncoding.Size = new System.Drawing.Size(123, 25);
+            this.ConfigureEncoding.TabIndex = 81;
+            this.ConfigureEncoding.Text = "Configure";
+            this.ConfigureEncoding.UseVisualStyleBackColor = true;
+            this.ConfigureEncoding.Click += new System.EventHandler(this.ConfigureEncoding_Click);
             // 
             // GitConfigSettingsPage
             // 
@@ -623,5 +636,6 @@
         private System.Windows.Forms.RadioButton globalAutoCrlfNotSet;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGitConfig;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelLineEndings;
+        private System.Windows.Forms.Button ConfigureEncoding;
     }
 }

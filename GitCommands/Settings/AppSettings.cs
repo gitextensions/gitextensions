@@ -12,6 +12,7 @@ using GitCommands.Logging;
 using GitCommands.Repository;
 using GitCommands.Settings;
 using Microsoft.Win32;
+using System.Linq;
 
 namespace GitCommands
 {
@@ -1162,6 +1163,7 @@ namespace GitCommands
 
         public static void SaveSettings()
         {
+            SaveEncodings();
             try
             {
                 SettingsContainer.LockedAction(() =>
@@ -1178,13 +1180,7 @@ namespace GitCommands
 
         public static void LoadSettings()
         {
-            Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
-            addEncoding(Encoding.Default);
-            addEncoding(new ASCIIEncoding());
-            addEncoding(new UnicodeEncoding());
-            addEncoding(new UTF7Encoding());
-            addEncoding(new UTF8Encoding(false));
-            addEncoding(System.Text.Encoding.GetEncoding("CP852"));
+            LoadEncodings();
 
             try
             {
@@ -1488,6 +1484,47 @@ namespace GitCommands
         public static string GetString(string name, string defaultValue)
         {
             return SettingsContainer.GetString(name, defaultValue);
+        }
+
+        private static void LoadEncodings()
+        {
+            Action<Encoding> addEncoding = delegate (Encoding e) { AvailableEncodings[e.HeaderName] = e; };
+            Action<string> addEncodingByName = delegate (string s) { try { addEncoding(Encoding.GetEncoding(s)); } catch { } };
+
+            string availableEncodings = GetString("AvailableEncodings", "");
+            if (string.IsNullOrWhiteSpace(availableEncodings))
+            {
+                // Default encoding set
+                addEncoding(Encoding.Default);
+                addEncoding(new ASCIIEncoding());
+                addEncoding(new UnicodeEncoding());
+                addEncoding(new UTF7Encoding());
+                addEncoding(new UTF8Encoding(false));
+                addEncoding(Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage));
+            }
+            else
+            {
+                var utf8 = new UTF8Encoding(false);
+                foreach(var encodingName in availableEncodings.Split(';'))
+                {
+                    // create utf-8 without BOM
+                    if (encodingName == utf8.HeaderName)
+                        addEncoding(utf8);
+                    // default encoding
+                    else if (encodingName == "Default")
+                        addEncoding(Encoding.Default);
+                    // add encoding by name
+                    else
+                        addEncodingByName(encodingName);
+                }
+            }
+        }
+
+        private static void SaveEncodings()
+        {
+            string availableEncodings = AvailableEncodings.Values.Select(e => e.HeaderName).Join(";");
+            availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
+            SetString("AvailableEncodings", availableEncodings);
         }
 
     }
