@@ -1179,13 +1179,11 @@ namespace GitCommands
         public static void LoadSettings()
         {
             Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
-            addEncoding(Encoding.Default);
-            addEncoding(new ASCIIEncoding());
-            addEncoding(new UnicodeEncoding());
-            addEncoding(new UTF7Encoding());
-            addEncoding(new UTF8Encoding(false));
-            addEncoding(System.Text.Encoding.GetEncoding("CP852"));
-
+            foreach(var enc in Encoding.GetEncodings())
+            {
+                addEncoding(enc.GetEncoding());
+            }
+            
             try
             {
                 GitCommandHelpers.SetSsh(SshPath);
