@@ -2,6 +2,7 @@ using GitUI.UserControls.RevisionGridClasses;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -181,6 +182,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
 
             toolPanel.SplitterDistance = ToolStrip.PreferredSize.Height;
+            SetSplitterPositions();
 
             // set tab page images
             {
@@ -971,19 +973,19 @@ namespace GitUI.CommandsDialogs
         /// <param name="branchName">Current branch name.</param>
         private string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
-#if DEBUG
-            const string defaultTitle = "Git Extensions -> DEBUG <-";
-            const string repositoryTitleFormat = "{0} ({1}) - Git Extensions -> DEBUG <-";
-#else
             const string defaultTitle = "Git Extensions";
-            const string repositoryTitleFormat = "{0} ({1}) - Git Extensions";
+            const string repositoryTitleFormat = "{0} ({1}) - Git Extensions{2}";
+            string additionalTitleText = "";
+#if DEBUG
+            additionalTitleText = " -> DEBUG <-";
 #endif
             if (!isWorkingDirValid)
-                return defaultTitle;
+                return defaultTitle + additionalTitleText;
             string repositoryDescription = GetRepositoryShortName(workingDir);
             if (string.IsNullOrEmpty(branchName))
                 branchName = _noBranchTitle.Text;
-            return string.Format(repositoryTitleFormat, repositoryDescription, branchName.Trim('(', ')'));
+            return string.Format(repositoryTitleFormat, repositoryDescription,
+                branchName.Trim('(', ')'), additionalTitleText);
         }
 
         /// <summary>
@@ -2781,9 +2783,52 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        protected void SetSplitterPositions()
+        {
+            try
+            {
+                int deviceDpi = GetCurrentDeviceDpi();
+                int dashboardDpi = Properties.Settings.Default.FormBrowse_DeviceDpi;
+                int mainSplitContainerSplitterDistance = Properties.Settings.Default.FormBrowse_MainSplitContainer_SplitterDistance;
+                int fileTreeSplitContainerSplitterDistance = Properties.Settings.Default.FormBrowse_FileTreeSplitContainer_SplitterDistance;
+                int diffSplitContainerSplitterDistance = Properties.Settings.Default.FormBrowse_DiffSplitContainer_SplitterDistance;
+                if (dashboardDpi != 0)
+                {
+                    float scaleFactor = 1.0f * deviceDpi / dashboardDpi;
+                    mainSplitContainerSplitterDistance = (int)(scaleFactor * mainSplitContainerSplitterDistance);
+                    fileTreeSplitContainerSplitterDistance = (int)(scaleFactor * fileTreeSplitContainerSplitterDistance);
+                    diffSplitContainerSplitterDistance = (int)(scaleFactor * diffSplitContainerSplitterDistance);
+                }
+                if (mainSplitContainerSplitterDistance != 0)
+                    MainSplitContainer.SplitterDistance = mainSplitContainerSplitterDistance;
+                FileTreeSplitContainer.SplitterDistance = fileTreeSplitContainerSplitterDistance;
+                DiffSplitContainer.SplitterDistance = diffSplitContainerSplitterDistance;
+            }
+            catch (ConfigurationException)
+            {
+            }
+        }
+
+        protected void SaveSplitterPositions()
+        {
+            try
+            {
+                Properties.Settings.Default.FormBrowse_DeviceDpi = GetCurrentDeviceDpi();
+                Properties.Settings.Default.FormBrowse_MainSplitContainer_SplitterDistance = MainSplitContainer.SplitterDistance;
+                Properties.Settings.Default.FormBrowse_FileTreeSplitContainer_SplitterDistance = FileTreeSplitContainer.SplitterDistance;
+                Properties.Settings.Default.FormBrowse_DiffSplitContainer_SplitterDistance = DiffSplitContainer.SplitterDistance;
+                Properties.Settings.Default.Save();
+            }
+            catch (ConfigurationException)
+            {
+                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
+            }
+        }
+
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             base.OnClosing(e);
+            SaveSplitterPositions();
             if (_dashboard != null)
                 _dashboard.SaveSplitterPositions();
         }
@@ -3498,7 +3543,7 @@ namespace GitUI.CommandsDialogs
         }
 
         private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
-        {            
+        {
             Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new");
         }
 
