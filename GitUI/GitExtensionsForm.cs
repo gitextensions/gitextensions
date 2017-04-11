@@ -229,33 +229,23 @@ namespace GitUI
             if (position == null)
                 return;
 
-            float scale = 1.0f;
-            if (position.DeviceDpi != 0)
-            {
-                int deviceDpi = GetCurrentDeviceDpi();
-                scale = 1.0f * deviceDpi / position.DeviceDpi;
-            }
+            int deviceDpi = GetCurrentDeviceDpi();
+            float scale = 1.0f * deviceDpi / position.DeviceDpi;
 
             StartPosition = FormStartPosition.Manual;
             if (FormBorderStyle == FormBorderStyle.Sizable ||
                 FormBorderStyle == FormBorderStyle.SizableToolWindow)
             {
                 Size formSize = position.Rect.Size;
-                if (position.DeviceDpi != 0)
-                {
-                    formSize.Width = (int)(formSize.Width * scale);
-                    formSize.Height = (int)(formSize.Height * scale);
-                }
+                formSize.Width = (int)(formSize.Width * scale);
+                formSize.Height = (int)(formSize.Height * scale);
                 Size = formSize;
             }
             if (Owner == null || !_windowCentred)
             {
                 Point location = position.Rect.Location;
-                if (position.DeviceDpi != 0)
-                {
-                    location.X = (int)(location.X * scale);
-                    location.Y = (int)(location.Y * scale);
-                }
+                location.X = (int)(location.X * scale);
+                location.Y = (int)(location.Y * scale);
                 Rectangle? rect = FindWindowScreen(location);
                 if (rect != null)
                     location.Y = rect.Value.Y;
@@ -333,7 +323,7 @@ namespace GitUI
 
                 // Write to the user settings:
                 if (_windowPositionList == null)
-                    _windowPositionList = WindowPositionList.Load(); 
+                    _windowPositionList = WindowPositionList.Load();
                 WindowPosition windowPosition = _windowPositionList.Get(name);
                 // Don't save location when we center modal form
                 if (windowPosition != null && Owner != null && _windowCentred)
