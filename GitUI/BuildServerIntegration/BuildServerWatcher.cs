@@ -280,7 +280,7 @@ namespace GitUI.BuildServerIntegration
             {
                 if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
                     return null;
-                var buildServerType = Module.EffectiveSettings.BuildServer.Type.Value;
+                var buildServerType = Module.EffectiveSettings.BuildServer.Type.ValueOrDefault;
                 if (string.IsNullOrEmpty(buildServerType))
                     return null;
                 var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
