@@ -842,6 +842,12 @@ namespace GitCommands
             set { SetBool("showfirstparent", value); }
         }
 
+        public static int CommitDialogDeviceDpi
+        {
+            get { return GetInt("commitdialogdevicedpi", 96); }
+            set { SetInt("commitdialogdevicedpi", value); }
+        }
+
         public static int CommitDialogSplitter
         {
             get { return GetInt("commitdialogsplitter", -1); }
@@ -854,7 +860,7 @@ namespace GitCommands
             set { SetInt("commitdialogrightsplitter", value); }
         }
 
-        public static bool CommitDialogSelectionFilter 
+        public static bool CommitDialogSelectionFilter
         {
             get { return GetBool("commitdialogselectionfilter", false); }
             set { SetBool("commitdialogselectionfilter", value); }
