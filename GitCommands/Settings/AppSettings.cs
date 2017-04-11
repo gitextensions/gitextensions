@@ -1489,9 +1489,10 @@ namespace GitCommands
         private static void LoadEncodings()
         {
             Action<Encoding> addEncoding = delegate (Encoding e) { AvailableEncodings[e.HeaderName] = e; };
+            Action<string> addEncodingByName = delegate (string s) { try { addEncoding(Encoding.GetEncoding(s)); } catch { } };
 
-            string[] availableEncodings = GetString("AvailableEncodings", "").Split(';');
-            if (availableEncodings == null || availableEncodings.Length == 0 || string.IsNullOrWhiteSpace(availableEncodings[0]))
+            string availableEncodings = GetString("AvailableEncodings", "");
+            if (string.IsNullOrWhiteSpace(availableEncodings))
             {
                 // Default encoding set
                 addEncoding(Encoding.Default);
@@ -1504,16 +1505,17 @@ namespace GitCommands
             else
             {
                 var utf8 = new UTF8Encoding(false);
-                foreach(var encoding in availableEncodings)
+                foreach(var encodingName in availableEncodings.Split(';'))
                 {
                     // create utf-8 without BOM
-                    if (encoding == utf8.HeaderName)
+                    if (encodingName == utf8.HeaderName)
                         addEncoding(utf8);
                     // default encoding
-                    else if (encoding == "Default")
+                    else if (encodingName == "Default")
                         addEncoding(Encoding.Default);
+                    // add encoding by name
                     else
-                        addEncoding(Encoding.GetEncoding(encoding));
+                        addEncodingByName(encodingName);
                 }
             }
         }
