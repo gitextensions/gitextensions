@@ -60,6 +60,10 @@ namespace GitUIPluginInterfaces
                 }
 
                 control.SelectedIndex = Setting.Values.IndexOf(settingVal);
+                if (control.SelectedIndex == -1)
+                {
+                    control.Text = settingVal;
+                }
             }
 
             public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, ComboBox control)
