@@ -1464,8 +1464,10 @@ namespace GitUI
             }
             // Draw cell background
             e.Graphics.FillRectangle(cellBackgroundBrush, e.CellBounds);
-            Color backColor = (cellBackgroundBrush as SolidBrush).Color;
-
+            Color? backColor = null;
+            if (cellBackgroundBrush is SolidBrush)
+                backColor = (cellBackgroundBrush as SolidBrush).Color;
+            
             // Draw graphics column
             if (e.ColumnIndex == graphColIndex)
             {
@@ -1481,16 +1483,18 @@ namespace GitUI
             }
             else if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !Revisions.RowIsRelative(e.RowIndex))
             {
+                Debug.Assert(backColor != null);
                 foreColor = Color.Gray;
                 // TODO: If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast.
-                while (ColorHelper.GetColorBrightnessDifference(foreColor, backColor) < 125)
+                while (ColorHelper.GetColorBrightnessDifference(foreColor, backColor.Value) < 125)
                 {
-                    foreColor = ColorHelper.IsLightColor(backColor) ? ColorHelper.MakeColorDarker(foreColor) : ColorHelper.MakeColorLighter(foreColor);
+                    foreColor = ColorHelper.IsLightColor(backColor.Value) ? ColorHelper.MakeColorDarker(foreColor) : ColorHelper.MakeColorLighter(foreColor);
                 }
             }
             else
             {
-                foreColor = ColorHelper.GetForeColorForBackColor(backColor);
+                Debug.Assert(backColor != null);
+                foreColor = ColorHelper.GetForeColorForBackColor(backColor.Value);
             }
             /*
             if (!AppSettings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
