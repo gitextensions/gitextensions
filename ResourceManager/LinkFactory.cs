@@ -38,31 +38,20 @@ namespace ResourceManager
 
         public static string ParseLink(string aLinkText)
         {
-            var count = aLinkText.Count(c => c == '#');
-            if (count == 0)
+            string uriCandidate = aLinkText;
+            while(uriCandidate != null)
             {
-                return aLinkText;
-            }
-            if (count == 1)
-            {
-                return aLinkText.Substring(aLinkText.IndexOf('#') + 1);
-            }
-            else
-            {
-                var schemes = new[] { "http://", "https://", "gitext://", "mailto:" };
-                int indexLink = -1;
-                foreach (var scheme in schemes)
+                try
                 {
-                    indexLink = aLinkText.IndexOf("#" + scheme);
-                    if (indexLink != -1)
-                        break;
+                    var uri = new Uri(uriCandidate);
+                    return uri.AbsoluteUri;
                 }
-
-                return (indexLink != -1)
-                    ? aLinkText.Substring(indexLink + 1)
-                    : aLinkText.Split(new[] { '#' }, 2)[1];
+                catch (UriFormatException)
+                { }
+                uriCandidate = uriCandidate.SkipStr("#");
             }
 
+            return aLinkText;
         }
     }
 }
