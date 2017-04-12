@@ -1873,6 +1873,13 @@ namespace GitUI.CommandsDialogs
 
         private void FileToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
+            if (Repositories.RepositoryHistory.Repositories.Count() == 0)
+            {
+                recentToolStripMenuItem.Enabled = false;
+                return;
+            }
+
+            recentToolStripMenuItem.Enabled = true;
             recentToolStripMenuItem.DropDownItems.Clear();
 
             foreach (var historyItem in Repositories.RepositoryHistory.Repositories)
@@ -1885,6 +1892,11 @@ namespace GitUI.CommandsDialogs
                 historyItemMenu.Width = 225;
                 recentToolStripMenuItem.DropDownItems.Add(historyItemMenu);
             }
+
+            // Re-add controls.
+            recentToolStripMenuItem.DropDownItems.Add(this.clearRecentRepositoriesListToolStripMenuItem);
+            TranslateItem(clearRecentRepositoriesListMenuItem.Name, clearRecentRepositoriesListMenuItem);
+            recentToolStripMenuItem.DropDownItems.Add(clearRecentRepositoriesListMenuItem);
         }
 
         private void ChangeWorkingDir(string path)
@@ -1916,6 +1928,16 @@ namespace GitUI.CommandsDialogs
                 return;
 
             ChangeWorkingDir(button.Text);
+        }
+
+        private void ClearRecentRepositoriesListClick(object sender, EventArgs e)
+        {
+            Repositories.RepositoryHistory.Repositories.Clear();
+            Repositories.SaveSettings();
+            // Force clear recent repositories list from dashboard.
+            if (this._dashboard != null) {
+                _dashboard.ShowRecentRepositories();
+            }
         }
 
         private void PluginSettingsToolStripMenuItemClick(object sender, EventArgs e)
