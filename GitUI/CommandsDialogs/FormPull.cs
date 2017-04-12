@@ -726,8 +726,10 @@ namespace GitUI.CommandsDialogs
 
         private void FillPullSourceDropDown()
         {
+            string prevUrl = comboBoxPullSource.Text;
             comboBoxPullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             comboBoxPullSource.DisplayMember = "Path";
+            comboBoxPullSource.Text = prevUrl;
         }
 
         private void StashClick(object sender, EventArgs e)

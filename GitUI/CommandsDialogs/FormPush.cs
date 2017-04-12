@@ -558,8 +558,10 @@ namespace GitUI.CommandsDialogs
 
         private void FillPushDestinationDropDown()
         {
+            string prevUrl = PushDestination.Text;
             PushDestination.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             PushDestination.DisplayMember = "Path";
+            PushDestination.Text = prevUrl;
         }
 
         private void UpdateBranchDropDown()
