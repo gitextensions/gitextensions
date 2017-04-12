@@ -259,7 +259,7 @@ namespace GitStatistics
                 {
                     lineCounter.NumberBlankLines,
                     lineCounter.NumberCommentsLines,
-                    lineCounter.NumberLines,
+                    lineCounter.NumberCodeLines,
                     lineCounter.NumberLinesInDesignerFiles
                 });
 
