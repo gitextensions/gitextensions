@@ -708,6 +708,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.FileTreeSplitContainer.Panel2.Controls.Add(this.FileText);
             this.FileTreeSplitContainer.Size = new System.Drawing.Size(909, 251);
+            this.FileTreeSplitContainer.SplitterDistance = global::GitUI.Properties.Settings.Default.FormBrowse_FileTreeSplitContainer_SplitterDistance;
             this.FileTreeSplitContainer.TabIndex = 1;
             // 
             // GitTree
@@ -925,6 +926,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.DiffSplitContainer.Panel2.Controls.Add(this.DiffText);
             this.DiffSplitContainer.Size = new System.Drawing.Size(909, 251);
+            this.DiffSplitContainer.SplitterDistance = global::GitUI.Properties.Settings.Default.FormBrowse_DiffSplitContainer_SplitterDistance;
             this.DiffSplitContainer.TabIndex = 0;
             // 
             // DiffFiles

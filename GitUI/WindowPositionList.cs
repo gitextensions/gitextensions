@@ -18,7 +18,7 @@ namespace GitUI
     /// <summary>
     ///   Stores the state and position of a single window
     /// </summary>
-    [DebuggerDisplay("Name={Name} Rect={Rect} DeviceDpi={DeviceDpi} State={State}")]
+    [DebuggerDisplay("Name={Name} Rect={Rect} State={State}")]
     [Serializable]
     public class WindowPosition
     {
@@ -26,16 +26,14 @@ namespace GitUI
         {
         }
 
-        public WindowPosition(Rectangle rect, int deviceDpi, FormWindowState state, string name)
+        public WindowPosition(Rectangle rect, FormWindowState state, string name)
         {
             Rect = rect;
-            DeviceDpi = deviceDpi;
             State = state;
             Name = name;
         }
 
         public Rectangle Rect { get; set; }
-        public int DeviceDpi { get; set; }
         public FormWindowState State { get; set; }
         public string Name { get; set; }
     }

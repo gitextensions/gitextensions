@@ -161,7 +161,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             try
             {
-                Properties.Settings.Default.Dashboard_DeviceDpi = GetCurrentDeviceDpi();
                 Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance = splitContainer5.SplitterDistance;
                 Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance = splitContainer6.SplitterDistance;
                 Properties.Settings.Default.Save();
@@ -270,17 +269,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             try
             {
-                int deviceDpi = GetCurrentDeviceDpi();
-                int dashboardDpi = Properties.Settings.Default.Dashboard_DeviceDpi;
-                int splitterDistance = Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance;
-                if (dashboardDpi != 0)
-                {
-                    float scaleFactor = 1.0f * deviceDpi / dashboardDpi;
-                    splitterDistance = (int) (scaleFactor * splitterDistance);
-                }
                 SetSplitterDistance(
                     splitContainer6,
-                    splitterDistance,
+                    Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance,
                     Math.Max(2, (int)(CommonActions.Height * 1.2)));
 
                 SetSplitterDistance(
@@ -290,7 +281,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 SetSplitterDistance(
                     splitContainer5,
-                    splitterDistance,
+                    Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance,
                     315);
             }
             catch (ConfigurationException)
@@ -379,7 +370,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             if (!module.IsValidGitWorkingDir())
             {
-                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text,
+                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, 
                     directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Cancel)
@@ -447,7 +438,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                     if (!module.IsValidGitWorkingDir())
                     {
-                        DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepositoryOpenIt.Text,
+                        DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepositoryOpenIt.Text, 
                             directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,
                             MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                         if (dialogResult == DialogResult.No)
