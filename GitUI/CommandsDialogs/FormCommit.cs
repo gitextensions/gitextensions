@@ -220,10 +220,16 @@ namespace GitUI.CommandsDialogs
 
         private void FormCommit_Load(object sender, EventArgs e)
         {
-            if (AppSettings.CommitDialogSplitter != -1)
-                splitMain.SplitterDistance = AppSettings.CommitDialogSplitter;
-            if (AppSettings.CommitDialogRightSplitter != -1)
-                splitRight.SplitterDistance = AppSettings.CommitDialogRightSplitter;
+            int deviceDpi = GetCurrentDeviceDpi();
+            int commitDialogDpi = AppSettings.CommitDialogDeviceDpi;
+            int commitDialogSplitter = AppSettings.CommitDialogSplitter;
+            int commitDialogRightSplitter = AppSettings.CommitDialogRightSplitter;
+
+            float scaleFactor = 1.0f * deviceDpi / commitDialogDpi;
+            if (commitDialogSplitter != -1)
+                splitMain.SplitterDistance = (int)(scaleFactor * commitDialogSplitter);
+            if (commitDialogRightSplitter != -1)
+                splitRight.SplitterDistance = (int)(scaleFactor * commitDialogRightSplitter);
 
             SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
             Reset.Visible = AppSettings.ShowResetAllChanges;
@@ -248,6 +254,7 @@ namespace GitUI.CommandsDialogs
             if (CommitKind.Normal == _commitKind)
                 GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text);
 
+            AppSettings.CommitDialogDeviceDpi = GetCurrentDeviceDpi();
             AppSettings.CommitDialogSplitter = splitMain.SplitterDistance;
             AppSettings.CommitDialogRightSplitter = splitRight.SplitterDistance;
             AppSettings.CommitDialogSelectionFilter = toolbarSelectionFilter.Visible;
@@ -1138,8 +1145,8 @@ namespace GitUI.CommandsDialogs
 
         private void Unstage(bool canUseUnstageAll = true)
         {
-            if (canUseUnstageAll && 
-                Staged.GitItemStatuses.Count() > 10 && 
+            if (canUseUnstageAll &&
+                Staged.GitItemStatuses.Count() > 10 &&
                 Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count())
             {
                 UnstageAllToolStripMenuItemClick(null, null);
@@ -1296,11 +1303,12 @@ namespace GitUI.CommandsDialogs
             ShowChanges(item, true);
         }
 
-		private void Staged_DataSourceChanged(object sender, EventArgs e)
-		{
+        private void Staged_DataSourceChanged(object sender, EventArgs e)
+        {
             int totalFilesCount = Staged.UnfilteredItemsCount() + Unstaged.UnfilteredItemsCount();
             commitStagedCount.Text = Staged.UnfilteredItemsCount().ToString() + "/" + totalFilesCount.ToString();
-		}
+        }
+
         private void Staged_Enter(object sender, EventArgs e)
         {
             if (_currentFilesList != Staged)
@@ -1928,8 +1936,6 @@ namespace GitUI.CommandsDialogs
                 RescanChanges();
 
             updateAuthorInfo();
-
-
         }
 
         private void updateAuthorInfo()
