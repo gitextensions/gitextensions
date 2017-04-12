@@ -338,6 +338,7 @@ namespace GitUI.CommandsDialogs
                 _dashboard.GitModuleChanged += SetGitModule;
                 toolPanel.Panel2.Controls.Add(_dashboard);
                 _dashboard.Dock = DockStyle.Fill;
+                _dashboard.SetSplitterPositions();
             }
             else
                 _dashboard.Refresh();
@@ -349,7 +350,10 @@ namespace GitUI.CommandsDialogs
         private void HideDashboard()
         {
             if (_dashboard != null && _dashboard.Visible)
+            {
+                _dashboard.SaveSplitterPositions();
                 _dashboard.Visible = false;
+            }
         }
 
         private void GitTree_AfterSelect(object sender, TreeViewEventArgs e)
@@ -2833,7 +2837,7 @@ namespace GitUI.CommandsDialogs
         {
             base.OnClosing(e);
             SaveSplitterPositions();
-            if (_dashboard != null)
+            if (_dashboard != null && _dashboard.Visible)
                 _dashboard.SaveSplitterPositions();
         }
 

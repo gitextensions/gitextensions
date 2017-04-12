@@ -254,8 +254,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             RecentRepositories.RepositoryCategory = filteredRecentRepositoryHistory;
 
             pictureBox1.BringToFront();
-
-            SetSplitterPositions();
         }
 
         void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
@@ -266,7 +264,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Refresh();
         }
 
-        private void SetSplitterPositions()
+        public void SetSplitterPositions()
         {
             try
             {
