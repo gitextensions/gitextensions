@@ -41,13 +41,9 @@ namespace ResourceManager
             string uriCandidate = aLinkText;
             while(uriCandidate != null)
             {
-                try
-                {
-                    var uri = new Uri(uriCandidate);
+                Uri uri;
+                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out uri))
                     return uri.AbsoluteUri;
-                }
-                catch (UriFormatException)
-                { }
                 uriCandidate = uriCandidate.SkipStr("#");
             }
 
