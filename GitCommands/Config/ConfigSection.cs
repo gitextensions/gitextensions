@@ -107,7 +107,7 @@ namespace GitCommands.Config
             if (_configKeys.TryGetValue(key, out list))
             {
                 if (list.Count > 0)
-                    return list[0];
+                    return list[list.Count-1];
             }
 
             return defaultValue;

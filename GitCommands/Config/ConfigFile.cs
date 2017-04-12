@@ -327,9 +327,14 @@ namespace GitCommands.Config
 
             private void NewSection()
             {
-                _section = new ConfigSection(token.ToString(), false);
-                _configFile.ConfigSections.Add(_section);
+                var sectionName = token.ToString();
                 token.Clear();
+                _section = _configFile.FindConfigSection(sectionName);
+                if (_section == null)
+                {
+                    _section = new ConfigSection(sectionName, false);
+                    _configFile.ConfigSections.Add(_section);
+                }
             }
 
             private void NewKey()
