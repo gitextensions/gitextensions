@@ -191,11 +191,11 @@ namespace GitUI
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
-
-            base.OnLoad(e);
-
             if (_enablePositionRestore)
                 RestorePosition(GetType().Name);
+
+            // Should be called after restoring position
+            base.OnLoad(e);
 
             if (!CheckComponent(this))
                 OnRuntimeLoad(e);
