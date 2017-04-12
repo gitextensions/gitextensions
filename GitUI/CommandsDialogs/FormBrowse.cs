@@ -379,6 +379,7 @@ namespace GitUI.CommandsDialogs
                 TaskbarManager.Instance.ApplicationId = "GitExtensions";
             }
 #endif
+            SetSplitterPositions();
             HideVariableMainMenuItems();
 
             RevisionGrid.Load();
@@ -2784,12 +2785,6 @@ namespace GitUI.CommandsDialogs
                     }
                 }
             }
-        }
-
-        protected override void RestorePosition(string name)
-        {
-            base.RestorePosition(name);
-            SetSplitterPositions();
         }
 
         protected void SetSplitterPositions()
