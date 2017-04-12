@@ -39,6 +39,10 @@ namespace ResourceManager
         public static string ParseLink(string aLinkText)
         {
             var count = aLinkText.Count(c => c == '#');
+            if (count == 0)
+            {
+                return aLinkText;
+            }
             if (count == 1)
             {
                 return aLinkText.Substring(aLinkText.IndexOf('#') + 1);
