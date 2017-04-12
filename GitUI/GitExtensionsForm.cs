@@ -216,7 +216,7 @@ namespace GitUI
         /// </summary>
         /// <param name = "name">The name to use when looking up the position in
         ///   the settings</param>
-        private void RestorePosition(String name)
+        protected virtual void RestorePosition(String name)
         {
             if (!Visible ||
                 WindowState == FormWindowState.Minimized)

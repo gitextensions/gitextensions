@@ -182,7 +182,6 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
 
             toolPanel.SplitterDistance = ToolStrip.PreferredSize.Height;
-            SetSplitterPositions();
 
             // set tab page images
             {
@@ -2781,6 +2780,12 @@ namespace GitUI.CommandsDialogs
                     }
                 }
             }
+        }
+
+        protected override void RestorePosition(string name)
+        {
+            base.RestorePosition(name);
+            SetSplitterPositions();
         }
 
         protected void SetSplitterPositions()
