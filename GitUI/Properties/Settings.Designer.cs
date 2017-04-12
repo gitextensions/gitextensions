@@ -85,7 +85,7 @@ namespace GitUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("96")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int Dashboard_DeviceDpi {
             get {
                 return ((int)(this["Dashboard_DeviceDpi"]));
@@ -97,7 +97,7 @@ namespace GitUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("96")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int FormBrowse_DeviceDpi {
             get {
                 return ((int)(this["FormBrowse_DeviceDpi"]));

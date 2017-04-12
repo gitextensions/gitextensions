@@ -35,7 +35,6 @@ namespace GitUI
         }
 
         public Rectangle Rect { get; set; }
-        [DefaultValue(96)]
         public int DeviceDpi { get; set; }
         public FormWindowState State { get; set; }
         public string Name { get; set; }

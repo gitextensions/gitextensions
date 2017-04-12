@@ -2788,16 +2788,17 @@ namespace GitUI.CommandsDialogs
             try
             {
                 int deviceDpi = GetCurrentDeviceDpi();
-                int browseFormDpi = Properties.Settings.Default.FormBrowse_DeviceDpi;
+                int dashboardDpi = Properties.Settings.Default.FormBrowse_DeviceDpi;
                 int mainSplitContainerSplitterDistance = Properties.Settings.Default.FormBrowse_MainSplitContainer_SplitterDistance;
                 int fileTreeSplitContainerSplitterDistance = Properties.Settings.Default.FormBrowse_FileTreeSplitContainer_SplitterDistance;
                 int diffSplitContainerSplitterDistance = Properties.Settings.Default.FormBrowse_DiffSplitContainer_SplitterDistance;
-
-                float scaleFactor = 1.0f * deviceDpi / browseFormDpi;
-                mainSplitContainerSplitterDistance = (int)(scaleFactor * mainSplitContainerSplitterDistance);
-                fileTreeSplitContainerSplitterDistance = (int)(scaleFactor * fileTreeSplitContainerSplitterDistance);
-                diffSplitContainerSplitterDistance = (int)(scaleFactor * diffSplitContainerSplitterDistance);
-
+                if (dashboardDpi != 0)
+                {
+                    float scaleFactor = 1.0f * deviceDpi / dashboardDpi;
+                    mainSplitContainerSplitterDistance = (int)(scaleFactor * mainSplitContainerSplitterDistance);
+                    fileTreeSplitContainerSplitterDistance = (int)(scaleFactor * fileTreeSplitContainerSplitterDistance);
+                    diffSplitContainerSplitterDistance = (int)(scaleFactor * diffSplitContainerSplitterDistance);
+                }
                 if (mainSplitContainerSplitterDistance != 0)
                     MainSplitContainer.SplitterDistance = mainSplitContainerSplitterDistance;
                 FileTreeSplitContainer.SplitterDistance = fileTreeSplitContainerSplitterDistance;

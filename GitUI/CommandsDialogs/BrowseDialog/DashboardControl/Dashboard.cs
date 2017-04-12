@@ -273,10 +273,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 int deviceDpi = GetCurrentDeviceDpi();
                 int dashboardDpi = Properties.Settings.Default.Dashboard_DeviceDpi;
                 int splitterDistance = Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance;
-
-                float scaleFactor = 1.0f * deviceDpi / dashboardDpi;
-                splitterDistance = (int) (scaleFactor * splitterDistance);
-
+                if (dashboardDpi != 0)
+                {
+                    float scaleFactor = 1.0f * deviceDpi / dashboardDpi;
+                    splitterDistance = (int) (scaleFactor * splitterDistance);
+                }
                 SetSplitterDistance(
                     splitContainer6,
                     splitterDistance,
