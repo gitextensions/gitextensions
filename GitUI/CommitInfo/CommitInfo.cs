@@ -118,6 +118,7 @@ namespace GitUI.CommitInfo
         private List<string> _branches;
         private string _branchInfo;
         private IList<string> _sortedRefs;
+        private System.Drawing.Rectangle _headerResize; // Cache desired size for commit header
 
         private void ReloadCommitInfo()
         {
@@ -203,7 +204,7 @@ namespace GitUI.CommitInfo
             if (EnvUtils.IsMonoRuntime())
                 return (int)(_RevisionHeader.Lines.Length * (0.8 + _RevisionHeader.Font.GetHeight()));
 
-            return _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
+            return _headerResize.Height;
         }
 
         private void loadSortedRefs()
@@ -549,6 +550,12 @@ namespace GitUI.CommitInfo
             {
                 DoCommandClick("navigateforward", null);
             }
+        }
+
+        private void _RevisionHeader_ContentsResized(object sender, ContentsResizedEventArgs e)
+        {
+            // Cache desired size for commit header
+            _headerResize = e.NewRectangle;
         }
 
     }
