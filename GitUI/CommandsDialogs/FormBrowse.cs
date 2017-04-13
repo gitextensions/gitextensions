@@ -3181,7 +3181,7 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
-                var revision = new GitRevision(Module, e.Data);
+                var revision = GitRevision.CreateForShortSha1(Module, e.Data);
                 var found = RevisionGrid.SetSelectedRevision(revision);
 
                 // When 'git log --first-parent' filtration is used, user can click on child commit

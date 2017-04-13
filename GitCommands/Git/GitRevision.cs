@@ -131,5 +131,19 @@ namespace GitCommands
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public static GitRevision CreateForShortSha1(GitModule aModule, string sha1)
+        {
+            if (!sha1.IsNullOrWhiteSpace() && sha1.Length < 40)
+            {
+                string fullSha1;
+                if (aModule.IsExistingCommitHash(sha1, out fullSha1))
+                {
+                    sha1 = fullSha1;
+                }
+            }
+
+            return new GitRevision(aModule, sha1);
+        }
     }
 }
