@@ -85,7 +85,7 @@ namespace ResourceManager
                 header.AppendLine();
                 string commitsString;
                 if (showRevisionsAsLinks)
-                    commitsString = commitData.ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                    commitsString = commitData.ChildrenGuids.Select(g => LinkFactory.CreateCommitLink(g)).Join(" ");
                 else
                     commitsString = commitData.ChildrenGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
                 header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetChildrenText()) + ":",
@@ -98,7 +98,7 @@ namespace ResourceManager
                 header.AppendLine();
                 string commitsString;
                 if (showRevisionsAsLinks)
-                    commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                    commitsString = parentGuids.Select(g => LinkFactory.CreateCommitLink(g)).Join(" ");
                 else
                     commitsString = parentGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
                 header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetParentsText()) + ":",

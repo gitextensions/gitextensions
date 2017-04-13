@@ -41,7 +41,7 @@ namespace ResourceManager
         /// Gets the commit info from CommitData.
         /// </summary>
         /// <returns></returns>
-        public static CommitInformation GetCommitInfo(CommitData data, bool showRevisionsAsLinks)
+        public static CommitInformation GetCommitInfo(CommitData data, bool showRevisionsAsLinks, GitModule module = null)
         {
             if (data == null)
                 throw new ArgumentNullException("data");
@@ -49,7 +49,19 @@ namespace ResourceManager
             string header = data.GetHeader(showRevisionsAsLinks);
             string body = "\n" + WebUtility.HtmlEncode(data.Body.Trim());
 
+            if (showRevisionsAsLinks)
+                body = GitRevision.Sha1HashShortRegex.Replace(body, match => ProcessHashCandidate(module, hash: match.Value));
             return new CommitInformation(header, body);
+        }
+
+        private static string ProcessHashCandidate(GitModule module, string hash)
+        {
+            if (module == null)
+                return hash;
+            string revParseResult = module.RunGitCmd(string.Format("rev-parse --verify --quiet {0}^{{commit}}", hash));
+            if (string.IsNullOrEmpty(revParseResult) || revParseResult.Contains("error"))
+                return hash;
+            return LinkFactory.CreateCommitLink(hash, preserveGuidInLinkText: true);
         }
     }
 }
