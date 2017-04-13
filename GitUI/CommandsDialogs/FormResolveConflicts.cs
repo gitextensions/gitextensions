@@ -232,7 +232,7 @@ namespace GitUI.CommandsDialogs
                 {".sxw",  "merge-ods.vbs"},
             };
 
-        private bool TryMergeWithScript(string fileName, string baseFileName, string remoteFileName, string localFileName)
+        private bool TryMergeWithScript(string fileName, string baseFileName, string localFileName, string remoteFileName)
         {
             if (!EnvUtils.RunningOnWindows())
                 return false;
@@ -254,7 +254,7 @@ namespace GitUI.CommandsDialogs
                                             uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                             DialogResult.Yes)
                         {
-                            UseMergeWithScript(fileName, Path.Combine(dir, mergeScript), baseFileName, remoteFileName, localFileName);
+                            UseMergeWithScript(fileName, Path.Combine(dir, mergeScript), baseFileName, localFileName, remoteFileName);
 
                             return true;
                         }
@@ -268,7 +268,7 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private void UseMergeWithScript(string fileName, string mergeScript, string baseFileName, string remoteFileName, string localFileName)
+        private void UseMergeWithScript(string fileName, string mergeScript, string baseFileName, string localFileName, string remoteFileName)
         {
             //get timestamp of file before merge. This is an extra check to verify if merge was successfully
             DateTime lastWriteTimeBeforeMerge = DateTime.Now;
