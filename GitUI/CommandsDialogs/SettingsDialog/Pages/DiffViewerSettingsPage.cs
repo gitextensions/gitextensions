@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkRememberShowEntireFilePreference.Checked = AppSettings.RememberShowEntireFilePreference;
             chkRememberShowNonPrintingCharsPreference.Checked = AppSettings.RememberShowNonPrintingCharsPreference;
             chkRememberNumberOfContextLines.Checked = AppSettings.RememberNumberOfContextLines;
+            chkOpenSubmoduleDiffInSeparateWindow.Checked = AppSettings.OpenSubmoduleDiffInSeparateWindow;
         }
 
         protected override void PageToSettings()
@@ -27,6 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RememberShowEntireFilePreference = chkRememberShowEntireFilePreference.Checked;
             AppSettings.RememberShowNonPrintingCharsPreference = chkRememberShowNonPrintingCharsPreference.Checked;
             AppSettings.RememberNumberOfContextLines = chkRememberNumberOfContextLines.Checked;
+            AppSettings.OpenSubmoduleDiffInSeparateWindow = chkOpenSubmoduleDiffInSeparateWindow.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

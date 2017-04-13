@@ -2292,11 +2292,16 @@ namespace GitUI.CommandsDialogs
 
         private void openSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = Application.ExecutablePath;
-            process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name.EnsureTrailingPathSeparator();
-            process.Start();
+            var submoduleName = Unstaged.SelectedItem.Name;
+            Unstaged.SelectedItem.SubmoduleStatus.ContinueWith(
+                    (t) =>
+                    {
+                        Process process = new Process();
+                        process.StartInfo.FileName = Application.ExecutablePath;
+                        process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
+                        process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, submoduleName.EnsureTrailingPathSeparator());
+                        process.Start();
+                    });
         }
 
         private void resetSubmoduleChanges_Click(object sender, EventArgs e)

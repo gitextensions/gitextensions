@@ -548,6 +548,12 @@ namespace GitCommands
             set { SetBool("LoadBlameOnShow", value); }
         }
 
+        public static bool OpenSubmoduleDiffInSeparateWindow
+        {
+            get { return GetBool("opensubmodulediffinseparatewindow", false); }
+            set { SetBool("opensubmodulediffinseparatewindow", value); }
+        }
+
         public static bool RevisionGraphShowWorkingDirChanges
         {
             get { return GetBool("revisiongraphshowworkingdirchanges", false); }

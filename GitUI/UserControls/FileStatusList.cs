@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -247,6 +248,10 @@ namespace GitUI
             set
             {
                 FileStatusListView.ContextMenuStrip = value;
+                if (FileStatusListView.ContextMenuStrip != null)
+                {
+                    FileStatusListView.ContextMenuStrip.Opening += new CancelEventHandler(FileStatusListView_ContextMenu_Opening);
+                }
             }
         }
 
@@ -517,9 +522,60 @@ namespace GitUI
         void FileStatusListView_DoubleClick(object sender, EventArgs e)
         {
             if (DoubleClick == null)
-                UICommands.StartFileHistoryDialog(this, SelectedItem.Name, Revision);
+            {
+                if (AppSettings.OpenSubmoduleDiffInSeparateWindow && SelectedItem.IsSubmodule)
+                {
+                    OpenSubmodule();
+                }
+                else
+                {
+                    UICommands.StartFileHistoryDialog(this, SelectedItem.Name, Revision);
+                }
+            }
             else
                 DoubleClick(sender, e);
+        }
+
+        private void OpenSubmodule()
+        {
+            var submoduleName = SelectedItem.Name;
+            SelectedItem.SubmoduleStatus.ContinueWith(
+                (t) =>
+                {
+                    Process process = new Process();
+                    process.StartInfo.FileName = Application.ExecutablePath;
+                    process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
+                    process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, submoduleName.EnsureTrailingPathSeparator());
+                    process.Start();
+                });
+        }
+
+        void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            var cm = sender as ContextMenuStrip;
+            const string openSubmoduleKey = "openSubmoduleMenuItem";
+            var openSubmoduleMenuItem = cm.Items.Find(openSubmoduleKey, true).FirstOrDefault();
+            if (SelectedItem.IsSubmodule && openSubmoduleMenuItem == null)
+            {
+                openSubmoduleMenuItem = new ToolStripMenuItem
+                {
+                    Name = openSubmoduleKey,
+                    Tag = "1",
+                    Text = "Open with Git Extensions",
+                    Image = Resources.IconFolderSubmodule
+                };
+                openSubmoduleMenuItem.Click += (s, ea) => { OpenSubmodule();};
+
+                cm.Items.Insert(1, openSubmoduleMenuItem);
+
+            }
+
+            if (openSubmoduleMenuItem != null)
+            {
+                openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ? 
+                    new Font(openSubmoduleMenuItem.Font,  FontStyle.Bold) : 
+                    new Font(openSubmoduleMenuItem.Font, FontStyle.Regular);
+            }
         }
 
         void FileStatusListView_SelectedIndexChanged()
