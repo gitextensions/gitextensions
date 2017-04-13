@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -33,6 +34,15 @@ namespace GitUI.CommitInfo
             {
                 _sortedRefs = null;
             };
+            _RevisionHeader.ContentsResized += RevisionHeaderOnContentsResized;
+        }
+
+        private void RevisionHeaderOnContentsResized(object sender, ContentsResizedEventArgs e)
+        {
+            const int margin = 2;
+            _RevisionHeader.ClientSize = new Size(
+                e.NewRectangle.Width + margin,
+                e.NewRectangle.Height + margin);
         }
 
         [DefaultValue(false)]
@@ -150,10 +160,9 @@ namespace GitUI.CommitInfo
                 ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
 
             data.ChildrenGuids = _children;
-            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
+            CommitInformation commitInformation = CommitInformation.GetCommitInfo(Module, data, CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
-            _RevisionHeader.Height = GetRevisionHeaderHeight();
             _revisionInfo = commitInformation.Body;
             updateText();
             LoadAuthorImage(data.Author ?? data.Committer);
@@ -196,14 +205,8 @@ namespace GitUI.CommitInfo
             // simulate a two column layout even when there's more then one tab used
             _revisionHeaderTabStops = new int[] { tabStop, tabStop + 1, tabStop + 2, tabStop + 3 };
             return _revisionHeaderTabStops;
-        }
 
-        private int GetRevisionHeaderHeight()
-        {
-            if (EnvUtils.IsMonoRuntime())
-                return (int)(_RevisionHeader.Lines.Length * (0.8 + _RevisionHeader.Font.GetHeight()));
 
-            return _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
         }
 
         private void loadSortedRefs()

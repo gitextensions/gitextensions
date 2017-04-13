@@ -86,6 +86,7 @@
     <Compile Include="Git\AuthorEmailEqualityComparer.cs" />
     <Compile Include="Git\GitBranchNameNormaliser.cs" />
     <Compile Include="Git\GitBranchNameOptions.cs" />
+    <Compile Include="Git\IGitRevisionProvider.cs" />
     <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="RemoteActionResult.cs" />
     <Compile Include="Settings\BasicSettingTypes.cs" />

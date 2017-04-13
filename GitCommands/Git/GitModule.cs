@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
@@ -81,7 +82,7 @@ namespace GitCommands
     /// <summary>Provides manipulation with git module.
     /// <remarks>Several instances may be created for submodules.</remarks></summary>
     [DebuggerDisplay("GitModule ( {_workingDir} )")]
-    public sealed class GitModule : IGitModule
+    public sealed class GitModule : IGitModule, IGitRevisionProvider
     {
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
         private static readonly Regex AnsiCodePattern = new Regex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);

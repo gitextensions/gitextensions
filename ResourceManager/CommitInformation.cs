@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using GitCommands;
+using GitCommands.Git;
 
 namespace ResourceManager
 {
@@ -31,7 +32,7 @@ namespace ResourceManager
             if (data == null)
                 return new CommitInformation(error, "");
 
-            string header = data.GetHeader(false);
+            string header = data.GetHeader(module, false);
             string body = "\n" + WebUtility.HtmlEncode(data.Body.Trim());
 
             return new CommitInformation(header, body);
@@ -41,12 +42,12 @@ namespace ResourceManager
         /// Gets the commit info from CommitData.
         /// </summary>
         /// <returns></returns>
-        public static CommitInformation GetCommitInfo(CommitData data, bool showRevisionsAsLinks)
+        public static CommitInformation GetCommitInfo(IGitRevisionProvider module, CommitData data, bool showRevisionsAsLinks)
         {
             if (data == null)
                 throw new ArgumentNullException("data");
 
-            string header = data.GetHeader(showRevisionsAsLinks);
+            string header = data.GetHeader(module, showRevisionsAsLinks);
             string body = "\n" + WebUtility.HtmlEncode(data.Body.Trim());
 
             return new CommitInformation(header, body);

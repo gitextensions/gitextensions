@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using GitCommands;
+using GitCommands.Git;
 
 namespace ResourceManager
 {
@@ -49,7 +50,7 @@ namespace ResourceManager
         /// Generate header.
         /// </summary>
         /// <returns></returns>
-        public static string GetHeader(this CommitData commitData, bool showRevisionsAsLinks)
+        public static string GetHeader(this CommitData commitData, IGitRevisionProvider module, bool showRevisionsAsLinks)
         {
             StringBuilder header = new StringBuilder();
             string authorEmail = GetEmail(commitData.Author);
@@ -79,33 +80,57 @@ namespace ResourceManager
                 FillToLength(WebUtility.HtmlEncode(Strings.GetCommitHashText()) + ":",
                     COMMITHEADER_STRING_LENGTH) +
                 WebUtility.HtmlEncode(commitData.Guid));
-
+            var indent = FillToLength(" ", COMMITHEADER_STRING_LENGTH);
             if (commitData.ChildrenGuids != null && commitData.ChildrenGuids.Count != 0)
             {
                 header.AppendLine();
                 string commitsString;
                 if (showRevisionsAsLinks)
-                    commitsString = commitData.ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                {
+                    commitsString = commitData.ChildrenGuids
+                        .Select(c => LinkFactory.CreateCommitLink(c) + " " + GetCommitSubject(c, module))
+                        .Join(Environment.NewLine + indent);
+                }
                 else
-                    commitsString = commitData.ChildrenGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
+                {
+                    commitsString = commitData.ChildrenGuids
+                        .Select(guid => guid.Substring(0, 10) + " " + GetCommitSubject(guid, module))
+                        .Join(Environment.NewLine + indent);
+                }
                 header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetChildrenText()) + ":",
                     COMMITHEADER_STRING_LENGTH) + commitsString);
             }
 
-            var parentGuids = commitData.ParentGuids.Where(s => !String.IsNullOrEmpty(s));
+            var parentGuids = commitData.ParentGuids.Where(s => !String.IsNullOrEmpty(s)).ToList();
             if (parentGuids.Any())
             {
                 header.AppendLine();
+
                 string commitsString;
                 if (showRevisionsAsLinks)
-                    commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                {
+                    commitsString = parentGuids
+                        .Select(c => LinkFactory.CreateCommitLink(c) + " " + GetCommitSubject(c, module))
+                        .Join(Environment.NewLine + indent);
+                }
                 else
-                    commitsString = parentGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
+                {
+                    commitsString = parentGuids
+                        .Select(guid => indent + guid.Substring(0, 10) + " " + GetCommitSubject(guid, module))
+                        .Join(Environment.NewLine + indent);
+                }
                 header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetParentsText()) + ":",
                     COMMITHEADER_STRING_LENGTH) + commitsString);
             }
 
             return RemoveRedundancies(header.ToString());
+        }
+
+        private static string GetCommitSubject(string sha, IGitRevisionProvider module)
+        {
+            return GitRevision.IsArtificial(sha)
+                ? ""
+                : module.GetRevision(sha, shortFormat: true).Subject;
         }
 
         private static string RemoveRedundancies(string info)
