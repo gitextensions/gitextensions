@@ -35,10 +35,13 @@ namespace GitUI
         private const int ImageSize = 16;
 
         private bool _filterVisible;
+        private ToolStripItem _openSubmoduleMenuItem;
 
         public FileStatusList()
         {
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            CreateOpenSubmoduleMenuItem();
+            Translate();
             FilterVisible = false;
 
             SelectFirstItemOnSetItems = true;
@@ -74,6 +77,18 @@ namespace GitUI
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
 
             _filter = new Regex(".*");
+        }
+
+        private void CreateOpenSubmoduleMenuItem()
+        {
+            _openSubmoduleMenuItem = new ToolStripMenuItem
+            {
+                Name = "openSubmoduleMenuItem",
+                Tag = "1",
+                Text = "Open with Git Extensions",
+                Image = Resources.IconFolderSubmodule
+            };
+            _openSubmoduleMenuItem.Click += (s, ea) => { OpenSubmodule(); };
         }
 
         protected override void DisposeCustomResources()
@@ -553,28 +568,18 @@ namespace GitUI
         void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
         {
             var cm = sender as ContextMenuStrip;
-            const string openSubmoduleKey = "openSubmoduleMenuItem";
-            var openSubmoduleMenuItem = cm.Items.Find(openSubmoduleKey, true).FirstOrDefault();
-            if (SelectedItem.IsSubmodule && openSubmoduleMenuItem == null)
+            if (!cm.Items.Find(_openSubmoduleMenuItem.Name, true).Any())
             {
-                openSubmoduleMenuItem = new ToolStripMenuItem
-                {
-                    Name = openSubmoduleKey,
-                    Tag = "1",
-                    Text = "Open with Git Extensions",
-                    Image = Resources.IconFolderSubmodule
-                };
-                openSubmoduleMenuItem.Click += (s, ea) => { OpenSubmodule();};
-
-                cm.Items.Insert(1, openSubmoduleMenuItem);
-
+                cm.Items.Insert(1, _openSubmoduleMenuItem);
             }
 
-            if (openSubmoduleMenuItem != null)
+            _openSubmoduleMenuItem.Visible = SelectedItem.IsSubmodule;
+
+            if (SelectedItem.IsSubmodule)
             {
-                openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ? 
-                    new Font(openSubmoduleMenuItem.Font,  FontStyle.Bold) : 
-                    new Font(openSubmoduleMenuItem.Font, FontStyle.Regular);
+                _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ? 
+                    new Font(_openSubmoduleMenuItem.Font,  FontStyle.Bold) : 
+                    new Font(_openSubmoduleMenuItem.Font, FontStyle.Regular);
             }
         }
 
