@@ -28,8 +28,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-
-            chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
             chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir;
             chkPlaySpecialStartupSound.Checked = AppSettings.PlaySpecialStartupSound;
@@ -53,8 +51,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
-
-            AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
             AppSettings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
             AppSettings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
             AppSettings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
