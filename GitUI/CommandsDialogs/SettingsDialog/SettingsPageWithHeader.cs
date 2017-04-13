@@ -4,7 +4,7 @@ using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public abstract class SettingsPageWithHeader : SettingsPageBase, IGlobalSettingsPage
+    public class SettingsPageWithHeader : SettingsPageBase, IGlobalSettingsPage
     {
         private SettingsPageHeader header;
 
