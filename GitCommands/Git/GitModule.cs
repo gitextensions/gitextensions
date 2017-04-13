@@ -1180,6 +1180,22 @@ namespace GitCommands
             return RunGitCmd("rev-parse HEAD").TrimEnd();
         }
 
+        public bool IsExistingCommitHash(string sha1Fragment, out string fullSha1)
+        {
+            string revParseResult = RunGitCmd(string.Format("rev-parse --verify --quiet {0}^{{commit}}", sha1Fragment));
+            revParseResult = revParseResult.Trim();
+            if (revParseResult.IsNotNullOrWhitespace() && revParseResult.StartsWith(sha1Fragment))
+            {
+                fullSha1 = revParseResult;
+                return true;
+            }
+            else
+            {
+                fullSha1 = null;
+                return false;
+            }
+        }
+
         public KeyValuePair<char, string> GetSuperprojectCurrentCheckout()
         {
             if (SuperprojectModule == null)

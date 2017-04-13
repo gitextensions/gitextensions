@@ -58,10 +58,10 @@ namespace ResourceManager
         {
             if (module == null)
                 return hash;
-            string revParseResult = module.RunGitCmd(string.Format("rev-parse --verify --quiet {0}^{{commit}}", hash));
-            if (string.IsNullOrEmpty(revParseResult) || revParseResult.Contains("error"))
+            string fullHash;
+            if (!module.IsExistingCommitHash(hash, out fullHash))
                 return hash;
-            return LinkFactory.CreateCommitLink(hash, preserveGuidInLinkText: true);
+            return LinkFactory.CreateCommitLink(guid: fullHash, linkText: hash, preserveGuidInLinkText: true);
         }
     }
 }
