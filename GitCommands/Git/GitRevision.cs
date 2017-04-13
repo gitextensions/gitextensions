@@ -17,7 +17,7 @@ namespace GitCommands
         public const string IndexGuid = "1111111111111111111111111111111111111111";
         /// <summary>40 characters of a-f or any digit.</summary>
         public const string Sha1HashPattern = @"[a-f\d]{40}";
-        public const string Sha1HashShortPattern = @"[a-f\d]{4,40}";
+        public const string Sha1HashShortPattern = @"[a-f\d]{7,40}";
         public static readonly Regex Sha1HashRegex = new Regex("^" + Sha1HashPattern + "$", RegexOptions.Compiled);
         public static readonly Regex Sha1HashShortRegex = new Regex(string.Format(@"\b{0}\b", Sha1HashShortPattern), RegexOptions.Compiled);
 
