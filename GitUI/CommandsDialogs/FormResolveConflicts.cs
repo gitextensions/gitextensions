@@ -275,7 +275,7 @@ namespace GitUI.CommandsDialogs
             if (File.Exists(Path.Combine(Module.WorkingDir, fileName)))
                 lastWriteTimeBeforeMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, fileName));
 
-            Module.RunCmd("wscript", "\"" + mergeScript + "\" \"" +
+            Module.RunExternalCmdDetached("wscript", "\"" + mergeScript + "\" \"" +
                 FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
                 FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"");
 
