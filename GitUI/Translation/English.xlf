@@ -6173,15 +6173,15 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <target />
       </trans-unit>
       <trans-unit id="Apply.Text">
-        <source>Apply Selected</source>
+        <source>Apply Selected Stash</source>
         <target />
       </trans-unit>
       <trans-unit id="Clear.Text">
-        <source>Delete Selected</source>
+        <source>Delete Selected Stash</source>
         <target />
       </trans-unit>
       <trans-unit id="Stash.Text">
-        <source>Save Changes</source>
+        <source>Save Changes to New Stash</source>
         <target />
       </trans-unit>
       <trans-unit id="StashKeepIndex.Text">
