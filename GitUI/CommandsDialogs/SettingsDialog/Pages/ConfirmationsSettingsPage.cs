@@ -21,6 +21,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkPushNewBranch.Checked = AppSettings.DontConfirmPushNewBranch;
             chkAddTrackingRef.Checked = AppSettings.DontConfirmAddTrackingRef;
             chkUpdateModules.CheckState = AppSettings.UpdateSubmodulesOnCheckout.ToCheckboxState();
+            chkResolveConflicts.Checked = AppSettings.DontConfirmResolveConflicts;
+            chkCommitAfterConflictsResolved.Checked = AppSettings.DontConfirmCommitAfterConflictsResolved;
+            chkSecondAbortConfirmation.Checked = AppSettings.DontConfirmSecondAbortConfirmation;
         }
 
         protected override void PageToSettings()
@@ -32,6 +35,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
             AppSettings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
             AppSettings.UpdateSubmodulesOnCheckout = chkUpdateModules.CheckState.ToBoolean();
+            AppSettings.DontConfirmResolveConflicts = chkResolveConflicts.Checked;
+            AppSettings.DontConfirmCommitAfterConflictsResolved = chkCommitAfterConflictsResolved.Checked;
+            AppSettings.DontConfirmSecondAbortConfirmation = chkSecondAbortConfirmation.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

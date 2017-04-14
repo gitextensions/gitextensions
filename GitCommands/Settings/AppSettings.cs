@@ -692,6 +692,24 @@ namespace GitCommands
             set { SetBool("DontConfirmAddTrackingRef", value); }
         }
 
+        public static bool DontConfirmCommitAfterConflictsResolved
+        {
+            get { return GetBool("DontConfirmCommitAfterConflictsResolved", false); }
+            set { SetBool("DontConfirmCommitAfterConflictsResolved", value); }
+        }
+
+        public static bool DontConfirmSecondAbortConfirmation
+        {
+            get { return GetBool("DontConfirmSecondAbortConfirmation", false); }
+            set { SetBool("DontConfirmSecondAbortConfirmation", value); }
+        }
+
+        public static bool DontConfirmResolveConflicts
+        {
+            get { return GetBool("DontConfirmResolveConflicts", false); }
+            set { SetBool("DontConfirmResolveConflicts", value); }
+        }
+
         public static bool IncludeUntrackedFilesInAutoStash
         {
             get { return GetBool("includeUntrackedFilesInAutoStash", false); }
