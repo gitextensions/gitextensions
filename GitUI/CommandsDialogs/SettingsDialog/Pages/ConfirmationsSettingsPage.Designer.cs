@@ -31,6 +31,7 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.CheckoutGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.chkSecondAbortConfirmation = new System.Windows.Forms.CheckBox();
             this.chkCommitAfterConflictsResolved = new System.Windows.Forms.CheckBox();
             this.chkResolveConflicts = new System.Windows.Forms.CheckBox();
             this.chkAmend = new System.Windows.Forms.CheckBox();
@@ -40,7 +41,6 @@
             this.chkAddTrackingRef = new System.Windows.Forms.CheckBox();
             this.chkPushNewBranch = new System.Windows.Forms.CheckBox();
             this.chkUpdateModules = new System.Windows.Forms.CheckBox();
-            this.chkSecondAbortConfirmation = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.CheckoutGB.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -105,6 +105,17 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.Size = new System.Drawing.Size(442, 230);
             this.tableLayoutPanel3.TabIndex = 1;
+            // 
+            // chkSecondAbortConfirmation
+            // 
+            this.chkSecondAbortConfirmation.AutoSize = true;
+            this.chkSecondAbortConfirmation.Location = new System.Drawing.Point(3, 210);
+            this.chkSecondAbortConfirmation.Name = "chkSecondAbortConfirmation";
+            this.chkSecondAbortConfirmation.Size = new System.Drawing.Size(243, 17);
+            this.chkSecondAbortConfirmation.TabIndex = 10;
+            this.chkSecondAbortConfirmation.Text = "Confirm for the second time to abort a merge";
+            this.chkSecondAbortConfirmation.ThreeState = true;
+            this.chkSecondAbortConfirmation.UseVisualStyleBackColor = true;
             // 
             // chkCommitAfterConflictsResolved
             // 
@@ -202,24 +213,12 @@
             this.chkUpdateModules.ThreeState = true;
             this.chkUpdateModules.UseVisualStyleBackColor = true;
             // 
-            // chkSecondAbortConfirmation
-            // 
-            this.chkSecondAbortConfirmation.AutoSize = true;
-            this.chkSecondAbortConfirmation.Location = new System.Drawing.Point(3, 210);
-            this.chkSecondAbortConfirmation.Name = "chkSecondAbortConfirmation";
-            this.chkSecondAbortConfirmation.Size = new System.Drawing.Size(243, 17);
-            this.chkSecondAbortConfirmation.TabIndex = 10;
-            this.chkSecondAbortConfirmation.Text = "Confirm for the second time to abort a merge";
-            this.chkSecondAbortConfirmation.ThreeState = true;
-            this.chkSecondAbortConfirmation.UseVisualStyleBackColor = true;
-            // 
             // ConfirmationsSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "ConfirmationsSettingsPage";
-            this.Size = new System.Drawing.Size(1216, 547);
+            this.Size = new System.Drawing.Size(1109, 461);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.CheckoutGB.ResumeLayout(false);

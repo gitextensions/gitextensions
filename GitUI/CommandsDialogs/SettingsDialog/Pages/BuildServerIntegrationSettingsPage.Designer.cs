@@ -40,10 +40,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // 
             this.buildServerSettingsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buildServerSettingsPanel.Location = new System.Drawing.Point(16, 154);
-            this.buildServerSettingsPanel.MinimumSize = new System.Drawing.Size(400, 242);
+            this.buildServerSettingsPanel.Location = new System.Drawing.Point(14, 125);
+            this.buildServerSettingsPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buildServerSettingsPanel.MinimumSize = new System.Drawing.Size(343, 197);
             this.buildServerSettingsPanel.Name = "buildServerSettingsPanel";
-            this.buildServerSettingsPanel.Size = new System.Drawing.Size(828, 242);
+            this.buildServerSettingsPanel.Size = new System.Drawing.Size(1365, 197);
             this.buildServerSettingsPanel.TabIndex = 5;
             // 
             // BuildServerType
@@ -53,18 +54,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.BuildServerType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.BuildServerType.Enabled = false;
             this.BuildServerType.FormattingEnabled = true;
-            this.BuildServerType.Location = new System.Drawing.Point(122, 123);
+            this.BuildServerType.Location = new System.Drawing.Point(105, 100);
+            this.BuildServerType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.BuildServerType.Name = "BuildServerType";
-            this.BuildServerType.Size = new System.Drawing.Size(722, 24);
+            this.BuildServerType.Size = new System.Drawing.Size(1274, 21);
             this.BuildServerType.TabIndex = 4;
             this.BuildServerType.SelectedIndexChanged += new System.EventHandler(this.BuildServerType_SelectedIndexChanged);
             // 
             // labelBuildServerType
             // 
             this.labelBuildServerType.AutoSize = true;
-            this.labelBuildServerType.Location = new System.Drawing.Point(13, 126);
+            this.labelBuildServerType.Location = new System.Drawing.Point(11, 102);
             this.labelBuildServerType.Name = "labelBuildServerType";
-            this.labelBuildServerType.Size = new System.Drawing.Size(103, 16);
+            this.labelBuildServerType.Size = new System.Drawing.Size(88, 13);
             this.labelBuildServerType.TabIndex = 3;
             this.labelBuildServerType.Text = "Build server type";
             // 
@@ -72,9 +74,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // 
             this.checkBoxEnableBuildServerIntegration.AutoSize = true;
             this.checkBoxEnableBuildServerIntegration.Enabled = false;
-            this.checkBoxEnableBuildServerIntegration.Location = new System.Drawing.Point(13, 69);
+            this.checkBoxEnableBuildServerIntegration.Location = new System.Drawing.Point(11, 56);
+            this.checkBoxEnableBuildServerIntegration.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxEnableBuildServerIntegration.Name = "checkBoxEnableBuildServerIntegration";
-            this.checkBoxEnableBuildServerIntegration.Size = new System.Drawing.Size(201, 20);
+            this.checkBoxEnableBuildServerIntegration.Size = new System.Drawing.Size(172, 17);
             this.checkBoxEnableBuildServerIntegration.TabIndex = 1;
             this.checkBoxEnableBuildServerIntegration.Text = "Enable build server integration";
             this.checkBoxEnableBuildServerIntegration.ThreeState = true;
@@ -84,9 +87,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // 
             this.checkBoxShowBuildSummary.AutoSize = true;
             this.checkBoxShowBuildSummary.Enabled = false;
-            this.checkBoxShowBuildSummary.Location = new System.Drawing.Point(13, 96);
+            this.checkBoxShowBuildSummary.Location = new System.Drawing.Point(11, 78);
+            this.checkBoxShowBuildSummary.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxShowBuildSummary.Name = "checkBoxShowBuildSummary";
-            this.checkBoxShowBuildSummary.Size = new System.Drawing.Size(268, 20);
+            this.checkBoxShowBuildSummary.Size = new System.Drawing.Size(224, 17);
             this.checkBoxShowBuildSummary.TabIndex = 2;
             this.checkBoxShowBuildSummary.Text = "Show build status summary in revision log";
             this.checkBoxShowBuildSummary.ThreeState = true;
@@ -95,26 +99,26 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // labelBuildServerSettingsInfo
             // 
             this.labelBuildServerSettingsInfo.AutoSize = true;
-            this.labelBuildServerSettingsInfo.Location = new System.Drawing.Point(10, 19);
+            this.labelBuildServerSettingsInfo.Location = new System.Drawing.Point(9, 15);
             this.labelBuildServerSettingsInfo.Name = "labelBuildServerSettingsInfo";
-            this.labelBuildServerSettingsInfo.Size = new System.Drawing.Size(602, 16);
+            this.labelBuildServerSettingsInfo.Size = new System.Drawing.Size(507, 13);
             this.labelBuildServerSettingsInfo.TabIndex = 0;
             this.labelBuildServerSettingsInfo.Text = "Git Extensions can integrate with build servers to supply per-commit Continuous I" +
     "ntegration information.";
             // 
             // BuildServerIntegrationSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.labelBuildServerSettingsInfo);
             this.Controls.Add(this.checkBoxShowBuildSummary);
             this.Controls.Add(this.checkBoxEnableBuildServerIntegration);
             this.Controls.Add(this.buildServerSettingsPanel);
             this.Controls.Add(this.BuildServerType);
             this.Controls.Add(this.labelBuildServerType);
-            this.MinimumSize = new System.Drawing.Size(530, 352);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MinimumSize = new System.Drawing.Size(454, 286);
             this.Name = "BuildServerIntegrationSettingsPage";
-            this.Size = new System.Drawing.Size(868, 538);
+            this.Size = new System.Drawing.Size(1109, 461);
             this.ResumeLayout(false);
             this.PerformLayout();
 

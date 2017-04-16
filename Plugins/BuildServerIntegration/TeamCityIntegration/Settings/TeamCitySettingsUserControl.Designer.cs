@@ -50,27 +50,27 @@ namespace TeamCityIntegration.Settings
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new System.Drawing.Point(3, 41);
+            label13.Location = new System.Drawing.Point(3, 33);
             label13.Name = "label13";
-            label13.Size = new System.Drawing.Size(137, 17);
+            label13.Size = new System.Drawing.Size(108, 13);
             label13.TabIndex = 0;
             label13.Text = "TeamCity server URL";
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(3, 72);
+            label1.Location = new System.Drawing.Point(3, 58);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(90, 17);
+            label1.Size = new System.Drawing.Size(70, 13);
             label1.TabIndex = 2;
             label1.Text = "Project name";
             // 
             // labelBuildFilter
             // 
             labelBuildFilter.AutoSize = true;
-            labelBuildFilter.Location = new System.Drawing.Point(3, 125);
+            labelBuildFilter.Location = new System.Drawing.Point(3, 102);
             labelBuildFilter.Name = "labelBuildFilter";
-            labelBuildFilter.Size = new System.Drawing.Size(84, 17);
+            labelBuildFilter.Size = new System.Drawing.Size(69, 13);
             labelBuildFilter.TabIndex = 4;
             labelBuildFilter.Text = "Build Id Filter";
             // 
@@ -78,9 +78,9 @@ namespace TeamCityIntegration.Settings
             // 
             labelProjectNameComment.AutoSize = true;
             labelProjectNameComment.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
-            labelProjectNameComment.Location = new System.Drawing.Point(133, 96);
+            labelProjectNameComment.Location = new System.Drawing.Point(114, 78);
             labelProjectNameComment.Name = "labelProjectNameComment";
-            labelProjectNameComment.Size = new System.Drawing.Size(210, 20);
+            labelProjectNameComment.Size = new System.Drawing.Size(173, 15);
             labelProjectNameComment.TabIndex = 6;
             labelProjectNameComment.Text = "Several names splitted by | char";
             // 
@@ -88,9 +88,9 @@ namespace TeamCityIntegration.Settings
             // 
             labelBuildIdFilter.AutoSize = true;
             labelBuildIdFilter.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
-            labelBuildIdFilter.Location = new System.Drawing.Point(133, 150);
+            labelBuildIdFilter.Location = new System.Drawing.Point(114, 122);
             labelBuildIdFilter.Name = "labelBuildIdFilter";
-            labelBuildIdFilter.Size = new System.Drawing.Size(55, 20);
+            labelBuildIdFilter.Size = new System.Drawing.Size(45, 15);
             labelBuildIdFilter.TabIndex = 7;
             labelBuildIdFilter.Text = "Regexp";
             // 
@@ -98,9 +98,10 @@ namespace TeamCityIntegration.Settings
             // 
             this.TeamCityServerUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TeamCityServerUrl.Location = new System.Drawing.Point(136, 38);
+            this.TeamCityServerUrl.Location = new System.Drawing.Point(117, 31);
+            this.TeamCityServerUrl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TeamCityServerUrl.Name = "TeamCityServerUrl";
-            this.TeamCityServerUrl.Size = new System.Drawing.Size(509, 23);
+            this.TeamCityServerUrl.Size = new System.Drawing.Size(437, 21);
             this.TeamCityServerUrl.TabIndex = 1;
             this.TeamCityServerUrl.TextChanged += new System.EventHandler(this.TeamCityServerUrl_TextChanged);
             // 
@@ -108,18 +109,20 @@ namespace TeamCityIntegration.Settings
             // 
             this.TeamCityProjectName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TeamCityProjectName.Location = new System.Drawing.Point(136, 68);
+            this.TeamCityProjectName.Location = new System.Drawing.Point(117, 55);
+            this.TeamCityProjectName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TeamCityProjectName.Name = "TeamCityProjectName";
-            this.TeamCityProjectName.Size = new System.Drawing.Size(478, 23);
+            this.TeamCityProjectName.Size = new System.Drawing.Size(410, 21);
             this.TeamCityProjectName.TabIndex = 3;
             // 
             // TeamCityBuildIdFilter
             // 
             this.TeamCityBuildIdFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TeamCityBuildIdFilter.Location = new System.Drawing.Point(136, 122);
+            this.TeamCityBuildIdFilter.Location = new System.Drawing.Point(117, 99);
+            this.TeamCityBuildIdFilter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TeamCityBuildIdFilter.Name = "TeamCityBuildIdFilter";
-            this.TeamCityBuildIdFilter.Size = new System.Drawing.Size(509, 23);
+            this.TeamCityBuildIdFilter.Size = new System.Drawing.Size(437, 21);
             this.TeamCityBuildIdFilter.TabIndex = 5;
             this.TeamCityBuildIdFilter.TextChanged += new System.EventHandler(this.TeamCityBuildIdFilter_TextChanged);
             // 
@@ -128,9 +131,9 @@ namespace TeamCityIntegration.Settings
             this.labelRegexError.AutoSize = true;
             this.labelRegexError.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.labelRegexError.ForeColor = System.Drawing.Color.Red;
-            this.labelRegexError.Location = new System.Drawing.Point(188, 150);
+            this.labelRegexError.Location = new System.Drawing.Point(161, 122);
             this.labelRegexError.Name = "labelRegexError";
-            this.labelRegexError.Size = new System.Drawing.Size(457, 20);
+            this.labelRegexError.Size = new System.Drawing.Size(374, 15);
             this.labelRegexError.TabIndex = 10;
             this.labelRegexError.Text = "The \"Build Id Filter\" regular expression is not valid and won\'t be saved!";
             this.labelRegexError.Visible = false;
@@ -138,9 +141,10 @@ namespace TeamCityIntegration.Settings
             // CheckBoxLogAsGuest
             // 
             this.CheckBoxLogAsGuest.AutoSize = true;
-            this.CheckBoxLogAsGuest.Location = new System.Drawing.Point(137, 177);
+            this.CheckBoxLogAsGuest.Location = new System.Drawing.Point(117, 144);
+            this.CheckBoxLogAsGuest.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CheckBoxLogAsGuest.Name = "CheckBoxLogAsGuest";
-            this.CheckBoxLogAsGuest.Size = new System.Drawing.Size(268, 21);
+            this.CheckBoxLogAsGuest.Size = new System.Drawing.Size(213, 17);
             this.CheckBoxLogAsGuest.TabIndex = 11;
             this.CheckBoxLogAsGuest.Text = "Log as guest to display the build report";
             this.CheckBoxLogAsGuest.UseVisualStyleBackColor = true;
@@ -148,9 +152,10 @@ namespace TeamCityIntegration.Settings
             // buttonProjectChooser
             // 
             this.buttonProjectChooser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonProjectChooser.Location = new System.Drawing.Point(617, 67);
+            this.buttonProjectChooser.Location = new System.Drawing.Point(529, 54);
+            this.buttonProjectChooser.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonProjectChooser.Name = "buttonProjectChooser";
-            this.buttonProjectChooser.Size = new System.Drawing.Size(28, 25);
+            this.buttonProjectChooser.Size = new System.Drawing.Size(24, 20);
             this.buttonProjectChooser.TabIndex = 12;
             this.buttonProjectChooser.Text = "...";
             this.buttonProjectChooser.UseVisualStyleBackColor = true;
@@ -159,9 +164,9 @@ namespace TeamCityIntegration.Settings
             // lnkExtractDataFromBuildUrlCopiedInTheClipboard
             // 
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.AutoSize = true;
-            this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.Location = new System.Drawing.Point(168, 11);
+            this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.Location = new System.Drawing.Point(144, 9);
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.Name = "lnkExtractDataFromBuildUrlCopiedInTheClipboard";
-            this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.Size = new System.Drawing.Size(357, 17);
+            this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.Size = new System.Drawing.Size(280, 13);
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.TabIndex = 13;
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.TabStop = true;
             this.lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text = "Extract the data from the build url copied in the clipboard";
@@ -169,8 +174,7 @@ namespace TeamCityIntegration.Settings
             // 
             // TeamCitySettingsUserControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.lnkExtractDataFromBuildUrlCopiedInTheClipboard);
             this.Controls.Add(this.buttonProjectChooser);
             this.Controls.Add(this.CheckBoxLogAsGuest);
@@ -185,7 +189,7 @@ namespace TeamCityIntegration.Settings
             this.Controls.Add(this.TeamCityServerUrl);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "TeamCitySettingsUserControl";
-            this.Size = new System.Drawing.Size(658, 223);
+            this.Size = new System.Drawing.Size(564, 181);
             this.ResumeLayout(false);
             this.PerformLayout();
 
