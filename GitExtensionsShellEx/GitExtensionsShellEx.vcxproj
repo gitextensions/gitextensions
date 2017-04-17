@@ -22,7 +22,6 @@
     <ProjectGuid>{BBE7B8AD-D175-4679-A614-38BFF28B0269}</ProjectGuid>
     <RootNamespace>GitExtensionsShellEx</RootNamespace>
     <Keyword>AtlProj</Keyword>
-    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and $(VisualStudioVersion) == ''">$(VCTargetsPath11)</VCTargetsPath>
     <ProjectName>GitExtensionsShellEx</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
