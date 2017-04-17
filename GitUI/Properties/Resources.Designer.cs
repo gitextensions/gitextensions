@@ -1773,7 +1773,7 @@ namespace GitUI.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap light_bulb_icon_off_16 {
             get {
-                object obj = ResourceManager.GetObject("light-bulb-icon-off-16", resourceCulture);
+                object obj = ResourceManager.GetObject("light_bulb_icon_off_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1783,7 +1783,7 @@ namespace GitUI.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap light_bulb_icon_on_16 {
             get {
-                object obj = ResourceManager.GetObject("light-bulb-icon-on-16", resourceCulture);
+                object obj = ResourceManager.GetObject("light_bulb_icon_on_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
