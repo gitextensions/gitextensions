@@ -1354,6 +1354,7 @@ namespace GitUI.CommandsDialogs
             this.Controls.Add(this.splitMain);
             this.Controls.Add(this.commitStatusStrip);
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(600, 297);
             this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

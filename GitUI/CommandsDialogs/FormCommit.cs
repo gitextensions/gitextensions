@@ -252,7 +252,10 @@ namespace GitUI.CommandsDialogs
             // Do not remember commit message of fixup or squash commits, since they have
             // a special meaning, and can be dangerous if used inappropriately.
             if (CommitKind.Normal == _commitKind)
-                GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text);
+            {
+                CommitHelper.SetCommitMessage(Module, Message.Text);
+                CommitHelper.SetAmendCommit(Module, Amend.Checked);
+            }
 
             AppSettings.CommitDialogDeviceDpi = GetCurrentDeviceDpi();
             AppSettings.CommitDialogSplitter = splitMain.SplitterDistance;
@@ -1605,13 +1608,21 @@ namespace GitUI.CommandsDialogs
                 default:
                     message = Module.GetMergeMessage();
 
-                    if (string.IsNullOrEmpty(message) && File.Exists(GitCommands.CommitHelper.GetCommitMessagePath(Module)))
-                        message = File.ReadAllText(GitCommands.CommitHelper.GetCommitMessagePath(Module), Module.CommitEncoding);
+                    if (string.IsNullOrEmpty(message) && CommitHelper.IsCommitMessageSaved(Module))
+                    {
+                        message = CommitHelper.GetCommitMessage(Module);
+                    }
+
                     break;
             }
 
             if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
                 Message.Text = message;
+
+            if (CommitHelper.IsAmendCommitSaved(Module))
+            {
+                Amend.Checked = CommitHelper.GetAmendCommit(Module);
+            }
         }
 
         private void SetCommitMessageFromTextBox(string commitMessageText)
