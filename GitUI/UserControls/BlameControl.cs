@@ -191,7 +191,7 @@ namespace GitUI.Blame
         
         private AsyncLoader blameLoader = new AsyncLoader();
 
-        public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding)
+        public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null)
         {
             //refresh only when something changed
             string guid = revision.Guid;
@@ -203,7 +203,7 @@ namespace GitUI.Blame
 
             var scrollpos = BlameFile.ScrollPos;
 
-            int line = 0;
+            int line = initialLine.GetValueOrDefault( 0 );
             if (_clickedBlameLine.CommitGuid == guid)
                 line = _clickedBlameLine.OriginLineNumber;
             _revGrid = revGrid;

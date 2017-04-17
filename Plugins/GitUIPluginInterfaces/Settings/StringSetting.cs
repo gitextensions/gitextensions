@@ -19,16 +19,17 @@ namespace GitUIPluginInterfaces
         public string Name { get; private set; }
         public string Caption { get; private set; }
         public string DefaultValue { get; set; }
+        public TextBox CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()
         {
-            return new TextBoxBinding(this);
+            return new TextBoxBinding(this, CustomControl);
     }
 
         private class TextBoxBinding : SettingControlBinding<StringSetting, TextBox>
         {
-            public TextBoxBinding(StringSetting aSetting)
-                : base(aSetting)
+            public TextBoxBinding(StringSetting aSetting, TextBox aCustomControl)
+                : base(aSetting, aCustomControl)
             { }
 
             public override TextBox CreateControl()
@@ -51,9 +52,18 @@ namespace GitUIPluginInterfaces
                 control.Text = settingVal;
             }
 
-            public override void SaveSetting(ISettingsSource settings, TextBox control)
+            public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, TextBox control)
             {
-                Setting[settings] = control.Text;
+                var controlValue = control.Text;
+                if (areSettingsEffective)
+                {
+                    if (Setting.ValueOrDefault(settings) == controlValue)
+                    {
+                        return;
+                    }
+                }
+
+                Setting[settings] = controlValue;
             }
         }
 

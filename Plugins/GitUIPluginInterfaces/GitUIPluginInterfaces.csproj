@@ -81,6 +81,8 @@
     <Compile Include="GitCmdResult.cs" />
     <Compile Include="GitUIPostActionEventArgs.cs" />
     <Compile Include="IBrowseRepo.cs" />
+    <Compile Include="IConfigFileSettings.cs" />
+    <Compile Include="IConfigSection.cs" />
     <Compile Include="IGitItem.cs" />
     <Compile Include="IGitPluginForRepository.cs" />
     <Compile Include="IGitModule.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="Notifications\INotifications.cs" />
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="ILockableNotifier.cs" />
+    <Compile Include="ISettingsValueGetter.cs" />
     <Compile Include="Settings\BoolSetting.cs" />
     <Compile Include="ISetting.cs" />
     <Compile Include="ISettingsSource.cs" />

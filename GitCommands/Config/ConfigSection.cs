@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Config
 {
@@ -14,11 +16,14 @@ namespace GitCommands.Config
     ///   as case insensitive only when loaded from config file. Dot separated subsections
     ///   added from code, are treated as case sensitive.
     /// </summary>
-    public class ConfigSection
+    public class ConfigSection : IConfigSection
     {
+        private readonly IDictionary<string, IList<string>> _configKeys;
+
+
         internal ConfigSection(string name, bool forceCaseSensitive)
         {
-            Keys = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
+            _configKeys = new Dictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
 
             if (name.Contains("\"")) //[section "subsection"] case sensitive
             {
@@ -47,7 +52,6 @@ namespace GitCommands.Config
                 SubSectionCaseSensitive = true;
         }
 
-        internal IDictionary<string, IList<string>> Keys { get; set; }
         public string SectionName { get; set; }
         public string SubSection { get; set; }
         public bool SubSectionCaseSensitive { get; set; }
@@ -60,17 +64,22 @@ namespace GitCommands.Config
             return path.ToPosixPath();
         }
 
+        public IDictionary<string, IList<string>> AsDictionary()
+        {
+            return _configKeys.ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase);
+        }
+
         public bool HasValue(string key)
         {
-            return Keys.ContainsKey(key);
+            return _configKeys.ContainsKey(key);
         }
 
         public void SetValue(string key, string value)
         {
             if (string.IsNullOrEmpty(value))
-                Keys.Remove(key);
+                _configKeys.Remove(key);
             else
-                Keys[key] = new List<string> { value };
+                _configKeys[key] = new List<string> { value };
         }
 
         public void SetPathValue(string setting, string value)
@@ -80,10 +89,10 @@ namespace GitCommands.Config
 
         public void AddValue(string key, string value)
         {
-            if (!Keys.ContainsKey(key))
-                Keys[key] = new List<string>();
+            if (!_configKeys.ContainsKey(key))
+                _configKeys[key] = new List<string>();
 
-            Keys[key].Add(value);
+            _configKeys[key].Add(value);
         }
 
         public string GetValue(string key)
@@ -95,23 +104,18 @@ namespace GitCommands.Config
         {
             IList<string> list;
 
-            if (Keys.TryGetValue(key, out list))
+            if (_configKeys.TryGetValue(key, out list))
             {
                 if (list.Count > 0)
-                    return list[0];
+                    return list[list.Count-1];
             }
 
             return defaultValue;
         }
 
-        public string GetPathValue(string setting)
-        {
-            return GetValue(setting);
-        }
-
         public IList<string> GetValues(string key)
         {
-            return Keys.ContainsKey(key) ? Keys[key] : new List<string>();
+            return _configKeys.ContainsKey(key) ? _configKeys[key] : new List<string>();
         }
 
         public override string ToString()
@@ -130,7 +134,7 @@ namespace GitCommands.Config
             return result;
         }
 
-        public bool Equals(ConfigSection other)
+        public bool Equals(IConfigSection other)
         {
             StringComparison sc;
             if (SubSectionCaseSensitive)
@@ -138,17 +142,17 @@ namespace GitCommands.Config
             else
                 sc = StringComparison.OrdinalIgnoreCase;
 
-            return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) && 
+            return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(SubSection, other.SubSection, sc);
         }
     }
 
     public static class ConfigSectionExt
     {
-        public static bool GetValueAsBool(this ConfigSection section, string name, bool defaultValue)
+        public static bool GetValueAsBool(this IConfigSection section, string name, bool defaultValue)
         {
             bool result = defaultValue;
-            
+
             if (section.HasValue(name))
             {
                 string value = section.GetValue(name);
@@ -158,7 +162,7 @@ namespace GitCommands.Config
             return result;
         }
 
-        public static void SetValueAsBool(this ConfigSection section, string name, bool value)
+        public static void SetValueAsBool(this IConfigSection section, string name, bool value)
         {
             section.SetValue(name, value.ToString());
         }

@@ -9,8 +9,6 @@ using GitPluginShared;
 using GitPluginShared.Commands;
 
 using Microsoft.VisualStudio.Shell;
-
-using Constants = EnvDTE.Constants;
 using static GitExtensionsVSIX.PackageIds;
 
 namespace GitExtensionsVSIX
@@ -73,6 +71,7 @@ namespace GitExtensionsVSIX
                 RegisterCommand("ApplyPatch", new ToolbarCommand<ApplyPatch>(), gitExtApplyPatchCommand);
                 RegisterCommand("FormatPatch", new ToolbarCommand<FormatPatch>(), gitExtFormatPatchCommand);
                 RegisterCommand("ViewChanges", new ToolbarCommand<ViewChanges>(), gitExtViewChangesCommand);
+                RegisterCommand("Blame", new ToolbarCommand<Blame>(), gitExtBlameCommand);
                 RegisterCommand("FindFile", new ToolbarCommand<FindFile>(), gitExtFindFileCommand);
                 RegisterCommand("SwitchBranch", new ToolbarCommand<SwitchBranch>(), gitExtCheckoutCommand);
                 RegisterCommand("CreateBranch", new ToolbarCommand<CreateBranch>(), gitExtCreateBranchCommand);

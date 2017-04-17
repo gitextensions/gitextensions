@@ -160,7 +160,8 @@ namespace TfsIntegration
                 Status = (BuildInfo.BuildStatus)buildDetail.Status,
                 Description = buildDetail.Label + " (" + buildDetail.Description + ")",
                 CommitHashList = new[] { sha },
-                Url = buildDetail.Url
+                Url = buildDetail.Url,
+                ShowInBuildReportTab = false
             };
 
             return buildInfo;

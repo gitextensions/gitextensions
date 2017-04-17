@@ -4,9 +4,11 @@ using System.Text;
 using GitCommands;
 using GitCommands.Config;
 using NUnit.Framework;
+using System.Linq;
 using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestCleanup = NUnit.Framework.TearDownAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
+using System.Collections.Generic;
 
 namespace GitExtensionsTest.Config
 {
@@ -733,6 +735,71 @@ namespace GitExtensionsTest.Config
             }
         }
 
+        [TestMethod]
+        public void TwoSections_ValueInTheLast()
+        {
+            //test for bug reporten in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
+            string configFileContent = @"
+[status]
+[status]
+      showUntrackedFiles = no
+";
+            ConfigFile cfg = new ConfigFile("", true);
+            cfg.LoadFromString(configFileContent);
+            string actual = cfg.GetValue("status.showUntrackedFiles");
+            string expected = "no";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TwoSections_ValueInTheFirst()
+        {
+            //test for bug reporten in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
+            string configFileContent = @"
+[status]
+      showUntrackedFiles = no
+[status]
+";
+            ConfigFile cfg = new ConfigFile("", true);
+            cfg.LoadFromString(configFileContent);
+            string actual = cfg.GetValue("status.showUntrackedFiles");
+            string expected = "no";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TwoSections_ValueInBoth()
+        {
+            //test for bug reporten in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
+            string configFileContent = @"
+[status]
+      showUntrackedFiles = yes
+[status]
+      showUntrackedFiles = no
+";
+            ConfigFile cfg = new ConfigFile("", true);
+            cfg.LoadFromString(configFileContent);
+            string actual = cfg.GetValue("status.showUntrackedFiles");
+            string expected = "no";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TwoSections_ValueInBoth_GetValues()
+        {
+            //test for bug reporten in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
+            string configFileContent = @"
+[status]
+      showUntrackedFiles = yes
+[status]
+      showUntrackedFiles = no
+";
+            ConfigFile cfg = new ConfigFile("", true);
+            cfg.LoadFromString(configFileContent);
+            IEnumerable<string> actual = cfg.GetValues("status.showUntrackedFiles");
+            IEnumerable<string> expected = new string[] { "yes", "no" };
+            Assert.True(expected.SequenceEqual(actual));
+        }
 
         /// <summary>
         /// Always delete the test config file after each test

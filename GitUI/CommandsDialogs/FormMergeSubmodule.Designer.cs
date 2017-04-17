@@ -46,9 +46,9 @@
             // 
             // btStageCurrent
             // 
-            this.btStageCurrent.ForeColor = System.Drawing.Color.Black;
             this.btStageCurrent.Location = new System.Drawing.Point(392, 212);
             this.btStageCurrent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btStageCurrent.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btStageCurrent.Name = "btStageCurrent";
             this.btStageCurrent.Size = new System.Drawing.Size(190, 31);
             this.btStageCurrent.TabIndex = 16;
@@ -149,7 +149,7 @@
             // 
             // btOpenSubmodule
             // 
-            this.btOpenSubmodule.ForeColor = System.Drawing.Color.Black;
+            this.btOpenSubmodule.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btOpenSubmodule.Image = global::GitUI.Properties.Resources.IconFolderSubmodule;
             this.btOpenSubmodule.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btOpenSubmodule.Location = new System.Drawing.Point(19, 212);
@@ -186,9 +186,9 @@
             // 
             // btCheckoutBranch
             // 
-            this.btCheckoutBranch.ForeColor = System.Drawing.Color.Black;
             this.btCheckoutBranch.Location = new System.Drawing.Point(203, 212);
             this.btCheckoutBranch.Margin = new System.Windows.Forms.Padding(4);
+            this.btCheckoutBranch.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btCheckoutBranch.Name = "btCheckoutBranch";
             this.btCheckoutBranch.Size = new System.Drawing.Size(181, 31);
             this.btCheckoutBranch.TabIndex = 17;

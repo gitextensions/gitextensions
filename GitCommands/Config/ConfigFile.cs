@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Config
 {
@@ -16,7 +17,7 @@ namespace GitCommands.Config
 
         public ConfigFile(string fileName, bool aLocal)
         {
-            ConfigSections = new List<ConfigSection>();
+            ConfigSections = new List<IConfigSection>();
             Local = aLocal;
 
             _fileName = fileName;
@@ -31,9 +32,9 @@ namespace GitCommands.Config
             }
         }
 
-        public IList<ConfigSection> ConfigSections { get; private set; }
+        public IList<IConfigSection> ConfigSections { get; private set; }
 
-        public IEnumerable<ConfigSection> GetConfigSections(string sectionName)
+        public IEnumerable<IConfigSection> GetConfigSections(string sectionName)
         {
             return ConfigSections.Where(section => section.SectionName.Equals(sectionName, StringComparison.OrdinalIgnoreCase));
         }
@@ -85,14 +86,16 @@ namespace GitCommands.Config
 
             foreach (var section in ConfigSections)
             {
+                var keys = section.AsDictionary();
                 //Skip empty sections
-                if (section.Keys.Count == 0)
+                if (keys.Count == 0)
+                {
                     continue;
-
-                configFileContent.Append(section.ToString());
+                }
+                configFileContent.Append(section);
                 configFileContent.Append(Environment.NewLine);
 
-                foreach (var key in section.Keys)
+                foreach (var key in keys)
                 {
                     foreach (var value in key.Value)
                     {
@@ -106,14 +109,9 @@ namespace GitCommands.Config
 
         public void Save(string fileName)
         {
-
-
             try
             {
-                FileInfoExtensions
-                    .MakeFileTemporaryWritable(fileName,
-                                       x =>
-                                       File.WriteAllText(fileName, GetAsString(), GetEncoding()));
+                FileInfoExtensions.MakeFileTemporaryWritable(fileName, x => File.WriteAllText(fileName, GetAsString(), GetEncoding()));
             }
             catch (Exception ex)
             {
@@ -236,7 +234,7 @@ namespace GitCommands.Config
             configSection.SetValue(keyName, null);
         }
 
-        public ConfigSection FindOrCreateConfigSection(string name)
+        public IConfigSection FindOrCreateConfigSection(string name)
         {
             var result = FindConfigSection(name);
             if (result == null)
@@ -248,7 +246,7 @@ namespace GitCommands.Config
             return result;
         }
 
-        public void AddConfigSection(ConfigSection configSection)
+        public void AddConfigSection(IConfigSection configSection)
         {
             if (FindConfigSection(configSection) != null)
                 throw new ArgumentException("Can not add a section that already exists: " + configSection.SectionName);
@@ -272,14 +270,14 @@ namespace GitCommands.Config
             toRemove.ForEach(section => ConfigSections.Remove(section));
         }
 
-        public ConfigSection FindConfigSection(string name)
+        public IConfigSection FindConfigSection(string name)
         {
             var configSectionToFind = new ConfigSection(name, true);
 
             return FindConfigSection(configSectionToFind);
         }
 
-        private ConfigSection FindConfigSection(ConfigSection configSectionToFind)
+        private IConfigSection FindConfigSection(IConfigSection configSectionToFind)
         {
             foreach (var configSection in ConfigSections)
             {
@@ -297,7 +295,7 @@ namespace GitCommands.Config
 
             private ConfigFile _configFile;
             private string _fileContent;
-            private ConfigSection _section = null;
+            private IConfigSection _section = null;
             private string FileName { get { return _configFile._fileName; } }
             private string _key = null;
             //parsed char
@@ -329,9 +327,14 @@ namespace GitCommands.Config
 
             private void NewSection()
             {
-                _section = new ConfigSection(token.ToString(), false);
-                _configFile.ConfigSections.Add(_section);
+                var sectionName = token.ToString();
                 token.Clear();
+                _section = _configFile.FindConfigSection(sectionName);
+                if (_section == null)
+                {
+                    _section = new ConfigSection(sectionName, false);
+                    _configFile.ConfigSections.Add(_section);
+                }
             }
 
             private void NewKey()

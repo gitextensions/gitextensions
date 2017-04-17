@@ -5137,6 +5137,22 @@ Are you sure you want to push this branch?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormQuickGitRefSelector" source-language="en">
+    <body>
+      <trans-unit id="_actionDelete.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_actionRename.Text">
+        <source>Rename</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_tag.Text">
+        <source>tag</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormRebase" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -5501,6 +5517,26 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Default pull behavior (fetch &amp; merge)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_btnDeleteTooltip.Text">
+        <source>Delete the selected remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_btnNewTooltip.Text">
+        <source>Add a new remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_btnToggleStateTooltip.Text">
+        <source>Enable or disable the selected remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_lvgEnabledHeader.Text">
+        <source>Enabled</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_lvgDisabledHeader.Text">
+        <source>Disabled</source>
         <target />
       </trans-unit>
     </body>
@@ -6141,15 +6177,15 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <target />
       </trans-unit>
       <trans-unit id="Apply.Text">
-        <source>Apply Selected</source>
+        <source>Apply Selected Stash</source>
         <target />
       </trans-unit>
       <trans-unit id="Clear.Text">
-        <source>Delete Selected</source>
+        <source>Delete Selected Stash</source>
         <target />
       </trans-unit>
       <trans-unit id="Stash.Text">
-        <source>Save Changes</source>
+        <source>Save Changes to New Stash</source>
         <target />
       </trans-unit>
       <trans-unit id="StashKeepIndex.Text">

@@ -16,6 +16,7 @@ using GitCommands.Git;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Editor; // For ColorHelper
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.RevisionGridClasses;
@@ -92,7 +93,7 @@ namespace GitUI
 
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
-        private AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
+        private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
         private GitRevision _baseCommitToCompare = null;
         /// <summary>
@@ -130,6 +131,7 @@ namespace GitUI
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.CellFormatting += RevisionsCellFormatting;
             Revisions.KeyPress += RevisionsKeyPress;
+            Revisions.KeyUp += RevisionsKeyUp;
             Revisions.KeyDown += RevisionsKeyDown;
             Revisions.MouseDown += RevisionsMouseDown;
 
@@ -427,6 +429,78 @@ namespace GitUI
             }
         }
 
+        private void RevisionsKeyUp(object sender, KeyEventArgs e)
+        {
+            if (Revisions.RowCount < LastRowIndex || LastRowIndex < 0 || Revisions.RowCount == 0)
+            {
+                return;
+            }
+
+            if (e.KeyCode != Keys.F2 && e.KeyCode != Keys.Delete)
+            {
+                return;
+            }
+
+            var revision = GetRevision(LastRowIndex);
+            var gitRefListsForRevision = new GitRefListsForRevision(revision);
+
+            switch (e.KeyCode)
+            {
+                case Keys.F2:
+                    {
+                        InitiateRefAction(gitRefListsForRevision.GetRenameableLocalBranches(),
+                                          gitRef => UICommands.StartRenameDialog(this, gitRef.Name),
+                                          FormQuickGitRefSelector.Action.Rename);
+                    }
+                    break;
+
+                case Keys.Delete:
+                    {
+                        string currentBranch = Module.GetSelectedBranch();
+                        InitiateRefAction(gitRefListsForRevision.GetDeletableLocalRefs(currentBranch),
+                                          gitRef =>
+                                          {
+                                              if (gitRef.IsTag)
+                                              {
+                                                  UICommands.StartDeleteTagDialog(this, gitRef.Name);
+                                              }
+                                              else
+                                              {
+                                                  UICommands.StartDeleteBranchDialog(this, gitRef.Name);
+                                              }
+                                          },
+                                          FormQuickGitRefSelector.Action.Delete);
+                    }
+                    break;
+            }
+        }
+
+        private void InitiateRefAction(IGitRef[] refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
+        {
+            if (refs == null || refs.Length < 1)
+            {
+                return;
+            }
+
+            if (refs.Length == 1)
+            {
+                action(refs[0]);
+                return;
+            }
+
+            var rect = Revisions.GetCellDisplayRectangle(0, LastRowIndex, true);
+            using (var dlg = new FormQuickGitRefSelector())
+            {
+                dlg.Init(actionLabel, refs);
+                dlg.Location = PointToScreen(new Point(rect.Right, rect.Bottom));
+                if (DialogResult.OK != dlg.ShowDialog(this) || dlg.SelectedRef == null)
+                {
+                    return;
+                }
+                action(dlg.SelectedRef);
+            }
+        }
+
         private void RevisionsMouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.XButton1)
@@ -662,7 +736,7 @@ namespace GitUI
         private bool InternalSetSelectedRevision(string revision)
         {
             int index = FindRevisionIndex(revision);
-            if( index >= 0 )
+            if (index >= 0)
             {
                 SetSelectedIndex(index);
                 return true;
@@ -1046,7 +1120,8 @@ namespace GitUI
                 else
                     revGraphIMF = filterBarIMF;
 
-                _revisionGraphCommand = new RevisionGraph(Module) {
+                _revisionGraphCommand = new RevisionGraph(Module)
+                {
                     BranchFilter = BranchFilter,
                     RefsOptions = _refsOptions,
                     RevisionFilter = _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
@@ -1368,36 +1443,66 @@ namespace GitUI
 
             drawRefArgs.IsRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
 
+            // Determine background colour for cell
+            Brush cellBackgroundBrush;
             if (drawRefArgs.IsRowSelected /*&& !showRevisionCards*/)
             {
-                e.Graphics.FillRectangle(_selectedItemBrush, e.CellBounds);
+                cellBackgroundBrush = _selectedItemBrush;
             }
             else if (ShouldHighlightRevisionByAuthor(revision))
             {
-                e.Graphics.FillRectangle(_authoredRevisionsBrush, e.CellBounds);
+                cellBackgroundBrush = _authoredRevisionsBrush;
             }
             else
             {
                 if (e.RowIndex % 2 == 0)
                 {
-                    e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+                    //e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+                    cellBackgroundBrush = new SolidBrush(e.CellStyle.BackColor);
                 }
                 else
                 {
-                    Brush brush = new SolidBrush(Color.FromArgb(255, 240, 240, 240));
-                    e.Graphics.FillRectangle(brush, e.CellBounds);
+                    //Brush brush = new SolidBrush(Color.FromArgb(255, 240, 240, 240));
+                    //e.Graphics.FillRectangle(brush, e.CellBounds);
+                    cellBackgroundBrush = new SolidBrush(ColorHelper.MakeColorDarker(e.CellStyle.BackColor));
+                    // TODO if default background is nearly black, we should make it lighter instead
                 }
-                    
             }
-
+            // Draw cell background
+            e.Graphics.FillRectangle(cellBackgroundBrush, e.CellBounds);
+            Color? backColor = null;
+            if (cellBackgroundBrush is SolidBrush)
+                backColor = (cellBackgroundBrush as SolidBrush).Color;
+            
+            // Draw graphics column
             if (e.ColumnIndex == graphColIndex)
             {
                 Revisions.dataGrid_CellPainting(sender, e);
                 return;
             }
 
+            // Determine cell foreground (text) colour for other columns
             Color foreColor;
-
+            if (drawRefArgs.IsRowSelected)
+            {
+                foreColor = SystemColors.HighlightText;
+            }
+            else if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !Revisions.RowIsRelative(e.RowIndex))
+            {
+                Debug.Assert(backColor != null);
+                foreColor = Color.Gray;
+                // TODO: If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast.
+                while (ColorHelper.GetColorBrightnessDifference(foreColor, backColor.Value) < 125)
+                {
+                    foreColor = ColorHelper.IsLightColor(backColor.Value) ? ColorHelper.MakeColorDarker(foreColor) : ColorHelper.MakeColorLighter(foreColor);
+                }
+            }
+            else
+            {
+                Debug.Assert(backColor != null);
+                foreColor = ColorHelper.GetForeColorForBackColor(backColor.Value);
+            }
+            /*
             if (!AppSettings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
             {
                 foreColor = drawRefArgs.IsRowSelected && IsFilledBranchesLayout()
@@ -1408,6 +1513,7 @@ namespace GitUI
             {
                 foreColor = drawRefArgs.IsRowSelected ? SystemColors.HighlightText : Color.Gray;
             }
+            */
 
             using (Brush foreBrush = new SolidBrush(foreColor))
             {
@@ -1500,10 +1606,10 @@ namespace GitUI
                                 superprojectRefs.Remove(superprojectRef);
 
                             string name = gitRef.Name;
-                            if ( gitRef.IsTag
+                            if (gitRef.IsTag
                                  && gitRef.IsDereference // see note on using IsDereference in CommitInfo class.
                                  && AppSettings.ShowAnnotatedTagsMessages
-                                 && AppSettings.ShowIndicatorForMultilineMessage )
+                                 && AppSettings.ShowIndicatorForMultilineMessage)
                             {
                                 name = name + "  " + MultilineMessageIndicator;
                             }
@@ -2152,7 +2258,6 @@ namespace GitUI
             bisectSeparator.Visible = inTheMiddleOfBisect;
             compareWithCurrentBranchToolStripMenuItem.Visible = Module.GetSelectedBranch().IsNotNullOrWhitespace();
 
-            var revision = GetRevision(LastRowIndex);
 
             var deleteTagDropDown = new ContextMenuStrip();
             var deleteBranchDropDown = new ContextMenuStrip();
@@ -2161,7 +2266,6 @@ namespace GitUI
             var rebaseDropDown = new ContextMenuStrip();
             var renameDropDown = new ContextMenuStrip();
 
-            var gitRefListsForRevision = new GitRefListsForRevision(revision);
             ISet<string> ambiguosuRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
             Func<IGitRef, string> getRefUnambiguousName = (IGitRef gitRef) =>
             {
@@ -2173,6 +2277,8 @@ namespace GitUI
                 return gitRef.Name;
             };
 
+            var revision = GetRevision(LastRowIndex);
+            var gitRefListsForRevision = new GitRefListsForRevision(revision);
             foreach (var head in gitRefListsForRevision.AllTags)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
@@ -2187,9 +2293,7 @@ namespace GitUI
             }
 
             //For now there is no action that could be done on currentBranch
-            bool bareRepository = Module.IsBareRepository();
             string currentBranch = Module.GetSelectedBranch();
-            var allBranches = gitRefListsForRevision.AllBranches;
             var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;
@@ -2237,19 +2341,18 @@ namespace GitUI
                 MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, mainContextMenu);
 
                 var branchNames = gitRefListsForRevision.GetAllBranchNames();
-                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
-                    copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
+                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
 
                 var tagNames = gitRefListsForRevision.GetAllTagNames();
-                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
-                    copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
+                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
 
                 toolStripSeparator6.Visible = branchNames.Any() || tagNames.Any();
             }
 
+            var allBranches = gitRefListsForRevision.AllBranches;
             foreach (var head in allBranches)
             {
-                ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
+                ToolStripItem toolStripItem;
 
                 //skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
@@ -2270,7 +2373,6 @@ namespace GitUI
 
                 if (!head.Name.Equals(currentBranch))
                 {
-
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     if (head.IsRemote)
                         toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
@@ -2280,6 +2382,7 @@ namespace GitUI
                 }
             }
 
+            bool bareRepository = Module.IsBareRepository();
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
             deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
 
@@ -2517,7 +2620,7 @@ namespace GitUI
 
             if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges())
             {
-                CheckUncommitedChanged( filtredCurrentCheckout );
+                CheckUncommitedChanged(filtredCurrentCheckout);
             }
 
             var dataType = DvcsGraph.DataType.Normal;
@@ -3008,7 +3111,7 @@ namespace GitUI
                 case Commands.ToggleDrawNonRelativesGray: DrawNonrelativesGray_ToolStripMenuItemClick(null, null); break;
                 case Commands.ToggleShowGitNotes: ShowGitNotes_ToolStripMenuItemClick(null, null); break;
                 case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
-                case Commands.ToggleShowMergeCommits: ShowMergeCommits_ToolStripMenuItemClick(null, null);  break;
+                case Commands.ToggleShowMergeCommits: ShowMergeCommits_ToolStripMenuItemClick(null, null); break;
                 case Commands.ShowAllBranches: ShowAllBranches_ToolStripMenuItemClick(null, null); break;
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnly_ToolStripMenuItemClick(null, null); break;
                 case Commands.ShowFilteredBranches: ShowFilteredBranches_ToolStripMenuItemClick(null, null); break;
@@ -3223,7 +3326,7 @@ namespace GitUI
 
         private void compareToBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(_baseCommitToCompare == null)
+            if (_baseCommitToCompare == null)
             {
                 MessageBox.Show(this, _baseForCompareNotSelectedError.Text, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -3251,8 +3354,8 @@ namespace GitUI
         private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var revision = this.GetSelectedRevisions().First();
-            if(revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url))
-                Process.Start(revision.BuildStatus.Url); 
+            if (revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url))
+                Process.Start(revision.BuildStatus.Url);
         }
     }
 }

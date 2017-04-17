@@ -8,6 +8,10 @@ rem
 setlocal
 set version=2.49.03
 set numericVersion=2.49.03
+if not "%APPVEYOR_BUILD_VERSION%"=="" (
+    set version=%APPVEYOR_BUILD_VERSION%
+    set numericVersion=%APPVEYOR_BUILD_VERSION%
+)
 
 set normal=GitExtensions-%Version%-Setup.msi
 set complete=GitExtensions-%Version%-SetupComplete.msi

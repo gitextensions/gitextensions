@@ -21,4 +21,4 @@ call MakeMonoArchive.cmd
 IF ERRORLEVEL 1 EXIT /B 1
 
 echo.
-pause
+IF "%SKIP_PAUSE%"=="" pause

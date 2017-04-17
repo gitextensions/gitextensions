@@ -161,9 +161,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             try
             {
-                Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance = splitContainer5.SplitterDistance;
-                Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance = splitContainer6.SplitterDistance;
-                Properties.Settings.Default.Save();
+                Settings.Default.Dashboard_DeviceDpi = GetCurrentDeviceDpi();
+                Settings.Default.Dashboard_MainSplitContainer_SplitterDistance = mainSplitContainer.SplitterDistance;
+                Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance = commonSplitContainer.SplitterDistance;
+                Settings.Default.Save();
             }
             catch (ConfigurationException)
             {
@@ -230,8 +231,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 initialized = true;
             }
 
-            splitContainer6.Panel1MinSize = 1;
-            splitContainer6.Panel2MinSize = 1;
+            commonSplitContainer.Panel1MinSize = 1;
+            commonSplitContainer.Panel2MinSize = 1;
             splitContainer7.Panel1MinSize = 1;
             splitContainer7.Panel2MinSize = 1;
 
@@ -253,8 +254,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             RecentRepositories.RepositoryCategory = filteredRecentRepositoryHistory;
 
             pictureBox1.BringToFront();
-
-            SetSplitterPositions();
         }
 
         void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
@@ -265,13 +264,22 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Refresh();
         }
 
-        private void SetSplitterPositions()
+        public void SetSplitterPositions()
         {
             try
             {
+                int deviceDpi = GetCurrentDeviceDpi();
+                int dashboardDpi = Settings.Default.Dashboard_DeviceDpi;
+                int mainSplitterDistance = Settings.Default.Dashboard_MainSplitContainer_SplitterDistance;
+                int commonSplitterDistance = Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance;
+
+                float scaleFactor = 1.0f * deviceDpi / dashboardDpi;
+                mainSplitterDistance = (int)(scaleFactor * mainSplitterDistance);
+                commonSplitterDistance = (int)(scaleFactor * commonSplitterDistance);
+
                 SetSplitterDistance(
-                    splitContainer6,
-                    Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance,
+                    commonSplitContainer,
+                    commonSplitterDistance,
                     Math.Max(2, (int)(CommonActions.Height * 1.2)));
 
                 SetSplitterDistance(
@@ -280,8 +288,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25)));
 
                 SetSplitterDistance(
-                    splitContainer5,
-                    Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance,
+                    mainSplitContainer,
+                    mainSplitterDistance,
                     315);
             }
             catch (ConfigurationException)
@@ -370,7 +378,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             if (!module.IsValidGitWorkingDir())
             {
-                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, 
+                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text,
                     directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Cancel)
@@ -438,7 +446,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                     if (!module.IsValidGitWorkingDir())
                     {
-                        DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepositoryOpenIt.Text, 
+                        DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepositoryOpenIt.Text,
                             directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,
                             MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                         if (dialogResult == DialogResult.No)

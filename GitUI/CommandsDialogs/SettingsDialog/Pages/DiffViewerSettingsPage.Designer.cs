@@ -36,6 +36,8 @@
             this.chkRememberNumberOfContextLines = new System.Windows.Forms.CheckBox();
             this.chkOmitUninterestingDiff = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.chkOpenSubmoduleDiffInSeparateWindow = new System.Windows.Forms.CheckBox();
+            this.chkShowDiffForAllParents = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanelForDiffViewer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,6 +47,8 @@
             this.tableLayoutPanelForDiffViewer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanelForDiffViewer.ColumnCount = 1;
             this.tableLayoutPanelForDiffViewer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkShowDiffForAllParents, 0, 6);
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOpenSubmoduleDiffInSeparateWindow, 0, 5);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberIgnoreWhiteSpacePreference, 0, 0);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberShowNonPrintingCharsPreference, 0, 1);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberShowEntireFilePreference, 0, 2);
@@ -53,13 +57,15 @@
             this.tableLayoutPanelForDiffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelForDiffViewer.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelForDiffViewer.Name = "tableLayoutPanelForDiffViewer";
-            this.tableLayoutPanelForDiffViewer.RowCount = 5;
+            this.tableLayoutPanelForDiffViewer.RowCount = 7;
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelForDiffViewer.Size = new System.Drawing.Size(1476, 788);
+            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelForDiffViewer.Size = new System.Drawing.Size(1216, 464);
             this.tableLayoutPanelForDiffViewer.TabIndex = 1;
             // 
             // chkRememberIgnoreWhiteSpacePreference
@@ -67,7 +73,7 @@
             this.chkRememberIgnoreWhiteSpacePreference.AutoSize = true;
             this.chkRememberIgnoreWhiteSpacePreference.Location = new System.Drawing.Point(3, 3);
             this.chkRememberIgnoreWhiteSpacePreference.Name = "chkRememberIgnoreWhiteSpacePreference";
-            this.chkRememberIgnoreWhiteSpacePreference.Size = new System.Drawing.Size(251, 17);
+            this.chkRememberIgnoreWhiteSpacePreference.Size = new System.Drawing.Size(253, 17);
             this.chkRememberIgnoreWhiteSpacePreference.TabIndex = 4;
             this.chkRememberIgnoreWhiteSpacePreference.Text = "Remember the \'Ignore whitespaces\' preference";
             this.chkRememberIgnoreWhiteSpacePreference.UseVisualStyleBackColor = true;
@@ -118,12 +124,32 @@
             this.tooltip.InitialDelay = 500;
             this.tooltip.ReshowDelay = 100;
             // 
+            // chkOpenSubmoduleDiffInSeparateWindow
+            // 
+            this.chkOpenSubmoduleDiffInSeparateWindow.AutoSize = true;
+            this.chkOpenSubmoduleDiffInSeparateWindow.Location = new System.Drawing.Point(3, 118);
+            this.chkOpenSubmoduleDiffInSeparateWindow.Name = "chkOpenSubmoduleDiffInSeparateWindow";
+            this.chkOpenSubmoduleDiffInSeparateWindow.Size = new System.Drawing.Size(223, 17);
+            this.chkOpenSubmoduleDiffInSeparateWindow.TabIndex = 9;
+            this.chkOpenSubmoduleDiffInSeparateWindow.Text = "Open Submodule Diff in separate window";
+            this.chkOpenSubmoduleDiffInSeparateWindow.UseVisualStyleBackColor = true;
+            // 
+            // chkShowDiffForAllParents
+            // 
+            this.chkShowDiffForAllParents.AutoSize = true;
+            this.chkShowDiffForAllParents.Location = new System.Drawing.Point(3, 141);
+            this.chkShowDiffForAllParents.Name = "chkShowDiffForAllParents";
+            this.chkShowDiffForAllParents.Size = new System.Drawing.Size(280, 17);
+            this.chkShowDiffForAllParents.TabIndex = 10;
+            this.chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog.";
+            this.chkShowDiffForAllParents.UseVisualStyleBackColor = true;
+            // 
             // DiffViewerSettingsPage
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.tableLayoutPanelForDiffViewer);
             this.Name = "DiffViewerSettingsPage";
-            this.Size = new System.Drawing.Size(1476, 788);
+            this.Size = new System.Drawing.Size(1216, 464);
             this.tableLayoutPanelForDiffViewer.ResumeLayout(false);
             this.tableLayoutPanelForDiffViewer.PerformLayout();
             this.ResumeLayout(false);
@@ -140,5 +166,7 @@
         private System.Windows.Forms.CheckBox chkRememberNumberOfContextLines;
         private System.Windows.Forms.CheckBox chkOmitUninterestingDiff;
         private System.Windows.Forms.ToolTip tooltip;
+        private System.Windows.Forms.CheckBox chkOpenSubmoduleDiffInSeparateWindow;
+        private System.Windows.Forms.CheckBox chkShowDiffForAllParents;
     }
 }

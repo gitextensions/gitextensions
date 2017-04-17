@@ -11,6 +11,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
+        protected override void Init(ISettingsPageHost aPageHost)
+        {
+            base.Init(aPageHost);
+            BindSettingsWithControls();
+        }
+
         private DetailedGroup DetailedSettings
         {
             get
@@ -19,21 +25,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        protected override void SettingsToPage()
+        private void BindSettingsWithControls()
         {
-            chkChowConsoleTab.SetNullableChecked(DetailedSettings.ShowConEmuTab.Value);
-            chkRemotesFromServer.SetNullableChecked(DetailedSettings.GetRemoteBranchesDirectlyFromRemote.Value);
-        }
-
-        protected override void PageToSettings()
-        {
-            DetailedSettings.ShowConEmuTab.Value = chkChowConsoleTab.GetNullableChecked();
-            DetailedSettings.GetRemoteBranchesDirectlyFromRemote.Value = chkRemotesFromServer.GetNullableChecked();
+            AddSettingBinding(DetailedSettings.ShowConEmuTab, chkChowConsoleTab);
+            AddSettingBinding(DetailedSettings.ConEmuStyle, cboStyle);
+            AddSettingBinding(DetailedSettings.ConEmuTerminal, cboTerminal);
+            AddSettingBinding(DetailedSettings.ConEmuFontSize, cboFontSize);
+            AddSettingBinding(DetailedSettings.GetRemoteBranchesDirectlyFromRemote, chkRemotesFromServer);
         }
 
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(DetailedSettingsPage));
+        }
+
+        private void chkChowConsoleTab_CheckedChanged(object sender, System.EventArgs e)
+        {
+            groupBoxConsoleSettings.Enabled = chkChowConsoleTab.Checked;
         }
     }
 }

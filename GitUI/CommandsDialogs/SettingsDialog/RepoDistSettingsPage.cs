@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GitCommands.Settings;
+﻿using GitCommands.Settings;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -18,9 +15,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             CurrentSettings = RepoDistSettingsSet.EffectiveSettings;
         }
 
-        public bool AreEffectiveSettingsSet
+        protected override bool AreEffectiveSettings
         {
             get { return CurrentSettings == RepoDistSettingsSet.EffectiveSettings; }
+        }
+
+        protected override ISettingsSource GetCurrentSettings()
+        {
+            return CurrentSettings;
         }
 
         public void SetEffectiveSettings()

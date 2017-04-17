@@ -68,14 +68,20 @@ namespace GitUI.Editor
             showNonprintableCharactersToolStripMenuItem.Checked = AppSettings.ShowNonPrintingChars;
             ToggleNonPrintingChars(AppSettings.ShowNonPrintingChars);
 
-
             IsReadOnly = true;
+            var encodingList = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToList();
+            var defaultEncodingName = Encoding.Default.EncodingName;
 
-            this.encodingToolStripComboBox.Items.AddRange(new Object[]
-                                                    {
-                                                        "Default (" + Encoding.Default.HeaderName + ")","DOS852", "ASCII",
-                                                        "Unicode", "UTF7", "UTF8", "UTF32"
-                                                    });
+            for (int i = 0; i < encodingList.Count; i++)
+            {
+                if (string.Compare(encodingList[i], defaultEncodingName, true) == 0)
+                {
+                    encodingList[i] = "Default (" + Encoding.Default.HeaderName + ")";
+                    break;
+                }
+            }
+            encodingToolStripComboBox.Items.AddRange(encodingList.ToArray());
+
             _internalFileViewer.MouseMove += TextAreaMouseMove;
             _internalFileViewer.MouseLeave += TextAreaMouseLeave;
             _internalFileViewer.TextChanged += TextEditor_TextChanged;
@@ -178,7 +184,6 @@ namespace GitUI.Editor
             this.Encoding = null;
         }
 
-
         protected override void OnRuntimeLoad(EventArgs e)
         {
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -239,6 +244,7 @@ namespace GitUI.Editor
         protected virtual void OnRequestDiffView(EventArgs args)
         {
             var handler = RequestDiffView;
+
             if (handler != null)
             {
                 handler(this, args);
@@ -267,20 +273,8 @@ namespace GitUI.Editor
 
         private void UpdateEncodingCombo()
         {
-            if (this.Encoding.GetType() == typeof(ASCIIEncoding))
-                this.encodingToolStripComboBox.Text = "ASCII";
-            else if (this.Encoding.GetType() == typeof(UnicodeEncoding))
-                this.encodingToolStripComboBox.Text = "Unicode";
-            else if (this.Encoding.GetType() == typeof(UTF7Encoding))
-                this.encodingToolStripComboBox.Text = "UTF7";
-            else if (this.Encoding.GetType() == typeof(UTF8Encoding))
-                this.encodingToolStripComboBox.Text = "UTF8";
-            else if (this.Encoding.GetType() == typeof(UTF32Encoding))
-                this.encodingToolStripComboBox.Text = "UTF32";
-            else if (this.Encoding == Encoding.Default)
-                this.encodingToolStripComboBox.Text = "Default (" + Encoding.Default.HeaderName + ")";
-            else if (this.Encoding == Encoding.GetEncoding("CP852"))
-                this.encodingToolStripComboBox.Text = "DOS852";
+            if (Encoding != null)
+                encodingToolStripComboBox.Text = Encoding.EncodingName;
         }
 
         public event EventHandler<EventArgs> ExtraDiffArgumentsChanged;
@@ -300,7 +294,6 @@ namespace GitUI.Editor
             copyPatchToolStripMenuItem.Visible = visible;
         }
 
-
         private void OnExtraDiffArgumentsChanged()
         {
             if (ExtraDiffArgumentsChanged != null)
@@ -310,6 +303,7 @@ namespace GitUI.Editor
         public string GetExtraDiffArguments()
         {
             var diffArguments = new StringBuilder();
+
             if (IgnoreWhitespaceChanges)
                 diffArguments.Append(" --ignore-space-change");
 
@@ -340,7 +334,6 @@ namespace GitUI.Editor
                 fileviewerToolbar != null)
                 fileviewerToolbar.Visible = false;
         }
-
 
         public void SaveCurrentScrollPos()
         {
@@ -485,7 +478,9 @@ namespace GitUI.Editor
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
         {
             FilePreabmle = null;
+
             string fullPath = Path.GetFullPath(Path.Combine(Module.WorkingDir, fileName));
+
             if (fileName.EndsWith("/") || Directory.Exists(fullPath))
             {
                 if (GitModule.IsValidGitWorkingDir(fullPath))
@@ -514,7 +509,6 @@ namespace GitUI.Editor
                                     {
                                         PictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
                                     }
-
                                 }
                                 PictureBox.Image = image;
                             });
@@ -528,7 +522,6 @@ namespace GitUI.Editor
                 _async.Load(getFileText, text => ViewText(fileName, text));
             }
         }
-
 
         private bool IsBinaryFile(string fileName)
         {
@@ -596,6 +589,7 @@ namespace GitUI.Editor
         private string GetFileText(string fileName)
         {
             string path;
+
             if (File.Exists(fileName))
                 path = fileName;
             else
@@ -640,6 +634,7 @@ namespace GitUI.Editor
         }
 
         private bool patchHighlighting;
+
         private void ResetForDiff()
         {
             Reset(true, true);
@@ -715,6 +710,7 @@ namespace GitUI.Editor
         private void CopyToolStripMenuItemClick(object sender, EventArgs e)
         {
             string code = _internalFileViewer.GetSelectedText();
+
             if (string.IsNullOrEmpty(code))
                 return;
 
@@ -743,9 +739,10 @@ namespace GitUI.Editor
         private string RemovePrefix(string line)
         {
             var isCombinedDiff = DiffHighlightService.IsCombinedDiff(_internalFileViewer.GetText());
-            var specials = isCombinedDiff ? new[]{"  ", "++", "+ ", " +", "--", "- ", " -"}
-                : new[]{ " ", "-", "+" };
-            if(string.IsNullOrWhiteSpace(line))
+            var specials = isCombinedDiff ? new[] { "  ", "++", "+ ", " +", "--", "- ", " -" }
+                : new[] { " ", "-", "+" };
+
+            if (string.IsNullOrWhiteSpace(line))
             {
                 return line;
             }
@@ -759,6 +756,7 @@ namespace GitUI.Editor
         private void CopyPatchToolStripMenuItemClick(object sender, EventArgs e)
         {
             var selectedText = _internalFileViewer.GetSelectedText();
+
             if (!string.IsNullOrEmpty(selectedText))
             {
                 Clipboard.SetText(selectedText);
@@ -766,6 +764,7 @@ namespace GitUI.Editor
             }
 
             var text = _internalFileViewer.GetText();
+
             if (!text.IsNullOrEmpty())
                 Clipboard.SetText(text);
         }
@@ -813,6 +812,7 @@ namespace GitUI.Editor
         private void NextChangeButtonClick(object sender, EventArgs e)
         {
             Focus();
+
             var firstVisibleLine = _internalFileViewer.LineAtCaret;
             var totalNumberOfLines = _internalFileViewer.TotalNumberOfLines;
             var emptyLineCheck = false;
@@ -820,6 +820,7 @@ namespace GitUI.Editor
             for (var line = firstVisibleLine + 1; line < totalNumberOfLines; line++)
             {
                 var lineContent = _internalFileViewer.GetLineText(line);
+
                 if (IsDiffLine(_internalFileViewer.GetText(), lineContent))
                 {
                     if (emptyLineCheck)
@@ -842,13 +843,14 @@ namespace GitUI.Editor
         private static bool IsDiffLine(string wholeText, string lineContent)
         {
             var isCombinedDiff = DiffHighlightService.IsCombinedDiff(wholeText);
-            return lineContent.StartsWithAny(isCombinedDiff ? new[] {"+", "-", " +", " -"}
-                : new[] {"+", "-"});
+            return lineContent.StartsWithAny(isCombinedDiff ? new[] { "+", "-", " +", " -" }
+                : new[] { "+", "-" });
         }
 
         private void PreviousChangeButtonClick(object sender, EventArgs e)
         {
             Focus();
+
             var firstVisibleLine = _internalFileViewer.LineAtCaret;
             var emptyLineCheck = false;
             //go to the top of change block
@@ -859,6 +861,7 @@ namespace GitUI.Editor
             for (var line = firstVisibleLine; line > 0; line--)
             {
                 var lineContent = _internalFileViewer.GetLineText(line);
+
                 if (lineContent.StartsWithAny(new string[] { "+", "-" })
                     && !lineContent.StartsWithAny(new string[] { "++", "--" }))
                 {
@@ -973,31 +976,23 @@ namespace GitUI.Editor
             return (_internalFileViewer.GetText() != null && _internalFileViewer.GetText().Contains("@@"));
         }
 
-        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader){
+        public void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader)
+        {
             _internalFileViewer.SetFileLoader(fileLoader);
         }
 
         private void encodingToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             Encoding encod = null;
+
             if (string.IsNullOrEmpty(encodingToolStripComboBox.Text))
                 encod = Module.FilesEncoding;
             else if (encodingToolStripComboBox.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
                 encod = Encoding.Default;
-            else if (encodingToolStripComboBox.Text.Equals("DOS852", StringComparison.CurrentCultureIgnoreCase))
-                encod = Encoding.GetEncoding("CP852");
-            else if (encodingToolStripComboBox.Text.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
-                encod = new ASCIIEncoding();
-            else if (encodingToolStripComboBox.Text.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
-                encod = new UnicodeEncoding();
-            else if (encodingToolStripComboBox.Text.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                encod = new UTF7Encoding();
-            else if (encodingToolStripComboBox.Text.Equals("UTF8", StringComparison.CurrentCultureIgnoreCase))
-                encod = new UTF8Encoding(false);
-            else if (encodingToolStripComboBox.Text.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                encod = new UTF32Encoding(true, false);
             else
-                encod = Module.FilesEncoding;
+                encod = AppSettings.AvailableEncodings.Values
+                      .Where(en => en.EncodingName == encodingToolStripComboBox.Text)
+                      .FirstOrDefault() ?? Module.FilesEncoding;
             if (!encod.Equals(this.Encoding))
             {
                 this.Encoding = encod;
@@ -1029,6 +1024,7 @@ namespace GitUI.Editor
         {
             string code = _internalFileViewer.GetSelectedText();
             bool noSelection = false;
+
             if (string.IsNullOrEmpty(code))
             {
                 code = _internalFileViewer.GetText();
@@ -1040,9 +1036,11 @@ namespace GitUI.Editor
                 //add artificail space if selected text is not starting from line begining, it will be removed later
                 int pos = noSelection ? 0 : _internalFileViewer.GetSelectionPosition();
                 string fileText = _internalFileViewer.GetText();
+
                 if (pos > 0)
                     if (fileText[pos - 1] != '\n')
                         code = " " + code;
+
                 IEnumerable<string> lines = code.Split('\n');
                 lines = lines.Where(s => s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0]));
                 int hpos = fileText.IndexOf("\n@@");
@@ -1061,7 +1059,7 @@ namespace GitUI.Editor
 
         private string DoAutoCRLF(string s)
         {
-            if (Module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
+            if (Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
             {
                 return s.Replace("\n", Environment.NewLine);
             }
@@ -1092,6 +1090,7 @@ namespace GitUI.Editor
             if (patch != null && patch.Length > 0)
             {
                 string output = Module.RunGitCmd(args, null, patch);
+
                 if (!string.IsNullOrEmpty(output))
                 {
                     if (!MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false))

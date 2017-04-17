@@ -220,16 +220,23 @@ namespace GitUI.CommandsDialogs
 
         private void FormCommit_Load(object sender, EventArgs e)
         {
-            if (AppSettings.CommitDialogSplitter != -1)
-                splitMain.SplitterDistance = AppSettings.CommitDialogSplitter;
-            if (AppSettings.CommitDialogRightSplitter != -1)
-                splitRight.SplitterDistance = AppSettings.CommitDialogRightSplitter;
+            int deviceDpi = GetCurrentDeviceDpi();
+            int commitDialogDpi = AppSettings.CommitDialogDeviceDpi;
+            int commitDialogSplitter = AppSettings.CommitDialogSplitter;
+            int commitDialogRightSplitter = AppSettings.CommitDialogRightSplitter;
+
+            float scaleFactor = 1.0f * deviceDpi / commitDialogDpi;
+            if (commitDialogSplitter != -1)
+                splitMain.SplitterDistance = (int)(scaleFactor * commitDialogSplitter);
+            if (commitDialogRightSplitter != -1)
+                splitRight.SplitterDistance = (int)(scaleFactor * commitDialogRightSplitter);
 
             SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
             Reset.Visible = AppSettings.ShowResetAllChanges;
             ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
             AdjustCommitButtonPanelHeight();
+            showUntrackedFilesToolStripMenuItem.Checked = !Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles").Equals("no");
         }
 
         private void AdjustCommitButtonPanelHeight()
@@ -247,6 +254,7 @@ namespace GitUI.CommandsDialogs
             if (CommitKind.Normal == _commitKind)
                 GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text);
 
+            AppSettings.CommitDialogDeviceDpi = GetCurrentDeviceDpi();
             AppSettings.CommitDialogSplitter = splitMain.SplitterDistance;
             AppSettings.CommitDialogRightSplitter = splitRight.SplitterDistance;
             AppSettings.CommitDialogSelectionFilter = toolbarSelectionFilter.Visible;
@@ -911,7 +919,7 @@ namespace GitUI.CommandsDialogs
             if (_useFormCommitMessage && !ValidCommitMessage())
                 return;
 
-            if (Module.IsDetachedHead() && !Module.InTheMiddleOfRebase())
+            if (!AppSettings.DontConfirmCommitIfNoBranch && Module.IsDetachedHead() && !Module.InTheMiddleOfRebase())
             {
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
                                                         _notOnBranchCaption.Text,
@@ -1054,6 +1062,7 @@ namespace GitUI.CommandsDialogs
             {
                 toolRefreshItem.Enabled = false;
                 Initialize();
+                Message.RefreshAutoCompleteWords();
                 toolRefreshItem.Enabled = true;
             }
         }
@@ -1089,7 +1098,15 @@ namespace GitUI.CommandsDialogs
 
             OnStageAreaLoaded += stageAreaLoaded;
 
-            Module.ResetMixed("HEAD");
+            if (IsMergeCommit)
+            {
+                Staged.SelectAll();
+                Unstage(canUseUnstageAll: false);
+            }
+            else
+            {
+                Module.ResetMixed("HEAD");
+            }
             Initialize();
         }
 
@@ -1127,9 +1144,11 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Unstage()
+        private void Unstage(bool canUseUnstageAll = true)
         {
-            if (Staged.GitItemStatuses.Count() > 10 && Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count())
+            if (canUseUnstageAll &&
+                Staged.GitItemStatuses.Count() > 10 &&
+                Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count())
             {
                 UnstageAllToolStripMenuItemClick(null, null);
                 return;
@@ -1285,11 +1304,12 @@ namespace GitUI.CommandsDialogs
             ShowChanges(item, true);
         }
 
-		private void Staged_DataSourceChanged(object sender, EventArgs e)
-		{
+        private void Staged_DataSourceChanged(object sender, EventArgs e)
+        {
             int totalFilesCount = Staged.UnfilteredItemsCount() + Unstaged.UnfilteredItemsCount();
             commitStagedCount.Text = Staged.UnfilteredItemsCount().ToString() + "/" + totalFilesCount.ToString();
-		}
+        }
+
         private void Staged_Enter(object sender, EventArgs e)
         {
             if (_currentFilesList != Staged)
@@ -1917,8 +1937,6 @@ namespace GitUI.CommandsDialogs
                 RescanChanges();
 
             updateAuthorInfo();
-
-
         }
 
         private void updateAuthorInfo()
@@ -2275,11 +2293,16 @@ namespace GitUI.CommandsDialogs
 
         private void openSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = Application.ExecutablePath;
-            process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name.EnsureTrailingPathSeparator();
-            process.Start();
+            var submoduleName = Unstaged.SelectedItem.Name;
+            Unstaged.SelectedItem.SubmoduleStatus.ContinueWith(
+                    (t) =>
+                    {
+                        Process process = new Process();
+                        process.StartInfo.FileName = Application.ExecutablePath;
+                        process.StartInfo.Arguments = "browse -commit=" + t.Result.Commit;
+                        process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, submoduleName.EnsureTrailingPathSeparator());
+                        process.Start();
+                    });
         }
 
         private void resetSubmoduleChanges_Click(object sender, EventArgs e)

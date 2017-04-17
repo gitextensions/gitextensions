@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using GitCommands.Config;
@@ -15,13 +16,17 @@ namespace GitExtensionsTest.GitUI.Objects
     class GitRemoteControllerTests
     {
         private IGitModule _module;
+        private IConfigFileSettings _configFile;
         private IGitRemoteController _controller;
 
 
         [SetUp]
         public void Setup()
         {
+            _configFile = Substitute.For<IConfigFileSettings>();
+
             _module = Substitute.For<IGitModule>();
+            _module.LocalConfigFile.Returns(_configFile);
 
             _controller = new GitRemoteController(_module);
         }
@@ -32,7 +37,7 @@ namespace GitExtensionsTest.GitUI.Objects
         {
             _module = null;
 
-            ((Action)(() => _controller.LoadRemotes())).ShouldNotThrow();
+            ((Action)(() => _controller.LoadRemotes(true))).ShouldNotThrow();
         }
 
         [Test]
@@ -40,7 +45,7 @@ namespace GitExtensionsTest.GitUI.Objects
         {
             _module.GetRemotes().Returns(x => Enumerable.Empty<string>());
 
-            _controller.LoadRemotes();
+            _controller.LoadRemotes(true);
 
             _controller.Remotes.Count.Should().Be(0);
             _module.Received(1).GetRemotes();
@@ -53,7 +58,7 @@ namespace GitExtensionsTest.GitUI.Objects
         {
             _module.GetRemotes().Returns(x => new[] { null, "", " ", "    ", "\t" });
 
-            _controller.LoadRemotes();
+            _controller.LoadRemotes(true);
 
             _controller.Remotes.Count.Should().Be(0);
             _module.Received(1).GetRemotes();
@@ -61,20 +66,32 @@ namespace GitExtensionsTest.GitUI.Objects
             _module.DidNotReceive().GetSettings(Arg.Any<string>());
         }
 
-        [Test]
-        public void LoadRemotes_should_populate_remotes_if_any()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void LoadRemotes_should_populate_remotes_if_any(bool loadDisabled)
         {
-            const string remote = "a";
-            _module.GetRemotes().Returns(x => new[] { null, "", " ", "    ", remote, "\t" });
+            const string remoteName1 = "name1";
+            const string remoteName2 = "name2";
+            _module.GetRemotes().Returns(x => new[] { null, "", " ", "    ", remoteName1, "\t" });
+            var sections = new List<IConfigSection> { new ConfigSection($"{GitRemoteController.DisabledSectionPrefix}{GitRemoteController.SectionRemote}.{remoteName2}", true) };
+            _configFile.GetConfigSections().Returns(x => sections);
 
-            _controller.LoadRemotes();
+            _controller.LoadRemotes(loadDisabled);
 
-            _controller.Remotes.Count.Should().Be(1);
+            _controller.Remotes.Count.Should().Be(loadDisabled ? 2 : 1);
+
             _module.Received(1).GetRemotes();
-            _module.Received(1).GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
-            _module.Received(1).GetSetting(string.Format(SettingKeyString.RemotePushUrl, remote));
-            _module.Received(1).GetSetting(string.Format(SettingKeyString.RemotePuttySshKey, remote));
-            _module.Received(1).GetSettings(string.Format(SettingKeyString.RemotePush, remote));
+            _module.Received(1).GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName1));
+            _module.Received(1).GetSetting(string.Format(SettingKeyString.RemotePushUrl, remoteName1));
+            _module.Received(1).GetSetting(string.Format(SettingKeyString.RemotePuttySshKey, remoteName1));
+            _module.Received(1).GetSettings(string.Format(SettingKeyString.RemotePush, remoteName1));
+
+            var count = loadDisabled ? 1 : 0;
+            _configFile.Received(count).GetConfigSections();
+            _module.Received(count).GetSetting(GitRemoteController.DisabledSectionPrefix + string.Format(SettingKeyString.RemoteUrl, remoteName2));
+            _module.Received(count).GetSetting(GitRemoteController.DisabledSectionPrefix + string.Format(SettingKeyString.RemotePushUrl, remoteName2));
+            _module.Received(count).GetSetting(GitRemoteController.DisabledSectionPrefix + string.Format(SettingKeyString.RemotePuttySshKey, remoteName2));
+            _module.Received(count).GetSettings(GitRemoteController.DisabledSectionPrefix + string.Format(SettingKeyString.RemotePush, remoteName2));
         }
 
         [Test]
@@ -95,9 +112,13 @@ namespace GitExtensionsTest.GitUI.Objects
         }
 
         [Test]
-        public void SaveRemote_should_throw_if_remoteName_is_null()
+        public void SaveRemote_should_throw_if_remoteName_is_null_or_empty()
         {
             ((Action)(() => _controller.SaveRemote(null, null, "b", "c", "d"))).ShouldThrow<ArgumentNullException>()
+                .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
+            ((Action)(() => _controller.SaveRemote(null, "", "b", "c", "d"))).ShouldThrow<ArgumentNullException>()
+                .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
+            ((Action)(() => _controller.SaveRemote(null, "  ", "b", "c", "d"))).ShouldThrow<ArgumentNullException>()
                 .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
         }
 
@@ -114,6 +135,25 @@ namespace GitExtensionsTest.GitUI.Objects
             result.UserMessage.Should().Be(output);
             result.ShouldUpdateRemote.Should().BeTrue();
             _module.Received(1).AddRemote(remoteName, remoteUrl);
+        }
+
+        [Test]
+        public void SaveRemote_null_remote_should_set_settings()
+        {
+            const string remoteName = "a";
+            const string remoteUrl = "b";
+            const string remotePushUrl = "c";
+            const string remotePuttySshKey = "";
+            const string output = "yes!";
+            _module.AddRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
+
+            var result = _controller.SaveRemote(null, remoteName, remoteUrl, remotePushUrl, remotePuttySshKey);
+
+            result.UserMessage.Should().Be(output);
+            result.ShouldUpdateRemote.Should().BeTrue();
+            _module.Received(1).SetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName), remoteUrl);
+            _module.Received(1).SetSetting(string.Format(SettingKeyString.RemotePushUrl, remoteName), remotePushUrl);
+            _module.Received(1).UnsetSetting(string.Format(SettingKeyString.RemotePuttySshKey, remoteName));
         }
 
         [Test]
@@ -173,6 +213,42 @@ namespace GitExtensionsTest.GitUI.Objects
             ensure(SettingKeyString.RemoteUrl, remoteUrl);
             ensure(SettingKeyString.RemotePushUrl, remotePushUrl);
             ensure(SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
+        }
+
+        [Test]
+        public void SetRemoteState_should_throw_if_remote_is_null()
+        {
+            ((Action)(() => _controller.ToggleRemoteState(null, false))).ShouldThrow<ArgumentNullException>()
+                .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
+        }
+
+        [Test]
+        public void SetRemoteState_should_do_nothing_if_section_not_found()
+        {
+            _configFile.GetConfigSections().Returns(x => new List<IConfigSection>());
+
+            _controller.ToggleRemoteState("boo", false);
+
+            _configFile.Received(1).GetConfigSections();
+            _module.DidNotReceive().RemoveRemote(Arg.Any<string>());
+            _configFile.DidNotReceive().RemoveConfigSection(Arg.Any<string>());
+        }
+
+        [TestCase("name1", false)]
+        [TestCase("name2", true)]
+        public void SetRemoteState_should_call_ToggleRemoteState(string remoteName, bool remoteDisabled)
+        {
+            var sections = new List<IConfigSection> { new ConfigSection("-remote.name1", true), new ConfigSection("remote.name2", true) };
+            _configFile.GetConfigSections().Returns(x => sections);
+
+            _controller.ToggleRemoteState(remoteName, remoteDisabled);
+
+            _configFile.Received(1).GetConfigSections();
+            _module.Received(remoteDisabled ? 1 : 0).RemoveRemote(remoteName);
+            _configFile.Received(remoteDisabled ? 0 : 1).RemoveConfigSection($"{GitRemoteController.DisabledSectionPrefix}{GitRemoteController.SectionRemote}.{remoteName}");
+
+            _configFile.Received(1).AddConfigSection(sections[remoteDisabled ? 1 : 0]);
+            _configFile.Received(1).Save();
         }
     }
 }

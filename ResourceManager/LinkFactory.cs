@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using GitCommands;
 
@@ -25,14 +26,36 @@ namespace ResourceManager
             return WebUtility.HtmlEncode(noPrefixBranch);
         }
 
-        public static string CreateCommitLink(string guid)
+        public static string CreateCommitLink(string guid, string linkText = null, bool preserveGuidInLinkText = false)
         {
-            if (GitRevision.UnstagedGuid == guid)
-                return "<a href='gitext://gotocommit/" + guid + "'>" + Strings.GetCurrentUnstagedChanges() + "</a>";
-            else if (GitRevision.IndexGuid == guid)
-                return "<a href='gitext://gotocommit/" + guid + "'>" + Strings.GetCurrentIndex() + "</a>";
-            else
-                return "<a href='gitext://gotocommit/" + guid + "'>" + guid.Substring(0, 10) + "</a>";
+            if (linkText == null)
+            {
+                if (GitRevision.UnstagedGuid == guid)
+                    linkText = Strings.GetCurrentUnstagedChanges();
+                else if (GitRevision.IndexGuid == guid)
+                    linkText = Strings.GetCurrentIndex();
+                else
+                {
+                    linkText = preserveGuidInLinkText || guid.Length < 10
+                        ? guid
+                        : guid.Substring(0, 10);
+                }
+            }
+            return "<a href='gitext://gotocommit/" + guid + "'>" + linkText + "</a>";
+        }
+
+        public static string ParseLink(string aLinkText)
+        {
+            string uriCandidate = aLinkText;
+            while(uriCandidate != null)
+            {
+                Uri uri;
+                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out uri))
+                    return uri.AbsoluteUri;
+                uriCandidate = uriCandidate.SkipStr("#");
+            }
+
+            return aLinkText;
         }
     }
 }

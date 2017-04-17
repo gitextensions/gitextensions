@@ -441,7 +441,7 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
-                FileChanges.SetSelectedRevision(new GitRevision(Module, e.Data));
+                FileChanges.SetSelectedRevision(GitRevision.CreateForShortSha1(Module, e.Data));
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
