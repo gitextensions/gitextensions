@@ -39,7 +39,7 @@ namespace Github3
             this.webBrowser1.Location = new System.Drawing.Point(0, 0);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(980, 600);
+            this.webBrowser1.Size = new System.Drawing.Size(1000, 580);
             this.webBrowser1.TabIndex = 0;
             this.webBrowser1.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.web_Navigated);
             this.webBrowser1.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.web_Navigating);
@@ -48,7 +48,7 @@ namespace Github3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(980, 600);
+            this.ClientSize = new System.Drawing.Size(1000, 580);
             this.Controls.Add(this.webBrowser1);
             this.Name = "OAuth";
             this.ShowIcon = false;
