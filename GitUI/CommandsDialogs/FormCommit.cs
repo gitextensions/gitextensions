@@ -1609,7 +1609,7 @@ namespace GitUI.CommandsDialogs
                     if (string.IsNullOrEmpty(message) && File.Exists(CommitHelper.GetCommitMessagePath(Module)))
                     {
                         message = File.ReadAllText(CommitHelper.GetCommitMessagePath(Module), Module.CommitEncoding);
-                        if (File.Exists(CommitHelper.GetAmendPath(Module)))
+                        if (!AppSettings.DontRememberAmendCommitState && File.Exists(CommitHelper.GetAmendPath(Module)))
                             Amend.Checked = bool.Parse(File.ReadAllText(CommitHelper.GetAmendPath(Module)));
                     }
                     break;

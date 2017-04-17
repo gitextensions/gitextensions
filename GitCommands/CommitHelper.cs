@@ -46,7 +46,7 @@ namespace GitCommands
             {
                 textWriter.Write(commitMessageText);
             }
-            if(amendCommit)
+            if(!AppSettings.DontRememberAmendCommitState && amendCommit)
                 File.WriteAllText(GetAmendPath(module), true.ToString());
             else if(File.Exists(GetAmendPath(module)))
                 File.Delete(GetAmendPath(module));
