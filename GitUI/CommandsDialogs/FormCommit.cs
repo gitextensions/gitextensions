@@ -1610,7 +1610,17 @@ namespace GitUI.CommandsDialogs
                     {
                         message = File.ReadAllText(CommitHelper.GetCommitMessagePath(Module), Module.CommitEncoding);
                         if (!AppSettings.DontRememberAmendCommitState && File.Exists(CommitHelper.GetAmendPath(Module)))
-                            Amend.Checked = bool.Parse(File.ReadAllText(CommitHelper.GetAmendPath(Module)));
+                        {
+                            var amendSaveStateFilePath = CommitHelper.GetAmendPath(Module);
+                            Amend.Checked = bool.Parse(File.ReadAllText(amendSaveStateFilePath));
+                            try
+                            {
+                                File.Delete(amendSaveStateFilePath);
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
                     }
                     break;
             }
