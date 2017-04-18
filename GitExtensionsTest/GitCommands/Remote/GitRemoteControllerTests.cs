@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using GitCommands.Config;
-using GitUI.Objects;
+using GitCommands.Remote;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GitExtensionsTest.GitUI.Objects
+namespace GitExtensionsTest.GitCommands.Remote
 {
     [SetCulture("")]
     [SetUICulture("")]

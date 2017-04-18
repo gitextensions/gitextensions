@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
-using GitUI.Objects;
+using GitCommands.Remote;
 using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;

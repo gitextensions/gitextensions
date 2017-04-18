@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="GitCommands\CommitInformationTest.cs" />
     <Compile Include="GitCommands\Config\ConfigFileTest.cs" />
+    <Compile Include="GitCommands\GitExtLinks\GitExtLinksTests.cs" />
     <Compile Include="GitCommands\Git\GitBranchNameNormaliserTest.cs" />
     <Compile Include="GitCommands\Git\GitBranchNameOptionsTest.cs" />
     <Compile Include="GitCommands\Git\GitCommandHelpersTest.cs" />
@@ -98,7 +99,7 @@
     <Compile Include="GitUI\FormUpdateFixture.cs" />
     <Compile Include="GitUI\HotkeySettingsManagerFixture.cs" />
     <Compile Include="GitUI\LinkFactoryFixture.cs" />
-    <Compile Include="GitUI\Objects\GitRemoteControllerTests.cs" />
+    <Compile Include="GitCommands\Remote\GitRemoteControllerTests.cs" />
     <Compile Include="GitUI\SingleHtmlUserManualFixture.cs" />
     <Compile Include="GitUI\StandardHtmlUserManualFixture.cs" />
     <Compile Include="Plugins\ReleaseNotesGenerator\MainFixture.cs" />

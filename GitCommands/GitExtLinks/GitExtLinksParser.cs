@@ -87,7 +87,16 @@ namespace GitCommands.GitExtLinks
             if (LowerPriority != null)
                 LowerPriority.LoadFromSettings();
 
-            LinkDefs = null;
+            var xml = Settings.GetString("RevisionLinkDefs", null);
+            LinkDefs = LoadFromXmlString(xml);
+        }
+
+        public static List<GitExtLinkDef> LoadFromXmlString(string xmlString)
+        {
+            if (xmlString.IsNullOrWhiteSpace())
+            {
+                return new List<GitExtLinkDef>();
+            }
 
             try
             {
@@ -95,17 +104,11 @@ namespace GitCommands.GitExtLinks
                 StringReader stringReader = null;
                 try
                 {
-                    var xml = Settings.GetString("RevisionLinkDefs", null);
-                    if (xml == null)
-                    {
-                        LinkDefs = new List<GitExtLinkDef>();
-                        return;
-                    }
-                    stringReader = new StringReader(xml);
+                    stringReader = new StringReader(xmlString);
                     using (var xmlReader = new XmlTextReader(stringReader))
                     {
                         stringReader = null;
-                        LinkDefs = serializer.Deserialize(xmlReader) as List<GitExtLinkDef>;
+                        return serializer.Deserialize(xmlReader) as List<GitExtLinkDef>;
                     }
                 }
                 finally
@@ -117,11 +120,9 @@ namespace GitCommands.GitExtLinks
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                LinkDefs = null;
             }
 
-            if (LinkDefs == null)
-                LinkDefs = new List<GitExtLinkDef>();
+            return new List<GitExtLinkDef>();
         }
 
         public void SaveToSettings()

@@ -7,7 +7,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 
-namespace GitUI.Objects
+namespace GitCommands.Remote
 {
     public interface IGitRemoteController
     {

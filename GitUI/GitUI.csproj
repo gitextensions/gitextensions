@@ -279,9 +279,6 @@
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="Script\PowerShellHelper.cs" />
-    <Compile Include="Objects\GitRemote.cs" />
-    <Compile Include="Objects\GitRemoteController.cs" />
-    <Compile Include="Objects\GitRemoteSaveResult.cs" />
     <Compile Include="RepoHosts.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">

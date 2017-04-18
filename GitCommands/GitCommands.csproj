@@ -88,6 +88,9 @@
     <Compile Include="Git\GitBranchNameOptions.cs" />
     <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="RemoteActionResult.cs" />
+    <Compile Include="Remote\GitRemote.cs" />
+    <Compile Include="Remote\GitRemoteController.cs" />
+    <Compile Include="Remote\GitRemoteSaveResult.cs" />
     <Compile Include="Settings\BasicSettingTypes.cs" />
     <Compile Include="Settings\CommonSettingsTypes.cs" />
     <Compile Include="Settings\ConfigFileSettings.cs" />
