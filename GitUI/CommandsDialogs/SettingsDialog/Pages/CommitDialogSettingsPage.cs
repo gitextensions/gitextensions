@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowResetUnstagedChanges.Checked = AppSettings.ShowResetUnstagedChanges;
             chkShowResetAllChanges.Checked = AppSettings.ShowResetAllChanges;
             chkAutocomplete.Checked = AppSettings.ProvideAutocompletion;
-            cbDontRememberAmendCommitState.Checked = AppSettings.DontRememberAmendCommitState;
+            cbRememberAmendCommitState.Checked = AppSettings.RememberAmendCommitState;
         }
 
         protected override void PageToSettings()
@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowResetUnstagedChanges = chkShowResetUnstagedChanges.Checked;
             AppSettings.ShowResetAllChanges = chkShowResetAllChanges.Checked;
             AppSettings.ProvideAutocompletion = chkAutocomplete.Checked;
-            AppSettings.DontRememberAmendCommitState = cbDontRememberAmendCommitState.Checked;
+            AppSettings.RememberAmendCommitState = cbRememberAmendCommitState.Checked;
         }
     }
 }

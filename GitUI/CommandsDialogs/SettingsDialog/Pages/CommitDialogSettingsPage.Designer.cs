@@ -30,6 +30,7 @@
         {
             this.groupBoxBehaviour = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelBehaviour = new System.Windows.Forms.TableLayoutPanel();
+            this.cbRememberAmendCommitState = new System.Windows.Forms.CheckBox();
             this.chkAutocomplete = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages = new System.Windows.Forms.NumericUpDown();
             this.lblCommitDialogNumberOfPreviousMessages = new System.Windows.Forms.Label();
@@ -41,7 +42,6 @@
             this.chkShowResetUnstagedChanges = new System.Windows.Forms.CheckBox();
             this.chkShowResetAllChanges = new System.Windows.Forms.CheckBox();
             this.chkAddNewlineToCommitMessageWhenMissing = new System.Windows.Forms.CheckBox();
-            this.cbDontRememberAmendCommitState = new System.Windows.Forms.CheckBox();
             this.groupBoxBehaviour.SuspendLayout();
             this.tableLayoutPanelBehaviour.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).BeginInit();
@@ -67,7 +67,7 @@
             this.tableLayoutPanelBehaviour.ColumnCount = 2;
             this.tableLayoutPanelBehaviour.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelBehaviour.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelBehaviour.Controls.Add(this.cbDontRememberAmendCommitState, 0, 6);
+            this.tableLayoutPanelBehaviour.Controls.Add(this.cbRememberAmendCommitState, 0, 6);
             this.tableLayoutPanelBehaviour.Controls.Add(this.chkAutocomplete, 0, 0);
             this.tableLayoutPanelBehaviour.Controls.Add(this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages, 1, 4);
             this.tableLayoutPanelBehaviour.Controls.Add(this.lblCommitDialogNumberOfPreviousMessages, 0, 4);
@@ -90,6 +90,16 @@
             this.tableLayoutPanelBehaviour.Size = new System.Drawing.Size(968, 250);
             this.tableLayoutPanelBehaviour.TabIndex = 57;
             // 
+            // cbDontRememberAmendCommitState
+            // 
+            this.cbRememberAmendCommitState.AutoSize = true;
+            this.cbRememberAmendCommitState.Location = new System.Drawing.Point(3, 135);
+            this.cbRememberAmendCommitState.Name = "cbDontRememberAmendCommitState";
+            this.cbRememberAmendCommitState.Size = new System.Drawing.Size(304, 17);
+            this.cbRememberAmendCommitState.TabIndex = 5;
+            this.cbRememberAmendCommitState.Text = "Remember \'Amend commit\' checkbox on commit form close";
+            this.cbRememberAmendCommitState.UseVisualStyleBackColor = true;
+            // 
             // chkAutocomplete
             // 
             this.chkAutocomplete.AutoSize = true;
@@ -102,7 +112,7 @@
             // 
             // _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages
             // 
-            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(338, 108);
+            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(313, 108);
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Maximum = new decimal(new int[] {
             10,
             0,
@@ -221,16 +231,6 @@
             this.chkAddNewlineToCommitMessageWhenMissing.Text = "Ensure the second line of commit message is empty";
             this.chkAddNewlineToCommitMessageWhenMissing.UseVisualStyleBackColor = true;
             // 
-            // cbDontRememberAmendCommitState
-            // 
-            this.cbDontRememberAmendCommitState.AutoSize = true;
-            this.cbDontRememberAmendCommitState.Location = new System.Drawing.Point(3, 135);
-            this.cbDontRememberAmendCommitState.Name = "cbDontRememberAmendCommitState";
-            this.cbDontRememberAmendCommitState.Size = new System.Drawing.Size(329, 17);
-            this.cbDontRememberAmendCommitState.TabIndex = 5;
-            this.cbDontRememberAmendCommitState.Text = "Don\'t remember \'Amend commit\' checkbox on commit form close";
-            this.cbDontRememberAmendCommitState.UseVisualStyleBackColor = true;
-            // 
             // CommitDialogSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -268,6 +268,6 @@
         private System.Windows.Forms.CheckBox chkShowResetAllChanges;
         private System.Windows.Forms.CheckBox chkAddNewlineToCommitMessageWhenMissing;
         private System.Windows.Forms.CheckBox chkAutocomplete;
-        private System.Windows.Forms.CheckBox cbDontRememberAmendCommitState;
+        private System.Windows.Forms.CheckBox cbRememberAmendCommitState;
     }
 }
