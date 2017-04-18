@@ -147,6 +147,7 @@ namespace GitUI.CommandsDialogs
             this.editgitattributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editmailmapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuitemSparse = new System.Windows.Forms.ToolStripMenuItem();
+            this.editgitinfoexcludeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.gitMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1318,6 +1319,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripMenuItemWorktrees,
             this.toolStripSeparator44,
             this.editgitignoreToolStripMenuItem1,
+            this.editgitinfoexcludeToolStripMenuItem,
             this.editgitattributesToolStripMenuItem,
             this.editmailmapToolStripMenuItem,
             this.menuitemSparse,
@@ -1430,6 +1432,13 @@ namespace GitUI.CommandsDialogs
             this.menuitemSparse.Size = new System.Drawing.Size(221, 22);
             this.menuitemSparse.Text = "Sparse Working Copy";
             this.menuitemSparse.Click += new System.EventHandler(this.menuitemSparseWorkingCopy_Click);
+            // 
+            // editgitinfoexcludeToolStripMenuItem
+            // 
+            this.editgitinfoexcludeToolStripMenuItem.Name = "editgitinfoexcludeToolStripMenuItem";
+            this.editgitinfoexcludeToolStripMenuItem.Size = new System.Drawing.Size(261, 24);
+            this.editgitinfoexcludeToolStripMenuItem.Text = "Edit .git/info/exclude";
+            this.editgitinfoexcludeToolStripMenuItem.Click += new System.EventHandler(this.EditGitInfoExcludeToolStripMenuItemClick);
             // 
             // toolStripSeparator4
             // 
@@ -2274,8 +2283,9 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem menuitemSparse;
         private ToolStripButton ShowFirstParent;
         private ToolTip FilterToolTip;
-        private ToolStripMenuItem toolStripMenuItemReflog;
         private ToolStripSeparator toolStripSeparator10;
+        private ToolStripMenuItem editgitinfoexcludeToolStripMenuItem;
+        private ToolStripMenuItem toolStripMenuItemReflog;
         private ToolStripMenuItem manageWorktreeToolStripMenuItem;
         private ToolStripMenuItem createWorktreeToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItemWorktrees;

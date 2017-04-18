@@ -2147,7 +2147,7 @@ namespace GitUI
 
         private void GitIgnoreClick(object sender, EventArgs e)
         {
-            UICommands.StartEditGitIgnoreDialog(this);
+            UICommands.StartEditGitIgnoreDialog(this, false);
         }
 
         internal void InvalidateRevisions()
