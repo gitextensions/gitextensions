@@ -1201,7 +1201,7 @@ namespace GitUI
             DisposeRevisionGraphCommand();
             this.InvokeAsync(() =>
                 {
-                    throw e.Exception;
+                    throw new AggregateException(e.Exception);
                 }
             );
             e.Handled = true;
