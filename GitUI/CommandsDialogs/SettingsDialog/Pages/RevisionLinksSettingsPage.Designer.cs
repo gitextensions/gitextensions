@@ -55,6 +55,7 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this._NO_TRANSLATE_Name = new System.Windows.Forms.TextBox();
             this.EnabledChx = new System.Windows.Forms.CheckBox();
+            this.gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -88,7 +89,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.LinksGrid);
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Panel2.Controls.Add(this.detailPanel);
-            this.splitContainer1.Size = new System.Drawing.Size(1125, 548);
+            this.splitContainer1.Size = new System.Drawing.Size(974, 452);
             this.splitContainer1.SplitterDistance = 192;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -101,7 +102,7 @@
             this.tableLayoutPanel1.Controls.Add(this.Remove, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.Add, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 519);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 423);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -147,7 +148,7 @@
             this._NO_TRANSLATE_Categories.Location = new System.Drawing.Point(0, 22);
             this._NO_TRANSLATE_Categories.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
-            this._NO_TRANSLATE_Categories.Size = new System.Drawing.Size(192, 526);
+            this._NO_TRANSLATE_Categories.Size = new System.Drawing.Size(192, 430);
             this._NO_TRANSLATE_Categories.TabIndex = 1;
             this._NO_TRANSLATE_Categories.SelectedIndexChanged += new System.EventHandler(this._NO_TRANSLATE_Categories_SelectedIndexChanged);
             // 
@@ -176,7 +177,7 @@
             this.LinksGrid.RowHeadersVisible = false;
             this.LinksGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.LinksGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.LinksGrid.Size = new System.Drawing.Size(929, 414);
+            this.LinksGrid.Size = new System.Drawing.Size(778, 318);
             this.LinksGrid.TabIndex = 8;
             // 
             // CaptionCol
@@ -202,7 +203,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 119);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 3);
-            this.panel1.Size = new System.Drawing.Size(929, 15);
+            this.panel1.Size = new System.Drawing.Size(778, 15);
             this.panel1.TabIndex = 7;
             // 
             // label6
@@ -226,7 +227,7 @@
             this.detailPanel.Location = new System.Drawing.Point(0, 0);
             this.detailPanel.Name = "detailPanel";
             this.detailPanel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 6);
-            this.detailPanel.Size = new System.Drawing.Size(929, 119);
+            this.detailPanel.Size = new System.Drawing.Size(778, 119);
             this.detailPanel.TabIndex = 6;
             // 
             // tableLayoutPanel3
@@ -254,7 +255,6 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(929, 110);
             this.tableLayoutPanel3.TabIndex = 14;
             // 
             // _NO_TRANSLATE_SearchPatternEdit
@@ -351,7 +351,7 @@
             this.flowLayoutPanel1.Controls.Add(this.RemoteBranchChx);
             this.flowLayoutPanel1.Location = new System.Drawing.Point(87, 30);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(271, 23);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(329, 23);
             this.flowLayoutPanel1.TabIndex = 23;
             // 
             // MessageChx
@@ -370,7 +370,7 @@
             this.LocalBranchChx.AutoSize = true;
             this.LocalBranchChx.Location = new System.Drawing.Point(77, 3);
             this.LocalBranchChx.Name = "LocalBranchChx";
-            this.LocalBranchChx.Size = new System.Drawing.Size(86, 17);
+            this.LocalBranchChx.Size = new System.Drawing.Size(115, 17);
             this.LocalBranchChx.TabIndex = 1;
             this.LocalBranchChx.Text = "Local branch name";
             this.LocalBranchChx.UseVisualStyleBackColor = true;
@@ -379,9 +379,9 @@
             // RemoteBranchChx
             // 
             this.RemoteBranchChx.AutoSize = true;
-            this.RemoteBranchChx.Location = new System.Drawing.Point(169, 3);
+            this.RemoteBranchChx.Location = new System.Drawing.Point(198, 3);
             this.RemoteBranchChx.Name = "RemoteBranchChx";
-            this.RemoteBranchChx.Size = new System.Drawing.Size(99, 17);
+            this.RemoteBranchChx.Size = new System.Drawing.Size(128, 17);
             this.RemoteBranchChx.TabIndex = 2;
             this.RemoteBranchChx.Text = "Remote branch name";
             this.RemoteBranchChx.UseVisualStyleBackColor = true;
@@ -393,10 +393,11 @@
             this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel2.Controls.Add(this._NO_TRANSLATE_Name);
             this.flowLayoutPanel2.Controls.Add(this.EnabledChx);
+            this.flowLayoutPanel2.Controls.Add(this.gotoUserManualControl1);
             this.flowLayoutPanel2.Location = new System.Drawing.Point(84, 0);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(346, 27);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(422, 27);
             this.flowLayoutPanel2.TabIndex = 24;
             // 
             // _NO_TRANSLATE_Name
@@ -419,6 +420,19 @@
             this.EnabledChx.Text = "Enabled";
             this.EnabledChx.UseVisualStyleBackColor = true;
             // 
+            // gotoUserManualControl1
+            // 
+            this.gotoUserManualControl1.AutoSize = true;
+            this.gotoUserManualControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gotoUserManualControl1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.gotoUserManualControl1.Location = new System.Drawing.Point(349, 3);
+            this.gotoUserManualControl1.ManualSectionAnchorName = "revision-links";
+            this.gotoUserManualControl1.ManualSectionSubfolder = "settings";
+            this.gotoUserManualControl1.MinimumSize = new System.Drawing.Size(70, 20);
+            this.gotoUserManualControl1.Name = "gotoUserManualControl1";
+            this.gotoUserManualControl1.Size = new System.Drawing.Size(70, 21);
+            this.gotoUserManualControl1.TabIndex = 26;
+            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.DataPropertyName = "Title";
@@ -431,7 +445,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.splitContainer1);
             this.Name = "RevisionLinksSettingsPage";
-            this.Size = new System.Drawing.Size(1125, 548);
+            this.Size = new System.Drawing.Size(974, 452);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -485,5 +499,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Name;
         private System.Windows.Forms.CheckBox EnabledChx;
+        private UserControls.GotoUserManualControl gotoUserManualControl1;
     }
 }
