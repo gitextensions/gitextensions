@@ -46,7 +46,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cboAutoNormaliseSymbol = new System.Windows.Forms.ComboBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.cbDontRememberAmendCommitState = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.CheckoutGB.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -70,7 +69,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1022, 391);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1351, 892);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // CheckoutGB
@@ -82,7 +81,7 @@
             this.CheckoutGB.Location = new System.Drawing.Point(3, 3);
             this.CheckoutGB.Name = "CheckoutGB";
             this.CheckoutGB.Padding = new System.Windows.Forms.Padding(8);
-            this.CheckoutGB.Size = new System.Drawing.Size(1016, 89);
+            this.CheckoutGB.Size = new System.Drawing.Size(1345, 89);
             this.CheckoutGB.TabIndex = 0;
             this.CheckoutGB.TabStop = false;
             this.CheckoutGB.Text = "Checkout";
@@ -101,7 +100,7 @@
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(1000, 59);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(1329, 59);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // chkAlwaysShowCheckoutDlg
@@ -135,7 +134,7 @@
             this.GeneralGB.Location = new System.Drawing.Point(3, 98);
             this.GeneralGB.Name = "GeneralGB";
             this.GeneralGB.Padding = new System.Windows.Forms.Padding(8);
-            this.GeneralGB.Size = new System.Drawing.Size(1016, 195);
+            this.GeneralGB.Size = new System.Drawing.Size(1345, 172);
             this.GeneralGB.TabIndex = 1;
             this.GeneralGB.TabStop = false;
             this.GeneralGB.Text = "General";
@@ -146,7 +145,6 @@
             this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.cbDontRememberAmendCommitState, 0, 6);
             this.tableLayoutPanel1.Controls.Add(this.chkCheckForRCVersions, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.chkAlwaysShowAdvOpt, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.chkDontSHowHelpImages, 0, 0);
@@ -155,15 +153,14 @@
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(8, 22);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 7;
+            this.tableLayoutPanel1.RowCount = 6;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1000, 165);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1329, 142);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // chkCheckForRCVersions
@@ -202,7 +199,7 @@
             this.chkConsoleEmulator.Dock = System.Windows.Forms.DockStyle.Top;
             this.chkConsoleEmulator.Location = new System.Drawing.Point(3, 72);
             this.chkConsoleEmulator.Name = "chkConsoleEmulator";
-            this.chkConsoleEmulator.Size = new System.Drawing.Size(994, 17);
+            this.chkConsoleEmulator.Size = new System.Drawing.Size(1323, 17);
             this.chkConsoleEmulator.TabIndex = 4;
             this.chkConsoleEmulator.Text = "Use Console Emulator for console output in command dialogs";
             this.tooltip.SetToolTip(this.chkConsoleEmulator, resources.GetString("chkConsoleEmulator.ToolTip"));
@@ -225,7 +222,7 @@
             this.tableLayoutPanel4.RowCount = 2;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(1000, 50);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(1329, 50);
             this.tableLayoutPanel4.TabIndex = 5;
             // 
             // chkAutoNormaliseBranchName
@@ -235,7 +232,7 @@
             this.chkAutoNormaliseBranchName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkAutoNormaliseBranchName.Location = new System.Drawing.Point(3, 3);
             this.chkAutoNormaliseBranchName.Name = "chkAutoNormaliseBranchName";
-            this.chkAutoNormaliseBranchName.Size = new System.Drawing.Size(994, 17);
+            this.chkAutoNormaliseBranchName.Size = new System.Drawing.Size(1323, 17);
             this.chkAutoNormaliseBranchName.TabIndex = 6;
             this.chkAutoNormaliseBranchName.Text = "Auto normalise branch name";
             this.tooltip.SetToolTip(this.chkAutoNormaliseBranchName, "Controls whether branch name should be automatically normalised as per git branch" +
@@ -272,22 +269,12 @@
             this.tooltip.InitialDelay = 500;
             this.tooltip.ReshowDelay = 100;
             // 
-            // cbDontRememberAmendCommitState
-            // 
-            this.cbDontRememberAmendCommitState.AutoSize = true;
-            this.cbDontRememberAmendCommitState.Location = new System.Drawing.Point(3, 145);
-            this.cbDontRememberAmendCommitState.Name = "cbDontRememberAmendCommitState";
-            this.cbDontRememberAmendCommitState.Size = new System.Drawing.Size(329, 17);
-            this.cbDontRememberAmendCommitState.TabIndex = 6;
-            this.cbDontRememberAmendCommitState.Text = "Don\'t remember \'Amend commit\' checkbox on commit form close";
-            this.cbDontRememberAmendCommitState.UseVisualStyleBackColor = true;
-            // 
             // AdvancedSettingsPage
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "AdvancedSettingsPage";
-            this.Size = new System.Drawing.Size(1022, 391);
+            this.Size = new System.Drawing.Size(1351, 892);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.CheckoutGB.ResumeLayout(false);
@@ -323,6 +310,5 @@
         private System.Windows.Forms.CheckBox chkAutoNormaliseBranchName;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cboAutoNormaliseSymbol;
-        private System.Windows.Forms.CheckBox cbDontRememberAmendCommitState;
     }
 }
