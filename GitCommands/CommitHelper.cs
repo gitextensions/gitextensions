@@ -52,6 +52,16 @@ namespace GitCommands
                 File.Delete(GetAmendPath(module));
         }
 
+        public static string GetCommitMessage(GitModule module)
+        {
+            if (File.Exists(CommitHelper.GetCommitMessagePath(module)))
+            {
+                return File.ReadAllText(CommitHelper.GetCommitMessagePath(module), module.CommitEncoding);
+            }
+
+            return string.Empty;
+        }
+
         public static string GetCommitMessagePath(GitModule module)
         {
             return GetFilePath(module, "COMMITMESSAGE");
@@ -65,6 +75,25 @@ namespace GitCommands
         public static string GetFilePath(GitModule module, string action)
         {
             return Path.Combine(module.GetGitDirectory(), action);
+        }
+
+        public static bool GetAmendState(GitModule module)
+        {
+            bool amendState = false;
+            if (AppSettings.RememberAmendCommitState && File.Exists(CommitHelper.GetAmendPath(module)))
+            {
+                var amendSaveStateFilePath = CommitHelper.GetAmendPath(module);
+                bool.TryParse(File.ReadAllText(amendSaveStateFilePath), out amendState);
+                try
+                {
+                    File.Delete(amendSaveStateFilePath);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            return amendState;
         }
     }
 }

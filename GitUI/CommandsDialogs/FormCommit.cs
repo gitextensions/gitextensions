@@ -1606,21 +1606,10 @@ namespace GitUI.CommandsDialogs
                 default:
                     message = Module.GetMergeMessage();
 
-                    if (string.IsNullOrEmpty(message) && File.Exists(CommitHelper.GetCommitMessagePath(Module)))
+                    if (string.IsNullOrEmpty(message))
                     {
-                        message = File.ReadAllText(CommitHelper.GetCommitMessagePath(Module), Module.CommitEncoding);
-                        if (AppSettings.RememberAmendCommitState && File.Exists(CommitHelper.GetAmendPath(Module)))
-                        {
-                            var amendSaveStateFilePath = CommitHelper.GetAmendPath(Module);
-                            Amend.Checked = bool.Parse(File.ReadAllText(amendSaveStateFilePath));
-                            try
-                            {
-                                File.Delete(amendSaveStateFilePath);
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        }
+                        message = CommitHelper.GetCommitMessage(Module);
+                        Amend.Checked = CommitHelper.GetAmendState(Module);
                     }
                     break;
             }
