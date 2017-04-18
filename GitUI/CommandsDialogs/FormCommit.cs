@@ -1582,13 +1582,13 @@ namespace GitUI.CommandsDialogs
 
         private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartEditGitIgnoreDialog(this, false);
+            UICommands.StartEditGitIgnoreDialog(this, localExcludes: false);
             Initialize();
         }
 
         private void EditGitInfoExcludeToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartEditGitIgnoreDialog(this, false);
+            UICommands.StartEditGitIgnoreDialog(this, localExcludes: true);
             Initialize();
         }
 
