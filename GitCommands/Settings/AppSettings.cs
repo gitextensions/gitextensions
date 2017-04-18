@@ -91,6 +91,12 @@ namespace GitCommands
             }
         }
 
+        public static bool DontRememberAmendCommitState
+        {
+            get { return GetBool("DontRememberAmendCommitState", false); }
+            set { SetBool("DontRememberAmendCommitState", value); }
+        }
+
         public static void UsingContainer(RepoDistSettings aSettingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>

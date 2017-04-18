@@ -33,11 +33,12 @@ namespace GitCommands
                 Dto.Result = module.RunGitCmd("commit -m \"" + Dto.Message + "\"");
         }
 
-        public static void SetCommitMessage(GitModule module, string commitMessageText)
+        public static void SetCommitMessage(GitModule module, string commitMessageText, bool amendCommit)
         {
-            if (String.IsNullOrEmpty(commitMessageText))
+            if (string.IsNullOrEmpty(commitMessageText))
             {
                 File.Delete(GetCommitMessagePath(module));
+                File.Delete(GetAmendPath(module));
                 return;
             }
 
@@ -45,11 +46,25 @@ namespace GitCommands
             {
                 textWriter.Write(commitMessageText);
             }
+            if(!AppSettings.DontRememberAmendCommitState && amendCommit)
+                File.WriteAllText(GetAmendPath(module), true.ToString());
+            else if(File.Exists(GetAmendPath(module)))
+                File.Delete(GetAmendPath(module));
         }
 
         public static string GetCommitMessagePath(GitModule module)
         {
-            return Path.Combine(module.GetGitDirectory(), "COMMITMESSAGE");
+            return GetFilePath(module, "COMMITMESSAGE");
+        }
+
+        public static string GetAmendPath(GitModule module)
+        {
+            return GetFilePath(module, "GitExtensions.amend");
+        }
+
+        public static string GetFilePath(GitModule module, string action)
+        {
+            return Path.Combine(module.GetGitDirectory(), action);
         }
     }
 }
