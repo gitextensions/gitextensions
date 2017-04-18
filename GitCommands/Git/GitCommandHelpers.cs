@@ -1157,7 +1157,7 @@ namespace GitCommands
                 command.Append(" --allow-unrelated-histories");
 
             if (!string.IsNullOrEmpty(message))
-                command.AppendFormat(" -m {0}", message);
+                command.AppendFormat(" -m {0}", message.Quote());
 
             if (log.HasValue)
                 command.AppendFormat(" --log={0}", log.Value);

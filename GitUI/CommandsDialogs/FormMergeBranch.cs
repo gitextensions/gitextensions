@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using GitCommands;
 using ResourceManager;
 
@@ -18,6 +19,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+            currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
             noCommit.Checked = AppSettings.DontCommitMerge;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _formMergeBranchHoverShowImageLabelText.Text;
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
@@ -84,7 +86,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_mergeStrategy.Visible = NonDefaultMergeStrategy.Checked;
             strategyHelp.Visible = NonDefaultMergeStrategy.Checked;
 
-            if (!_NO_TRANSLATE_mergeStrategy.Visible)
+            if (!advanced.Checked)
                 _NO_TRANSLATE_mergeStrategy.Text = "";
         }
 
@@ -95,14 +97,15 @@ namespace GitUI.CommandsDialogs
 
         private void advanced_CheckedChanged(object sender, EventArgs e)
         {
-            NonDefaultMergeStrategy.Visible = advanced.Checked;
+            advancedPanel.Visible = advanced.Checked;
             NonDefaultMergeStrategy_CheckedChanged(null, null);
-            squash.Visible = advanced.Checked;
 
             if (!advanced.Checked)
             {
                 NonDefaultMergeStrategy.Checked = false;
                 squash.Checked = false;
+                allowUnrelatedHistories.Checked = false;
+                addMergeMessage.Checked = false;
             }
         }
 
