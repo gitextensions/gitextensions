@@ -5523,16 +5523,22 @@ Value has been reset to empty value.</source>
         <source>Add a new remote</source>
         <target />
       </trans-unit>
-      <trans-unit id="_btnToggleStateTooltip.Text">
-        <source>Enable or disable the selected remote</source>
+      <trans-unit id="_btnToggleStateTooltip_Activate.Text">
+        <source>Activate the selected remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_btnToggleStateTooltip_Deactivate.Text">
+        <source><![CDATA[Deactivate the selected remote.
+Inactive remote is completely invisible to git.]]>
+        </source>
         <target />
       </trans-unit>
       <trans-unit id="_lvgEnabledHeader.Text">
-        <source>Enabled</source>
+        <source>Active</source>
         <target />
       </trans-unit>
       <trans-unit id="_lvgDisabledHeader.Text">
-        <source>Disabled</source>
+        <source>Inactive</source>
         <target />
       </trans-unit>
     </body>
