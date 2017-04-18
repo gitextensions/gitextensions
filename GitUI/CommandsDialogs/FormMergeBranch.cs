@@ -61,8 +61,14 @@ namespace GitUI.CommandsDialogs
             Module.EffectiveSettings.NoFastForwardMerge = noFastForward.Checked;
             AppSettings.DontCommitMerge = noCommit.Checked;
 
-            var successfullyMerged = FormProcess.ShowDialog(this,
-                GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text, allowUnrelatedHistories.Checked));
+            var successfullyMerged = FormProcess.ShowDialog(this, GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(),
+                                                                                                   fastForward.Checked,
+                                                                                                   squash.Checked,
+                                                                                                   noCommit.Checked,
+                                                                                                   _NO_TRANSLATE_mergeStrategy.Text,
+                                                                                                   allowUnrelatedHistories.Checked,
+                                                                                                   addMergeMessage.Checked ? mergeMessage.Text : null,
+                                                                                                   addLogMessages.Checked ? (int)nbMessages.Value : (int?)null));
 
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);
 
@@ -108,6 +114,16 @@ namespace GitUI.CommandsDialogs
         private void noFastForward_CheckedChanged(object sender, EventArgs e)
         {
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+        }
+
+        private void addMessages_CheckedChanged(object sender, EventArgs e)
+        {
+            nbMessages.Enabled = addLogMessages.Checked;
+        }
+
+        private void addMergeMessage_CheckedChanged(object sender, EventArgs e)
+        {
+            mergeMessage.Enabled = addMergeMessage.Checked;
         }
     }
 }

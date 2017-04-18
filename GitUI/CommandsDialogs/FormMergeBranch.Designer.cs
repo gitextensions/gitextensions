@@ -33,6 +33,10 @@
             this.Ok = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.addMergeMessage = new System.Windows.Forms.CheckBox();
+            this.mergeMessage = new System.Windows.Forms.TextBox();
+            this.nbMessages = new System.Windows.Forms.NumericUpDown();
+            this.addLogMessages = new System.Windows.Forms.CheckBox();
             this.Branches = new GitUI.BranchComboBox();
             this.noCommit = new System.Windows.Forms.CheckBox();
             this.advanced = new System.Windows.Forms.CheckBox();
@@ -49,6 +53,7 @@
             this.helpImageDisplayUserControl1 = new GitUI.Help.HelpImageDisplayUserControl();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nbMessages)).BeginInit();
             this.SuspendLayout();
             // 
             // strategyToolTip
@@ -89,6 +94,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.addMergeMessage);
+            this.groupBox1.Controls.Add(this.mergeMessage);
+            this.groupBox1.Controls.Add(this.nbMessages);
+            this.groupBox1.Controls.Add(this.addLogMessages);
             this.groupBox1.Controls.Add(this.Branches);
             this.groupBox1.Controls.Add(this.noCommit);
             this.groupBox1.Controls.Add(this.advanced);
@@ -110,6 +119,54 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
+            // 
+            // addMergeMessage
+            // 
+            this.addMergeMessage.AutoSize = true;
+            this.addMergeMessage.Location = new System.Drawing.Point(13, 213);
+            this.addMergeMessage.Name = "addMergeMessage";
+            this.addMergeMessage.Size = new System.Drawing.Size(150, 19);
+            this.addMergeMessage.TabIndex = 14;
+            this.addMergeMessage.Text = "Specify merge message";
+            this.addMergeMessage.UseVisualStyleBackColor = true;
+            this.addMergeMessage.CheckedChanged += new System.EventHandler(this.addMergeMessage_CheckedChanged);
+            // 
+            // mergeMessage
+            // 
+            this.mergeMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mergeMessage.Enabled = false;
+            this.mergeMessage.Location = new System.Drawing.Point(13, 238);
+            this.mergeMessage.Multiline = true;
+            this.mergeMessage.Name = "mergeMessage";
+            this.mergeMessage.Size = new System.Drawing.Size(473, 65);
+            this.mergeMessage.TabIndex = 12;
+            // 
+            // nbMessages
+            // 
+            this.nbMessages.Enabled = false;
+            this.nbMessages.Location = new System.Drawing.Point(195, 187);
+            this.nbMessages.Name = "nbMessages";
+            this.nbMessages.Size = new System.Drawing.Size(41, 23);
+            this.nbMessages.TabIndex = 11;
+            this.nbMessages.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.nbMessages.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            // 
+            // addLogMessages
+            // 
+            this.addLogMessages.AutoSize = true;
+            this.addLogMessages.Location = new System.Drawing.Point(13, 188);
+            this.addLogMessages.Name = "addLogMessages";
+            this.addLogMessages.Size = new System.Drawing.Size(122, 19);
+            this.addLogMessages.TabIndex = 10;
+            this.addLogMessages.Text = "Add log messages";
+            this.addLogMessages.UseVisualStyleBackColor = true;
+            this.addLogMessages.CheckedChanged += new System.EventHandler(this.addMessages_CheckedChanged);
             // 
             // Branches
             // 
@@ -134,6 +191,7 @@
             // 
             // advanced
             // 
+            this.advanced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.advanced.AutoSize = true;
             this.advanced.Location = new System.Drawing.Point(13, 200);
             this.advanced.Name = "advanced";
@@ -145,6 +203,7 @@
             // 
             // NonDefaultMergeStrategy
             // 
+            this.NonDefaultMergeStrategy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.NonDefaultMergeStrategy.AutoSize = true;
             this.NonDefaultMergeStrategy.Location = new System.Drawing.Point(27, 228);
             this.NonDefaultMergeStrategy.Name = "NonDefaultMergeStrategy";
@@ -157,6 +216,7 @@
             // 
             // squash
             // 
+            this.squash.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.squash.AutoSize = true;
             this.squash.Location = new System.Drawing.Point(27, 256);
             this.squash.Name = "squash";
@@ -168,6 +228,7 @@
             // 
             // strategyHelp
             // 
+            this.strategyHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.strategyHelp.AutoSize = true;
             this.strategyHelp.Location = new System.Drawing.Point(418, 229);
             this.strategyHelp.Name = "strategyHelp";
@@ -180,6 +241,7 @@
             // 
             // _NO_TRANSLATE_mergeStrategy
             // 
+            this._NO_TRANSLATE_mergeStrategy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this._NO_TRANSLATE_mergeStrategy.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_mergeStrategy.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this._NO_TRANSLATE_mergeStrategy.FormattingEnabled = true;
@@ -294,6 +356,7 @@
             this.tableLayoutPanel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nbMessages)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -317,5 +380,9 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;
         private System.Windows.Forms.CheckBox allowUnrelatedHistories;
+        private System.Windows.Forms.NumericUpDown nbMessages;
+        private System.Windows.Forms.CheckBox addLogMessages;
+        private System.Windows.Forms.TextBox mergeMessage;
+        private System.Windows.Forms.CheckBox addMergeMessage;
     }
 }
