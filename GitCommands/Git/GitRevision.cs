@@ -145,5 +145,10 @@ namespace GitCommands
 
             return new GitRevision(aModule, sha1);
         }
+
+        public static bool IsFullSha1Hash(string id)
+        {
+            return Regex.IsMatch(id, GitRevision.Sha1HashPattern);
+        }
     }
 }

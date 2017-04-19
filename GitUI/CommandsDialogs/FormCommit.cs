@@ -654,7 +654,7 @@ namespace GitUI.CommandsDialogs
         private void UpdateMergeHead()
         {
             var mergeHead = Module.RevParse("MERGE_HEAD");
-            IsMergeCommit = Regex.IsMatch(mergeHead, GitRevision.Sha1HashPattern);
+            IsMergeCommit = GitRevision.IsFullSha1Hash(mergeHead);
         }
 
         private void InitializedStaged()
