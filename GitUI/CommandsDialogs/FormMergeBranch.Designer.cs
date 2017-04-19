@@ -99,7 +99,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(298, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(472, 409);
+            this.groupBox1.Size = new System.Drawing.Size(472, 412);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
@@ -131,7 +131,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(453, 369);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(453, 372);
             this.tableLayoutPanel2.TabIndex = 15;
             // 
             // advancedPanel
@@ -151,7 +151,7 @@
             this.advancedPanel.Controls.Add(this.addLogMessages, 0, 4);
             this.advancedPanel.Controls.Add(this.addMergeMessage, 0, 5);
             this.advancedPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.advancedPanel.Location = new System.Drawing.Point(3, 162);
+            this.advancedPanel.Location = new System.Drawing.Point(3, 165);
             this.advancedPanel.Name = "advancedPanel";
             this.advancedPanel.RowCount = 6;
             this.advancedPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -266,6 +266,7 @@
             0,
             0,
             0});
+            this.nbMessages.ValueChanged += new System.EventHandler(this.nbMessages_ValueChanged);
             // 
             // addLogMessages
             // 
@@ -295,7 +296,7 @@
             this.advanced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.advanced.AutoSize = true;
             this.tableLayoutPanel2.SetColumnSpan(this.advanced, 2);
-            this.advanced.Location = new System.Drawing.Point(3, 139);
+            this.advanced.Location = new System.Drawing.Point(3, 142);
             this.advanced.Name = "advanced";
             this.advanced.Size = new System.Drawing.Size(140, 17);
             this.advanced.TabIndex = 10;
@@ -307,7 +308,7 @@
             // 
             this.noCommit.AutoSize = true;
             this.tableLayoutPanel2.SetColumnSpan(this.noCommit, 2);
-            this.noCommit.Location = new System.Drawing.Point(3, 116);
+            this.noCommit.Location = new System.Drawing.Point(3, 119);
             this.noCommit.Name = "noCommit";
             this.noCommit.Size = new System.Drawing.Size(94, 17);
             this.noCommit.TabIndex = 9;
@@ -318,7 +319,7 @@
             // 
             this.noFastForward.AutoSize = true;
             this.tableLayoutPanel2.SetColumnSpan(this.noFastForward, 2);
-            this.noFastForward.Location = new System.Drawing.Point(3, 93);
+            this.noFastForward.Location = new System.Drawing.Point(3, 96);
             this.noFastForward.Name = "noFastForward";
             this.noFastForward.Size = new System.Drawing.Size(194, 17);
             this.noFastForward.TabIndex = 6;
@@ -331,7 +332,7 @@
             this.fastForward.AutoSize = true;
             this.fastForward.Checked = true;
             this.tableLayoutPanel2.SetColumnSpan(this.fastForward, 2);
-            this.fastForward.Location = new System.Drawing.Point(3, 70);
+            this.fastForward.Location = new System.Drawing.Point(3, 73);
             this.fastForward.Name = "fastForward";
             this.fastForward.Size = new System.Drawing.Size(264, 17);
             this.fastForward.TabIndex = 5;
@@ -344,7 +345,7 @@
             // 
             this.currentBranchLabel.AutoSize = true;
             this.currentBranchLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.currentBranchLabel.Location = new System.Drawing.Point(110, 21);
+            this.currentBranchLabel.Location = new System.Drawing.Point(110, 24);
             this.currentBranchLabel.Name = "currentBranchLabel";
             this.currentBranchLabel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.currentBranchLabel.Size = new System.Drawing.Size(340, 46);
@@ -355,7 +356,7 @@
             // 
             this.Currentbranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Currentbranch.AutoSize = true;
-            this.Currentbranch.Location = new System.Drawing.Point(3, 21);
+            this.Currentbranch.Location = new System.Drawing.Point(3, 24);
             this.Currentbranch.Name = "Currentbranch";
             this.Currentbranch.Padding = new System.Windows.Forms.Padding(0, 3, 0, 30);
             this.Currentbranch.Size = new System.Drawing.Size(101, 46);
@@ -371,14 +372,14 @@
             this.Branches.Location = new System.Drawing.Point(107, 0);
             this.Branches.Margin = new System.Windows.Forms.Padding(0);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(346, 21);
+            this.Branches.Size = new System.Drawing.Size(346, 24);
             this.Branches.TabIndex = 2;
             // 
             // label2
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 4);
+            this.label2.Location = new System.Drawing.Point(3, 5);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(73, 13);
             this.label2.TabIndex = 1;

@@ -21,6 +21,8 @@ namespace GitUI.CommandsDialogs
             Translate();
             currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
             noCommit.Checked = AppSettings.DontCommitMerge;
+            addLogMessages.Checked = AppSettings.AddMergeLogMessages;
+            nbMessages.Value = AppSettings.MergeLogMessagesCount;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _formMergeBranchHoverShowImageLabelText.Text;
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
@@ -122,11 +124,17 @@ namespace GitUI.CommandsDialogs
         private void addMessages_CheckedChanged(object sender, EventArgs e)
         {
             nbMessages.Enabled = addLogMessages.Checked;
+            AppSettings.AddMergeLogMessages = addLogMessages.Checked;
         }
 
         private void addMergeMessage_CheckedChanged(object sender, EventArgs e)
         {
             mergeMessage.Enabled = addMergeMessage.Checked;
+        }
+
+        private void nbMessages_ValueChanged(object sender, EventArgs e)
+        {
+            AppSettings.MergeLogMessagesCount = Convert.ToInt32(nbMessages.Value);
         }
     }
 }
