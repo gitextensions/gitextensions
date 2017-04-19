@@ -52,6 +52,34 @@ namespace GitCommands.Settings
         }
     }
 
+    public class IntNullableSetting : Setting<int?>
+    {
+        public IntNullableSetting(string aName, SettingsPath settingsSource, int aDefaultValue)
+            : base(aName, settingsSource, aDefaultValue)
+        { }
+
+        public override int? Value
+        {
+            get
+            {
+                return SettingsSource.GetInt(Name);
+            }
+
+            set
+            {
+                SettingsSource.SetInt(Name, value);
+            }
+        }
+
+        public new int ValueOrDefault
+        {
+            get
+            {
+                return base.ValueOrDefault.Value;
+            }
+        }
+    }
+
     public class BoolSetting : Setting<bool>
     {
         public BoolSetting(string aName, SettingsPath settingsSource, bool aDefaultValue)

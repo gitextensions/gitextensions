@@ -117,6 +117,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AddControlBinding(adapter.CreateControlBinding());
         }
 
+        protected void AddSettingBinding(IntNullableSetting aSetting, TextBox aControl)
+        {
+            var adapter = new IntTextBoxAdapter(aSetting, aControl);
+            AddControlBinding(adapter.CreateControlBinding());
+        }
+
         protected void AddSettingBinding(GitCommands.Settings.StringSetting aSetting, ComboBox aComboBox)
         {
             var adapter = new StringComboBoxAdapter(aSetting, aComboBox);
@@ -191,5 +197,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             CustomControl = aComboBox;
         }
     }
-    
+
+    public class IntTextBoxAdapter : GitUIPluginInterfaces.NumberSetting<int>
+    {
+        public IntTextBoxAdapter(IntNullableSetting aSetting, TextBox aControl)
+            : base(aSetting.FullPath, aSetting.DefaultValue.Value)
+        {
+            CustomControl = aControl;
+        }
+    }
 }
