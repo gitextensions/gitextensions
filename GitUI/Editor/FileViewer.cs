@@ -50,10 +50,13 @@ namespace GitUI.Editor
             _async.LoadingError +=
                 (sender, args) =>
                 {
-                    ResetForText(null);
-                    _internalFileViewer.SetText("Unsupported file: \n\n" + args.Exception.ToString());
-                    if (TextLoaded != null)
-                        TextLoaded(this, null);
+                    if (!IsDisposed)
+                    {
+                        ResetForText(null);
+                        _internalFileViewer.SetText("Unsupported file: \n\n" + args.Exception.ToString());
+                        if (TextLoaded != null)
+                            TextLoaded(this, null);
+                    }
                 };
 
             IgnoreWhitespaceChanges = AppSettings.IgnoreWhitespaceChanges;
