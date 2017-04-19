@@ -21,7 +21,6 @@ namespace GitUI.CommandsDialogs
             Translate();
             currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
             noCommit.Checked = AppSettings.DontCommitMerge;
-            nbMessages.Value = Module.EffectiveSettings.Detailed.MergeLogMessagesCount.ValueOrDefault;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _formMergeBranchHoverShowImageLabelText.Text;
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
@@ -30,6 +29,7 @@ namespace GitUI.CommandsDialogs
             {
                 noFastForward.Checked = Module.EffectiveSettings.NoFastForwardMerge;
                 addLogMessages.Checked = Module.EffectiveSettings.Detailed.AddMergeLogMessages.ValueOrDefault;
+                nbMessages.Value = Module.EffectiveSettings.Detailed.MergeLogMessagesCount.ValueOrDefault;
             }
 
             advanced.Checked = AppSettings.AlwaysShowAdvOpt;
