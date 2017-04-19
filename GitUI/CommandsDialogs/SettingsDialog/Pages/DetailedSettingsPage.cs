@@ -32,6 +32,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AddSettingBinding(DetailedSettings.ConEmuTerminal, cboTerminal);
             AddSettingBinding(DetailedSettings.ConEmuFontSize, cboFontSize);
             AddSettingBinding(DetailedSettings.GetRemoteBranchesDirectlyFromRemote, chkRemotesFromServer);
+            AddSettingBinding(DetailedSettings.AddMergeLogMessages, addLogMessages);
+            AddSettingBinding(DetailedSettings.MergeLogMessagesCount, nbMessages);
         }
 
         public static SettingsPageReference GetPageReference()

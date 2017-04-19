@@ -1280,18 +1280,6 @@ namespace GitCommands
             set { SetBool("DontCommitMerge", value); }
         }
 
-        public static bool AddMergeLogMessages
-        {
-            get { return GetBool("AddMergeLogMessages", false); }
-            set { SetBool("AddMergeLogMessages", value); }
-        }
-
-        public static int MergeLogMessagesCount
-        {
-            get { return GetInt("MergeLogMessagesCount", 20); }
-            set { SetInt("MergeLogMessagesCount", value); }
-        }
-
         public static int CommitValidationMaxCntCharsFirstLine
         {
             get { return GetInt("CommitValidationMaxCntCharsFirstLine", 0); }

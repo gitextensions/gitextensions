@@ -142,6 +142,8 @@ namespace GitCommands.Settings
         public readonly StringSetting ConEmuTerminal;
         public readonly BoolNullableSetting GetRemoteBranchesDirectlyFromRemote;
         public readonly StringSetting ConEmuFontSize;
+        public readonly BoolNullableSetting AddMergeLogMessages;
+        public readonly IntNullableSetting MergeLogMessagesCount;
 
         public DetailedGroup(RepoDistSettings container)
             : base(container, "Detailed")
@@ -151,6 +153,8 @@ namespace GitCommands.Settings
             ConEmuTerminal = new StringSetting("ConEmuTerminal", this, "bash");
             ConEmuFontSize = new StringSetting("ConEmuFontSize", this, "12");
             GetRemoteBranchesDirectlyFromRemote = new BoolNullableSetting("GetRemoteBranchesDirectlyFromRemote", this, false);
+            AddMergeLogMessages = new BoolNullableSetting("AddMergeLogMessages", this, false);
+            MergeLogMessagesCount = new IntNullableSetting("MergeLogMessagesCount", this, 20);
         }
 
     }
