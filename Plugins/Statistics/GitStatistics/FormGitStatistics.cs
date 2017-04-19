@@ -188,13 +188,9 @@ namespace GitStatistics
 
         private void LoadLinesOfCodeForModule(IGitModule module)
         {
-            var result = module.RunGitCmd("ls-files");
+            var result = module.GetTree("HEAD", full: true);
             var filesToCheck = new List<string>();
-            if (!string.IsNullOrWhiteSpace(result))
-            {
-                filesToCheck.AddRange(result.Split('\n')
-                    .Select(file => Path.Combine(module.WorkingDir, file)));
-            }
+            filesToCheck.AddRange(result.Select(file => Path.Combine(module.WorkingDir, file.Name)));
 
             _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore, filesToCheck);
         }
