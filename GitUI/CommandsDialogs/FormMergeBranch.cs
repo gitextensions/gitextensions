@@ -21,15 +21,15 @@ namespace GitUI.CommandsDialogs
             Translate();
             currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
             noCommit.Checked = AppSettings.DontCommitMerge;
-            addLogMessages.Checked = Module.EffectiveSettings.Detailed.AddMergeLogMessages.ValueOrDefault;
             nbMessages.Value = Module.EffectiveSettings.Detailed.MergeLogMessagesCount.ValueOrDefault;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _formMergeBranchHoverShowImageLabelText.Text;
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
 
-            if (aCommands != null && Module.EffectiveSettings.NoFastForwardMerge)
+            if (aCommands != null)
             {
-                noFastForward.Checked = true;
+                noFastForward.Checked = Module.EffectiveSettings.NoFastForwardMerge;
+                addLogMessages.Checked = Module.EffectiveSettings.Detailed.AddMergeLogMessages.ValueOrDefault;
             }
 
             advanced.Checked = AppSettings.AlwaysShowAdvOpt;
