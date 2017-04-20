@@ -90,11 +90,11 @@
             this.tableLayoutPanelBehaviour.Size = new System.Drawing.Size(968, 250);
             this.tableLayoutPanelBehaviour.TabIndex = 57;
             // 
-            // cbDontRememberAmendCommitState
+            // cbRememberAmendCommitState
             // 
             this.cbRememberAmendCommitState.AutoSize = true;
             this.cbRememberAmendCommitState.Location = new System.Drawing.Point(3, 135);
-            this.cbRememberAmendCommitState.Name = "cbDontRememberAmendCommitState";
+            this.cbRememberAmendCommitState.Name = "cbRememberAmendCommitState";
             this.cbRememberAmendCommitState.Size = new System.Drawing.Size(304, 17);
             this.cbRememberAmendCommitState.TabIndex = 5;
             this.cbRememberAmendCommitState.Text = "Remember \'Amend commit\' checkbox on commit form close";
