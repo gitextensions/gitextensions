@@ -2,12 +2,19 @@
 
 cd /d "%~p0"
 
-IF NOT EXIST "%~p0\tools\vswhere1.0.62.exe" (
-    "%~p0\tools\curl.exe" -L -k -o %~p0\tools\vswhere1.0.62.exe https://github.com/Microsoft/vswhere/releases/download/1.0.62/vswhere.exe -L https://github.com > NUL
-    IF ERRORLEVEL 1 EXIT /B 1
+set subPathToVsWhere=Microsoft Visual Studio\Installer\vswhere.exe
+if exist "%ProgramFiles(x86)%" (
+    set vswhere="%ProgramFiles(x86)%\%subPathToVsWhere%"
+) else (
+    set vswhere="%ProgramFiles%\%subPathToVsWhere%"
 )
 
-for /f "usebackq tokens=1* delims=: " %%i in (`.\tools\vswhere1.0.62.exe -latest -requires Microsoft.Component.MSBuild`) do (
+if not exist %vswhere% (
+    echo "Failed to find vswhere.exe, make sure you have installed Visual Studio 15.2.26418.1 or a later version."
+    exit /B 1
+)
+
+for /f "usebackq tokens=1* delims=: " %%i in (`%vswhere% -latest -requires Microsoft.Component.MSBuild`) do (
   if /i "%%i"=="installationPath" set msbuild="%%j\MSBuild\15.0\Bin\MSBuild.exe"
 )
 
