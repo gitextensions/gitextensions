@@ -12,6 +12,7 @@ using GitCommands.Utils;
 using GitCommands.GitExtLinks;
 using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager;
+using GitUI.Editor;
 
 namespace GitUI.CommitInfo
 {
@@ -122,6 +123,8 @@ namespace GitUI.CommitInfo
 
         private void ReloadCommitInfo()
         {
+            _RevisionHeader.BackColor = ColorHelper.MakeColorDarker(this.BackColor);
+
             showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal;
             showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote;
             showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
