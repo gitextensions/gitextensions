@@ -566,6 +566,51 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
+        private void copyCommitHashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.Guid);
+        }
+
+        private void copyCommitSubjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.Subject);
+        }
+
+        private void copyCommitMessageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.Body);
+        }
+
+        private void copyAuthorNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.Author);
+        }
+
+        private void copyAuthorEmailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.AuthorEmail);
+        }
+
+        private void copyAuthorDateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.AuthorDate.ToString());
+        }
+
+        private void copyCommitterNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.Committer);
+        }
+
+        private void copyCommitterEmailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.CommitterEmail);
+        }
+
+        private void copyCommitDateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.CommitDate.ToString());
+        }
+
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var commitInfo = string.Empty;

@@ -34,6 +34,16 @@
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyCommitHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyCommitSubjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyCommitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyAuthorNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyAuthorEmailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyCommitterNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyCommitterEmailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyCommitDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showContainedInBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showContainedInBranchesRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,6 +111,7 @@
             // 
             this.commitInfoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyCommitInfoToolStripMenuItem,
+            this.copyToolStripMenuItem,
             this.toolStripSeparator1,
             this.showContainedInBranchesToolStripMenuItem,
             this.showContainedInBranchesRemoteToolStripMenuItem,
@@ -110,14 +121,94 @@
             this.toolStripSeparator2,
             this.addNoteToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
-            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(454, 170);
+            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(454, 192);
             // 
             // copyCommitInfoToolStripMenuItem
             // 
             this.copyCommitInfoToolStripMenuItem.Name = "copyCommitInfoToolStripMenuItem";
             this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.copyCommitInfoToolStripMenuItem.Text = "Copy commit info";
+            this.copyCommitInfoToolStripMenuItem.Text = "Copy full commit info";
             this.copyCommitInfoToolStripMenuItem.Click += new System.EventHandler(this.copyCommitInfoToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyCommitHashToolStripMenuItem,
+            this.copyCommitSubjectToolStripMenuItem,
+            this.copyCommitMessageToolStripMenuItem,
+            this.copyAuthorNameToolStripMenuItem,
+            this.copyAuthorEmailToolStripMenuItem,
+            this.copyAuthorDateToolStripMenuItem,
+            this.copyCommitterNameToolStripMenuItem,
+            this.copyCommitterEmailToolStripMenuItem,
+            this.copyCommitDateToolStripMenuItem});
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyCommitHashToolStripMenuItem_Click);
+            // 
+            // copyCommitHashToolStripMenuItem
+            // 
+            this.copyCommitHashToolStripMenuItem.Name = "copyCommitHashToolStripMenuItem";
+            this.copyCommitHashToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.copyCommitHashToolStripMenuItem.Text = "Commit hash";
+            this.copyCommitHashToolStripMenuItem.Click += new System.EventHandler(this.copyCommitHashToolStripMenuItem_Click);
+            // 
+            // copyCommitSubjectToolStripMenuItem
+            // 
+            this.copyCommitSubjectToolStripMenuItem.Name = "copyCommitSubjectToolStripMenuItem";
+            this.copyCommitSubjectToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.copyCommitSubjectToolStripMenuItem.Text = "Commit subject";
+            this.copyCommitSubjectToolStripMenuItem.Click += new System.EventHandler(this.copyCommitSubjectToolStripMenuItem_Click);
+            // 
+            // copyCommitMessageToolStripMenuItem
+            // 
+            this.copyCommitMessageToolStripMenuItem.Name = "copyCommitMessageToolStripMenuItem";
+            this.copyCommitMessageToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.copyCommitMessageToolStripMenuItem.Text = "Commit message";
+            this.copyCommitMessageToolStripMenuItem.Click += new System.EventHandler(this.copyCommitMessageToolStripMenuItem_Click);
+            // 
+            // copyAuthorNameToolStripMenuItem
+            // 
+            this.copyAuthorNameToolStripMenuItem.Name = "copyAuthorNameToolStripMenuItem";
+            this.copyAuthorNameToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.copyAuthorNameToolStripMenuItem.Text = "Author name";
+            this.copyAuthorNameToolStripMenuItem.Click += new System.EventHandler(this.copyAuthorNameToolStripMenuItem_Click);
+            // 
+            // copyAuthorEmailToolStripMenuItem
+            // 
+            this.copyAuthorEmailToolStripMenuItem.Name = "copyAuthorEmailToolStripMenuItem";
+            this.copyAuthorEmailToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.copyAuthorEmailToolStripMenuItem.Text = "Author e-mail";
+            this.copyAuthorEmailToolStripMenuItem.Click += new System.EventHandler(this.copyAuthorEmailToolStripMenuItem_Click);
+            // 
+            // copyAuthorDateToolStripMenuItem
+            // 
+            this.copyAuthorDateToolStripMenuItem.Name = "copyAuthorDateToolStripMenuItem";
+            this.copyAuthorDateToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.copyAuthorDateToolStripMenuItem.Text = "Author date";
+            this.copyAuthorDateToolStripMenuItem.Click += new System.EventHandler(this.copyAuthorDateToolStripMenuItem_Click);
+            // 
+            // copyCommitterNameToolStripMenuItem
+            // 
+            this.copyCommitterNameToolStripMenuItem.Name = "copyCommitterNameToolStripMenuItem";
+            this.copyCommitterNameToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.copyCommitterNameToolStripMenuItem.Text = "Committer name";
+            this.copyCommitterNameToolStripMenuItem.Click += new System.EventHandler(this.copyCommitterNameToolStripMenuItem_Click);
+            // 
+            // copyCommitterEmailToolStripMenuItem
+            // 
+            this.copyCommitterEmailToolStripMenuItem.Name = "copyCommitterEmailToolStripMenuItem";
+            this.copyCommitterEmailToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.copyCommitterEmailToolStripMenuItem.Text = "Committer e-mail";
+            this.copyCommitterEmailToolStripMenuItem.Click += new System.EventHandler(this.copyCommitterEmailToolStripMenuItem_Click);
+            // 
+            // copyCommitDateToolStripMenuItem
+            // 
+            this.copyCommitDateToolStripMenuItem.Name = "copyCommitDateToolStripMenuItem";
+            this.copyCommitDateToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.copyCommitDateToolStripMenuItem.Text = "Commit date";
+            this.copyCommitDateToolStripMenuItem.Click += new System.EventHandler(this.copyCommitDateToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -218,5 +309,15 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem addNoteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showMessagesOfAnnotatedTagsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyCommitHashToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyAuthorNameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyAuthorEmailToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyAuthorDateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyCommitterNameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyCommitterEmailToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyCommitMessageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyCommitDateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyCommitSubjectToolStripMenuItem;
     }
 }
