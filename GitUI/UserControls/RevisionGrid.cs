@@ -3359,15 +3359,25 @@ namespace GitUI
 
         private void editCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            launchRebase("e");
+        }
+
+        private void rewordCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            launchRebase("r");
+        }
+
+        private void launchRebase(string command)
+        {
             if (LatestSelectedRevision == null)
                 return;
 
-            String rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.ParentGuids[0], 
+            String rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.ParentGuids[0],
                 interactive: true, preserveMerges: false, autosquash: false, autostash: true);
 
             using (var formProcess = new FormProcess(null, rebaseCmd, Module.WorkingDir, null, true))
             {
-                formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", "sed -i -re '0,/pick/s//e/'");
+                formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", String.Format("sed -i -re '0,/pick/s//{0}/'", command));
                 formProcess.ShowDialog(this);
             }
         }
