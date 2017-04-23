@@ -7592,6 +7592,10 @@ If this is a central repository (bare repository without a working directory):
         <source>Revert commit</source>
         <target />
       </trans-unit>
+      <trans-unit id="rewordCommitToolStripMenuItem.Text">
+        <source>Reword commit</source>
+        <target />
+      </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run script</source>
         <target />
