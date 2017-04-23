@@ -288,7 +288,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!string.IsNullOrEmpty(selectCommit))
             {
-                RevisionGrid.SetInitialRevision(new GitRevision(Module, selectCommit));
+                RevisionGrid.SetInitialRevision(GitRevision.CreateForShortSha1(Module, selectCommit));
             }
         }
 
