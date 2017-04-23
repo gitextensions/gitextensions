@@ -1791,7 +1791,7 @@ namespace GitUI.CommandsDialogs
                 return;
 
             SelectedDiff.Clear();
-            var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
+            var fileNames = Unstaged.SelectedItems.Select(item => "/" + item.Name).ToArray();
             if (UICommands.StartAddToGitIgnoreDialog(this, localExclude, fileNames))
                 Initialize();
         }
