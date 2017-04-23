@@ -28,7 +28,7 @@ namespace GitUI.BuildServerIntegration
                         buildStatusImage = Resources.BuildCancelled;
                         break;
                     case BuildInfo.BuildStatus.InProgress:
-                        buildStatusImage = Resources.Icon_77;
+                        buildStatusImage = Resources.Settings;
                         break;
                     case BuildInfo.BuildStatus.Unstable:
                         buildStatusImage = Resources.IconMixed;
