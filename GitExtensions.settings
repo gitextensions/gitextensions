@@ -109,6 +109,7 @@
       &lt;RevisionPart&gt;LocalBranches&lt;/RevisionPart&gt;
       &lt;RevisionPart&gt;RemoteBranches&lt;/RevisionPart&gt;
     &lt;/SearchInParts&gt;
+    &lt;RemoteSearchInParts /&gt;
     &lt;LinkFormats&gt;
       &lt;GitExtLinkFormat&gt;
         &lt;Caption&gt;Issue {0}&lt;/Caption&gt;
@@ -119,11 +120,13 @@
     &lt;SearchPattern&gt;(\s*(,|and)?\s*#\d+)+&lt;/SearchPattern&gt;
     &lt;NestedSearchPattern&gt;(\d+)+&lt;/NestedSearchPattern&gt;
     &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;UseOnlyFirstRemote&gt;false&lt;/UseOnlyFirstRemote&gt;
   &lt;/GitExtLinkDef&gt;
   &lt;GitExtLinkDef&gt;
     &lt;SearchInParts&gt;
       &lt;RevisionPart&gt;Message&lt;/RevisionPart&gt;
     &lt;/SearchInParts&gt;
+    &lt;RemoteSearchInParts /&gt;
     &lt;LinkFormats&gt;
       &lt;GitExtLinkFormat&gt;
         &lt;Caption&gt;View on GitHub&lt;/Caption&gt;
@@ -134,6 +137,7 @@
     &lt;SearchPattern&gt;.*&lt;/SearchPattern&gt;
     &lt;NestedSearchPattern /&gt;
     &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;UseOnlyFirstRemote&gt;false&lt;/UseOnlyFirstRemote&gt;
   &lt;/GitExtLinkDef&gt;
   &lt;GitExtLinkDef&gt;
     &lt;SearchInParts&gt;
@@ -141,6 +145,7 @@
       &lt;RevisionPart&gt;LocalBranches&lt;/RevisionPart&gt;
       &lt;RevisionPart&gt;RemoteBranches&lt;/RevisionPart&gt;
     &lt;/SearchInParts&gt;
+    &lt;RemoteSearchInParts /&gt;
     &lt;LinkFormats&gt;
       &lt;GitExtLinkFormat&gt;
         &lt;Caption&gt;PR {0}&lt;/Caption&gt;
@@ -151,6 +156,7 @@
     &lt;SearchPattern&gt;pr/n\d+_&lt;/SearchPattern&gt;
     &lt;NestedSearchPattern&gt;\d+&lt;/NestedSearchPattern&gt;
     &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;UseOnlyFirstRemote&gt;false&lt;/UseOnlyFirstRemote&gt;
   &lt;/GitExtLinkDef&gt;
 &lt;/ArrayOfGitExtLinkDef&gt;</string>
     </value>
