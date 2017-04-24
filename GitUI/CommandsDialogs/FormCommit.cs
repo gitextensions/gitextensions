@@ -1126,7 +1126,7 @@ namespace GitUI.CommandsDialogs
             Staged.ClearSelected();
 
             _currentSelection = Unstaged.SelectedItems.ToList();
-            GitItemStatus item = _currentSelection.FirstOrDefault();
+            GitItemStatus item = _currentSelection.LastOrDefault();
             ShowChanges(item, false);
 
             if (!item.IsSubmodule)
@@ -1301,7 +1301,7 @@ namespace GitUI.CommandsDialogs
 
             Unstaged.ClearSelected();
             _currentSelection = Staged.SelectedItems.ToList();
-            GitItemStatus item = _currentSelection.FirstOrDefault();
+            GitItemStatus item = _currentSelection.LastOrDefault();
             ShowChanges(item, true);
         }
 

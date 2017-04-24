@@ -408,7 +408,7 @@ namespace GitUI
             {
                 if (FileStatusListView.SelectedItems.Count > 0)
                 {
-                    ListViewItem item = FileStatusListView.SelectedItems[0];
+                    ListViewItem item = FileStatusListView.SelectedItems[FileStatusListView.SelectedItems.Count - 1];
                     return (GitItemStatus)item.Tag;
                 }
                 return null;
