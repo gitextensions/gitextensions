@@ -42,10 +42,12 @@
             // _NO_TRANSLATE_Caption
             // 
             this._NO_TRANSLATE_Caption.AutoSize = true;
+            this._NO_TRANSLATE_Caption.Dock = System.Windows.Forms.DockStyle.Top;
             this._NO_TRANSLATE_Caption.ContextMenuStrip = this.CategoryContextMenuStrip1;
             this._NO_TRANSLATE_Caption.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this._NO_TRANSLATE_Caption.Location = new System.Drawing.Point(3, 2);
             this._NO_TRANSLATE_Caption.Name = "_NO_TRANSLATE_Caption";
+            this._NO_TRANSLATE_Caption.Padding = new System.Windows.Forms.Padding(0, 0, 0, 5);
             this._NO_TRANSLATE_Caption.Size = new System.Drawing.Size(44, 15);
             this._NO_TRANSLATE_Caption.TabIndex = 8;
             this._NO_TRANSLATE_Caption.Text = "##Title";
@@ -91,6 +93,7 @@
             // flowLayoutPanel
             // 
             this.flowLayoutPanel.AutoSize = true;
+            this.flowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel.Location = new System.Drawing.Point(0, 22);
             this.flowLayoutPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -103,7 +106,6 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.flowLayoutPanel);
             this.Controls.Add(this._NO_TRANSLATE_Caption);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
