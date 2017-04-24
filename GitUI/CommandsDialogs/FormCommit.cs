@@ -2594,6 +2594,11 @@ namespace GitUI.CommandsDialogs
             }
             base.Dispose(disposing);
         }
+
+        private void createBranchToolStripButton_Click(object sender, EventArgs e)
+        {
+            UICommands.StartCreateBranchDialog(this, null);
+        }
     }
 
     /// <summary>

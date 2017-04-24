@@ -136,6 +136,7 @@ namespace GitUI.CommandsDialogs
             this.toolAuthor = new System.Windows.Forms.ToolStripTextBox();
             this.noVerifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commitTemplatesToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
+            this.createBranchToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.commitStatusStrip = new System.Windows.Forms.StatusStrip();
             this.commitAuthorStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitStagedCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -1169,7 +1170,8 @@ namespace GitUI.CommandsDialogs
             this.toolbarCommit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.commitMessageToolStripMenuItem,
             this.toolStripMenuItem3,
-            this.commitTemplatesToolStripMenuItem});
+            this.commitTemplatesToolStripMenuItem,
+            this.createBranchToolStripButton});
             this.toolbarCommit.Location = new System.Drawing.Point(175, 0);
             this.toolbarCommit.Name = "toolbarCommit";
             this.toolbarCommit.Padding = new System.Windows.Forms.Padding(1, 1, 2, 1);
@@ -1286,6 +1288,15 @@ namespace GitUI.CommandsDialogs
             this.commitTemplatesToolStripMenuItem.Size = new System.Drawing.Size(135, 20);
             this.commitTemplatesToolStripMenuItem.Text = "Commit &templates";
             this.commitTemplatesToolStripMenuItem.DropDownOpening += new System.EventHandler(this.commitTemplatesToolStripMenuItem_DropDownOpening);
+            // 
+            // createBranchToolStripButton
+            // 
+            this.createBranchToolStripButton.Image = global::GitUI.Properties.Resources.IconBranchCreate;
+            this.createBranchToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.createBranchToolStripButton.Name = "createBranchToolStripButton";
+            this.createBranchToolStripButton.Size = new System.Drawing.Size(101, 23);
+            this.createBranchToolStripButton.Text = "Create branch";
+            this.createBranchToolStripButton.Click += new System.EventHandler(this.createBranchToolStripButton_Click);
             // 
             // commitStatusStrip
             // 
@@ -1553,5 +1564,6 @@ namespace GitUI.CommandsDialogs
         private Button ResetUnStaged;
         private ToolStripMenuItem resetUnstagedChangesToolStripMenuItem;
         private ToolStripMenuItem noVerifyToolStripMenuItem;
+        private ToolStripButton createBranchToolStripButton;
     }
 }
