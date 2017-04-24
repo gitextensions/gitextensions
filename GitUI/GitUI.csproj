@@ -217,6 +217,12 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.Designer.cs">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.Designer.cs">
+      <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormStatusOutputLog.cs" />
     <Compile Include="CommandsDialogs\WorktreeDialog\FormCreateWorktree.cs">
       <SubType>Form</SubType>
@@ -1123,6 +1129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.resx">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.resx">
+      <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.resx">
       <DependentUpon>RepoDistSettingsPage.cs</DependentUpon>

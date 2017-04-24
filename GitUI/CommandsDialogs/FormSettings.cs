@@ -99,6 +99,7 @@ namespace GitUI.CommandsDialogs
             var detailedSettingsPage = DetailedSettingsPage.GetPageReference();
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConfirmationsSettingsPage>(this), advancedPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<FormBrowseRepoSettingsPage>(this), detailedSettingsPage);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DiffViewerSettingsPage>(this), detailedSettingsPage);
 
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null);

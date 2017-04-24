@@ -3646,7 +3646,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void FillTerminalTab()
         {
-            if (!EnvUtils.RunningOnWindows() || !Module.EffectiveSettings.Detailed.ShowConEmuTab.ValueOrDefault)
+            if (!EnvUtils.RunningOnWindows() || !AppSettings.ShowConEmuTab.ValueOrDefault)
             {
                 return; // ConEmu only works on WinNT
             }
@@ -3702,10 +3702,10 @@ namespace GitUI.CommandsDialogs
                 };
 
                 var startinfoBaseConfiguration = startinfo.BaseConfiguration;
-                if (!string.IsNullOrWhiteSpace(Module.EffectiveSettings.Detailed.ConEmuFontSize.ValueOrDefault))
+                if (!string.IsNullOrWhiteSpace(AppSettings.ConEmuFontSize.ValueOrDefault))
                 {
                     int fontSize;
-                    if (int.TryParse(Module.EffectiveSettings.Detailed.ConEmuFontSize.ValueOrDefault, out fontSize))
+                    if (int.TryParse(AppSettings.ConEmuFontSize.ValueOrDefault, out fontSize))
                     {
                         var nodeFontSize =
                             startinfoBaseConfiguration.SelectSingleNode("/key/key/key/value[@name='FontSize']");
@@ -3716,7 +3716,7 @@ namespace GitUI.CommandsDialogs
                 startinfo.BaseConfiguration = startinfoBaseConfiguration;
 
                 string[] exeList;
-                switch (Module.EffectiveSettings.Detailed.ConEmuTerminal.ValueOrDefault)
+                switch (AppSettings.ConEmuTerminal.ValueOrDefault)
                 {
                     case "cmd":
                         exeList = new[] { "cmd.exe" };
@@ -3747,15 +3747,15 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    if(Module.EffectiveSettings.Detailed.ConEmuTerminal.ValueOrDefault == "bash")
+                    if(AppSettings.ConEmuTerminal.ValueOrDefault == "bash")
                         startinfo.ConsoleProcessCommandLine = cmdPath + " --login -i";
                     else
                         startinfo.ConsoleProcessCommandLine = cmdPath;
                 }
 
-                if (Module.EffectiveSettings.Detailed.ConEmuStyle.ValueOrDefault != "Default")
+                if (AppSettings.ConEmuStyle.ValueOrDefault != "Default")
                 {
-                    startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + Module.EffectiveSettings.Detailed.ConEmuStyle.ValueOrDefault + "\"";
+                    startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";
                 }
 
                 // Set path to git in this window (actually, effective with CMD only)
@@ -3775,7 +3775,7 @@ namespace GitUI.CommandsDialogs
             if (terminal == null || terminal.RunningSession == null || string.IsNullOrWhiteSpace(path))
                 return;
 
-            if (Module.EffectiveSettings.Detailed.ConEmuTerminal.ValueOrDefault == "bash")
+            if (AppSettings.ConEmuTerminal.ValueOrDefault == "bash")
             {
                 string posixPath;
                 if (PathUtil.TryConvertWindowsPathToPosix(path, out posixPath))
@@ -3783,7 +3783,7 @@ namespace GitUI.CommandsDialogs
                     ClearTerminalCommandLineAndRunCommand("cd " + posixPath);
                 }
             }
-            else if (Module.EffectiveSettings.Detailed.ConEmuTerminal.ValueOrDefault == "powershell")
+            else if (AppSettings.ConEmuTerminal.ValueOrDefault == "powershell")
             {
                 ClearTerminalCommandLineAndRunCommand("cd \"" + path + "\"");
             }

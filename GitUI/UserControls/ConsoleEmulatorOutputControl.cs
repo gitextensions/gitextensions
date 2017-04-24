@@ -115,7 +115,10 @@ namespace GitUI.UserControls
 
             var startinfo = new ConEmuStartInfo();
             startinfo.ConsoleProcessCommandLine = cmdl.ToString();
-            startinfo.ConsoleProcessExtraArgs = " -cur_console:P:\"<Solarized Light>\"";
+            if (AppSettings.ConEmuStyle.ValueOrDefault != "Default")
+            {
+                startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";
+            }
             startinfo.StartupDirectory = workdir;
             foreach (var envVariable in envVariables)
             {

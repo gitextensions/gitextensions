@@ -36,6 +36,7 @@ namespace GitCommands
 
         private static RepoDistSettings _SettingsContainer;
         public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
+        private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
 
         public static readonly int BranchDropDownMinWidth = 300;
         public static readonly int BranchDropDownMaxWidth = 600;
@@ -311,6 +312,11 @@ namespace GitCommands
             get { return GetBool("showresetallchanges", true); }
             set { SetBool("showresetallchanges", value); }
         }
+        
+        public static readonly BoolNullableSetting ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", DetailedSettingsPath, true);
+        public static readonly StringSetting ConEmuStyle = new StringSetting("ConEmuStyle", DetailedSettingsPath, "<Solarized Light>");
+        public static readonly StringSetting ConEmuTerminal = new StringSetting("ConEmuTerminal", DetailedSettingsPath, "bash");
+        public static readonly StringSetting ConEmuFontSize = new StringSetting("ConEmuFontSize", DetailedSettingsPath, "12");
 
         public static bool ProvideAutocompletion
         {
@@ -1560,6 +1566,24 @@ namespace GitCommands
             string availableEncodings = AvailableEncodings.Values.Select(e => e.HeaderName).Join(";");
             availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
             SetString("AvailableEncodings", availableEncodings);
+        }
+
+    }
+
+    internal class AppSettingsPath : SettingsPath
+    {
+        public AppSettingsPath(string aPathName) : base(null, aPathName)
+        {
+        }
+
+        public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
+        {
+            return AppSettings.SettingsContainer.GetValue(PathFor(name), defaultValue, decode);
+        }
+
+        public override void SetValue<T>(string name, T value, Func<T, string> encode)
+        {
+            AppSettings.SettingsContainer.SetValue(PathFor(name), value, encode);
         }
 
     }
