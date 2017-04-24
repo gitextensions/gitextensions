@@ -45,6 +45,7 @@
             this.settingsButton = new System.Windows.Forms.ToolStripButton();
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.PictureBox = new System.Windows.Forms.PictureBox();
+            this.revertSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
@@ -55,6 +56,7 @@
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyToolStripMenuItem,
             this.cherrypickSelectedLinesToolStripMenuItem,
+            this.revertSelectedLinesToolStripMenuItem,
             this.copyPatchToolStripMenuItem,
             this.copyNewVersionToolStripMenuItem,
             this.copyOldVersionToolStripMenuItem,
@@ -310,6 +312,14 @@
             this.PictureBox.TabStop = false;
             this.PictureBox.Visible = false;
             // 
+            // resetSelectedLinesToolStripMenuItem
+            // 
+            this.revertSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetFileTo;
+            this.revertSelectedLinesToolStripMenuItem.Name = "revertSelectedLinesToolStripMenuItem";
+            this.revertSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.revertSelectedLinesToolStripMenuItem.Text = "Revert selected lines";
+            this.revertSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.revertSelectedLinesToolStripMenuItem_Click);
+            // 
             // FileViewer
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -358,5 +368,6 @@
         private System.Windows.Forms.ToolStripMenuItem copyNewVersionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyOldVersionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cherrypickSelectedLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem revertSelectedLinesToolStripMenuItem;
     }
 }
