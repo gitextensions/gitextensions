@@ -5345,6 +5345,10 @@ Nothing to rebase.</source>
         <source>Sort most recent repositories alphabetically</source>
         <target />
       </trans-unit>
+      <trans-unit id="comboMinWidthNote.Text">
+        <source>NB: The width of the columns helps to visualise how the repository name will be shown in the combobox.</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormRemotes" source-language="en">

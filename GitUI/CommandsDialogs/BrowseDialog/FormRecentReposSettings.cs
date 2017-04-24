@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
-using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormRecentReposSettings : GitExtensionsForm
     {
-        private readonly int ComboWidth;
-        private readonly int FormWidth;
-
         public FormRecentReposSettings()
+            : base(true)
         {
             InitializeComponent();
-            FormWidth = Width;
-            ComboWidth = comboPanel.Width;
             Translate();
             LoadSettings();
             RefreshRepos();
@@ -31,7 +27,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             sortLessRecentRepos.Checked = AppSettings.SortLessRecentRepos;
             _NO_TRANSLATE_maxRecentRepositories.Value = AppSettings.MaxMostRecentRepositories;
             comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
-
         }
 
         private void SaveSettings()
@@ -93,19 +88,25 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             foreach (RecentRepoInfo repo in mostRecentRepos)
-                MostRecentLB.Items.Add(repo);
+                MostRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
 
             foreach (RecentRepoInfo repo in lessRecentRepos)
-                LessRecentLB.Items.Add(repo);
+                LessRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
         }
 
         private void SetComboWidth()
         {
             if (comboMinWidthEdit.Value == 0)
-                comboPanel.Width = ComboWidth;
+            {
+                MostRecentLB.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                LessRecentLB.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            }
             else
-                comboPanel.Width = (int)comboMinWidthEdit.Value + 30;
-            this.Width = FormWidth + comboPanel.Width - ComboWidth;
+            {
+                int width = Math.Max(30, (int)comboMinWidthEdit.Value);
+                MostRecentLB.Columns[0].Width = width;
+                LessRecentLB.Columns[0].Width = width;
+            }
         }
 
         private void sortMostRecentRepos_CheckedChanged(object sender, EventArgs e)
@@ -113,10 +114,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             RefreshRepos();
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        private void comboMinWidthEdit_ValueChanged(object sender, EventArgs e)
         {
-            SetComboWidth();
-            RefreshRepos();
+            try
+            {
+                MostRecentLB.BeginUpdate();
+                LessRecentLB.BeginUpdate();
+
+                SetComboWidth();
+                RefreshRepos();
+            }
+            finally
+            {
+                MostRecentLB.EndUpdate();
+                LessRecentLB.EndUpdate();
+            }
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -147,13 +159,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private bool GetSelectedRepo(object sender, out RecentRepoInfo repo)
         {
             if (sender is ContextMenuStrip)
-                sender = (sender as ContextMenuStrip).SourceControl;
+                sender = ((ContextMenuStrip)sender).SourceControl;
             else if (sender is ToolStripItem)
-                return GetSelectedRepo((sender as ToolStripItem).Owner, out repo);
+                return GetSelectedRepo(((ToolStripItem)sender).Owner, out repo);
             else
                 sender = null;
 
-            ListBox lb;
+            ListView lb;
             if (sender == MostRecentLB)
                 lb = MostRecentLB;
             else if (sender == LessRecentLB)
@@ -161,11 +173,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             else
                 lb = null;
 
-            if (lb != null)
-                repo = (RecentRepoInfo)lb.SelectedItem;
-            else
-                repo = null;
-
+            repo = null;
+            if (lb?.SelectedItems.Count > 0)
+            {
+                repo = lb.SelectedItems[0].Tag as RecentRepoInfo;
+            }
             return repo != null;
         }
 
@@ -213,6 +225,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
+        private void listView_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            var listView = (ListView)sender;
 
+            var rowBounds = e.Bounds;
+            int leftMargin = e.Item.GetBounds(ItemBoundsPortion.Label).Left;
+            var bounds = new Rectangle(leftMargin, rowBounds.Top, rowBounds.Width - leftMargin, rowBounds.Height);
+
+            e.Graphics.FillRectangle(SystemBrushes.Window, bounds);
+            TextRenderer.DrawText(e.Graphics, e.Item.Text, listView.Font, bounds, SystemColors.ControlText,
+                                  TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.VerticalCenter);
+        }
     }
 }
