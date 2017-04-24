@@ -206,6 +206,7 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
 
             Translate();
+            LayoutRevisionInfo();
 
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
@@ -270,6 +271,26 @@ namespace GitUI.CommandsDialogs
 
             FillTerminalTab();
             ManageWorktreeSupport();
+        }
+
+        private void LayoutRevisionInfo()
+        {
+            if (AppSettings.ShowRevisionInfoNextToRevisionGrid.ValueOrDefault)
+            {
+                RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
+                RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - 500;
+                RevisionInfo.DisplayAvatarOnRight();
+                CommitInfoTabControl.SuspendLayout();
+                CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
+                CommitInfoTabControl.RemoveIfExists(TreeTabPage);
+                CommitInfoTabControl.TabPages.Insert(1, TreeTabPage);
+                CommitInfoTabControl.SelectedTab = DiffTabPage;
+                CommitInfoTabControl.ResumeLayout(true);
+            }
+            else
+            {
+                RevisionsSplitContainer.Panel2Collapsed = true;
+            }
         }
 
         private void ManageWorktreeSupport()
@@ -1176,7 +1197,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillCommitInfo()
         {
-            if (CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
+            if (!AppSettings.ShowRevisionInfoNextToRevisionGrid.ValueOrDefault && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
                 return;
 
             if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
@@ -1420,7 +1441,10 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
+                    if (RevisionInfo.Parent == CommitInfoTabPage)
+                    {
+                        CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
+                    }
                     CommitInfoTabControl.InsertIfNotExists(1, TreeTabPage);
                 }
 
@@ -2859,6 +2883,10 @@ namespace GitUI.CommandsDialogs
                 mainSplitContainerSplitterDistance = (int)(scaleFactor * mainSplitContainerSplitterDistance);
                 fileTreeSplitContainerSplitterDistance = (int)(scaleFactor * fileTreeSplitContainerSplitterDistance);
                 diffSplitContainerSplitterDistance = (int)(scaleFactor * diffSplitContainerSplitterDistance);
+                if (Properties.Settings.Default.FormBrowse_RevisionsSplitContainer_SplitterDistance > 0)
+                {
+                    RevisionsSplitContainer.SplitterDistance = (int)(scaleFactor * Properties.Settings.Default.FormBrowse_RevisionsSplitContainer_SplitterDistance);
+                }
 
                 if (mainSplitContainerSplitterDistance != 0)
                     MainSplitContainer.SplitterDistance = mainSplitContainerSplitterDistance;
@@ -2878,6 +2906,7 @@ namespace GitUI.CommandsDialogs
                 Properties.Settings.Default.FormBrowse_MainSplitContainer_SplitterDistance = MainSplitContainer.SplitterDistance;
                 Properties.Settings.Default.FormBrowse_FileTreeSplitContainer_SplitterDistance = FileTreeSplitContainer.SplitterDistance;
                 Properties.Settings.Default.FormBrowse_DiffSplitContainer_SplitterDistance = DiffSplitContainer.SplitterDistance;
+                Properties.Settings.Default.FormBrowse_RevisionsSplitContainer_SplitterDistance = RevisionsSplitContainer.SplitterDistance;
                 Properties.Settings.Default.Save();
             }
             catch (ConfigurationException)

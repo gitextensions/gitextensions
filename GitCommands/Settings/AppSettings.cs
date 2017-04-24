@@ -317,6 +317,7 @@ namespace GitCommands
         public static readonly StringSetting ConEmuStyle = new StringSetting("ConEmuStyle", DetailedSettingsPath, "<Solarized Light>");
         public static readonly StringSetting ConEmuTerminal = new StringSetting("ConEmuTerminal", DetailedSettingsPath, "bash");
         public static readonly StringSetting ConEmuFontSize = new StringSetting("ConEmuFontSize", DetailedSettingsPath, "12");
+        public static readonly BoolNullableSetting ShowRevisionInfoNextToRevisionGrid = new BoolNullableSetting("ShowRevisionInfoNextToRevisionGrid", DetailedSettingsPath, true);
 
         public static bool ProvideAutocompletion
         {

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.chkShowRevisionInfoNextToRevisionGrid = new System.Windows.Forms.CheckBox();
             this.ConEmuGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBoxConsoleSettings = new System.Windows.Forms.GroupBox();
@@ -51,6 +52,7 @@
             this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.Controls.Add(this.chkShowRevisionInfoNextToRevisionGrid, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.ConEmuGB, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
@@ -61,6 +63,18 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(1297, 666);
             this.tableLayoutPanel2.TabIndex = 3;
+            // 
+            // chkShowRevisionInfoNextToRevisionGrid
+            // 
+            this.chkShowRevisionInfoNextToRevisionGrid.AutoSize = true;
+            this.chkShowRevisionInfoNextToRevisionGrid.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.chkShowRevisionInfoNextToRevisionGrid.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chkShowRevisionInfoNextToRevisionGrid.Location = new System.Drawing.Point(3, 198);
+            this.chkShowRevisionInfoNextToRevisionGrid.Name = "chkShowRevisionInfoNextToRevisionGrid";
+            this.chkShowRevisionInfoNextToRevisionGrid.Size = new System.Drawing.Size(1291, 17);
+            this.chkShowRevisionInfoNextToRevisionGrid.TabIndex = 6;
+            this.chkShowRevisionInfoNextToRevisionGrid.Text = "Show revision details next to the revision list (restart required)";
+            this.chkShowRevisionInfoNextToRevisionGrid.UseVisualStyleBackColor = true;
             // 
             // ConEmuGB
             // 
@@ -258,5 +272,6 @@
         private System.Windows.Forms.ComboBox cboTerminal;
         private System.Windows.Forms.ComboBox cboStyle;
         private System.Windows.Forms.CheckBox chkChowConsoleTab;
+        private System.Windows.Forms.CheckBox chkShowRevisionInfoNextToRevisionGrid;
     }
 }

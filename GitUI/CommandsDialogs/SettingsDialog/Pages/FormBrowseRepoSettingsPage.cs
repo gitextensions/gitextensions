@@ -31,6 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AddSettingBinding(AppSettings.ConEmuStyle, cboStyle);
             AddSettingBinding(AppSettings.ConEmuTerminal, cboTerminal);
             AddSettingBinding(AppSettings.ConEmuFontSize, cboFontSize);
+            AddSettingBinding(AppSettings.ShowRevisionInfoNextToRevisionGrid, chkShowRevisionInfoNextToRevisionGrid);
         }
 
         private void chkChowConsoleTab_CheckedChanged(object sender, System.EventArgs e)
