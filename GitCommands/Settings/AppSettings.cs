@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -1564,46 +1563,5 @@ namespace GitCommands
         }
 
     }
-
-    /*
-    public abstract class Setting<T> : IXmlSerializable
-    {
-        public SettingsContainer SettingsSource { get; private set; }
-        private T _Value;
-        public bool HasValue { get; private set; }
-        public string Name { get; private set; }
-        public T DefaultValue { get; private set; }
-
-        public Setting(SettingsContainer aSettingsSource, string aName, T aDefaultValue)
-        {
-            SettingsSource = aSettingsSource;
-            Name = aName;
-            DefaultValue = aDefaultValue;
-            HasValue = false;
-        }
-
-        public T Value
-        {
-            get
-            {
-                return SettingsSource.GetValue(Name, DefaultValue, (s) => DefaultValue);
-            }
-
-            set
-            {
-                //SettingsSource.SetValue(this, value);
-            }
-        }
-
-        public virtual System.Xml.Schema.XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        public abstract void ReadXml(XmlReader reader);
-        public abstract void WriteXml(XmlWriter writer);
-    }
-
-    */
 
 }
