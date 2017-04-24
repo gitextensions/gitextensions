@@ -29,17 +29,19 @@
             // flowLayoutPanel2
             // 
             this.flowLayoutPanel2.AutoSize = true;
-            this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel2.Controls.Add(this.flowLayoutPanel1);
             this.flowLayoutPanel2.Controls.Add(this._NO_TRANSLATE_Description);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel2.Size = new System.Drawing.Size(177, 49);
             this.flowLayoutPanel2.TabIndex = 8;
             this.flowLayoutPanel2.WrapContents = false;
+            this.flowLayoutPanel2.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
+            this.flowLayoutPanel2.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
             // 
             // flowLayoutPanel1
             // 
@@ -48,21 +50,26 @@
             this.flowLayoutPanel1.Controls.Add(this.Icon);
             this.flowLayoutPanel1.Controls.Add(this._NO_TRANSLATE_Title);
             this.flowLayoutPanel1.Controls.Add(this._NO_TRANSLATE_BranchName);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 2);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(4, 4);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(177, 22);
             this.flowLayoutPanel1.TabIndex = 7;
             this.flowLayoutPanel1.WrapContents = false;
+            this.flowLayoutPanel1.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
+            this.flowLayoutPanel1.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
             // 
             // Icon
             // 
             this.Icon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.Icon.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Icon.Dock = System.Windows.Forms.DockStyle.Left;
             this.Icon.Location = new System.Drawing.Point(3, 2);
             this.Icon.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Icon.MinimumSize = new System.Drawing.Size(18, 18);
             this.Icon.Name = "Icon";
-            this.Icon.Size = new System.Drawing.Size(19, 18);
+            this.Icon.Size = new System.Drawing.Size(18, 18);
+            this.Icon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.Icon.TabIndex = 0;
             this.Icon.TabStop = false;
             this.Icon.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
@@ -115,7 +122,6 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.flowLayoutPanel2);
             this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -123,8 +129,6 @@
             this.Name = "DashboardItem";
             this.Size = new System.Drawing.Size(177, 49);
             this.SizeChanged += new System.EventHandler(this.DashboardItem_SizeChanged);
-            this.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
-            this.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
             this.VisibleChanged += new System.EventHandler(DashboardItem_VisibleChanged);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
