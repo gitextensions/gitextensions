@@ -34,8 +34,6 @@
                 </Directory>
             </Directory>
             <Directory Id="PersonalFolder">
-                <Directory Id="VS2005" Name="Visual Studio 2005" />
-                <Directory Id="VS2008" Name="Visual Studio 2008" />
                 <Directory Id="VS2010" Name="Visual Studio 2010" />
                 <Directory Id="VS2012" Name="Visual Studio 2012" />
                 <Directory Id="VS2013" Name="Visual Studio 2013" />
@@ -48,7 +46,7 @@
                 <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
             </Component>
         </Directory>
-        <?define VsVersions = 2005;2008;2010;2012;2013?>
+        <?define VsVersions = 2010;2012;2013?>
         <?foreach VsVersion in $(var.VsVersions)?>
         <Property Id="VS$(var.VsVersion)INSTFOLDER">
             <DirectorySearch Id="VS$(var.VsVersion)DirSearchId" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
@@ -565,14 +563,6 @@
 
         <!-- http://www.mztools.com/articles/2011/MZ2011020.aspx -->
         <Binary Id="BinRemoveVSAddInCommands" SourceFile="RemoveVSAddInCommands.vbs"/>
-        <CustomAction Id='RemoveVS2005AddInCommands'
-            BinaryKey="BinRemoveVSAddInCommands"
-            VBScriptCall="RemoveVS2005AddInCommands"
-            Return="check"/>
-        <CustomAction Id='RemoveVS2008AddInCommands'
-            BinaryKey="BinRemoveVSAddInCommands"
-            VBScriptCall="RemoveVS2008AddInCommands"
-            Return="check"/>
         <CustomAction Id='RemoveVS2010AddInCommands'
             BinaryKey="BinRemoveVSAddInCommands"
             VBScriptCall="RemoveVS2010AddInCommands"
@@ -599,14 +589,6 @@
               - The add-in feature state (!feature-state) for the Visual Studio version is installed (3 = INSTALLSTATE_LOCAL). See:
                 Conditional Statement Syntax (http://msdn.microsoft.com/en-us/library/aa368012.aspx)
             -->
-            <Custom Action="RemoveVS2005AddInCommands"
-                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2005INSTFOLDER
-                                     AND !VS2005FeatureId=3</Custom>
-
-            <Custom Action="RemoveVS2008AddInCommands"
-                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2008INSTFOLDER
-                                     AND !VS2008FeatureId=3</Custom>
-
             <Custom Action="RemoveVS2010AddInCommands"
                  After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2010INSTFOLDER
                                      AND !VS2010FeatureId=3</Custom>
