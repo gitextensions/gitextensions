@@ -77,6 +77,8 @@
             // 
             // _NO_TRANSLATE_BranchName
             // 
+            this._NO_TRANSLATE_BranchName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this._NO_TRANSLATE_BranchName.AutoSize = true;
             this._NO_TRANSLATE_BranchName.Cursor = System.Windows.Forms.Cursors.Hand;
             this._NO_TRANSLATE_BranchName.Location = new System.Drawing.Point(102, 0);
@@ -84,6 +86,7 @@
             this._NO_TRANSLATE_BranchName.Size = new System.Drawing.Size(72, 20);
             this._NO_TRANSLATE_BranchName.TabIndex = 4;
             this._NO_TRANSLATE_BranchName.Text = "##branch";
+            this._NO_TRANSLATE_BranchName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_BranchName.Visible = false;
             this._NO_TRANSLATE_BranchName.Click += new System.EventHandler(this.Title_Click);
             this._NO_TRANSLATE_BranchName.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
@@ -91,6 +94,8 @@
             // 
             // _NO_TRANSLATE_Title
             // 
+            this._NO_TRANSLATE_Title.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this._NO_TRANSLATE_Title.AutoEllipsis = true;
             this._NO_TRANSLATE_Title.AutoSize = true;
             this._NO_TRANSLATE_Title.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -100,6 +105,7 @@
             this._NO_TRANSLATE_Title.TabIndex = 1;
             this._NO_TRANSLATE_Title.TabStop = true;
             this._NO_TRANSLATE_Title.Text = "##label1";
+            this._NO_TRANSLATE_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_Title.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             this._NO_TRANSLATE_Title.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
             this._NO_TRANSLATE_Title.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnKeyDown);			
@@ -120,7 +126,7 @@
             // 
             // DashboardItem
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.Controls.Add(this.flowLayoutPanel2);
             this.Cursor = System.Windows.Forms.Cursors.Hand;
