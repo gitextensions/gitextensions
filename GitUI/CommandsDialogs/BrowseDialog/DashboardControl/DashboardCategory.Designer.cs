@@ -104,7 +104,7 @@
             // 
             // DashboardCategory
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.Controls.Add(this.flowLayoutPanel);
             this.Controls.Add(this._NO_TRANSLATE_Caption);
