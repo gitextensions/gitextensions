@@ -36,7 +36,7 @@
             this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(4);
+            this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel2.Size = new System.Drawing.Size(177, 49);
             this.flowLayoutPanel2.TabIndex = 8;
             this.flowLayoutPanel2.WrapContents = false;
@@ -50,7 +50,7 @@
             this.flowLayoutPanel1.Controls.Add(this.Icon);
             this.flowLayoutPanel1.Controls.Add(this._NO_TRANSLATE_Title);
             this.flowLayoutPanel1.Controls.Add(this._NO_TRANSLATE_BranchName);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(4, 4);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(2, 2);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(177, 22);
@@ -126,6 +126,7 @@
             // 
             // DashboardItem
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.Controls.Add(this.flowLayoutPanel2);
