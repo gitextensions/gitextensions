@@ -82,7 +82,7 @@ namespace GitUI.CommandsDialogs
                 LocalBranch.Checked = !remote;
                 Remotebranch.Checked = remote;
 
-                Initialize();
+                PopulateBranches();
 
                 //Set current branch after initialize, because initialize will reset it
                 if (!string.IsNullOrEmpty(branch))
@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs
                     {
                         LocalBranch.Checked = remote;
                         Remotebranch.Checked = !remote;
-                        Initialize();
+                        PopulateBranches();
                     }
                 }
 
@@ -183,33 +183,35 @@ namespace GitUI.CommandsDialogs
                 PopulateBranches();
             }
 
-            remoteOptionsPanel.Visible = Remotebranch.Checked;
         }
 
         private void PopulateBranches()
         {
-            Branches.Items.Clear();
-
-            if (_containRevisons == null)
+            if (IsUICommandsInitialized)
             {
-                if (LocalBranch.Checked)
+                Branches.Items.Clear();
+
+                if (_containRevisons == null)
                 {
-                    Branches.Items.AddRange(GetLocalBranches().Select(b => b.Name).ToArray());
+                    if (LocalBranch.Checked)
+                    {
+                        Branches.Items.AddRange(GetLocalBranches().Select(b => b.Name).ToArray());
+                    }
+                    else
+                    {
+                        Branches.Items.AddRange(GetRemoteBranches().Select(b => b.Name).ToArray());
+                    }
                 }
                 else
                 {
-                    Branches.Items.AddRange(GetRemoteBranches().Select(b => b.Name).ToArray());
+                    Branches.Items.AddRange(GetContainsRevisionBranches().ToArray());
                 }
-            }
-            else
-            {
-                Branches.Items.AddRange(GetContainsRevisionBranches().ToArray());
-            }
 
-            if (_containRevisons != null && Branches.Items.Count == 1)
-                Branches.SelectedIndex = 0;
-            else
-                Branches.Text = null;
+                if (_containRevisons != null && Branches.Items.Count == 1)
+                    Branches.SelectedIndex = 0;
+                else
+                    Branches.Text = null;
+            }
         }
 
         private LocalChangesAction ChangesMode
@@ -383,6 +385,7 @@ namespace GitUI.CommandsDialogs
         {
             MaximumSize = new Size(0, 0);
             MinimumSize = new Size(0, 0);
+            remoteOptionsPanel.Visible = Remotebranch.Checked;
             BranchTypeChanged();
             RecalculateSizeConstraints();
             Branches_SelectedIndexChanged(sender, e);
