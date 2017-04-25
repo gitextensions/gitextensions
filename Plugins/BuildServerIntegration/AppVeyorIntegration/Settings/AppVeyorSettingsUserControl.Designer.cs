@@ -37,19 +37,24 @@ namespace AppVeyorIntegration.Settings
             this.AppVeyorProjectName = new System.Windows.Forms.TextBox();
             this.AppVeyorAccountName = new System.Windows.Forms.TextBox();
             this.cbLoadTestResults = new System.Windows.Forms.CheckBox();
-            this.cbGitHubPullRequest = new System.Windows.Forms.CheckBox();
             this.txtGitHubToken = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.cbGitHubPullRequest = new System.Windows.Forms.CheckBox();
             lblApiToken = new System.Windows.Forms.Label();
             lblAccountName = new System.Windows.Forms.Label();
             lblProjects = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblApiToken
             // 
+            lblApiToken.Anchor = System.Windows.Forms.AnchorStyles.Left;
             lblApiToken.AutoSize = true;
-            lblApiToken.Location = new System.Drawing.Point(3, 34);
+            lblApiToken.Location = new System.Drawing.Point(3, 31);
             lblApiToken.Name = "lblApiToken";
             lblApiToken.Size = new System.Drawing.Size(52, 13);
             lblApiToken.TabIndex = 0;
@@ -57,8 +62,9 @@ namespace AppVeyorIntegration.Settings
             // 
             // lblAccountName
             // 
+            lblAccountName.Anchor = System.Windows.Forms.AnchorStyles.Left;
             lblAccountName.AutoSize = true;
-            lblAccountName.Location = new System.Drawing.Point(3, 10);
+            lblAccountName.Location = new System.Drawing.Point(3, 6);
             lblAccountName.Name = "lblAccountName";
             lblAccountName.Size = new System.Drawing.Size(75, 13);
             lblAccountName.TabIndex = 2;
@@ -66,8 +72,9 @@ namespace AppVeyorIntegration.Settings
             // 
             // lblProjects
             // 
+            lblProjects.Anchor = System.Windows.Forms.AnchorStyles.Left;
             lblProjects.AutoSize = true;
-            lblProjects.Location = new System.Drawing.Point(3, 81);
+            lblProjects.Location = new System.Drawing.Point(3, 79);
             lblProjects.Name = "lblProjects";
             lblProjects.Size = new System.Drawing.Size(97, 13);
             lblProjects.TabIndex = 4;
@@ -75,8 +82,10 @@ namespace AppVeyorIntegration.Settings
             // 
             // label1
             // 
+            label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(114, 107);
+            label1.Location = new System.Drawing.Point(106, 98);
+            label1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 10);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(480, 13);
             label1.TabIndex = 4;
@@ -85,8 +94,10 @@ namespace AppVeyorIntegration.Settings
             // 
             // label2
             // 
+            label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(114, 53);
+            label2.Location = new System.Drawing.Point(106, 50);
+            label2.Margin = new System.Windows.Forms.Padding(3, 0, 3, 10);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(457, 13);
             label2.TabIndex = 4;
@@ -95,9 +106,8 @@ namespace AppVeyorIntegration.Settings
             // 
             // AppVeyorAccountToken
             // 
-            this.AppVeyorAccountToken.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AppVeyorAccountToken.Location = new System.Drawing.Point(117, 30);
+            this.AppVeyorAccountToken.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AppVeyorAccountToken.Location = new System.Drawing.Point(106, 27);
             this.AppVeyorAccountToken.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.AppVeyorAccountToken.Name = "AppVeyorAccountToken";
             this.AppVeyorAccountToken.Size = new System.Drawing.Size(504, 21);
@@ -105,9 +115,8 @@ namespace AppVeyorIntegration.Settings
             // 
             // AppVeyorProjectName
             // 
-            this.AppVeyorProjectName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AppVeyorProjectName.Location = new System.Drawing.Point(117, 78);
+            this.AppVeyorProjectName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AppVeyorProjectName.Location = new System.Drawing.Point(106, 75);
             this.AppVeyorProjectName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.AppVeyorProjectName.Name = "AppVeyorProjectName";
             this.AppVeyorProjectName.Size = new System.Drawing.Size(504, 21);
@@ -115,9 +124,8 @@ namespace AppVeyorIntegration.Settings
             // 
             // AppVeyorAccountName
             // 
-            this.AppVeyorAccountName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AppVeyorAccountName.Location = new System.Drawing.Point(117, 6);
+            this.AppVeyorAccountName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AppVeyorAccountName.Location = new System.Drawing.Point(106, 2);
             this.AppVeyorAccountName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.AppVeyorAccountName.Name = "AppVeyorAccountName";
             this.AppVeyorAccountName.Size = new System.Drawing.Size(504, 21);
@@ -125,8 +133,9 @@ namespace AppVeyorIntegration.Settings
             // 
             // cbLoadTestResults
             // 
+            this.cbLoadTestResults.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cbLoadTestResults.AutoSize = true;
-            this.cbLoadTestResults.Location = new System.Drawing.Point(117, 141);
+            this.cbLoadTestResults.Location = new System.Drawing.Point(106, 123);
             this.cbLoadTestResults.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbLoadTestResults.Name = "cbLoadTestResults";
             this.cbLoadTestResults.Size = new System.Drawing.Size(434, 17);
@@ -135,45 +144,84 @@ namespace AppVeyorIntegration.Settings
     "nsive!)";
             this.cbLoadTestResults.UseVisualStyleBackColor = true;
             // 
+            // txtGitHubToken
+            // 
+            this.txtGitHubToken.Location = new System.Drawing.Point(266, 2);
+            this.txtGitHubToken.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtGitHubToken.Name = "txtGitHubToken";
+            this.txtGitHubToken.Size = new System.Drawing.Size(241, 21);
+            this.txtGitHubToken.TabIndex = 3;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 1, 6);
+            this.tableLayoutPanel1.Controls.Add(lblAccountName, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.AppVeyorAccountName, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.cbLoadTestResults, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(lblApiToken, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(label1, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(label2, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(lblProjects, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.AppVeyorProjectName, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.AppVeyorAccountToken, 1, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 7;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(613, 167);
+            this.tableLayoutPanel1.TabIndex = 7;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoSize = true;
+            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel1.Controls.Add(this.cbGitHubPullRequest);
+            this.flowLayoutPanel1.Controls.Add(this.txtGitHubToken);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(103, 142);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(510, 25);
+            this.flowLayoutPanel1.TabIndex = 8;
+            // 
             // cbGitHubPullRequest
             // 
             this.cbGitHubPullRequest.AutoSize = true;
-            this.cbGitHubPullRequest.Location = new System.Drawing.Point(117, 171);
+            this.cbGitHubPullRequest.Dock = System.Windows.Forms.DockStyle.Left;
+            this.cbGitHubPullRequest.Location = new System.Drawing.Point(3, 2);
             this.cbGitHubPullRequest.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbGitHubPullRequest.Name = "cbGitHubPullRequest";
-            this.cbGitHubPullRequest.Size = new System.Drawing.Size(257, 17);
+            this.cbGitHubPullRequest.Size = new System.Drawing.Size(257, 21);
             this.cbGitHubPullRequest.TabIndex = 6;
             this.cbGitHubPullRequest.Text = "display github pull requests builds. GithubToken:";
             this.cbGitHubPullRequest.UseVisualStyleBackColor = true;
             this.cbGitHubPullRequest.CheckedChanged += new System.EventHandler(this.cbGitHubPullRequest_CheckedChanged);
             // 
-            // txtGitHubToken
-            // 
-            this.txtGitHubToken.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtGitHubToken.Location = new System.Drawing.Point(389, 171);
-            this.txtGitHubToken.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtGitHubToken.Name = "txtGitHubToken";
-            this.txtGitHubToken.Size = new System.Drawing.Size(230, 21);
-            this.txtGitHubToken.TabIndex = 3;
-            // 
             // AppVeyorSettingsUserControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.cbGitHubPullRequest);
-            this.Controls.Add(this.cbLoadTestResults);
-            this.Controls.Add(label2);
-            this.Controls.Add(label1);
-            this.Controls.Add(lblProjects);
-            this.Controls.Add(this.AppVeyorAccountName);
-            this.Controls.Add(lblAccountName);
-            this.Controls.Add(lblApiToken);
-            this.Controls.Add(this.txtGitHubToken);
-            this.Controls.Add(this.AppVeyorProjectName);
-            this.Controls.Add(this.AppVeyorAccountToken);
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "AppVeyorSettingsUserControl";
-            this.Size = new System.Drawing.Size(631, 245);
+            this.Size = new System.Drawing.Size(613, 167);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -185,7 +233,9 @@ namespace AppVeyorIntegration.Settings
         private System.Windows.Forms.TextBox AppVeyorProjectName;
         private System.Windows.Forms.TextBox AppVeyorAccountName;
         private System.Windows.Forms.CheckBox cbLoadTestResults;
-        private System.Windows.Forms.CheckBox cbGitHubPullRequest;
         private System.Windows.Forms.TextBox txtGitHubToken;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.CheckBox cbGitHubPullRequest;
     }
 }
