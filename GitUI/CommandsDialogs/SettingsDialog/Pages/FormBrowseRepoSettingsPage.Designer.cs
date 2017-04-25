@@ -241,8 +241,8 @@
             // 
             // FormBrowseRepoSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "FormBrowseRepoSettingsPage";
             this.Size = new System.Drawing.Size(1297, 666);
