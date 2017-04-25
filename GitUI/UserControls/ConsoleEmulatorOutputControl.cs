@@ -128,8 +128,6 @@ namespace GitUI.UserControls
             startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) =>
             {
                 var text = args.GetText(GitModule.SystemEncoding);
-                if (EnvUtils.RunningOnWindows())
-                    text = text.Replace("\n", Environment.NewLine);
                 FireDataReceived(new TextEventArgs(text));
             };
             startinfo.ConsoleProcessExitedEventSink = (sender, args) =>
