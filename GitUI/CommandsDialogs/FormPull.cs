@@ -328,7 +328,7 @@ namespace GitUI.CommandsDialogs
             }
             if ((bool)messageBoxResult)
             {
-                UICommands.StashPop(this);
+                UICommands.StashPop(owner);
             }
         }
 

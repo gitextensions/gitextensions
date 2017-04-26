@@ -430,7 +430,7 @@ namespace GitUI.CommandsDialogs
             if (isRejected.IsMatch(form.GetOutputString()) && !Module.IsBareRepository())
             {
                 bool forcePush = false;
-                IWin32Window owner = form;
+                IWin32Window owner = form.Owner;
                 if (AppSettings.AutoPullOnPushRejectedAction == null)
                 {
                     bool cancel = false;
