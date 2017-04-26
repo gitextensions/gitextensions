@@ -2,14 +2,6 @@
 <dictionary>
   <item>
     <key>
-      <string>BuildServer.AppVeyor.AppVeyorAccountName</string>
-    </key>
-    <value>
-      <string>gitextensions</string>
-    </value>
-  </item>
-  <item>
-    <key>
       <string>BuildServer.AppVeyor.AppVeyorDisplayGitHubPullRequests</string>
     </key>
     <value>
@@ -29,7 +21,7 @@
       <string>BuildServer.AppVeyor.AppVeyorProjectName</string>
     </key>
     <value>
-      <string>gitextensions</string>
+      <string>gitextensions/gitextensions</string>
     </value>
   </item>
   <item>

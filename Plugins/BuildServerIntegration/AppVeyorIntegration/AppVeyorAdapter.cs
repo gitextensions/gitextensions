@@ -70,7 +70,8 @@ namespace AppVeyorIntegration
             IsCommitInRevisionGrid = isCommitInRevisionGrid;
             var accountName = config.GetString("AppVeyorAccountName", null);
             _accountToken = config.GetString("AppVeyorAccountToken", null);
-            if (string.IsNullOrEmpty(accountName))
+            var projectNamesSetting = config.GetString("AppVeyorProjectName", null);
+            if (accountName.IsNullOrWhiteSpace() && projectNamesSetting.IsNullOrWhiteSpace())
                 return;
 
             _shouldLoadTestResults = config.GetBool("AppVeyorLoadTestsResults", false);
@@ -80,7 +81,6 @@ namespace AppVeyorIntegration
 
             _fetchBuilds = new HashSet<string>();
             _buildServerWatcher = buildServerWatcher;
-            var projectNamesSetting = config.GetString("AppVeyorProjectName", null);
 
             _httpClientAppVeyor = GetHttpClient(WebSiteUrl, _accountToken);
 
@@ -101,6 +101,10 @@ namespace AppVeyorIntegration
                 }
                 else
                 {
+                    if (accountName.IsNullOrWhiteSpace())
+                    {
+                        return;
+                    }
                     GetResponseAsync(_httpClientAppVeyor, ApiBaseUrl, CancellationToken.None)
                         .ContinueWith(
                             task =>
@@ -112,26 +116,18 @@ namespace AppVeyorIntegration
                                 foreach (var project in projects)
                                 {
                                     var projectId = project["slug"].ToString();
+                                    projectId = accountName.Combine("/", projectId);
                                     var projectName = project["name"].ToString();
-                                    if (useAllProjets)
+                                    var projectObj = new Project
                                     {
-                                        Projects.Add(projectName, new Project
-                                        {
-                                            Name = projectName,
-                                            Id = projectId,
-                                            QueryUrl = BuildQueryUrl(accountName, projectId)
-                                        });
-                                    }
-                                    else
+                                        Name = projectName,
+                                        Id = projectId,
+                                        QueryUrl = BuildQueryUrl(projectId)
+                                    };
+
+                                    if (useAllProjets || projectNames.Contains(projectObj.Name))
                                     {
-                                        if (projectNames.Contains(projectName))
-                                            Projects.Add(projectName,
-                                                new Project
-                                                {
-                                                    Name = projectName,
-                                                    Id = projectId,
-                                                    QueryUrl = BuildQueryUrl(accountName, projectId)
-                                                });
+                                        Projects.Add(projectObj.Name, projectObj);
                                     }
                                 }
                             }).Wait();
@@ -139,19 +135,19 @@ namespace AppVeyorIntegration
             }
             var builds = Projects.Where(p => useAllProjets || projectNames.Contains(p.Value.Name)).Select(p => p.Value);
             _allBuilds =
-                FilterBuilds(builds.SelectMany(project => QueryBuildsResults(accountName, project.Id, project.QueryUrl)));
+                FilterBuilds(builds.SelectMany(project => QueryBuildsResults(project)));
         }
 
         private void FillProjectsFromSettings(string accountName, string[] projectNames)
         {
             foreach (var projectName in projectNames)
             {
-                var projectId = projectName;
+                var projectId = accountName.Combine("/", projectName);
                 Projects.Add(projectName, new Project
                 {
                     Name = projectName,
                     Id = projectId,
-                    QueryUrl = BuildQueryUrl(accountName, projectId)
+                    QueryUrl = BuildQueryUrl(projectId)
                 });
             }
         }
@@ -170,9 +166,9 @@ namespace AppVeyorIntegration
             return httpClient;
         }
 
-        private string BuildQueryUrl(string accountName, string projectId)
+        private string BuildQueryUrl(string projectId)
         {
-            return ApiBaseUrl + accountName + "/" + projectId + "/history?recordsNumber=" + ProjectsToRetrieveCount;
+            return ApiBaseUrl + projectId + "/history?recordsNumber=" + ProjectsToRetrieveCount;
         }
 
         private class Project
@@ -182,17 +178,17 @@ namespace AppVeyorIntegration
             public string QueryUrl;
         }
 
-        private List<BuildDetails> QueryBuildsResults(string accountName, string projectId, string projectUrl)
+        private List<BuildDetails> QueryBuildsResults(Project project)
         {
-            var buildTask = GetResponseAsync(_httpClientAppVeyor, projectUrl, CancellationToken.None)
+            var buildTask = GetResponseAsync(_httpClientAppVeyor, project.QueryUrl, CancellationToken.None)
                 .ContinueWith(
                     task =>
                     {
                         var jobDescription = JObject.Parse(task.Result);
                         var builds = jobDescription["builds"];
                         var myBuilds = builds.Children();
-                        var baseApiUrl = ApiBaseUrl + accountName + "/" + projectId;
-                        var baseWebUrl = WebSiteUrl + "/project/" + accountName + "/" + projectId + "/build/";
+                        var baseApiUrl = ApiBaseUrl + project.Id;
+                        var baseWebUrl = WebSiteUrl + "/project/" + project.Id + "/build/";
                         var isGitHubRepository = jobDescription["project"]["repositoryType"].ToObject<string>() ==
                                                  "gitHub";
                         var repoName = jobDescription["project"]["repositoryName"].ToObject<string>();
@@ -249,7 +245,7 @@ namespace AppVeyorIntegration
                                 Status = status,
                                 StartDate = b["started"] == null ? DateTime.MinValue : b["started"].ToObject<DateTime>(),
                                 BaseWebUrl = baseWebUrl,
-                                Url = WebSiteUrl + "/project/" + accountName + "/" + projectId + "/build/" + version,
+                                Url = WebSiteUrl + "/project/" + project.Id + "/build/" + version,
                                 BaseApiUrl = baseApiUrl,
                                 AppVeyorBuildReportUrl = baseApiUrl + "/build/" + version,
                                 PullRequestText = (pullRequestId != null ? " PR#" + pullRequestId.Value<string>() : string.Empty),
