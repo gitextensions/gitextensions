@@ -186,6 +186,11 @@ namespace AppVeyorIntegration
                     .ContinueWith(
                         task =>
                         {
+                            if (string.IsNullOrWhiteSpace(task.Result))
+                            {
+                                return Enumerable.Empty<BuildDetails>();
+                            }
+
                             var jobDescription = JObject.Parse(task.Result);
                             var builds = jobDescription["builds"];
                             var myBuilds = builds.Children();
@@ -254,7 +259,9 @@ namespace AppVeyorIntegration
                                     Duration = duration,
                                     TestsResultText = string.Empty
                                 };
-                            }).ToList();
+                            })
+                            .Where(x => x != null)
+                            .ToList();
                         },
                         TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent);
                 return buildTask.Result.Where(b => b != null).ToList();
@@ -458,7 +465,7 @@ namespace AppVeyorIntegration
             if (retry)
                 return GetStreamAsync(httpClient, restServicePath, cancellationToken);
 
-            if (task.Result.IsSuccessStatusCode)
+            if (task.Status == TaskStatus.RanToCompletion && task.Result.IsSuccessStatusCode)
                 return task.Result.Content.ReadAsStreamAsync();
 
             return null;
