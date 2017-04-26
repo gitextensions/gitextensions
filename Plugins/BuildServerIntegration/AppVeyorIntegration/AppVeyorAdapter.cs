@@ -94,6 +94,7 @@ namespace AppVeyorIntegration
             if (Projects.Count == 0 ||
                 (!useAllProjets && Projects.Keys.Intersect(projectNames).Count() != projectNames.Length))
             {
+                Projects.Clear();
                 if (_accountToken.IsNullOrWhiteSpace())
                 {
                     FillProjectsFromSettings(accountName, projectNames);
