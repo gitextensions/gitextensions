@@ -61,7 +61,7 @@ namespace TfsInterop
                 else
                 {
                     url = "http://" + _hostname + ":8080/tfs/" + teamCollection;
-                    _urlPrefix = "http://" + hostname + ":8080/tfs/Build/Build.aspx?artifactMoniker=";
+                    _urlPrefix = "http://" + hostname + ":8080/tfs/"+(String.IsNullOrEmpty(teamCollection)? "" : teamCollection+"/")+"Build/Build.aspx?artifactMoniker=";
                 }
 
                 _tfsCollection = new TfsTeamProjectCollection(new Uri(url), new TfsClientCredentials());
