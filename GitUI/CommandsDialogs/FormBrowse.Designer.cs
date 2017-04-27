@@ -123,6 +123,8 @@ namespace GitUI.CommandsDialogs
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearRecentRepositoriesListToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
+            this.clearRecentRepositoriesListMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cloneSVNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1241,7 +1243,9 @@ namespace GitUI.CommandsDialogs
             // recentToolStripMenuItem
             // 
             this.recentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2});
+            this.toolStripMenuItem2,
+            this.clearRecentRepositoriesListToolStripMenuItem,
+            this.clearRecentRepositoriesListMenuItem});
             this.recentToolStripMenuItem.Image = global::GitUI.Properties.Resources.RecentRepositories;
             this.recentToolStripMenuItem.Name = "recentToolStripMenuItem";
             this.recentToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
@@ -1250,8 +1254,20 @@ namespace GitUI.CommandsDialogs
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(83, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem2.Text = "...";
+            // 
+            // clearRecentRepositoriesListToolStripMenuItem
+            // 
+            this.clearRecentRepositoriesListToolStripMenuItem.Name = "clearRecentRepositoriesListToolStripMenuItem";
+            this.clearRecentRepositoriesListToolStripMenuItem.Size = new System.Drawing.Size(149, 6);
+            // 
+            // clearRecentRepositoriesListMenuItem
+            // 
+            this.clearRecentRepositoriesListMenuItem.Name = "clearRecentRepositoriesListMenuItem";
+            this.clearRecentRepositoriesListMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clearRecentRepositoriesListMenuItem.Text = "Clear List";
+            this.clearRecentRepositoriesListMenuItem.Click += new System.EventHandler(ClearRecentRepositoriesListClick);
             // 
             // toolStripSeparator12
             // 
@@ -2311,5 +2327,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem manageWorktreeToolStripMenuItem;
         private ToolStripMenuItem createWorktreeToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItemWorktrees;
+        private ToolStripMenuItem clearRecentRepositoriesListMenuItem;
+        private ToolStripSeparator clearRecentRepositoriesListToolStripMenuItem;
     }
 }
