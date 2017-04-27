@@ -135,6 +135,7 @@ namespace GitUI.CommandsDialogs
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
         private string _userName = "";
         private string _userEmail = "";
+        private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -244,16 +245,9 @@ namespace GitUI.CommandsDialogs
 
         private void FormCommit_Load(object sender, EventArgs e)
         {
-            int deviceDpi = GetCurrentDeviceDpi();
-            int commitDialogDpi = AppSettings.CommitDialogDeviceDpi;
-            int commitDialogSplitter = AppSettings.CommitDialogSplitter;
-            int commitDialogRightSplitter = AppSettings.CommitDialogRightSplitter;
-
-            float scaleFactor = 1.0f * deviceDpi / commitDialogDpi;
-            if (commitDialogSplitter != -1)
-                splitMain.SplitterDistance = (int)(scaleFactor * commitDialogSplitter);
-            if (commitDialogRightSplitter != -1)
-                splitRight.SplitterDistance = (int)(scaleFactor * commitDialogRightSplitter);
+            _splitterManager.AddSplitter(splitMain, "splitMain");
+            _splitterManager.AddSplitter(splitRight, "splitRight");
+            _splitterManager.RestoreSplitters();
 
             SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
             Reset.Visible = AppSettings.ShowResetAllChanges;
@@ -279,9 +273,7 @@ namespace GitUI.CommandsDialogs
             if (CommitKind.Normal == _commitKind)
                 GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
 
-            AppSettings.CommitDialogDeviceDpi = GetCurrentDeviceDpi();
-            AppSettings.CommitDialogSplitter = splitMain.SplitterDistance;
-            AppSettings.CommitDialogRightSplitter = splitRight.SplitterDistance;
+            _splitterManager.SaveSplitters();
             AppSettings.CommitDialogSelectionFilter = toolbarSelectionFilter.Visible;
         }
 
