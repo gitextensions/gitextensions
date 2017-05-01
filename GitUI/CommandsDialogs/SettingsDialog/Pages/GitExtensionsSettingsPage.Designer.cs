@@ -326,8 +326,7 @@
             this.chkShowGitStatusInToolbar.Name = "chkShowGitStatusInToolbar";
             this.chkShowGitStatusInToolbar.Size = new System.Drawing.Size(451, 17);
             this.chkShowGitStatusInToolbar.TabIndex = 1;
-            this.chkShowGitStatusInToolbar.Text = "Show repository status in browse dialog (number of changes in toolbar, restart re" +
-    "quired)";
+            this.chkShowGitStatusInToolbar.Text = "Show number of changed files on commit button (restart required)";
             this.chkShowGitStatusInToolbar.UseVisualStyleBackColor = true;
             // 
             // chkShowStashCountInBrowseWindow
