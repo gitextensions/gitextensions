@@ -8447,7 +8447,7 @@ global settings.
 
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show repository status in browse dialog (number of changes in toolbar, restart required)</source>
+        <source>Show number of changed files on commit button (restart required)</source>
         <target>在浏览对话框中显示档案库的状态（在工具栏上会产生一些变化，需要重新启动）</target>
 
       </trans-unit>

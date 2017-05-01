@@ -8531,7 +8531,7 @@ zmieniać globalne ustawienia.
 
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show repository status in browse dialog (number of changes in toolbar, restart required)</source>
+        <source>Show number of changed files on commit button (restart required)</source>
         <target>Pokaż status repozytorium w oknie przeglądania (ilość zmian na pasku narzędzi, wymagany restart)</target>
 
       </trans-unit>

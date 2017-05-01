@@ -8043,7 +8043,7 @@ globali.</target>
 
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show repository status in browse dialog (number of changes in toolbar, restart required)</source>
+        <source>Show number of changed files on commit button (restart required)</source>
         <target>Mostra stato del repository nella finestra Sfoglia (numero di cambiamenti nella barra degli strumenti, richiesto riavvio)</target>
 
       </trans-unit>

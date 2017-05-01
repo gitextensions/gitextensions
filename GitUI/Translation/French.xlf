@@ -8563,7 +8563,7 @@ global settings.
 
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show repository status in browse dialog (number of changes in toolbar, restart required)</source>
+        <source>Show number of changed files on commit button (restart required)</source>
         <target>Afficher le statut du dépôt dans la fenêtre parcourir (number of changes in toolbar, restart required)</target>
 
       </trans-unit>
