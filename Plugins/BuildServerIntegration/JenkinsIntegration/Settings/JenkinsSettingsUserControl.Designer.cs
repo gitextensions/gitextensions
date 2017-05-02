@@ -28,35 +28,33 @@ namespace JenkinsIntegration.Settings
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Label label13;
-            System.Windows.Forms.Label label1;
+            this.lblJenkinsServerUrl = new System.Windows.Forms.Label();
+            this.lblProjectName = new System.Windows.Forms.Label();
             this.JenkinsServerUrl = new System.Windows.Forms.TextBox();
             this.JenkinsProjectName = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            label13 = new System.Windows.Forms.Label();
-            label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label13
+            // lblJenkinsServerUrl
             // 
-            label13.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            label13.AutoSize = true;
-            label13.Location = new System.Drawing.Point(3, 7);
-            label13.Name = "label13";
-            label13.Size = new System.Drawing.Size(98, 13);
-            label13.TabIndex = 0;
-            label13.Text = "Jenkins server URL";
+            this.lblJenkinsServerUrl.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblJenkinsServerUrl.AutoSize = true;
+            this.lblJenkinsServerUrl.Location = new System.Drawing.Point(3, 7);
+            this.lblJenkinsServerUrl.Name = "lblJenkinsServerUrl";
+            this.lblJenkinsServerUrl.Size = new System.Drawing.Size(98, 13);
+            this.lblJenkinsServerUrl.TabIndex = 0;
+            this.lblJenkinsServerUrl.Text = "Jenkins server URL";
             // 
-            // label1
+            // lblProjectName
             // 
-            label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(3, 34);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(70, 13);
-            label1.TabIndex = 2;
-            label1.Text = "Project name";
+            this.lblProjectName.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblProjectName.AutoSize = true;
+            this.lblProjectName.Location = new System.Drawing.Point(3, 34);
+            this.lblProjectName.Name = "lblProjectName";
+            this.lblProjectName.Size = new System.Drawing.Size(70, 13);
+            this.lblProjectName.TabIndex = 2;
+            this.lblProjectName.Text = "Project name";
             // 
             // JenkinsServerUrl
             // 
@@ -81,9 +79,9 @@ namespace JenkinsIntegration.Settings
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(label13, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.lblJenkinsServerUrl, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.JenkinsProjectName, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(label1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.lblProjectName, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.JenkinsServerUrl, 1, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -114,5 +112,7 @@ namespace JenkinsIntegration.Settings
         private System.Windows.Forms.TextBox JenkinsServerUrl;
         private System.Windows.Forms.TextBox JenkinsProjectName;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Label lblJenkinsServerUrl;
+        private System.Windows.Forms.Label lblProjectName;
     }
 }

@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.49RC2">
+<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="2.49.03">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="cbGitHubPullRequest.Text">
+        <source>display github pull requests builds. GithubToken:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbLoadTestResults.Text">
+        <source>display tests results in build status summary for each build result (network intensive!)</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
     <body>
       <trans-unit id="Description.Text">
@@ -908,12 +920,12 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
+      <trans-unit id="lblJenkinsServerUrl.Text">
+        <source>Jenkins server URL</source>
         <target />
       </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>Jenkins server URL</source>
+      <trans-unit id="lblProjectName.Text">
+        <source>Project name</source>
         <target />
       </trans-unit>
     </body>
@@ -1247,8 +1259,32 @@ branch names, tag names)</source>
         <source>Log as guest to display the build report</source>
         <target />
       </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Build url not valid</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy in the clipboard the url of the build before retrying.
+(Should contains at least the parameter"buildTypeId")</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectCaption.Text">
+        <source>Error when loading the projects and build list</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectMessage.Text">
+        <source>Fail to load the projects and build list.
+Please verify the server url.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The "Build Id Filter" regular expression is not valid and won't be saved!</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
+        <source>Extract the data from the build url copied in the clipboard</source>
         <target />
       </trans-unit>
     </body>
