@@ -171,9 +171,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return FindFileInFolders(exeName, p4mergepath, @"Perforce\");
                 case "meld":
                     string difftoolMeldPath = UnquoteString(GetGlobalSetting(settings, "difftool.meld.path"));
-                    string programFilesMeldPath = @"Meld\meld\";
                     exeName = "meld.exe";
-                    return FindFileInFolders(exeName, difftoolMeldPath, programFilesMeldPath);
+                    return FindFileInFolders(exeName, difftoolMeldPath, @"Meld\", @"Meld (x86)\");
                 case "semanticdiff":
                     exeName = "semanticmergetool.exe";
                     string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -249,6 +248,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "DiffMerge.exe";
                 case "kdiff3":
                     return "kdiff3.exe";
+                case "meld":
+                    return "meld.exe";
                 case "p4merge":
                     return "p4merge.exe";
                 case "semanticmerge":
@@ -297,6 +298,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         regkdiff3path += "\\" + exeName;
 
                     return FindFileInFolders(exeName, kdiff3path, @"KDiff3\", regkdiff3path);
+                case "meld":
+                    string mergetoolMeldPath = UnquoteString(GetGlobalSetting(settings, "mergetool.meld.path"));
+                    exeName = "meld.exe";
+                    return FindFileInFolders(exeName, mergetoolMeldPath, @"Meld\", @"Meld (x86)\");
                 case "p4merge":
                     string p4mergepath = UnquoteString(GetGlobalSetting(settings, "mergetool.p4merge.path"));
                     exeName = "p4merge.exe";
@@ -358,6 +363,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
                 case "diffmerge":
                     return "\"" + exeFile + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
+                case "meld":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\"";
                 case "p4merge":
                     return "\"" + exeFile + "\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
                 case "semanticmerge":
