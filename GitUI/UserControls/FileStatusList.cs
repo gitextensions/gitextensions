@@ -573,9 +573,11 @@ namespace GitUI
                 cm.Items.Insert(1, _openSubmoduleMenuItem);
             }
 
-            _openSubmoduleMenuItem.Visible = SelectedItem.IsSubmodule;
+            bool isSubmoduleSelected = SelectedItem != null && SelectedItem.IsSubmodule;
 
-            if (SelectedItem.IsSubmodule)
+            _openSubmoduleMenuItem.Visible = isSubmoduleSelected;
+
+            if (isSubmoduleSelected)
             {
                 _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ? 
                     new Font(_openSubmoduleMenuItem.Font,  FontStyle.Bold) : 
