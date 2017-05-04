@@ -234,7 +234,7 @@ namespace GitUI
             OutputLog.Append(line);
 
             // To the display control
-            AddMessageLine(line);
+            AddMessage(line);
         }
 
         public static bool IsOperationAborted(string dialogResult)
