@@ -2,92 +2,92 @@
 Changelog
 =========
 ### Version 2.49.03 (26 March 2017)
-* Fixed issue [#3605](//github.com/gitextensions/gitextensions/issues/3605). NullReferenceException from CanBeGitUrl when trying to clone git repository from dashboard.
-* Fixed issue [#3578](//github.com/gitextensions/gitextensions/issues/3578). File history and blame not show when path to file contain cyrilic chars bug reproducible.
+* Fixed issue #3605. NullReferenceException from CanBeGitUrl when trying to clone git repository from dashboard.
+* Fixed issue #3578. File history and blame not show when path to file contain cyrilic chars bug reproducible.
 
 ### Version 2.49.02 (22 March 2017)
-* Fixed issue [#3464](//github.com/gitextensions/gitextensions/issues/3464). Background fetch plugin - Not working.
-* Fixed issue [#3491](//github.com/gitextensions/gitextensions/issues/3491). 'Enter commit message' does not disappear when you start typing your message bug reproducible.
-* Fixed issue [#3394](//github.com/gitextensions/gitextensions/issues/3394). Gitext Clone in Explorer Context Menu try to clone in the wrong folder bug.
-* Fixed issue [#3142](//github.com/gitextensions/gitextensions/issues/3142). Comparing A/B/Working directory with diff tool UX.
-* Fixed issue [#3589](//github.com/gitextensions/gitextensions/issues/3589). Option 'Close dialog when all changes are committed' does not work properly bug
-* Fixed issue [#3569](//github.com/gitextensions/gitextensions/issues/3569). Windows OS version string is incorrect for 8, 8.1, and 10.
-* Fixed issue [#3539](//github.com/gitextensions/gitextensions/issues/3539). Non-sequential tab ordering on Settings -> Advanced -> Confirmations page.
-* Fixed issue [#3554](//github.com/gitextensions/gitextensions/issues/3554). Comparing branch form didn't honor the ShowMoreContext toolbar button.
-* Fix problem with incorrect building command line arguments. PR [#3551](//github.com/gitextensions/gitextensions/issues/3551)
+* Fixed issue #3464. Background fetch plugin - Not working.
+* Fixed issue #3491. 'Enter commit message' does not disappear when you start typing your message bug reproducible.
+* Fixed issue #3394. Gitext Clone in Explorer Context Menu try to clone in the wrong folder bug.
+* Fixed issue #3142. Comparing A/B/Working directory with diff tool UX.
+* Fixed issue #3589. Option 'Close dialog when all changes are committed' does not work properly bug
+* Fixed issue #3569. Windows OS version string is incorrect for 8, 8.1, and 10.
+* Fixed issue #3539. Non-sequential tab ordering on Settings -> Advanced -> Confirmations page.
+* Fixed issue #3554. Comparing branch form didn't honor the ShowMoreContext toolbar button.
+* Fix problem with incorrect building command line arguments. PR #3551
 
 ### Version 2.49.01 (12 March 2017)
-* Fixed issue [#3587](//github.com/gitextensions/gitextensions/issues/3587). Diff view is blank if git configuration is diff.color=always 
-* Fixed issue [#3427](//github.com/gitextensions/gitextensions/issues/3427). Pushing to a different remote wrongly ask about new branch bug.
-* Fixed issue [#3560](//github.com/gitextensions/gitextensions/issues/3560). GitExtensions doesn't respect core.commentChar setting in interactive rebase.
-* Fixed issue [#3507](//github.com/gitextensions/gitextensions/issues/3507). Branch normalization strips valid characters from the branch name.
-* Fixed issue [#3372](//github.com/gitextensions/gitextensions/issues/3372). Create tag: set focus to tag name first feature-request UX.
-* Fixed issue [#3441](//github.com/gitextensions/gitextensions/issues/3441). Prompt to commit after resolving merge conflicts even when "Do not commit" is checked bug.
-* Fixed issue [#3445](//github.com/gitextensions/gitextensions/issues/3445). "Reset file(s) to" functionality doesn't work bug.
-* Fixed issue [#2679](//github.com/gitextensions/gitextensions/issues/2679). "Unsupported file" error with submodules
-* Fixed issue [#3434](//github.com/gitextensions/gitextensions/issues/3434). Filtering commits by unicode search text fails bug
-* Fixed issue [#3412](//github.com/gitextensions/gitextensions/issues/3412). Fix reset file menu item text.
-* Fix "Host Fingerprint not registered" Plink handling on clone. PR [#3405](//github.com/gitextensions/gitextensions/issues/3405)
-* Fix crash when one of the stash is an autostash. PR [#3410](//github.com/gitextensions/gitextensions/issues/3410)
+* Fixed issue #3587. Diff view is blank if git configuration is diff.color=always 
+* Fixed issue #3427. Pushing to a different remote wrongly ask about new branch bug.
+* Fixed issue #3560. GitExtensions doesn't respect core.commentChar setting in interactive rebase.
+* Fixed issue #3507. Branch normalization strips valid characters from the branch name.
+* Fixed issue #3372. Create tag: set focus to tag name first feature-request UX.
+* Fixed issue #3441. Prompt to commit after resolving merge conflicts even when "Do not commit" is checked bug.
+* Fixed issue #3445. "Reset file(s) to" functionality doesn't work bug.
+* Fixed issue #2679. "Unsupported file" error with submodules
+* Fixed issue #3434. Filtering commits by unicode search text fails bug
+* Fixed issue #3412. Fix reset file menu item text.
+* Fix "Host Fingerprint not registered" Plink handling on clone. PR #3405
+* Fix crash when one of the stash is an autostash. PR #3410
 
 ### Version 2.49 (9 November 2016)
-* Updated Git for Windows to version 2.10.1. PR [#3353](//github.com/gitextensions/gitextensions/issues/3353)
+* Updated Git for Windows to version 2.10.1. PR #3353
 * Updated Putty to version 0.67
 * KDiff3 rolled back to version 0.9.97
-* VSIX extension for VS2015. PR [#2885](//github.com/gitextensions/gitextensions/issues/2885), [#3331](//github.com/gitextensions/gitextensions/issues/3331)
-* ConEmu Console Emulator Control for Running Git Commands in the Real Terminal. PR [#3152](//github.com/gitextensions/gitextensions/issues/3152)
-* Highlighting of authored commits. PR [#2672](//github.com/gitextensions/gitextensions/issues/2672)
-* Support sparse checkout. PR [#2918](//github.com/gitextensions/gitextensions/issues/2918)
-* Support shallow clone. PR [#2911](//github.com/gitextensions/gitextensions/issues/2911)
-* Support no checkout on Clone. PR [#2921](//github.com/gitextensions/gitextensions/issues/2921)
-* Stash before rebase. PR [#2770](//github.com/gitextensions/gitextensions/issues/2770)
-* Draw smoother Bezier curves in Revision Grid. PR [#2662](//github.com/gitextensions/gitextensions/issues/2662)
-* Support for --assume-unchanged. PR [#2889](//github.com/gitextensions/gitextensions/issues/2889)
-* Colorful diffs for Linux. PR [#2969](//github.com/gitextensions/gitextensions/issues/2969)
-* Comparing to another branch or Commit. PR [#3039](//github.com/gitextensions/gitextensions/issues/3039)
-* Support for “View Tag annotations”. PR [#2836](//github.com/gitextensions/gitextensions/issues/2836)
-* Support showing the real line number for diff. PR [#2988](//github.com/gitextensions/gitextensions/issues/2988)
-* Add force with lease to the advanced push options. PR [#2991](//github.com/gitextensions/gitextensions/issues/2991)
-* Diff filtering. PR [#3198](//github.com/gitextensions/gitextensions/issues/3198)
+* VSIX extension for VS2015. PR #2885, #3331
+* ConEmu Console Emulator Control for Running Git Commands in the Real Terminal. PR #3152
+* Highlighting of authored commits. PR #2672
+* Support sparse checkout. PR #2918
+* Support shallow clone. PR #2911
+* Support no checkout on Clone. PR #2921
+* Stash before rebase. PR #2770
+* Draw smoother Bezier curves in Revision Grid. PR #2662
+* Support for --assume-unchanged. PR #2889
+* Colorful diffs for Linux. PR #2969
+* Comparing to another branch or Commit. PR #3039
+* Support for “View Tag annotations”. PR #2836
+* Support showing the real line number for diff. PR #2988
+* Add force with lease to the advanced push options. PR #2991
+* Diff filtering. PR #3198
 * Cherry pick selected file/selected lines
-* Added preset for VisualStudio Diff Tool. PR [#3034](//github.com/gitextensions/gitextensions/issues/3034)
+* Added preset for VisualStudio Diff Tool. PR #3034
 * Polish translation and dictionary added
 * Czech translation added
 * Disabled "Traditional Chinese" translation
-* Romanian dictionary added. PR [#2979](//github.com/gitextensions/gitextensions/issues/2979)
+* Romanian dictionary added. PR #2979
 
 ### Version 2.49RC2 (22 October 2016)
-* Updated Git for Windows to version 2.10.1. PR [#3353](//github.com/gitextensions/gitextensions/issues/3353)
+* Updated Git for Windows to version 2.10.1. PR #3353
 * Updated Putty to version 0.67
-* Fixed issue [#3356](//github.com/gitextensions/gitextensions/issues/3356), [#3370](//github.com/gitextensions/gitextensions/issues/3370), [#3357](//github.com/gitextensions/gitextensions/issues/3357): ConEmu integration issues
-* Fixed issue [#2532](//github.com/gitextensions/gitextensions/issues/2532): Fix encoding of gitext.sh
-* Fixed issue [#3364](//github.com/gitextensions/gitextensions/issues/3364): Prevent crash when encountering a 'tag' in 'recover lost objects' form
-* Fixed issue [#3365](//github.com/gitextensions/gitextensions/issues/3365): Exception when search 'diff contains' has a special character
+* Fixed issue #3356, #3370, #3357: ConEmu integration issues
+* Fixed issue #2532: Fix encoding of gitext.sh
+* Fixed issue #3364: Prevent crash when encountering a 'tag' in 'recover lost objects' form
+* Fixed issue #3365: Exception when search 'diff contains' has a special character
 
 ### Version 2.49RC1 (12 October 2016)
 * Updated Git for Windows to version 2.10.0
 * KDiff3 rolled back to version 0.9.97
-* VSIX extension for VS2015. PR [#2885](//github.com/gitextensions/gitextensions/issues/2885), [#3331](//github.com/gitextensions/gitextensions/issues/3331)
-* ConEmu Console Emulator Control for Running Git Commands in the Real Terminal. PR [#3152](//github.com/gitextensions/gitextensions/issues/3152)
-* Highlighting of authored commits. PR [#2672](//github.com/gitextensions/gitextensions/issues/2672)
-* Support sparse checkout. PR [#2918](//github.com/gitextensions/gitextensions/issues/2918)
-* Support shallow clone. PR [#2911](//github.com/gitextensions/gitextensions/issues/2911)
-* Support no checkout on Clone. PR [#2921](//github.com/gitextensions/gitextensions/issues/2921)
-* Stash before rebase. PR [#2770](//github.com/gitextensions/gitextensions/issues/2770)
-* Draw smoother Bezier curves in Revision Grid. PR [#2662](//github.com/gitextensions/gitextensions/issues/2662)
-* Support for --assume-unchanged. PR [#2889](//github.com/gitextensions/gitextensions/issues/2889)
-* Colorful diffs for Linux. PR [#2969](//github.com/gitextensions/gitextensions/issues/2969)
-* Comparing to another branch or Commit. PR [#3039](//github.com/gitextensions/gitextensions/issues/3039)
-* Support for “View Tag annotations”. PR [#2836](//github.com/gitextensions/gitextensions/issues/2836)
-* Support showing the real line number for diff. PR [#2988](//github.com/gitextensions/gitextensions/issues/2988)
-* Add force with lease to the advanced push options. PR [#2991](//github.com/gitextensions/gitextensions/issues/2991)
-* Diff filtering. PR [#3198](//github.com/gitextensions/gitextensions/issues/3198)
+* VSIX extension for VS2015. PR #2885, #3331
+* ConEmu Console Emulator Control for Running Git Commands in the Real Terminal. PR #3152
+* Highlighting of authored commits. PR #2672
+* Support sparse checkout. PR #2918
+* Support shallow clone. PR #2911
+* Support no checkout on Clone. PR #2921
+* Stash before rebase. PR #2770
+* Draw smoother Bezier curves in Revision Grid. PR #2662
+* Support for --assume-unchanged. PR #2889
+* Colorful diffs for Linux. PR #2969
+* Comparing to another branch or Commit. PR #3039
+* Support for “View Tag annotations”. PR #2836
+* Support showing the real line number for diff. PR #2988
+* Add force with lease to the advanced push options. PR #2991
+* Diff filtering. PR #3198
 * Cherry pick selected file/selected lines
-* Added preset for VisualStudio Diff Tool. PR [#3034](//github.com/gitextensions/gitextensions/issues/3034)
+* Added preset for VisualStudio Diff Tool. PR #3034
 * Polish translation and dictionary added
 * Czech translation added
 * Disabled "Traditional Chinese" translation
-* Romanian dictionary added. PR [#2979](//github.com/gitextensions/gitextensions/issues/2979)
+* Romanian dictionary added. PR #2979
 
 
 
@@ -95,132 +95,132 @@ Changelog
 * Option to check for release candidate versions
 * Make dictionary setting configurable for each repository separately
 * Use complete name of the merged/rebased branch to avoid conflict with a remote branch (if named the same).
-* Remember the IgnoreWhitespaceChanges settings for FileViewer. PR [#2844](//github.com/gitextensions/gitextensions/issues/2844)
-* Specify Git and PuTTY locations with environment variables. PR [#2367](//github.com/gitextensions/gitextensions/issues/2367)
-* Tags in branch list are visible when "Local" is selected. PR [#2543](//github.com/gitextensions/gitextensions/issues/2543), [#2545](//github.com/gitextensions/gitextensions/issues/2545)
-* Follow only exact renames setting added. PR [#2627](//github.com/gitextensions/gitextensions/issues/2627)
-* Update preview list of ignored files in background. PR [#2557](//github.com/gitextensions/gitextensions/issues/2557)
-* Statistics plugin improvements. PR [#2707](//github.com/gitextensions/gitextensions/issues/2707)
-* DOS Codepage 852 added into supported encodings. PR [#2913](//github.com/gitextensions/gitextensions/issues/2913)
-* {WorkingDir} Parameter for Scripts. PR [#2914](//github.com/gitextensions/gitextensions/issues/2914)
-* Multiple tfs build defs. PR [#2916](//github.com/gitextensions/gitextensions/issues/2916)
-* Show commit SHA1 in log. PR [#2659](//github.com/gitextensions/gitextensions/issues/2659)
-* Allow auto-normalisation of branch name. PR [#3233](//github.com/gitextensions/gitextensions/issues/3233)
-* Using Common Item Dialog to select folders. PR [#2788](//github.com/gitextensions/gitextensions/issues/2788)
-* Ability to run scripts with several selected commits: {sHashes} argument. PR [#2578](//github.com/gitextensions/gitextensions/issues/2578)
-* Use the repository URL from the clipboard if available. PR [#2586](//github.com/gitextensions/gitextensions/issues/2586)
-* Enter/Return in file tree acts as double click. PR [#2785](//github.com/gitextensions/gitextensions/issues/2785)
-* Add script events: BeforeCheckout, AfterCheckout. PR [#3211](//github.com/gitextensions/gitextensions/issues/3211)
-* Clarified wording for Pull dropdown menu, now matches tooltips. PR [#2830](//github.com/gitextensions/gitextensions/issues/2830)
-* Manage new format to detect detached HEAD (Git >v2.4). PR [#3010](//github.com/gitextensions/gitextensions/issues/3010)
+* Remember the IgnoreWhitespaceChanges settings for FileViewer. PR #2844
+* Specify Git and PuTTY locations with environment variables. PR #2367
+* Tags in branch list are visible when "Local" is selected. PR #2543, #2545
+* Follow only exact renames setting added. PR #2627
+* Update preview list of ignored files in background. PR #2557
+* Statistics plugin improvements. PR #2707
+* DOS Codepage 852 added into supported encodings. PR #2913
+* {WorkingDir} Parameter for Scripts. PR #2914
+* Multiple tfs build defs. PR #2916
+* Show commit SHA1 in log. PR #2659
+* Allow auto-normalisation of branch name. PR #3233
+* Using Common Item Dialog to select folders. PR #2788
+* Ability to run scripts with several selected commits: {sHashes} argument. PR #2578
+* Use the repository URL from the clipboard if available. PR #2586
+* Enter/Return in file tree acts as double click. PR #2785
+* Add script events: BeforeCheckout, AfterCheckout. PR #3211
+* Clarified wording for Pull dropdown menu, now matches tooltips. PR #2830
+* Manage new format to detect detached HEAD (Git >v2.4). PR #3010
 * Support combined diff for merge commit
 * Per repository plugins settings
-* TeamCity: Add an option to try to display build report logged as a guest. PR [#3224](//github.com/gitextensions/gitextensions/issues/3224)
-* Add a popup to easy finding a TeamCity build. PR [#3241](//github.com/gitextensions/gitextensions/issues/3241)
-* Improve fixup commits. PR [#3264](//github.com/gitextensions/gitextensions/issues/3264)
-* Some changes around .gitignore. PR [#3283](//github.com/gitextensions/gitextensions/issues/3283)
-* Search graph row index by commit hash using dictionary. PR [#3295](//github.com/gitextensions/gitextensions/issues/3295)
-* FormChooseCommit: Add links helper to find parent(s) of current selected commit. PR [#3246](//github.com/gitextensions/gitextensions/issues/3246)
-* --first-parent filtration added, --full-history fixed, hotkeys exposed, context menu in file history window unification. PR [#3250](//github.com/gitextensions/gitextensions/issues/3250)
-* Added setting to enable/disable autocompletion in commit dialog. PR [#2799](//github.com/gitextensions/gitextensions/issues/2799)
-* Menu entries for improved accessibility. PR [#3234](//github.com/gitextensions/gitextensions/issues/3234)
+* TeamCity: Add an option to try to display build report logged as a guest. PR #3224
+* Add a popup to easy finding a TeamCity build. PR #3241
+* Improve fixup commits. PR #3264
+* Some changes around .gitignore. PR #3283
+* Search graph row index by commit hash using dictionary. PR #3295
+* FormChooseCommit: Add links helper to find parent(s) of current selected commit. PR #3246
+* --first-parent filtration added, --full-history fixed, hotkeys exposed, context menu in file history window unification. PR #3250
+* Added setting to enable/disable autocompletion in commit dialog. PR #2799
+* Menu entries for improved accessibility. PR #3234
 * Fixed an intermittent bug where ObjectDisposedException occurs on launch
 * Fixed a bug where branch filter throws null reference exception when no repository selected
-* Fixed issue [#2977](//github.com/gitextensions/gitextensions/issues/2977), [#2566](//github.com/gitextensions/gitextensions/issues/2566), [#2712](//github.com/gitextensions/gitextensions/issues/2712), [#2972](//github.com/gitextensions/gitextensions/issues/2972), [#2959](//github.com/gitextensions/gitextensions/issues/2959), [#2958](//github.com/gitextensions/gitextensions/issues/2958), [#2904](//github.com/gitextensions/gitextensions/issues/2904): Fixes for mono build
-* Fixed issue [#3093](//github.com/gitextensions/gitextensions/issues/3093): Fix height calculation for RevisionHeader in the CommitInfo panel on Linux
-* Fixed issue [#3094](//github.com/gitextensions/gitextensions/issues/3094): Change the default application font for Linux
-* Fixed issue [#3267](//github.com/gitextensions/gitextensions/issues/3267): Linux aware paths
-* Fixed issue [#3100](//github.com/gitextensions/gitextensions/issues/3100): Don't show Putty toolstrip menu item when not running on Windows
-* Fixed issue [#2769](//github.com/gitextensions/gitextensions/issues/2769): GitExtensions slow with many Submodules
-* Fixed issue [#3207](//github.com/gitextensions/gitextensions/issues/3207): Checkout branch dialog is too narrow
-* Fixed issue [#3069](//github.com/gitextensions/gitextensions/issues/3069): "Unsupported commit message encoding" in conemu repo
-* Fixed issue [#3274](//github.com/gitextensions/gitextensions/issues/3274): Honour the AutoSetupMerge git config
-* Fixed issue [#2924](//github.com/gitextensions/gitextensions/issues/2924): "Illegal Characters in Path" if %PATH% Contains Quotes
-* Fixed issue [#3262](//github.com/gitextensions/gitextensions/issues/3262): Fix p4merge diff settings
-* Fixed issue [#2759](//github.com/gitextensions/gitextensions/issues/2759): On Diff/File List pane got exception ArgumentOutOfRangeException InvalidArgument Value of -1 is not valid for index
-* Fixed issue [#3297](//github.com/gitextensions/gitextensions/issues/3297): Unable to use '/' or '.' in branch name when creating a new branch
-* Fixed issue [#3271](//github.com/gitextensions/gitextensions/issues/3271): No need to close the "create branch" dialog if failed to create
-* Fixed issue [#3054](//github.com/gitextensions/gitextensions/issues/3054): Changes to global gitignore do not properly propagate to the Commit button
-* Fixed issue [#573](//github.com/gitextensions/gitextensions/issues/573): Push Multiple Branches hang if using OpenSSH for key mgmt
-* Fixed issue [#3079](//github.com/gitextensions/gitextensions/issues/3079): Hidden expandable column between message and author
-* Fixed issue [#2813](//github.com/gitextensions/gitextensions/issues/2813): Bisect labels size problems on french version
-* Fixed issue [#2965](//github.com/gitextensions/gitextensions/issues/2965): Config Settings written with upper case True and False
-* Fixed issue [#2292](//github.com/gitextensions/gitextensions/issues/2292): Don't auto-remember the desired action 'Local changes' when checking out a branch
-* Fixed issue [#3136](//github.com/gitextensions/gitextensions/issues/3136): No option to pull request if host is stash/bit bucket but repo (or project) contains
-* Fixed issue [#3231](//github.com/gitextensions/gitextensions/issues/3231): Shouldn't popup the "not on a branch" warning when editing a commit during rebasing
-* Fixed issue [#3063](//github.com/gitextensions/gitextensions/issues/3063): Application crash caused by hotkey CTRL+P
-* Fixed issue [#3221](//github.com/gitextensions/gitextensions/issues/3221): Prevent crash due to invalid Build CI project name regex saved
-* Fixed issue [#3014](//github.com/gitextensions/gitextensions/issues/3014): Ignore web browser script error for TeamCity and GitHub
-* Fixed issue [#2654](//github.com/gitextensions/gitextensions/issues/2654): Jenkins plugin: Incorrectly detects Internet Explorer 'Document Mode'
-* Fixed issue [#3055](//github.com/gitextensions/gitextensions/issues/3055): "Don't set as default" option in Pull menu is ignored for three of the five items in the Pull menu
-* Fixed issue [#3006](//github.com/gitextensions/gitextensions/issues/3006): CryptographicException when attempting to open a repository
-* Fixed issue [#3111](//github.com/gitextensions/gitextensions/issues/3111): Creating branch from empty repo leads to ArgumentOutOfRangeException
-* Fixed issue [#2790](//github.com/gitextensions/gitextensions/issues/2790): Can not assign null value to UICommandsSource
-* Fixed issue [#3067](//github.com/gitextensions/gitextensions/issues/3067): Diff for the root commit is broken in master branch
-* Fixed issue [#2993](//github.com/gitextensions/gitextensions/issues/2993): Do not show password in plain text in Stash plugin options
-* Fixed issue [#2860](//github.com/gitextensions/gitextensions/issues/2860): Unable to open 'periodic background fetch' settings
-* Fixed issue [#2954](//github.com/gitextensions/gitextensions/issues/2954): Git Flow plugin: Fix some combo boxes overlap with labels
-* Fixed issue [#2614](//github.com/gitextensions/gitextensions/issues/2614): Fix a problem with the directory name detected for certain url
-* Fixed issue [#2887](//github.com/gitextensions/gitextensions/issues/2887): Jenkins integration not requesting credentials
-* Fixed issue [#3015](//github.com/gitextensions/gitextensions/issues/3015): Mono: Unable to locate plugins folder
-* Fixed issue [#2902](//github.com/gitextensions/gitextensions/issues/2902): Ampersand (&) in Revision Link URI breaks revision message
-* Fixed issue [#2846](//github.com/gitextensions/gitextensions/issues/2846): Remember check-box states in "Cherry pick commit" dialog
-* Fixed issue [#2874](//github.com/gitextensions/gitextensions/issues/2874): Fix infinite loop bug during undo with auto-wrap
-* Fixed issue [#2857](//github.com/gitextensions/gitextensions/issues/2857): Fails to reset selected lines on new files
-* Fixed issue [#2840](//github.com/gitextensions/gitextensions/issues/2840): Commit filter by number doesn't work
-* Fixed issue [#2700](//github.com/gitextensions/gitextensions/issues/2700), [#2822](//github.com/gitextensions/gitextensions/issues/2822), [#2854](//github.com/gitextensions/gitextensions/issues/2854): Filtering by branch name or commit id doesn't work
-* Fixed issue [#2786](//github.com/gitextensions/gitextensions/issues/2786): Clicking on the branch dropdown before selecting a repository triggers a NPE
-* Fixed issue [#2692](//github.com/gitextensions/gitextensions/issues/2692): Intermittent error "cannot access a disposed object" on launch
-* Fixed issue [#2821](//github.com/gitextensions/gitextensions/issues/2821): Additional hotkeys in Commit Dialog
-* Fixed issue [#2822](//github.com/gitextensions/gitextensions/issues/2822): File history and blame dialogs are empty
-* Fixed issue [#2847](//github.com/gitextensions/gitextensions/issues/2847): Application crashes when an empty string is pasted as a commit message
-* Fixed issue [#2739](//github.com/gitextensions/gitextensions/issues/2739): Turn on Treat Warnings As Errors for all projects
-* Fixed issue [#2809](//github.com/gitextensions/gitextensions/issues/2809): Jenkins plugin: Login with default credentials (single sign on)
-* Fixed issue [#2731](//github.com/gitextensions/gitextensions/issues/2731): Move Microsoft.TeamFoundation.Client references from GAC to NuGet
-* Fixed issue [#2761](//github.com/gitextensions/gitextensions/issues/2761): ArgumentOutOfRangeException is thrown when right clicking of the table header of 'Resolve merge conflicts' window
-* Fixed issue [#2154](//github.com/gitextensions/gitextensions/issues/2154), [#2645](//github.com/gitextensions/gitextensions/issues/2645): Branches with comma in their name cannot be deleted
-* Fixed issue [#2686](//github.com/gitextensions/gitextensions/issues/2686): ssh:// with port not working with Putty
-* Fixed issue [#2493](//github.com/gitextensions/gitextensions/issues/2493): After Clone, GitExt shows "Starting a second message loop on a single thread is not a valid operation. Use Form.ShowDialog instead"
-* Fixed issue [#2694](//github.com/gitextensions/gitextensions/issues/2694): typos in .gitignore template text
-* Fixed issue [#2453](//github.com/gitextensions/gitextensions/issues/2453): Autocomplete Display-Bug
-* Fixed issue [#2488](//github.com/gitextensions/gitextensions/issues/2488): AutoCRLF correction when copying a text from the FileViewer
-* Fixed issue [#2301](//github.com/gitextensions/gitextensions/issues/2301): IME error with Spell checker
-* Fixed issue [#2617](//github.com/gitextensions/gitextensions/issues/2617): Fixed calls of plink for host key caching with invalid urls
-* Fixed issue [#2473](//github.com/gitextensions/gitextensions/issues/2473): Fixes in GitStatistics Plugin
-* Fixed issue [#2480](//github.com/gitextensions/gitextensions/issues/2480): Wrong Gource URL and settings
-* Fixed issue [#2584](//github.com/gitextensions/gitextensions/issues/2584): Cloning from Explorer in a drive root crashes GitExtensions
-* Fixed issue [#2597](//github.com/gitextensions/gitextensions/issues/2597): [VS Plugin] Don't try highlight node when it is not found
-* Fixed issue [#2590](//github.com/gitextensions/gitextensions/issues/2590): [VS Plugin] Allow some commands on all targets
-* Fixed issue [#2601](//github.com/gitextensions/gitextensions/issues/2601), [#2587](//github.com/gitextensions/gitextensions/issues/2587), [#2559](//github.com/gitextensions/gitextensions/issues/2559), [#2560](//github.com/gitextensions/gitextensions/issues/2560): Fix issues with VS Plugin
-* Fixed issue [#2591](//github.com/gitextensions/gitextensions/issues/2591): NullRefernceException in GitPlugin
-* Fixed issue [#2620](//github.com/gitextensions/gitextensions/issues/2620): Fix a couple of exceptions thrown when processing is incorrectly done on error messages
-* Fixed issue [#2565](//github.com/gitextensions/gitextensions/issues/2565): Fix for "init" command line command
-* Fixed issue [#2501](//github.com/gitextensions/gitextensions/issues/2501): Fix for "fatal: Not a valid object name" when displaying a nonexistent blob
-* Fixed issue [#2440](//github.com/gitextensions/gitextensions/issues/2440): Fixed parsing quoted printable for Author field
-* Fixed issue [#2422](//github.com/gitextensions/gitextensions/issues/2422): Fix refresh issue with the branches filter textbox
-* Fixed issue [#2409](//github.com/gitextensions/gitextensions/issues/2409): Display correctly windows end of line in git commit message
+* Fixed issue #2977, #2566, #2712, #2972, #2959, #2958, #2904: Fixes for mono build
+* Fixed issue #3093: Fix height calculation for RevisionHeader in the CommitInfo panel on Linux
+* Fixed issue #3094: Change the default application font for Linux
+* Fixed issue #3267: Linux aware paths
+* Fixed issue #3100: Don't show Putty toolstrip menu item when not running on Windows
+* Fixed issue #2769: GitExtensions slow with many Submodules
+* Fixed issue #3207: Checkout branch dialog is too narrow
+* Fixed issue #3069: "Unsupported commit message encoding" in conemu repo
+* Fixed issue #3274: Honour the AutoSetupMerge git config
+* Fixed issue #2924: "Illegal Characters in Path" if %PATH% Contains Quotes
+* Fixed issue #3262: Fix p4merge diff settings
+* Fixed issue #2759: On Diff/File List pane got exception ArgumentOutOfRangeException InvalidArgument Value of -1 is not valid for index
+* Fixed issue #3297: Unable to use '/' or '.' in branch name when creating a new branch
+* Fixed issue #3271: No need to close the "create branch" dialog if failed to create
+* Fixed issue #3054: Changes to global gitignore do not properly propagate to the Commit button
+* Fixed issue #573: Push Multiple Branches hang if using OpenSSH for key mgmt
+* Fixed issue #3079: Hidden expandable column between message and author
+* Fixed issue #2813: Bisect labels size problems on french version
+* Fixed issue #2965: Config Settings written with upper case True and False
+* Fixed issue #2292: Don't auto-remember the desired action 'Local changes' when checking out a branch
+* Fixed issue #3136: No option to pull request if host is stash/bit bucket but repo (or project) contains
+* Fixed issue #3231: Shouldn't popup the "not on a branch" warning when editing a commit during rebasing
+* Fixed issue #3063: Application crash caused by hotkey CTRL+P
+* Fixed issue #3221: Prevent crash due to invalid Build CI project name regex saved
+* Fixed issue #3014: Ignore web browser script error for TeamCity and GitHub
+* Fixed issue #2654: Jenkins plugin: Incorrectly detects Internet Explorer 'Document Mode'
+* Fixed issue #3055: "Don't set as default" option in Pull menu is ignored for three of the five items in the Pull menu
+* Fixed issue #3006: CryptographicException when attempting to open a repository
+* Fixed issue #3111: Creating branch from empty repo leads to ArgumentOutOfRangeException
+* Fixed issue #2790: Can not assign null value to UICommandsSource
+* Fixed issue #3067: Diff for the root commit is broken in master branch
+* Fixed issue #2993: Do not show password in plain text in Stash plugin options
+* Fixed issue #2860: Unable to open 'periodic background fetch' settings
+* Fixed issue #2954: Git Flow plugin: Fix some combo boxes overlap with labels
+* Fixed issue #2614: Fix a problem with the directory name detected for certain url
+* Fixed issue #2887: Jenkins integration not requesting credentials
+* Fixed issue #3015: Mono: Unable to locate plugins folder
+* Fixed issue #2902: Ampersand (&) in Revision Link URI breaks revision message
+* Fixed issue #2846: Remember check-box states in "Cherry pick commit" dialog
+* Fixed issue #2874: Fix infinite loop bug during undo with auto-wrap
+* Fixed issue #2857: Fails to reset selected lines on new files
+* Fixed issue #2840: Commit filter by number doesn't work
+* Fixed issue #2700, #2822, #2854: Filtering by branch name or commit id doesn't work
+* Fixed issue #2786: Clicking on the branch dropdown before selecting a repository triggers a NPE
+* Fixed issue #2692: Intermittent error "cannot access a disposed object" on launch
+* Fixed issue #2821: Additional hotkeys in Commit Dialog
+* Fixed issue #2822: File history and blame dialogs are empty
+* Fixed issue #2847: Application crashes when an empty string is pasted as a commit message
+* Fixed issue #2739: Turn on Treat Warnings As Errors for all projects
+* Fixed issue #2809: Jenkins plugin: Login with default credentials (single sign on)
+* Fixed issue #2731: Move Microsoft.TeamFoundation.Client references from GAC to NuGet
+* Fixed issue #2761: ArgumentOutOfRangeException is thrown when right clicking of the table header of 'Resolve merge conflicts' window
+* Fixed issue #2154, #2645: Branches with comma in their name cannot be deleted
+* Fixed issue #2686: ssh:// with port not working with Putty
+* Fixed issue #2493: After Clone, GitExt shows "Starting a second message loop on a single thread is not a valid operation. Use Form.ShowDialog instead"
+* Fixed issue #2694: typos in .gitignore template text
+* Fixed issue #2453: Autocomplete Display-Bug
+* Fixed issue #2488: AutoCRLF correction when copying a text from the FileViewer
+* Fixed issue #2301: IME error with Spell checker
+* Fixed issue #2617: Fixed calls of plink for host key caching with invalid urls
+* Fixed issue #2473: Fixes in GitStatistics Plugin
+* Fixed issue #2480: Wrong Gource URL and settings
+* Fixed issue #2584: Cloning from Explorer in a drive root crashes GitExtensions
+* Fixed issue #2597: [VS Plugin] Don't try highlight node when it is not found
+* Fixed issue #2590: [VS Plugin] Allow some commands on all targets
+* Fixed issue #2601, #2587, #2559, #2560: Fix issues with VS Plugin
+* Fixed issue #2591: NullRefernceException in GitPlugin
+* Fixed issue #2620: Fix a couple of exceptions thrown when processing is incorrectly done on error messages
+* Fixed issue #2565: Fix for "init" command line command
+* Fixed issue #2501: Fix for "fatal: Not a valid object name" when displaying a nonexistent blob
+* Fixed issue #2440: Fixed parsing quoted printable for Author field
+* Fixed issue #2422: Fix refresh issue with the branches filter textbox
+* Fixed issue #2409: Display correctly windows end of line in git commit message
 
 ### Version 2.48.05 (16 May 2015)
-* Fixed issue [#2493](//github.com/gitextensions/gitextensions/issues/2493): StartBrowseDialog failed after clone
-* Fixed issue [#2783](//github.com/gitextensions/gitextensions/issues/2783): Fixed crash when right click on blank line in 'File Tree'
+* Fixed issue #2493: StartBrowseDialog failed after clone
+* Fixed issue #2783: Fixed crash when right click on blank line in 'File Tree'
 * Enter/Return in file tree acts as double click
 * Support Git for Windows path for Linux tools
 
 ### Version 2.48.04 (8 May 2015)
-* Fixed issue [#1643](//github.com/gitextensions/gitextensions/issues/1643): Do stage of 16506 files and GUI becomes Not Respoding
-* Fixed issue [#2591](//github.com/gitextensions/gitextensions/issues/2591): VSAddin solutionItem.ProjectItem == null when selected 'References' item in C# project
-* Fixed issue [#2587](//github.com/gitextensions/gitextensions/issues/2587), [#2601](//github.com/gitextensions/gitextensions/issues/2601): VSAddin fixed StackOverflowException
-* Fixed issue [#2584](//github.com/gitextensions/gitextensions/issues/2584): Escape the last backslash from paths before running GitExtensions to avoid escaping the double-quote
-* Fixed issue [#2574](//github.com/gitextensions/gitextensions/issues/2574): MSysGit updated to version 1.9.5-preview20141217
-* Fixed issue [#2649](//github.com/gitextensions/gitextensions/issues/2649): Refreshing the ignored files set every 10 minutes instead of every 500 miliseconds
-* Fixed issue [#2525](//github.com/gitextensions/gitextensions/issues/2525): Additional handling for strings passed to RichTextBox
-* Fixed issue [#2700](//github.com/gitextensions/gitextensions/issues/2700): Fix filtering by branch name
+* Fixed issue #1643: Do stage of 16506 files and GUI becomes Not Respoding
+* Fixed issue #2591: VSAddin solutionItem.ProjectItem == null when selected 'References' item in C# project
+* Fixed issue #2587, #2601: VSAddin fixed StackOverflowException
+* Fixed issue #2584: Escape the last backslash from paths before running GitExtensions to avoid escaping the double-quote
+* Fixed issue #2574: MSysGit updated to version 1.9.5-preview20141217
+* Fixed issue #2649: Refreshing the ignored files set every 10 minutes instead of every 500 miliseconds
+* Fixed issue #2525: Additional handling for strings passed to RichTextBox
+* Fixed issue #2700: Fix filtering by branch name
 * Fixed 'ArgumentOutOfRangeException is thrown when right clicking of the table header of 'Resolve merge conflicts' window'
 * Fix performance for RevisionGrid
 
 ### Version 2.48.03 (9 December 2014)
-* Fixed issue [#2538](//github.com/gitextensions/gitextensions/issues/2538): Fix crash happening when deleting a remote branch
-* Fixed issue [#2498](//github.com/gitextensions/gitextensions/issues/2498): VS Plugin use solution scope if no active document
+* Fixed issue #2538: Fix crash happening when deleting a remote branch
+* Fixed issue #2498: VS Plugin use solution scope if no active document
 
 ### Version 2.48.02 (29 November 2014)
 * Updated msysgit to 1.9.4 20140929
@@ -229,17 +229,17 @@ Changelog
 * Form pull "Manage remotes" button fixed
 * Resolving conflict for removed submodule fixed
 * Svn clone prefix fixed
-* Fixed issue [#2509](//github.com/gitextensions/gitextensions/issues/2509): Backslash correction turned off for URLs
-* Fixed issue [#2420](//github.com/gitextensions/gitextensions/issues/2420): Indicate change when repository changed
-* Fixed issue [#2454](//github.com/gitextensions/gitextensions/issues/2454): Support changed path to DiffMerge
-* Fixed issue [#2450](//github.com/gitextensions/gitextensions/issues/2450): There is no verification that settings can not contain invalid xml characters
-* Fixed issue [#2407](//github.com/gitextensions/gitextensions/issues/2407): Double appearance of "Current unstaged changes" fixed
-* Fixed issue [#2269](//github.com/gitextensions/gitextensions/issues/2269): Ignore COM exceptions in UpdateJumplist
-* Fixed issue [#2165](//github.com/gitextensions/gitextensions/issues/2165): Pushing HEAD fixed
-* Fixed issue [#2463](//github.com/gitextensions/gitextensions/issues/2463): Crash fixed when selecting a file with no base in the "Resolve merge conflicts" dialog
-* Fixed issue [#2448](//github.com/gitextensions/gitextensions/issues/2448): Freeze while commit many files with warnings
-* Fixed issue [#2467](//github.com/gitextensions/gitextensions/issues/2467), [#2483](//github.com/gitextensions/gitextensions/issues/2483): Installing GitCredentialsHelper fixed
-* Fixed issue [#1493](//github.com/gitextensions/gitextensions/issues/1493): Should fix command bar position saving in some cases
+* Fixed issue #2509: Backslash correction turned off for URLs
+* Fixed issue #2420: Indicate change when repository changed
+* Fixed issue #2454: Support changed path to DiffMerge
+* Fixed issue #2450: There is no verification that settings can not contain invalid xml characters
+* Fixed issue #2407: Double appearance of "Current unstaged changes" fixed
+* Fixed issue #2269: Ignore COM exceptions in UpdateJumplist
+* Fixed issue #2165: Pushing HEAD fixed
+* Fixed issue #2463: Crash fixed when selecting a file with no base in the "Resolve merge conflicts" dialog
+* Fixed issue #2448: Freeze while commit many files with warnings
+* Fixed issue #2467, #2483: Installing GitCredentialsHelper fixed
+* Fixed issue #1493: Should fix command bar position saving in some cases
 
 ### Version 2.48 (20 August 2014)
 * Git credential helper now optional product
@@ -251,11 +251,11 @@ Changelog
 * Button Browse... and Manage Remotes fixed in form Pull
 * Support machine level HOME environment variable
 * Error string in list of branches fixed
-* Fixed issue [#2079](//github.com/gitextensions/gitextensions/issues/2079): Selection order after refresh fixed
-* Fixed issue [#2178](//github.com/gitextensions/gitextensions/issues/2178): Disabled caching diffs for artificial revisions
-* Fixed issue [#2387](//github.com/gitextensions/gitextensions/issues/2387): Remove pdf manual from installer
-* Fixed issue [#2389](//github.com/gitextensions/gitextensions/issues/2389): Never try to checkout an empty-named branch
-* Fixed issue [#2397](//github.com/gitextensions/gitextensions/issues/2397): Cannot close GitEx window with opened repository
+* Fixed issue #2079: Selection order after refresh fixed
+* Fixed issue #2178: Disabled caching diffs for artificial revisions
+* Fixed issue #2387: Remove pdf manual from installer
+* Fixed issue #2389: Never try to checkout an empty-named branch
+* Fixed issue #2397: Cannot close GitEx window with opened repository
 * Updated translations
 
 ### Version 2.48RC (13 July 2014)
@@ -263,7 +263,7 @@ Changelog
 * Implemented auto completion for commit message window.
 * Support intergration with TeamCity and Jenkins build server
 * Support pull request for Atlassian Stash
-* GitExt suggest update submodules after changing revision. PR [#2176](//github.com/gitextensions/gitextensions/issues/2176)
+* GitExt suggest update submodules after changing revision. PR #2176
 * Show commit changes (i.e: -1+5) on Checkout Branch, CheckoutR evision, Create Branch and Create Tag dialogs
 * Sepatate windows to merge submodules
 * Increased performance and lowered memory footprint of DvcsGraph
@@ -278,7 +278,7 @@ Changelog
 * Open .git/config fixed
 * "Back" button and history
 * Disabled by default: include untracked files in stash
-* Commiter name added to commit dialog status bar. PR [#1812](//github.com/gitextensions/gitextensions/issues/1812)
+* Commiter name added to commit dialog status bar. PR #1812
 * Check ValidSvnWorkindDir before do svn commands. Method GitSvnCommandHelpers.ValidSvnWorkindDir work not correct on submodule repo
 * Fixed undetected working directory in root directory (the additional "dir.rfind" in the while condition stopped the loop **before** e.g. "C:" has been reached)
 * "Initialize repository" renamed to "Create repository"
@@ -286,99 +286,99 @@ Changelog
 * Preffer Putty from GitExtensions
 * New settings management
 * Translation format changed to XLIFF (you can help on [Transifex](https://www.transifex.com/organization/git-extensions/dashboard/git-extensions) website)
-* Fixed issue [#2349](//github.com/gitextensions/gitextensions/issues/2349): Bug fixed with file history for file outside of the solution
-* Fixed issue [#2294](//github.com/gitextensions/gitextensions/issues/2294): Commit dialog hangs for hours on selecting or deselecting many files
-* Fixed issue [#2250](//github.com/gitextensions/gitextensions/issues/2250): Shell Extensions: IsValidGitDir UNC path performance bug fix
-* Fixed issue [#2240](//github.com/gitextensions/gitextensions/issues/2240): Allow push by commit hash
-* Fixed issue [#2235](//github.com/gitextensions/gitextensions/issues/2235): Allow the user to pick Git.exe no matter
+* Fixed issue #2349: Bug fixed with file history for file outside of the solution
+* Fixed issue #2294: Commit dialog hangs for hours on selecting or deselecting many files
+* Fixed issue #2250: Shell Extensions: IsValidGitDir UNC path performance bug fix
+* Fixed issue #2240: Allow push by commit hash
+* Fixed issue #2235: Allow the user to pick Git.exe no matter
   where it is installed on their system
-* Fixed issue [#2142](//github.com/gitextensions/gitextensions/issues/2142): Fetch in 2.47.3 creating remote ref from remote HEAD using current local branch's name
-* Fixed issue [#2140](//github.com/gitextensions/gitextensions/issues/2140): Fix slow settings load because of UNC paths
-* Fixed issue [#2139](//github.com/gitextensions/gitextensions/issues/2139): Double click on submodule fails to open the submodule in a new instance of GitExtensions
-* Fixed issue [#2137](//github.com/gitextensions/gitextensions/issues/2137): Strange push behaviour
-* Fixed issue [#2136](//github.com/gitextensions/gitextensions/issues/2136): Git credential helper does not load
-* Fixed issue [#2135](//github.com/gitextensions/gitextensions/issues/2135): In v2.47.03 the SSH setting defaults to OpenSSH even though PuTTY is selected during installation
-* Fixed issue [#2131](//github.com/gitextensions/gitextensions/issues/2131): No horizontal scrollbar in the main window Diff tab file list
-* Fixed issue [#2110](//github.com/gitextensions/gitextensions/issues/2110): VS Plugin make CommandBar permanent (position handling of CommandBar)
-* Fixed issue [#2013](//github.com/gitextensions/gitextensions/issues/2013): "the branch seems to be new for the remote" is shown but the branch is already there
-* Fixed issue [#230](//github.com/gitextensions/gitextensions/issues/230): Don't spawn another git status if the previous one is still running
+* Fixed issue #2142: Fetch in 2.47.3 creating remote ref from remote HEAD using current local branch's name
+* Fixed issue #2140: Fix slow settings load because of UNC paths
+* Fixed issue #2139: Double click on submodule fails to open the submodule in a new instance of GitExtensions
+* Fixed issue #2137: Strange push behaviour
+* Fixed issue #2136: Git credential helper does not load
+* Fixed issue #2135: In v2.47.03 the SSH setting defaults to OpenSSH even though PuTTY is selected during installation
+* Fixed issue #2131: No horizontal scrollbar in the main window Diff tab file list
+* Fixed issue #2110: VS Plugin make CommandBar permanent (position handling of CommandBar)
+* Fixed issue #2013: "the branch seems to be new for the remote" is shown but the branch is already there
+* Fixed issue #230: Don't spawn another git status if the previous one is still running
 * Stop runaway git process creation under Windows
 * Updated translations
 
 ### Version 2.47.3 (15 November 2013)
-* Fixed issue [#2124](//github.com/gitextensions/gitextensions/issues/2124): GitHub integration not working in 2.47.1
+* Fixed issue #2124: GitHub integration not working in 2.47.1
 
 ### Version 2.47.1 (14 November 2013)
-* Fixed issue [#2006](//github.com/gitextensions/gitextensions/issues/2006): Check for updates using GitHub api. There is a bug in WebClient that causes AV
-* Fixed issue [#2117](//github.com/gitextensions/gitextensions/issues/2117): Create branch/tag command in VS fixed
-* Fixed issue [#2114](//github.com/gitextensions/gitextensions/issues/2114): "Keep dialog open" doesn't work
+* Fixed issue #2006: Check for updates using GitHub api. There is a bug in WebClient that causes AV
+* Fixed issue #2117: Create branch/tag command in VS fixed
+* Fixed issue #2114: "Keep dialog open" doesn't work
 * Added IconFileStatusUnknown - when git exits with error then GitExt crashes with IndexOutOfBounds
 
 ### Version 2.47 (8 November 2013)
-* Main menu restructured. Issues: [#1576](//github.com/gitextensions/gitextensions/issues/1576), [#1629](//github.com/gitextensions/gitextensions/issues/1629)
+* Main menu restructured. Issues: #1576, #1629
 * Added BackgroundFetch plugin in order to allow perioding fetching of all remotes automatically
 * Putty updated to version beta 0.63 (released 2013-08-06)
 * Display diff files list for each parent in separete collapsible group
-* Autopull from remote to which push was rejected. Closes [#1887](//github.com/gitextensions/gitextensions/issues/1887)
+* Autopull from remote to which push was rejected. Closes #1887
 * Added support for installing GitPlugin in VS2013
-* ShellExtensionSettingsPage: add simple preview for context menu items. PR [#1661](//github.com/gitextensions/gitextensions/issues/1661)
-* Allow pushing a non-branch source rev to a remote branch. PR [#1676](//github.com/gitextensions/gitextensions/issues/1676)
+* ShellExtensionSettingsPage: add simple preview for context menu items. PR #1661
+* Allow pushing a non-branch source rev to a remote branch. PR #1676
 * FormResolveConflicts show submodule hashes for merge conflicts
-* FormChooseCommit: double click behaves like OK button instead of opening the CommitInfo dialog. PR [#1681](//github.com/gitextensions/gitextensions/issues/1681)
-* Remove old Create tag dialog and related changes. PR [#1680](//github.com/gitextensions/gitextensions/issues/1680)
-* FormCheckoutRevision: make similar to CreateBranch/Tag dialogs and use in RevisionGrid. PR [#1685](//github.com/gitextensions/gitextensions/issues/1685)
-* FormChooseCommit: add button that opens the Go to commit dialog that helps to find a specific commit. PR [#1723](//github.com/gitextensions/gitextensions/issues/1723)
+* FormChooseCommit: double click behaves like OK button instead of opening the CommitInfo dialog. PR #1681
+* Remove old Create tag dialog and related changes. PR #1680
+* FormCheckoutRevision: make similar to CreateBranch/Tag dialogs and use in RevisionGrid. PR #1685
+* FormChooseCommit: add button that opens the Go to commit dialog that helps to find a specific commit. PR #1723
 * GitPlugin icon transparency fixed
 * FormPuttyError Retry() button fixed
-* Add Help link that opens GitExt manual in browser at predefined section. PR [#1739](//github.com/gitextensions/gitextensions/issues/1739)
+* Add Help link that opens GitExt manual in browser at predefined section. PR #1739
 * Push dialog now asks pull changes if push was rejected
-* Improvements for FormResetCurrentBranch. PR [#1750](//github.com/gitextensions/gitextensions/issues/1750)
+* Improvements for FormResetCurrentBranch. PR #1750
 * FormFormatPatch support sending from gmail server
 * LoadPuttyKey for all remotes
 * Close commit dialog when all changes are commited - now considers new file as a change
-* Disabled offer commit for resolve conflicts dialog when it called from commit window. Closes [#1623](//github.com/gitextensions/gitextensions/issues/1623)
+* Disabled offer commit for resolve conflicts dialog when it called from commit window. Closes #1623
 * Support pull latest submodule changes from FormSubmodules dialog window
 * Asynchronous RepositoryHistory loading implemented
 * Switch for selection gravatar image size added
 * Menu in revision grid sorted to simply common branch operations
 * Suggest prune branches if remote branch no longer exist
-* Added a "Show tags" menu item. PR [#1814](//github.com/gitextensions/gitextensions/issues/1814)
-* Branch filter wildcards. PR [#1815](//github.com/gitextensions/gitextensions/issues/1815)
+* Added a "Show tags" menu item. PR #1814
+* Branch filter wildcards. PR #1815
 * Disallow to cache stash diffs
-* Menu ShortcutKey improvements. PR [#1863](//github.com/gitextensions/gitextensions/issues/1863)
-* FormBrowse: Diff Tab: new context menu item: "Show in File tree". PR [#1850](//github.com/gitextensions/gitextensions/issues/1850)
+* Menu ShortcutKey improvements. PR #1863
+* FormBrowse: Diff Tab: new context menu item: "Show in File tree". PR #1850
 * File tree tab: "Open containing folder" now also works on directory nodes (instead of file nodes only)
 * Diff tab: If a file does not exist then "Open containing folder" now opens the parent directory of the non-existing file
-* Add "Archive..." to context menu of File tree tab / Archive filter by path. PR [#1868](//github.com/gitextensions/gitextensions/issues/1868)
+* Add "Archive..." to context menu of File tree tab / Archive filter by path. PR #1868
 * Blame previous revision fixed
 * Combined diff processing improved
-* Don't commit merge - now generic option. Closes [#1882](//github.com/gitextensions/gitextensions/issues/1882)
+* Don't commit merge - now generic option. Closes #1882
 * Current checkout detection fixed for bare repositories
 * Updating current file in commit window improved
-* Fix Plugin: Release Notes Generator. PR [#1907](//github.com/gitextensions/gitextensions/issues/1907)
-* Set the default buttons in the "Reset Current Branch" popup to fix Enter/Escape keys not working. PR [#1911](//github.com/gitextensions/gitextensions/issues/1911)
+* Fix Plugin: Release Notes Generator. PR #1907
+* Set the default buttons in the "Reset Current Branch" popup to fix Enter/Escape keys not working. PR #1911
 * Selecting items in FormCommit improved, should update diff view only when needed
-* Open corresponding SettingsPage directly from Plugin. PR [#1925](//github.com/gitextensions/gitextensions/issues/1925)
+* Open corresponding SettingsPage directly from Plugin. PR #1925
 * Fix diff for initial branch commit
-* Fixed issue [#1633](//github.com/gitextensions/gitextensions/issues/1633): Move Plugins --> Update menu option to Help menu
-* Fixed issue [#1590](//github.com/gitextensions/gitextensions/issues/1590): Checking "Show current branch only" results in unexpected behaviour
-* Fixed issue [#1655](//github.com/gitextensions/gitextensions/issues/1655): Add ellipsis to menu items which will require input
-* Fixed issue [#1575](//github.com/gitextensions/gitextensions/issues/1575): Remove old "Create branch" dialog
-* Fixed issue [#1317](//github.com/gitextensions/gitextensions/issues/1317): Exception after closing File History dialog (from Commit Dialog) which was not completely loaded
-* Fixed issue [#1704](//github.com/gitextensions/gitextensions/issues/1704): The link to the git-review command page moved from project openstack-ci to openstack-infra
-* Fixed issue [#1658](//github.com/gitextensions/gitextensions/issues/1658): Portable Settings
-* Fixed issue [#1790](//github.com/gitextensions/gitextensions/issues/1790): GitCommands.Settings#GetGitExtensionsDirectory: Crash if fileName.LastIndexOfAny returns -1
-* Fixed issue [#1799](//github.com/gitextensions/gitextensions/issues/1799): Refresh dontSetAsDefaultToolStripMenuItem.Checked
-* Fixed issue [#1874](//github.com/gitextensions/gitextensions/issues/1874): "Show changes" crash fixed in Blame dialog
-* Fixed issue [#1889](//github.com/gitextensions/gitextensions/issues/1889): Push dialog remembers "Push all tags" but does not show it to the user
-* Fixed issue [#1883](//github.com/gitextensions/gitextensions/issues/1883): Script on event ShowInUserMenuBar very large icon
-* Fixed issue [#1604](//github.com/gitextensions/gitextensions/issues/1604): Add configuration option to specify a default clone destination directory
-* Fixed issue [#1899](//github.com/gitextensions/gitextensions/issues/1899): Commit dialog steals focus
-* Fixed issue [#1923](//github.com/gitextensions/gitextensions/issues/1923): File History shows entire history graph in gray
-* Fixed issue [#1361](//github.com/gitextensions/gitextensions/issues/1361): Export difference between revisions
-* Fixed issue [#1939](//github.com/gitextensions/gitextensions/issues/1939): Running script with "{cHash}" in arguments using hotkey causes runtime exception
-* Fixed issue [#1957](//github.com/gitextensions/gitextensions/issues/1957): Search file inside Visual Studio does not open file
-* Fixed issue [#1209](//github.com/gitextensions/gitextensions/issues/1209), [#2001](//github.com/gitextensions/gitextensions/issues/2001): Remote branch autofill corrected
+* Fixed issue #1633: Move Plugins --> Update menu option to Help menu
+* Fixed issue #1590: Checking "Show current branch only" results in unexpected behaviour
+* Fixed issue #1655: Add ellipsis to menu items which will require input
+* Fixed issue #1575: Remove old "Create branch" dialog
+* Fixed issue #1317: Exception after closing File History dialog (from Commit Dialog) which was not completely loaded
+* Fixed issue #1704: The link to the git-review command page moved from project openstack-ci to openstack-infra
+* Fixed issue #1658: Portable Settings
+* Fixed issue #1790: GitCommands.Settings#GetGitExtensionsDirectory: Crash if fileName.LastIndexOfAny returns -1
+* Fixed issue #1799: Refresh dontSetAsDefaultToolStripMenuItem.Checked
+* Fixed issue #1874: "Show changes" crash fixed in Blame dialog
+* Fixed issue #1889: Push dialog remembers "Push all tags" but does not show it to the user
+* Fixed issue #1883: Script on event ShowInUserMenuBar very large icon
+* Fixed issue #1604: Add configuration option to specify a default clone destination directory
+* Fixed issue #1899: Commit dialog steals focus
+* Fixed issue #1923: File History shows entire history graph in gray
+* Fixed issue #1361: Export difference between revisions
+* Fixed issue #1939: Running script with "{cHash}" in arguments using hotkey causes runtime exception
+* Fixed issue #1957: Search file inside Visual Studio does not open file
+* Fixed issue #1209, #2001: Remote branch autofill corrected
 * Many bugfixes and minor changes
 * Updated Spanish translation
 * Updated French translation
@@ -398,45 +398,45 @@ Changelog
 * FormCheckoutBranch behavior fixed again when called from commit dialog
 * Fixed navigation in the blame committer list when double clicking
 * Fixed FormFileHistory selection current revision
-* Fixed issue [#1585](//github.com/gitextensions/gitextensions/issues/1585): IsBinaryAccordingToGitAttribute() rewrited using "git check-attr"
-* Fixed issue [#1590](//github.com/gitextensions/gitextensions/issues/1590): "Show current branch only" fixed
-* Fixed issue [#1622](//github.com/gitextensions/gitextensions/issues/1622): "Show Changes" from Blame window crash fixed
-* Fixed issue [#1631](//github.com/gitextensions/gitextensions/issues/1631): Font size reading from settings fixed
-* Fixed issue [#1687](//github.com/gitextensions/gitextensions/issues/1687): GetSuperprojectCurrentCheckout() now called asynchronously
-* Fixed issue [#1727](//github.com/gitextensions/gitextensions/issues/1727): CreatePullRequestForm crash fixed
+* Fixed issue #1585: IsBinaryAccordingToGitAttribute() rewrited using "git check-attr"
+* Fixed issue #1590: "Show current branch only" fixed
+* Fixed issue #1622: "Show Changes" from Blame window crash fixed
+* Fixed issue #1631: Font size reading from settings fixed
+* Fixed issue #1687: GetSuperprojectCurrentCheckout() now called asynchronously
+* Fixed issue #1727: CreatePullRequestForm crash fixed
 * Updated msysgit to build of version 1.8.3
 * Updated French translation
 * Updated German translation
 
 ### Version 2.44 (18 February 2013)
-* Fixed issue [#710](//github.com/gitextensions/gitextensions/issues/710): Added icons to shell extensions
-* Fixed issue [#1336](//github.com/gitextensions/gitextensions/issues/1336): Prefix context menu entries with
-* Fixed issue [#1354](//github.com/gitextensions/gitextensions/issues/1354): Dashboard item description label is cut off at the top
-* Fixed issue [#1371](//github.com/gitextensions/gitextensions/issues/1371): Different icons for submodule status icons
-* Fixed issue [#1388](//github.com/gitextensions/gitextensions/issues/1388): Created icons for submodules
-* Fixed issue [#1396](//github.com/gitextensions/gitextensions/issues/1396): Mergetool command suggest button does not work
-* Fixed issue [#1397](//github.com/gitextensions/gitextensions/issues/1397): Shell exceptions broken
-* Fixed issue [#1407](//github.com/gitextensions/gitextensions/issues/1407): Reorder context menu items in commit dialog to better match other context menus
-* Fixed issue [#1419](//github.com/gitextensions/gitextensions/issues/1419): Command line argument "commit --quiet" doesn't work anymore
-* Fixed issue [#1428](//github.com/gitextensions/gitextensions/issues/1428): Uncheck "Amend Commit" checkbox after commiting
-* Fixed issue [#1372](//github.com/gitextensions/gitextensions/issues/1372): Stage submodule after commit
-* Fixed Issue [#1430](//github.com/gitextensions/gitextensions/issues/1430): Replaced settings dialog with more user friendlue dialog
-* Fixed issue [#1432](//github.com/gitextensions/gitextensions/issues/1432): Add icon for "Revert commit" in revision grid context menu
-* Fixed issue [#1433](//github.com/gitextensions/gitextensions/issues/1433): Improved layout for commit information in various dialogs (e.g. cherry pick)
-* Fixed issue [#1434](//github.com/gitextensions/gitextensions/issues/1434): Use FolderBrowserButton in FormOpenDirectory, FormPull and FormPush
-* Fixed issue [#1471](//github.com/gitextensions/gitextensions/issues/1471): Make "Add submodule" Window resizable
-* Fixed issue [#1475](//github.com/gitextensions/gitextensions/issues/1475): Fixed tab order in create tag dialog
-* Fixed issue [#1477](//github.com/gitextensions/gitextensions/issues/1477): Quick filter by commit sha
-* Fixed issue [#1478](//github.com/gitextensions/gitextensions/issues/1478): Bug fixes and improvements to Gerrit plugin
-* Fixed issue [#1483](//github.com/gitextensions/gitextensions/issues/1483): Staging a file which undoes all current staged changes leaves the file available in "Working dir changes"
-* Fixed issue [#1488](//github.com/gitextensions/gitextensions/issues/1488): Default pull action not run
-* Fixed issue [#1506](//github.com/gitextensions/gitextensions/issues/1506): Do not refresh revisions in grid when Delete Tag dialog is canceled
-* Fixed issue [#1505](//github.com/gitextensions/gitextensions/issues/1505): New help images for Fetch, Rebase, Merge actions in pull dialog
-* Fixed issue [#1513](//github.com/gitextensions/gitextensions/issues/1513): Moved plugin settings to settings dialog
-* Fixed issue [#1533](//github.com/gitextensions/gitextensions/issues/1533): Font size incorrect when changing culture
-* Fixed issue [#1561](//github.com/gitextensions/gitextensions/issues/1561): Allow creating orphan branches
-* Fixed issue [#1565](//github.com/gitextensions/gitextensions/issues/1565): Tab Order is wrong on Delete Branch form
-* Fixed issue [#1585](//github.com/gitextensions/gitextensions/issues/1585): Binary file detection fixed
+* Fixed issue #710: Added icons to shell extensions
+* Fixed issue #1336: Prefix context menu entries with
+* Fixed issue #1354: Dashboard item description label is cut off at the top
+* Fixed issue #1371: Different icons for submodule status icons
+* Fixed issue #1388: Created icons for submodules
+* Fixed issue #1396: Mergetool command suggest button does not work
+* Fixed issue #1397: Shell exceptions broken
+* Fixed issue #1407: Reorder context menu items in commit dialog to better match other context menus
+* Fixed issue #1419: Command line argument "commit --quiet" doesn't work anymore
+* Fixed issue #1428: Uncheck "Amend Commit" checkbox after commiting
+* Fixed issue #1372: Stage submodule after commit
+* Fixed Issue #1430: Replaced settings dialog with more user friendlue dialog
+* Fixed issue #1432: Add icon for "Revert commit" in revision grid context menu
+* Fixed issue #1433: Improved layout for commit information in various dialogs (e.g. cherry pick)
+* Fixed issue #1434: Use FolderBrowserButton in FormOpenDirectory, FormPull and FormPush
+* Fixed issue #1471: Make "Add submodule" Window resizable
+* Fixed issue #1475: Fixed tab order in create tag dialog
+* Fixed issue #1477: Quick filter by commit sha
+* Fixed issue #1478: Bug fixes and improvements to Gerrit plugin
+* Fixed issue #1483: Staging a file which undoes all current staged changes leaves the file available in "Working dir changes"
+* Fixed issue #1488: Default pull action not run
+* Fixed issue #1506: Do not refresh revisions in grid when Delete Tag dialog is canceled
+* Fixed issue #1505: New help images for Fetch, Rebase, Merge actions in pull dialog
+* Fixed issue #1513: Moved plugin settings to settings dialog
+* Fixed issue #1533: Font size incorrect when changing culture
+* Fixed issue #1561: Allow creating orphan branches
+* Fixed issue #1565: Tab Order is wrong on Delete Branch form
+* Fixed issue #1585: Binary file detection fixed
 * Fixed issue: Amend commit doesn't work when using Ctrl+Enter key
 * Fixed issue: shell extension registration in settings dialog fixed with UAC
 * Fixed issue: "0 hours" and "0 year" displayed in revision grid
@@ -462,32 +462,32 @@ Changelog
 * Updated French translation
 
 ### Version 2.43 (31 October 2012)
-* Fixed issue [#47](//github.com/gitextensions/gitextensions/issues/47): Support non-standard SSH port for Test Connection
-* Fixed issue [#85](//github.com/gitextensions/gitextensions/issues/85): Integrated git-credential-winstore to installer to handle HTTP authentication
-* Fixed issue [#407](//github.com/gitextensions/gitextensions/issues/407): Added links to parent commit, branches and tags to commit info
-* Fixed issue [#517](//github.com/gitextensions/gitextensions/issues/517): Added button to go to superproject
-* Fixed issue [#528](//github.com/gitextensions/gitextensions/issues/528): Correctly terminate processes tree on abort
-* Fixed issue [#650](//github.com/gitextensions/gitextensions/issues/650): Enable reset for unstaged files
-* Fixed issue [#737](//github.com/gitextensions/gitextensions/issues/737): Support local commit.template
-* Fixed issue [#945](//github.com/gitextensions/gitextensions/issues/945): Delete tag from remote repository added
-* Fixed issue [#1021](//github.com/gitextensions/gitextensions/issues/1021): Added option to always show checkout dialog
-* Fixed issue [#1135](//github.com/gitextensions/gitextensions/issues/1135): Auto suggestion disabled in the Clone Repository dialog
-* Fixed issue [#1161](//github.com/gitextensions/gitextensions/issues/1161): Jump list fixed
-* Fixed issue [#1173](//github.com/gitextensions/gitextensions/issues/1173): Integraded NBug
-* Fixed issue [#1195](//github.com/gitextensions/gitextensions/issues/1195): Email address HTML encoding fixed
-* Fixed issue [#1199](//github.com/gitextensions/gitextensions/issues/1199): Warn user when reset file changes failed because it is in use
-* Fixed issue [#1201](//github.com/gitextensions/gitextensions/issues/1201): Fixed url to MSysGit project page
-* Fixed issue [#1201](//github.com/gitextensions/gitextensions/issues/1201): Git.cmd used instead of git.exe
-* Fixed issue [#1269](//github.com/gitextensions/gitextensions/issues/1269): Default button and focus for checkout branch dialog
-* Fixed issue [#1276](//github.com/gitextensions/gitextensions/issues/1276): Diff fixed when diff.mnemonicprefix = true
-* Fixed issue [#1290](//github.com/gitextensions/gitextensions/issues/1290): Automatic file encoding detection improved
-* Fixed issue [#1295](//github.com/gitextensions/gitextensions/issues/1295): Do not refresh revision grid after cancel create tag
-* Fixed issue [#1301](//github.com/gitextensions/gitextensions/issues/1301): Escaping characters for git.cmd added
-* Fixed issue [#1303](//github.com/gitextensions/gitextensions/issues/1303): Displaying pulled new repositories without HEAD
-* Fixed issue [#1309](//github.com/gitextensions/gitextensions/issues/1309): Fix stash apply and drop error
-* Fixed issue [#1312](//github.com/gitextensions/gitextensions/issues/1312): Fixed FormStatus layout
-* Fixed issue [#1319](//github.com/gitextensions/gitextensions/issues/1319): Fixed FormStatus layout
-* Fixed issue [#1321](//github.com/gitextensions/gitextensions/issues/1321): Fix Fetch all from toolbar
+* Fixed issue #47: Support non-standard SSH port for Test Connection
+* Fixed issue #85: Integrated git-credential-winstore to installer to handle HTTP authentication
+* Fixed issue #407: Added links to parent commit, branches and tags to commit info
+* Fixed issue #517: Added button to go to superproject
+* Fixed issue #528: Correctly terminate processes tree on abort
+* Fixed issue #650: Enable reset for unstaged files
+* Fixed issue #737: Support local commit.template
+* Fixed issue #945: Delete tag from remote repository added
+* Fixed issue #1021: Added option to always show checkout dialog
+* Fixed issue #1135: Auto suggestion disabled in the Clone Repository dialog
+* Fixed issue #1161: Jump list fixed
+* Fixed issue #1173: Integraded NBug
+* Fixed issue #1195: Email address HTML encoding fixed
+* Fixed issue #1199: Warn user when reset file changes failed because it is in use
+* Fixed issue #1201: Fixed url to MSysGit project page
+* Fixed issue #1201: Git.cmd used instead of git.exe
+* Fixed issue #1269: Default button and focus for checkout branch dialog
+* Fixed issue #1276: Diff fixed when diff.mnemonicprefix = true
+* Fixed issue #1290: Automatic file encoding detection improved
+* Fixed issue #1295: Do not refresh revision grid after cancel create tag
+* Fixed issue #1301: Escaping characters for git.cmd added
+* Fixed issue #1303: Displaying pulled new repositories without HEAD
+* Fixed issue #1309: Fix stash apply and drop error
+* Fixed issue #1312: Fixed FormStatus layout
+* Fixed issue #1319: Fixed FormStatus layout
+* Fixed issue #1321: Fix Fetch all from toolbar
 * Fixed description for repositories on dashboard
 * Fixed two way merge fixed for Perforce Merge
 * Fixed bug in rendering revision graph that a lane was grayed out
@@ -509,8 +509,8 @@ Changelog
 * Updated merge scripts
 
 ### Version 2.41 (22 September 2012)
-* Fixed issue [#1254](//github.com/gitextensions/gitextensions/issues/1254): Visual Studio 2005 plugin not working
-* Fixed issue [#1225](//github.com/gitextensions/gitextensions/issues/1225): Visual Studio 2008 plugin not working
+* Fixed issue #1254: Visual Studio 2005 plugin not working
+* Fixed issue #1225: Visual Studio 2008 plugin not working
 * Fixed window position in multi monitor configuration
 * Fill title with the most recent commit message
 * New dialog for checkout branch
@@ -521,24 +521,24 @@ Changelog
 * German translation updated
 
 ### Version 2.40 (19 August 2012)
-* fixed issue [#79](//github.com/gitextensions/gitextensions/issues/79): Don't offer to commit when resolving a stash conflict
-* Fixed issue [#875](//github.com/gitextensions/gitextensions/issues/875): Show untracked files in stash
-* Fixed issue [#980](//github.com/gitextensions/gitextensions/issues/980): spell check only covers first 5 visible lines in commit dialog
-* Fixed issue [#988](//github.com/gitextensions/gitextensions/issues/988): status bar for commit message
-* Fixed issue [#1018](//github.com/gitextensions/gitextensions/issues/1018): Git Extensions sets core.editor to its own program without asking the user
-* Fixed issue [#1038](//github.com/gitextensions/gitextensions/issues/1038): Add multiple selected files to gitignore
-* Fixed issue [#1042](//github.com/gitextensions/gitextensions/issues/1042): Added option for force add submodule
-* Fixed issue [#1053](//github.com/gitextensions/gitextensions/issues/1053): Exception when processing patch
-* Fixed issue [#1054](//github.com/gitextensions/gitextensions/issues/1054): Backslash in URL caused invalid config file
-* Fixed issue [#1076](//github.com/gitextensions/gitextensions/issues/1076): Added warning before dropping stash
-* Fixed issue [#1082](//github.com/gitextensions/gitextensions/issues/1082): Always show commit button
-* Fixed issue [#1089](//github.com/gitextensions/gitextensions/issues/1089): Fixed "n seconds ago" in revision grid
-* Fixed issue [#1092](//github.com/gitextensions/gitextensions/issues/1092): Launching an external difftool (KDiff, or DiffMerge etc) leaves more and more processes (git, less and perl) open
-* Fixed issue [#1113](//github.com/gitextensions/gitextensions/issues/1113): Show friendly error when deleting current branch
-* Fixed issue [#1113](//github.com/gitextensions/gitextensions/issues/1113): Show friendly error when deleting unmerged branch without selecting force option
-* Fixed issue [#1114](//github.com/gitextensions/gitextensions/issues/1114): Hide remode HEAD
-* Fixed issue [#1116](//github.com/gitextensions/gitextensions/issues/1116): In some cases file differences are shown incorrect
-* Fixed issue [#1128](//github.com/gitextensions/gitextensions/issues/1128): Removed buttons from Visual Studion Xml Editor toolbar
+* fixed issue #79: Don't offer to commit when resolving a stash conflict
+* Fixed issue #875: Show untracked files in stash
+* Fixed issue #980: spell check only covers first 5 visible lines in commit dialog
+* Fixed issue #988: status bar for commit message
+* Fixed issue #1018: Git Extensions sets core.editor to its own program without asking the user
+* Fixed issue #1038: Add multiple selected files to gitignore
+* Fixed issue #1042: Added option for force add submodule
+* Fixed issue #1053: Exception when processing patch
+* Fixed issue #1054: Backslash in URL caused invalid config file
+* Fixed issue #1076: Added warning before dropping stash
+* Fixed issue #1082: Always show commit button
+* Fixed issue #1089: Fixed "n seconds ago" in revision grid
+* Fixed issue #1092: Launching an external difftool (KDiff, or DiffMerge etc) leaves more and more processes (git, less and perl) open
+* Fixed issue #1113: Show friendly error when deleting current branch
+* Fixed issue #1113: Show friendly error when deleting unmerged branch without selecting force option
+* Fixed issue #1114: Hide remode HEAD
+* Fixed issue #1116: In some cases file differences are shown incorrect
+* Fixed issue #1128: Removed buttons from Visual Studion Xml Editor toolbar
 * Fixed syntax highlighting when + or - is in text
 * Added line and column position to commit window
 * Implement Mergetool/Difftool command suggestions for p4merge (Merge only) and BeyondCompare3 (Merge and Diff)
