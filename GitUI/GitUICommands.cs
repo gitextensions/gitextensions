@@ -1222,11 +1222,11 @@ namespace GitUI
             return StartDeleteTagDialog(null, "");
         }
 
-        public bool StartEditGitIgnoreDialog(IWin32Window owner)
+        public bool StartEditGitIgnoreDialog(IWin32Window owner, bool localExcludes)
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormGitIgnore(this))
+                using (var form = new FormGitIgnore(this, localExcludes))
                     form.ShowDialog(owner);
 
                 return true;
@@ -1235,17 +1235,16 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreEditGitIgnore, PostEditGitIgnore, action);
         }
 
-        public bool StartEditGitIgnoreDialog()
+        public bool StartEditGitIgnoreDialog(bool localExcludes)
         {
-            return StartEditGitIgnoreDialog(null);
+            return StartEditGitIgnoreDialog(null, localExcludes);
         }
 
-        public bool StartAddToGitIgnoreDialog(IWin32Window owner, params string[] filePattern)
+        public bool StartAddToGitIgnoreDialog(IWin32Window owner, bool localExclude, params string[] filePattern)
         {
-
             Func<bool> action = () =>
             {
-                using (var frm = new FormAddToGitIgnore(this, filePattern))
+                using (var frm = new FormAddToGitIgnore(this, localExclude, filePattern))
                     frm.ShowDialog(owner);
 
                 return true;
@@ -1922,7 +1921,7 @@ namespace GitUI
                     Module.RunBash();
                     return;
                 case "gitignore":
-                    StartEditGitIgnoreDialog();
+                    StartEditGitIgnoreDialog(false);
                     return;
                 case "init":        // [path]
                     RunInitCommand(args);

@@ -12,6 +12,7 @@ using GitCommands.Utils;
 using GitCommands.GitExtLinks;
 using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager;
+using GitUI.Editor;
 
 namespace GitUI.CommitInfo
 {
@@ -122,6 +123,8 @@ namespace GitUI.CommitInfo
 
         private void ReloadCommitInfo()
         {
+            _RevisionHeader.BackColor = ColorHelper.MakeColorDarker(this.BackColor);
+
             showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal;
             showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote;
             showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
@@ -317,6 +320,21 @@ namespace GitUI.CommitInfo
                 int j = _otherList.IndexOf(b);
                 return i - j;
             }
+        }
+
+        public void DisplayAvatarOnRight()
+        {
+            tableLayout.SuspendLayout();
+            this.tableLayout.ColumnStyles.Clear();
+            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tableLayout.SetColumn(gravatar1, 1);
+            tableLayout.SetColumn(_RevisionHeader, 0);
+            tableLayout.SetColumn(RevisionInfo, 0);
+            tableLayout.SetRowSpan(gravatar1, 1);
+            tableLayout.SetColumnSpan(RevisionInfo, 2);
+            tableLayout.ResumeLayout(true);
+
         }
 
         private void updateText()

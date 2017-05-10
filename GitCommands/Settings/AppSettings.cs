@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -37,6 +36,7 @@ namespace GitCommands
 
         private static RepoDistSettings _SettingsContainer;
         public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
+        private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
 
         public static readonly int BranchDropDownMinWidth = 300;
         public static readonly int BranchDropDownMaxWidth = 600;
@@ -89,6 +89,12 @@ namespace GitCommands
                 }
                 SetString("AutoNormaliseSymbol", value);
             }
+        }
+
+        public static bool RememberAmendCommitState
+        {
+            get { return GetBool("RememberAmendCommitState", true); }
+            set { SetBool("RememberAmendCommitState", value); }
         }
 
         public static void UsingContainer(RepoDistSettings aSettingsContainer, Action action)
@@ -306,6 +312,12 @@ namespace GitCommands
             get { return GetBool("showresetallchanges", true); }
             set { SetBool("showresetallchanges", value); }
         }
+        
+        public static readonly BoolNullableSetting ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", DetailedSettingsPath, true);
+        public static readonly StringSetting ConEmuStyle = new StringSetting("ConEmuStyle", DetailedSettingsPath, "<Solarized Light>");
+        public static readonly StringSetting ConEmuTerminal = new StringSetting("ConEmuTerminal", DetailedSettingsPath, "bash");
+        public static readonly StringSetting ConEmuFontSize = new StringSetting("ConEmuFontSize", DetailedSettingsPath, "12");
+        public static readonly BoolNullableSetting ShowRevisionInfoNextToRevisionGrid = new BoolNullableSetting("ShowRevisionInfoNextToRevisionGrid", DetailedSettingsPath, false);
 
         public static bool ProvideAutocompletion
         {
@@ -1559,45 +1571,22 @@ namespace GitCommands
 
     }
 
-    /*
-    public abstract class Setting<T> : IXmlSerializable
+    internal class AppSettingsPath : SettingsPath
     {
-        public SettingsContainer SettingsSource { get; private set; }
-        private T _Value;
-        public bool HasValue { get; private set; }
-        public string Name { get; private set; }
-        public T DefaultValue { get; private set; }
-
-        public Setting(SettingsContainer aSettingsSource, string aName, T aDefaultValue)
+        public AppSettingsPath(string aPathName) : base(null, aPathName)
         {
-            SettingsSource = aSettingsSource;
-            Name = aName;
-            DefaultValue = aDefaultValue;
-            HasValue = false;
         }
 
-        public T Value
+        public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
-            get
-            {
-                return SettingsSource.GetValue(Name, DefaultValue, (s) => DefaultValue);
-            }
-
-            set
-            {
-                //SettingsSource.SetValue(this, value);
-            }
+            return AppSettings.SettingsContainer.GetValue(PathFor(name), defaultValue, decode);
         }
 
-        public virtual System.Xml.Schema.XmlSchema GetSchema()
+        public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            return null;
+            AppSettings.SettingsContainer.SetValue(PathFor(name), value, encode);
         }
 
-        public abstract void ReadXml(XmlReader reader);
-        public abstract void WriteXml(XmlWriter writer);
     }
-
-    */
 
 }

@@ -362,7 +362,7 @@ namespace GitUI.Script
                                                              List<string> selectedRemotes, List<IGitRef> selectedLocalBranches,
                                                              List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
-            GitRevision selectedRevision = revisionGrid.GetRevision(revisionGrid.LastRowIndex);
+            GitRevision selectedRevision = revisionGrid.LatestSelectedRevision;
             foreach (GitRef head in selectedRevision.Refs)
             {
                 if (head.IsTag)

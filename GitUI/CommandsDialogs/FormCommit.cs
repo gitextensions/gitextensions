@@ -237,6 +237,7 @@ namespace GitUI.CommandsDialogs
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
             AdjustCommitButtonPanelHeight();
             showUntrackedFilesToolStripMenuItem.Checked = !Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles").Equals("no");
+            MinimizeBox = Owner == null;
         }
 
         private void AdjustCommitButtonPanelHeight()
@@ -252,7 +253,7 @@ namespace GitUI.CommandsDialogs
             // Do not remember commit message of fixup or squash commits, since they have
             // a special meaning, and can be dangerous if used inappropriately.
             if (CommitKind.Normal == _commitKind)
-                GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text);
+                GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
 
             AppSettings.CommitDialogDeviceDpi = GetCurrentDeviceDpi();
             AppSettings.CommitDialogSplitter = splitMain.SplitterDistance;
@@ -653,7 +654,7 @@ namespace GitUI.CommandsDialogs
         private void UpdateMergeHead()
         {
             var mergeHead = Module.RevParse("MERGE_HEAD");
-            IsMergeCommit = Regex.IsMatch(mergeHead, GitRevision.Sha1HashPattern);
+            IsMergeCommit = GitRevision.IsFullSha1Hash(mergeHead);
         }
 
         private void InitializedStaged()
@@ -965,7 +966,7 @@ namespace GitUI.CommandsDialogs
                 ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
                 Message.Text = string.Empty;
-                CommitHelper.SetCommitMessage(Module, string.Empty);
+                CommitHelper.SetCommitMessage(Module, string.Empty, Amend.Checked);
 
                 bool pushCompleted = true;
                 if (push)
@@ -1125,7 +1126,7 @@ namespace GitUI.CommandsDialogs
             Staged.ClearSelected();
 
             _currentSelection = Unstaged.SelectedItems.ToList();
-            GitItemStatus item = _currentSelection.FirstOrDefault();
+            GitItemStatus item = _currentSelection.LastOrDefault();
             ShowChanges(item, false);
 
             if (!item.IsSubmodule)
@@ -1300,7 +1301,7 @@ namespace GitUI.CommandsDialogs
 
             Unstaged.ClearSelected();
             _currentSelection = Staged.SelectedItems.ToList();
-            GitItemStatus item = _currentSelection.FirstOrDefault();
+            GitItemStatus item = _currentSelection.LastOrDefault();
             ShowChanges(item, true);
         }
 
@@ -1581,7 +1582,13 @@ namespace GitUI.CommandsDialogs
 
         private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartEditGitIgnoreDialog(this);
+            UICommands.StartEditGitIgnoreDialog(this, localExcludes: false);
+            Initialize();
+        }
+
+        private void EditGitInfoExcludeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            UICommands.StartEditGitIgnoreDialog(this, localExcludes: true);
             Initialize();
         }
 
@@ -1605,8 +1612,11 @@ namespace GitUI.CommandsDialogs
                 default:
                     message = Module.GetMergeMessage();
 
-                    if (string.IsNullOrEmpty(message) && File.Exists(GitCommands.CommitHelper.GetCommitMessagePath(Module)))
-                        message = File.ReadAllText(GitCommands.CommitHelper.GetCommitMessagePath(Module), Module.CommitEncoding);
+                    if (string.IsNullOrEmpty(message))
+                    {
+                        message = CommitHelper.GetCommitMessage(Module);
+                        Amend.Checked = CommitHelper.GetAmendState(Module);
+                    }
                     break;
             }
 
@@ -1619,7 +1629,7 @@ namespace GitUI.CommandsDialogs
             //Save last commit message in settings. This way it can be used in multiple repositories.
             AppSettings.LastCommitMessage = commitMessageText;
 
-            var path = Path.Combine(Module.GetGitDirectory(), "COMMITMESSAGE");
+            var path = CommitHelper.GetCommitMessagePath(Module);
 
             //Commit messages are UTF-8 by default unless otherwise in the config file.
             //The git manual states:
@@ -1767,12 +1777,22 @@ namespace GitUI.CommandsDialogs
 
         private void AddFileTogitignoreToolStripMenuItemClick(object sender, EventArgs e)
         {
+            HandleExcludeFileClick(false);
+        }
+
+        private void AddFileToGitInfoExcludeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            HandleExcludeFileClick(true);
+        }
+
+        private void HandleExcludeFileClick(bool localExclude)
+        {
             if (!Unstaged.SelectedItems.Any())
                 return;
 
             SelectedDiff.Clear();
-            var fileNames = Unstaged.SelectedItems.Select(item => item.Name).ToArray();
-            if (UICommands.StartAddToGitIgnoreDialog(this, fileNames))
+            var fileNames = Unstaged.SelectedItems.Select(item => "/" + item.Name).ToArray();
+            if (UICommands.StartAddToGitIgnoreDialog(this, localExclude, fileNames))
                 Initialize();
         }
 
@@ -2573,6 +2593,11 @@ namespace GitUI.CommandsDialogs
                     components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void createBranchToolStripButton_Click(object sender, EventArgs e)
+        {
+            UICommands.StartCreateBranchDialog(this, null);
         }
     }
 

@@ -50,10 +50,13 @@ namespace GitUI.Editor
             _async.LoadingError +=
                 (sender, args) =>
                 {
-                    ResetForText(null);
-                    _internalFileViewer.SetText("Unsupported file: \n\n" + args.Exception.ToString());
-                    if (TextLoaded != null)
-                        TextLoaded(this, null);
+                    if (!IsDisposed)
+                    {
+                        ResetForText(null);
+                        _internalFileViewer.SetText("Unsupported file: \n\n" + args.Exception.ToString());
+                        if (TextLoaded != null)
+                            TextLoaded(this, null);
+                    }
                 };
 
             IgnoreWhitespaceChanges = AppSettings.IgnoreWhitespaceChanges;
@@ -1077,16 +1080,25 @@ namespace GitUI.Editor
             CopyNotStartingWith('+');
         }
 
-        private void cherrypickSelectedLines(int selectionStart, int selectionLength)
+        private void applySelectedLines(int selectionStart, int selectionLength, bool reverse)
         {
             // Prepare git command
             string args = "apply --3way --whitespace=nowarn";
 
             byte[] patch;
-            patch = PatchManager.GetSelectedLinesAsPatch(Module, GetText(),
+
+            if (reverse)
+            {
+                patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, GetText(),
+                selectionStart, selectionLength,
+                false, Encoding);
+            }
+            else
+            {
+                patch = PatchManager.GetSelectedLinesAsPatch(Module, GetText(),
                 selectionStart, selectionLength,
                 false, Encoding, false);
-
+            }
             if (patch != null && patch.Length > 0)
             {
                 string output = Module.RunGitCmd(args, null, patch);
@@ -1101,14 +1113,14 @@ namespace GitUI.Editor
 
         private void cherrypickSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            cherrypickSelectedLines(GetSelectionPosition(), GetSelectionLength());
+            applySelectedLines(GetSelectionPosition(), GetSelectionLength(), reverse: false);
         }
 
         public void CherryPickAllChanges()
         {
             if (GetText().Length > 0)
             {
-                cherrypickSelectedLines(0, GetText().Length);
+                applySelectedLines(0, GetText().Length, reverse: false);
             }
         }
 
@@ -1131,6 +1143,11 @@ namespace GitUI.Editor
         private void settingsButton_Click(object sender, EventArgs e)
         {
             UICommands.StartSettingsDialog(this.ParentForm, DiffViewerSettingsPage.GetPageReference());
+        }
+
+        private void revertSelectedLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            applySelectedLines(GetSelectionPosition(), GetSelectionLength(), reverse: true);
         }
     }
 }

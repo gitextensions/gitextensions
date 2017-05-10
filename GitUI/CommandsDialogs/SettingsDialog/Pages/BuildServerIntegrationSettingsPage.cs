@@ -100,6 +100,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 control.LoadSettings(CurrentSettings.BuildServer.TypeSettings);
 
                 buildServerSettingsPanel.Controls.Add((Control)control);
+                ((Control)control).Dock = DockStyle.Fill;
             }
         }
 

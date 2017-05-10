@@ -323,6 +323,7 @@
             "BeyondCompare4",
             "DiffMerge",
             "kdiff3",
+            "meld",
             "p4merge",
             "semanticmerge",
             "TortoiseMerge",

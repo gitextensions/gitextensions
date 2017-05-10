@@ -27,21 +27,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void BindSettingsWithControls()
         {
-            AddSettingBinding(DetailedSettings.ShowConEmuTab, chkChowConsoleTab);
-            AddSettingBinding(DetailedSettings.ConEmuStyle, cboStyle);
-            AddSettingBinding(DetailedSettings.ConEmuTerminal, cboTerminal);
-            AddSettingBinding(DetailedSettings.ConEmuFontSize, cboFontSize);
             AddSettingBinding(DetailedSettings.GetRemoteBranchesDirectlyFromRemote, chkRemotesFromServer);
+            AddSettingBinding(DetailedSettings.AddMergeLogMessages, addLogMessages);
+            AddSettingBinding(DetailedSettings.MergeLogMessagesCount, nbMessages);
         }
 
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(DetailedSettingsPage));
-        }
-
-        private void chkChowConsoleTab_CheckedChanged(object sender, System.EventArgs e)
-        {
-            groupBoxConsoleSettings.Enabled = chkChowConsoleTab.Checked;
         }
     }
 }

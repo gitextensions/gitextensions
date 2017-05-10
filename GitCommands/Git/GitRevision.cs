@@ -24,14 +24,14 @@ namespace GitCommands
         public string[] ParentGuids;
         private IList<IGitItem> _subItems;
         private readonly List<IGitRef> _refs = new List<IGitRef>();
-        private readonly GitModule _module;
+        public readonly GitModule Module;
         private BuildInfo _buildStatus;
 
         public GitRevision(GitModule aModule, string guid)
         {
             Guid = guid;
             Subject = "";
-            _module = aModule;
+            Module = aModule;
         }
 
         public List<IGitRef> Refs { get { return _refs; } }
@@ -68,7 +68,7 @@ namespace GitCommands
 
         public IEnumerable<IGitItem> SubItems
         {
-            get { return _subItems ?? (_subItems = _module.GetTree(TreeGuid, false)); }
+            get { return _subItems ?? (_subItems = Module.GetTree(TreeGuid, false)); }
         }
 
         #endregion
@@ -144,6 +144,11 @@ namespace GitCommands
             }
 
             return new GitRevision(aModule, sha1);
+        }
+
+        public static bool IsFullSha1Hash(string id)
+        {
+            return Regex.IsMatch(id, GitRevision.Sha1HashPattern);
         }
     }
 }

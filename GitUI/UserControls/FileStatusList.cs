@@ -408,7 +408,7 @@ namespace GitUI
             {
                 if (FileStatusListView.SelectedItems.Count > 0)
                 {
-                    ListViewItem item = FileStatusListView.SelectedItems[0];
+                    ListViewItem item = FileStatusListView.SelectedItems[FileStatusListView.SelectedItems.Count - 1];
                     return (GitItemStatus)item.Tag;
                 }
                 return null;
@@ -573,9 +573,11 @@ namespace GitUI
                 cm.Items.Insert(1, _openSubmoduleMenuItem);
             }
 
-            _openSubmoduleMenuItem.Visible = SelectedItem.IsSubmodule;
+            bool isSubmoduleSelected = SelectedItem != null && SelectedItem.IsSubmodule;
 
-            if (SelectedItem.IsSubmodule)
+            _openSubmoduleMenuItem.Visible = isSubmoduleSelected;
+
+            if (isSubmoduleSelected)
             {
                 _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ? 
                     new Font(_openSubmoduleMenuItem.Font,  FontStyle.Bold) : 

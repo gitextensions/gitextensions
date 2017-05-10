@@ -8,6 +8,7 @@ using GitCommands;
 using GitUI.UserControls;
 
 using ResourceManager;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -28,12 +29,13 @@ namespace GitUI
         public string ProcessInput { get; set; }
         public readonly string WorkingDirectory;
         public HandleOnExit HandleOnExitCallback { get; set; }
+        public readonly Dictionary<string, string> ProcessEnvVariables = new Dictionary<string, string>();
 
         protected FormProcess()
             : base(true)
         { }
 
-        protected FormProcess(string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+        public FormProcess(string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
             : base(useDialogSettings)
         {
             ProcessCallback = processStart;
@@ -133,7 +135,7 @@ namespace GitUI
 
             try
             {
-                ConsoleOutput.StartProcess(ProcessString, ProcessArguments, WorkingDirectory);
+                ConsoleOutput.StartProcess(ProcessString, ProcessArguments, WorkingDirectory, ProcessEnvVariables);
 
                 if (!string.IsNullOrEmpty(ProcessInput))
                 {
@@ -232,7 +234,7 @@ namespace GitUI
             OutputLog.Append(line);
 
             // To the display control
-            AddMessageLine(line);
+            AddMessage(line);
         }
 
         public static bool IsOperationAborted(string dialogResult)

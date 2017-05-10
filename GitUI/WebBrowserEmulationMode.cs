@@ -26,47 +26,58 @@ namespace GitUI
 
             var featureControlRegKey = @"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\";
 
-            Registry.SetValue(featureControlRegKey + "FEATURE_BROWSER_EMULATION", appName, GetBrowserEmulationMode(), RegistryValueKind.DWord);
+            UInt32 emulationMode;
+            if (TryGetBrowserEmulationMode(out emulationMode))
+            {
+                Registry.SetValue(featureControlRegKey + "FEATURE_BROWSER_EMULATION", appName, emulationMode, RegistryValueKind.DWord);
+            }
         }
 
-        static UInt32 GetBrowserEmulationMode()
+        static bool TryGetBrowserEmulationMode(out UInt32 emulationMode)
         {
             // https://msdn.microsoft.com/en-us/library/ee330730(v=vs.85).aspx#browser_emulation
             // http://stackoverflow.com/questions/28526826/web-browser-control-emulation-issue-feature-browser-emulation/28626667#28626667
-            int browserVersion = 0;
-            using (var ieKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer",
-                RegistryKeyPermissionCheck.ReadSubTree,
-                System.Security.AccessControl.RegistryRights.QueryValues))
+
+            emulationMode = 11000; // Internet Explorer 11. Webpages containing standards-based !DOCTYPE directives are displayed in IE11 Standards mode.
+            try
             {
-                var version = ieKey.GetValue("svcVersion");
-                if (null == version)
+                int browserVersion = 0;
+                using (var ieKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer",
+                    RegistryKeyPermissionCheck.ReadSubTree,
+                    System.Security.AccessControl.RegistryRights.QueryValues))
                 {
-                    version = ieKey.GetValue("Version");
+                    var version = ieKey.GetValue("svcVersion");
                     if (null == version)
-                        throw new ApplicationException("Microsoft Internet Explorer is required!");
+                    {
+                        version = ieKey.GetValue("Version");
+                        if (null == version)
+                            return false;
+                    }
+                    int.TryParse(version.ToString().Split('.')[0], out browserVersion);
                 }
-                int.TryParse(version.ToString().Split('.')[0], out browserVersion);
+
+                switch (browserVersion)
+                {
+                    case 7:
+                        emulationMode = 7000; // Webpages containing standards-based !DOCTYPE directives are displayed in IE7 Standards mode.
+                        break;
+                    case 8:
+                        emulationMode = 8000; // Webpages containing standards-based !DOCTYPE directives are displayed in IE8 mode.
+                        break;
+                    case 9:
+                        emulationMode = 9000; // Internet Explorer 9. Webpages containing standards-based !DOCTYPE directives are displayed in IE9 mode.
+                        break;
+                    case 10:
+                        emulationMode = 10000; // Internet Explorer 10.
+                        break;
+                }
+
+                return true;
             }
-
-            UInt32 mode = 11000; // Internet Explorer 11. Webpages containing standards-based !DOCTYPE directives are displayed in IE11 Standards mode.
-
-            switch (browserVersion)
+            catch 
             {
-                case 7:
-                    mode = 7000; // Webpages containing standards-based !DOCTYPE directives are displayed in IE7 Standards mode.
-                    break;
-                case 8:
-                    mode = 8000; // Webpages containing standards-based !DOCTYPE directives are displayed in IE8 mode.
-                    break;
-                case 9:
-                    mode = 9000; // Internet Explorer 9. Webpages containing standards-based !DOCTYPE directives are displayed in IE9 mode.
-                    break;
-                case 10:
-                    mode = 10000; // Internet Explorer 10.
-                    break;
+                return false;
             }
-
-            return mode;
         }
     }
 }

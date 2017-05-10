@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace GitUI.Editor
 {
@@ -24,9 +25,18 @@ namespace GitUI.Editor
         public static Color AdjustColor(Color color, int amount = 10)
         {
             return Color.FromArgb(
-                color.R + amount,
-                color.G + amount,
-                color.B + amount);
+                AdjustColorComponent(color.R, amount),
+                AdjustColorComponent(color.G, amount),
+                AdjustColorComponent(color.B, amount));
+        }
+
+        public static int AdjustColorComponent(int colorComponentValue, int amount)
+        {
+            int newValue = colorComponentValue + amount;
+            newValue = Math.Max(0, newValue);
+            newValue = Math.Min(255, newValue);
+
+            return newValue;
         }
 
         public static Color MakeColorLighter(Color color)

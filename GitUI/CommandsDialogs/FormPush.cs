@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
-using GitUI.Objects;
+using GitCommands.Remote;
 using GitUI.Script;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -430,7 +430,7 @@ namespace GitUI.CommandsDialogs
             if (isRejected.IsMatch(form.GetOutputString()) && !Module.IsBareRepository())
             {
                 bool forcePush = false;
-                IWin32Window owner = form;
+                IWin32Window owner = form.Owner;
                 if (AppSettings.AutoPullOnPushRejectedAction == null)
                 {
                     bool cancel = false;

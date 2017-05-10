@@ -268,7 +268,20 @@ namespace GitUI
         [Browsable(false)]
         public Task<SuperProjectInfo> SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
-        public int LastRowIndex { get; private set; }
+        public int LatestSelectedRowIndex { get; private set; }
+        [Browsable(false)]
+        public GitRevision LatestSelectedRevision
+        {
+            get
+            {
+                if (IsValidRevisionIndex(LatestSelectedRowIndex))
+                {
+                    return GetRevision(LatestSelectedRowIndex);
+                }
+
+                return null;
+            }
+        }
 
         [Description("Indicates whether the user is allowed to select more than one commit at a time.")]
         [Category("Behavior")]
@@ -431,7 +444,8 @@ namespace GitUI
 
         private void RevisionsKeyUp(object sender, KeyEventArgs e)
         {
-            if (Revisions.RowCount < LastRowIndex || LastRowIndex < 0 || Revisions.RowCount == 0)
+            var selectedRevision = LatestSelectedRevision;
+            if (selectedRevision == null)
             {
                 return;
             }
@@ -441,8 +455,7 @@ namespace GitUI
                 return;
             }
 
-            var revision = GetRevision(LastRowIndex);
-            var gitRefListsForRevision = new GitRefListsForRevision(revision);
+            var gitRefListsForRevision = new GitRefListsForRevision(selectedRevision);
 
             switch (e.KeyCode)
             {
@@ -488,7 +501,7 @@ namespace GitUI
                 return;
             }
 
-            var rect = Revisions.GetCellDisplayRectangle(0, LastRowIndex, true);
+            var rect = Revisions.GetCellDisplayRectangle(0, LatestSelectedRowIndex, true);
             using (var dlg = new FormQuickGitRefSelector())
             {
                 dlg.Init(actionLabel, refs);
@@ -793,7 +806,7 @@ namespace GitUI
 
             if (Revisions.SelectedRows.Count > 0)
             {
-                LastRowIndex = Revisions.SelectedRows[0].Index;
+                LatestSelectedRowIndex = Revisions.SelectedRows[0].Index;
                 //if there was selected a new revision while data is being loaded
                 //then don't change the new selection when restoring selected revisions after data is loaded
                 if (_isRefreshingRevisions && !Revisions.UpdatingVisibleRows)
@@ -860,6 +873,11 @@ namespace GitUI
         public List<string> GetRevisionChildren(string revision)
         {
             return Revisions.GetRevisionChildren(revision);
+        }
+
+        public bool IsValidRevisionIndex(int aIndex)
+        {
+            return aIndex >= 0 && aIndex < Revisions.RowCount;
         }
 
         public GitRevision GetRevision(int aRow)
@@ -1207,7 +1225,7 @@ namespace GitUI
             DisposeRevisionGraphCommand();
             this.InvokeAsync(() =>
                 {
-                    throw e.Exception;
+                    throw new AggregateException(e.Exception);
                 }
             );
             e.Handled = true;
@@ -2087,10 +2105,10 @@ namespace GitUI
 
         private void CreateTagToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (LatestSelectedRevision == null)
                 return;
 
-            using (var frm = new FormCreateTag(UICommands, GetRevision(LastRowIndex)))
+            using (var frm = new FormCreateTag(UICommands, LatestSelectedRevision))
             {
                 if (frm.ShowDialog(this) == DialogResult.OK)
                 {
@@ -2101,21 +2119,21 @@ namespace GitUI
 
         private void ResetCurrentBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (LatestSelectedRevision == null)
                 return;
 
-            var frm = new FormResetCurrentBranch(UICommands, GetRevision(LastRowIndex));
+            var frm = new FormResetCurrentBranch(UICommands, LatestSelectedRevision);
             frm.ShowDialog(this);
         }
 
         private void CreateNewBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (LatestSelectedRevision == null)
                 return;
 
             UICommands.DoActionOnRepo(() =>
                 {
-                    var frm = new FormCreateBranch(UICommands, GetRevision(LastRowIndex));
+                    var frm = new FormCreateBranch(UICommands, LatestSelectedRevision);
 
                     return frm.ShowDialog(this) == DialogResult.OK;
                 });
@@ -2125,7 +2143,7 @@ namespace GitUI
         {
             var pt = Revisions.PointToClient(Cursor.Position);
             var hti = Revisions.HitTest(pt.X, pt.Y);
-            LastRowIndex = hti.RowIndex;
+            LatestSelectedRowIndex = hti.RowIndex;
         }
 
         private void RevisionsCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -2136,14 +2154,14 @@ namespace GitUI
             var pt = Revisions.PointToClient(Cursor.Position);
             var hti = Revisions.HitTest(pt.X, pt.Y);
 
-            if (LastRowIndex == hti.RowIndex)
+            if (LatestSelectedRowIndex == hti.RowIndex)
                 return;
 
-            LastRowIndex = hti.RowIndex;
+            LatestSelectedRowIndex = hti.RowIndex;
             Revisions.ClearSelection();
 
-            if (LastRowIndex >= 0 && Revisions.Rows.Count > LastRowIndex)
-                Revisions.Rows[LastRowIndex].Selected = true;
+            if (IsValidRevisionIndex(LatestSelectedRowIndex))
+                Revisions.Rows[LatestSelectedRowIndex].Selected = true;
         }
 
         private void CommitClick(object sender, EventArgs e)
@@ -2153,7 +2171,7 @@ namespace GitUI
 
         private void GitIgnoreClick(object sender, EventArgs e)
         {
-            UICommands.StartEditGitIgnoreDialog(this);
+            UICommands.StartEditGitIgnoreDialog(this, false);
         }
 
         internal void InvalidateRevisions()
@@ -2227,10 +2245,10 @@ namespace GitUI
 
         private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (LatestSelectedRevision == null)
                 return;
 
-            UICommands.StartRevertCommitDialog(this, GetRevision(LastRowIndex));
+            UICommands.StartRevertCommitDialog(this, LatestSelectedRevision);
         }
 
         internal void FilterToolStripMenuItemClick(object sender, EventArgs e)
@@ -2247,7 +2265,7 @@ namespace GitUI
 
         private void ContextMenuOpening(object sender, CancelEventArgs e)
         {
-            if (Revisions.RowCount < LastRowIndex || LastRowIndex < 0 || Revisions.RowCount == 0)
+            if (LatestSelectedRevision == null)
                 return;
 
             var inTheMiddleOfBisect = Module.InTheMiddleOfBisect();
@@ -2277,7 +2295,7 @@ namespace GitUI
                 return gitRef.Name;
             };
 
-            var revision = GetRevision(LastRowIndex);
+            var revision = LatestSelectedRevision;
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
             foreach (var head in gitRefListsForRevision.AllTags)
             {
@@ -2486,10 +2504,10 @@ namespace GitUI
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (LatestSelectedRevision == null)
                 return;
 
-            string revision = GetRevision(LastRowIndex).Guid;
+            string revision = LatestSelectedRevision.Guid;
             UICommands.StartCheckoutRevisionDialog(this, revision);
         }
 
@@ -2554,18 +2572,18 @@ namespace GitUI
 
         private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (LatestSelectedRevision == null)
                 return;
 
-            UICommands.StartFixupCommitDialog(this, GetRevision(LastRowIndex));
+            UICommands.StartFixupCommitDialog(this, LatestSelectedRevision);
         }
 
         private void SquashCommitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (LatestSelectedRevision == null)
                 return;
 
-            UICommands.StartSquashCommitDialog(this, GetRevision(LastRowIndex));
+            UICommands.StartSquashCommitDialog(this, LatestSelectedRevision);
         }
 
         internal void ShowRelativeDate_ToolStripMenuItemClick(object sender, EventArgs e)
@@ -2669,22 +2687,22 @@ namespace GitUI
 
         private void MessageToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Clipboard.SetText(GetRevision(LastRowIndex).Subject);
+            Clipboard.SetText(LatestSelectedRevision.Subject);
         }
 
         private void AuthorToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Clipboard.SetText(GetRevision(LastRowIndex).Author);
+            Clipboard.SetText(LatestSelectedRevision.Author);
         }
 
         private void DateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Clipboard.SetText(GetRevision(LastRowIndex).CommitDate.ToString());
+            Clipboard.SetText(LatestSelectedRevision.CommitDate.ToString());
         }
 
         private void HashToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Clipboard.SetText(GetRevision(LastRowIndex).Guid);
+            Clipboard.SetText(LatestSelectedRevision.Guid);
         }
 
         private void MarkRevisionAsBadToolStripMenuItemClick(object sender, EventArgs e)
@@ -2704,10 +2722,10 @@ namespace GitUI
 
         private void ContinueBisect(GitBisectOption bisectOption)
         {
-            if (Revisions.RowCount <= LastRowIndex || LastRowIndex < 0)
+            if (LatestSelectedRevision == null)
                 return;
 
-            FormProcess.ShowDialog(this, Module, GitCommandHelpers.ContinueBisectCmd(bisectOption, GetRevision(LastRowIndex).Guid), false);
+            FormProcess.ShowDialog(this, Module, GitCommandHelpers.ContinueBisectCmd(bisectOption, LatestSelectedRevision.Guid), false);
             RefreshRevisions();
         }
 
@@ -3198,7 +3216,7 @@ namespace GitUI
 
         private void goToParentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var r = GetRevision(LastRowIndex);
+            var r = LatestSelectedRevision;
             if (r != null)
             {
                 if (_parentChildNavigationHistory.HasPreviousParent)
@@ -3210,7 +3228,7 @@ namespace GitUI
 
         private void goToChildToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var r = GetRevision(LastRowIndex);
+            var r = LatestSelectedRevision;
             if (r != null)
             {
                 var children = GetRevisionChildren(r.Guid);
@@ -3224,7 +3242,7 @@ namespace GitUI
 
         private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
         {
-            var r = GetRevision(LastRowIndex);
+            var r = LatestSelectedRevision;
             if (r != null)
             {
                 CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(r.Guid, 15));
@@ -3356,6 +3374,31 @@ namespace GitUI
             var revision = this.GetSelectedRevisions().First();
             if (revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url))
                 Process.Start(revision.BuildStatus.Url);
+        }
+
+        private void editCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            launchRebase("e");
+        }
+
+        private void rewordCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            launchRebase("r");
+        }
+
+        private void launchRebase(string command)
+        {
+            if (LatestSelectedRevision == null)
+                return;
+
+            String rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.ParentGuids[0],
+                interactive: true, preserveMerges: false, autosquash: false, autostash: true);
+
+            using (var formProcess = new FormProcess(null, rebaseCmd, Module.WorkingDir, null, true))
+            {
+                formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", String.Format("sed -i -re '0,/pick/s//{0}/'", command));
+                formProcess.ShowDialog(this);
+            }
         }
     }
 }

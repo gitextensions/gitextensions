@@ -100,5 +100,20 @@ namespace GitCommands.Utils
 
             return false;
         }
+
+        public static string ReplaceLinuxNewLinesDependingOnPlatform(string s)
+        {
+            if (s.IsNullOrEmpty())
+            {
+                return s;
+            }
+
+            if (RunningOnUnix())
+            {
+                return s;
+            }
+
+            return s.Replace("\n", Environment.NewLine);
+        }
     }
 }

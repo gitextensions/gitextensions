@@ -353,7 +353,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 CheckSettingsLogic.SolveMergeToolPathForKDiff();
             }
-            else if (CommonLogic.IsMergeTool("p4merge") || CommonLogic.IsMergeTool("TortoiseMerge"))
+            else if (CommonLogic.IsMergeTool("p4merge") || CommonLogic.IsMergeTool("TortoiseMerge") || CommonLogic.IsMergeTool("meld"))
             {
                 CheckSettingsLogic.AutoConfigMergeToolCmd();
 
@@ -604,7 +604,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     return true;
                 }
                 string mergetool = CommonLogic.GetGlobalMergeTool().ToLowerInvariant();
-                if (mergetool == "p4merge" || mergetool == "tmerge")
+                if (mergetool == "p4merge" || mergetool == "tmerge" || mergetool == "meld")
                 {
                     string p = GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
                     if (string.IsNullOrEmpty(p))

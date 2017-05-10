@@ -214,6 +214,7 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
 
             Translate();
+            LayoutRevisionInfo();
 
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
@@ -283,6 +284,26 @@ namespace GitUI.CommandsDialogs
             RecoverSplitterContainerLayout();
         }
 
+        private void LayoutRevisionInfo()
+        {
+            if (AppSettings.ShowRevisionInfoNextToRevisionGrid.ValueOrDefault)
+            {
+                RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
+                RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - 500;
+                RevisionInfo.DisplayAvatarOnRight();
+                CommitInfoTabControl.SuspendLayout();
+                CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
+                CommitInfoTabControl.RemoveIfExists(TreeTabPage);
+                CommitInfoTabControl.TabPages.Insert(1, TreeTabPage);
+                CommitInfoTabControl.SelectedTab = DiffTabPage;
+                CommitInfoTabControl.ResumeLayout(true);
+            }
+            else
+            {
+                RevisionsSplitContainer.Panel2Collapsed = true;
+            }
+        }
+
         private void ManageWorktreeSupport()
         {
             if (!GitCommandHelpers.VersionInUse.SupportWorktree)
@@ -299,7 +320,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!string.IsNullOrEmpty(selectCommit))
             {
-                RevisionGrid.SetInitialRevision(new GitRevision(Module, selectCommit));
+                RevisionGrid.SetInitialRevision(GitRevision.CreateForShortSha1(Module, selectCommit));
             }
         }
 
@@ -1189,7 +1210,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillCommitInfo()
         {
-            if (CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
+            if (!AppSettings.ShowRevisionInfoNextToRevisionGrid.ValueOrDefault && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
                 return;
 
             if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
@@ -1433,7 +1454,10 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
+                    if (RevisionInfo.Parent == CommitInfoTabPage)
+                    {
+                        CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
+                    }
                     CommitInfoTabControl.InsertIfNotExists(1, TreeTabPage);
                 }
 
@@ -1715,7 +1739,12 @@ namespace GitUI.CommandsDialogs
 
         private void EditGitignoreToolStripMenuItem1Click(object sender, EventArgs e)
         {
-            UICommands.StartEditGitIgnoreDialog(this);
+            UICommands.StartEditGitIgnoreDialog(this, false);
+        }
+
+        private void EditGitInfoExcludeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            UICommands.StartEditGitIgnoreDialog(this, true);
         }
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
@@ -1930,6 +1959,13 @@ namespace GitUI.CommandsDialogs
 
         private void FileToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
+            if (Repositories.RepositoryHistory.Repositories.Count() == 0)
+            {
+                recentToolStripMenuItem.Enabled = false;
+                return;
+            }
+
+            recentToolStripMenuItem.Enabled = true;
             recentToolStripMenuItem.DropDownItems.Clear();
 
             foreach (var historyItem in Repositories.RepositoryHistory.Repositories)
@@ -1942,6 +1978,11 @@ namespace GitUI.CommandsDialogs
                 historyItemMenu.Width = 225;
                 recentToolStripMenuItem.DropDownItems.Add(historyItemMenu);
             }
+
+            // Re-add controls.
+            recentToolStripMenuItem.DropDownItems.Add(this.clearRecentRepositoriesListToolStripMenuItem);
+            TranslateItem(clearRecentRepositoriesListMenuItem.Name, clearRecentRepositoriesListMenuItem);
+            recentToolStripMenuItem.DropDownItems.Add(clearRecentRepositoriesListMenuItem);
         }
 
         private void ChangeWorkingDir(string path)
@@ -1973,6 +2014,16 @@ namespace GitUI.CommandsDialogs
                 return;
 
             ChangeWorkingDir(button.Text);
+        }
+
+        private void ClearRecentRepositoriesListClick(object sender, EventArgs e)
+        {
+            Repositories.RepositoryHistory.Repositories.Clear();
+            Repositories.SaveSettings();
+            // Force clear recent repositories list from dashboard.
+            if (this._dashboard != null) {
+                _dashboard.ShowRecentRepositories();
+            }
         }
 
         private void PluginSettingsToolStripMenuItemClick(object sender, EventArgs e)
@@ -2867,6 +2918,10 @@ namespace GitUI.CommandsDialogs
                 mainSplitContainerSplitterDistance = (int)(scaleFactor * mainSplitContainerSplitterDistance);
                 fileTreeSplitContainerSplitterDistance = (int)(scaleFactor * fileTreeSplitContainerSplitterDistance);
                 diffSplitContainerSplitterDistance = (int)(scaleFactor * diffSplitContainerSplitterDistance);
+                if (Properties.Settings.Default.FormBrowse_RevisionsSplitContainer_SplitterDistance > 0)
+                {
+                    RevisionsSplitContainer.SplitterDistance = (int)(scaleFactor * Properties.Settings.Default.FormBrowse_RevisionsSplitContainer_SplitterDistance);
+                }
 
                 if (mainSplitContainerSplitterDistance != 0)
                     MainSplitContainer.SplitterDistance = mainSplitContainerSplitterDistance;
@@ -2886,6 +2941,7 @@ namespace GitUI.CommandsDialogs
                 Properties.Settings.Default.FormBrowse_MainSplitContainer_SplitterDistance = MainSplitContainer.SplitterDistance;
                 Properties.Settings.Default.FormBrowse_FileTreeSplitContainer_SplitterDistance = FileTreeSplitContainer.SplitterDistance;
                 Properties.Settings.Default.FormBrowse_DiffSplitContainer_SplitterDistance = DiffSplitContainer.SplitterDistance;
+                Properties.Settings.Default.FormBrowse_RevisionsSplitContainer_SplitterDistance = RevisionsSplitContainer.SplitterDistance;
                 Properties.Settings.Default.Save();
             }
             catch (ConfigurationException)
@@ -3666,7 +3722,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void FillTerminalTab()
         {
-            if (!EnvUtils.RunningOnWindows() || !Module.EffectiveSettings.Detailed.ShowConEmuTab.ValueOrDefault)
+            if (!EnvUtils.RunningOnWindows() || !AppSettings.ShowConEmuTab.ValueOrDefault)
             {
                 return; // ConEmu only works on WinNT
             }
@@ -3722,10 +3778,10 @@ namespace GitUI.CommandsDialogs
                 };
 
                 var startinfoBaseConfiguration = startinfo.BaseConfiguration;
-                if (!string.IsNullOrWhiteSpace(Module.EffectiveSettings.Detailed.ConEmuFontSize.ValueOrDefault))
+                if (!string.IsNullOrWhiteSpace(AppSettings.ConEmuFontSize.ValueOrDefault))
                 {
                     int fontSize;
-                    if (int.TryParse(Module.EffectiveSettings.Detailed.ConEmuFontSize.ValueOrDefault, out fontSize))
+                    if (int.TryParse(AppSettings.ConEmuFontSize.ValueOrDefault, out fontSize))
                     {
                         var nodeFontSize =
                             startinfoBaseConfiguration.SelectSingleNode("/key/key/key/value[@name='FontSize']");
@@ -3736,7 +3792,7 @@ namespace GitUI.CommandsDialogs
                 startinfo.BaseConfiguration = startinfoBaseConfiguration;
 
                 string[] exeList;
-                switch (Module.EffectiveSettings.Detailed.ConEmuTerminal.ValueOrDefault)
+                switch (AppSettings.ConEmuTerminal.ValueOrDefault)
                 {
                     case "cmd":
                         exeList = new[] { "cmd.exe" };
@@ -3767,15 +3823,15 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    if(Module.EffectiveSettings.Detailed.ConEmuTerminal.ValueOrDefault == "bash")
+                    if(AppSettings.ConEmuTerminal.ValueOrDefault == "bash")
                         startinfo.ConsoleProcessCommandLine = cmdPath + " --login -i";
                     else
                         startinfo.ConsoleProcessCommandLine = cmdPath;
                 }
 
-                if (Module.EffectiveSettings.Detailed.ConEmuStyle.ValueOrDefault != "Default")
+                if (AppSettings.ConEmuStyle.ValueOrDefault != "Default")
                 {
-                    startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + Module.EffectiveSettings.Detailed.ConEmuStyle.ValueOrDefault + "\"";
+                    startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";
                 }
 
                 // Set path to git in this window (actually, effective with CMD only)
@@ -3795,7 +3851,7 @@ namespace GitUI.CommandsDialogs
             if (terminal == null || terminal.RunningSession == null || string.IsNullOrWhiteSpace(path))
                 return;
 
-            if (Module.EffectiveSettings.Detailed.ConEmuTerminal.ValueOrDefault == "bash")
+            if (AppSettings.ConEmuTerminal.ValueOrDefault == "bash")
             {
                 string posixPath;
                 if (PathUtil.TryConvertWindowsPathToPosix(path, out posixPath))
@@ -3803,7 +3859,7 @@ namespace GitUI.CommandsDialogs
                     ClearTerminalCommandLineAndRunCommand("cd " + posixPath);
                 }
             }
-            else if (Module.EffectiveSettings.Detailed.ConEmuTerminal.ValueOrDefault == "powershell")
+            else if (AppSettings.ConEmuTerminal.ValueOrDefault == "powershell")
             {
                 ClearTerminalCommandLineAndRunCommand("cd \"" + path + "\"");
             }

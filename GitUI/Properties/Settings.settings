@@ -29,5 +29,8 @@
     <Setting Name="FormBrowse_LeftPanel_Collapsed" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="FormBrowse_RevisionsSplitContainer_SplitterDistance" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

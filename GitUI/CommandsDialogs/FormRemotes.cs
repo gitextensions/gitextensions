@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
-using GitUI.Objects;
+using GitCommands.Remote;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -66,14 +66,18 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _btnNewTooltip =
             new TranslationString("Add a new remote");
 
-        private readonly TranslationString _btnToggleStateTooltip =
-            new TranslationString("Enable or disable the selected remote");
+        private readonly TranslationString _btnToggleStateTooltip_Activate =
+            new TranslationString("Activate the selected remote");
+
+        private readonly TranslationString _btnToggleStateTooltip_Deactivate =
+            new TranslationString(@"Deactivate the selected remote.
+Inactive remote is completely invisible to git.");
 
         private readonly TranslationString _lvgEnabledHeader =
-            new TranslationString("Enabled");
+            new TranslationString("Active");
 
         private readonly TranslationString _lvgDisabledHeader =
-            new TranslationString("Disabled");
+            new TranslationString("Inactive");
         #endregion
 
         public delegate void EventRemoteChange(string remoteName);
@@ -93,7 +97,6 @@ namespace GitUI.CommandsDialogs
             Delete.Text = string.Empty;
             toolTip1.SetToolTip(New, _btnNewTooltip.Text);
             toolTip1.SetToolTip(Delete, _btnDeleteTooltip.Text);
-            toolTip1.SetToolTip(btnToggleState, _btnToggleStateTooltip.Text);
 
             _lvgEnabled = new ListViewGroup(_lvgEnabledHeader.Text, HorizontalAlignment.Left);
             _lvgDisabled = new ListViewGroup(_lvgDisabledHeader.Text, HorizontalAlignment.Left);
@@ -144,6 +147,20 @@ namespace GitUI.CommandsDialogs
             else
             {
                 RemoteName.Focus();
+            }
+        }
+
+        private void BindBtnToggleState(bool disabled)
+        {
+            if (disabled)
+            {
+                btnToggleState.Image = Properties.Resources.light_bulb_icon_off_16;
+                toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Activate.Text ?? "").Trim());
+            }
+            else
+            {
+                btnToggleState.Image = Properties.Resources.light_bulb_icon_on_16;
+                toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Deactivate.Text ?? "").Trim());
             }
         }
 
@@ -255,9 +272,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
             _selectedRemote.Disabled = !_selectedRemote.Disabled;
-            btnToggleState.Image = _selectedRemote.Disabled ? Properties.Resources.light_bulb_icon_off_16 : Properties.Resources.light_bulb_icon_on_16;
             _gitRemoteController.ToggleRemoteState(_selectedRemote.Name, _selectedRemote.Disabled);
-
+            BindBtnToggleState(_selectedRemote.Disabled);
             BindRemotes(_selectedRemote.Name);
         }
 
@@ -520,9 +536,8 @@ namespace GitUI.CommandsDialogs
             checkBoxSepPushUrl.Checked = !string.IsNullOrEmpty(_selectedRemote.PushUrl);
             PuttySshKey.Text = _selectedRemote.PuttySshKey;
             gbMgtPanel.Text = _gbMgtPanelHeaderEdit.Text;
-            btnToggleState.Image = _selectedRemote.Disabled ? Properties.Resources.light_bulb_icon_off_16 : Properties.Resources.light_bulb_icon_on_16;
+            BindBtnToggleState(_selectedRemote.Disabled);
             btnToggleState.Visible = true;
-
             flpnlRemoteManagement.Enabled = !_selectedRemote.Disabled;
         }
 

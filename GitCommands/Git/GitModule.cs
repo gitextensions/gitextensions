@@ -2992,7 +2992,17 @@ namespace GitCommands
             string args = "-z";
             if (full)
                 args += " -r";
-            var tree = this.RunCacheableCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
+
+            string tree;
+
+            if (GitRevision.IsFullSha1Hash(id))
+            {
+                tree = this.RunCacheableCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
+            }
+            else
+            {
+                tree = this.RunCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
+            }
 
             return GitItem.CreateIGitItemsFromString(this, tree);
         }
