@@ -80,26 +80,18 @@ namespace GitUI.CommandsDialogs
                 Text = _editLocalExcludeTitle.Text;
         }
 
-        private string ExcludeFileRelative
+        private string ExcludeFile
         {
             get
             {
                 if (!_localExclude)
                 {
-                    return ".gitignore";
+                    return Path.Combine(Module.WorkingDir, ".gitignore");
                 }
                 else
                 {
-                    return Path.Combine(".git", "info", "exclude");
+                    return Path.Combine(Module.GetGitDirectory(), "info", "exclude");
                 }
-            }
-        }
-
-        private string ExcludeFile
-        {
-            get
-            {
-                return Module.WorkingDir + ExcludeFileRelative;
             }
         }
 
@@ -198,7 +190,7 @@ namespace GitUI.CommandsDialogs
             // workaround to prevent GitIgnoreFileLoaded event handling (it causes wrong _originalGitIgnoreFileContent update)
             // TODO: implement in FileViewer separate events for loading text from file and for setting text directly via ViewText
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded -= GitIgnoreFileLoaded;
-            _NO_TRANSLATE_GitIgnoreEdit.ViewText(ExcludeFileRelative,
+            _NO_TRANSLATE_GitIgnoreEdit.ViewText(ExcludeFile,
                 currentFileContent + Environment.NewLine +
                 string.Join(Environment.NewLine, patternsToAdd) + Environment.NewLine + string.Empty);
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;

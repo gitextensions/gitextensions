@@ -33,26 +33,18 @@ namespace GitUI.CommandsDialogs
                 FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
         }
 
-        private string ExcludeFileRelative
+        private string ExcludeFile
         {
             get
             {
                 if (!_localExclude)
                 {
-                    return ".gitignore";
+                    return Path.Combine(Module.WorkingDir, ".gitignore");
                 }
                 else
                 {
-                    return Path.Combine(".git", "info", "exclude");
+                    return Path.Combine(Module.GetGitDirectory(), "info", "exclude");
                 }
-            }
-        }
-
-        private string ExcludeFile
-        {
-            get
-            {
-                return Module.WorkingDir + ExcludeFileRelative;
             }
         }
 
