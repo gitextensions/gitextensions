@@ -15,11 +15,11 @@ namespace TeamCityIntegration.Settings
     {
         private string _defaultProjectName;
         private readonly TeamCityAdapter _teamCityAdapter = new TeamCityAdapter();
-        private readonly TranslationString _failToLoadProjectMessage = new TranslationString("Fail to load the projects and build list." + Environment.NewLine + "Please verify the server url.");
+        private readonly TranslationString _failToLoadProjectMessage = new TranslationString("Failed to load the projects and build list." + Environment.NewLine + "Please verify the server url.");
         private readonly TranslationString _failToLoadProjectCaption = new TranslationString("Error when loading the projects and build list");
         private readonly TranslationString _failToExtractDataFromClipboardMessage = new TranslationString( "The clipboard doesn't contain a valid build url." + Environment.NewLine + Environment.NewLine +
                 "Please copy in the clipboard the url of the build before retrying." + Environment.NewLine +
-                "(Should contains at least the parameter\"buildTypeId\")");
+                "(Should contain at least the \"buildTypeId\" parameter)");
         private readonly TranslationString _failToExtractDataFromClipboardCaption = new TranslationString("Build url not valid");
 
         public TeamCitySettingsUserControl()
