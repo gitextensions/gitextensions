@@ -240,10 +240,10 @@ namespace GitUI.Blame
 
             BlameCommitter.ViewText("committer.txt", blameCommitter.ToString());
             BlameFile.ViewText(_fileName, blameFile.ToString());
-            if (line == 0)
-                BlameFile.ScrollPos = scrollpos;
+            if (line > 0)
+                BlameFile.GoToLine(line - 1);
             else
-                BlameFile.GoToLine(line);
+                BlameFile.ScrollPos = scrollpos;
 
             _clickedBlameLine = new GitBlameLine();
 
