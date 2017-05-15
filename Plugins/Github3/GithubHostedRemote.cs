@@ -15,7 +15,7 @@ namespace Github3
         public IHostedRepository GetHostedRepository()
         {
             if(repo == null)
-                repo = new GithubRepo(Github3Plugin.github.getRepository(Owner, RemoteRepositoryName));
+                repo = new GithubRepo(Github3Plugin.github.GetRepository(Owner, RemoteRepositoryName));
 
             return repo;
         }
