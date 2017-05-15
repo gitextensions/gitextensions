@@ -64,7 +64,7 @@ namespace Github3
                 {
                     this.Hide();
                     this.Close();
-                    string token = OAuth2Helper.requestToken(GithubAPIInfo.client_id, GithubAPIInfo.client_secret, code);
+                    string token = OAuth2Helper.RequestToken(GithubAPIInfo.client_id, GithubAPIInfo.client_secret, code);
                     if (token == null)
                         return;
                     gotToken = true;

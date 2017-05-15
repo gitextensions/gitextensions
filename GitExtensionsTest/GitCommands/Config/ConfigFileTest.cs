@@ -426,8 +426,10 @@ namespace GitExtensionsTest.Config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
 
                 //Make sure it is hidden
-                FileInfo configFile = new FileInfo(GetConfigFileName());
-                configFile.Attributes = FileAttributes.Hidden;
+                FileInfo configFile = new FileInfo(GetConfigFileName())
+                {
+                    Attributes = FileAttributes.Hidden
+                };
             }
 
             { //PERFORM TEST
@@ -810,9 +812,10 @@ namespace GitExtensionsTest.Config
             if (File.Exists(GetConfigFileName()))
             {
                 //Make sure it is hidden
-                FileInfo configFile = new FileInfo(GetConfigFileName());
-                configFile.Attributes = FileAttributes.Normal;
-
+                FileInfo configFile = new FileInfo(GetConfigFileName())
+                {
+                    Attributes = FileAttributes.Normal
+                };
                 File.Delete(GetConfigFileName());
             }
         }

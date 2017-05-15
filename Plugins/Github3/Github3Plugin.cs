@@ -31,7 +31,7 @@ namespace Github3
 
                 try
                 {
-                    var user = Github3Plugin.github.getCurrentUser();
+                    var user = Github3Plugin.github.GetCurrentUser();
                     if (user != null)
                     {
                         _username = user.Login;
@@ -60,7 +60,7 @@ namespace Github3
             {
                 _username = null;
                 Github3Plugin.instance.OAuthToken[Github3Plugin.instance.Settings] = value;
-                Github3Plugin.github.setOAuth2Token(value);
+                Github3Plugin.github.SetOAuth2Token(value);
             }
         }
     }
@@ -91,7 +91,7 @@ namespace Github3
         {
             if (!string.IsNullOrEmpty(GithubLoginInfo.OAuthToken))
             {
-                github.setOAuth2Token(GithubLoginInfo.OAuthToken);
+                github.SetOAuth2Token(GithubLoginInfo.OAuthToken);
             }
         }
 
@@ -113,22 +113,22 @@ namespace Github3
 
         public IList<IHostedRepository> SearchForRepository(string search)
         {
-            return github.searchRepositories(search).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
+            return github.SearchRepositories(search).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
         public IList<IHostedRepository> GetRepositoriesOfUser(string user)
         {
-            return github.getRepositories(user).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
+            return github.GetRepositories(user).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
         public IHostedRepository GetRepository(string user, string repositoryName)
         {
-            return new GithubRepo(github.getRepository(user, repositoryName));
+            return new GithubRepo(github.GetRepository(user, repositoryName));
         }
 
         public IList<IHostedRepository> GetMyRepos()
         {
-            return github.getRepositories().Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
+            return github.GetRepositories().Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
         public bool ConfigurationOk { get { return true; } }

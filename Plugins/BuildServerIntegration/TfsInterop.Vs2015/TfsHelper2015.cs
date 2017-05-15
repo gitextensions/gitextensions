@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Services.Common;
 using Microsoft.TeamFoundation.Build.Client;
 using Microsoft.TeamFoundation.Client;
+using Microsoft.VisualStudio.Services.WebApi;
 
 namespace TfsInterop
 {
@@ -227,8 +228,7 @@ namespace TfsInterop
                 
                 connection.Settings.BypassProxyOnLocal = false;
                 BuildHttpClient buildClient = connection.GetClientAsync<BuildHttpClient>().Result;
-                var definitions = await buildClient.GetDefinitionsAsync(project: projectName,
-                                                                    type: DefinitionType.Build);
+                var definitions = await buildClient.GetDefinitionsAsync(project: projectName);
                 var buildDefs = new List<DefinitionReference>();
 
                 foreach (var def in definitions)
@@ -266,8 +266,7 @@ namespace TfsInterop
             var task = _buildClient.GetBuildsAsync(project: _projectName,
                                                       definitions: _buildDefinitions2015.Select(b => b.Id),
                                                       minFinishTime: sinceDate,
-                                                      statusFilter: statusFilter,
-                                                      type: DefinitionType.Build);
+                                                      statusFilter: statusFilter);
             //while (!task.IsCompleted) { }
             //task.Wait();
             List<Build> builds = task.Result;

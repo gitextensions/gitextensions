@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             try
             {
                 Client github = new Client();
-                Repository gitExtRepo = github.getRepository("gitextensions", "gitextensions");
+                Repository gitExtRepo = github.GetRepository("gitextensions", "gitextensions");
                 if (gitExtRepo == null)
                     return;
 
