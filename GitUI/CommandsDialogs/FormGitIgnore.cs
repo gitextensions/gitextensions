@@ -77,7 +77,9 @@ namespace GitUI.CommandsDialogs
             Translate();
 
             if (localExclude)
+            {
                 Text = _editLocalExcludeTitle.Text;
+            }
         }
 
         private string ExcludeFile
