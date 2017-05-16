@@ -60,14 +60,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SmartFormat, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SmartFormat.NET.1.6.1.0\lib\net40-Client\SmartFormat.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SmartFormat, Version=2.0.0.0, Culture=neutral, PublicKeyToken=568866805651201f, processorArchitecture=MSIL">
+      <HintPath>..\packages\SmartFormat.NET.2.0.0.0\lib\net40\SmartFormat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.IO">
       <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
     </Reference>
@@ -124,7 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
-      <Project>{62ced1d5-f603-40de-8bf5-3e49d3a392f4}</Project>
+      <Project>{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}</Project>
       <Name>NBug</Name>
     </ProjectReference>
     <ProjectReference Include="..\GitUI\GitUI.csproj">
@@ -132,7 +129,7 @@
       <Name>GitUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
-      <Project>{7e5433f4-dd13-4d8e-95b2-59b4ffe7d636}</Project>
+      <Project>{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}</Project>
       <Name>AutoCompileSubmodules</Name>
       <Private>False</Private>
     </ProjectReference>
@@ -157,7 +154,7 @@
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Gerrit\Gerrit.csproj">
-      <Project>{ec6988f6-0e8e-42d2-8e41-e562c5fb65bc}</Project>
+      <Project>{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}</Project>
       <Name>Gerrit</Name>
       <Private>False</Private>
     </ProjectReference>
