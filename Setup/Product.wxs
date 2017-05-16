@@ -735,7 +735,7 @@
                     <ComponentRef Id="Microsoft.TeamFoundation.Build2.WebApi.dll" />
                     <ComponentRef Id="Microsoft.TeamFoundation.Common.dll" />
                     <ComponentRef Id="Microsoft.TeamFoundation.Core.WebApi.dll" />
-                    <ComponentRef Id="Microsoft.VisualStudio.Services.Client.dll" />
+                    <ComponentRef Id="Microsoft.VisualStudio.Services.Client.Interactive.dll" />
                     <ComponentRef Id="Microsoft.VisualStudio.Services.Common.dll" />
                     <ComponentRef Id="Microsoft.VisualStudio.Services.WebApi.dll" />
                     <ComponentRef Id="System.Net.Http.Formatting.dll" />
