@@ -77,7 +77,15 @@ namespace GitUI.CommandsDialogs
             Translate();
 
             if (localExclude)
+            {
                 Text = _editLocalExcludeTitle.Text;
+            }
+
+            // for some reason 'Save' button doesn't scale as well as other buttons
+            // when scaled its height is slightly less then 'Cancel' button's height
+            // fix this manually
+            Save.AutoSize = false;
+            Save.Height = btnCancel.Height;
         }
 
         private string ExcludeFile
