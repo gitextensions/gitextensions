@@ -292,8 +292,8 @@
             <Component Id="Microsoft.TeamFoundation.Core.WebApi.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.TeamFoundation.Core.WebApi.dll" />
             </Component>
-            <Component Id="Microsoft.VisualStudio.Services.Client.dll" Guid="*">
-                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.VisualStudio.Services.Client.dll" />
+            <Component Id="Microsoft.VisualStudio.Services.Client.Interactive.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.VisualStudio.Services.Client.Interactive.dll" />
             </Component>
             <Component Id="Microsoft.VisualStudio.Services.Common.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.VisualStudio.Services.Common.dll" />
