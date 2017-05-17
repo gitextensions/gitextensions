@@ -290,14 +290,14 @@ namespace GitUI
             return OutputLog.GetString();
         }
 
-      private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
-      {
-          AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
+        private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
+        {
+            AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
 
-          // Maintain the invariant: if changing to "don't keep" and conditions are such that the dialog would have closed in dont-keep mode, then close it
-          if((!KeepDialogOpen.Checked /* keep off */) && (Ok.Enabled /* done */) && (!errorOccurred /* and successful */)) /* not checking for UseDialogSettings because checkbox is only visible with True */
-              Close();
-      }
+            // Maintain the invariant: if changing to "don't keep" and conditions are such that the dialog would have closed in dont-keep mode, then close it
+            if ((!KeepDialogOpen.Checked /* keep off */) && (Ok.Enabled /* done */) && (!errorOccurred /* and successful */)) /* not checking for UseDialogSettings because checkbox is only visible with True */
+                Close();
+        }
 
         internal void AfterClosed()
         {

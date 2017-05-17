@@ -12,6 +12,7 @@ using GitCommands.Utils;
 using GitCommands.GitExtLinks;
 using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager;
+using GitUI.Editor;
 
 namespace GitUI.CommitInfo
 {
@@ -42,46 +43,37 @@ namespace GitUI.CommitInfo
 
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
+            string link = LinkFactory.ParseLink(e.LinkText);
+            HandleLink(link, sender);
+        }
+
+        private void HandleLink(string link, object sender)
+        {
             try
             {
-                var url = e.LinkText;
-                var data = url.Split(new[] { '#' }, 2);
-
-                try
+                var result = new Uri(link);
+                if (result.Scheme == "gitext")
                 {
-                    if (data.Length > 1)
+                    if (CommandClick != null)
                     {
-                        var result = new Uri(data[1]);
-                        if (result.Scheme == "gitext")
-                        {
-                            if (CommandClick != null)
-                            {
-                                string path = result.AbsolutePath.TrimStart('/');
-                                CommandClick(sender, new CommandEventArgs(result.Host, path));
-                            }
-                            return;
-                        }
-                        else
-                        {
-                            url = result.AbsoluteUri;
-                        }
+                        string path = result.AbsolutePath.TrimStart('/');
+                        CommandClick(sender, new CommandEventArgs(result.Host, path));
                     }
                 }
-                catch (UriFormatException)
+                else
                 {
-
-                }
-
-                using (var process = new Process
+                    using (var process = new Process
                     {
                         EnableRaisingEvents = false,
-                        StartInfo = { FileName = url }
+                        StartInfo = { FileName = result.AbsoluteUri }
                     })
-                    process.Start();
+                    {
+                        process.Start();
+                    }
+                }
             }
-            catch (Exception ex)
+            catch (UriFormatException)
             {
-                MessageBox.Show(ex.Message);
             }
         }
 
@@ -127,9 +119,12 @@ namespace GitUI.CommitInfo
         private List<string> _branches;
         private string _branchInfo;
         private IList<string> _sortedRefs;
+        private System.Drawing.Rectangle _headerResize; // Cache desired size for commit header
 
         private void ReloadCommitInfo()
         {
+            _RevisionHeader.BackColor = ColorHelper.MakeColorDarker(this.BackColor);
+
             showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal;
             showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote;
             showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
@@ -159,7 +154,7 @@ namespace GitUI.CommitInfo
                 ThreadPool.QueueUserWorkItem(_ => loadSortedRefs());
 
             data.ChildrenGuids = _children;
-            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
+            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null, Module);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
             _RevisionHeader.Height = GetRevisionHeaderHeight();
@@ -212,7 +207,7 @@ namespace GitUI.CommitInfo
             if (EnvUtils.IsMonoRuntime())
                 return (int)(_RevisionHeader.Lines.Length * (0.8 + _RevisionHeader.Font.GetHeight()));
 
-            return _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
+            return _headerResize.Height;
         }
 
         private void loadSortedRefs()
@@ -325,6 +320,21 @@ namespace GitUI.CommitInfo
                 int j = _otherList.IndexOf(b);
                 return i - j;
             }
+        }
+
+        public void DisplayAvatarOnRight()
+        {
+            tableLayout.SuspendLayout();
+            this.tableLayout.ColumnStyles.Clear();
+            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tableLayout.SetColumn(gravatar1, 1);
+            tableLayout.SetColumn(_RevisionHeader, 0);
+            tableLayout.SetColumn(RevisionInfo, 0);
+            tableLayout.SetRowSpan(gravatar1, 1);
+            tableLayout.SetColumnSpan(RevisionInfo, 2);
+            tableLayout.ResumeLayout(true);
+
         }
 
         private void updateText()
@@ -558,6 +568,12 @@ namespace GitUI.CommitInfo
             {
                 DoCommandClick("navigateforward", null);
             }
+        }
+
+        private void _RevisionHeader_ContentsResized(object sender, ContentsResizedEventArgs e)
+        {
+            // Cache desired size for commit header
+            _headerResize = e.NewRectangle;
         }
 
     }

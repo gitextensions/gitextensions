@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -12,6 +11,7 @@ using GitCommands.Logging;
 using GitCommands.Repository;
 using GitCommands.Settings;
 using Microsoft.Win32;
+using System.Linq;
 
 namespace GitCommands
 {
@@ -36,6 +36,7 @@ namespace GitCommands
 
         private static RepoDistSettings _SettingsContainer;
         public static RepoDistSettings SettingsContainer { get { return _SettingsContainer; } }
+        private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
 
         public static readonly int BranchDropDownMinWidth = 300;
         public static readonly int BranchDropDownMaxWidth = 600;
@@ -88,6 +89,12 @@ namespace GitCommands
                 }
                 SetString("AutoNormaliseSymbol", value);
             }
+        }
+
+        public static bool RememberAmendCommitState
+        {
+            get { return GetBool("RememberAmendCommitState", true); }
+            set { SetBool("RememberAmendCommitState", value); }
         }
 
         public static void UsingContainer(RepoDistSettings aSettingsContainer, Action action)
@@ -305,6 +312,12 @@ namespace GitCommands
             get { return GetBool("showresetallchanges", true); }
             set { SetBool("showresetallchanges", value); }
         }
+        
+        public static readonly BoolNullableSetting ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", DetailedSettingsPath, true);
+        public static readonly StringSetting ConEmuStyle = new StringSetting("ConEmuStyle", DetailedSettingsPath, "<Solarized Light>");
+        public static readonly StringSetting ConEmuTerminal = new StringSetting("ConEmuTerminal", DetailedSettingsPath, "bash");
+        public static readonly StringSetting ConEmuFontSize = new StringSetting("ConEmuFontSize", DetailedSettingsPath, "12");
+        public static readonly BoolNullableSetting ShowRevisionInfoNextToRevisionGrid = new BoolNullableSetting("ShowRevisionInfoNextToRevisionGrid", DetailedSettingsPath, false);
 
         public static bool ProvideAutocompletion
         {
@@ -547,6 +560,12 @@ namespace GitCommands
             set { SetBool("LoadBlameOnShow", value); }
         }
 
+        public static bool OpenSubmoduleDiffInSeparateWindow
+        {
+            get { return GetBool("opensubmodulediffinseparatewindow", false); }
+            set { SetBool("opensubmodulediffinseparatewindow", value); }
+        }
+
         public static bool RevisionGraphShowWorkingDirChanges
         {
             get { return GetBool("revisiongraphshowworkingdirchanges", false); }
@@ -649,6 +668,12 @@ namespace GitCommands
             set { SetBool("DontConfirmAmend", value); }
         }
 
+        public static bool DontConfirmCommitIfNoBranch
+        {
+            get { return GetBool("DontConfirmCommitIfNoBranch", false); }
+            set { SetBool("DontConfirmCommitIfNoBranch", value); }
+        }
+
         public static bool? AutoPopStashAfterPull
         {
             get { return GetBool("AutoPopStashAfterPull"); }
@@ -677,6 +702,24 @@ namespace GitCommands
         {
             get { return GetBool("DontConfirmAddTrackingRef", false); }
             set { SetBool("DontConfirmAddTrackingRef", value); }
+        }
+
+        public static bool DontConfirmCommitAfterConflictsResolved
+        {
+            get { return GetBool("DontConfirmCommitAfterConflictsResolved", false); }
+            set { SetBool("DontConfirmCommitAfterConflictsResolved", value); }
+        }
+
+        public static bool DontConfirmSecondAbortConfirmation
+        {
+            get { return GetBool("DontConfirmSecondAbortConfirmation", false); }
+            set { SetBool("DontConfirmSecondAbortConfirmation", value); }
+        }
+
+        public static bool DontConfirmResolveConflicts
+        {
+            get { return GetBool("DontConfirmResolveConflicts", false); }
+            set { SetBool("DontConfirmResolveConflicts", value); }
         }
 
         public static bool IncludeUntrackedFilesInAutoStash
@@ -835,6 +878,12 @@ namespace GitCommands
             set { SetBool("showfirstparent", value); }
         }
 
+        public static int CommitDialogDeviceDpi
+        {
+            get { return GetInt("commitdialogdevicedpi", 96); }
+            set { SetInt("commitdialogdevicedpi", value); }
+        }
+
         public static int CommitDialogSplitter
         {
             get { return GetInt("commitdialogsplitter", -1); }
@@ -847,7 +896,7 @@ namespace GitCommands
             set { SetInt("commitdialogrightsplitter", value); }
         }
 
-        public static bool CommitDialogSelectionFilter 
+        public static bool CommitDialogSelectionFilter
         {
             get { return GetBool("commitdialogselectionfilter", false); }
             set { SetBool("commitdialogselectionfilter", value); }
@@ -1156,6 +1205,7 @@ namespace GitCommands
 
         public static void SaveSettings()
         {
+            SaveEncodings();
             try
             {
                 SettingsContainer.LockedAction(() =>
@@ -1172,13 +1222,7 @@ namespace GitCommands
 
         public static void LoadSettings()
         {
-            Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
-            addEncoding(Encoding.Default);
-            addEncoding(new ASCIIEncoding());
-            addEncoding(new UnicodeEncoding());
-            addEncoding(new UTF7Encoding());
-            addEncoding(new UTF8Encoding(false));
-            addEncoding(System.Text.Encoding.GetEncoding("CP852"));
+            LoadEncodings();
 
             try
             {
@@ -1484,47 +1528,65 @@ namespace GitCommands
             return SettingsContainer.GetString(name, defaultValue);
         }
 
+        private static void LoadEncodings()
+        {
+            Action<Encoding> addEncoding = delegate (Encoding e) { AvailableEncodings[e.HeaderName] = e; };
+            Action<string> addEncodingByName = delegate (string s) { try { addEncoding(Encoding.GetEncoding(s)); } catch { } };
+
+            string availableEncodings = GetString("AvailableEncodings", "");
+            if (string.IsNullOrWhiteSpace(availableEncodings))
+            {
+                // Default encoding set
+                addEncoding(Encoding.Default);
+                addEncoding(new ASCIIEncoding());
+                addEncoding(new UnicodeEncoding());
+                addEncoding(new UTF7Encoding());
+                addEncoding(new UTF8Encoding(false));
+                addEncoding(Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage));
+            }
+            else
+            {
+                var utf8 = new UTF8Encoding(false);
+                foreach(var encodingName in availableEncodings.Split(';'))
+                {
+                    // create utf-8 without BOM
+                    if (encodingName == utf8.HeaderName)
+                        addEncoding(utf8);
+                    // default encoding
+                    else if (encodingName == "Default")
+                        addEncoding(Encoding.Default);
+                    // add encoding by name
+                    else
+                        addEncodingByName(encodingName);
+                }
+            }
+        }
+
+        private static void SaveEncodings()
+        {
+            string availableEncodings = AvailableEncodings.Values.Select(e => e.HeaderName).Join(";");
+            availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
+            SetString("AvailableEncodings", availableEncodings);
+        }
+
     }
 
-    /*
-    public abstract class Setting<T> : IXmlSerializable
+    internal class AppSettingsPath : SettingsPath
     {
-        public SettingsContainer SettingsSource { get; private set; }
-        private T _Value;
-        public bool HasValue { get; private set; }
-        public string Name { get; private set; }
-        public T DefaultValue { get; private set; }
-
-        public Setting(SettingsContainer aSettingsSource, string aName, T aDefaultValue)
+        public AppSettingsPath(string aPathName) : base(null, aPathName)
         {
-            SettingsSource = aSettingsSource;
-            Name = aName;
-            DefaultValue = aDefaultValue;
-            HasValue = false;
         }
 
-        public T Value
+        public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
-            get
-            {
-                return SettingsSource.GetValue(Name, DefaultValue, (s) => DefaultValue);
-            }
-
-            set
-            {
-                //SettingsSource.SetValue(this, value);
-            }
+            return AppSettings.SettingsContainer.GetValue(PathFor(name), defaultValue, decode);
         }
 
-        public virtual System.Xml.Schema.XmlSchema GetSchema()
+        public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            return null;
+            AppSettings.SettingsContainer.SetValue(PathFor(name), value, encode);
         }
 
-        public abstract void ReadXml(XmlReader reader);
-        public abstract void WriteXml(XmlWriter writer);
     }
-
-    */
 
 }

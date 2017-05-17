@@ -82,6 +82,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 RemoteBranchChx.Checked = false;
                 _NO_TRANSLATE_SearchPatternEdit.Text = string.Empty;
                 _NO_TRANSLATE_NestedPatternEdit.Text = string.Empty;
+                _NO_TRANSLATE_RemotePatern.Text = string.Empty;
+                _NO_TRANSLATE_UseRemotes.Text = string.Empty;
+                chkOnlyFirstRemote.Checked = false;
+                chxURL.Checked = false;
+                chxPushURL.Checked = false;
                 LinksGrid.DataSource = null;
             }
             else
@@ -94,6 +99,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 RemoteBranchChx.Checked = SelectedCategory.SearchInParts.Contains(GitExtLinkDef.RevisionPart.RemoteBranches);
                 _NO_TRANSLATE_SearchPatternEdit.Text = SelectedCategory.SearchPattern;
                 _NO_TRANSLATE_NestedPatternEdit.Text = SelectedCategory.NestedSearchPattern;
+                _NO_TRANSLATE_RemotePatern.Text = SelectedCategory.RemoteSearchPattern;
+                chxURL.Checked = SelectedCategory.RemoteSearchInParts.Contains(GitExtLinkDef.RemotePart.URL);
+                chxPushURL.Checked = SelectedCategory.RemoteSearchInParts.Contains(GitExtLinkDef.RemotePart.PushURL);
+                _NO_TRANSLATE_UseRemotes.Text = SelectedCategory.UseRemotesPattern;
+                chkOnlyFirstRemote.Checked = SelectedCategory.UseOnlyFirstRemote;
                 LinksGrid.DataSource = SelectedCategory.LinkFormats;
             }
         }
@@ -103,7 +113,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GitExtLinkDef newCategory = new GitExtLinkDef();
             newCategory.Name = "<new>";
             newCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.Message);
+            newCategory.RemoteSearchInParts.Add(GitExtLinkDef.RemotePart.URL);
             newCategory.Enabled = true;
+            newCategory.UseRemotesPattern = "upstream|origin";
+            newCategory.UseOnlyFirstRemote = true;
             parser.AddLinkDef(newCategory);
             ReloadCategories();
             _NO_TRANSLATE_Categories.SelectedItem = newCategory;
@@ -206,6 +219,60 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 {
                     SelectedCategory.SearchInParts.Remove(GitExtLinkDef.RevisionPart.RemoteBranches);
                 }
+            }
+        }
+
+        private void _NO_TRANSLATE_RemotePatern_Leave(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                SelectedCategory.RemoteSearchPattern = _NO_TRANSLATE_RemotePatern.Text.Trim();
+            }
+        }
+
+        private void chxURL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                if (chxURL.Checked)
+                {
+                    SelectedCategory.RemoteSearchInParts.Add(GitExtLinkDef.RemotePart.URL);
+                }
+                else
+                {
+                    SelectedCategory.RemoteSearchInParts.Remove(GitExtLinkDef.RemotePart.URL);
+                }
+            }
+        }
+
+        private void chxPushURL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                if (chxPushURL.Checked)
+                {
+                    SelectedCategory.RemoteSearchInParts.Add(GitExtLinkDef.RemotePart.PushURL);
+                }
+                else
+                {
+                    SelectedCategory.RemoteSearchInParts.Remove(GitExtLinkDef.RemotePart.PushURL);
+                }
+            }
+        }
+
+        private void _NO_TRANSLATE_UseRemotes_Leave(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                SelectedCategory.UseRemotesPattern = _NO_TRANSLATE_UseRemotes.Text.Trim();
+            }
+        }
+
+        private void chkOnlyFirstRemote_CheckedChanged(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                SelectedCategory.UseOnlyFirstRemote = chkOnlyFirstRemote.Checked;
             }
         }
     }

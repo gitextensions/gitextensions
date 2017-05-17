@@ -9,16 +9,13 @@ GitExtensions is a standalone Git repository tool, a Visual Studio 2010-2015 plu
 
 ## Current status
 
-Build status: master [![TeamCity Build Status](http://teamcity.jetbrains.com/app/rest/builds/buildType:\(id:GitExtensions_Master\)/statusIcon)](http://teamcity.jetbrains.com/viewType.html?buildTypeId=GitExtensions_Master) [![Build status](https://ci.appveyor.com/api/projects/status/v736qwg7p40m025g/branch/master?svg=true)](https://ci.appveyor.com/project/jbialobr/gitextensions/branch/master)
+Build on Windows: [![Build status](https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true)](https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master)
 
-Mono Build status: master
-[![Build Status](https://travis-ci.org/gitextensions/gitextensions.svg?branch=master)](https://travis-ci.org/gitextensions/gitextensions)
+Build on Linux: [![Build Status](https://travis-ci.org/gitextensions/gitextensions.svg?branch=master)](https://travis-ci.org/gitextensions/gitextensions)
 
 Translation: [![Transifex](https://ds0k0en9abmn1.cloudfront.net/static/charts/images/tx-logo-micro.646b0065fce6.png)](https://www.transifex.com/projects/p/git-extensions/)
 
 [![Transifex Stats](https://www.transifex.com/projects/p/git-extensions/resource/ui-master/chart/image_png)](https://www.transifex.com/projects/p/git-extensions/)
-
-The [build](http://teamcity.jetbrains.com/project.html?projectId=GitExtensions&branch_GitExtensions=__all_branches__) is generously hosted and run on the [TeamCity JetBrains](https://blog.jetbrains.com/teamcity/2016/10/hosted-teamcity-for-open-source-a-new-home/) infrastructure.
 
 Special thanks to JetBRAINS for [Resharper](https://www.jetbrains.com/resharper/) license.
 

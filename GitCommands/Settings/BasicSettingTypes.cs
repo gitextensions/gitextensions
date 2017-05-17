@@ -14,7 +14,7 @@ namespace GitCommands.Settings
         {
             get
             {
-                return SettingsSource.GetString(Name, DefaultValue);
+                return SettingsSource.GetString(Name, null);
             }
 
             set
@@ -43,17 +43,41 @@ namespace GitCommands.Settings
             }
         }
 
-        public bool ValueOrDefault
+        public new bool ValueOrDefault
         {
             get
             {
-                if (Value.HasValue)
-                    return Value.Value;
+                return base.ValueOrDefault.Value;
+            }
+        }
+    }
 
-                return DefaultValue.Value;
+    public class IntNullableSetting : Setting<int?>
+    {
+        public IntNullableSetting(string aName, SettingsPath settingsSource, int aDefaultValue)
+            : base(aName, settingsSource, aDefaultValue)
+        { }
+
+        public override int? Value
+        {
+            get
+            {
+                return SettingsSource.GetInt(Name);
+            }
+
+            set
+            {
+                SettingsSource.SetInt(Name, value);
             }
         }
 
+        public new int ValueOrDefault
+        {
+            get
+            {
+                return base.ValueOrDefault.Value;
+            }
+        }
     }
 
     public class BoolSetting : Setting<bool>

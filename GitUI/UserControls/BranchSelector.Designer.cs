@@ -57,7 +57,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(371, 60);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(325, 54);
             this.tableLayoutPanel1.TabIndex = 1;
             this.tableLayoutPanel1.TabStop = true;
             // 
@@ -69,7 +69,7 @@
             this.LocalBranch.Location = new System.Drawing.Point(0, 2);
             this.LocalBranch.Margin = new System.Windows.Forms.Padding(0);
             this.LocalBranch.Name = "LocalBranch";
-            this.LocalBranch.Size = new System.Drawing.Size(93, 19);
+            this.LocalBranch.Size = new System.Drawing.Size(85, 17);
             this.LocalBranch.TabIndex = 0;
             this.LocalBranch.TabStop = true;
             this.LocalBranch.Text = "Local branch";
@@ -80,11 +80,11 @@
             // 
             this.Remotebranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Remotebranch.AutoSize = true;
-            this.Remotebranch.Location = new System.Drawing.Point(95, 2);
+            this.Remotebranch.Location = new System.Drawing.Point(87, 2);
             this.Remotebranch.Margin = new System.Windows.Forms.Padding(2);
             this.Remotebranch.Name = "Remotebranch";
-            this.Remotebranch.Padding = new System.Windows.Forms.Padding(7, 0, 0, 0);
-            this.Remotebranch.Size = new System.Drawing.Size(113, 19);
+            this.Remotebranch.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+            this.Remotebranch.Size = new System.Drawing.Size(104, 17);
             this.Remotebranch.TabIndex = 0;
             this.Remotebranch.Text = "Remote branch";
             this.Remotebranch.UseVisualStyleBackColor = true;
@@ -94,10 +94,10 @@
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 40);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 12, 3, 0);
+            this.label1.Location = new System.Drawing.Point(10, 36);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 10, 3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 15);
+            this.label1.Size = new System.Drawing.Size(72, 13);
             this.label1.TabIndex = 7;
             this.label1.Text = "Select branch";
             // 
@@ -107,32 +107,31 @@
             this.Branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.Branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Branches.FormattingEnabled = true;
-            this.Branches.Location = new System.Drawing.Point(95, 35);
-            this.Branches.Margin = new System.Windows.Forms.Padding(2, 12, 7, 2);
+            this.Branches.Location = new System.Drawing.Point(87, 31);
+            this.Branches.Margin = new System.Windows.Forms.Padding(2, 10, 6, 2);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(249, 23);
+            this.Branches.Size = new System.Drawing.Size(214, 21);
             this.Branches.TabIndex = 1;
             // 
             // lbChanges
             // 
             this.lbChanges.AutoSize = true;
             this.lbChanges.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbChanges.Location = new System.Drawing.Point(353, 37);
-            this.lbChanges.Margin = new System.Windows.Forms.Padding(2, 14, 6, 2);
+            this.lbChanges.Location = new System.Drawing.Point(309, 33);
+            this.lbChanges.Margin = new System.Windows.Forms.Padding(2, 12, 5, 2);
             this.lbChanges.Name = "lbChanges";
-            this.lbChanges.Size = new System.Drawing.Size(12, 15);
+            this.lbChanges.Size = new System.Drawing.Size(11, 13);
             this.lbChanges.TabIndex = 30;
             this.lbChanges.Text = "-";
             // 
             // BranchSelector
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "BranchSelector";
-            this.Size = new System.Drawing.Size(371, 60);
+            this.Size = new System.Drawing.Size(325, 54);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

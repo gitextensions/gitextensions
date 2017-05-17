@@ -93,7 +93,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 84);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 80);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -103,17 +103,18 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.DiffText);
-            this.splitContainer1.Size = new System.Drawing.Size(1036, 598);
+            this.splitContainer1.Size = new System.Drawing.Size(1036, 602);
             this.splitContainer1.SplitterDistance = 345;
             this.splitContainer1.TabIndex = 1;
             // 
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DiffFiles.FilterVisible = false;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(345, 598);
+            this.DiffFiles.Size = new System.Drawing.Size(345, 602);
             this.DiffFiles.TabIndex = 0;
             // 
             // DiffText
@@ -123,7 +124,7 @@
             this.DiffText.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.DiffText.Name = "DiffText";
             this.DiffText.ShowLineNumbers = false;
-            this.DiffText.Size = new System.Drawing.Size(687, 598);
+            this.DiffText.Size = new System.Drawing.Size(687, 602);
             this.DiffText.TabIndex = 0;
             // 
             // settingsLayoutPanel
@@ -144,7 +145,7 @@
             this.settingsLayoutPanel.RowCount = 2;
             this.settingsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.settingsLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.settingsLayoutPanel.Size = new System.Drawing.Size(1036, 75);
+            this.settingsLayoutPanel.Size = new System.Drawing.Size(1036, 71);
             this.settingsLayoutPanel.TabIndex = 3;
             // 
             // btnSwap
@@ -154,7 +155,7 @@
             this.btnSwap.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSwap.Image = global::GitUI.Properties.Resources.Renamed;
             this.btnSwap.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSwap.Location = new System.Drawing.Point(507, 21);
+            this.btnSwap.Location = new System.Drawing.Point(507, 20);
             this.btnSwap.Margin = new System.Windows.Forms.Padding(10, 15, 10, 0);
             this.btnSwap.Name = "btnSwap";
             this.btnSwap.Size = new System.Drawing.Size(22, 22);
@@ -166,9 +167,9 @@
             // ckCompareToMergeBase
             // 
             this.ckCompareToMergeBase.AutoSize = true;
-            this.ckCompareToMergeBase.Location = new System.Drawing.Point(3, 53);
+            this.ckCompareToMergeBase.Location = new System.Drawing.Point(3, 51);
             this.ckCompareToMergeBase.Name = "ckCompareToMergeBase";
-            this.ckCompareToMergeBase.Size = new System.Drawing.Size(153, 19);
+            this.ckCompareToMergeBase.Size = new System.Drawing.Size(141, 17);
             this.ckCompareToMergeBase.TabIndex = 8;
             this.ckCompareToMergeBase.Text = "Compare to merge base";
             this.ckCompareToMergeBase.UseVisualStyleBackColor = true;
@@ -183,7 +184,7 @@
             this.baseCommitGroup.Location = new System.Drawing.Point(0, 0);
             this.baseCommitGroup.Margin = new System.Windows.Forms.Padding(0);
             this.baseCommitGroup.Name = "baseCommitGroup";
-            this.baseCommitGroup.Size = new System.Drawing.Size(497, 50);
+            this.baseCommitGroup.Size = new System.Drawing.Size(497, 48);
             this.baseCommitGroup.TabIndex = 16;
             this.baseCommitGroup.TabStop = false;
             this.baseCommitGroup.Text = "BASE";
@@ -196,7 +197,7 @@
             this.baseCommitPanel.Controls.Add(this.btnAnotherBaseBranch);
             this.baseCommitPanel.Controls.Add(this.btnAnotherBaseCommit);
             this.baseCommitPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.baseCommitPanel.Location = new System.Drawing.Point(3, 19);
+            this.baseCommitPanel.Location = new System.Drawing.Point(3, 17);
             this.baseCommitPanel.Margin = new System.Windows.Forms.Padding(0);
             this.baseCommitPanel.Name = "baseCommitPanel";
             this.baseCommitPanel.Size = new System.Drawing.Size(491, 28);
@@ -206,10 +207,10 @@
             // 
             this.lblBaseCommit.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblBaseCommit.AutoSize = true;
-            this.lblBaseCommit.Location = new System.Drawing.Point(3, 6);
+            this.lblBaseCommit.Location = new System.Drawing.Point(3, 7);
             this.lblBaseCommit.MinimumSize = new System.Drawing.Size(200, 0);
             this.lblBaseCommit.Name = "lblBaseCommit";
-            this.lblBaseCommit.Size = new System.Drawing.Size(200, 15);
+            this.lblBaseCommit.Size = new System.Drawing.Size(200, 13);
             this.lblBaseCommit.TabIndex = 14;
             this.lblBaseCommit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -250,7 +251,7 @@
             this.headCommitGroup.Location = new System.Drawing.Point(539, 0);
             this.headCommitGroup.Margin = new System.Windows.Forms.Padding(0);
             this.headCommitGroup.Name = "headCommitGroup";
-            this.headCommitGroup.Size = new System.Drawing.Size(497, 50);
+            this.headCommitGroup.Size = new System.Drawing.Size(497, 48);
             this.headCommitGroup.TabIndex = 17;
             this.headCommitGroup.TabStop = false;
             this.headCommitGroup.Text = "Compare";
@@ -263,7 +264,7 @@
             this.headCommitPanel.Controls.Add(this.btnAnotherHeadBranch);
             this.headCommitPanel.Controls.Add(this.btnAnotherHeadCommit);
             this.headCommitPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.headCommitPanel.Location = new System.Drawing.Point(3, 19);
+            this.headCommitPanel.Location = new System.Drawing.Point(3, 17);
             this.headCommitPanel.Margin = new System.Windows.Forms.Padding(0);
             this.headCommitPanel.Name = "headCommitPanel";
             this.headCommitPanel.Size = new System.Drawing.Size(491, 28);
@@ -273,10 +274,10 @@
             // 
             this.lblHeadCommit.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblHeadCommit.AutoSize = true;
-            this.lblHeadCommit.Location = new System.Drawing.Point(3, 6);
+            this.lblHeadCommit.Location = new System.Drawing.Point(3, 7);
             this.lblHeadCommit.MinimumSize = new System.Drawing.Size(200, 0);
             this.lblHeadCommit.Name = "lblHeadCommit";
-            this.lblHeadCommit.Size = new System.Drawing.Size(200, 15);
+            this.lblHeadCommit.Size = new System.Drawing.Size(200, 13);
             this.lblHeadCommit.TabIndex = 1;
             this.lblHeadCommit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -431,8 +432,8 @@
             // 
             // FormDiff
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1042, 685);
             this.Controls.Add(this.mainLayoutPanel);
             this.DoubleBuffered = true;

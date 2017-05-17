@@ -168,6 +168,7 @@
             this.translationConfig.FlatAppearance.BorderSize = 0;
             this.translationConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.translationConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.translationConfig.ForeColor = System.Drawing.Color.Black;
             this.translationConfig.Location = new System.Drawing.Point(3, 308);
             this.translationConfig.Name = "translationConfig";
             this.translationConfig.Size = new System.Drawing.Size(1116, 29);
@@ -186,6 +187,7 @@
             this.DiffTool.FlatAppearance.BorderSize = 0;
             this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DiffTool.ForeColor = System.Drawing.Color.Black;
             this.DiffTool.Location = new System.Drawing.Point(3, 138);
             this.DiffTool.Name = "DiffTool";
             this.DiffTool.Size = new System.Drawing.Size(1116, 29);
@@ -204,6 +206,7 @@
             this.SshConfig.FlatAppearance.BorderSize = 0;
             this.SshConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.SshConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SshConfig.ForeColor = System.Drawing.Color.Black;
             this.SshConfig.Location = new System.Drawing.Point(3, 274);
             this.SshConfig.Name = "SshConfig";
             this.SshConfig.Size = new System.Drawing.Size(1116, 29);
@@ -222,6 +225,7 @@
             this.GitBinFound.FlatAppearance.BorderSize = 0;
             this.GitBinFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitBinFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GitBinFound.ForeColor = System.Drawing.Color.Black;
             this.GitBinFound.Location = new System.Drawing.Point(3, 206);
             this.GitBinFound.Name = "GitBinFound";
             this.GitBinFound.Size = new System.Drawing.Size(1116, 29);
@@ -273,6 +277,7 @@
             this.GitFound.FlatAppearance.BorderSize = 0;
             this.GitFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GitFound.ForeColor = System.Drawing.Color.Black;
             this.GitFound.Location = new System.Drawing.Point(3, 36);
             this.GitFound.Name = "GitFound";
             this.GitFound.Size = new System.Drawing.Size(1116, 29);
@@ -291,6 +296,7 @@
             this.MergeTool.FlatAppearance.BorderSize = 0;
             this.MergeTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.MergeTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MergeTool.ForeColor = System.Drawing.Color.Black;
             this.MergeTool.Location = new System.Drawing.Point(3, 104);
             this.MergeTool.Name = "MergeTool";
             this.MergeTool.Size = new System.Drawing.Size(1116, 29);
@@ -309,6 +315,7 @@
             this.UserNameSet.FlatAppearance.BorderSize = 0;
             this.UserNameSet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.UserNameSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UserNameSet.ForeColor = System.Drawing.Color.Black;
             this.UserNameSet.Location = new System.Drawing.Point(3, 70);
             this.UserNameSet.Name = "UserNameSet";
             this.UserNameSet.Size = new System.Drawing.Size(1116, 29);
@@ -327,6 +334,7 @@
             this.ShellExtensionsRegistered.FlatAppearance.BorderSize = 0;
             this.ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.ShellExtensionsRegistered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ShellExtensionsRegistered.ForeColor = System.Drawing.Color.Black;
             this.ShellExtensionsRegistered.Location = new System.Drawing.Point(3, 172);
             this.ShellExtensionsRegistered.Name = "ShellExtensionsRegistered";
             this.ShellExtensionsRegistered.Size = new System.Drawing.Size(1116, 29);
@@ -345,6 +353,7 @@
             this.GitExtensionsInstall.FlatAppearance.BorderSize = 0;
             this.GitExtensionsInstall.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitExtensionsInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GitExtensionsInstall.ForeColor = System.Drawing.Color.Black;
             this.GitExtensionsInstall.Location = new System.Drawing.Point(3, 240);
             this.GitExtensionsInstall.Name = "GitExtensionsInstall";
             this.GitExtensionsInstall.Size = new System.Drawing.Size(1116, 29);

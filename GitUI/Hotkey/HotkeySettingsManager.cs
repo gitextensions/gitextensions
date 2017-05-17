@@ -79,11 +79,9 @@ namespace GitUI.Hotkey
             var defaultSettings = CreateDefaultSettings();
             var loadedSettings = LoadSerializedSettings();
 
-            // If the default settings and the loaded settings do not match, then get the default settings, as we don't trust the loaded ones
-            if (DidDefaultSettingsChange(defaultSettings, loadedSettings))
-                return defaultSettings;
-            else
-                return loadedSettings;
+            MergeIntoDefaultSettings(defaultSettings, loadedSettings);
+
+            return defaultSettings;
         }
 
         private static void GetUsedHotkeys(HotkeySettings[] settings)
@@ -120,34 +118,49 @@ namespace GitUI.Hotkey
             catch { }
         }
 
-        internal static bool DidDefaultSettingsChange(HotkeySettings[] defaultSettings, HotkeySettings[] loadedSettings)
+        internal static void MergeIntoDefaultSettings(HotkeySettings[] defaultSettings, HotkeySettings[] loadedSettings)
         {
-            if (defaultSettings == null || loadedSettings == null)
-                return true;
-
-            if (defaultSettings.Length != loadedSettings.Length)
-                return true;
-
-            var defaultCmds = defaultSettings.SelectMany(s => s.Commands).ToArray();
-            var loadedCmds = loadedSettings.SelectMany(s => s.Commands).ToArray();
-
-            // see if total commands count has changed
-            if (defaultCmds.Length != loadedCmds.Length)
-                return true;
-
-            // detect if total commands count did not change but a command was moved from one set to another
-            for (int i = 0; i < defaultSettings.Length; i++)
+            if (loadedSettings == null)
             {
-                var defaultSetting = defaultSettings[i];
-                var loadedSetting = loadedSettings[i];
-
-                if (defaultSetting.Commands.Length != loadedSetting.Commands.Length)
-                {
-                    return true;
-                }
+                return;
             }
 
-            return false;
+            Dictionary<string, HotkeyCommand> defaultCommands = new Dictionary<string, HotkeyCommand>();
+            FillDictionaryWithCommands(defaultCommands, defaultSettings);
+            AssignKotkeysFromLoaded(defaultCommands, loadedSettings);
+        }
+
+        private static void AssignKotkeysFromLoaded(Dictionary<string, HotkeyCommand> defaultCommands, HotkeySettings[] loadedSettings)
+        {
+            foreach (HotkeySettings setting in loadedSettings)
+            {
+                foreach (HotkeyCommand command in setting.Commands)
+                {
+                    string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
+                    HotkeyCommand defaultCommand;
+                    if (defaultCommands.TryGetValue(dictKey, out defaultCommand))
+                    {
+                        defaultCommand.KeyData = command.KeyData;
+                    }
+                }
+            }
+        }
+
+        private static void FillDictionaryWithCommands(Dictionary<string, HotkeyCommand> dict, HotkeySettings[] settings)
+        {
+            foreach(HotkeySettings setting in settings)
+            {
+                foreach (HotkeyCommand command in setting.Commands)
+                {
+                    string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
+                    dict.Add(dictKey, command);
+                }
+            }
+        }
+
+        private static string CalcDictionaryKey(String settingName, int commandCode)
+        {
+            return settingName + ":" + commandCode;
         }
 
         private static HotkeySettings[] LoadSerializedSettings()
@@ -172,7 +185,7 @@ namespace GitUI.Hotkey
         {
             Func<object, Keys, HotkeyCommand> hk = (en, k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
 
-            HotkeyCommand[] j = LoadScriptHotkeys();
+            HotkeyCommand[] scriptsHotkeys = LoadScriptHotkeys();
 
 
             return new[]
@@ -231,7 +244,8 @@ namespace GitUI.Hotkey
                     hk(RevisionGrid.Commands.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),
                     hk(RevisionGrid.Commands.SelectAsBaseToCompare, Keys.Control | Keys.L),
                     hk(RevisionGrid.Commands.CompareToBase, Keys.Control | Keys.R),
-                    hk(RevisionGrid.Commands.GoToCommit, Keys.Control | Keys.Shift | Keys.G)),
+                    hk(RevisionGrid.Commands.GoToCommit, Keys.Control | Keys.Shift | Keys.G),
+                    hk(RevisionGrid.Commands.CreateFixupCommit, Keys.Control | Keys.X)),
                 new HotkeySettings(FileViewer.HotkeySettingsName,
                     hk(FileViewer.Commands.Find, Keys.Control | Keys.F),
                     hk(FileViewer.Commands.GoToLine, Keys.Control | Keys.G),
@@ -248,7 +262,7 @@ namespace GitUI.Hotkey
                     hk(FormResolveConflicts.Commands.Merge, Keys.M),
                     hk(FormResolveConflicts.Commands.Rescan, Keys.F5)),
                 new HotkeySettings(FormSettings.HotkeySettingsName,
-                    j)
+                    scriptsHotkeys)
               };
         }
 

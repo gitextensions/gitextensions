@@ -2,6 +2,8 @@
 using FluentAssertions;
 using GitUI.Hotkey;
 using ResourceManager;
+using System.Windows.Forms;
+using System.Linq;
 
 namespace GitExtensionsTest.GitUI
 {
@@ -9,50 +11,71 @@ namespace GitExtensionsTest.GitUI
     public class HotkeySettingsManagerFixture
     {
         [Test]
-        public void DidDefaultSettingsChangeTest1()
+        public void MergeEqualSettings()
         {
             // arrange
-            HotkeySettings hotkeySettings1 = new HotkeySettings("settings1", new HotkeyCommand(1, "C1"), new HotkeyCommand(2, "C2"));
-            HotkeySettings hotkeySettings2 = new HotkeySettings("settings2", new HotkeyCommand(3, "C3"), new HotkeyCommand(4, "C4"));
 
-            var defaultHotkeySettingsArray = new HotkeySettings[2] { hotkeySettings1, hotkeySettings2 };
-            var loadedHotkeySettingsArray = new HotkeySettings[2] { hotkeySettings1, hotkeySettings2 };
+            var defaultHotkeySettingsArray = CreateHotkeySettings(2);
+            var loadedHotkeySettingsArray = CreateHotkeySettings(2);
 
-            // act, assert
-            HotkeySettingsManager.DidDefaultSettingsChange(defaultHotkeySettingsArray, loadedHotkeySettingsArray).Should().BeFalse();
+            HotkeySettingsManager.MergeIntoDefaultSettings(defaultHotkeySettingsArray, loadedHotkeySettingsArray);
+            var expected = CreateHotkeySettings(2);
 
-            // arrange: add one more settings items
-            defaultHotkeySettingsArray = new HotkeySettings[3] { hotkeySettings1, hotkeySettings2, hotkeySettings2 };
-
-            // act, assert
-            HotkeySettingsManager.DidDefaultSettingsChange(defaultHotkeySettingsArray, loadedHotkeySettingsArray).Should().BeTrue();
-
-            // act (null handling), assert
-            HotkeySettingsManager.DidDefaultSettingsChange(null, defaultHotkeySettingsArray).Should().BeTrue();
-
-            // act (null handling), assert
-            HotkeySettingsManager.DidDefaultSettingsChange(defaultHotkeySettingsArray, null).Should().BeTrue();
-
-            // act (null handling), assert
-            HotkeySettingsManager.DidDefaultSettingsChange(null, null).Should().BeTrue();
+            defaultHotkeySettingsArray.SequenceEqual(expected).Should().BeTrue();
         }
 
-        [Test(Description="Move one command from one settings to another should also be detected in 'changed settings'")]
-        public void DidDefaultSettingsChangeTest2()
+        public void SequenceEqualOnDifferentSettings()
+        {
+            var defaultHotkeySettingsArray = CreateHotkeySettings(2);
+            var loadedHotkeySettingsArray = CreateHotkeySettings(2);
+            loadedHotkeySettingsArray[0].Commands[0].KeyData = Keys.C;
+
+            defaultHotkeySettingsArray.SequenceEqual(loadedHotkeySettingsArray).Should().BeFalse();
+        }
+
+        public void SequenceEqualOnEqualSettings()
+        {
+            var defaultHotkeySettingsArray = CreateHotkeySettings(2);
+            var loadedHotkeySettingsArray = CreateHotkeySettings(2);
+
+            defaultHotkeySettingsArray.SequenceEqual(loadedHotkeySettingsArray).Should().BeTrue();
+        }
+
+        public void MergeLoadedSettings()
         {
             // arrange
-            var defaultHotkeySettingsArray = new HotkeySettings[2] {
-                new HotkeySettings("settings1", new HotkeyCommand(1, "C1")),
-                new HotkeySettings("settings2", new HotkeyCommand(3, "C3"), new HotkeyCommand(2, "C2"), new HotkeyCommand(4, "C4"))
-            };
 
-            var loadedHotkeySettingsArray = new HotkeySettings[2] {
-                new HotkeySettings("settings1", new HotkeyCommand(1, "C1"), new HotkeyCommand(4, "C4")),
-                new HotkeySettings("settings2", new HotkeyCommand(3, "C3"), new HotkeyCommand(2, "C2"))
-            };
+            var defaultHotkeySettingsArray = CreateHotkeySettings(2);
+            var loadedHotkeySettingsArray = CreateHotkeySettings(2);
+            loadedHotkeySettingsArray[0].Commands[0].KeyData = Keys.C;
 
-            // act, assert
-            HotkeySettingsManager.DidDefaultSettingsChange(defaultHotkeySettingsArray, loadedHotkeySettingsArray).Should().BeTrue();
+            HotkeySettingsManager.MergeIntoDefaultSettings(defaultHotkeySettingsArray, loadedHotkeySettingsArray);
+
+            defaultHotkeySettingsArray.SequenceEqual(loadedHotkeySettingsArray).Should().BeTrue();
+        }
+
+        public void MergeLoadedDiffSizeSettings()
+        {
+            // arrange
+
+            var defaultHotkeySettingsArray = CreateHotkeySettings(3);
+            var loadedHotkeySettingsArray = CreateHotkeySettings(2);
+            loadedHotkeySettingsArray[1].Commands[1].KeyData = Keys.C;
+
+            HotkeySettingsManager.MergeIntoDefaultSettings(defaultHotkeySettingsArray, loadedHotkeySettingsArray);
+            var expected = CreateHotkeySettings(3);
+            expected[1].Commands[1].KeyData = loadedHotkeySettingsArray[1].Commands[1].KeyData;
+
+            defaultHotkeySettingsArray.SequenceEqual(expected).Should().BeTrue();
+        }
+
+        private static HotkeySettings[] CreateHotkeySettings(int count)
+        {
+            return Enumerable.Range(1, count).Select(i =>
+                new HotkeySettings("settings" + i,
+                    new HotkeyCommand(1, "C1") { KeyData = Keys.A },
+                    new HotkeyCommand(2, "C2") { KeyData = Keys.B }
+                )).ToArray();
         }
     }
 }

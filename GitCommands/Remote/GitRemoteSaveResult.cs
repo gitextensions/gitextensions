@@ -1,4 +1,4 @@
-namespace GitUI.Objects
+namespace GitCommands.Remote
 {
     /// <summary>
     /// Represents a result of <see cref="GitRemoteController.SaveRemote"/> operation.

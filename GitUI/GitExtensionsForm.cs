@@ -191,11 +191,11 @@ namespace GitUI
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
-
-            base.OnLoad(e);
-
             if (_enablePositionRestore)
                 RestorePosition(GetType().Name);
+
+            // Should be called after restoring position
+            base.OnLoad(e);
 
             if (!CheckComponent(this))
                 OnRuntimeLoad(e);
@@ -229,13 +229,23 @@ namespace GitUI
             if (position == null)
                 return;
 
+            int deviceDpi = GetCurrentDeviceDpi();
+            float scale = 1.0f * deviceDpi / position.DeviceDpi;
+
             StartPosition = FormStartPosition.Manual;
             if (FormBorderStyle == FormBorderStyle.Sizable ||
                 FormBorderStyle == FormBorderStyle.SizableToolWindow)
-                Size = position.Rect.Size;
+            {
+                Size formSize = position.Rect.Size;
+                formSize.Width = (int)(formSize.Width * scale);
+                formSize.Height = (int)(formSize.Height * scale);
+                Size = formSize;
+            }
             if (Owner == null || !_windowCentred)
             {
                 Point location = position.Rect.Location;
+                location.X = (int)(location.X * scale);
+                location.Y = (int)(location.Y * scale);
                 Rectangle? rect = FindWindowScreen(location);
                 if (rect != null)
                     location.Y = rect.Value.Y;
@@ -276,6 +286,20 @@ namespace GitUI
             }
         }
 
+        public int GetCurrentDeviceDpi()
+        {
+#if TARGETING_DOTNET47
+            int deviceDpi = DeviceDpi;
+#else
+            int deviceDpi;
+            using (Graphics g = this.CreateGraphics())
+            {
+                deviceDpi = (int)g.DpiX;
+            }
+#endif
+            return deviceDpi;
+        }
+
         private static WindowPositionList _windowPositionList;
         /// <summary>
         ///   Save the position of a form to the user settings. Hides the window
@@ -299,7 +323,7 @@ namespace GitUI
 
                 // Write to the user settings:
                 if (_windowPositionList == null)
-                    _windowPositionList = WindowPositionList.Load(); 
+                    _windowPositionList = WindowPositionList.Load();
                 WindowPosition windowPosition = _windowPositionList.Get(name);
                 // Don't save location when we center modal form
                 if (windowPosition != null && Owner != null && _windowCentred)
@@ -308,7 +332,8 @@ namespace GitUI
                         rectangle.Location = windowPosition.Rect.Location;
                 }
 
-                var position = new WindowPosition(rectangle, formWindowState, name);
+                int deviceDpi = GetCurrentDeviceDpi();
+                var position = new WindowPosition(rectangle, deviceDpi, formWindowState, name);
                 _windowPositionList.AddOrUpdate(position);
                 _windowPositionList.Save();
             }

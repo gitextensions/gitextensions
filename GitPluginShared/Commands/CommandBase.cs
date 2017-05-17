@@ -10,9 +10,9 @@ namespace GitPluginShared.Commands
 
         abstract public bool IsEnabled(DTE2 application);
 
-        protected static void RunGitEx(string command, string filename)
+        protected static void RunGitEx(string command, string filename, string[] arguments = null)
         {
-            GitCommands.RunGitEx(command, filename);
+            GitCommands.RunGitEx(command, filename, arguments);
         }
 
         public bool RunForSelection { get; set; }

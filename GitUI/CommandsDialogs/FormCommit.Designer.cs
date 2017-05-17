@@ -37,6 +37,7 @@ namespace GitUI.CommandsDialogs
             this.deleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.addFileTogitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.doNotAssumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -90,6 +91,7 @@ namespace GitUI.CommandsDialogs
             this.resetAlltrackedChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.editGitIgnoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editLocallyIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAllUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.selectionFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,6 +136,7 @@ namespace GitUI.CommandsDialogs
             this.toolAuthor = new System.Windows.Forms.ToolStripTextBox();
             this.noVerifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commitTemplatesToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
+            this.createBranchToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.commitStatusStrip = new System.Windows.Forms.StatusStrip();
             this.commitAuthorStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitStagedCountLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -193,6 +196,7 @@ namespace GitUI.CommandsDialogs
             this.deleteFileToolStripMenuItem,
             this.toolStripSeparator5,
             this.addFileTogitignoreToolStripMenuItem,
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem,
             this.assumeUnchangedToolStripMenuItem,
             this.doNotAssumeUnchangedToolStripMenuItem,
             this.toolStripSeparator4,
@@ -309,6 +313,14 @@ namespace GitUI.CommandsDialogs
             this.addFileTogitignoreToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.addFileTogitignoreToolStripMenuItem.Text = "Add file to .gitignore";
             this.addFileTogitignoreToolStripMenuItem.Click += new System.EventHandler(this.AddFileTogitignoreToolStripMenuItemClick);
+            // 
+            // addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem
+            // 
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconAddToGitIgnore;
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Name = "addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem";
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Text = "Add file to .git/info/exclude";
+            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Click += new System.EventHandler(this.AddFileToGitInfoExcludeToolStripMenuItemClick);
             // 
             // assumeUnchangedToolStripMenuItem
             // 
@@ -707,6 +719,7 @@ namespace GitUI.CommandsDialogs
             this.resetAlltrackedChangesToolStripMenuItem,
             this.toolStripSeparator1,
             this.editGitIgnoreToolStripMenuItem,
+            this.editLocallyIgnoredFilesToolStripMenuItem,
             this.deleteAllUntrackedFilesToolStripMenuItem,
             this.toolStripMenuItem2,
             this.selectionFilterToolStripMenuItem});
@@ -785,6 +798,14 @@ namespace GitUI.CommandsDialogs
             this.editGitIgnoreToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.editGitIgnoreToolStripMenuItem.Text = "Edit ignored files";
             this.editGitIgnoreToolStripMenuItem.Click += new System.EventHandler(this.EditGitIgnoreToolStripMenuItemClick);
+            // 
+            // editLocallyIgnoredFilesToolStripMenuItem
+            // 
+            this.editLocallyIgnoredFilesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconEditGitIgnore;
+            this.editLocallyIgnoredFilesToolStripMenuItem.Name = "editLocallyIgnoredFilesToolStripMenuItem";
+            this.editLocallyIgnoredFilesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.editLocallyIgnoredFilesToolStripMenuItem.Text = "Edit locally ignored files";
+            this.editLocallyIgnoredFilesToolStripMenuItem.Click += new System.EventHandler(this.EditGitInfoExcludeToolStripMenuItemClick);
             // 
             // deleteAllUntrackedFilesToolStripMenuItem
             // 
@@ -1149,7 +1170,8 @@ namespace GitUI.CommandsDialogs
             this.toolbarCommit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.commitMessageToolStripMenuItem,
             this.toolStripMenuItem3,
-            this.commitTemplatesToolStripMenuItem});
+            this.commitTemplatesToolStripMenuItem,
+            this.createBranchToolStripButton});
             this.toolbarCommit.Location = new System.Drawing.Point(175, 0);
             this.toolbarCommit.Name = "toolbarCommit";
             this.toolbarCommit.Padding = new System.Windows.Forms.Padding(1, 1, 2, 1);
@@ -1266,6 +1288,15 @@ namespace GitUI.CommandsDialogs
             this.commitTemplatesToolStripMenuItem.Size = new System.Drawing.Size(135, 20);
             this.commitTemplatesToolStripMenuItem.Text = "Commit &templates";
             this.commitTemplatesToolStripMenuItem.DropDownOpening += new System.EventHandler(this.commitTemplatesToolStripMenuItem_DropDownOpening);
+            // 
+            // createBranchToolStripButton
+            // 
+            this.createBranchToolStripButton.Image = global::GitUI.Properties.Resources.IconBranchCreate;
+            this.createBranchToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.createBranchToolStripButton.Name = "createBranchToolStripButton";
+            this.createBranchToolStripButton.Size = new System.Drawing.Size(101, 23);
+            this.createBranchToolStripButton.Text = "Create branch";
+            this.createBranchToolStripButton.Click += new System.EventHandler(this.createBranchToolStripButton_Click);
             // 
             // commitStatusStrip
             // 
@@ -1419,6 +1450,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Button SolveMergeconflicts;
         private FileViewer SelectedDiff;
         private System.Windows.Forms.ToolStripMenuItem addFileTogitignoreToolStripMenuItem;
+        private ToolStripMenuItem addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assumeUnchangedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem doNotAssumeUnchangedToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
@@ -1451,6 +1483,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem resetAlltrackedChangesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem editGitIgnoreToolStripMenuItem;
+        private ToolStripMenuItem editLocallyIgnoredFilesToolStripMenuItem;
         private ToolStripMenuItem deleteAllUntrackedFilesToolStripMenuItem;
         private ToolStripEx toolbarStaged;
         private FileStatusList Staged;
@@ -1531,5 +1564,6 @@ namespace GitUI.CommandsDialogs
         private Button ResetUnStaged;
         private ToolStripMenuItem resetUnstagedChangesToolStripMenuItem;
         private ToolStripMenuItem noVerifyToolStripMenuItem;
+        private ToolStripButton createBranchToolStripButton;
     }
 }

@@ -1,7 +1,6 @@
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using GitCommands.Settings;
-using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;

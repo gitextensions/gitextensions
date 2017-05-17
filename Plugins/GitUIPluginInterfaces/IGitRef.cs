@@ -1,10 +1,5 @@
 ﻿namespace GitUIPluginInterfaces
 {
-    public interface ISettingsValueGetter
-    {
-        string GetValue(string setting);
-    }
-
     public interface IGitRef : IGitItem
     {
         string CompleteName { get; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using GitCommands;
 using PatchApply;
@@ -33,8 +34,14 @@ namespace GitUI.Editor.Diff
             var leftLineNum = DiffLineNum.NotApplicableLineNum;
             var rightLineNum = DiffLineNum.NotApplicableLineNum;
             var isHeaderLineLocated = false;
-            foreach (var line in diffContent.Split('\n'))
+            string[] lines = diffContent.Split('\n');
+            for (int i = 0; i < lines.Length; i++)
             {
+                string line = lines[i];
+                if (i == lines.Length - 1 && line.IsNullOrEmpty())
+                {
+                    break;
+                }
                 lineNumInDiff++;
                 if (line.StartsWith("@"))
                 {

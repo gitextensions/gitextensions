@@ -82,6 +82,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.ConflictedFiles)).BeginInit();
             this.ConflictedFilesContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
@@ -119,7 +120,6 @@
             this.ConflictedFiles.DataSource = this.gitItemBindingSource;
             this.ConflictedFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ConflictedFiles.Location = new System.Drawing.Point(3, 19);
-            this.ConflictedFiles.MultiSelect = false;
             this.ConflictedFiles.Name = "ConflictedFiles";
             this.ConflictedFiles.ReadOnly = true;
             this.ConflictedFiles.RowHeadersVisible = false;
@@ -574,6 +574,7 @@
             this.flowLayoutPanel1.Controls.Add(this.startMergetool);
             this.flowLayoutPanel1.Controls.Add(this.Rescan);
             this.flowLayoutPanel1.Controls.Add(this.Reset);
+            this.flowLayoutPanel1.Controls.Add(this.progressBar);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(470, 3);
@@ -581,6 +582,16 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(146, 290);
             this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
+            // 
+            // progressBar
+            // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar.Location = new System.Drawing.Point(3, 127);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(140, 24);
+            this.progressBar.TabIndex = 7;
+            this.progressBar.Visible = false;
             // 
             // tableLayoutPanel5
             // 
@@ -611,6 +622,7 @@
             this.gotoUserManualControl1.Name = "gotoUserManualControl1";
             this.gotoUserManualControl1.Size = new System.Drawing.Size(70, 20);
             this.gotoUserManualControl1.TabIndex = 2;
+            // 
             // 
             // FormResolveConflicts
             // 
@@ -698,5 +710,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private UserControls.GotoUserManualControl gotoUserManualControl1;
+        private System.Windows.Forms.ProgressBar progressBar;
     }
 }

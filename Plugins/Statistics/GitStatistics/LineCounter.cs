@@ -44,7 +44,7 @@ namespace GitStatistics
                     {
                         fileInfo = new FileInfo(file);
                     }
-                    catch (UnauthorizedAccessException)
+                    catch (Exception)
                     {
                         continue;
                     }

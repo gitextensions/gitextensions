@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
-using GitUI.Objects;
+using GitCommands.Remote;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
@@ -124,6 +124,7 @@ namespace GitUI.CommandsDialogs
             Fetch.Checked = AppSettings.FormPullAction == AppSettings.PullAction.Fetch;
             localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = AppSettings.AutoStash;
+            Prune.Enabled = AppSettings.FormPullAction == AppSettings.PullAction.Merge || AppSettings.FormPullAction == AppSettings.PullAction.Fetch;
 
             ErrorOccurred = false;
 
@@ -153,7 +154,7 @@ namespace GitUI.CommandsDialogs
         private void BindRemotesDropDown(string selectedRemoteName)
         {
             // refresh registered git remotes
-            _gitRemoteController.LoadRemotes();
+            _gitRemoteController.LoadRemotes(false);
 
             _NO_TRANSLATE_Remotes.Sorted = false;
             _NO_TRANSLATE_Remotes.DataSource = new[] { new GitRemote { Name = AllRemotes } }.Union(_gitRemoteController.Remotes).ToList();
@@ -327,7 +328,7 @@ namespace GitUI.CommandsDialogs
             }
             if ((bool)messageBoxResult)
             {
-                UICommands.StashPop(this);
+                UICommands.StashPop(owner);
             }
         }
 
@@ -482,12 +483,12 @@ namespace GitUI.CommandsDialogs
         {
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked));
+                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked));
             }
 
             Debug.Assert(Merge.Checked || Rebase.Checked);
 
-            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked))
+            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
                        {
                            HandleOnExitCallback = HandlePullOnExit
                        };
@@ -725,8 +726,10 @@ namespace GitUI.CommandsDialogs
 
         private void FillPullSourceDropDown()
         {
+            string prevUrl = comboBoxPullSource.Text;
             comboBoxPullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             comboBoxPullSource.DisplayMember = "Path";
+            comboBoxPullSource.Text = prevUrl;
         }
 
         private void StashClick(object sender, EventArgs e)
@@ -808,6 +811,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
             AllTags.Enabled = false;
+            Prune.Enabled = true;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
         }
@@ -819,6 +823,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;
+            Prune.Enabled = false;
             if (AllTags.Checked)
                 ReachableTags.Checked = true;
         }
@@ -829,6 +834,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
+            Prune.Enabled = true;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)

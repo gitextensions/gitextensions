@@ -34,8 +34,6 @@
                 </Directory>
             </Directory>
             <Directory Id="PersonalFolder">
-                <Directory Id="VS2005" Name="Visual Studio 2005" />
-                <Directory Id="VS2008" Name="Visual Studio 2008" />
                 <Directory Id="VS2010" Name="Visual Studio 2010" />
                 <Directory Id="VS2012" Name="Visual Studio 2012" />
                 <Directory Id="VS2013" Name="Visual Studio 2013" />
@@ -48,7 +46,7 @@
                 <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
             </Component>
         </Directory>
-        <?define VsVersions = 2005;2008;2010;2012;2013?>
+        <?define VsVersions = 2010;2012;2013?>
         <?foreach VsVersion in $(var.VsVersions)?>
         <Property Id="VS$(var.VsVersion)INSTFOLDER">
             <DirectorySearch Id="VS$(var.VsVersion)DirSearchId" Path="[PersonalFolder]Visual Studio $(var.VsVersion)" />
@@ -239,7 +237,7 @@
                 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll" />
             </Component>
             <Component Id="Newtonsoft.Json.dll" Guid="*">
-                <File Source="..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll" />
+                <File Source="..\packages\Newtonsoft.Json.10.0.2\lib\net40\Newtonsoft.Json.dll" />
             </Component>
             <Component Id="JiraCommitTipPlugin.dll" Guid="*">
                 <File Source="..\Plugins\JiraCommitTipPlugin\bin\Release\JiraComminTipPlugin.dll" />
@@ -285,6 +283,30 @@
             <!-- Component Id="TfsInterop.Vs2013.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2013\bin\Release\TfsInterop.Vs2013.dll" />
             </Component -->
+            <Component Id="TfsInterop.Vs2015.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\TfsInterop.Vs2015.dll" />
+            </Component>
+            <Component Id="Microsoft.VisualStudio.Services.WebApi.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.VisualStudio.Services.WebApi.dll" />
+            </Component>
+            <Component Id="Microsoft.TeamFoundation.Build2.WebApi.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.TeamFoundation.Build2.WebApi.dll" />
+            </Component>
+            <Component Id="Microsoft.TeamFoundation.Common.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.TeamFoundation.Common.dll" />
+            </Component>
+            <Component Id="Microsoft.TeamFoundation.Core.WebApi.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.TeamFoundation.Core.WebApi.dll" />
+            </Component>
+            <Component Id="Microsoft.VisualStudio.Services.Client.Interactive.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.VisualStudio.Services.Client.Interactive.dll" />
+            </Component>
+            <Component Id="Microsoft.VisualStudio.Services.Common.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\Microsoft.VisualStudio.Services.Common.dll" />
+            </Component>
+            <Component Id="System.Net.Http.Formatting.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\Release\System.Net.Http.Formatting.dll" />
+            </Component>
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
             <Component Id="Blue.ico" Guid="*">
@@ -547,14 +569,6 @@
 
         <!-- http://www.mztools.com/articles/2011/MZ2011020.aspx -->
         <Binary Id="BinRemoveVSAddInCommands" SourceFile="RemoveVSAddInCommands.vbs"/>
-        <CustomAction Id='RemoveVS2005AddInCommands'
-            BinaryKey="BinRemoveVSAddInCommands"
-            VBScriptCall="RemoveVS2005AddInCommands"
-            Return="check"/>
-        <CustomAction Id='RemoveVS2008AddInCommands'
-            BinaryKey="BinRemoveVSAddInCommands"
-            VBScriptCall="RemoveVS2008AddInCommands"
-            Return="check"/>
         <CustomAction Id='RemoveVS2010AddInCommands'
             BinaryKey="BinRemoveVSAddInCommands"
             VBScriptCall="RemoveVS2010AddInCommands"
@@ -581,14 +595,6 @@
               - The add-in feature state (!feature-state) for the Visual Studio version is installed (3 = INSTALLSTATE_LOCAL). See:
                 Conditional Statement Syntax (http://msdn.microsoft.com/en-us/library/aa368012.aspx)
             -->
-            <Custom Action="RemoveVS2005AddInCommands"
-                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2005INSTFOLDER
-                                     AND !VS2005FeatureId=3</Custom>
-
-            <Custom Action="RemoveVS2008AddInCommands"
-                 After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2008INSTFOLDER
-                                     AND !VS2008FeatureId=3</Custom>
-
             <Custom Action="RemoveVS2010AddInCommands"
                  After="RemoveFiles">Installed AND NOT UPGRADINGPRODUCTCODE AND VS2010INSTFOLDER
                                      AND !VS2010FeatureId=3</Custom>
@@ -731,6 +737,14 @@
                     <ComponentRef Id="TfsIntegration.dll" />
                     <ComponentRef Id="TfsInterop.Vs2012.dll" />
                     <!-- ComponentRef Id="TfsInterop.Vs2013.dll" /-->
+                    <ComponentRef Id="TfsInterop.Vs2015.dll" />
+                    <ComponentRef Id="Microsoft.TeamFoundation.Build2.WebApi.dll" />
+                    <ComponentRef Id="Microsoft.TeamFoundation.Common.dll" />
+                    <ComponentRef Id="Microsoft.TeamFoundation.Core.WebApi.dll" />
+                    <ComponentRef Id="Microsoft.VisualStudio.Services.Client.Interactive.dll" />
+                    <ComponentRef Id="Microsoft.VisualStudio.Services.Common.dll" />
+                    <ComponentRef Id="Microsoft.VisualStudio.Services.WebApi.dll" />
+                    <ComponentRef Id="System.Net.Http.Formatting.dll" />
                 </Feature>
                 <Feature Id="JiraCommitTipPlugin" Title="Jira Commit Tip Plugin" Level="1">
                     <ComponentRef Id="JiraCommitTipPlugin.dll" />
@@ -885,9 +899,9 @@
             </Feature>
         </Feature>
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
-        <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe" />
+        <Binary Id="KDiff" SourceFile="cache\KDiff3-32bit-Setup_0.9.97.exe" />
         <CustomAction Id="InstallKDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
-        <Binary Id="Git" SourceFile="..\Bin\Git-2.10.1-32-bit.exe" />
+        <Binary Id="Git" SourceFile="cache\Git-2.12.2-32-bit.exe" />
         <CustomAction Id="InstallGit" Impersonate="no" BinaryKey="Git" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
         <InstallExecuteSequence>
             <Custom Action="InstallKDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>

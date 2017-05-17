@@ -7,17 +7,17 @@ namespace GitUI.CommandsDialogs
     {
         private FormBlame()
             : this(null)
-        {         
+        {
         }
 
         private FormBlame(GitUICommands aCommands)
             : base(aCommands)
         {
             InitializeComponent();
-            Translate();        
+            Translate();
         }
 
-        public FormBlame(GitUICommands aCommands, string fileName, GitRevision revision) : this(aCommands)
+        public FormBlame(GitUICommands aCommands, string fileName, GitRevision revision, int? initialLine = null) : this(aCommands)
         {
             if (string.IsNullOrEmpty(fileName))
                 return;
@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs
             if (revision == null)
                 revision = Module.GetRevision("Head");
 
-            blameControl1.LoadBlame(revision, null, fileName, null, null, Module.FilesEncoding);
+            blameControl1.LoadBlame(revision, null, fileName, null, null, Module.FilesEncoding, initialLine);
         }
 
         public string FileName { get; set; }

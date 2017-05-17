@@ -64,6 +64,7 @@
             // 
             this.Hard.AutoSize = true;
             this.Hard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.Hard.ForeColor = System.Drawing.Color.Black;
             this.Hard.Location = new System.Drawing.Point(13, 102);
             this.Hard.Name = "Hard";
             this.Hard.Size = new System.Drawing.Size(323, 34);
@@ -77,6 +78,7 @@
             this.Mixed.AutoSize = true;
             this.Mixed.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.Mixed.Checked = true;
+            this.Mixed.ForeColor = System.Drawing.Color.Black;
             this.Mixed.Location = new System.Drawing.Point(13, 64);
             this.Mixed.Name = "Mixed";
             this.Mixed.Size = new System.Drawing.Size(276, 19);
@@ -89,6 +91,7 @@
             // 
             this.Soft.AutoSize = true;
             this.Soft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.Soft.ForeColor = System.Drawing.Color.Black;
             this.Soft.Location = new System.Drawing.Point(13, 28);
             this.Soft.Name = "Soft";
             this.Soft.Size = new System.Drawing.Size(257, 19);

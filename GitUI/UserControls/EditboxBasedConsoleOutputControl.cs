@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 
 using JetBrains.Annotations;
+using System.Collections.Generic;
 
 namespace GitUI.UserControls
 {
@@ -77,7 +78,7 @@ namespace GitUI.UserControls
             _editbox.Visible = false;
         }
 
-        public override void StartProcess(string command, string arguments, string workdir)
+        public override void StartProcess(string command, string arguments, string workdir, Dictionary<string, string> envVariables)
         {
             try
             {
@@ -97,11 +98,15 @@ namespace GitUI.UserControls
                 var process = new Process();
                 ProcessStartInfo startInfo = GitCommandHelpers.CreateProcessStartInfo(command, arguments, workdir, GitModule.SystemEncoding);
                 startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
+                foreach (var envVariable in envVariables)
+                {
+                    startInfo.EnvironmentVariables.Add(envVariable.Key, envVariable.Value);
+                }
                 process.StartInfo = startInfo;
 
                 process.EnableRaisingEvents = true;
-                process.OutputDataReceived += (sender, args) => FireDataReceived(new TextEventArgs(args.Data ?? ""));
-                process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs(args.Data ?? ""));
+                process.OutputDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
+                process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
                 process.Exited += delegate
                 {
                     this.InvokeAsync(new Action(() =>

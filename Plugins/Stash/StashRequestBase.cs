@@ -6,6 +6,7 @@ using RestSharp;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Windows.Forms;
+using RestSharp.Authenticators;
 
 namespace Stash
 {

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using GitUIPluginInterfaces;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -25,6 +23,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public virtual void SetGlobalSettings()
         {        
+        }
+
+        protected override bool AreEffectiveSettings => true;
+        protected override ISettingsSource GetCurrentSettings()
+        {
+            return AppSettings.SettingsContainer;
         }
     }
 }

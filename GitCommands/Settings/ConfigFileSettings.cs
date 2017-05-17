@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using GitCommands.Config;
@@ -8,7 +8,7 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
-    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, ISettingsValueGetter
+    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, IConfigFileSettings
     {
         public ConfigFileSettings(ConfigFileSettings aLowerPriority, ConfigFileSettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
@@ -94,14 +94,28 @@ namespace GitCommands.Settings
             SetValue(setting, ConfigSection.FixPath(value));
         }
 
-        public IList<ConfigSection> GetConfigSections()
+        public IList<IConfigSection> GetConfigSections()
         {
             return SettingsCache.GetConfigSections();
         }
 
-        public void RemoveConfigSection(string configSectionName)
+        /// <summary>
+        /// Adds the specific configuration section to the .git/config file.
+        /// </summary>
+        /// <param name="configSection">The configuration section.</param>
+        public void AddConfigSection(IConfigSection configSection)
         {
-            SettingsCache.RemoveConfigSection(configSectionName);
+            SettingsCache.AddConfigSection(configSection);
+        }
+
+        /// <summary>
+        /// Removes the specific configuration section from the .git/config file.
+        /// </summary>
+        /// <param name="configSectionName">The name of the configuration section.</param>
+        /// <param name="performSave">If <see langword="true"/> the configuration changes will be saved immediately.</param>
+        public void RemoveConfigSection(string configSectionName, bool performSave = false)
+        {
+            SettingsCache.RemoveConfigSection(configSectionName, performSave);
         }
 
         public Encoding FilesEncoding
@@ -162,7 +176,6 @@ namespace GitCommands.Settings
         {
             SetValue(settingName, encoding == null ? null : encoding.HeaderName);
         }
-
     }
 
     public class CorePath : SettingsPath

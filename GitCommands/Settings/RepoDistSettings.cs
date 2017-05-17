@@ -130,22 +130,25 @@ namespace GitCommands.Settings
         {
             get
             {
-                return new SettingsPath(this, Type.Value);
+                return new SettingsPath(this, Type.ValueOrDefault);
             }
         }
     }
 
     public class DetailedGroup : SettingsPath
     {
-        public readonly BoolNullableSetting ShowConEmuTab;
         public readonly BoolNullableSetting GetRemoteBranchesDirectlyFromRemote;
+        public readonly BoolNullableSetting AddMergeLogMessages;
+        public readonly IntNullableSetting MergeLogMessagesCount;
 
         public DetailedGroup(RepoDistSettings container)
             : base(container, "Detailed")
         {
-            ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", this, true);
             GetRemoteBranchesDirectlyFromRemote = new BoolNullableSetting("GetRemoteBranchesDirectlyFromRemote", this, false);
+            AddMergeLogMessages = new BoolNullableSetting("AddMergeLogMessages", this, false);
+            MergeLogMessagesCount = new IntNullableSetting("MergeLogMessagesCount", this, 20);
         }
+
     }
 
 }

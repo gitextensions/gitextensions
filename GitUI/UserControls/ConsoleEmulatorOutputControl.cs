@@ -6,6 +6,7 @@ using ConEmu.WinForms;
 
 using GitCommands;
 using GitCommands.Utils;
+using System.Collections.Generic;
 
 namespace GitUI.UserControls
 {
@@ -102,7 +103,7 @@ namespace GitUI.UserControls
             }
         }
 
-        public override void StartProcess(string command, string arguments, string workdir)
+        public override void StartProcess(string command, string arguments, string workdir, Dictionary<string, string> envVariables)
         {
             var cmdl = new StringBuilder();
             if (command != null)
@@ -114,14 +115,19 @@ namespace GitUI.UserControls
 
             var startinfo = new ConEmuStartInfo();
             startinfo.ConsoleProcessCommandLine = cmdl.ToString();
-            startinfo.ConsoleProcessExtraArgs = " -cur_console:P:\"<Solarized Light>\"";
+            if (AppSettings.ConEmuStyle.ValueOrDefault != "Default")
+            {
+                startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";
+            }
             startinfo.StartupDirectory = workdir;
+            foreach (var envVariable in envVariables)
+            {
+                startinfo.SetEnv(envVariable.Key, envVariable.Value);
+            }
             startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
             startinfo.AnsiStreamChunkReceivedEventSink = (sender, args) =>
             {
                 var text = args.GetText(GitModule.SystemEncoding);
-                if (EnvUtils.RunningOnWindows())
-                    text = text.Replace("\n", Environment.NewLine);
                 FireDataReceived(new TextEventArgs(text));
             };
             startinfo.ConsoleProcessExitedEventSink = (sender, args) =>

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using GitCommands;
 using ResourceManager;
+using GitUI.Editor;
 
 namespace GitUI.UserControls
 {
@@ -64,6 +65,7 @@ namespace GitUI.UserControls
                     if (tagList.Any())
                     {
                         labelTags.BackColor = _tagsBackColor;
+                        labelTags.ForeColor = ColorHelper.GetForeColorForBackColor(_tagsBackColor);
                     }
                     else
                     {
@@ -76,6 +78,7 @@ namespace GitUI.UserControls
                     if (branchesList.Any())
                     {
                         labelBranches.BackColor = _branchesBackColor;
+                        labelBranches.ForeColor = ColorHelper.GetForeColorForBackColor(_branchesBackColor);
                     }
                     else
                     {
