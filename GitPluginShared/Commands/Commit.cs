@@ -24,23 +24,9 @@ namespace GitPluginShared.Commands
 
             string fileName = GetSelectedFile(application);
 
-            if (showCurrentBranch && (fileName != lastFile || DateTime.Now - lastBranchCheck > new TimeSpan(0, 0, 0, 1, 0)))
+            if (showCurrentBranch)
             {
-                string newCaption = "Commit";
-                if (enabled)
-                {
-                    string head = GitCommands.GetCurrentBranch(fileName);
-                    if (!string.IsNullOrEmpty(head))
-                    {
-                        string headShort;
-                        if (head.Length > 27)
-                            headShort = "..." + head.Substring(head.Length - 23);
-                        else
-                            headShort = head;
-
-                        newCaption = "Commit (" + headShort + ")";
-                    }
-                }
+                string newCaption = ComputeCaption(application);
 
                 // This guard required not only for perfromance, but also for prevent StackOverflowException.
                 // IDE.QueryStatus -> Commit.IsEnabled -> Plugin.UpdateCaption -> IDE.QueryStatus ...
@@ -52,12 +38,42 @@ namespace GitPluginShared.Commands
                     if (!PluginHelpers.ChangeCommandCaption(application, "GitExtensions", "Commit changes", newCaption))
                         _lastUpdatedCaption = null;
                 }
-
-                lastBranchCheck = DateTime.Now;
-                lastFile = fileName;
             }
 
             return enabled;
+        }
+
+        public string ComputeCaption(EnvDTE80.DTE2 application)
+        {
+            string fileName = GetSelectedFile(application);
+
+            if (fileName != lastFile || DateTime.Now - lastBranchCheck > new TimeSpan(0, 0, 0, 1, 0))
+            {
+                bool enabled = base.IsEnabled(application);
+
+                string newCaption = "&Commit";
+                if (enabled)
+                {
+                    string head = GitCommands.GetCurrentBranch(fileName);
+                    if (!string.IsNullOrEmpty(head))
+                    {
+                        string headShort;
+                        if (head.Length > 27)
+                            headShort = "..." + head.Substring(head.Length - 23);
+                        else
+                            headShort = head;
+
+                        newCaption = "&Commit (" + headShort + ")";
+                    }
+                }
+
+                lastBranchCheck = DateTime.Now;
+                lastFile = fileName;
+
+                return newCaption;
+            }
+
+            return _lastUpdatedCaption;
         }
 
         protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)

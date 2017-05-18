@@ -16,7 +16,6 @@ namespace GitPlugin
     /// </summary>
     public class Plugin
     {
-        private const string GitCommandBarName = "GitExtensions";
         private const string OldGitMainMenuName = "&Git";
         private const string OldGitExtMainMenuName = "&GitExt";
         private const string GitMainMenuName = "G&itExt";
@@ -135,19 +134,6 @@ namespace GitPlugin
             return null;
         }
 
-        private static MsoButtonStyle CommandStyleToButtonStyle(vsCommandStyle commandStyle)
-        {
-            switch (commandStyle)
-            {
-                case vsCommandStyle.vsCommandStylePict:
-                    return MsoButtonStyle.msoButtonIcon;
-                case vsCommandStyle.vsCommandStyleText:
-                    return MsoButtonStyle.msoButtonCaption;
-                default:
-                    return MsoButtonStyle.msoButtonIconAndCaption;
-            }
-        }
-
         private bool HasCommand(CommandBar commandBar, string caption)
         {
             caption = caption.Trim();
@@ -156,19 +142,11 @@ namespace GitPlugin
                 .Any(control => (control.Caption.Replace("&", "").Trim().Equals(caption.Replace("&", ""), StringComparison.CurrentCultureIgnoreCase) || (control.Caption.StartsWith("Commit") && caption.StartsWith("Commit"))));
         }
 
-        public static bool ChangeCommandCaption(DTE2 application, string commandBarName, string tooltipText, string caption)
-        {
-            if (!AllowCaptionUpdate)
-                return false;
-
-            return GitPluginShared.PluginHelpers.ChangeCommandCaption(application, commandBarName, tooltipText, caption);
-        }
-
         public void DeleteGitExtCommandBar()
         {
             CommandBar cb =
                 CommandBars.Cast<CommandBar>()
-                    .FirstOrDefault(c => c.Name == GitCommandBarName);
+                    .FirstOrDefault(c => c.Name == PluginHelpers.GitCommandBarName);
             if (cb != null)
             {
                 cb.Delete();
@@ -179,10 +157,10 @@ namespace GitPlugin
         {
             CommandBar bar =
                 CommandBars.Cast<CommandBar>()
-                    .FirstOrDefault(c => c.Name == GitCommandBarName);
+                    .FirstOrDefault(c => c.Name == PluginHelpers.GitCommandBarName);
             if (bar == null)
             {
-                bar = (CommandBar)_application.Commands.AddCommandBar(GitCommandBarName, vsCommandBarType.vsCommandBarTypeToolbar);
+                bar = (CommandBar)_application.Commands.AddCommandBar(PluginHelpers.GitCommandBarName, vsCommandBarType.vsCommandBarTypeToolbar);
                 bar.Position = position;
                 bar.RowIndex = -1;
             }
@@ -289,7 +267,7 @@ namespace GitPlugin
             {
                 CommandBar cb =
                     CommandBars.Cast<CommandBar>()
-                        .FirstOrDefault(c => c.Name == GitCommandBarName);
+                        .FirstOrDefault(c => c.Name == PluginHelpers.GitCommandBarName);
                 if (cb == null)
                 {
                     return true;
@@ -394,7 +372,7 @@ namespace GitPlugin
                 OutputPane.OutputString("Add toolbar command: " + caption + Environment.NewLine);
 #endif
                 var control = (CommandBarButton)command.AddControl(bar, insertIndex);
-                control.Style = CommandStyleToButtonStyle(commandStyle);
+                control.Style = PluginHelpers.CommandStyleToButtonStyle(commandStyle);
                 control.BeginGroup = beginGroup;
             }
         }
@@ -403,7 +381,7 @@ namespace GitPlugin
         {
             CommandBar cb =
                 CommandBars.Cast<CommandBar>()
-                    .FirstOrDefault(c => c.Name == GitCommandBarName);
+                    .FirstOrDefault(c => c.Name == PluginHelpers.GitCommandBarName);
             if (cb != null)
             {
                 foreach (CommandBarButton control in cb.Controls)
