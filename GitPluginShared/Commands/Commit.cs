@@ -8,14 +8,10 @@ namespace GitPluginShared.Commands
     {
         private static DateTime lastBranchCheck;
         private static string lastFile;
-        private static bool showCurrentBranch;
         private static string _lastUpdatedCaption;
 
         public Commit()
         {
-            if (lastFile == null)
-                lastFile = string.Empty;
-            showCurrentBranch = GitCommands.GetShowCurrentBranchSetting();
         }
 
         public override bool IsEnabled(EnvDTE80.DTE2 application)
@@ -24,9 +20,30 @@ namespace GitPluginShared.Commands
 
             string fileName = GetSelectedFile(application);
 
-            if (showCurrentBranch)
+            if ((fileName != lastFile || DateTime.Now - lastBranchCheck > new TimeSpan(0, 0, 0, 2, 0)))
             {
-                string newCaption = ComputeCaption(application);
+                string newCaption = "&Commit";
+                if (enabled)
+                {
+                    bool showCurrentBranch = GitCommands.GetShowCurrentBranchSetting();
+                    if (showCurrentBranch && !string.IsNullOrEmpty(fileName))
+                    {
+                        string head = GitCommands.GetCurrentBranch(fileName);
+                        if (!string.IsNullOrEmpty(head))
+                        {
+                            string headShort;
+                            if (head.Length > 27)
+                                headShort = "..." + head.Substring(head.Length - 23);
+                            else
+                                headShort = head;
+
+                            newCaption = "&Commit (" + headShort + ")";
+                        }
+                    }
+
+                    lastBranchCheck = DateTime.Now;
+                    lastFile = fileName;
+                }
 
                 // This guard required not only for perfromance, but also for prevent StackOverflowException.
                 // IDE.QueryStatus -> Commit.IsEnabled -> Plugin.UpdateCaption -> IDE.QueryStatus ...
@@ -35,45 +52,12 @@ namespace GitPluginShared.Commands
                     _lastUpdatedCaption = newCaption;
 
                     // try apply new caption (operation can fail)
-                    if (!PluginHelpers.ChangeCommandCaption(application, "GitExtensions", "Commit changes", newCaption))
+                    if (!PluginHelpers.ChangeCommandCaption(application, PluginHelpers.GitCommandBarName, "Commit changes", newCaption))
                         _lastUpdatedCaption = null;
                 }
             }
 
             return enabled;
-        }
-
-        public string ComputeCaption(EnvDTE80.DTE2 application)
-        {
-            string fileName = GetSelectedFile(application);
-
-            if (fileName != lastFile || DateTime.Now - lastBranchCheck > new TimeSpan(0, 0, 0, 1, 0))
-            {
-                bool enabled = base.IsEnabled(application);
-
-                string newCaption = "&Commit";
-                if (enabled)
-                {
-                    string head = GitCommands.GetCurrentBranch(fileName);
-                    if (!string.IsNullOrEmpty(head))
-                    {
-                        string headShort;
-                        if (head.Length > 27)
-                            headShort = "..." + head.Substring(head.Length - 23);
-                        else
-                            headShort = head;
-
-                        newCaption = "&Commit (" + headShort + ")";
-                    }
-                }
-
-                lastBranchCheck = DateTime.Now;
-                lastFile = fileName;
-
-                return newCaption;
-            }
-
-            return _lastUpdatedCaption;
         }
 
         protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)

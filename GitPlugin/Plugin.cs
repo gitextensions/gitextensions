@@ -28,10 +28,6 @@ namespace GitPlugin
         private readonly OutputWindowPane _outputPane;
         private readonly Dictionary<string, Command> _visualStudioCommands = new Dictionary<string, Command>();
 
-        // specify if captions of commands can be updated
-        // On VS2013 (at least) update captions of command on hidden toolbar lead to create doubles of all commands on toolbar 2 commits, 4, 8, 16 ...
-        public static bool AllowCaptionUpdate;
-
         public Plugin(DTE2 application, AddIn addIn, string panelName, string connectPath)
         {
             // TODO: This can be figured out from traversing the assembly and locating the Connect class...
@@ -132,6 +128,19 @@ namespace GitPlugin
                     return command;
             }
             return null;
+        }
+
+        private static MsoButtonStyle CommandStyleToButtonStyle(vsCommandStyle commandStyle)
+        {
+            switch (commandStyle)
+            {
+                case vsCommandStyle.vsCommandStylePict:
+                    return MsoButtonStyle.msoButtonIcon;
+                case vsCommandStyle.vsCommandStyleText:
+                    return MsoButtonStyle.msoButtonCaption;
+                default:
+                    return MsoButtonStyle.msoButtonIconAndCaption;
+            }
         }
 
         private bool HasCommand(CommandBar commandBar, string caption)
@@ -372,7 +381,7 @@ namespace GitPlugin
                 OutputPane.OutputString("Add toolbar command: " + caption + Environment.NewLine);
 #endif
                 var control = (CommandBarButton)command.AddControl(bar, insertIndex);
-                control.Style = PluginHelpers.CommandStyleToButtonStyle(commandStyle);
+                control.Style = CommandStyleToButtonStyle(commandStyle);
                 control.BeginGroup = beginGroup;
             }
         }

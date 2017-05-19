@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
-using Microsoft.VisualStudio.CommandBars;
 
 using EnvDTE;
 using EnvDTE80;
@@ -55,12 +54,8 @@ namespace GitExtensionsVSIX
 
             try
             {
-
-
-                GitPluginUISetupMainMenu();
-                GitPluginUISetupCommandBar();
-                //GitPluginUISetupContextMenu();
-
+                RegisterCommands();
+                PluginHelpers.AllowCaptionUpdate = true;
             }
             catch (Exception ex)
             {
@@ -69,20 +64,7 @@ namespace GitExtensionsVSIX
             }
         }
 
-        private void GitPluginUISetupCommandBar()
-        {
-            CommandBar commandBar = _application.GetOrAddGitExtCommandBar();
-
-            _application.AddToolbarCommandWithText(commandBar, "Commit", "Commit", "Commit changes", 7, 1);
-            _application.AddToolbarCommand(commandBar, "Browse", "Browse", "Browse repository", 12, 2);
-            _application.AddToolbarCommand(commandBar, "Pull", "Pull", "Pull changes from remote repository", 9, 3);
-            _application.AddToolbarCommand(commandBar, "Push", "Push", "Push changes to remote repository", 8, 4);
-            _application.AddToolbarCommand(commandBar, "Stash", "Stash", "Stash changes", 3, 5);
-            _application.AddToolbarCommand(commandBar, "Settings", "Settings", "Settings", 2, 6);
-
-        }
-
-        private void GitPluginUISetupMainMenu()
+        private void RegisterCommands()
         {
             //RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
             RegisterCommand("Difftool", new ToolbarCommand<OpenWithDiftool>(), gitExtDiffCommand);
@@ -93,7 +75,7 @@ namespace GitExtensionsVSIX
             RegisterCommand("Browse", new ToolbarCommand<Browse>(), gitExtBrowseCommand);
             RegisterCommand("Clone", new ToolbarCommand<Clone>(), gitExtCloneCommand);
             RegisterCommand("CreateNewRepository", new ToolbarCommand<Init>(), gitExtNewCommand);
-            RegisterCommand("Commit", new VsixCommit(), gitExtCommitCommand);
+            RegisterCommand("Commit", new Commit(), gitExtCommitCommand);
             RegisterCommand("Pull", new ToolbarCommand<Pull>(), gitExtPullCommand);
             RegisterCommand("Push", new ToolbarCommand<Push>(), gitExtPushCommand);
             RegisterCommand("Stash", new ToolbarCommand<Stash>(), gitExtStashCommand);

@@ -121,6 +121,7 @@
                 <Strings>
                     <CommandName>GitExt.Commit</CommandName>
                     <ButtonText>&amp;Commit</ButtonText>
+                  <ToolTipText>Commit changes</ToolTipText>
                 </Strings>
             </Button>
             <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtPullCommand" priority="0x0002" type="Button">
