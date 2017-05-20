@@ -3,8 +3,11 @@ using System.Xml.Serialization;
 
 namespace GitCommands.Repository
 {
+    [Serializable]
     public class Repository
     {
+        private string _path;
+
         public enum RepositoryAnchor
         {
             MostRecent,
@@ -12,22 +15,26 @@ namespace GitCommands.Repository
             None
         }
 
-        public Repository()
+        // required by XmlSerializer
+        private Repository()
         {
             Anchor = RepositoryAnchor.None;
         }
 
-        public Repository(string path, string description, string title)
+        public Repository(string path)
             : this()
         {
             Path = path;
-            Description = description;
-            Title = title;
-            RepositoryType = RepositoryType.Repository;
         }
 
-        public string Title { get; set; }
-        private string _path;
+
+        public RepositoryAnchor Anchor { get; set; }
+
+        public string Category { get; set; }
+
+        [XmlIgnore]
+        public bool IsRemote => PathIsUrl(Path);
+
         public string Path
         {
             get
@@ -39,33 +46,15 @@ namespace GitCommands.Repository
                 _path = value;
             }
         }
-        public string Description { get; set; }
-        public RepositoryAnchor Anchor { get; set; }
 
-        [XmlIgnore]
-        public bool IsRemote
-        {
-            get { return PathIsUrl(Path); }
-        }
-
-        [XmlIgnore]
-        public RepositoryType RepositoryType { get; set; }
-
-        public void Assign(Repository source)
-        {
-            if (source == null)
-                return;
-            Path = source.Path;
-            Title = source.Title;
-            Description = source.Description;
-            RepositoryType = source.RepositoryType;
-        }
 
         public override string ToString()
         {
             return Path + " ("+ Anchor.ToString() +")";
         }
 
+
+        // TODO: doesn't belong here
         public static bool PathIsUrl(string path)
         {
             return !String.IsNullOrEmpty(path) &&

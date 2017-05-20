@@ -16,39 +16,38 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
+
         protected override string GetCommaSeparatedKeywordList()
         {
-            return "color,graph,diff,icon";
+            return "color,graph,diff,icon,dashboard,theme";
         }
 
-        private int GetIconStyleIndex(string text)
+        protected override void PageToSettings()
         {
-            switch (text.ToLowerInvariant())
-            {
-                case "large":
-                    return 1;
-                case "small":
-                    return 2;
-                case "cow":
-                    return 3;
-                default:
-                    return 0;
-            }
-        }
+            AppSettings.MulticolorBranches = MulticolorBranches.Checked;
+            AppSettings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
+            AppSettings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
+            AppSettings.BranchBorders = BranchBorders.Checked;
+            AppSettings.StripedBranchChange = StripedBanchChange.Checked;
+            AppSettings.HighlightAuthoredRevisions = HighlightAuthoredRevisions.Checked;
 
-        private string GetIconStyleString(int index)
-        {
-            switch (index)
-            {
-                case 1:
-                    return "large";
-                case 2:
-                    return "small";
-                case 3:
-                    return "cow";
-                default:
-                    return "default";
-            }
+            AppSettings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
+            AppSettings.TagColor = _NO_TRANSLATE_ColorTagLabel.BackColor;
+            AppSettings.BranchColor = _NO_TRANSLATE_ColorBranchLabel.BackColor;
+            AppSettings.RemoteBranchColor = _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor;
+            AppSettings.OtherTagColor = _NO_TRANSLATE_ColorOtherLabel.BackColor;
+            AppSettings.AuthoredRevisionsColor = _NO_TRANSLATE_ColorAuthoredRevisions.BackColor;
+
+            AppSettings.DiffAddedColor = _NO_TRANSLATE_ColorAddedLineLabel.BackColor;
+            AppSettings.DiffRemovedColor = _NO_TRANSLATE_ColorRemovedLine.BackColor;
+            AppSettings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
+            AppSettings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
+            AppSettings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
+
+            AppSettings.IconColor = GetSelectedApplicationIconColor();
+            AppSettings.IconStyle = GetIconStyleString(IconStyle.SelectedIndex);
+
+            AppSettings.DashboardThemeIndex = cboDashboardTheme.SelectedIndex;
         }
 
         protected override void SettingsToPage()
@@ -120,34 +119,40 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             RandomIcon.Checked = iconColor == "random";
 
             IconStyle.SelectedIndex = GetIconStyleIndex(AppSettings.IconStyle);
+            cboDashboardTheme.SelectedIndex = Math.Min(Math.Max(0, AppSettings.DashboardThemeIndex), cboDashboardTheme.Items.Count);
 
             ShowIconPreview();
         }
 
-        protected override void PageToSettings()
+
+        private int GetIconStyleIndex(string text)
         {
-            AppSettings.MulticolorBranches = MulticolorBranches.Checked;
-            AppSettings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
-            AppSettings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
-            AppSettings.BranchBorders = BranchBorders.Checked;
-            AppSettings.StripedBranchChange = StripedBanchChange.Checked;
-            AppSettings.HighlightAuthoredRevisions = HighlightAuthoredRevisions.Checked;
+            switch (text.ToLowerInvariant())
+            {
+                case "large":
+                    return 1;
+                case "small":
+                    return 2;
+                case "cow":
+                    return 3;
+                default:
+                    return 0;
+            }
+        }
 
-            AppSettings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
-            AppSettings.TagColor = _NO_TRANSLATE_ColorTagLabel.BackColor;
-            AppSettings.BranchColor = _NO_TRANSLATE_ColorBranchLabel.BackColor;
-            AppSettings.RemoteBranchColor = _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor;
-            AppSettings.OtherTagColor = _NO_TRANSLATE_ColorOtherLabel.BackColor;
-            AppSettings.AuthoredRevisionsColor = _NO_TRANSLATE_ColorAuthoredRevisions.BackColor;
-
-            AppSettings.DiffAddedColor = _NO_TRANSLATE_ColorAddedLineLabel.BackColor;
-            AppSettings.DiffRemovedColor = _NO_TRANSLATE_ColorRemovedLine.BackColor;
-            AppSettings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
-            AppSettings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
-            AppSettings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
-
-            AppSettings.IconColor = GetSelectedApplicationIconColor();
-            AppSettings.IconStyle = GetIconStyleString(IconStyle.SelectedIndex);
+        private string GetIconStyleString(int index)
+        {
+            switch (index)
+            {
+                case 1:
+                    return "large";
+                case 2:
+                    return "small";
+                case 3:
+                    return "cow";
+                default:
+                    return "default";
+            }
         }
 
         private string GetSelectedApplicationIconColor()
@@ -168,6 +173,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return "random";
             return "default";
         }
+
 
         private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -228,12 +234,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ColorLabel_Click(object sender, EventArgs e)
         {
-            PickColor((Label) sender);
+            PickColor((Label)sender);
         }
 
         private void PickColor(Control targetColorControl)
         {
-            using (var colorDialog = new ColorDialog {Color = targetColorControl.BackColor})
+            using (var colorDialog = new ColorDialog { Color = targetColorControl.BackColor })
             {
                 colorDialog.ShowDialog(this);
                 targetColorControl.BackColor = colorDialog.Color;

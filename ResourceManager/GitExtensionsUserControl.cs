@@ -17,6 +17,14 @@ namespace ResourceManager
             Load += GitExtensionsControl_Load;
         }
 
+        public void ApplyPaddingScaling(Control control, float scaleFactor)
+        {
+            control.Padding = new Padding((int)(control.Padding.Left * scaleFactor),
+                                          (int)(control.Padding.Top * scaleFactor),
+                                          (int)(control.Padding.Right * scaleFactor),
+                                          (int)(control.Padding.Bottom * scaleFactor));
+        }
+
         public int GetCurrentDeviceDpi()
         {
 #if TARGETING_DOTNET47
@@ -29,6 +37,14 @@ namespace ResourceManager
             }
 #endif
             return deviceDpi;
+        }
+
+        public float GetScaleFactor()
+        {
+            var currentDpi = GetCurrentDeviceDpi();
+            var standardDpi = 96; // Default DPI at 100% zoom
+            var scaleFactor = (float)currentDpi / standardDpi;
+            return scaleFactor;
         }
 
         [Browsable(false)] // because we always read from settings

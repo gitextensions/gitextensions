@@ -482,6 +482,12 @@ namespace GitCommands
             set { SetString("iconstyle", value); }
         }
 
+        public static int DashboardThemeIndex
+        {
+            get { return GetInt("dashboardthemeindex", -1); }
+            set { SetInt("dashboardthemeindex", value); }
+        }
+
         public static int AuthorImageSize
         {
             get { return GetInt("authorimagesize", 80); }

@@ -554,6 +554,22 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Highlight authored revisions</source>
         <target />
       </trans-unit>
+      <trans-unit id="cboDashboardTheme.Item0">
+        <source>Auto-detect</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboDashboardTheme.Item1">
+        <source>Light</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboDashboardTheme.Item2">
+        <source>Dark</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="IconStyle.Item0">
+        <source>Default</source>
+        <target />
+      </trans-unit>
       <trans-unit id="IconStyle.Item0">
         <source>Default</source>
         <target />
@@ -999,22 +1015,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Develop</source>
         <target />
       </trans-unit>
-      <trans-unit id="directoryIsNotAValidRepository.Text">
-        <source>The selected item is not a valid git repository.
-
-Do you want to abort and remove it from the recent repositories list?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="directoryIsNotAValidRepositoryCaption.Text">
-        <source>Open</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="directoryIsNotAValidRepositoryOpenIt.Text">
-        <source>The selected item is not a valid git repository.
-
-Do you want to open it?</source>
-        <target />
-      </trans-unit>
       <trans-unit id="donate.Text">
         <source>Donate</source>
         <target />
@@ -1029,102 +1029,6 @@ Do you want to open it?</source>
       </trans-unit>
       <trans-unit id="translate.Text">
         <source>Translate</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="DashboardCategory" source-language="en">
-    <body>
-      <trans-unit id="$this.Title">
-        <source>##Title</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_editCategory.Text">
-        <source>Edit</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_moveCategoryDown.Text">
-        <source>Move down</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_moveCategoryUp.Text">
-        <source>Move up</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_moveToCategory.Text">
-        <source>Move to category</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_newCategory.Text">
-        <source>New category</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_removeCategory.Text">
-        <source>Remove</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="editToolStripMenuItem.Text">
-        <source>Edit</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="moveDownToolStripMenuItem.Text">
-        <source>Move Down</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="moveUpToolStripMenuItem.Text">
-        <source>Move Up</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="removeToolStripMenuItem.Text">
-        <source>Remove</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="DashboardEditor" source-language="en">
-    <body>
-      <trans-unit id="Add.Text">
-        <source>Add</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="CategoriesLabel.Text">
-        <source>Categories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Remove.Text">
-        <source>Remove</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="RepositoriesType.Text">
-        <source>Repositories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="RssFeedType.Text">
-        <source>RSS Feed</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Title.HeaderText">
-        <source>Title</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="descriptionDataGridViewTextBoxColumn.HeaderText">
-        <source>Description</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Caption</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Type</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>RSS feed</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
-        <source>Path</source>
         <target />
       </trans-unit>
     </body>
@@ -4416,6 +4320,39 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
       <trans-unit id="userprofileHome.Text">
         <source>Set HOME to USERPROFILE</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormFirstTimeDashboardTheme" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Select dashboard theme</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboDashboardTheme.Item0">
+        <source>Auto-detect</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboDashboardTheme.Item1">
+        <source>Light</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboDashboardTheme.Item2">
+        <source>Dark</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>We have redesigned the dashboard to make it a bit more modern and,
+hopefully, a bit easier to use.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Select the dashboard theme:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>You can always pick a different theme later in Settings -> Color tab.</source>
         <target />
       </trans-unit>
     </body>
@@ -7813,6 +7750,60 @@ This will just checkout on the submodule the commit determined by the superproje
     <body>
       <trans-unit id="$this.Title">
         <source>Plugins</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="RecentRepositoriesList" source-language="en">
+    <body>
+      <trans-unit id="directoryIsNotAValidRepository.Text">
+        <source>The selected item is not a valid git repository.
+
+Do you want to abort and remove it from the recent repositories list?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="directoryIsNotAValidRepositoryCaption.Text">
+        <source>Open</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiOpenFolder.Text">
+        <source>Open containing folder</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCategories.Text">
+        <source>Categories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCategoryNone.Text">
+        <source>(none)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCategoryAdd.Text">
+        <source>Add new...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiAddToMostRecent.Text">
+        <source>Add to most recent</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiRemoveFromMostRecent.Text">
+        <source>Remove from most recent</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiRemoveFromList.Text">
+        <source>Remove project from the list</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="RecentRepositoryItem" source-language="en">
+    <body>
+      <trans-unit id="_banchTooltip.Text">
+        <source>Branch: {0}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_categoryTooltip.Text">
+        <source>Category: {0}</source>
         <target />
       </trans-unit>
     </body>
