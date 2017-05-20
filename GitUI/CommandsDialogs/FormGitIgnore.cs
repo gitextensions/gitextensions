@@ -77,7 +77,9 @@ namespace GitUI.CommandsDialogs
             Translate();
 
             if (localExclude)
+            {
                 Text = _editLocalExcludeTitle.Text;
+            }
         }
 
         private string ExcludeFile
@@ -95,12 +97,25 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+
         protected override void OnRuntimeLoad(EventArgs e)
         {
             base.OnRuntimeLoad(e);
             LoadGitIgnore();
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
         }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+                Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
 
         private void LoadGitIgnore()
         {
@@ -221,6 +236,11 @@ namespace GitUI.CommandsDialogs
         private void lnkGitIgnoreGenerate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"https://www.gitignore.io/");
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

@@ -3416,13 +3416,13 @@ namespace GitCommands
             return ReEncodeStringFromLossless(s, LogOutputEncoding);
         }
 
-        //there is a bug: git does not recode commit message when format is given
+        //there was a bug: Git before v1.8.4 did not recode commit message when format is given
         //Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
         //characters could be replaced by replacement character while reencoding to LogOutputEncoding
         public string ReEncodeCommitMessage(string s, string toEncodingName)
         {
 
-            bool isABug = true;
+            bool isABug = !GitCommandHelpers.VersionInUse.LogFormatRecodesCommitMessage;
 
             Encoding encoding;
             try
@@ -3438,7 +3438,7 @@ namespace GitCommands
                     else
                         encoding = Encoding.GetEncoding(toEncodingName);
                 }
-                else//if bug will be fixed, git should recode commit message to LogOutputEncoding
+                else//bug is fixed in Git v1.8.4, Git recodes commit message to LogOutputEncoding
                     encoding = LogOutputEncoding;
 
             }

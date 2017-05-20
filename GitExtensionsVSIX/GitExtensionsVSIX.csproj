@@ -65,6 +65,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Commands\VsixCommandBase.cs" />
     <Compile Include="GitExtCommands.cs" />
     <Compile Include="GitExtCommandTable.cs">
       <AutoGen>True</AutoGen>
