@@ -66,8 +66,9 @@ namespace GitUI.Script
 
         private static string GetRemotePath(string url)
         {
+            Uri uri;
             string path = "";
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
+            if (Uri.TryCreate(url, UriKind.Absolute, out uri))
                 path = uri.LocalPath;
             else if (Uri.TryCreate("ssh://" + url.Replace(":", "/"), UriKind.Absolute, out uri))
                 path = uri.LocalPath;

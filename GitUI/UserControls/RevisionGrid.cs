@@ -178,8 +178,9 @@ namespace GitUI
         {
             foreach (var menuCommand in menuCommands)
             {
-                var toolStripItem = (ToolStripItem)MenuCommand.CreateToolStripItem(menuCommand);
-                if (toolStripItem is ToolStripMenuItem toolStripMenuItem)
+                var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
+                var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
+                if (toolStripMenuItem != null)
                 {
                     menuCommand.RegisterMenuItem(toolStripMenuItem);
                 }
