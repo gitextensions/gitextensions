@@ -3210,7 +3210,8 @@ namespace GitUI
 
         private void DeleteBranchTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem item)
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            if (item != null)
             {
                 if (item.DropDown != null && item.DropDown.Items.Count == 1)
                     item.DropDown.Items[0].PerformClick();
