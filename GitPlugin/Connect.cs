@@ -261,7 +261,7 @@ namespace GitPlugin
             GitPluginUIUpdateCommandBar();
 
             // enable update captions after initialization
-            Plugin.AllowCaptionUpdate = true;
+            PluginHelpers.AllowCaptionUpdate = true;
         }
 
         private void GitPluginUIUpdateMenu()
