@@ -585,6 +585,9 @@ namespace GitUI.SpellChecker
 
         private void TextBoxTextChanged(object sender, EventArgs e)
         {
+            if (_customUnderlines.IsImeStartingComposition)
+                return;
+
             if (!_disableAutoCompleteTriggerOnTextUpdate)
             {
                 // Reset when timer is already running
@@ -916,6 +919,9 @@ namespace GitUI.SpellChecker
 
         private void UpdateOrShowAutoComplete (bool calledByUser)
         {
+            if (_customUnderlines.IsImeStartingComposition)
+                return;
+
             if (_autoCompleteListTask == null || !AppSettings.ProvideAutocompletion)
                 return;
 
