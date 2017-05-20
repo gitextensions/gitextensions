@@ -2808,7 +2808,8 @@ namespace GitUI
 
         void Revisions_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
+            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
+            if (fileNameArray != null)
             {
                 if (fileNameArray.Length > 10)
                 {
@@ -2832,7 +2833,8 @@ namespace GitUI
 
         static void Revisions_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
+            var fileNameArray = e.Data.GetData(DataFormats.FileDrop) as Array;
+            if (fileNameArray != null)
             {
                 foreach (object fileNameObject in fileNameArray)
                 {
