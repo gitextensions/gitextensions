@@ -55,11 +55,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             BranchName = string.Empty;
             Path = string.Empty;
 
-            MouseEnter += recentRepositoryItem_MouseEnter;
+            MouseEnter += RecentRepositoryItem_MouseEnter;
             var controls = new Control[] { _NO_TRANSLATE_BranchName, _NO_TRANSLATE_Path, pbIcon, _NO_TRANSLATE_Category, flpnlRow2, tlpnlContainer };
             foreach (Control control in controls)
             {
-                control.MouseEnter += recentRepositoryItem_MouseEnter;
+                control.MouseEnter += RecentRepositoryItem_MouseEnter;
                 control.MouseLeave += (s, e) => OnMouseLeave(e);
                 control.MouseDown += (s, e) =>
                 {
@@ -253,7 +253,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public override ContextMenuStrip ContextMenuStrip
         {
-            get => base.ContextMenuStrip;
+            get
+            {
+                return base.ContextMenuStrip;
+            }
             set
             {
                 if (base.ContextMenuStrip == value)
@@ -262,14 +265,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 }
                 if (base.ContextMenuStrip != null)
                 {
-                    base.ContextMenuStrip.Opened -= contextMenuStrip_Opened;
-                    base.ContextMenuStrip.Closed -= contextMenuStrip_Closed;
+                    base.ContextMenuStrip.Opened -= ContextMenuStrip_Opened;
+                    base.ContextMenuStrip.Closed -= ContextMenuStrip_Closed;
                 }
                 base.ContextMenuStrip = value;
                 if (value != null)
                 {
-                    base.ContextMenuStrip.Opened += contextMenuStrip_Opened;
-                    base.ContextMenuStrip.Closed += contextMenuStrip_Closed;
+                    base.ContextMenuStrip.Opened += ContextMenuStrip_Opened;
+                    base.ContextMenuStrip.Closed += ContextMenuStrip_Closed;
                 }
             }
         }
@@ -381,7 +384,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         }
 
 
-        private void contextMenuStrip_Closed(object sender, ToolStripDropDownClosedEventArgs e)
+        private void ContextMenuStrip_Closed(object sender, ToolStripDropDownClosedEventArgs e)
         {
             _isContextMenuOpened = false;
             if ((sender as ContextMenuStrip)?.SourceControl != this)
@@ -391,7 +394,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             ResetHighlight();
         }
 
-        private void contextMenuStrip_Opened(object sender, EventArgs e)
+        private void ContextMenuStrip_Opened(object sender, EventArgs e)
         {
             if ((sender as ContextMenuStrip)?.SourceControl != this)
             {
@@ -401,12 +404,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             SetHighlight();
         }
 
-        private void recentRepositoryItem_MouseEnter(object sender, EventArgs e)
+        private void RecentRepositoryItem_MouseEnter(object sender, EventArgs e)
         {
             SetHighlight();
         }
 
-        private void pbIcon_Click(object sender, EventArgs e)
+        private void PbIcon_Click(object sender, EventArgs e)
         {
             if (_repository == null)
             {

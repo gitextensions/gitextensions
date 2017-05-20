@@ -51,7 +51,7 @@
             this.pbIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbIcon.TabIndex = 0;
             this.pbIcon.TabStop = false;
-            this.pbIcon.Click += new System.EventHandler(this.pbIcon_Click);
+            this.pbIcon.Click += new System.EventHandler(this.PbIcon_Click);
             // 
             // _NO_TRANSLATE_Path
             // 
