@@ -9,6 +9,7 @@ namespace GitCommands
         private static readonly GitVersion v1_7_1 = new GitVersion("1.7.1");
         private static readonly GitVersion v1_7_7 = new GitVersion("1.7.7");
         private static readonly GitVersion v1_7_11 = new GitVersion("1.7.11");
+        private static readonly GitVersion v1_8_4 = new GitVersion("1.8.4");
         private static readonly GitVersion v1_8_5 = new GitVersion("1.8.5");
         private static readonly GitVersion v2_0_1 = new GitVersion("2.0.1");
         private static readonly GitVersion v2_5_1 = new GitVersion("2.5.1");
@@ -39,6 +40,11 @@ namespace GitCommands
         public bool FetchCanAskForProgress
         {
             get { return this >= v1_7_1; }
+        }
+
+        public bool LogFormatRecodesCommitMessage
+        {
+            get { return this >= v1_8_4; }
         }
 
         public bool PushCanAskForProgress

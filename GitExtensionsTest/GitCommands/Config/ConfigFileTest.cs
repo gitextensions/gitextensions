@@ -801,6 +801,38 @@ namespace GitExtensionsTest.Config
             Assert.True(expected.SequenceEqual(actual));
         }
 
+        [TestMethod]
+        public void SquareBracketInValue()
+        {
+            StringBuilder content = new StringBuilder();
+
+            content.AppendLine("[branch \"reporting_bad_behavour\"]");
+            content.AppendLine("    remote = origin");
+            content.AppendLine("	merge = refs/heads/[en]reporting_bad_behavour");
+
+            ConfigFile cfg = new ConfigFile("", true);
+            cfg.LoadFromString(content.ToString());
+            string actual = cfg.GetValue("branch.reporting_bad_behavour.merge");
+            string expected = "refs/heads/[en]reporting_bad_behavour";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void SquareBracketInSectionName()
+        {
+            StringBuilder content = new StringBuilder();
+
+            content.AppendLine("[branch \"[en]reporting_bad_behavour\"]");
+            content.AppendLine("    remote = origin");
+            content.AppendLine("	merge = refs/heads/reporting_bad_behavour");
+
+            ConfigFile cfg = new ConfigFile("", true);
+            cfg.LoadFromString(content.ToString());
+            string actual = cfg.GetValue("branch.[en]reporting_bad_behavour.merge");
+            string expected = "refs/heads/reporting_bad_behavour";
+            Assert.AreEqual(expected, actual);
+        }
+
         /// <summary>
         /// Always delete the test config file after each test
         /// </summary>

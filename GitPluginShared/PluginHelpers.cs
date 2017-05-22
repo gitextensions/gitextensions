@@ -9,8 +9,16 @@ namespace GitPluginShared
 {
     public static class PluginHelpers
     {
+        public const string GitCommandBarName = "GitExtensions";
+        // specify if captions of commands can be updated
+        // On VS2013 (at least) update captions of command on hidden toolbar lead to create doubles of all commands on toolbar 2 commits, 4, 8, 16 ...
+        public static bool AllowCaptionUpdate;
+
         public static bool ChangeCommandCaption(DTE2 application, string commandBarName, string tooltipText, string caption)
         {
+            if (!AllowCaptionUpdate)
+                return false;
+
             try
             {
                 var cmdBars = (CommandBars)application.CommandBars;
