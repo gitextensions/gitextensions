@@ -240,7 +240,7 @@
                 <File Source="..\packages\Newtonsoft.Json.10.0.2\lib\net40\Newtonsoft.Json.dll" />
             </Component>
             <Component Id="JiraCommitTipPlugin.dll" Guid="*">
-                <File Source="..\Plugins\JiraCommitTipPlugin\bin\Release\JiraComminTipPlugin.dll" />
+                <File Source="..\Plugins\JiraCommitTipPlugin\bin\Release\JiraCommitTipPlugin.dll" />
             </Component>
             <Component Id="Atlassian.Jira.dll" Guid="*">
                 <File Source="..\Plugins\JiraCommitTipPlugin\bin\Release\Atlassian.Jira.dll" />
