@@ -919,6 +919,11 @@ namespace GitUI.SpellChecker
 
         private void UpdateOrShowAutoComplete (bool calledByUser)
         {
+            if (IsDisposed)
+            {
+                return;
+            }
+
             if (_autoCompleteListTask == null || !AppSettings.ProvideAutocompletion)
                 return;
 
