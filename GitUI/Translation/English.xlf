@@ -4607,6 +4607,10 @@ Check if file is accessible.</source>
         <source>Save changes?</source>
         <target />
       </trans-unit>
+      <trans-unit id="btnCancel.Text">
+        <source>Cancel</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Specify filepatterns you want git to ignore.
 
@@ -7853,6 +7857,10 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="GotoParentCommit.Text">
         <source>Go to parent commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="IdDataGridViewColumn.HeaderText">
+        <source>SHA1</source>
         <target />
       </trans-unit>
       <trans-unit id="InitRepository.Text">
