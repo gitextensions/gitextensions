@@ -115,7 +115,7 @@ namespace GitUI.Script
                         currentRemote = aModule.GetCurrentRemote();
                         if (string.IsNullOrEmpty(currentRemote))
                             currentRemote = aModule.GetSetting(string.Format(SettingKeyString.BranchRemote,
-                                askToSpecify(currentLocalBranches, "Current Revision Branch")));
+                                AskToSpecify(currentLocalBranches, "Current Revision Branch")));
                     }
                 }
                 else if (option.StartsWith("{s") && selectedRevision == null && revisionGrid != null)
@@ -137,7 +137,7 @@ namespace GitUI.Script
                         if (selectedTags.Count == 1)
                             argument = argument.Replace(option, selectedTags[0].Name);
                         else if (selectedTags.Count != 0)
-                            argument = argument.Replace(option, askToSpecify(selectedTags, "Selected Revision Tag"));
+                            argument = argument.Replace(option, AskToSpecify(selectedTags, "Selected Revision Tag"));
                         else
                             argument = argument.Replace(option, "");
                         break;
@@ -146,7 +146,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, selectedBranches[0].Name);
                         else if (selectedBranches.Count != 0)
                             argument = argument.Replace(option,
-                                                        askToSpecify(selectedBranches, "Selected Revision Branch"));
+                                                        AskToSpecify(selectedBranches, "Selected Revision Branch"));
                         else
                             argument = argument.Replace(option, "");
                         break;
@@ -155,7 +155,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, selectedLocalBranches[0].Name);
                         else if (selectedLocalBranches.Count != 0)
                             argument = argument.Replace(option,
-                                                        askToSpecify(selectedLocalBranches,
+                                                        AskToSpecify(selectedLocalBranches,
                                                                      "Selected Revision Local Branch"));
                         else
                             argument = argument.Replace(option, "");
@@ -165,7 +165,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, selectedRemoteBranches[0].Name);
                         else if (selectedRemoteBranches.Count != 0)
                             argument = argument.Replace(option,
-                                                        askToSpecify(selectedRemoteBranches,
+                                                        AskToSpecify(selectedRemoteBranches,
                                                                      "Selected Revision Remote Branch"));
                         else
                             argument = argument.Replace(option, "");
@@ -179,7 +179,7 @@ namespace GitUI.Script
                         if (selectedRemotes.Count == 1)
                             remote = selectedRemotes[0];
                         else
-                            remote = askToSpecify(selectedRemotes, "Selected Revision Remote");
+                            remote = AskToSpecify(selectedRemotes, "Selected Revision Remote");
                         argument = argument.Replace(option, remote);
                         break;
                     case "{sRemoteUrl}":
@@ -191,7 +191,7 @@ namespace GitUI.Script
                         if (selectedRemotes.Count == 1)
                             remote = selectedRemotes[0];
                         else
-                            remote = askToSpecify(selectedRemotes, "Selected Revision Remote");
+                            remote = AskToSpecify(selectedRemotes, "Selected Revision Remote");
                         url = aModule.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         argument = argument.Replace(option, url);
                         break;
@@ -204,7 +204,7 @@ namespace GitUI.Script
                         if (selectedRemotes.Count == 1)
                             remote = selectedRemotes[0];
                         else
-                            remote = askToSpecify(selectedRemotes, "Selected Revision Remote");
+                            remote = AskToSpecify(selectedRemotes, "Selected Revision Remote");
                         url = aModule.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         argument = argument.Replace(option, GetRemotePath(url));
                         break;
@@ -230,7 +230,7 @@ namespace GitUI.Script
                         if (currentTags.Count == 1)
                             argument = argument.Replace(option, currentTags[0].Name);
                         else if (currentTags.Count != 0)
-                            argument = argument.Replace(option, askToSpecify(currentTags, "Current Revision Tag"));
+                            argument = argument.Replace(option, AskToSpecify(currentTags, "Current Revision Tag"));
                         else
                             argument = argument.Replace(option, "");
                         break;
@@ -239,7 +239,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, currentBranches[0].Name);
                         else if (currentBranches.Count != 0)
                             argument = argument.Replace(option,
-                                                        askToSpecify(currentBranches, "Current Revision Branch"));
+                                                        AskToSpecify(currentBranches, "Current Revision Branch"));
                         else
                             argument = argument.Replace(option, "");
                         break;
@@ -248,7 +248,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, currentLocalBranches[0].Name);
                         else if (currentLocalBranches.Count != 0)
                             argument = argument.Replace(option,
-                                                        askToSpecify(currentLocalBranches,
+                                                        AskToSpecify(currentLocalBranches,
                                                                      "Current Revision Local Branch"));
                         else
                             argument = argument.Replace(option, "");
@@ -258,7 +258,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, currentRemoteBranches[0].Name);
                         else if (currentRemoteBranches.Count != 0)
                             argument = argument.Replace(option,
-                                                        askToSpecify(currentRemoteBranches,
+                                                        AskToSpecify(currentRemoteBranches,
                                                                      "Current Revision Remote Branch"));
                         else
                             argument = argument.Replace(option, "");
@@ -486,7 +486,7 @@ namespace GitUI.Script
             return originalCommand;
         }
 
-        private static string askToSpecify(IEnumerable<IGitRef> options, string title)
+        private static string AskToSpecify(IEnumerable<IGitRef> options, string title)
         {
             using (var f = new FormRunScriptSpecify(options, title))
             {
@@ -495,7 +495,7 @@ namespace GitUI.Script
             }
         }
 
-        private static string askToSpecify(IEnumerable<string> options, string title)
+        private static string AskToSpecify(IEnumerable<string> options, string title)
         {
             using (var f = new FormRunScriptSpecify(options, title))
             {

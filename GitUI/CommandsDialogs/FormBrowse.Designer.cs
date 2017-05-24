@@ -280,7 +280,7 @@ namespace GitUI.CommandsDialogs
             this.toolPanel.Size = new System.Drawing.Size(923, 527);
             this.toolPanel.SplitterDistance = 25;
             this.toolPanel.SplitterWidth = 1;
-            this.toolPanel.TabIndex = 4;
+            this.toolPanel.TabIndex = 1;
             // 
             // UserMenuToolStrip
             // 
@@ -328,7 +328,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStrip.Name = "ToolStrip";
             this.ToolStrip.Padding = new System.Windows.Forms.Padding(0);
             this.ToolStrip.Size = new System.Drawing.Size(923, 25);
-            this.ToolStrip.TabIndex = 4;
+            this.ToolStrip.TabIndex = 0;
             // 
             // RefreshButton
             // 
@@ -2024,7 +2024,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator7,
             this.settingsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // commitcountPerUserToolStripMenuItem
@@ -2063,7 +2063,7 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(923, 24);
-            this.menuStrip1.TabIndex = 3;
+            this.menuStrip1.TabIndex = 0;
             // 
             // FormBrowse
             // 

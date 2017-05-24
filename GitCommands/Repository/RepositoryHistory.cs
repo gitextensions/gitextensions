@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 namespace GitCommands.Repository
 {
@@ -36,10 +35,6 @@ namespace GitCommands.Repository
 
         public override void SetIcon()
         {
-            foreach (var recentRepository in Repositories)
-            {
-                recentRepository.RepositoryType = RepositoryType.History;
-            }
         }
 
         public void RemoveRecentRepository(string repo)
@@ -78,10 +73,7 @@ namespace GitCommands.Repository
                 break;
             }
 
-            var repository = new Repository(repo, null, null) {
-                RepositoryType = RepositoryType.History,
-                Anchor = anchor
-            };
+            var repository = new Repository(repo) { Anchor = anchor };
             Repositories.Insert(0, repository);
 
             while (MaxCount > 0 && Repositories.Count > MaxCount)

@@ -58,43 +58,7 @@ namespace GitUI.Properties {
                 this["FormBrowse_DiffSplitContainer_SplitterDistance"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Dashboard_MainSplitContainer_SplitterDistance {
-            get {
-                return ((int)(this["Dashboard_MainSplitContainer_SplitterDistance"]));
-            }
-            set {
-                this["Dashboard_MainSplitContainer_SplitterDistance"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Dashboard_CommonSplitContainer_SplitterDistance {
-            get {
-                return ((int)(this["Dashboard_CommonSplitContainer_SplitterDistance"]));
-            }
-            set {
-                this["Dashboard_CommonSplitContainer_SplitterDistance"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("96")]
-        public int Dashboard_DeviceDpi {
-            get {
-                return ((int)(this["Dashboard_DeviceDpi"]));
-            }
-            set {
-                this["Dashboard_DeviceDpi"] = value;
-            }
-        }
-        
+                
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("96")]

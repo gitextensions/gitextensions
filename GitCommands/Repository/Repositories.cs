@@ -99,7 +99,9 @@ namespace GitCommands.Repository
                 {
                     Repository catRepo = FindFirstCategoryRepository(repo.Path);
                     if (catRepo != null)
-                        repo.Assign(catRepo);
+                    {
+                        repo.Path = catRepo.Path;
+                    }
                 }
             }
         }
@@ -252,6 +254,15 @@ namespace GitCommands.Repository
         public static void AddCategory(string title)
         {
             RepositoryCategories.Add(new RepositoryCategory { Description = title });
+        }
+
+        public static void RemoveCategory(string title)
+        {
+            var category = RepositoryCategories.FirstOrDefault(c => c.Description == title);
+            if (category != null)
+            {
+                RepositoryCategories.Remove(category);
+            }
         }
 
         public static void AddMostRecentRepository(string repo)

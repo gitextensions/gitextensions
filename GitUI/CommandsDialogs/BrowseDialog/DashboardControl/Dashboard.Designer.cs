@@ -28,242 +28,172 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.commonSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.CommonActions = new DashboardCategory();
-            this.splitContainer7 = new System.Windows.Forms.SplitContainer();
-            this.RecentRepositories = new DashboardCategory();
-            this.DonateCategory = new DashboardCategory();
-            this.groupLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pnlLeft = new System.Windows.Forms.Panel();
+            this.flpnlStart = new System.Windows.Forms.FlowLayoutPanel();
+            this.pnlLogo = new System.Windows.Forms.Panel();
+            this.lblLogo = new System.Windows.Forms.Label();
+            this.flpnlContribute = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblContribute = new System.Windows.Forms.Label();
+            this.recentRepositoriesList1 = new GitUI.CommandsDialogs.BrowseDialog.DashboardControl.RecentRepositoriesList();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-
-            ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
-
-            this.mainSplitContainer.Panel1.SuspendLayout();
-            this.mainSplitContainer.Panel2.SuspendLayout();
-            this.mainSplitContainer.SuspendLayout();
-
-            ((System.ComponentModel.ISupportInitialize)(this.commonSplitContainer)).BeginInit();
-
-            this.commonSplitContainer.Panel1.SuspendLayout();
-            this.commonSplitContainer.Panel2.SuspendLayout();
-            this.commonSplitContainer.SuspendLayout();
-
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).BeginInit();
-
-            this.splitContainer7.Panel1.SuspendLayout();
-            this.splitContainer7.Panel2.SuspendLayout();
-            this.splitContainer7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.pnlLeft.SuspendLayout();
+            this.pnlLogo.SuspendLayout();
+            this.flpnlContribute.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // mainSplitContainer
+            // pnlLeft
             // 
-            this.mainSplitContainer.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.mainSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.mainSplitContainer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.mainSplitContainer.Name = "mainSplitContainer";
+            this.pnlLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(228)))), ((int)(((byte)(235)))));
+            this.pnlLeft.Controls.Add(this.flpnlStart);
+            this.pnlLeft.Controls.Add(this.pnlLogo);
+            this.pnlLeft.Controls.Add(this.flpnlContribute);
+            this.pnlLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlLeft.Location = new System.Drawing.Point(54, 0);
+            this.pnlLeft.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlLeft.MinimumSize = new System.Drawing.Size(0, 500);
+            this.pnlLeft.Name = "pnlLeft";
+            this.pnlLeft.Size = new System.Drawing.Size(320, 640);
+            this.pnlLeft.TabIndex = 0;
             // 
-            // mainSplitContainer.Panel1
+            // flpnlStart
             // 
-            this.mainSplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.mainSplitContainer.Panel1.Controls.Add(this.commonSplitContainer);
+            this.flpnlStart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(50)))), ((int)(((byte)(58)))));
+            this.flpnlStart.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpnlStart.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpnlStart.Location = new System.Drawing.Point(0, 70);
+            this.flpnlStart.Name = "flpnlStart";
+            this.flpnlStart.Padding = new System.Windows.Forms.Padding(30);
+            this.flpnlStart.Size = new System.Drawing.Size(320, 351);
+            this.flpnlStart.TabIndex = 1;
+            this.flpnlStart.WrapContents = false;
             // 
-            // mainSplitContainer.Panel2
+            // pnlLogo
             // 
-            this.mainSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.Control;
-            this.mainSplitContainer.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.mainSplitContainer.Panel2.Controls.Add(this.tableLayoutPanel1);
-            this.mainSplitContainer.Size = new System.Drawing.Size(972, 623);
-            this.mainSplitContainer.SplitterDistance = 314;
-            this.mainSplitContainer.SplitterWidth = 5;
-            this.mainSplitContainer.TabIndex = 9;
+            this.pnlLogo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(40)))), ((int)(((byte)(57)))));
+            this.pnlLogo.Controls.Add(this.lblLogo);
+            this.pnlLogo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlLogo.Location = new System.Drawing.Point(0, 0);
+            this.pnlLogo.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlLogo.Name = "pnlLogo";
+            this.pnlLogo.Padding = new System.Windows.Forms.Padding(0, 0, 0, 17);
+            this.pnlLogo.Size = new System.Drawing.Size(320, 70);
+            this.pnlLogo.TabIndex = 0;
             // 
-            // commonSplitContainer
+            // lblLogo
             // 
-            this.commonSplitContainer.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.commonSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commonSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.commonSplitContainer.Location = new System.Drawing.Point(0, 0);
-            this.commonSplitContainer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.commonSplitContainer.Name = "commonSplitContainer";
-            this.commonSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.lblLogo.AutoSize = true;
+            this.lblLogo.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lblLogo.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lblLogo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(29)))), ((int)(((byte)(35)))));
+            this.lblLogo.Image = global::GitUI.Properties.Resources.x_with_arrow_32;
+            this.lblLogo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblLogo.Location = new System.Drawing.Point(0, -57);
+            this.lblLogo.Name = "lblLogo";
+            this.lblLogo.Size = new System.Drawing.Size(338, 55);
+            this.lblLogo.TabIndex = 0;
+            this.lblLogo.Text = "    git extensions";
+            this.lblLogo.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lblLogo_MouseClick);
             // 
-            // commonSplitContainer.Panel1
+            // flpnlContribute
             // 
-            this.commonSplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.commonSplitContainer.Panel1.Controls.Add(this.CommonActions);
+            this.flpnlContribute.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(69)))), ((int)(((byte)(86)))));
+            this.flpnlContribute.Controls.Add(this.lblContribute);
+            this.flpnlContribute.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.flpnlContribute.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpnlContribute.Location = new System.Drawing.Point(0, 421);
+            this.flpnlContribute.Name = "flpnlContribute";
+            this.flpnlContribute.Padding = new System.Windows.Forms.Padding(30, 30, 30, 45);
+            this.flpnlContribute.Size = new System.Drawing.Size(320, 219);
+            this.flpnlContribute.TabIndex = 2;
+            this.flpnlContribute.WrapContents = false;
             // 
-            // commonSplitContainer.Panel2
+            // lblContribute
             // 
-            this.commonSplitContainer.Panel2.Controls.Add(this.splitContainer7);
-            this.commonSplitContainer.Size = new System.Drawing.Size(314, 623);
-            this.commonSplitContainer.SplitterDistance = 126;
-            this.commonSplitContainer.SplitterWidth = 5;
-            this.commonSplitContainer.TabIndex = 0;
+            this.lblContribute.AutoSize = true;
+            this.lblContribute.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.lblContribute.ForeColor = System.Drawing.Color.Gray;
+            this.lblContribute.Location = new System.Drawing.Point(33, 30);
+            this.lblContribute.Margin = new System.Windows.Forms.Padding(3, 0, 3, 12);
+            this.lblContribute.Name = "lblContribute";
+            this.lblContribute.Size = new System.Drawing.Size(153, 40);
+            this.lblContribute.TabIndex = 0;
+            this.lblContribute.Text = "Contribute";
             // 
-            // CommonActions
+            // recentRepositoriesList1
             // 
-            this.CommonActions.AutoSize = true;
-            this.CommonActions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.CommonActions.BackColor = System.Drawing.Color.Transparent;
-            this.CommonActions.Location = new System.Drawing.Point(0, 0);
-            this.CommonActions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.CommonActions.Name = "CommonActions";
-            this.CommonActions.RepositoryCategory = null;
-            this.CommonActions.Size = new System.Drawing.Size(129, 24);
-            this.CommonActions.TabIndex = 8;
-            this.CommonActions.Title = "Common Actions";
-            // 
-            // splitContainer7
-            // 
-            this.splitContainer7.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.splitContainer7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer7.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer7.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer7.Name = "splitContainer7";
-            this.splitContainer7.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer7.Panel1
-            // 
-            this.splitContainer7.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer7.Panel1.Controls.Add(this.RecentRepositories);
-            // 
-            // splitContainer7.Panel2
-            // 
-            this.splitContainer7.Panel2.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer7.Panel2.Controls.Add(this.DonateCategory);
-            this.splitContainer7.Size = new System.Drawing.Size(314, 492);
-            this.splitContainer7.SplitterDistance = 412;
-            this.splitContainer7.TabIndex = 0;
-            // 
-            // RecentRepositories
-            // 
-            this.RecentRepositories.AutoSize = true;
-            this.RecentRepositories.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.RecentRepositories.BackColor = System.Drawing.Color.Transparent;
-            this.RecentRepositories.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RecentRepositories.Location = new System.Drawing.Point(0, 0);
-            this.RecentRepositories.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.RecentRepositories.Name = "RecentRepositories";
-            this.RecentRepositories.RepositoryCategory = null;
-            this.RecentRepositories.Size = new System.Drawing.Size(314, 412);
-            this.RecentRepositories.TabIndex = 0;
-            this.RecentRepositories.Title = "Recent Repositories";
-            // 
-            // DonateCategory
-            // 
-            this.DonateCategory.AutoSize = true;
-            this.DonateCategory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.DonateCategory.BackColor = System.Drawing.Color.Transparent;
-            this.DonateCategory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DonateCategory.Location = new System.Drawing.Point(0, 0);
-            this.DonateCategory.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.DonateCategory.Name = "DonateCategory";
-            this.DonateCategory.RepositoryCategory = null;
-            this.DonateCategory.Size = new System.Drawing.Size(314, 76);
-            this.DonateCategory.TabIndex = 0;
-            this.DonateCategory.Title = "Contribute";
-            // 
-            // groupLayoutPanel
-            // 
-            this.groupLayoutPanel.AllowDrop = true;
-            this.groupLayoutPanel.AutoScroll = true;
-            this.groupLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.groupLayoutPanel.Location = new System.Drawing.Point(3, 2);
-            this.groupLayoutPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupLayoutPanel.Name = "groupLayoutPanel";
-            this.groupLayoutPanel.Size = new System.Drawing.Size(647, 487);
-            this.groupLayoutPanel.TabIndex = 0;
-            this.groupLayoutPanel.WrapContents = false;
-            this.groupLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | 
-                                                                                   System.Windows.Forms.AnchorStyles.Bottom) | 
-                                                                                   System.Windows.Forms.AnchorStyles.Left) |
-                                                                                   System.Windows.Forms.AnchorStyles.Right)));
-            this.groupLayoutPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.groupLayoutPanel_DragDrop);
-            this.groupLayoutPanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.groupLayoutPanel_DragEnter);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.git_extensions_logo_final_128;
-            this.pictureBox1.Location = new System.Drawing.Point(522, 493);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(128, 128);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 6;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.recentRepositoriesList1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.recentRepositoriesList1.AutoScroll = true;
+            this.recentRepositoriesList1.AutoScrollMargin = new System.Drawing.Size(40, 200);
+            this.recentRepositoriesList1.AutoScrollMinSize = new System.Drawing.Size(450, 0);
+            this.recentRepositoriesList1.BranchNameColor = System.Drawing.SystemColors.HotTrack;
+            this.recentRepositoriesList1.HeaderBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(183)))), ((int)(((byte)(226)))));
+            this.recentRepositoriesList1.HeaderColor = System.Drawing.Color.Empty;
+            this.recentRepositoriesList1.HeaderHeight = 70;
+            this.recentRepositoriesList1.HoverColor = System.Drawing.Color.Empty;
+            this.recentRepositoriesList1.Location = new System.Drawing.Point(374, 0);
+            this.recentRepositoriesList1.MainBackColor = System.Drawing.Color.Empty;
+            this.recentRepositoriesList1.Margin = new System.Windows.Forms.Padding(0);
+            this.recentRepositoriesList1.Name = "recentRepositoriesList1";
+            this.recentRepositoriesList1.Size = new System.Drawing.Size(657, 640);
+            this.recentRepositoriesList1.TabIndex = 1;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.groupLayoutPanel, 0, 0);
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel1.ColumnCount = 4;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85.71428F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
+            this.tableLayoutPanel1.Controls.Add(this.pnlLeft, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.recentRepositoriesList1, 2, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(653, 623);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1087, 640);
+            this.tableLayoutPanel1.TabIndex = 2;
             // 
             // Dashboard
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.BackColor = System.Drawing.SystemColors.Control;
-            this.Controls.Add(this.mainSplitContainer);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScroll = true;
+            this.AutoScrollMinSize = new System.Drawing.Size(0, 500);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(243)))), ((int)(((byte)(253)))));
+            this.BackgroundImage = global::GitUI.Properties.Resources.bgblue;
+            this.Controls.Add(this.tableLayoutPanel1);
+            this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Dashboard";
-            this.Size = new System.Drawing.Size(972, 623);
-            this.mainSplitContainer.Panel1.ResumeLayout(false);
-            this.mainSplitContainer.Panel2.ResumeLayout(false);
-
-            ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
-
-            this.mainSplitContainer.ResumeLayout(false);
-            this.commonSplitContainer.Panel1.ResumeLayout(false);
-            this.commonSplitContainer.Panel1.PerformLayout();
-            this.commonSplitContainer.Panel2.ResumeLayout(false);
-
-            ((System.ComponentModel.ISupportInitialize)(this.commonSplitContainer)).EndInit();
-
-            this.commonSplitContainer.ResumeLayout(false);
-            this.splitContainer7.Panel1.ResumeLayout(false);
-            this.splitContainer7.Panel1.PerformLayout();
-            this.splitContainer7.Panel2.ResumeLayout(false);
-            this.splitContainer7.Panel2.PerformLayout();
-
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).EndInit();
-
-            this.splitContainer7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.Size = new System.Drawing.Size(1087, 640);
+            this.ParentChanged += new System.EventHandler(this.dashboard_ParentChanged);
+            this.pnlLeft.ResumeLayout(false);
+            this.pnlLogo.ResumeLayout(false);
+            this.pnlLogo.PerformLayout();
+            this.flpnlContribute.ResumeLayout(false);
+            this.flpnlContribute.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.SplitContainer mainSplitContainer;
-        private System.Windows.Forms.SplitContainer commonSplitContainer;
-        private System.Windows.Forms.SplitContainer splitContainer7;
-        private DashboardCategory RecentRepositories;
-        private DashboardCategory CommonActions;
-        private DashboardCategory DonateCategory;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.FlowLayoutPanel groupLayoutPanel;
+        private System.Windows.Forms.FlowLayoutPanel flpnlStart;
+        private System.Windows.Forms.Label lblLogo;
+        private System.Windows.Forms.Panel pnlLeft;
+        private System.Windows.Forms.FlowLayoutPanel flpnlContribute;
+        private System.Windows.Forms.Label lblContribute;
+        private System.Windows.Forms.Panel pnlLogo;
+        private RecentRepositoriesList recentRepositoriesList1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

@@ -34,11 +34,15 @@ fatcow
 ------
 - http://www.fatcow.com/free-icons
 - Lisence: Creative Commons (Attribution 3.0 United States)
+bullet_add.png
+bullet_delete.png
 database_save_a*.png
 database*.png
 fatcow_*
 light-bulb-icon-on-16.png
 light-bulb-icon-off-16.png
+new_feature.png
+
 
 icons.lisisoft.com
 ==================
@@ -59,3 +63,14 @@ http://www.iconfinder.com/browse/iconset/ledicons/, License:
     http://led24.de/iconset/ or http://led24.de/ would be appreciated.
     Follow us on twitter http://twitter.com/gasyoun or email leds24@gmail.com
     512 icons 20/05/2009
+
+bgblue.png
+bggrey.png
+--------------
+https://www.vecteezy.com/vector-art/136250-rhinestone-abstract-background-vector
+    Copyright: noodledoodle
+
+    You are allowed to:
+    Download to obtain the non-exclusive right to use Eezy files to create new, derivative, unique works, however the original Eezy file or artwork must be largely unrecognizable.
+    Download, edit, and remix for personal and commercial use, but give credit back to the author:
+        Illustration credit: www.Vecteezy.com

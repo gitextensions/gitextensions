@@ -28,16 +28,13 @@ namespace GitCommands.Repository
                 Caption = Repo.Path;
             }
 
-            if (Repo.Title != null)
-                ShortName = Repo.Title;
-            else if (DirInfo != null)
-                ShortName = DirInfo.Name;
-
-
             if (DirInfo != null)
+            {
+                ShortName = DirInfo.Name;
                 DirInfo = DirInfo.Parent;
+            }
 
-            DirName = DirInfo == null ? "" : DirInfo.FullName;
+            DirName = DirInfo?.FullName ?? "";
         }
 
         public bool FullPath
@@ -214,10 +211,6 @@ namespace GitCommands.Repository
             if (dirInfo == null)
             {
                 repoInfo.Caption = repoInfo.Repo.Path;
-                if (repoInfo.Caption.IsNullOrEmpty())
-                {
-                    repoInfo.Caption = repoInfo.Repo.Title ?? string.Empty;
-                }
             }
             else
             {
