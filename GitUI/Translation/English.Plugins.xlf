@@ -1267,7 +1267,7 @@ branch names, tag names)</source>
         <source>The clipboard doesn't contain a valid build url.
 
 Please copy in the clipboard the url of the build before retrying.
-(Should contains at least the parameter"buildTypeId")</source>
+(Should contain at least the "buildTypeId" parameter)</source>
         <target />
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
@@ -1275,7 +1275,7 @@ Please copy in the clipboard the url of the build before retrying.
         <target />
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
-        <source>Fail to load the projects and build list.
+        <source>Failed to load the projects and build list.
 Please verify the server url.</source>
         <target />
       </trans-unit>

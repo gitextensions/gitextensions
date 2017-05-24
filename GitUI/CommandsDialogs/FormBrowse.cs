@@ -155,7 +155,6 @@ namespace GitUI.CommandsDialogs
         private ThumbnailToolBarButton _pullButton;
         private bool _toolbarButtonsCreated;
 #endif
-        private bool _dontUpdateOnIndexChange;
         private readonly ToolStripGitStatus _toolStripGitStatus;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
@@ -252,7 +251,6 @@ namespace GitUI.CommandsDialogs
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
-            this._dontUpdateOnIndexChange = false;
 
             GitUICommandsChanged += (a, e) =>
             {
@@ -1839,8 +1837,7 @@ namespace GitUI.CommandsDialogs
 
         private void DiffFilesSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!_dontUpdateOnIndexChange)
-                ShowSelectedFileDiff();
+            ShowSelectedFileDiff();
         }
 
         private void ShowSelectedFileDiff()
@@ -2727,9 +2724,7 @@ namespace GitUI.CommandsDialogs
                 return new Tuple<int, string>(idx, null);
 
             idx = getNextIdx(idx, DiffFiles.GitItemStatuses.Count() - 1, searchBackward);
-            _dontUpdateOnIndexChange = true;
-            DiffFiles.SelectedIndex = idx;
-            _dontUpdateOnIndexChange = false;
+            DiffFiles.SetSelectedIndex(idx, notify: false);
             return new Tuple<int, string>(idx, DiffText.GetSelectedPatch(RevisionGrid, DiffFiles.SelectedItem));
         }
 
