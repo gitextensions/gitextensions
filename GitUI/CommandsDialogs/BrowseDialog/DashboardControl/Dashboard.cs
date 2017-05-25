@@ -399,7 +399,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void openItem_Click(object sender, EventArgs e)
         {
-            GitModule module = FormOpenDirectory.OpenModule(this);
+            GitModule module = FormOpenDirectory.OpenModule(this, currentModule: null);
             if (module != null)
                 OnModuleChanged(this, new GitModuleEventArgs(module));
         }

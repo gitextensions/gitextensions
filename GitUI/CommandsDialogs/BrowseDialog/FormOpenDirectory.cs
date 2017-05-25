@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using ResourceManager;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -17,13 +19,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private GitModule choosenModule = null;
 
-        public FormOpenDirectory()
+        public FormOpenDirectory(GitModule currentModule)
         {
             InitializeComponent();
             Translate();
 
-            _NO_TRANSLATE_Directory.DataSource = Repositories.RepositoryHistory.Repositories;
-            _NO_TRANSLATE_Directory.DisplayMember = "Path";
+            _NO_TRANSLATE_Directory.DataSource = GetDirectories(currentModule);
 
             Load.Select();
 
@@ -31,9 +32,32 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _NO_TRANSLATE_Directory.Select();
         }
 
-        public static GitModule OpenModule(IWin32Window owner)
+        private IList<string> GetDirectories(GitModule currentModule)
         {
-            using (var open = new FormOpenDirectory())
+            List<string> directories = new List<string>();
+
+            if (AppSettings.DefaultCloneDestinationPath.IsNotNullOrWhitespace())
+            {
+                directories.Add(PathUtil.EnsureTrailingPathSeparator(AppSettings.DefaultCloneDestinationPath));
+            }
+
+            if (currentModule != null)
+            {
+                DirectoryInfo di = new DirectoryInfo(currentModule.WorkingDir);
+                if (di.Parent != null)
+                {
+                    directories.Add(PathUtil.EnsureTrailingPathSeparator(di.Parent.FullName));
+                }
+            }
+
+            directories.AddRange(Repositories.RepositoryHistory.Repositories.Select(r => r.Path));
+
+            return directories.Distinct().ToList();
+        }
+
+        public static GitModule OpenModule(IWin32Window owner, GitModule currentModule)
+        {
+            using (var open = new FormOpenDirectory(currentModule))
             {
                 open.ShowDialog(owner);
                 return open.choosenModule;

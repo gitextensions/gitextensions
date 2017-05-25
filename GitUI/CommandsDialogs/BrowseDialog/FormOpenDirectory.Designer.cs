@@ -72,10 +72,12 @@
             // folderBrowserButton1
             // 
             this.folderBrowserButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.folderBrowserButton1.Location = new System.Drawing.Point(434, 8);
+            this.folderBrowserButton1.AutoSize = true;
+            this.folderBrowserButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.folderBrowserButton1.Location = new System.Drawing.Point(444, 8);
             this.folderBrowserButton1.Name = "folderBrowserButton1";
             this.folderBrowserButton1.PathShowingControl = this._NO_TRANSLATE_Directory;
-            this.folderBrowserButton1.Size = new System.Drawing.Size(110, 25);
+            this.folderBrowserButton1.Size = new System.Drawing.Size(100, 25);
             this.folderBrowserButton1.TabIndex = 4;
             // 
             // FormOpenDirectory
@@ -83,7 +85,7 @@
             this.AcceptButton = this.Load;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(548, 82);
+            this.ClientSize = new System.Drawing.Size(548, 81);
             this.Controls.Add(this.folderBrowserButton1);
             this.Controls.Add(this.Load);
             this.Controls.Add(this._NO_TRANSLATE_Directory);
