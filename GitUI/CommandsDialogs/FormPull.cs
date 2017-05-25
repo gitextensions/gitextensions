@@ -137,7 +137,7 @@ namespace GitUI.CommandsDialogs
             if (aCommands != null)
             {
                 // Detect by presence of the shallow file, not 100% sure it's the best way, but it's created upon shallow cloning and removed upon unshallowing
-                bool isRepoShallow = File.Exists(Path.Combine(aCommands.Module.GetGitDirectory(), "shallow"));
+                bool isRepoShallow = File.Exists(aCommands.Module.ResolveGitInternalPath("shallow"));
                 if (isRepoShallow)
                     Unshallow.Visible = true;
             }

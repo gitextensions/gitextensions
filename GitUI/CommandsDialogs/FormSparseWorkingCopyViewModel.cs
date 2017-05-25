@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs
         [NotNull]
         public FileInfo GetPathToSparseCheckoutFile()
         {
-            return new FileInfo(Path.Combine(Path.Combine(_gitcommands.GitModule.GetGitDirectory(), "info"), "sparse-checkout"));
+            return new FileInfo(Path.Combine(_gitcommands.GitModule.ResolveGitInternalPath("info"), "sparse-checkout"));
         }
 
         /// <summary>
