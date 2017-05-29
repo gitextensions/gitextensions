@@ -1474,7 +1474,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitModule module = FormOpenDirectory.OpenModule(this);
+            GitModule module = FormOpenDirectory.OpenModule(this, Module);
             if (module != null)
                 SetGitModule(this, new GitModuleEventArgs(module));
         }
