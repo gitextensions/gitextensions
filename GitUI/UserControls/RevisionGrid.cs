@@ -749,7 +749,7 @@ namespace GitUI
         private bool InternalSetSelectedRevision(string revision)
         {
             int index = FindRevisionIndex(revision);
-            if (index >= 0)
+            if (index >= 0 && index < Revisions.RowCount)
             {
                 SetSelectedIndex(index);
                 return true;
