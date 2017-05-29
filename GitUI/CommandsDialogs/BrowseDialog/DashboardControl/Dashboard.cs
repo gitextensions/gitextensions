@@ -341,7 +341,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void TranslateItem_Click(object sender, EventArgs e)
         {
-            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TranslationApp.exe"));
+            Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
         }
 
         private static void GitHubItem_Click(object sender, EventArgs e)

@@ -2194,7 +2194,7 @@ namespace GitUI.CommandsDialogs
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TranslationApp.exe"));
+            Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
         }
 
         private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
