@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void BindSettingsWithControls()
         {
             AddSettingBinding(AppSettings.ShowConEmuTab, chkChowConsoleTab);
-            AddSettingBinding(AppSettings.ConEmuStyle, cboStyle);
+            AddSettingBinding(AppSettings.ConEmuStyle, _NO_TRANSLATE_cboStyle);
             AddSettingBinding(AppSettings.ConEmuTerminal, cboTerminal);
             AddSettingBinding(AppSettings.ConEmuFontSize, cboFontSize);
             AddSettingBinding(AppSettings.ShowRevisionInfoNextToRevisionGrid, chkShowRevisionInfoNextToRevisionGrid);

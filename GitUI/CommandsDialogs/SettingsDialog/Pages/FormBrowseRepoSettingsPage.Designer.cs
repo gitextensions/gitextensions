@@ -38,7 +38,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.cboTerminal = new System.Windows.Forms.ComboBox();
-            this.cboStyle = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_cboStyle = new System.Windows.Forms.ComboBox();
             this.chkChowConsoleTab = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.ConEmuGB.SuspendLayout();
@@ -117,7 +117,7 @@
             this.groupBoxConsoleSettings.Controls.Add(this.label2);
             this.groupBoxConsoleSettings.Controls.Add(this.label1);
             this.groupBoxConsoleSettings.Controls.Add(this.cboTerminal);
-            this.groupBoxConsoleSettings.Controls.Add(this.cboStyle);
+            this.groupBoxConsoleSettings.Controls.Add(this._NO_TRANSLATE_cboStyle);
             this.groupBoxConsoleSettings.Location = new System.Drawing.Point(17, 25);
             this.groupBoxConsoleSettings.Margin = new System.Windows.Forms.Padding(17, 2, 3, 2);
             this.groupBoxConsoleSettings.Name = "groupBoxConsoleSettings";
@@ -192,9 +192,9 @@
             // 
             // cboStyle
             // 
-            this.cboStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboStyle.FormattingEnabled = true;
-            this.cboStyle.Items.AddRange(new object[] {
+            this._NO_TRANSLATE_cboStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._NO_TRANSLATE_cboStyle.FormattingEnabled = true;
+            this._NO_TRANSLATE_cboStyle.Items.AddRange(new object[] {
             "Default",
             "<Default Windows scheme>",
             "<Base16>",
@@ -222,11 +222,11 @@
             "<Ubuntu>",
             "<xterm>",
             "<Zenburn>"});
-            this.cboStyle.Location = new System.Drawing.Point(118, 26);
-            this.cboStyle.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.cboStyle.Name = "cboStyle";
-            this.cboStyle.Size = new System.Drawing.Size(262, 21);
-            this.cboStyle.TabIndex = 3;
+            this._NO_TRANSLATE_cboStyle.Location = new System.Drawing.Point(118, 26);
+            this._NO_TRANSLATE_cboStyle.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this._NO_TRANSLATE_cboStyle.Name = "cboStyle";
+            this._NO_TRANSLATE_cboStyle.Size = new System.Drawing.Size(262, 21);
+            this._NO_TRANSLATE_cboStyle.TabIndex = 3;
             // 
             // chkChowConsoleTab
             // 
@@ -270,7 +270,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cboTerminal;
-        private System.Windows.Forms.ComboBox cboStyle;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cboStyle;
         private System.Windows.Forms.CheckBox chkChowConsoleTab;
         private System.Windows.Forms.CheckBox chkShowRevisionInfoNextToRevisionGrid;
     }
