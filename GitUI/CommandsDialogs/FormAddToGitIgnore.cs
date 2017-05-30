@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    return Path.Combine(Module.GetGitDirectory(), "info", "exclude");
+                    return Path.Combine(Module.ResolveGitInternalPath("info"), "exclude");
                 }
             }
         }
