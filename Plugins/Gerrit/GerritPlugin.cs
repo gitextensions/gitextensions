@@ -84,20 +84,20 @@ namespace Gerrit
 
             _installCommitMsgMenuItem.Visible =
                 showGerritItems &&
-                !HaveValidCommitMsgHook(e.GitModule.GetGitDirectory());
+                !HaveValidCommitMsgHook(e.GitModule);
         }
 
-        private bool HaveValidCommitMsgHook(string gitDirectory)
+        private bool HaveValidCommitMsgHook(IGitModule gitModule)
         {
-            return HaveValidCommitMsgHook(gitDirectory, false);
+            return HaveValidCommitMsgHook(gitModule, false);
         }
 
-        private bool HaveValidCommitMsgHook([NotNull] string gitDirectory, bool force)
+        private bool HaveValidCommitMsgHook([NotNull] IGitModule gitModule, bool force)
         {
-            if (gitDirectory == null)
+            if (gitModule == null)
                 throw new ArgumentNullException("gitDirectory");
 
-            string path = Path.Combine(gitDirectory, "hooks", "commit-msg");
+            string path = Path.Combine(gitModule.ResolveGitInternalPath("hooks"), "commit-msg");
 
             if (!File.Exists(path))
                 return false;
@@ -280,8 +280,7 @@ namespace Gerrit
                 return;
 
             string path = Path.Combine(
-                _gitUiCommands.GitModule.GetGitDirectory(),
-                "hooks",
+                _gitUiCommands.GitModule.ResolveGitInternalPath("hooks"),
                 "commit-msg"
             );
 
@@ -312,7 +311,7 @@ namespace Gerrit
 
                 // Update the cache.
 
-                HaveValidCommitMsgHook(_gitUiCommands.GitModule.GetGitDirectory(), true);
+                HaveValidCommitMsgHook(_gitUiCommands.GitModule, true);
             }
         }
 

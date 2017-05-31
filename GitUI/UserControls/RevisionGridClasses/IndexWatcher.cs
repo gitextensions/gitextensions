@@ -59,16 +59,16 @@ namespace GitUI.UserControls.RevisionGridClasses
             {
                 try
                 {
-                    enabled = GitCommands.AppSettings.UseFastChecks;
+                    enabled = AppSettings.UseFastChecks;
 
-                    Path = Module.GetGitDirectory();
+                    _gitDirPath = Module.GetGitDirectory();
 
-                    GitIndexWatcher.Path = Path;
+                    GitIndexWatcher.Path = _gitDirPath;
                     GitIndexWatcher.Filter = "index";
                     GitIndexWatcher.IncludeSubdirectories = false;
                     GitIndexWatcher.EnableRaisingEvents = enabled;
 
-                    RefsWatcher.Path = System.IO.Path.Combine(Path, "refs");
+                    RefsWatcher.Path = Path.Combine(Module.GitCommonDirectory, "refs");
                     RefsWatcher.IncludeSubdirectories = true;
                     RefsWatcher.EnableRaisingEvents = enabled;
                 }
@@ -87,7 +87,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 if (!enabled)
                     return true;
 
-                if (Path != Module.GetGitDirectory())
+                if (_gitDirPath != Module.GetGitDirectory())
                     return true;
 
                 return indexChanged;
@@ -103,7 +103,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         }
 
         private bool enabled;
-        private string Path;
+        private string _gitDirPath;
         private FileSystemWatcher GitIndexWatcher { get; set; }
         private FileSystemWatcher RefsWatcher { get; set; }
 
@@ -126,8 +126,8 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private void RefreshWatcher()
         {
-            if (Path != Module.GetGitDirectory() ||
-                enabled != GitCommands.AppSettings.UseFastChecks)
+            if (_gitDirPath != Module.GetGitDirectory() ||
+                enabled != AppSettings.UseFastChecks)
                 SetFileSystemWatcher();
         }
 

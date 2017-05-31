@@ -403,6 +403,47 @@ namespace GitCommands
                    Directory.Exists(dirPath + "refs");
         }
 
+        /// <summary>
+        /// Asks git to resolve the given relativePath
+        /// git special folders are located in different directories depending on the kind of repo: submodule, worktree, main
+        /// See https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-pathltpathgt
+        /// </summary>
+        /// <param name="relativePath">A path relative to the .git directory</param>
+        /// <returns></returns>
+        public string ResolveGitInternalPath(string relativePath)
+        {
+            string gitPath = RunGitCmd("rev-parse --git-path " + relativePath.Quote());
+            string systemPath = PathUtil.ToNativePath(gitPath.Trim());
+            if (systemPath.StartsWith(".git\\"))
+            {
+                systemPath = Path.Combine(GetGitDirectory(), systemPath.Substring(".git\\".Length));
+            }
+            return systemPath;
+        }
+
+        private string _GitCommonDirectory;
+        /// <summary>
+        /// Returns git common directory
+        /// https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-common-dir
+        /// </summary>
+        public string GitCommonDirectory
+        {
+            get
+            {
+                if (_GitCommonDirectory == null)
+                {
+                    _GitCommonDirectory = PathUtil.ToNativePath(RunGitCmd("rev-parse --git-common-dir").Trim());
+                    if (_GitCommonDirectory == ".git")
+                    {
+                        _GitCommonDirectory = GetGitDirectory();
+                    }
+
+                }
+
+                return _GitCommonDirectory;
+            }
+        }
+
         /// <summary>Gets the ".git" directory path.</summary>
         public string GetGitDirectory()
         {

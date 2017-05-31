@@ -65,7 +65,7 @@ namespace FindLargeFiles
                         curGitObject.Commit.Add(commit);
                     }
                 }
-                string objectsPackDirectory = _gitCommands.GetGitDirectory() + "objects/pack/";
+                string objectsPackDirectory = _gitCommands.ResolveGitInternalPath("objects/pack/");
                 if (Directory.Exists(objectsPackDirectory))
                 {
                     var packFiles = Directory.GetFiles(objectsPackDirectory, "pack-*.idx");

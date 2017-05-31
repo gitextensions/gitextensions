@@ -1268,6 +1268,12 @@ namespace GitCommands
             set { SetInt("RecentReposComboMinWidth", value); }
         }
 
+        public static string SerializedHotkeys
+        {
+            get { return GetString("SerializedHotkeys", null); }
+            set { SetString("SerializedHotkeys", value); }
+        }
+
         public static bool SortMostRecentRepos
         {
             get { return GetBool("SortMostRecentRepos", false); }
