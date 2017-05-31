@@ -93,11 +93,11 @@ if __name__ == '__main__':
     makeInstallers = open(filename, "r").readlines()
     for i in range(len(makeInstallers)):
         line = makeInstallers[i]
-        if line.find("set numericVersion=") != -1:
+        if line.find("set numericVersion=") == 0:
             data = line.split('=')
             data[1] = '.'.join(verSplitted) + '\n'
             makeInstallers[i] = '='.join(data)
-        if line.find("set version=") != -1:
+        if line.find("set version=") == 0:
             data = line.split('=')
             data[1] = args.text + '\n'
             makeInstallers[i] = '='.join(data)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     makeInstallers = open(filename, "r").readlines()
     for i in range(len(makeInstallers)):
         line = makeInstallers[i]
-        if line.find("set version=") != -1:
+        if line.find("set version=") == 0:
             data = line.split('=')
             data[1] = args.text + '\n'
             makeInstallers[i] = '='.join(data)
