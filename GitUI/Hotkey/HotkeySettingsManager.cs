@@ -169,15 +169,8 @@ namespace GitUI.Hotkey
 
             MigrateSettings();
 
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
-                    using (StringReader reader = new StringReader(AppSettings.SerializedHotkeys))
-                    {
-                        settings = Serializer.Deserialize(reader) as HotkeySettings[];
-                    }
-            }
-            catch { }
+            if (!string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
+                settings = LoadSerializedSettings(AppSettings.SerializedHotkeys);
 
             return settings;
         }
