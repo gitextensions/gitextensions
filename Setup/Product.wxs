@@ -198,7 +198,7 @@
                 </RegistryKey>
             </Component>
             <Component Id="VS2015_VSIX" Guid="*">
-                <VSExtension:VsixPackage File="GitExtensionsVSIX.vsix" PackageId="GitExtensions..3166f76a-2b07-410a-a72a-509d6a2d146c" Target="community" TargetVersion="14.0" Vital="yes" Permanent="no" />
+                <VSExtension:VsixPackage File="GitExtensionsVSIX.vsix" PackageId="GitExtensions..3166f76a-2b07-410a-a72a-509d6a2d146c" Target="community" TargetVersion="14.0" Vital="no" Permanent="no" />
                 <File Source="..\GitExtensionsVSIX\bin\Release\GitExtensionsVSIX.vsix" />
             </Component>
         </DirectoryRef>
