@@ -19,6 +19,11 @@ Translation: [![Transifex](https://ds0k0en9abmn1.cloudfront.net/static/charts/im
 
 Special thanks to JetBRAINS for [Resharper](https://www.jetbrains.com/resharper/) license.
 
+## OS Support
+- Windows: 7SP1 and above
+- Linux:? and above  Mono?
+- Mac?
+
 ## Links
 
 * Download page: [https://github.com/gitextensions/gitextensions/releases/latest](https://github.com/gitextensions/gitextensions/releases/latest)
