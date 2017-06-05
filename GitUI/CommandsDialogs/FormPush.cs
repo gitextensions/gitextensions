@@ -273,7 +273,7 @@ namespace GitUI.CommandsDialogs
                     track = selectedLocalBranch != null && string.IsNullOrEmpty(selectedLocalBranch.TrackingRemote) &&
                             !_gitRemoteController.Remotes.Any(x => _NO_TRANSLATE_Branch.Text.StartsWith(x.Name, StringComparison.OrdinalIgnoreCase));
                     var autoSetupMerge = Module.EffectiveConfigFile.GetValue("branch.autoSetupMerge");
-                    if (autoSetupMerge.IsNotNullOrWhitespace() && autoSetupMerge.ToLowerInvariant() == "false")
+                    if (!autoSetupMerge.IsNullOrWhiteSpace() && autoSetupMerge.ToLowerInvariant() == "false")
                     {
                         track = false;
                     }
@@ -741,7 +741,7 @@ namespace GitUI.CommandsDialogs
 
         private void EnableLoadSshButton()
         {
-            LoadSSHKey.Visible = _selectedRemote.PuttySshKey.IsNotNullOrWhitespace();
+            LoadSSHKey.Visible = !_selectedRemote.PuttySshKey.IsNullOrWhiteSpace();
         }
 
         private void LoadSshKeyClick(object sender, EventArgs e)

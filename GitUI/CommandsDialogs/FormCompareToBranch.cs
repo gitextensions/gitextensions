@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs
 {
@@ -34,7 +35,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnCompare_Click(object sender, EventArgs e)
         {
-            if (branchSelector.SelectedBranchName.IsNotNullOrWhitespace())
+            if (!branchSelector.SelectedBranchName.IsNullOrWhiteSpace())
             {
                 BranchName = branchSelector.SelectedBranchName;
                 DialogResult = DialogResult.OK;

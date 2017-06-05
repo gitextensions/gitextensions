@@ -75,6 +75,7 @@
     <Compile Include="GitCommands\Helpers\PathUtilTest.cs" />
     <Compile Include="GitCommands\Patch\PatchManagerTest.cs" />
     <Compile Include="GitCommands\Patch\PatchTest.cs" />
+    <Compile Include="GitCommands\StringExtensionsTests.cs" />
     <Compile Include="GitUI\AuthorEmailBasedRevisionHighlightingFixture.cs" />
     <Compile Include="GitUI\Editor\Diff\DiffLineNumAnalyzerFixture.cs" />
     <Compile Include="GitUI\Editor\Diff\LinePrefixHelperFixture.cs" />

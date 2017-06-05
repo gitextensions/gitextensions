@@ -3,12 +3,10 @@ using System.Linq;
 using GitCommands;
 using GitCommands.Git;
 using NUnit.Framework;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
-namespace GitExtensionsTest.Git
+namespace GitExtensionsTest.GitCommands.Git
 {
-    [TestClass]
+    [TestFixture]
     public class GitCheckoutBranchCmdTest
     {
         private GitCheckoutBranchCmd GetInstance(bool remote)
@@ -16,87 +14,115 @@ namespace GitExtensionsTest.Git
             return new GitCheckoutBranchCmd("branchName", remote);
         }
 
-        [TestMethod]
+        [Test]
         public void TestConstructor()
         {
-            GitCheckoutBranchCmd cmd = GetInstance(true);
+            var cmd = GetInstance(true);
             Assert.IsNotNull(cmd);
             Assert.AreEqual(cmd.BranchName, "branchName");
             Assert.IsTrue(cmd.Remote);
         }
 
-        [TestMethod]
+        [Test]
         public void TestConstructorRemoteIsFalse()
         {
-            GitCheckoutBranchCmd cmd = GetInstance(false);
+            var cmd = GetInstance(false);
             Assert.IsNotNull(cmd);
             Assert.AreEqual(cmd.BranchName, "branchName");
             Assert.IsFalse(cmd.Remote);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGitCommandName()
         {
-            GitCheckoutBranchCmd cmd = GetInstance(true);
+            var cmd = GetInstance(true);
             Assert.AreEqual(cmd.GitComandName(), "checkout");
         }
 
-        [TestMethod]
+        [Test]
         public void TestAccessesRemoteIsFalse()
         {
-            GitCheckoutBranchCmd cmd = GetInstance(true);
+            var cmd = GetInstance(true);
             Assert.IsFalse(cmd.AccessesRemote());
         }
 
-        [TestMethod]
-        public void TestCollectArgumentsMergeReset()
+        [TestCase((string)null)]
+        [TestCase("")]
+        public void CollectArguments_should_set_branchName_if_null(string branchName)
         {
-            GitCheckoutBranchCmd cmd = GetInstance(true);
+            var cmd = new GitCheckoutBranchCmd(branchName, true);
+            cmd.LocalChanges = LocalChangesAction.Merge;
+            cmd.Remote = false;
 
-            IEnumerable<string> whenMergeChangesOnly = new List<string> { "--merge", "\"branchName\"" };
-            IEnumerable<string> whenMergeChangesWithRemoteNewBranchCreate = new List<string> { "--merge", "-b \"newBranchName\"", "\"branchName\"" };
-            IEnumerable<string> whenMergeChangesWithRemoteNewBranchReset = new List<string> { "--merge", "-B \"newBranchName\"", "\"branchName\"" };
+            Assert.IsTrue(cmd.CollectArguments().SequenceEqual(new List<string> { "--merge", "" }));
+        }
 
-            IEnumerable<string> whenResetChangesOnly = new List<string> { "--force", "\"branchName\"" };
-            IEnumerable<string> whenResetChangesWithRemoteNewBranchCreate = new List<string> { "--force", "-b \"newBranchName\"", "\"branchName\"" };
-            IEnumerable<string> whenResetChangesWithRemoteNewBranchReset = new List<string> { "--force", "-B \"newBranchName\"", "\"branchName\"" };
+        [Test]
+        public void CollectArguments_merge_changes_only()
+        {
+            var cmd = GetInstance(true);
+            cmd.LocalChanges = LocalChangesAction.Merge;
+            cmd.Remote = false;
 
-            //Merge
-            {
-                cmd.LocalChanges = LocalChangesAction.Merge;
-                cmd.Remote = false;
+            Assert.IsTrue(cmd.CollectArguments().SequenceEqual(new List<string> { "--merge", "\"branchName\"" }));
+        }
 
-                Assert.IsTrue(cmd.CollectArguments().SequenceEqual(whenMergeChangesOnly));
+        [Test]
+        public void CollectArguments_merge_with_remote_NewBranch_Create()
+        {
+            var cmd = GetInstance(true);
+            cmd.LocalChanges = LocalChangesAction.Merge;
+            cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Create;
+            cmd.Remote = true;
+            cmd.NewBranchName = "newBranchName";
 
-                cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Create;
-                cmd.Remote = true;
-                cmd.NewBranchName = "newBranchName";
+            Assert.IsTrue(cmd.CollectArguments().SequenceEqual(new List<string> { "--merge", "-b \"newBranchName\"", "\"branchName\"" }));
+        }
 
-                Assert.IsTrue(cmd.CollectArguments().SequenceEqual(whenMergeChangesWithRemoteNewBranchCreate));
+        [Test]
+        public void CollectArguments_merge_with_remote_NewBranch_Reset()
+        {
+            var cmd = GetInstance(true);
+            cmd.LocalChanges = LocalChangesAction.Merge;
+            cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Reset;
+            cmd.Remote = true;
+            cmd.NewBranchName = "newBranchName";
 
-                cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Reset;
+            Assert.IsTrue(cmd.CollectArguments().SequenceEqual(new List<string> { "--merge", "-B \"newBranchName\"", "\"branchName\"" }));
+        }
 
-                Assert.IsTrue(cmd.CollectArguments().SequenceEqual(whenMergeChangesWithRemoteNewBranchReset));
-            }
+        [Test]
+        public void CollectArguments_reset_changes_only()
+        {
+            var cmd = GetInstance(true);
+            cmd.LocalChanges = LocalChangesAction.Reset;
+            cmd.Remote = false;
 
-            //Reset
-            {
-                cmd.LocalChanges = LocalChangesAction.Reset;
-                cmd.Remote = false;
+            Assert.IsTrue(cmd.CollectArguments().SequenceEqual(new List<string> { "--force", "\"branchName\"" }));
+        }
 
-                Assert.IsTrue(cmd.CollectArguments().SequenceEqual(whenResetChangesOnly));
+        [Test]
+        public void CollectArguments_reset_with_remote_NewBranch_Create()
+        {
+            var cmd = GetInstance(true);
+            cmd.LocalChanges = LocalChangesAction.Reset;
+            cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Create;
+            cmd.Remote = true;
+            cmd.NewBranchName = "newBranchName";
 
-                cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Create;
-                cmd.Remote = true;
-                cmd.NewBranchName = "newBranchName";
+            Assert.IsTrue(cmd.CollectArguments().SequenceEqual(new List<string> { "--force", "-b \"newBranchName\"", "\"branchName\"" }));
+        }
 
-                Assert.IsTrue(cmd.CollectArguments().SequenceEqual(whenResetChangesWithRemoteNewBranchCreate));
+        [Test]
+        public void CollectArguments_reset_with_remote_NewBranch_Reset()
+        {
+            var cmd = GetInstance(true);
+            cmd.LocalChanges = LocalChangesAction.Reset;
+            cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Reset;
+            cmd.Remote = true;
+            cmd.NewBranchName = "newBranchName";
 
-                cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Reset;
-
-                Assert.IsTrue(cmd.CollectArguments().SequenceEqual(whenResetChangesWithRemoteNewBranchReset));
-            }
-
+            Assert.IsTrue(cmd.CollectArguments().SequenceEqual(new List<string> { "--force", "-B \"newBranchName\"", "\"branchName\"" }));
         }
     }
 }

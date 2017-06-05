@@ -1,4 +1,5 @@
 ﻿using System;
+using GitCommands;
 
 namespace GitUI.UserManual
 {

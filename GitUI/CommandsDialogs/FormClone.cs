@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs
                     try
                     {
                         // If the from directory is filled with the pushUrl from current working directory, set the destination directory to the parent
-                        if (pushUrl.IsNotNullOrWhitespace() && _NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+                        if (!pushUrl.IsNullOrWhiteSpace() && _NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && !Module.WorkingDir.IsNullOrWhiteSpace())
                             _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
 
                     }
@@ -127,7 +127,7 @@ namespace GitUI.CommandsDialogs
             }
 
             //if there is no destination directory, then use current working directory
-            if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+            if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && !Module.WorkingDir.IsNullOrWhiteSpace())
                 _NO_TRANSLATE_To.Text = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
 
             FromTextUpdate(null, null);

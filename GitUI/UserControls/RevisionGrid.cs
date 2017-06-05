@@ -2268,7 +2268,7 @@ namespace GitUI
             bisectSkipRevisionToolStripMenuItem.Visible = inTheMiddleOfBisect;
             stopBisectToolStripMenuItem.Visible = inTheMiddleOfBisect;
             bisectSeparator.Visible = inTheMiddleOfBisect;
-            compareWithCurrentBranchToolStripMenuItem.Visible = Module.GetSelectedBranch().IsNotNullOrWhitespace();
+            compareWithCurrentBranchToolStripMenuItem.Visible = !Module.GetSelectedBranch().IsNullOrWhiteSpace();
 
 
             var deleteTagDropDown = new ContextMenuStrip();

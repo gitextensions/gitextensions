@@ -355,7 +355,7 @@ namespace GitUI
         {
             Func<bool> action = () =>
             {
-                FormProcess.ShowDialog(owner, Module, "stash branch " + branchName.Quote().Combine(" ", stash.QuoteNE()));
+                FormProcess.ShowDialog(owner, Module, "stash branch " + branchName.Quote().Combine(" ", stash.Quote(false)));
                 return true;
             };
 

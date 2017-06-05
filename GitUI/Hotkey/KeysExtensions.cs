@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI.Hotkey
 {

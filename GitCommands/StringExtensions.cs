@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 
-namespace System
+namespace GitCommands
 {
     public static class StringExtensions
     {
@@ -23,7 +24,7 @@ namespace System
                 return null;
         }
 
-        public static String TakeUntilStr(this string str, String untilStr)
+        public static string TakeUntilStr(this string str, string untilStr)
         {
             if (str == null)
                 return null;
@@ -59,7 +60,6 @@ namespace System
             return string.IsNullOrEmpty(s);
         }
 
-
         public static string Combine(this string left, string sep, string right)
         {
             if (left.IsNullOrEmpty())
@@ -71,42 +71,45 @@ namespace System
         }
 
         /// <summary>
-        /// Quotes string if it is not null
+        /// Surrounds the supplied string with double quotes (").
         /// </summary>
-        public static string Quote(this string s)
+        /// <returns>
+        /// <para><see cref="string.Empty"/>, if the supplied string is <see langword="null"/>, or</para>
+        /// <para><see cref="string.Empty"/>, if the supplied string is <see cref="string.Empty"/> and <paramref name="quoteEmptyString"/> is <see langword="false"/>, or</para>
+        /// <para>the supplied string surrounded with double quotes.</para>
+        /// </returns>
+        public static string Quote(this string s, bool quoteEmptyString = true)
         {
-            return s.Quote("\"");
+            return s.Quote("\"", quoteEmptyString);
         }
 
         /// <summary>
-        /// Quotes this string with the specified <paramref name="quotationMark"/>
+        /// Surrounds the supplied string with specified <paramref name="quotationMark"/>.
         /// </summary>
-        public static string Quote(this string s, string quotationMark)
+        /// <returns>
+        /// <para><see cref="string.Empty"/>, if the supplied string is <see langword="null"/>, or</para>
+        /// <para><see cref="string.Empty"/>, if the supplied string is <see cref="string.Empty"/> and <paramref name="quoteEmptyString"/> is <see langword="false"/>, or</para>
+        /// <para>the supplied string surrounded with provided quotes.</para>
+        /// </returns>
+        public static string Quote(this string s, string quotationMark, bool quoteEmptyString = true)
         {
-            if (s == null)
+            if (s == null || (!quoteEmptyString && string.IsNullOrEmpty(s)))
+            {
                 return string.Empty;
-
+            }
             return quotationMark + s + quotationMark;
         }
 
         /// <summary>
-        /// Quotes this string if it is not null and not empty
+        /// Surrounds the supplied string with parentheses.
         /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static string QuoteNE(this string s)
+        /// <returns>
+        /// <para><see cref="string.Empty"/>, if the supplied string is <see langword="null"/> or <see cref="string.Empty"/>, or</para>
+        /// <para>the supplied string surrounded with parentheses.</para>
+        /// </returns>
+        public static string AddParentheses(this string s)
         {
-            return s.IsNullOrEmpty() ? s : s.Quote("\"");
-        }
-
-        /// <summary>
-        /// Adds parentheses if string is not null and not empty
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static string AddParenthesesNE(this string s)
-        {
-            return s.IsNullOrEmpty() ? s : "(" + s + ")";
+            return s.IsNullOrEmpty() ? (s ?? string.Empty) : "(" + s + ")";
         }
 
         /// <summary>
@@ -123,12 +126,6 @@ namespace System
         public static bool IsNullOrWhiteSpace([CanBeNull] this string value)
         {
             return string.IsNullOrWhiteSpace(value);
-        }
-
-        /// <summary>Indicates whether the specified string is neither null, nor empty, nor has only whitespace.</summary>
-        public static bool IsNotNullOrWhitespace([CanBeNull] this string value)
-        {
-            return !value.IsNullOrWhiteSpace();
         }
 
         /// <summary>
@@ -160,47 +157,10 @@ namespace System
             return sb.ToString();
         }
 
-        /// <summary>Split a string, removing empty entries, then trim whitespace.</summary>
-        public static IEnumerable<string> SplitThenTrim(this string value, params string[] separator)
-        {
-            return value
-                .Split(separator, StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.Trim());
-        }
-
-        /// <summary>Split a string, removing empty entries, then trim whitespace.</summary>
-        public static IEnumerable<string> SplitThenTrim(this string value, params char[] separator)
-        {
-            return value
-                .Split(separator, StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.Trim());
-        }
-
         /// <summary>Split a string, delimited by line-breaks, excluding empty entries.</summary>
         public static string[] SplitLines(this string value)
         {
             return value.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        /// <summary>Split a string, delimited by line-breaks, excluding empty entries; then trim whitespace.</summary>
-        public static IEnumerable<string> SplitLinesThenTrim(this string value)
-        {
-            return value.SplitThenTrim(NewLineSeparator);
-        }
-
-        /// <summary>Gets the text after the last separator.
-        /// If NO separator OR ends with separator, returns the original value.</summary>
-        public static string SubstringAfterLastSafe(this string value, string separator)
-        {// ex: "origin/master" -> "master"
-            if (value.EndsWith(separator) || !value.Contains(separator))
-            {// "origin/master/" OR "master" -> return original
-                return value;
-            }
-            return value.Substring(1 + value.LastIndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
-        }
-        public static string SubstringAfterFirst(this string value, string separator)
-        {
-            return value.Substring(1 + value.IndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
