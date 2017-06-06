@@ -135,7 +135,7 @@ clone [path]
 commit [--quiet]
 difftool filename
 filehistory filename
-fileeditor filename
+fileeditor [--syntax syntax_name] filename
 formatpatch
 gitbash
 gitignore
