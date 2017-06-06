@@ -114,7 +114,8 @@ namespace GitUI.CommandsDialogs
                 Mergetool.Enabled = false;
                 Skip.Enabled = false;
                 Abort.Enabled = false;
-                chkStash.Enabled = Module.IsDirtyDir(); ;
+                chkStash.Enabled = Module.IsDirtyDir();
+                chkStash.Checked = chkStash.Enabled;
             }
 
             SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
