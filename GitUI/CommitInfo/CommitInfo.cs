@@ -419,7 +419,11 @@ namespace GitUI.CommitInfo
             _annotatedTagsMessages = null;
             _tags = null;
             updateText();
-            gravatar1.LoadImageForEmail("");
+            gravatar1.Visible = AppSettings.ShowAuthorGravatar;
+            if (AppSettings.ShowAuthorGravatar)
+            {
+                gravatar1.LoadImageForEmail("");
+            }
         }
 
         private void LoadAuthorImage(string author)
@@ -429,7 +433,10 @@ namespace GitUI.CommitInfo
             if (matches.Count == 0)
                 return;
 
-            gravatar1.LoadImageForEmail(matches[0].Groups[1].Value);
+            if (AppSettings.ShowAuthorGravatar)
+            {
+                gravatar1.LoadImageForEmail(matches[0].Groups[1].Value);
+            }
         }
 
         private string GetBranchesWhichContainsThisCommit(IEnumerable<string> branches, bool showBranchesAsLinks)
