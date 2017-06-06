@@ -166,6 +166,11 @@ namespace GitUI.CommandsDialogs
         private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
 #pragma warning restore 0414
 
+        private string _resetFileToSelectedToolStripMenuItemOriginalText;
+        private string _resetFileToParentToolStripMenuItemOriginalText;
+        private string _resetFileToFirstToolStripMenuItemOriginalText;
+        private string _resetFileToSecondToolStripMenuItemOriginalText;
+
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -204,6 +209,7 @@ namespace GitUI.CommandsDialogs
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
 
+            SaveItemsOriginalText();
             Translate();
             LayoutRevisionInfo();
 
@@ -310,6 +316,7 @@ namespace GitUI.CommandsDialogs
                 RevisionGrid.SetInitialRevision(GitRevision.CreateForShortSha1(Module, selectCommit));
             }
         }
+
 
         private new void Translate()
         {
@@ -3146,6 +3153,14 @@ namespace GitUI.CommandsDialogs
             Settings.SetNextPullActionAsDefault = false;
         }
 
+        private void SaveItemsOriginalText()
+        {
+            _resetFileToSelectedToolStripMenuItemOriginalText = resetFileToSelectedToolStripMenuItem.Text;
+            _resetFileToParentToolStripMenuItemOriginalText = resetFileToParentToolStripMenuItem.Text;
+            _resetFileToFirstToolStripMenuItemOriginalText = resetFileToFirstToolStripMenuItem.Text;
+            _resetFileToSecondToolStripMenuItemOriginalText = resetFileToSecondToolStripMenuItem.Text;
+        }
+
         private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
@@ -3154,12 +3169,14 @@ namespace GitUI.CommandsDialogs
             if (selectedRevsCount == 1)
             {
                 resetFileToSelectedToolStripMenuItem.Visible = true;
+                resetFileToSelectedToolStripMenuItem.Text = _resetFileToSelectedToolStripMenuItemOriginalText;
                 TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
                 resetFileToSelectedToolStripMenuItem.Text += " (" + revisions[0].Subject.ShortenTo(50) + ")";
 
                 if (revisions[0].HasParent())
                 {
                     resetFileToParentToolStripMenuItem.Visible = true;
+                    resetFileToParentToolStripMenuItem.Text = _resetFileToParentToolStripMenuItemOriginalText;
                     TranslateItem(resetFileToParentToolStripMenuItem.Name, resetFileToParentToolStripMenuItem);
                     GitRevision parentRev = RevisionGrid.GetRevision(revisions[0].ParentGuids[0]);
                     if (parentRev != null)
@@ -3181,10 +3198,12 @@ namespace GitUI.CommandsDialogs
             if (selectedRevsCount == 2)
             {
                 resetFileToFirstToolStripMenuItem.Visible = true;
+                resetFileToFirstToolStripMenuItem.Text = _resetFileToFirstToolStripMenuItemOriginalText;
                 TranslateItem(resetFileToFirstToolStripMenuItem.Name, resetFileToFirstToolStripMenuItem);
                 resetFileToFirstToolStripMenuItem.Text += " (" + revisions[1].Subject.ShortenTo(50) + ")";
 
                 resetFileToSecondToolStripMenuItem.Visible = true;
+                resetFileToSecondToolStripMenuItem.Text = _resetFileToSecondToolStripMenuItemOriginalText;
                 TranslateItem(resetFileToSecondToolStripMenuItem.Name, resetFileToSecondToolStripMenuItem);
                 resetFileToSecondToolStripMenuItem.Text += " (" + revisions[0].Subject.ShortenTo(50) + ")";
             }
