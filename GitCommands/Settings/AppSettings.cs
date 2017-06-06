@@ -502,7 +502,7 @@ namespace GitCommands
 
         public static bool CloseCommitDialogAfterCommit
         {
-            get { return GetBool("closecommitdialogaftercommit", true); }
+            get { return GetBool("closecommitdialogaftercommit", false); }
             set { SetBool("closecommitdialogaftercommit", value); }
         }
 
@@ -628,7 +628,7 @@ namespace GitCommands
 
         public static bool AutoStash
         {
-            get { return GetBool("autostash", false); }
+            get { return GetBool("autostash", true); }
             set { SetBool("autostash", value); }
         }
 
@@ -658,7 +658,7 @@ namespace GitCommands
 
         public static bool AlwaysShowAdvOpt
         {
-            get { return GetBool("AlwaysShowAdvOpt", false); }
+            get { return GetBool("AlwaysShowAdvOpt", true); }
             set { SetBool("AlwaysShowAdvOpt", value); }
         }
 
@@ -694,7 +694,7 @@ namespace GitCommands
 
         public static bool DontConfirmPushNewBranch
         {
-            get { return GetBool("DontConfirmPushNewBranch", false); }
+            get { return GetBool("DontConfirmPushNewBranch", true); }
             set { SetBool("DontConfirmPushNewBranch", value); }
         }
 
@@ -850,7 +850,7 @@ namespace GitCommands
 
         public static bool CloseProcessDialog
         {
-            get { return GetBool("closeprocessdialog", false); }
+            get { return GetBool("closeprocessdialog", true); }
             set { SetBool("closeprocessdialog", value); }
         }
 
