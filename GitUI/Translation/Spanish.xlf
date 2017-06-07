@@ -8498,8 +8498,8 @@ la configuración global.</target>
 
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show repository status in browse dialog (number of changes in toolbar, restart required)</source>
-        <target>Mostrar el estado del repositorio en la ventana de búsqueda (número de cambios en la barra de herramientas, requiere reiniciar)</target>
+        <source>Show number of changed files on commit button (restart required)</source>
+        <target>Mostrar el número de archivos modificados en el botón de commit (requiere reiniciar)</target>
 
       </trans-unit>
       <trans-unit id="chkShowStashCountInBrowseWindow.Text">

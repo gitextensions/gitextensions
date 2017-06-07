@@ -8409,7 +8409,7 @@ Git の 正しいパスを入力してください。</target>
 
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show repository status in browse dialog (number of changes in toolbar, restart required)</source>
+        <source>Show number of changed files on commit button (restart required)</source>
         <target>リポジトリの状態 (変更の数) を表示する (再起動が必要)</target>
 
       </trans-unit>
