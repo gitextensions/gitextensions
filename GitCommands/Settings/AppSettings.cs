@@ -30,6 +30,7 @@ namespace GitCommands
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
         public static string ProductVersion { get { return Application.ProductVersion; } }
         public static readonly string SettingsFileName = "GitExtensions.settings";
+        public const string DefaultTheme = "default";
 
         public static readonly Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
@@ -474,6 +475,12 @@ namespace GitCommands
         {
             get { return GetString("iconcolor", "default"); }
             set { SetString("iconcolor", value); }
+        }
+
+        public static string IconTheme
+        {
+            get { return GetString("icontheme", DefaultTheme); }
+            set { SetString("icontheme", value); }
         }
 
         public static string IconStyle
