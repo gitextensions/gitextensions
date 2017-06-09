@@ -1,4 +1,16 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="cbGitHubPullRequest.Text">
+        <source>display github pull requests builds. GithubToken:</source>
+        
+      </trans-unit>
+      <trans-unit id="cbLoadTestResults.Text">
+        <source>display tests results in build status summary for each build result (network intensive!)</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="es">
     <body>
       <trans-unit id="Description.Text">
@@ -937,6 +949,10 @@ Para habilitar el soporte de Gerrit en un repositorio, se debe crear un archivo.
         <target>GitHub</target>
         
       </trans-unit>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="es">
@@ -1090,14 +1106,14 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="es">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        <target>Nombre del proyecto</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
+      <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
         <target>URL del servidor Jenkins</target>
+        
+      </trans-unit>
+      <trans-unit id="lblProjectName.Text">
+        <source>Project name</source>
+        <target>Nombre del proyecto</target>
         
       </trans-unit>
     </body>
@@ -1151,6 +1167,24 @@ Do you want to reset the configured path?</source>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
         <target>Cambiador de proxy</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
+        
+      </trans-unit>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
+        <target>Contraseña</target>
+        
+      </trans-unit>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>Nombre de usuario:</target>
         
       </trans-unit>
     </body>
@@ -1273,7 +1307,26 @@ nombres de ramas, ó nombres de tags)</target>
   <file datatype="plaintext" original="StashPlugin" source-language="en" target-language="es">
     <body>
       <trans-unit id="Description.Text">
-        <source>Create Stash Pull Request</source>
+        <source>Create Bitbucket Pull Request</source>
+        
+      </trans-unit>
+      <trans-unit id="StashBaseUrl.Caption">
+        <source>Specify the base URL to Bitbucket</source>
+        
+      </trans-unit>
+      <trans-unit id="StashDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>Des habilitar verificación SSL</target>
+        
+      </trans-unit>
+      <trans-unit id="StashPassword.Caption">
+        <source>Bitbucket Password</source>
+        <target>Contraseña de Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="StashUsername.Caption">
+        <source>Bitbucket Username</source>
+        <target>Nombre de usuario de Bitbucket</target>
         
       </trans-unit>
     </body>
@@ -1302,10 +1355,11 @@ nombres de ramas, ó nombres de tags)</target>
       </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
+        <target>Exito</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInStash.Text">
-        <source>Your repository is not hosted in Stash.</source>
+        <source>Your repository is not hosted in Bitbucket.</source>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
@@ -1452,8 +1506,32 @@ nombres de ramas, ó nombres de tags)</target>
         <source>Log as guest to display the build report</source>
         
       </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Build url not valid</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy in the clipboard the url of the build before retrying.
+(Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectCaption.Text">
+        <source>Error when loading the projects and build list</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectMessage.Text">
+        <source>Failed to load the projects and build list.
+Please verify the server url.</source>
+        
+      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        
+      </trans-unit>
+      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
+        <source>Extract the data from the build url copied in the clipboard</source>
         
       </trans-unit>
     </body>

@@ -1,4 +1,18 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49RC2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="cbGitHubPullRequest.Text">
+        <source>display github pull requests builds. GithubToken:</source>
+        <target>Afficher les builds des requêtes de pull de github. GithubToken :</target>
+        
+      </trans-unit>
+      <trans-unit id="cbLoadTestResults.Text">
+        <source>display tests results in build status summary for each build result (network intensive!)</source>
+        <target>Afficher le résultat des tests dans le résumé du status du build pour chaque résultat (couteux en réseau!)</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="fr">
     <body>
       <trans-unit id="Description.Text">
@@ -46,17 +60,17 @@
       </trans-unit>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>Effectuer une recherche périodique en arrière-plan</target>
+        <target>Effectuer une récupération (fetch) périodique en arrière-plan</target>
         
       </trans-unit>
       <trans-unit id="FetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>Effectuer une recherche de tous les modules</target>
+        <target>Effectuer une récupération de tous les sous-modules</target>
         
       </trans-unit>
       <trans-unit id="FetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>Effectuer une recherche toutes les (secondes) - mettre à 0 pour désactiver</target>
+        <target>Effectuer une récupération toutes les (secondes) - mettre à 0 pour désactiver</target>
         
       </trans-unit>
       <trans-unit id="GitCommand.Caption">
@@ -70,17 +84,17 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        <target>Créer des branches de suivie locales</target>
+        <target>Créer des branches locales de suivie</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
-        <target>Créer des branches de suivie locales</target>
+        <target>Créer des branches locales de suivie</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
-        <target>Distant pour créer des branches de suivie pour</target>
+        <target>Dépôt distant pour lequel créer des branches de suivie</target>
         
       </trans-unit>
     </body>
@@ -118,7 +132,7 @@
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
-        <target>Supprimer les branches distantes de</target>
+        <target>Supprimer les branches distantes du dépôt</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
@@ -128,7 +142,7 @@
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
-        <target>Branches de recherches</target>
+        <target>Rechercher les branches</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -148,7 +162,7 @@
       </trans-unit>
       <trans-unit id="_chooseBrancesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>Sélectionner des branches à supprimer. Seules les branches totalement fusionnées dans '{0}' seront supprimées.</target>
+        <target>Sélectionnez les branches à supprimer. Seules les branches totalement fusionnées dans '{0}' seront supprimées.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
@@ -187,7 +201,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>Branches de recherches</target>
+        <target>Rechercher des branches</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
@@ -197,7 +211,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
-        <target>Paramètres</target>
+        <target>Paramètres...</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
@@ -232,7 +246,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
-        <target>Ne correspond pas</target>
+        <target>Celles ne correspondant pas</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
@@ -242,12 +256,12 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
-        <target>Insensible à la casse</target>
+        <target>Ignorer la casse</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>Utilisez une regex pour filtrer des branches</target>
+        <target>Utiliser une regex pour filtrer les branches</target>
         
       </trans-unit>
     </body>
@@ -1130,14 +1144,14 @@ Voulez-vous réinitialiser le chemin configuré?</target>
   </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="fr">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        <target>Nom du projet</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
+      <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
         <target>URL du serveur Jenkins</target>
+        
+      </trans-unit>
+      <trans-unit id="lblProjectName.Text">
+        <source>Project name</source>
+        <target>Nom du projet</target>
         
       </trans-unit>
     </body>
@@ -1340,13 +1354,13 @@ noms de branche, noms de tag)</target>
   <file datatype="plaintext" original="StashPlugin" source-language="en" target-language="fr">
     <body>
       <trans-unit id="Description.Text">
-        <source>Create Stash Pull Request</source>
-        <target>Créer une demande d'importation de la réserve</target>
+        <source>Create Bitbucket Pull Request</source>
+        <target>Créer une demande de pull Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="StashBaseUrl.Caption">
-        <source>Specify the base URL to Stash</source>
-        <target>Spécifier l'URL de base de Stash</target>
+        <source>Specify the base URL to Bitbucket</source>
+        <target>Spécifier l'URL de base de Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="StashDisableSsl.Caption">
@@ -1355,13 +1369,13 @@ noms de branche, noms de tag)</target>
         
       </trans-unit>
       <trans-unit id="StashPassword.Caption">
-        <source>Stash Password</source>
-        <target>Mot de passe Stash</target>
+        <source>Bitbucket Password</source>
+        <target>Mot de passe Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="StashUsername.Caption">
-        <source>Stash Username</source>
-        <target>Utilisateur Stash</target>
+        <source>Bitbucket Username</source>
+        <target>Utilisateur Bitbucket</target>
         
       </trans-unit>
     </body>
@@ -1396,8 +1410,8 @@ noms de branche, noms de tag)</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInStash.Text">
-        <source>Your repository is not hosted in Stash.</source>
-        <target>Votre dépôt n'est pas hébergé dans la réserve.</target>
+        <source>Your repository is not hosted in Bitbucket.</source>
+        <target>Votre dépôt n'est pas hébergé dans Bitbucket.</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
@@ -1549,9 +1563,42 @@ noms de branche, noms de tag)</target>
         <target>Se logguer en tant qu'invité pour afficher le rapport de build</target>
         
       </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Build url not valid</source>
+        <target>Url du build non valide</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy in the clipboard the url of the build before retrying.
+(Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        <target>Le presse-papier ne contient pas une url de build valide.
+
+Copiez, s'il vous plait, dans votre presse-papier l'url de la build avant de réessayer.
+(Elle doit contenir au moins le paramètre &quot;buildTypeId&quot;)</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectCaption.Text">
+        <source>Error when loading the projects and build list</source>
+        <target>Erreur lors du chargement de la des projets et des builds</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectMessage.Text">
+        <source>Failed to load the projects and build list.
+Please verify the server url.</source>
+        <target>Échec de chargement de la liste des projets et des builds.
+Veuillez vérifier l'url du serveur.</target>
+        
+      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
         <target>L'expression régulière pour &quot;le filtre d'Id de build&quot; n'est pas valide et ne sera pas enregistrée!</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
+        <source>Extract the data from the build url copied in the clipboard</source>
+        <target>Extraire les données depuis l'url de la build copiée dans le presse-papier</target>
         
       </trans-unit>
     </body>
