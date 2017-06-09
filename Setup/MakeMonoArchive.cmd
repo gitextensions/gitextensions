@@ -133,12 +133,12 @@ REM xcopy /y ..\GitUI\Translation\Italian.xlf GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y ..\GitUI\Translation\Italian.Plugins.xlf GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Japanese.gif GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Japanese.xlf GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Japanese.Plugins.xlf GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Japanese.gif GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Japanese.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Japanese.Plugins.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y ..\GitUI\Translation\Korean.gif GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y ..\GitUI\Translation\Korean.xlf GitExtensions\Translation\
@@ -157,12 +157,12 @@ xcopy /y ..\GitUI\Translation\Russian.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Russian.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Simplified Chinese.gif" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Simplified Chinese.xlf" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Simplified Chinese.Plugins.xlf" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Simplified Chinese.gif" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Simplified Chinese.xlf" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Simplified Chinese.Plugins.xlf" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Spanish.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Spanish.xlf GitExtensions\Translation\

@@ -419,7 +419,7 @@
             </Component>
             <Component Id="Italian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Italian.gif" />
-            </Component-->
+            </Component
             <Component Id="Japanese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.xlf" />
             </Component>
@@ -428,7 +428,7 @@
             </Component>
             <Component Id="Japanese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.gif" />
-            </Component>
+            </Component>-->
             <!--Component Id="Korean.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.xlf" />
             </Component>
@@ -456,7 +456,7 @@
             <Component Id="Russian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.gif" />
             </Component>
-            <Component Id="SimplifiedChinese.xlf" Guid="*">
+            <!--<Component Id="SimplifiedChinese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.xlf" />
             </Component>
             <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
@@ -464,7 +464,7 @@
             </Component>
             <Component Id="SimplifiedChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
-            </Component>
+            </Component>-->
             <Component Id="Spanish.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Spanish.xlf" />
             </Component>
@@ -815,11 +815,11 @@
                     <ComponentRef Id="Italian.Plugins.xlf" />
                     <ComponentRef Id="Italian.gif" />
                 </Feature-->
-                <Feature Id="Japanese" Title="Japanese" Level="1">
+                <!--<Feature Id="Japanese" Title="Japanese" Level="1">
                     <ComponentRef Id="Japanese.xlf" />
                     <ComponentRef Id="Japanese.Plugins.xlf" />
                     <ComponentRef Id="Japanese.gif" />
-                </Feature>
+                </Feature>-->
                 <!--<Feature Id="Korean" Title="Korean" Level="1">
                     <ComponentRef Id="Korean.xlf" />
                     <ComponentRef Id="Korean.Plugins.xlf" />
@@ -835,11 +835,11 @@
                     <ComponentRef Id="Russian.Plugins.xlf" />
                     <ComponentRef Id="Russian.gif" />
                 </Feature>
-                <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
+                <!--<Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
                     <ComponentRef Id="SimplifiedChinese.xlf" />
                     <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
                     <ComponentRef Id="SimplifiedChinese.gif" />
-                </Feature>
+                </Feature>-->
                 <Feature Id="Spanish" Title="Spanish" Level="1">
                     <ComponentRef Id="Spanish.xlf" />
                     <ComponentRef Id="Spanish.Plugins.xlf" />
