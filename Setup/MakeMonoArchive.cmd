@@ -69,10 +69,6 @@ xcopy /y ..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Linq.dll GitExte
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BackgroundFetch\bin\Release\System.Reactive.PlatformServices.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitExtensions\bin\Release\TranslationApp.exe GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitExtensions\bin\Release\TranslationApp.exe.config GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BackgroundFetch\bin\Release\BackgroundFetch.dll GitExtensions\Plugins\
@@ -220,8 +216,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\NetSpell.SpellChecker.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\ResourceManager.pdb GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitExtensions\bin\Release\TranslationApp.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
