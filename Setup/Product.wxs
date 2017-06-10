@@ -259,6 +259,15 @@
             <Component Id="TeamCityIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
             </Component>
+            <Component Id="AppVeyorIntegration.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\Release\AppVeyorIntegration.dll" />
+            </Component>
+            <Component Id="System.Net.Http.Extensions.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\Release\System.Net.Http.Extensions.dll" />
+            </Component>
+            <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\Release\System.Net.Http.WebRequest.dll" />
+            </Component>
             <Component Id="JenkinsIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\Release\JenkinsIntegration.dll" />
             </Component>
@@ -709,9 +718,17 @@
                 <Feature Id="Stash" Title="Atlassian Stash integration" Level="1">
                     <ComponentRef Id="Stash.dll" />
                 </Feature>
-                <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
+                <Feature Id="AppVeyorIntegration" Title="AppVeyor integration" Level="1">
                     <ComponentRef Id="System.Net.Http.dll" />
                     <ComponentRef Id="System.Net.Http.Primitives.dll" />
+                    <ComponentRef Id="System.Net.Http.Extensions.dll" />
+                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
+                    <ComponentRef Id="AppVeyorIntegration.dll" />
+                    <ComponentRef Id="Newtonsoft.Json.dll" />                    
+                </Feature>
+                <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
+                    <ComponentRef Id="System.Net.Http.dll" />
+                    <ComponentRef Id="System.Net.Http.Primitives.dll" />                    
                     <ComponentRef Id="TeamCityIntegration.dll" />
                 </Feature>
                 <Feature Id="JenkinsIntegration" Title="Jenkins integration" Level="1">
