@@ -1,7 +1,7 @@
 Changelog
 =========
 
-### Version 2.50 (10 June 2017)
+### Version 2.50RC1 (10 June 2017)
 #### Features: 
 * Increased width for 'Open local repository' dialog. - PR [3644]
 * Shortcut key for "Create fixup commit" - Issue [3616]
