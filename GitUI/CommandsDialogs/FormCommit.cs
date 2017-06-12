@@ -283,7 +283,8 @@ namespace GitUI.CommandsDialogs
             StageSelectedFile,
             UnStageSelectedFile,
             ShowHistory,
-            ToggleSelectionFilter
+            ToggleSelectionFilter,
+            StageAll,
         }
 
         private bool AddToGitIgnore()
@@ -377,6 +378,19 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
+        private bool StageAllFiles()
+        {
+            if (Unstaged.IsEmpty)
+            {
+                return false;
+            }
+            else
+            {
+                StageAllToolStripMenuItemClick(this, null);
+                return true;
+            }
+        }
+
         private bool StartFileHistoryDialog()
         {
             if (Staged.Focused || Unstaged.Focused)
@@ -426,6 +440,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.UnStageSelectedFile: return UnStageSelectedFile();
                 case Commands.ShowHistory: return StartFileHistoryDialog();
                 case Commands.ToggleSelectionFilter: return ToggleSelectionFilter();
+                case Commands.StageAll: return StageAllFiles();
                 default: return base.ExecuteCommand(cmd);
             }
         }
