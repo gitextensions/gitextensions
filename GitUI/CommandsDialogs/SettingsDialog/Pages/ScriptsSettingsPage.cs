@@ -164,7 +164,8 @@ Current Branch:
         private void addScriptButton_Click(object sender, EventArgs e)
         {
             ScriptList.ClearSelection();
-            ScriptManager.GetScripts().AddNew();
+            ScriptInfo script = ScriptManager.GetScripts().AddNew();
+            script.HotkeyCommandIdentifier = ScriptManager.NextHotkeyCommandIdentifier();
             ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
             ScriptList_SelectionChanged(null, null); //needed for linux
         }
@@ -184,7 +185,6 @@ Current Branch:
             if (ScriptList.SelectedRows.Count > 0)
             {
                 ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                selectedScriptInfo.HotkeyCommandIdentifier = ScriptList.SelectedRows[0].Index + 9000;
                 selectedScriptInfo.Name = nameTextBox.Text;
                 selectedScriptInfo.Command = commandTextBox.Text;
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;
