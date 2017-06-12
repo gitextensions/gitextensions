@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -530,7 +530,16 @@ namespace GitUI.CommitInfo
 
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(string.Concat(_RevisionHeader.GetPlaintText(), Environment.NewLine, RevisionInfo.GetPlaintText()));
+            var commitInfo = string.Empty;
+            if (EnvUtils.IsMonoRuntime())
+            {
+                commitInfo = $"{_RevisionHeader.Text}{Environment.NewLine}{RevisionInfo.Text}";
+            }
+            else
+            {
+                commitInfo = $"{_RevisionHeader.GetPlaintText()}{Environment.NewLine}{RevisionInfo.GetPlaintText()}";
+            }
+            Clipboard.SetText(commitInfo);
         }
 
         private void showContainedInBranchesRemoteToolStripMenuItem_Click(object sender, EventArgs e)
