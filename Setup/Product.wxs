@@ -73,12 +73,6 @@
             <Component Id="GitExtensions.exe.config" Guid="*">
                 <File Source="..\GitExtensions\bin\Release\GitExtensions.exe.config" />
             </Component>
-            <Component Id="TranslationApp.exe" Guid="*">
-                <File Source="..\GitExtensions\bin\Release\TranslationApp.exe" />
-            </Component>
-            <Component Id="TranslationApp.exe.config" Guid="*">
-                <File Source="..\GitExtensions\bin\Release\TranslationApp.exe.config" />
-            </Component>
             <Component Id="Gravatar.dll" Guid="*">
                 <File Source="..\Gravatar\bin\Release\Gravatar.dll" />
             </Component>
@@ -198,7 +192,7 @@
                 </RegistryKey>
             </Component>
             <Component Id="VS2015_VSIX" Guid="*">
-                <VSExtension:VsixPackage File="GitExtensionsVSIX.vsix" PackageId="GitExtensions..3166f76a-2b07-410a-a72a-509d6a2d146c" Target="community" TargetVersion="14.0" Vital="yes" Permanent="no" />
+                <VSExtension:VsixPackage File="GitExtensionsVSIX.vsix" PackageId="GitExtensions..3166f76a-2b07-410a-a72a-509d6a2d146c" Target="community" TargetVersion="14.0" Vital="no" Permanent="no" />
                 <File Source="..\GitExtensionsVSIX\bin\Release\GitExtensionsVSIX.vsix" />
             </Component>
         </DirectoryRef>
@@ -264,6 +258,15 @@
             </Component>
             <Component Id="TeamCityIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
+            </Component>
+            <Component Id="AppVeyorIntegration.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\Release\AppVeyorIntegration.dll" />
+            </Component>
+            <Component Id="System.Net.Http.Extensions.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\Release\System.Net.Http.Extensions.dll" />
+            </Component>
+            <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
+                <File Source="..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\Release\System.Net.Http.WebRequest.dll" />
             </Component>
             <Component Id="JenkinsIntegration.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\Release\JenkinsIntegration.dll" />
@@ -425,7 +428,7 @@
             </Component>
             <Component Id="Italian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Italian.gif" />
-            </Component-->
+            </Component
             <Component Id="Japanese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.xlf" />
             </Component>
@@ -434,7 +437,7 @@
             </Component>
             <Component Id="Japanese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Japanese.gif" />
-            </Component>
+            </Component>-->
             <!--Component Id="Korean.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Korean.xlf" />
             </Component>
@@ -462,7 +465,7 @@
             <Component Id="Russian.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Russian.gif" />
             </Component>
-            <Component Id="SimplifiedChinese.xlf" Guid="*">
+            <!--<Component Id="SimplifiedChinese.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.xlf" />
             </Component>
             <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
@@ -470,7 +473,7 @@
             </Component>
             <Component Id="SimplifiedChinese.gif" Guid="*">
                 <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
-            </Component>
+            </Component>-->
             <Component Id="Spanish.xlf" Guid="*">
                 <File Source="..\GitUI\Translation\Spanish.xlf" />
             </Component>
@@ -629,8 +632,6 @@
             <ComponentRef Id="gitex.cmd" />
             <ComponentRef Id="GitExtensions.exe" />
             <ComponentRef Id="GitExtensions.exe.config" />
-            <ComponentRef Id="TranslationApp.exe" />
-            <ComponentRef Id="TranslationApp.exe.config" />
             <ComponentRef Id="Gravatar.dll" />
             <ComponentRef Id="GitCommands.dll" />
             <ComponentRef Id="GitExtUtils.dll" />
@@ -717,9 +718,17 @@
                 <Feature Id="Stash" Title="Atlassian Stash integration" Level="1">
                     <ComponentRef Id="Stash.dll" />
                 </Feature>
-                <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
+                <Feature Id="AppVeyorIntegration" Title="AppVeyor integration" Level="1">
                     <ComponentRef Id="System.Net.Http.dll" />
                     <ComponentRef Id="System.Net.Http.Primitives.dll" />
+                    <ComponentRef Id="System.Net.Http.Extensions.dll" />
+                    <ComponentRef Id="System.Net.Http.WebRequest.dll" />
+                    <ComponentRef Id="AppVeyorIntegration.dll" />
+                    <ComponentRef Id="Newtonsoft.Json.dll" />                    
+                </Feature>
+                <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
+                    <ComponentRef Id="System.Net.Http.dll" />
+                    <ComponentRef Id="System.Net.Http.Primitives.dll" />                    
                     <ComponentRef Id="TeamCityIntegration.dll" />
                 </Feature>
                 <Feature Id="JenkinsIntegration" Title="Jenkins integration" Level="1">
@@ -823,11 +832,11 @@
                     <ComponentRef Id="Italian.Plugins.xlf" />
                     <ComponentRef Id="Italian.gif" />
                 </Feature-->
-                <Feature Id="Japanese" Title="Japanese" Level="1">
+                <!--<Feature Id="Japanese" Title="Japanese" Level="1">
                     <ComponentRef Id="Japanese.xlf" />
                     <ComponentRef Id="Japanese.Plugins.xlf" />
                     <ComponentRef Id="Japanese.gif" />
-                </Feature>
+                </Feature>-->
                 <!--<Feature Id="Korean" Title="Korean" Level="1">
                     <ComponentRef Id="Korean.xlf" />
                     <ComponentRef Id="Korean.Plugins.xlf" />
@@ -843,11 +852,11 @@
                     <ComponentRef Id="Russian.Plugins.xlf" />
                     <ComponentRef Id="Russian.gif" />
                 </Feature>
-                <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
+                <!--<Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
                     <ComponentRef Id="SimplifiedChinese.xlf" />
                     <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
                     <ComponentRef Id="SimplifiedChinese.gif" />
-                </Feature>
+                </Feature>-->
                 <Feature Id="Spanish" Title="Spanish" Level="1">
                     <ComponentRef Id="Spanish.xlf" />
                     <ComponentRef Id="Spanish.Plugins.xlf" />

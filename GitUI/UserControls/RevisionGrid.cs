@@ -2754,6 +2754,7 @@ namespace GitUI
                     ToolStripItem item = new ToolStripMenuItem(scriptInfo.Name);
                     item.Name = item.Text + "_ownScript";
                     item.Click += RunScript;
+                    item.Image = scriptInfo.GetIcon();
                     if (scriptInfo.AddToRevisionGridContextMenu)
                         mainContextMenu.Items.Add(item);
                     else

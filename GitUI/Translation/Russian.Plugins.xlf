@@ -1,4 +1,16 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49RC2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="cbGitHubPullRequest.Text">
+        <source>display github pull requests builds. GithubToken:</source>
+        
+      </trans-unit>
+      <trans-unit id="cbLoadTestResults.Text">
+        <source>display tests results in build status summary for each build result (network intensive!)</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
@@ -1129,14 +1141,14 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        <target>Имя проекта</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
+      <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
         <target>URL сервера Jenkins</target>
+        
+      </trans-unit>
+      <trans-unit id="lblProjectName.Text">
+        <source>Project name</source>
+        <target>Имя проекта</target>
         
       </trans-unit>
     </body>
@@ -1338,13 +1350,11 @@ branch names, tag names)</source>
   <file datatype="plaintext" original="StashPlugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
-        <source>Create Stash Pull Request</source>
-        <target>Создать запрос на слияние в Stash</target>
+        <source>Create Bitbucket Pull Request</source>
         
       </trans-unit>
       <trans-unit id="StashBaseUrl.Caption">
-        <source>Specify the base URL to Stash</source>
-        <target>Укажите основной URL к Stash</target>
+        <source>Specify the base URL to Bitbucket</source>
         
       </trans-unit>
       <trans-unit id="StashDisableSsl.Caption">
@@ -1353,13 +1363,11 @@ branch names, tag names)</source>
         
       </trans-unit>
       <trans-unit id="StashPassword.Caption">
-        <source>Stash Password</source>
-        <target>Пароль Stash</target>
+        <source>Bitbucket Password</source>
         
       </trans-unit>
       <trans-unit id="StashUsername.Caption">
-        <source>Stash Username</source>
-        <target>Имя пользователя Stash</target>
+        <source>Bitbucket Username</source>
         
       </trans-unit>
     </body>
@@ -1394,8 +1402,7 @@ branch names, tag names)</source>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInStash.Text">
-        <source>Your repository is not hosted in Stash.</source>
-        <target>Ваш репозиторий не находится в Stash.</target>
+        <source>Your repository is not hosted in Bitbucket.</source>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
@@ -1547,9 +1554,33 @@ branch names, tag names)</source>
         <target>Залогиниться как гость для отображения отчета сборки</target>
         
       </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Build url not valid</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy in the clipboard the url of the build before retrying.
+(Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectCaption.Text">
+        <source>Error when loading the projects and build list</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectMessage.Text">
+        <source>Failed to load the projects and build list.
+Please verify the server url.</source>
+        
+      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
         <target>Регулярное выражение &quot;Build Id Filter&quot; недопустимо и не будет сохранено!</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
+        <source>Extract the data from the build url copied in the clipboard</source>
         
       </trans-unit>
     </body>

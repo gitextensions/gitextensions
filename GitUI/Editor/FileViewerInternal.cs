@@ -215,10 +215,14 @@ namespace GitUI.Editor
 
         public int ScrollPos
         {
-            get { return TextEditor.ActiveTextAreaControl.VScrollBar.Value; }
+            get { return TextEditor.ActiveTextAreaControl.VScrollBar?.Value ?? 0; }
             set
             {
                 var scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
+                if (scrollBar == null) 
+                {
+                    return;
+                }
                 int max = scrollBar.Maximum - scrollBar.LargeChange;
                 max = Math.Max(max, scrollBar.Minimum);
                 scrollBar.Value = max > value ? value : max;

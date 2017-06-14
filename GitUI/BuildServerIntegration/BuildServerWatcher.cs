@@ -262,13 +262,15 @@ namespace GitUI.BuildServerIntegration
                         buildInfo.StartDate >= rowData.BuildStatus.StartDate)
                     {
                         rowData.BuildStatus = buildInfo;
-
-                        if (BuildStatusImageColumnIndex != -1 &&
-                            revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
-                            revisions.UpdateCellValue(BuildStatusImageColumnIndex, index.Value);
-                        if (BuildStatusMessageColumnIndex != -1 &&
-                            revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
-                            revisions.UpdateCellValue(BuildStatusMessageColumnIndex, index.Value);
+                        if (index.Value < revisions.RowCount)
+                        {
+                            if (BuildStatusImageColumnIndex != -1 &&
+                                revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
+                                revisions.UpdateCellValue(BuildStatusImageColumnIndex, index.Value);
+                            if (BuildStatusMessageColumnIndex != -1 &&
+                                revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
+                                revisions.UpdateCellValue(BuildStatusMessageColumnIndex, index.Value);
+                        }
                     }
                 }
             }

@@ -2,10 +2,12 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
+using System.Collections.Generic;
 
 namespace GitUI.Script
 {
@@ -18,9 +20,24 @@ namespace GitUI.Script
             if (Scripts == null)
             {
                 DeserializeFromXml(AppSettings.ownScripts);
+                if (Scripts != null)
+                    FixAmbiguousHotkeyCommandIdentifiers(Scripts);
             }
 
             return Scripts;
+        }
+
+        private static void FixAmbiguousHotkeyCommandIdentifiers(BindingList<ScriptInfo> scripts)
+        {
+            ISet<int> ids = new HashSet<int>();
+            foreach (ScriptInfo si in scripts)
+            {
+                if (ids.Contains(si.HotkeyCommandIdentifier))
+                {
+                    si.HotkeyCommandIdentifier = NextHotkeyCommandIdentifier();
+                }
+                ids.Add(si.HotkeyCommandIdentifier);
+            }
         }
 
         public static ScriptInfo GetScript(string key)
@@ -150,6 +167,11 @@ namespace GitUI.Script
             FetchAll.Enabled = false;
             Scripts.Add(FetchAll);
 
+        }
+
+        internal static int NextHotkeyCommandIdentifier()
+        {
+            return GetScripts().Select(s => s.HotkeyCommandIdentifier).Max() + 1;
         }
 
         private static void DeserializeFromOldFormat(string inputString)

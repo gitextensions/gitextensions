@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -419,7 +419,11 @@ namespace GitUI.CommitInfo
             _annotatedTagsMessages = null;
             _tags = null;
             updateText();
-            gravatar1.LoadImageForEmail("");
+            gravatar1.Visible = AppSettings.ShowAuthorGravatar;
+            if (AppSettings.ShowAuthorGravatar)
+            {
+                gravatar1.LoadImageForEmail("");
+            }
         }
 
         private void LoadAuthorImage(string author)
@@ -429,7 +433,10 @@ namespace GitUI.CommitInfo
             if (matches.Count == 0)
                 return;
 
-            gravatar1.LoadImageForEmail(matches[0].Groups[1].Value);
+            if (AppSettings.ShowAuthorGravatar)
+            {
+                gravatar1.LoadImageForEmail(matches[0].Groups[1].Value);
+            }
         }
 
         private string GetBranchesWhichContainsThisCommit(IEnumerable<string> branches, bool showBranchesAsLinks)
@@ -523,7 +530,16 @@ namespace GitUI.CommitInfo
 
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(string.Concat(_RevisionHeader.GetPlaintText(), Environment.NewLine, RevisionInfo.GetPlaintText()));
+            var commitInfo = string.Empty;
+            if (EnvUtils.IsMonoRuntime())
+            {
+                commitInfo = $"{_RevisionHeader.Text}{Environment.NewLine}{RevisionInfo.Text}";
+            }
+            else
+            {
+                commitInfo = $"{_RevisionHeader.GetPlaintText()}{Environment.NewLine}{RevisionInfo.GetPlaintText()}";
+            }
+            Clipboard.SetText(commitInfo);
         }
 
         private void showContainedInBranchesRemoteToolStripMenuItem_Click(object sender, EventArgs e)

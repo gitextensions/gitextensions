@@ -1,4 +1,16 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="pt-BR">
+    <body>
+      <trans-unit id="cbGitHubPullRequest.Text">
+        <source>display github pull requests builds. GithubToken:</source>
+        
+      </trans-unit>
+      <trans-unit id="cbLoadTestResults.Text">
+        <source>display tests results in build status summary for each build result (network intensive!)</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="Description.Text">
@@ -375,6 +387,7 @@ Deseja realmente continuar?</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Download Gerrit Change</source>
+        <target>Download Gerrit Change</target>
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
@@ -399,6 +412,7 @@ Deseja realmente continuar?</target>
       </trans-unit>
       <trans-unit id="_downloadGerritChangeCaption.Text">
         <source>Download Gerrit Change</source>
+        <target>Download Gerrit Change</target>
         
       </trans-unit>
       <trans-unit id="_selectChange.Text">
@@ -435,6 +449,7 @@ Deseja realmente continuar?</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Publish Gerrit Change</source>
+        <target>Publicar alterações Gerrit</target>
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
@@ -449,6 +464,7 @@ Deseja realmente continuar?</target>
       </trans-unit>
       <trans-unit id="PublishDraft.Text">
         <source>Submit review as draft</source>
+        <target>Submeter revisão como rascunho</target>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
@@ -458,6 +474,7 @@ Deseja realmente continuar?</target>
       </trans-unit>
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
+        <target>Publicar alterações Gerrit</target>
         
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
@@ -548,6 +565,7 @@ defaultrebase=0</source>
       </trans-unit>
       <trans-unit id="lnkGitReviewHelp.Text">
         <source>GitHub page for git-review</source>
+        <target>Página do git-review no GitHub</target>
         
       </trans-unit>
     </body>
@@ -586,26 +604,32 @@ defaultrebase=0</source>
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
+        <target>Total de commits</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
+        <target>Total de linhas de código</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
+        <target>Total de linhas de código</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
+        <target>Total de linhas de código</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0} Blank lines ({1})</source>
+        <target>{0} Linhas em branco ({1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0} Comment lines ({1})</source>
+        <target>{0} Linhas de comentários ({1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
@@ -639,30 +663,37 @@ defaultrebase=0</source>
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0} Lines of production code ({1})</source>
+        <target>{0} Linhas de código de produção ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0} Lines of test code</source>
+        <target>{0} Linhas de código de teste</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0} Lines of test code ({1})</source>
+        <target>{0} Linhas de código de teste ({1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
+        <target>Linhas de código por idioma</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
+        <target>Commits por colaborador</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
+        <target>Linhas de código por tipo</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
+        <target>Linhas de código teste</target>
         
       </trans-unit>
     </body>
@@ -671,6 +702,7 @@ defaultrebase=0</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
+        <target>Impacto</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
@@ -679,6 +711,7 @@ defaultrebase=0</source>
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
+        <target>Incluindo submódulos</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
@@ -692,6 +725,7 @@ defaultrebase=0</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Gerrit Plugin</source>
+        <target>Plugin Gerrit</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
@@ -711,10 +745,12 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="Description.Text">
         <source>Gerrit Code Review</source>
+        <target>Revisão de código Gerrit</target>
         
       </trans-unit>
       <trans-unit id="_downloadGerritChange.Text">
         <source>Download Gerrit Change</source>
+        <target>Download Gerrit Change</target>
         
       </trans-unit>
       <trans-unit id="_editGitReview.Text">
@@ -740,6 +776,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
         <source>Publish Gerrit Change</source>
+        <target>Publicar alterações Gerrit</target>
         
       </trans-unit>
     </body>
@@ -757,18 +794,22 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_settingsErrorFileNotFound.Text">
         <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
+        <target>Não encontrei o arquivo &quot;.gitreview&quot; no diretório de trabalho.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorHostNotEntered.Text">
         <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
+        <target>A definição &quot;host&quot; no arquivo .gitreview é obrigatória.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorPortNotNumeric.Text">
         <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
+        <target>A &quot;port&quot; especificada no arquivo .gitreview pode conter somente dígitos.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorProjectNotEntered.Text">
         <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
+        <target>A definição &quot;project&quot; no arquivo .gitreview é obrigatória.</target>
         
       </trans-unit>
     </body>
@@ -777,6 +818,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
+        <target>GitFlow</target>
         
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
@@ -790,6 +832,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_noBranchExist.Text">
         <source>No {0} branches exist.</source>
+        <target>{0} não encontrado(s).</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
@@ -799,46 +842,57 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="btnCreateBranch.Text">
         <source>Start!</source>
+        <target>Iniciar!</target>
         
       </trans-unit>
       <trans-unit id="btnFinish.Text">
         <source>Finish</source>
+        <target>Terminar</target>
         
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
+        <target>Iniciar GitFlow</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
         <source>Publish</source>
+        <target>Publicar</target>
         
       </trans-unit>
       <trans-unit id="btnPull.Text">
         <source>Pull</source>
+        <target>Pull</target>
         
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
+        <target>baseado em:</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
+        <target>Gerenciar branches existentes:</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
+        <target>Branch início:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>branch:</source>
+        <target>branch:</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Expected name:</source>
+        <target>Nome esperado:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
+        <target>Comando:</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
@@ -847,18 +901,22 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
         <source>HEAD:</source>
+        <target>HEAD:</target>
         
       </trans-unit>
       <trans-unit id="lblHead.Text">
         <source>ref/...</source>
+        <target>ref/...</target>
         
       </trans-unit>
       <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
+        <target>[prefix]/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
+        <target>Sobre GitFlow</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -871,6 +929,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="Description.Text">
         <source>GitFlow</source>
+        <target>GitFlow</target>
         
       </trans-unit>
     </body>
@@ -879,6 +938,12 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="Description.Text">
         <source>Github</source>
+        <target>Github</target>
+        
+      </trans-unit>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        <target>Token OAuth</target>
         
       </trans-unit>
     </body>
@@ -887,6 +952,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
+        <target>Grafo de impacto</target>
         
       </trans-unit>
     </body>
@@ -895,6 +961,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="CodeFiles.Caption">
         <source>Code files</source>
+        <target>Arquivos de código</target>
         
       </trans-unit>
       <trans-unit id="Description.Text">
@@ -908,6 +975,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="IgnoreSubmodules.Caption">
         <source>Ignore submodules</source>
+        <target>Ignorar submódulos</target>
         
       </trans-unit>
     </body>
@@ -916,58 +984,78 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="Description.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="GourceArguments.Caption">
         <source>Arguments</source>
+        <target>Parâmetros</target>
         
       </trans-unit>
       <trans-unit id="GourcePath.Caption">
         <source>Path to Gource</source>
+        <target>Caminho para Gource</target>
         
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
+        <target>{0} bytes downloaded.</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Não encontrei o Gource.
+Baixe o Gource e defina o caminho no diálogo de configurações de plugins.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
+        <target>O diretório atual não é um repositório git válido.
+
+Gource só pode ser iniciado em um repositório git válido.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
+        <target>Não há caminho configurado para o Gource.
+
+Quer baixar o Gource automaticamente?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
+        <target>Download</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Falha ao baixar.
+Baixe o Gource e defina o caminho no diálogo de configurações de plugins.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
+        <target>Gource foi baixado e descompactado.</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
+        <target>Não encontrei o Gource no caminho configurado: {0}.
+
+Quer redefinir o caminho configurado?</target>
         
       </trans-unit>
     </body>
@@ -976,10 +1064,12 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
+        <target>Parâmetros</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
@@ -999,6 +1089,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
+        <target>Caminho para Gource</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -1008,23 +1099,26 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
+        <target>Projeto Gource</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
+        <target>Linha de comando Gource</target>
         
       </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="pt-BR">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        <target>Nome do projeto</target>
+      <trans-unit id="lblJenkinsServerUrl.Text">
+        <source>Jenkins server URL</source>
+        <target>URL do servidor Jenkins</target>
         
       </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>Jenkins server URL</source>
+      <trans-unit id="lblProjectName.Text">
+        <source>Project name</source>
+        <target>Nome do projeto</target>
         
       </trans-unit>
     </body>
@@ -1042,10 +1136,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
+        <target>http.proxy global:</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
+        <target>http.proxy local:</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
@@ -1055,6 +1151,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
         <source>Unset proxy</source>
+        <target>Inibir proxy</target>
         
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
@@ -1073,12 +1170,33 @@ Do you want to reset the configured path?</source>
         <source>Proxy Switcher</source>
         
       </trans-unit>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
+        <target>Proxy HTTP</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
+        <target>Porta do proxy HTTP</target>
+        
+      </trans-unit>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
+        <target>Senha</target>
+        
+      </trans-unit>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>Nome do usuário</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
+        <target>Gerador de Notas de Atualização</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
@@ -1087,26 +1205,32 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
+        <target>como tabela HTML</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
+        <target>como tabela de texto (espaços)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
+        <target>como tabela de texto (tabs)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
+        <target>output original</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
+        <target>Gerar</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
+        <target>Resultado</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
@@ -1120,6 +1244,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
+        <target>separar colunas com espaços</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
@@ -1133,18 +1258,22 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
+        <target>parâmetros git log:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
+        <target>{0} = de; {1} = para</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
+        <target>Ordenação: Revisões mais recentes são listadas no topo.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
+        <target>Contador de revisões = </target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
@@ -1154,10 +1283,12 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
+        <target>sem modificações</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
+        <target>separar colunas com tabs</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
@@ -1171,6 +1302,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
+        <target>Gerador de Notas de Atualização</target>
         
       </trans-unit>
     </body>
@@ -1178,7 +1310,27 @@ branch names, tag names)</source>
   <file datatype="plaintext" original="StashPlugin" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="Description.Text">
-        <source>Create Stash Pull Request</source>
+        <source>Create Bitbucket Pull Request</source>
+        
+      </trans-unit>
+      <trans-unit id="StashBaseUrl.Caption">
+        <source>Specify the base URL to Bitbucket</source>
+        <target>Especifique a URL base do Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="StashDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>Desativar verificação SSL</target>
+        
+      </trans-unit>
+      <trans-unit id="StashPassword.Caption">
+        <source>Bitbucket Password</source>
+        <target>Senha Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="StashUsername.Caption">
+        <source>Bitbucket Username</source>
+        <target>Usuário Bitbucket</target>
         
       </trans-unit>
     </body>
@@ -1207,14 +1359,17 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
+        <target>Sucesso</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInStash.Text">
-        <source>Your repository is not hosted in Stash.</source>
+        <source>Your repository is not hosted in Bitbucket.</source>
+        <target>Seu repositório não está hospedado no Bitbucket.</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
         <source>Approve</source>
+        <target>Approvar</target>
         
       </trans-unit>
       <trans-unit id="btnCreate.Text">
@@ -1229,10 +1384,12 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Source</source>
+        <target>Fonte</target>
         
       </trans-unit>
       <trans-unit id="groupBox2.Text">
         <source>Target</source>
+        <target>Target</target>
         
       </trans-unit>
       <trans-unit id="groupBox3.Text">
@@ -1241,10 +1398,12 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="groupBox4.Text">
         <source>Source</source>
+        <target>Fonte</target>
         
       </trans-unit>
       <trans-unit id="groupBox5.Text">
         <source>Target</source>
+        <target>Target</target>
         
       </trans-unit>
       <trans-unit id="groupBox6.Text">
@@ -1253,6 +1412,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="groupBox9.Text">
         <source>Information</source>
+        <target>Informação</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1262,6 +1422,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Reviewer (approved)</source>
+        <target>Revisor (aprovado)</target>
         
       </trans-unit>
       <trans-unit id="label12.Text">
@@ -1281,6 +1442,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label16.Text">
         <source>State</source>
+        <target>Estado</target>
         
       </trans-unit>
       <trans-unit id="label17.Text">
@@ -1330,6 +1492,7 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="lblReviewers.Text">
         <source>Reviewer(s)</source>
+        <target>Revisor(es)</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
@@ -1348,10 +1511,36 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
+        <target>
+Logar como convidado para exibir o relatório de compilação</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Build url not valid</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy in the clipboard the url of the build before retrying.
+(Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectCaption.Text">
+        <source>Error when loading the projects and build list</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectMessage.Text">
+        <source>Failed to load the projects and build list.
+Please verify the server url.</source>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        
+      </trans-unit>
+      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
+        <source>Extract the data from the build url copied in the clipboard</source>
         
       </trans-unit>
     </body>

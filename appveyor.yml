@@ -1,4 +1,4 @@
-version: 2.49.03.{build}
+version: 2.49.90.{build}
 
 os: Visual Studio 2015
 
