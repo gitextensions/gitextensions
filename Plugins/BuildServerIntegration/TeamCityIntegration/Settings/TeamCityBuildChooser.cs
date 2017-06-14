@@ -80,7 +80,7 @@ namespace TeamCityIntegration.Settings
             var project = (Project)treeNode.Tag;
             if (project.Builds == null)
             {
-                project.Builds = _teamCityAdapter.GetProjectBuilds(project.Name);
+                project.Builds = _teamCityAdapter.GetProjectBuilds(project.Id);
 
                 //Remove "Loading..." node
                 if (treeNode.Nodes.Count == 1 && treeNode.Nodes[0].Tag == null)
