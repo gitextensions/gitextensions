@@ -1,5 +1,10 @@
 Changelog
 =========
+### Version 2.50RC2 (15 June 2017)
+#### Fixes: 
+* fix Teamcity build chooser [3762]
+* Crash after saving settings - Issue [3755]
+* System.ArgumentException on start - Issue [3761]
 
 ### Version 2.50RC1 (10 June 2017)
 #### Features: 
@@ -1771,3 +1776,7 @@ Changelog
 [1975]:https://github.com/gitextensions/gitextensions/issues/1975
 [1845]:https://github.com/gitextensions/gitextensions/issues/1845
 [1064]:https://github.com/gitextensions/gitextensions/issues/1064
+
+[3761]:https://github.com/gitextensions/gitextensions/issues/3761
+[3755]:https://github.com/gitextensions/gitextensions/issues/3755
+[3762]:https://github.com/gitextensions/gitextensions/pull/3762
