@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using System.IO;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -78,6 +79,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             splitter.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
             splitter.MeasureFont = MostRecentLB.Font;
             splitter.Graphics = MostRecentLB.CreateGraphics();
+
+            RemoveDeletedRepositories();
+
             try
             {
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, lessRecentRepos);
@@ -92,6 +96,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             foreach (RecentRepoInfo repo in lessRecentRepos)
                 LessRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
+        }
+
+        private static void RemoveDeletedRepositories()
+        {
+            var repos = Repositories.RepositoryHistory.Repositories;
+            for (int i = repos.Count - 1; i >=  0; i--)
+            {
+                if(!Directory.Exists(repos[i].Path))
+                {
+                    repos.RemoveAt(i);
+                }
+            }
         }
 
         private void SetComboWidth()
