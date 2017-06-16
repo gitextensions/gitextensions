@@ -77,9 +77,9 @@
             flpnlControls.Controls.Add(this.Ok);
             flpnlControls.Dock = System.Windows.Forms.DockStyle.Bottom;
             flpnlControls.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            flpnlControls.Location = new System.Drawing.Point(0, 327);
+            flpnlControls.Location = new System.Drawing.Point(0, 410);
             flpnlControls.Name = "flpnlControls";
-            flpnlControls.Size = new System.Drawing.Size(676, 34);
+            flpnlControls.Size = new System.Drawing.Size(701, 34);
             flpnlControls.TabIndex = 2;
             flpnlControls.WrapContents = false;
             // 
@@ -88,7 +88,7 @@
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.AutoSize = true;
             this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(491, 3);
+            this.Ok.Location = new System.Drawing.Point(516, 3);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(88, 25);
             this.Ok.TabIndex = 0;
@@ -102,7 +102,7 @@
             this.Abort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Abort.AutoSize = true;
             this.Abort.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Abort.Location = new System.Drawing.Point(585, 3);
+            this.Abort.Location = new System.Drawing.Point(610, 3);
             this.Abort.Name = "Abort";
             this.Abort.Size = new System.Drawing.Size(88, 25);
             this.Abort.TabIndex = 1;
@@ -137,7 +137,7 @@
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(322, 327);
+            tableLayoutPanel1.Size = new System.Drawing.Size(345, 410);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // comboMinWidthNote
@@ -147,7 +147,7 @@
             this.comboMinWidthNote.Location = new System.Drawing.Point(11, 219);
             this.comboMinWidthNote.Name = "comboMinWidthNote";
             this.comboMinWidthNote.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            this.comboMinWidthNote.Size = new System.Drawing.Size(300, 100);
+            this.comboMinWidthNote.Size = new System.Drawing.Size(323, 183);
             this.comboMinWidthNote.TabIndex = 7;
             this.comboMinWidthNote.Text = "NB: The width of the columns helps to visualise how the repository name will be s" +
     "hown in the combobox.";
@@ -282,9 +282,9 @@
             this.comboPanel.Controls.Add(this.MostRecentLB);
             this.comboPanel.Controls.Add(this.panel2);
             this.comboPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.comboPanel.Location = new System.Drawing.Point(322, 0);
+            this.comboPanel.Location = new System.Drawing.Point(345, 0);
             this.comboPanel.Name = "comboPanel";
-            this.comboPanel.Size = new System.Drawing.Size(354, 327);
+            this.comboPanel.Size = new System.Drawing.Size(356, 410);
             this.comboPanel.TabIndex = 1;
             // 
             // LessRecentLB
@@ -297,11 +297,11 @@
             this.LessRecentLB.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.LessRecentLB.HideSelection = false;
             this.LessRecentLB.LabelWrap = false;
-            this.LessRecentLB.Location = new System.Drawing.Point(0, 162);
+            this.LessRecentLB.Location = new System.Drawing.Point(0, 191);
             this.LessRecentLB.MultiSelect = false;
             this.LessRecentLB.Name = "LessRecentLB";
             this.LessRecentLB.OwnerDraw = true;
-            this.LessRecentLB.Size = new System.Drawing.Size(354, 165);
+            this.LessRecentLB.Size = new System.Drawing.Size(356, 219);
             this.LessRecentLB.TabIndex = 2;
             this.LessRecentLB.UseCompatibleStateImageBehavior = false;
             this.LessRecentLB.View = System.Windows.Forms.View.Details;
@@ -319,13 +319,13 @@
             this.removeAnchorToolStripMenuItem,
             this.removeRecentToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(258, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(258, 114);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // anchorToMostToolStripMenuItem
             // 
             this.anchorToMostToolStripMenuItem.Name = "anchorToMostToolStripMenuItem";
-            this.anchorToMostToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.anchorToMostToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.anchorToMostToolStripMenuItem.Text = "Anchor to most recent repositories";
             this.anchorToMostToolStripMenuItem.Click += new System.EventHandler(this.anchorToMostToolStripMenuItem_Click);
             // 
@@ -339,14 +339,14 @@
             // removeAnchorToolStripMenuItem
             // 
             this.removeAnchorToolStripMenuItem.Name = "removeAnchorToolStripMenuItem";
-            this.removeAnchorToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.removeAnchorToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.removeAnchorToolStripMenuItem.Text = "Remove anchor";
             this.removeAnchorToolStripMenuItem.Click += new System.EventHandler(this.removeAnchorToolStripMenuItem_Click);
             // 
             // removeRecentToolStripMenuItem
             // 
             this.removeRecentToolStripMenuItem.Name = "removeRecentToolStripMenuItem";
-            this.removeRecentToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.removeRecentToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.removeRecentToolStripMenuItem.Text = "Remove from recent repositories";
             this.removeRecentToolStripMenuItem.Click += new System.EventHandler(this.removeRecentToolStripMenuItem_Click);
             // 
@@ -355,9 +355,9 @@
             this.panel3.AutoSize = true;
             this.panel3.Controls.Add(this.label1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 140);
+            this.panel3.Location = new System.Drawing.Point(0, 169);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(354, 22);
+            this.panel3.Size = new System.Drawing.Size(356, 22);
             this.panel3.TabIndex = 3;
             // 
             // label1
@@ -383,7 +383,7 @@
             this.MostRecentLB.MultiSelect = false;
             this.MostRecentLB.Name = "MostRecentLB";
             this.MostRecentLB.OwnerDraw = true;
-            this.MostRecentLB.Size = new System.Drawing.Size(354, 121);
+            this.MostRecentLB.Size = new System.Drawing.Size(356, 150);
             this.MostRecentLB.TabIndex = 0;
             this.MostRecentLB.UseCompatibleStateImageBehavior = false;
             this.MostRecentLB.View = System.Windows.Forms.View.Details;
@@ -401,7 +401,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(354, 19);
+            this.panel2.Size = new System.Drawing.Size(356, 19);
             this.panel2.TabIndex = 0;
             // 
             // MostRecentLabel
@@ -419,7 +419,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.Abort;
-            this.ClientSize = new System.Drawing.Size(684, 361);
+            this.ClientSize = new System.Drawing.Size(709, 444);
             this.Controls.Add(this.comboPanel);
             this.Controls.Add(tableLayoutPanel1);
             this.Controls.Add(flpnlControls);
