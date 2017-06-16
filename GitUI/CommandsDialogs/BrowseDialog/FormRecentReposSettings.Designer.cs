@@ -33,10 +33,17 @@
             System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
             this.Ok = new System.Windows.Forms.Button();
             this.Abort = new System.Windows.Forms.Button();
-            this._NO_TRANSLATE_maxRecentRepositories = new System.Windows.Forms.NumericUpDown();
+            this.comboMinWidthNote = new System.Windows.Forms.Label();
             this.maxRecentRepositories = new System.Windows.Forms.Label();
-            this.sortLessRecentRepos = new System.Windows.Forms.CheckBox();
+            this._NO_TRANSLATE_maxRecentRepositories = new System.Windows.Forms.NumericUpDown();
+            this.comboMinWidthEdit = new System.Windows.Forms.NumericUpDown();
             this.sortMostRecentRepos = new System.Windows.Forms.CheckBox();
+            this.comboMinWidthLabel = new System.Windows.Forms.Label();
+            this.sortLessRecentRepos = new System.Windows.Forms.CheckBox();
+            this.shorteningGB = new System.Windows.Forms.GroupBox();
+            this.dontShortenRB = new System.Windows.Forms.RadioButton();
+            this.middleDotRB = new System.Windows.Forms.RadioButton();
+            this.mostSigDirRB = new System.Windows.Forms.RadioButton();
             this.comboPanel = new System.Windows.Forms.Panel();
             this.LessRecentLB = new System.Windows.Forms.ListView();
             this.chdrRepository1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -51,30 +58,23 @@
             this.chdrRepository = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel2 = new System.Windows.Forms.Panel();
             this.MostRecentLabel = new System.Windows.Forms.Label();
-            this.shorteningGB = new System.Windows.Forms.GroupBox();
-            this.dontShortenRB = new System.Windows.Forms.RadioButton();
-            this.middleDotRB = new System.Windows.Forms.RadioButton();
-            this.mostSigDirRB = new System.Windows.Forms.RadioButton();
-            this.comboMinWidthEdit = new System.Windows.Forms.NumericUpDown();
-            this.comboMinWidthLabel = new System.Windows.Forms.Label();
-            this.comboMinWidthNote = new System.Windows.Forms.Label();
             flpnlControls = new System.Windows.Forms.FlowLayoutPanel();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             flpnlControls.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_maxRecentRepositories)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.comboMinWidthEdit)).BeginInit();
+            this.shorteningGB.SuspendLayout();
             this.comboPanel.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.shorteningGB.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.comboMinWidthEdit)).BeginInit();
-            tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // flpnlControls
             // 
-            flpnlControls.Controls.Add(this.Ok);
             flpnlControls.Controls.Add(this.Abort);
+            flpnlControls.Controls.Add(this.Ok);
             flpnlControls.Dock = System.Windows.Forms.DockStyle.Bottom;
             flpnlControls.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             flpnlControls.Location = new System.Drawing.Point(0, 327);
@@ -88,9 +88,9 @@
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.AutoSize = true;
             this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(549, 3);
+            this.Ok.Location = new System.Drawing.Point(491, 3);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(124, 25);
+            this.Ok.Size = new System.Drawing.Size(88, 25);
             this.Ok.TabIndex = 0;
             this.Ok.Text = "OK";
             this.Ok.UseCompatibleTextRendering = true;
@@ -102,14 +102,65 @@
             this.Abort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.Abort.AutoSize = true;
             this.Abort.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Abort.Location = new System.Drawing.Point(468, 3);
+            this.Abort.Location = new System.Drawing.Point(585, 3);
             this.Abort.Name = "Abort";
-            this.Abort.Size = new System.Drawing.Size(75, 25);
+            this.Abort.Size = new System.Drawing.Size(88, 25);
             this.Abort.TabIndex = 1;
             this.Abort.Text = "Cancel";
             this.Abort.UseCompatibleTextRendering = true;
             this.Abort.UseVisualStyleBackColor = true;
             this.Abort.Click += new System.EventHandler(this.Abort_Click);
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tableLayoutPanel1.Controls.Add(this.comboMinWidthNote, 0, 5);
+            tableLayoutPanel1.Controls.Add(this.maxRecentRepositories, 0, 0);
+            tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_maxRecentRepositories, 1, 0);
+            tableLayoutPanel1.Controls.Add(this.comboMinWidthEdit, 1, 4);
+            tableLayoutPanel1.Controls.Add(this.sortMostRecentRepos, 0, 1);
+            tableLayoutPanel1.Controls.Add(this.comboMinWidthLabel, 0, 4);
+            tableLayoutPanel1.Controls.Add(this.sortLessRecentRepos, 0, 2);
+            tableLayoutPanel1.Controls.Add(this.shorteningGB, 0, 3);
+            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(8);
+            tableLayoutPanel1.RowCount = 6;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(322, 327);
+            tableLayoutPanel1.TabIndex = 0;
+            // 
+            // comboMinWidthNote
+            // 
+            tableLayoutPanel1.SetColumnSpan(this.comboMinWidthNote, 2);
+            this.comboMinWidthNote.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboMinWidthNote.Location = new System.Drawing.Point(11, 219);
+            this.comboMinWidthNote.Name = "comboMinWidthNote";
+            this.comboMinWidthNote.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.comboMinWidthNote.Size = new System.Drawing.Size(300, 100);
+            this.comboMinWidthNote.TabIndex = 7;
+            this.comboMinWidthNote.Text = "NB: The width of the columns helps to visualise how the repository name will be s" +
+    "hown in the combobox.";
+            // 
+            // maxRecentRepositories
+            // 
+            this.maxRecentRepositories.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.maxRecentRepositories.AutoSize = true;
+            this.maxRecentRepositories.Location = new System.Drawing.Point(11, 15);
+            this.maxRecentRepositories.Name = "maxRecentRepositories";
+            this.maxRecentRepositories.Size = new System.Drawing.Size(222, 13);
+            this.maxRecentRepositories.TabIndex = 0;
+            this.maxRecentRepositories.Text = "Maximum number of most recent repositories";
             // 
             // _NO_TRANSLATE_maxRecentRepositories
             // 
@@ -124,15 +175,41 @@
             this._NO_TRANSLATE_maxRecentRepositories.TabIndex = 1;
             this._NO_TRANSLATE_maxRecentRepositories.ValueChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
             // 
-            // maxRecentRepositories
+            // comboMinWidthEdit
             // 
-            this.maxRecentRepositories.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.maxRecentRepositories.AutoSize = true;
-            this.maxRecentRepositories.Location = new System.Drawing.Point(11, 15);
-            this.maxRecentRepositories.Name = "maxRecentRepositories";
-            this.maxRecentRepositories.Size = new System.Drawing.Size(222, 13);
-            this.maxRecentRepositories.TabIndex = 0;
-            this.maxRecentRepositories.Text = "Maximum number of most recent repositories";
+            this.comboMinWidthEdit.Location = new System.Drawing.Point(250, 195);
+            this.comboMinWidthEdit.Maximum = new decimal(new int[] {
+            800,
+            0,
+            0,
+            0});
+            this.comboMinWidthEdit.Name = "comboMinWidthEdit";
+            this.comboMinWidthEdit.Size = new System.Drawing.Size(61, 21);
+            this.comboMinWidthEdit.TabIndex = 6;
+            this.comboMinWidthEdit.ValueChanged += new System.EventHandler(this.comboMinWidthEdit_ValueChanged);
+            // 
+            // sortMostRecentRepos
+            // 
+            this.sortMostRecentRepos.AutoSize = true;
+            this.sortMostRecentRepos.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.sortMostRecentRepos.Location = new System.Drawing.Point(11, 38);
+            this.sortMostRecentRepos.Name = "sortMostRecentRepos";
+            this.sortMostRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.sortMostRecentRepos.Size = new System.Drawing.Size(233, 17);
+            this.sortMostRecentRepos.TabIndex = 2;
+            this.sortMostRecentRepos.Text = "Sort most recent repositories alphabetically";
+            this.sortMostRecentRepos.UseVisualStyleBackColor = true;
+            this.sortMostRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            // 
+            // comboMinWidthLabel
+            // 
+            this.comboMinWidthLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.comboMinWidthLabel.AutoSize = true;
+            this.comboMinWidthLabel.Location = new System.Drawing.Point(11, 199);
+            this.comboMinWidthLabel.Name = "comboMinWidthLabel";
+            this.comboMinWidthLabel.Size = new System.Drawing.Size(202, 13);
+            this.comboMinWidthLabel.TabIndex = 5;
+            this.comboMinWidthLabel.Text = "Combobox minimum width (0 = Autosize)";
             // 
             // sortLessRecentRepos
             // 
@@ -147,18 +224,56 @@
             this.sortLessRecentRepos.UseVisualStyleBackColor = true;
             this.sortLessRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
             // 
-            // sortMostRecentRepos
+            // shorteningGB
             // 
-            this.sortMostRecentRepos.AutoSize = true;
-            this.sortMostRecentRepos.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.sortMostRecentRepos.Location = new System.Drawing.Point(11, 38);
-            this.sortMostRecentRepos.Name = "sortMostRecentRepos";
-            this.sortMostRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.sortMostRecentRepos.Size = new System.Drawing.Size(233, 17);
-            this.sortMostRecentRepos.TabIndex = 2;
-            this.sortMostRecentRepos.Text = "Sort most recent repositories alphabetically";
-            this.sortMostRecentRepos.UseVisualStyleBackColor = true;
-            this.sortMostRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            this.shorteningGB.AutoSize = true;
+            this.shorteningGB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.shorteningGB.Controls.Add(this.dontShortenRB);
+            this.shorteningGB.Controls.Add(this.middleDotRB);
+            this.shorteningGB.Controls.Add(this.mostSigDirRB);
+            this.shorteningGB.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.shorteningGB.Location = new System.Drawing.Point(11, 84);
+            this.shorteningGB.Name = "shorteningGB";
+            this.shorteningGB.Size = new System.Drawing.Size(233, 105);
+            this.shorteningGB.TabIndex = 4;
+            this.shorteningGB.TabStop = false;
+            this.shorteningGB.Text = "Shortening strategy";
+            // 
+            // dontShortenRB
+            // 
+            this.dontShortenRB.AutoSize = true;
+            this.dontShortenRB.Location = new System.Drawing.Point(6, 22);
+            this.dontShortenRB.Name = "dontShortenRB";
+            this.dontShortenRB.Size = new System.Drawing.Size(103, 17);
+            this.dontShortenRB.TabIndex = 0;
+            this.dontShortenRB.TabStop = true;
+            this.dontShortenRB.Text = "Do not shorten  ";
+            this.dontShortenRB.UseVisualStyleBackColor = true;
+            this.dontShortenRB.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            // 
+            // middleDotRB
+            // 
+            this.middleDotRB.AutoSize = true;
+            this.middleDotRB.Location = new System.Drawing.Point(6, 68);
+            this.middleDotRB.Name = "middleDotRB";
+            this.middleDotRB.Size = new System.Drawing.Size(169, 17);
+            this.middleDotRB.TabIndex = 2;
+            this.middleDotRB.TabStop = true;
+            this.middleDotRB.Text = "Replace middle part with dots ";
+            this.middleDotRB.UseVisualStyleBackColor = true;
+            this.middleDotRB.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            // 
+            // mostSigDirRB
+            // 
+            this.mostSigDirRB.AutoSize = true;
+            this.mostSigDirRB.Location = new System.Drawing.Point(6, 45);
+            this.mostSigDirRB.Name = "mostSigDirRB";
+            this.mostSigDirRB.Size = new System.Drawing.Size(169, 17);
+            this.mostSigDirRB.TabIndex = 1;
+            this.mostSigDirRB.TabStop = true;
+            this.mostSigDirRB.Text = "The most significant directory ";
+            this.mostSigDirRB.UseVisualStyleBackColor = true;
+            this.mostSigDirRB.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
             // 
             // comboPanel
             // 
@@ -298,120 +413,6 @@
             this.MostRecentLabel.TabIndex = 0;
             this.MostRecentLabel.Text = "Most recent repositories";
             // 
-            // shorteningGB
-            // 
-            this.shorteningGB.AutoSize = true;
-            this.shorteningGB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.shorteningGB.Controls.Add(this.dontShortenRB);
-            this.shorteningGB.Controls.Add(this.middleDotRB);
-            this.shorteningGB.Controls.Add(this.mostSigDirRB);
-            this.shorteningGB.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.shorteningGB.Location = new System.Drawing.Point(11, 84);
-            this.shorteningGB.Name = "shorteningGB";
-            this.shorteningGB.Size = new System.Drawing.Size(233, 105);
-            this.shorteningGB.TabIndex = 4;
-            this.shorteningGB.TabStop = false;
-            this.shorteningGB.Text = "Shortening strategy";
-            // 
-            // dontShortenRB
-            // 
-            this.dontShortenRB.AutoSize = true;
-            this.dontShortenRB.Location = new System.Drawing.Point(6, 22);
-            this.dontShortenRB.Name = "dontShortenRB";
-            this.dontShortenRB.Size = new System.Drawing.Size(103, 17);
-            this.dontShortenRB.TabIndex = 0;
-            this.dontShortenRB.TabStop = true;
-            this.dontShortenRB.Text = "Do not shorten  ";
-            this.dontShortenRB.UseVisualStyleBackColor = true;
-            this.dontShortenRB.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
-            // 
-            // middleDotRB
-            // 
-            this.middleDotRB.AutoSize = true;
-            this.middleDotRB.Location = new System.Drawing.Point(6, 68);
-            this.middleDotRB.Name = "middleDotRB";
-            this.middleDotRB.Size = new System.Drawing.Size(169, 17);
-            this.middleDotRB.TabIndex = 2;
-            this.middleDotRB.TabStop = true;
-            this.middleDotRB.Text = "Replace middle part with dots ";
-            this.middleDotRB.UseVisualStyleBackColor = true;
-            this.middleDotRB.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
-            // 
-            // mostSigDirRB
-            // 
-            this.mostSigDirRB.AutoSize = true;
-            this.mostSigDirRB.Location = new System.Drawing.Point(6, 45);
-            this.mostSigDirRB.Name = "mostSigDirRB";
-            this.mostSigDirRB.Size = new System.Drawing.Size(169, 17);
-            this.mostSigDirRB.TabIndex = 1;
-            this.mostSigDirRB.TabStop = true;
-            this.mostSigDirRB.Text = "The most significant directory ";
-            this.mostSigDirRB.UseVisualStyleBackColor = true;
-            this.mostSigDirRB.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
-            // 
-            // comboMinWidthEdit
-            // 
-            this.comboMinWidthEdit.Location = new System.Drawing.Point(250, 195);
-            this.comboMinWidthEdit.Maximum = new decimal(new int[] {
-            800,
-            0,
-            0,
-            0});
-            this.comboMinWidthEdit.Name = "comboMinWidthEdit";
-            this.comboMinWidthEdit.Size = new System.Drawing.Size(61, 21);
-            this.comboMinWidthEdit.TabIndex = 6;
-            this.comboMinWidthEdit.ValueChanged += new System.EventHandler(this.comboMinWidthEdit_ValueChanged);
-            // 
-            // comboMinWidthLabel
-            // 
-            this.comboMinWidthLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.comboMinWidthLabel.AutoSize = true;
-            this.comboMinWidthLabel.Location = new System.Drawing.Point(11, 199);
-            this.comboMinWidthLabel.Name = "comboMinWidthLabel";
-            this.comboMinWidthLabel.Size = new System.Drawing.Size(202, 13);
-            this.comboMinWidthLabel.TabIndex = 5;
-            this.comboMinWidthLabel.Text = "Combobox minimum width (0 = Autosize)";
-            // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayoutPanel1.Controls.Add(this.comboMinWidthNote, 0, 5);
-            tableLayoutPanel1.Controls.Add(this.maxRecentRepositories, 0, 0);
-            tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_maxRecentRepositories, 1, 0);
-            tableLayoutPanel1.Controls.Add(this.comboMinWidthEdit, 1, 4);
-            tableLayoutPanel1.Controls.Add(this.sortMostRecentRepos, 0, 1);
-            tableLayoutPanel1.Controls.Add(this.comboMinWidthLabel, 0, 4);
-            tableLayoutPanel1.Controls.Add(this.sortLessRecentRepos, 0, 2);
-            tableLayoutPanel1.Controls.Add(this.shorteningGB, 0, 3);
-            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
-            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(8);
-            tableLayoutPanel1.RowCount = 6;
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(322, 327);
-            tableLayoutPanel1.TabIndex = 0;
-            // 
-            // label2
-            // 
-            tableLayoutPanel1.SetColumnSpan(this.comboMinWidthNote, 2);
-            this.comboMinWidthNote.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.comboMinWidthNote.Location = new System.Drawing.Point(11, 219);
-            this.comboMinWidthNote.Name = "comboMinWidthNote";
-            this.comboMinWidthNote.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            this.comboMinWidthNote.Size = new System.Drawing.Size(300, 100);
-            this.comboMinWidthNote.TabIndex = 7;
-            this.comboMinWidthNote.Text = "NB: The width of the columns helps to visualise how the repository name will be shown in the combobox.";
-            // 
             // FormRecentReposSettings
             // 
             this.AcceptButton = this.Ok;
@@ -431,7 +432,12 @@
             this.Text = "Recent repositories settings";
             flpnlControls.ResumeLayout(false);
             flpnlControls.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_maxRecentRepositories)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.comboMinWidthEdit)).EndInit();
+            this.shorteningGB.ResumeLayout(false);
+            this.shorteningGB.PerformLayout();
             this.comboPanel.ResumeLayout(false);
             this.comboPanel.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
@@ -439,11 +445,6 @@
             this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.shorteningGB.ResumeLayout(false);
-            this.shorteningGB.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.comboMinWidthEdit)).EndInit();
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
