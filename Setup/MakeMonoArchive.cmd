@@ -8,7 +8,7 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=2.49.03
+set version=2.50RC1
 if not "%APPVEYOR_BUILD_VERSION%"=="" set version=%APPVEYOR_BUILD_VERSION%
 set normal=GitExtensions-%version%-Mono.zip
 set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
@@ -68,10 +68,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Linq.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BackgroundFetch\bin\Release\System.Reactive.PlatformServices.dll GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitExtensions\bin\Release\TranslationApp.exe GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitExtensions\bin\Release\TranslationApp.exe.config GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
@@ -137,12 +133,12 @@ REM xcopy /y ..\GitUI\Translation\Italian.xlf GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y ..\GitUI\Translation\Italian.Plugins.xlf GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Japanese.gif GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Japanese.xlf GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitUI\Translation\Japanese.Plugins.xlf GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Japanese.gif GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Japanese.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y ..\GitUI\Translation\Japanese.Plugins.xlf GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y ..\GitUI\Translation\Korean.gif GitExtensions\Translation\
 REM IF ERRORLEVEL 1 EXIT /B 1
 REM xcopy /y ..\GitUI\Translation\Korean.xlf GitExtensions\Translation\
@@ -161,12 +157,12 @@ xcopy /y ..\GitUI\Translation\Russian.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Russian.Plugins.xlf GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Simplified Chinese.gif" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Simplified Chinese.xlf" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y "..\GitUI\Translation\Simplified Chinese.Plugins.xlf" GitExtensions\Translation\
-IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Simplified Chinese.gif" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Simplified Chinese.xlf" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y "..\GitUI\Translation\Simplified Chinese.Plugins.xlf" GitExtensions\Translation\
+REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Spanish.gif GitExtensions\Translation\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitUI\Translation\Spanish.xlf GitExtensions\Translation\
@@ -220,8 +216,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\NetSpell.SpellChecker.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\ResourceManager.pdb GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitExtensions\bin\Release\TranslationApp.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1

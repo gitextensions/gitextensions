@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using ResourceManager;
+using GitCommands;
 
 namespace GitUI.Hotkey
 {
@@ -111,8 +112,7 @@ namespace GitUI.Hotkey
                 using (StringWriter writer = new StringWriter(strBuilder))
                 {
                     Serializer.Serialize(writer, settings);
-                    Properties.Settings.Default.Hotkeys = strBuilder.ToString();
-                    Properties.Settings.Default.Save();
+                    AppSettings.SerializedHotkeys = strBuilder.ToString();
                 }
             }
             catch { }
@@ -167,17 +167,52 @@ namespace GitUI.Hotkey
         {
             HotkeySettings[] settings = null;
 
+            MigrateSettings();
+
+            if (!string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
+                settings = LoadSerializedSettings(AppSettings.SerializedHotkeys);
+
+            return settings;
+        }
+
+        private static HotkeySettings[] LoadSerializedSettings(string serializedHotkeys)
+        {
+            HotkeySettings[] settings = null;
+
             try
             {
-                if (!string.IsNullOrEmpty(Properties.Settings.Default.Hotkeys))
-                    using (StringReader reader = new StringReader(Properties.Settings.Default.Hotkeys))
-                    {
-                        settings = Serializer.Deserialize(reader) as HotkeySettings[];
-                    }
+                using (StringReader reader = new StringReader(serializedHotkeys))
+                {
+                    settings = Serializer.Deserialize(reader) as HotkeySettings[];
+                }
             }
             catch { }
 
             return settings;
+        }
+
+        private static void MigrateSettings()
+        {
+            if (AppSettings.SerializedHotkeys == null)
+            {
+                Properties.Settings.Default.Upgrade();
+                if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.Hotkeys))
+                {
+                    HotkeySettings[] settings = LoadSerializedSettings(Properties.Settings.Default.Hotkeys);
+                    if (settings == null)
+                    {
+                        AppSettings.SerializedHotkeys = " ";//mark settings as migrated
+                    }
+                    else
+                    {
+                        SaveSettings(settings);
+                    }
+                }
+                else
+                {
+                    AppSettings.SerializedHotkeys = " ";//mark settings as migrated
+                }
+            }
         }
 
         /// <summary>Asks the IHotkeyables to create their default hotkey settings</summary>
@@ -203,7 +238,8 @@ namespace GitUI.Hotkey
                     hk(FormCommit.Commands.StageSelectedFile, Keys.S),
                     hk(FormCommit.Commands.UnStageSelectedFile, Keys.U),
                     hk(FormCommit.Commands.ShowHistory, Keys.H),
-                    hk(FormCommit.Commands.ToggleSelectionFilter, Keys.Control | Keys.F)),
+                    hk(FormCommit.Commands.ToggleSelectionFilter, Keys.Control | Keys.F),
+                    hk(FormCommit.Commands.StageAll, Keys.Control | Keys.S)),
                 new HotkeySettings(FormBrowse.HotkeySettingsName,
                     hk(FormBrowse.Commands.GitBash, Keys.Control | Keys.G),
                     hk(FormBrowse.Commands.GitGui, Keys.None),

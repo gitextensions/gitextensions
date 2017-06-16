@@ -99,6 +99,15 @@ namespace GitUI
             }
         }
 
+        private bool _enableSelectedIndexChangeEvent = true;
+
+        public void SetSelectedIndex(int idx, bool notify)
+        {
+            _enableSelectedIndexChangeEvent = notify;
+            SelectedIndex = idx;
+            _enableSelectedIndexChangeEvent = true;
+        }
+
         private void EnsureSelectedIndexChangeSubscription()
         {
             if (selectedIndexChangeSubscription == null)
@@ -106,6 +115,7 @@ namespace GitUI
                 selectedIndexChangeSubscription = Observable.FromEventPattern(
                     h => FileStatusListView.SelectedIndexChanged += h,
                     h => FileStatusListView.SelectedIndexChanged -= h)
+                    .Where(x => _enableSelectedIndexChangeEvent)
                     .Throttle(SelectedIndexChangeThrottleDuration)
                     .ObserveOn(SynchronizationContext.Current)
                     .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
@@ -208,7 +218,10 @@ namespace GitUI
 
             string text = GetItemText(e.Graphics, gitItemStatus);
 
-            if (gitItemStatus.IsSubmodule && gitItemStatus.SubmoduleStatus != null && gitItemStatus.SubmoduleStatus.IsCompleted)
+            if (gitItemStatus.IsSubmodule && 
+                gitItemStatus.SubmoduleStatus != null && 
+                gitItemStatus.SubmoduleStatus.IsCompleted &&
+                gitItemStatus.SubmoduleStatus.Result != null)
                 text += gitItemStatus.SubmoduleStatus.Result.AddedAndRemovedString();
 
             e.Graphics.DrawString(text, e.Item.ListView.Font,

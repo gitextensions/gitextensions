@@ -341,7 +341,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void TranslateItem_Click(object sender, EventArgs e)
         {
-            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TranslationApp.exe"));
+            Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
         }
 
         private static void GitHubItem_Click(object sender, EventArgs e)
@@ -399,7 +399,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void openItem_Click(object sender, EventArgs e)
         {
-            GitModule module = FormOpenDirectory.OpenModule(this);
+            GitModule module = FormOpenDirectory.OpenModule(this, currentModule: null);
             if (module != null)
                 OnModuleChanged(this, new GitModuleEventArgs(module));
         }

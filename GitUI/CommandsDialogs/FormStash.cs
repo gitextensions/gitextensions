@@ -21,6 +21,8 @@ namespace GitUI.CommandsDialogs
         readonly TranslationString areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
         readonly TranslationString dontShowAgain = new TranslationString("Don't show me this message again.");
 
+        private AsyncLoader _asyncLoader = new AsyncLoader();
+
         private FormStash()
             : this(null)
         { }
@@ -97,17 +99,13 @@ namespace GitUI.CommandsDialogs
             else if(gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
-                Task.Factory.StartNew(() => Module.GetAllChangedFiles())
-                    .ContinueWith((task) => LoadGitItemStatuses(task.Result),
-                        TaskScheduler.FromCurrentSynchronizationContext());
+                _asyncLoader.Load(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
                 Clear.Enabled = false; // disallow Drop  (of current working directory)
                 Apply.Enabled = false; // disallow Apply (of current working directory)
             }
             else
             {
-                Task.Factory.StartNew(() => Module.GetStashDiffFiles(gitStash.Name)) 
-                    .ContinueWith((task) => LoadGitItemStatuses(task.Result),
-                        TaskScheduler.FromCurrentSynchronizationContext());
+                _asyncLoader.Load(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
                 Clear.Enabled = true; // allow Drop
                 Apply.Enabled = true; // allow Apply
             }

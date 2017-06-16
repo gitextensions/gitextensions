@@ -154,7 +154,6 @@ namespace GitUI.CommandsDialogs
         private ThumbnailToolBarButton _pullButton;
         private bool _toolbarButtonsCreated;
 #endif
-        private bool _dontUpdateOnIndexChange;
         private readonly ToolStripGitStatus _toolStripGitStatus;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
@@ -244,7 +243,6 @@ namespace GitUI.CommandsDialogs
             this.HotkeysEnabled = true;
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
-            this._dontUpdateOnIndexChange = false;
             GitUICommandsChanged += (a, e) =>
             {
                 var oldcommands = e.OldCommands;
@@ -1463,7 +1461,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            GitModule module = FormOpenDirectory.OpenModule(this);
+            GitModule module = FormOpenDirectory.OpenModule(this, Module);
             if (module != null)
                 SetGitModule(this, new GitModuleEventArgs(module));
         }
@@ -1757,7 +1755,7 @@ namespace GitUI.CommandsDialogs
 
         private void EditLocalGitConfigToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var fileName = Path.Combine(Module.GetGitDirectory(), "config");
+            var fileName = Path.Combine(Module.ResolveGitInternalPath("config"));
             UICommands.StartFileEditorDialog(fileName, true);
         }
 
@@ -1826,8 +1824,7 @@ namespace GitUI.CommandsDialogs
 
         private void DiffFilesSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!_dontUpdateOnIndexChange)
-                ShowSelectedFileDiff();
+            ShowSelectedFileDiff();
         }
 
         private void ShowSelectedFileDiff()
@@ -2057,7 +2054,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.49/");
+                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.50/");
             }
             catch (System.ComponentModel.Win32Exception)
             {
@@ -2197,7 +2194,7 @@ namespace GitUI.CommandsDialogs
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TranslationApp.exe"));
+            Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
         }
 
         private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
@@ -2714,9 +2711,7 @@ namespace GitUI.CommandsDialogs
                 return new Tuple<int, string>(idx, null);
 
             idx = getNextIdx(idx, DiffFiles.GitItemStatuses.Count() - 1, searchBackward);
-            _dontUpdateOnIndexChange = true;
-            DiffFiles.SelectedIndex = idx;
-            _dontUpdateOnIndexChange = false;
+            DiffFiles.SetSelectedIndex(idx, notify: false);
             return new Tuple<int, string>(idx, DiffText.GetSelectedPatch(RevisionGrid, DiffFiles.SelectedItem));
         }
 

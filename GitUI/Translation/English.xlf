@@ -2714,114 +2714,6 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <source>Console emulator</source>
         <target />
       </trans-unit>
-      <trans-unit id="cboStyle.Item0">
-        <source>Default</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item1">
-        <source>&lt;Default Windows scheme&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item10">
-        <source>&lt;Solarized Git&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item11">
-        <source>&lt;Solarized (Luke Maciak)&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item12">
-        <source>&lt;Solarized (John Doe)&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item13">
-        <source>&lt;Solarized Light&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item14">
-        <source>&lt;SolarMe&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item15">
-        <source>&lt;Standard VGA&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item16">
-        <source>&lt;tc-maxx&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item17">
-        <source>&lt;Terminal.app&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item18">
-        <source>&lt;Tomorrow&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item19">
-        <source>&lt;Tomorrow Night&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item2">
-        <source>&lt;Base16&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item20">
-        <source>&lt;Tomorrow Night Blue&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item21">
-        <source>&lt;Tomorrow Night Bright&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item22">
-        <source>&lt;Tomorrow Night Eighties&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item23">
-        <source>&lt;Twilight&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item24">
-        <source>&lt;Ubuntu&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item25">
-        <source>&lt;xterm&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item26">
-        <source>&lt;Zenburn&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item3">
-        <source>&lt;Cobalt2&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item4">
-        <source>&lt;ConEmu&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item5">
-        <source>&lt;Gamma 1&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item6">
-        <source>&lt;Monokai&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item7">
-        <source>&lt;Murena scheme&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item8">
-        <source>&lt;PowerShell&gt;</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="cboStyle.Item9">
-        <source>&lt;Solarized&gt;</source>
-        <target />
-      </trans-unit>
       <trans-unit id="cboTerminal.Item0">
         <source>bash</source>
         <target />
@@ -4605,6 +4497,10 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_saveFileQuestionCaption.Text">
         <source>Save changes?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnCancel.Text">
+        <source>Cancel</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -7853,6 +7749,10 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="GotoParentCommit.Text">
         <source>Go to parent commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="IdDataGridViewColumn.HeaderText">
+        <source>SHA1</source>
         <target />
       </trans-unit>
       <trans-unit id="InitRepository.Text">
