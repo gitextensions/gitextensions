@@ -293,6 +293,7 @@
             this.chdrRepository1});
             this.LessRecentLB.ContextMenuStrip = this.contextMenuStrip1;
             this.LessRecentLB.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LessRecentLB.FullRowSelect = true;
             this.LessRecentLB.GridLines = true;
             this.LessRecentLB.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.LessRecentLB.HideSelection = false;
@@ -300,7 +301,6 @@
             this.LessRecentLB.Location = new System.Drawing.Point(0, 191);
             this.LessRecentLB.MultiSelect = false;
             this.LessRecentLB.Name = "LessRecentLB";
-            this.LessRecentLB.OwnerDraw = true;
             this.LessRecentLB.Size = new System.Drawing.Size(356, 219);
             this.LessRecentLB.TabIndex = 2;
             this.LessRecentLB.UseCompatibleStateImageBehavior = false;
@@ -375,6 +375,7 @@
             this.chdrRepository});
             this.MostRecentLB.ContextMenuStrip = this.contextMenuStrip1;
             this.MostRecentLB.Dock = System.Windows.Forms.DockStyle.Top;
+            this.MostRecentLB.FullRowSelect = true;
             this.MostRecentLB.GridLines = true;
             this.MostRecentLB.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.MostRecentLB.HideSelection = false;
@@ -382,7 +383,6 @@
             this.MostRecentLB.Location = new System.Drawing.Point(0, 19);
             this.MostRecentLB.MultiSelect = false;
             this.MostRecentLB.Name = "MostRecentLB";
-            this.MostRecentLB.OwnerDraw = true;
             this.MostRecentLB.Size = new System.Drawing.Size(356, 150);
             this.MostRecentLB.TabIndex = 0;
             this.MostRecentLB.UseCompatibleStateImageBehavior = false;
