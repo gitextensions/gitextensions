@@ -31,8 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.FlowLayoutPanel flpnlControls;
             System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-            this.Ok = new System.Windows.Forms.Button();
             this.Abort = new System.Windows.Forms.Button();
+            this.Ok = new System.Windows.Forms.Button();
             this.comboMinWidthNote = new System.Windows.Forms.Label();
             this.maxRecentRepositories = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_maxRecentRepositories = new System.Windows.Forms.NumericUpDown();
@@ -53,6 +53,10 @@
             this.removeAnchorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.buttonAnchorAllToMostRecentRepositories = new System.Windows.Forms.Button();
+            this.buttonAnchorToMostRecentRepositories = new System.Windows.Forms.Button();
+            this.buttonAnchorToLessRecentRepositories = new System.Windows.Forms.Button();
+            this.buttonAnchorAllToLessRecentRepositories = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.MostRecentLB = new System.Windows.Forms.ListView();
             this.chdrRepository = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -83,20 +87,6 @@
             flpnlControls.TabIndex = 2;
             flpnlControls.WrapContents = false;
             // 
-            // Ok
-            // 
-            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.AutoSize = true;
-            this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(516, 3);
-            this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(88, 25);
-            this.Ok.TabIndex = 0;
-            this.Ok.Text = "OK";
-            this.Ok.UseCompatibleTextRendering = true;
-            this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
-            // 
             // Abort
             // 
             this.Abort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
@@ -110,6 +100,20 @@
             this.Abort.UseCompatibleTextRendering = true;
             this.Abort.UseVisualStyleBackColor = true;
             this.Abort.Click += new System.EventHandler(this.Abort_Click);
+            // 
+            // Ok
+            // 
+            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.Ok.AutoSize = true;
+            this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.Ok.Location = new System.Drawing.Point(516, 3);
+            this.Ok.Name = "Ok";
+            this.Ok.Size = new System.Drawing.Size(88, 25);
+            this.Ok.TabIndex = 0;
+            this.Ok.Text = "OK";
+            this.Ok.UseCompatibleTextRendering = true;
+            this.Ok.UseVisualStyleBackColor = true;
+            this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -298,13 +302,14 @@
             this.LessRecentLB.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.LessRecentLB.HideSelection = false;
             this.LessRecentLB.LabelWrap = false;
-            this.LessRecentLB.Location = new System.Drawing.Point(0, 191);
+            this.LessRecentLB.Location = new System.Drawing.Point(0, 214);
             this.LessRecentLB.Name = "LessRecentLB";
-            this.LessRecentLB.Size = new System.Drawing.Size(356, 219);
+            this.LessRecentLB.Size = new System.Drawing.Size(356, 196);
             this.LessRecentLB.TabIndex = 2;
             this.LessRecentLB.UseCompatibleStateImageBehavior = false;
             this.LessRecentLB.View = System.Windows.Forms.View.Details;
             this.LessRecentLB.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
+            this.LessRecentLB.SelectedIndexChanged += new System.EventHandler(this.LessRecentLB_SelectedIndexChanged);
             // 
             // chdrRepository1
             // 
@@ -352,17 +357,61 @@
             // panel3
             // 
             this.panel3.AutoSize = true;
+            this.panel3.Controls.Add(this.buttonAnchorAllToMostRecentRepositories);
+            this.panel3.Controls.Add(this.buttonAnchorToMostRecentRepositories);
+            this.panel3.Controls.Add(this.buttonAnchorToLessRecentRepositories);
+            this.panel3.Controls.Add(this.buttonAnchorAllToLessRecentRepositories);
             this.panel3.Controls.Add(this.label1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 169);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(356, 22);
+            this.panel3.Size = new System.Drawing.Size(356, 45);
             this.panel3.TabIndex = 3;
+            // 
+            // buttonAnchorAllToMostRecentRepositories
+            // 
+            this.buttonAnchorAllToMostRecentRepositories.Image = global::GitUI.Properties.Resources.IconUnstageAll;
+            this.buttonAnchorAllToMostRecentRepositories.Location = new System.Drawing.Point(216, 5);
+            this.buttonAnchorAllToMostRecentRepositories.Name = "buttonAnchorAllToMostRecentRepositories";
+            this.buttonAnchorAllToMostRecentRepositories.Size = new System.Drawing.Size(25, 23);
+            this.buttonAnchorAllToMostRecentRepositories.TabIndex = 4;
+            this.buttonAnchorAllToMostRecentRepositories.UseVisualStyleBackColor = true;
+            this.buttonAnchorAllToMostRecentRepositories.Click += new System.EventHandler(this.buttonAnchorAllToMostRecentRepositories_Click);
+            // 
+            // buttonAnchorToMostRecentRepositories
+            // 
+            this.buttonAnchorToMostRecentRepositories.Image = global::GitUI.Properties.Resources.IconUnstage;
+            this.buttonAnchorToMostRecentRepositories.Location = new System.Drawing.Point(185, 5);
+            this.buttonAnchorToMostRecentRepositories.Name = "buttonAnchorToMostRecentRepositories";
+            this.buttonAnchorToMostRecentRepositories.Size = new System.Drawing.Size(25, 23);
+            this.buttonAnchorToMostRecentRepositories.TabIndex = 3;
+            this.buttonAnchorToMostRecentRepositories.UseVisualStyleBackColor = true;
+            this.buttonAnchorToMostRecentRepositories.Click += new System.EventHandler(this.buttonAnchorToMostRecentRepositories_Click);
+            // 
+            // buttonAnchorToLessRecentRepositories
+            // 
+            this.buttonAnchorToLessRecentRepositories.Image = global::GitUI.Properties.Resources.IconStage;
+            this.buttonAnchorToLessRecentRepositories.Location = new System.Drawing.Point(154, 5);
+            this.buttonAnchorToLessRecentRepositories.Name = "buttonAnchorToLessRecentRepositories";
+            this.buttonAnchorToLessRecentRepositories.Size = new System.Drawing.Size(25, 23);
+            this.buttonAnchorToLessRecentRepositories.TabIndex = 2;
+            this.buttonAnchorToLessRecentRepositories.UseVisualStyleBackColor = true;
+            this.buttonAnchorToLessRecentRepositories.Click += new System.EventHandler(this.buttonAnchorToLessRecentRepositories_Click);
+            // 
+            // buttonAnchorAllToLessRecentRepositories
+            // 
+            this.buttonAnchorAllToLessRecentRepositories.Image = global::GitUI.Properties.Resources.IconStageAll;
+            this.buttonAnchorAllToLessRecentRepositories.Location = new System.Drawing.Point(123, 5);
+            this.buttonAnchorAllToLessRecentRepositories.Name = "buttonAnchorAllToLessRecentRepositories";
+            this.buttonAnchorAllToLessRecentRepositories.Size = new System.Drawing.Size(25, 23);
+            this.buttonAnchorAllToLessRecentRepositories.TabIndex = 1;
+            this.buttonAnchorAllToLessRecentRepositories.UseVisualStyleBackColor = true;
+            this.buttonAnchorAllToLessRecentRepositories.Click += new System.EventHandler(this.buttonAnchorAllToLessRecentRepositories_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 9);
+            this.label1.Location = new System.Drawing.Point(3, 32);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(121, 13);
             this.label1.TabIndex = 0;
@@ -386,6 +435,7 @@
             this.MostRecentLB.UseCompatibleStateImageBehavior = false;
             this.MostRecentLB.View = System.Windows.Forms.View.Details;
             this.MostRecentLB.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
+            this.MostRecentLB.SelectedIndexChanged += new System.EventHandler(this.MostRecentLB_SelectedIndexChanged);
             // 
             // chdrRepository
             // 
@@ -477,5 +527,9 @@
         private System.Windows.Forms.ColumnHeader chdrRepository;
         private System.Windows.Forms.ColumnHeader chdrRepository1;
         private System.Windows.Forms.Label comboMinWidthNote;
+        private System.Windows.Forms.Button buttonAnchorAllToMostRecentRepositories;
+        private System.Windows.Forms.Button buttonAnchorToMostRecentRepositories;
+        private System.Windows.Forms.Button buttonAnchorToLessRecentRepositories;
+        private System.Windows.Forms.Button buttonAnchorAllToLessRecentRepositories;
     }
 }

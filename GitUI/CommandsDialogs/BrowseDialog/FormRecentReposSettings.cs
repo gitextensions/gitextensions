@@ -108,6 +108,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     item.Font = AnchorFont;
                 LessRecentLB.Items.Add(item);
             }
+
+            SetButtonState();
         }
 
         private static void RemoveDeletedRepositories()
@@ -194,7 +196,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 sender = ((ContextMenuStrip)sender).SourceControl;
             else if (sender is ToolStripItem)
                 return GetSelectedRepos(((ToolStripItem)sender).Owner, out repos);
-            else
+            else if (!(sender is ListView))
                 sender = null;
 
             ListView lb;
@@ -218,6 +220,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void anchorToMostToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            AnchorToMostRecentRepositories(sender);
+        }
+
+        private void AnchorToMostRecentRepositories(object sender)
+        {
             List<RecentRepoInfo> repos;
 
             if (GetSelectedRepos(sender, out repos))
@@ -232,6 +239,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         private void anchorToLessToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AnchorToLessRecentRepositories(sender);
+        }
+
+        private void AnchorToLessRecentRepositories(object sender)
         {
             List<RecentRepoInfo> repos;
 
@@ -286,6 +298,63 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             e.Graphics.FillRectangle(SystemBrushes.Window, bounds);
             TextRenderer.DrawText(e.Graphics, e.Item.Text, listView.Font, bounds, SystemColors.ControlText,
                                   TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.GlyphOverhangPadding | TextFormatFlags.VerticalCenter);
+        }
+
+        private void buttonAnchorAllToLessRecentRepositories_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in MostRecentLB.Items)
+            {
+                item.Selected = true;
+            }
+            AnchorToLessRecentRepositories(MostRecentLB);
+        }
+
+        private void buttonAnchorToLessRecentRepositories_Click(object sender, EventArgs e)
+        {
+            AnchorToLessRecentRepositories(MostRecentLB);
+            if(MostRecentLB.Items.Count != 0)
+            {
+                MostRecentLB.Items[0].Selected = true;
+                MostRecentLB.Select();
+            }
+        }
+
+        private void buttonAnchorToMostRecentRepositories_Click(object sender, EventArgs e)
+        {
+            AnchorToMostRecentRepositories(LessRecentLB);
+            if (LessRecentLB.Items.Count != 0)
+            {
+                LessRecentLB.Items[0].Selected = true;
+                LessRecentLB.Select();
+            }
+        }
+
+        private void buttonAnchorAllToMostRecentRepositories_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in LessRecentLB.Items)
+            {
+                item.Selected = true;
+            }
+            AnchorToMostRecentRepositories(LessRecentLB);
+        }
+
+        private void SetButtonState()
+        {
+            buttonAnchorAllToLessRecentRepositories.Enabled = (MostRecentLB.Items.Count != 0);
+            buttonAnchorAllToMostRecentRepositories.Enabled = (LessRecentLB.Items.Count != 0);
+
+            buttonAnchorToLessRecentRepositories.Enabled = (MostRecentLB.SelectedItems.Count != 0);
+            buttonAnchorToMostRecentRepositories.Enabled = (LessRecentLB.SelectedItems.Count != 0);
+        }
+
+        private void MostRecentLB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtonState();
+        }
+
+        private void LessRecentLB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetButtonState();
         }
     }
 }
