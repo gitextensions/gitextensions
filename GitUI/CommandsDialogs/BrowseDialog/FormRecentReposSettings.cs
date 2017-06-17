@@ -64,6 +64,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 throw new Exception("Unhandled shortening strategy: " + strategy);
         }
 
+        private static Font AnchorFont = new Font(new ListViewItem().Font, FontStyle.Bold);
         private void RefreshRepos()
         {
             MostRecentLB.Items.Clear();
@@ -93,10 +94,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             foreach (RecentRepoInfo repo in mostRecentRepos)
-                MostRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
+            {
+                var item = new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption };
+                if (repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent)
+                    item.Font = AnchorFont;
+                MostRecentLB.Items.Add(item);
+            }
 
             foreach (RecentRepoInfo repo in lessRecentRepos)
-                LessRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
+            {
+                var item = new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption };
+                if (repo.Repo.Anchor == Repository.RepositoryAnchor.LessRecent)
+                    item.Font = AnchorFont;
+                LessRecentLB.Items.Add(item);
+            }
         }
 
         private static void RemoveDeletedRepositories()
