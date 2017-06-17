@@ -129,6 +129,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void sortMostRecentRepos_CheckedChanged(object sender, EventArgs e)
         {
             RefreshRepos();
+            SetComboWidth();
         }
 
         private void comboMinWidthEdit_ValueChanged(object sender, EventArgs e)
@@ -215,6 +216,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     repo.Repo.Anchor = Repository.RepositoryAnchor.MostRecent;
                 }
                 RefreshRepos();
+                SetComboWidth();
             }
         }
 
@@ -229,6 +231,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     repo.Repo.Anchor = Repository.RepositoryAnchor.LessRecent;
                 }
                 RefreshRepos();
+                SetComboWidth();
             }
         }
 
@@ -243,6 +246,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     repo.Repo.Anchor = Repository.RepositoryAnchor.None;
                 }
                 RefreshRepos();
+                SetComboWidth();
             }
         }
 
