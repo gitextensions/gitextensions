@@ -299,7 +299,6 @@
             this.LessRecentLB.HideSelection = false;
             this.LessRecentLB.LabelWrap = false;
             this.LessRecentLB.Location = new System.Drawing.Point(0, 191);
-            this.LessRecentLB.MultiSelect = false;
             this.LessRecentLB.Name = "LessRecentLB";
             this.LessRecentLB.Size = new System.Drawing.Size(356, 219);
             this.LessRecentLB.TabIndex = 2;
@@ -381,7 +380,6 @@
             this.MostRecentLB.HideSelection = false;
             this.MostRecentLB.LabelWrap = false;
             this.MostRecentLB.Location = new System.Drawing.Point(0, 19);
-            this.MostRecentLB.MultiSelect = false;
             this.MostRecentLB.Name = "MostRecentLB";
             this.MostRecentLB.Size = new System.Drawing.Size(356, 150);
             this.MostRecentLB.TabIndex = 0;
