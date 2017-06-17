@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -101,9 +102,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private static void RemoveDeletedRepositories()
         {
             var repos = Repositories.RepositoryHistory.Repositories;
-            for (int i = repos.Count - 1; i >=  0; i--)
+            for (int i = repos.Count - 1; i >= 0; i--)
             {
-                if(!Directory.Exists(repos[i].Path))
+                if (!Directory.Exists(repos[i].Path))
                 {
                     repos.RemoveAt(i);
                 }
@@ -160,24 +161,27 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-            RecentRepoInfo repo;
+            List<RecentRepoInfo> repos;
 
-            e.Cancel = !GetSelectedRepo(sender, out repo);
+            e.Cancel = !GetSelectedRepos(sender, out repos);
 
             if (!e.Cancel)
             {
-                anchorToMostToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.MostRecent;
-                anchorToLessToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.LessRecent;
-                removeAnchorToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.None;
+                foreach (var repo in repos)
+                {
+                    anchorToMostToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.MostRecent;
+                    anchorToLessToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.LessRecent;
+                    removeAnchorToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.None;
+                }
             }
         }
 
-        private bool GetSelectedRepo(object sender, out RecentRepoInfo repo)
+        private bool GetSelectedRepos(object sender, out List<RecentRepoInfo> repos)
         {
             if (sender is ContextMenuStrip)
                 sender = ((ContextMenuStrip)sender).SourceControl;
             else if (sender is ToolStripItem)
-                return GetSelectedRepo(((ToolStripItem)sender).Owner, out repo);
+                return GetSelectedRepos(((ToolStripItem)sender).Owner, out repos);
             else
                 sender = null;
 
@@ -189,54 +193,69 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             else
                 lb = null;
 
-            repo = null;
+            repos = new List<RecentRepoInfo>();
             if (lb?.SelectedItems.Count > 0)
             {
-                repo = lb.SelectedItems[0].Tag as RecentRepoInfo;
+                foreach (ListViewItem item in lb.SelectedItems)
+                {
+                    repos.Add(item.Tag as RecentRepoInfo);
+                }
             }
-            return repo != null;
+            return repos.Count != 0;
         }
 
         private void anchorToMostToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
+            List<RecentRepoInfo> repos;
 
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepos(sender, out repos))
             {
-                repo.Repo.Anchor = Repository.RepositoryAnchor.MostRecent;
+                foreach (var repo in repos)
+                {
+                    repo.Repo.Anchor = Repository.RepositoryAnchor.MostRecent;
+                }
                 RefreshRepos();
             }
         }
 
         private void anchorToLessToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
+            List<RecentRepoInfo> repos;
 
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepos(sender, out repos))
             {
-                repo.Repo.Anchor = Repository.RepositoryAnchor.LessRecent;
+                foreach (var repo in repos)
+                {
+                    repo.Repo.Anchor = Repository.RepositoryAnchor.LessRecent;
+                }
                 RefreshRepos();
             }
         }
 
         private void removeAnchorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
+            List<RecentRepoInfo> repos;
 
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepos(sender, out repos))
             {
-                repo.Repo.Anchor = Repository.RepositoryAnchor.None;
+                foreach (var repo in repos)
+                {
+                    repo.Repo.Anchor = Repository.RepositoryAnchor.None;
+                }
                 RefreshRepos();
             }
         }
 
         private void removeRecentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RecentRepoInfo repo;
+            List<RecentRepoInfo> repos;
 
-            if (GetSelectedRepo(sender, out repo))
+            if (GetSelectedRepos(sender, out repos))
             {
-                Repositories.RepositoryHistory.Repositories.Remove(repo.Repo);
+                foreach (var repo in repos)
+                {
+                    Repositories.RepositoryHistory.Repositories.Remove(repo.Repo);
+                }
                 RefreshRepos();
             }
         }
