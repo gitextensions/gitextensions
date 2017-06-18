@@ -304,6 +304,7 @@
             this.LessRecentLB.LabelWrap = false;
             this.LessRecentLB.Location = new System.Drawing.Point(0, 214);
             this.LessRecentLB.Name = "LessRecentLB";
+            this.LessRecentLB.ShowItemToolTips = true;
             this.LessRecentLB.Size = new System.Drawing.Size(356, 196);
             this.LessRecentLB.TabIndex = 2;
             this.LessRecentLB.UseCompatibleStateImageBehavior = false;
@@ -430,6 +431,7 @@
             this.MostRecentLB.LabelWrap = false;
             this.MostRecentLB.Location = new System.Drawing.Point(0, 19);
             this.MostRecentLB.Name = "MostRecentLB";
+            this.MostRecentLB.ShowItemToolTips = true;
             this.MostRecentLB.Size = new System.Drawing.Size(356, 150);
             this.MostRecentLB.TabIndex = 0;
             this.MostRecentLB.UseCompatibleStateImageBehavior = false;

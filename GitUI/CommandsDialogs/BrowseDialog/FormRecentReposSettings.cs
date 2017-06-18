@@ -95,24 +95,33 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             foreach (RecentRepoInfo repo in mostRecentRepos)
             {
-                var item = new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption };
-                if (repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent)
-                    item.Font = AnchorFont;
+                var item = GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent);
                 MostRecentLB.Items.Add(item);
             }
 
             foreach (RecentRepoInfo repo in lessRecentRepos)
             {
-                var item = new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption };
-                if (repo.Repo.Anchor == Repository.RepositoryAnchor.LessRecent)
-                    item.Font = AnchorFont;
+                var item = GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.LessRecent);
                 LessRecentLB.Items.Add(item);
             }
 
             SetButtonState();
         }
 
-        private static void RemoveDeletedRepositories()
+        private ListViewItem GetRepositoryListViewItem(RecentRepoInfo repo, bool anchored)
+        {
+            var item = new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Repo.Path };
+            if (anchored)
+                item.Font = AnchorFont;
+            if (!Directory.Exists(repo.Repo.Path))
+            {
+                item.ForeColor = Color.Red;
+                ContainsDeletedRepositories = true;
+            }
+            return item;
+        }
+
+        private void RemoveDeletedRepositories()
         {
             var repos = Repositories.RepositoryHistory.Repositories;
             for (int i = repos.Count - 1; i >= 0; i--)
