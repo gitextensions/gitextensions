@@ -507,7 +507,7 @@ namespace GitUI.CommandsDialogs
             if (!_currentItemStaged && _currentItem.IsNew)
                 patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name,
                     SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(),
-                    SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, false, SelectedDiff.FilePreabmle);
+                    SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, false, SelectedDiff.FilePreamble);
             else
                 patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
@@ -587,7 +587,7 @@ namespace GitUI.CommandsDialogs
             else if (_currentItem.IsNew)
                 patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name,
                     SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
-                    SelectedDiff.Encoding, true, SelectedDiff.FilePreabmle);
+                    SelectedDiff.Encoding, true, SelectedDiff.FilePreamble);
             else
                 patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
