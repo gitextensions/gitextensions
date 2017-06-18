@@ -12,6 +12,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormRecentReposSettings : GitExtensionsForm
     {
+        private bool ContainsDeletedRepositories { get; set; }
         public FormRecentReposSettings()
             : base(true)
         {
@@ -65,6 +66,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         private static Font AnchorFont = new Font(new ListViewItem().Font, FontStyle.Bold);
+
         private void RefreshRepos()
         {
             MostRecentLB.Items.Clear();
@@ -81,8 +83,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             splitter.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
             splitter.MeasureFont = MostRecentLB.Font;
             splitter.Graphics = MostRecentLB.CreateGraphics();
-
-            RemoveDeletedRepositories();
 
             try
             {
@@ -131,6 +131,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     repos.RemoveAt(i);
                 }
             }
+            ContainsDeletedRepositories = false;
         }
 
         private void SetComboWidth()
@@ -354,6 +355,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             buttonAnchorToLessRecentRepositories.Enabled = (MostRecentLB.SelectedItems.Count != 0);
             buttonAnchorToMostRecentRepositories.Enabled = (LessRecentLB.SelectedItems.Count != 0);
+
+            buttonRemoveDeletedRepositories.Enabled = ContainsDeletedRepositories;
         }
 
         private void MostRecentLB_SelectedIndexChanged(object sender, EventArgs e)
@@ -364,6 +367,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void LessRecentLB_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtonState();
+        }
+
+        private void buttonRemoveDeletedRepositories_Click(object sender, EventArgs e)
+        {
+            RemoveDeletedRepositories();
+            RefreshRepos();
         }
     }
 }

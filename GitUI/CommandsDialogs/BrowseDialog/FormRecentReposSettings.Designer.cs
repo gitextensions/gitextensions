@@ -62,6 +62,7 @@
             this.chdrRepository = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel2 = new System.Windows.Forms.Panel();
             this.MostRecentLabel = new System.Windows.Forms.Label();
+            this.buttonRemoveDeletedRepositories = new System.Windows.Forms.Button();
             flpnlControls = new System.Windows.Forms.FlowLayoutPanel();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             flpnlControls.SuspendLayout();
@@ -79,6 +80,7 @@
             // 
             flpnlControls.Controls.Add(this.Abort);
             flpnlControls.Controls.Add(this.Ok);
+            flpnlControls.Controls.Add(this.buttonRemoveDeletedRepositories);
             flpnlControls.Dock = System.Windows.Forms.DockStyle.Bottom;
             flpnlControls.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             flpnlControls.Location = new System.Drawing.Point(0, 410);
@@ -140,6 +142,7 @@
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new System.Drawing.Size(345, 410);
             tableLayoutPanel1.TabIndex = 0;
@@ -324,13 +327,13 @@
             this.removeAnchorToolStripMenuItem,
             this.removeRecentToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(258, 114);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(258, 92);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // anchorToMostToolStripMenuItem
             // 
             this.anchorToMostToolStripMenuItem.Name = "anchorToMostToolStripMenuItem";
-            this.anchorToMostToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.anchorToMostToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.anchorToMostToolStripMenuItem.Text = "Anchor to most recent repositories";
             this.anchorToMostToolStripMenuItem.Click += new System.EventHandler(this.anchorToMostToolStripMenuItem_Click);
             // 
@@ -344,14 +347,14 @@
             // removeAnchorToolStripMenuItem
             // 
             this.removeAnchorToolStripMenuItem.Name = "removeAnchorToolStripMenuItem";
-            this.removeAnchorToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.removeAnchorToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.removeAnchorToolStripMenuItem.Text = "Remove anchor";
             this.removeAnchorToolStripMenuItem.Click += new System.EventHandler(this.removeAnchorToolStripMenuItem_Click);
             // 
             // removeRecentToolStripMenuItem
             // 
             this.removeRecentToolStripMenuItem.Name = "removeRecentToolStripMenuItem";
-            this.removeRecentToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.removeRecentToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
             this.removeRecentToolStripMenuItem.Text = "Remove from recent repositories";
             this.removeRecentToolStripMenuItem.Click += new System.EventHandler(this.removeRecentToolStripMenuItem_Click);
             // 
@@ -463,6 +466,19 @@
             this.MostRecentLabel.TabIndex = 0;
             this.MostRecentLabel.Text = "Most recent repositories";
             // 
+            // buttonRemoveDeletedRepositories
+            // 
+            this.buttonRemoveDeletedRepositories.AutoSize = true;
+            this.buttonRemoveDeletedRepositories.Dock = System.Windows.Forms.DockStyle.Left;
+            this.buttonRemoveDeletedRepositories.Location = new System.Drawing.Point(354, 3);
+            this.buttonRemoveDeletedRepositories.Name = "buttonRemoveDeletedRepositories";
+            this.buttonRemoveDeletedRepositories.Size = new System.Drawing.Size(156, 25);
+            this.buttonRemoveDeletedRepositories.TabIndex = 0;
+            this.buttonRemoveDeletedRepositories.Text = "Remove deleted repositories";
+            this.buttonRemoveDeletedRepositories.UseCompatibleTextRendering = true;
+            this.buttonRemoveDeletedRepositories.UseVisualStyleBackColor = true;
+            this.buttonRemoveDeletedRepositories.Click += new System.EventHandler(this.buttonRemoveDeletedRepositories_Click);
+            // 
             // FormRecentReposSettings
             // 
             this.AcceptButton = this.Ok;
@@ -533,5 +549,6 @@
         private System.Windows.Forms.Button buttonAnchorToMostRecentRepositories;
         private System.Windows.Forms.Button buttonAnchorToLessRecentRepositories;
         private System.Windows.Forms.Button buttonAnchorAllToLessRecentRepositories;
+        private System.Windows.Forms.Button buttonRemoveDeletedRepositories;
     }
 }
