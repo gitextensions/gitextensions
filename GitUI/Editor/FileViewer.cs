@@ -180,7 +180,7 @@ namespace GitUI.Editor
         }
 
         [Browsable(false)]
-        public byte[] FilePreabmle { get; private set; }
+        public byte[] FilePreamble { get; private set; }
 
         private void WorkingDirChanged(object sender, GitUICommandsChangedEventArgs e)
         {
@@ -480,7 +480,7 @@ namespace GitUI.Editor
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
         {
-            FilePreabmle = null;
+            FilePreamble = null;
 
             string fullPath = Path.GetFullPath(Path.Combine(Module.WorkingDir, fileName));
 
