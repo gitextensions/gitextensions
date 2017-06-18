@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             new TranslationString("There is a difftool configured: {0}");
 
         private readonly TranslationString _configureMergeTool =
-            new TranslationString("You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).");
+            new TranslationString("You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).");
 
         private readonly TranslationString _kdiffAsMergeConfiguredButNotFound =
             new TranslationString("KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.");

@@ -416,7 +416,7 @@ Ta akcja będzie wykonywana bez ostrzeżenia podczas przełączania gałęzi.</t
         
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
-        <source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</source>
+        <source>You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).</source>
         <target>Musisz skonfigurować narzędzie scalania (przykładowo kdiff3), aby móc rozwiązywać konflikty scalania.</target>
         
       </trans-unit>
@@ -2157,7 +2157,7 @@ Będziesz mieć uprawnienia wysyłania. {2}</target>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Istnieją nierozwiązane konflikty scalania
 </target>
@@ -3173,7 +3173,7 @@ Chcesz przerwać, i usunąć go z listy ostatnich repozytoriów?</target>
         
       </trans-unit>
       <trans-unit id="runMergetoolToolStripMenuItem.Text">
-        <source>Solve mergeconflicts...</source>
+        <source>Solve merge conflicts...</source>
         <target>Rozwiąż konflikty scalania...</target>
         
       </trans-unit>
@@ -3923,7 +3923,7 @@ gitex.cmd / gitex (umieszczone w tym samym folderze, co GitExtensions.exe):</tar
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Istnieją nierozwiązane konflikty scalania
 </target>
@@ -4060,7 +4060,7 @@ Chcesz kontynuować?</target>
         
       </trans-unit>
       <trans-unit id="_mergeConflicts.Text">
-        <source>There are unresolved mergeconflicts, solve mergeconflicts before committing.</source>
+        <source>There are unresolved merge conflicts, solve merge conflicts before committing.</source>
         <target>Istnieją nierozwiązane konflikty scalania, rozwiąż je przed zatwierdzeniem.</target>
         
       </trans-unit>
@@ -6138,7 +6138,7 @@ poziomie. Dostosowanie jest również wykonywane do zwyczajnego drzewa przodka.<
   <file datatype="plaintext" original="FormModifiedDeletedCreated" source-language="en" target-language="pl">
     <body>
       <trans-unit id="$this.Text">
-        <source>Solve mergeconflict</source>
+        <source>Solve merge conflict</source>
         <target>Rozwiąż konflikt scalania</target>
         
       </trans-unit>
@@ -6840,7 +6840,7 @@ Na pewno chcesz wysłać tę gałąź?</target>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Istnieją nierozwiązane konflikty scalania
 </target>
@@ -7529,7 +7529,7 @@ Przywrócono do pustej wartości.</target>
         
       </trans-unit>
       <trans-unit id="Rescan.Text">
-        <source>Rescan mergeconflicts</source>
+        <source>Rescan merge conflicts</source>
         <target>Przeskanuj konflikty scalania</target>
         
       </trans-unit>
@@ -7659,7 +7659,7 @@ Ta czynność nie może zostać cofnięta.</target>
         
       </trans-unit>
       <trans-unit id="allConflictsResolved.Text">
-        <source>All mergeconflicts are resolved, you can commit.
+        <source>All merge conflicts are resolved, you can commit.
 Do you want to commit now?</source>
         <target>Wszystkie konflikty scalania zostały rozwiązane, możesz zatwierdzić.
 Chcesz teraz zatwierdzić?</target>
@@ -7671,7 +7671,7 @@ Chcesz teraz zatwierdzić?</target>
         
       </trans-unit>
       <trans-unit id="askMergeConflictSolved.Text">
-        <source>Is the mergeconflict solved?</source>
+        <source>Is the merge conflict solved?</source>
         <target>Czy konflikt scalania został rozwiązany?</target>
         
       </trans-unit>
@@ -7679,7 +7679,7 @@ Chcesz teraz zatwierdzić?</target>
         <source>The merge conflict need to be solved and the result must be saved as:
 {0}
 
-Is the mergeconflict solved?</source>
+Is the merge conflict solved?</source>
         <target>Konflikt scalania musi zostać rozwiązany, a wynik musi zostać zapisany jako:
 {0}
 

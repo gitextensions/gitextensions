@@ -212,7 +212,7 @@
             this.SolveMergeconflicts.Name = "SolveMergeconflicts";
             this.SolveMergeconflicts.Size = new System.Drawing.Size(125, 78);
             this.SolveMergeconflicts.TabIndex = 12;
-            this.SolveMergeconflicts.Text = "There are unresolved mergeconflicts\r\n";
+            this.SolveMergeconflicts.Text = "There are unresolved merge conflicts\r\n";
             this.SolveMergeconflicts.UseVisualStyleBackColor = false;
             this.SolveMergeconflicts.Visible = false;
             this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
