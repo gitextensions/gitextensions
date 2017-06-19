@@ -416,7 +416,7 @@ This action will be performed without warning while checking out branch.</source
         
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
-        <source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</source>
+        <source>You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).</source>
         <target>Необходимо настроить инструмент слияния для решения конфликтов (например, kdiff3).</target>
         
       </trans-unit>
@@ -2167,7 +2167,7 @@ You will have push access. {2}</source>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Неразрешенные конфликты</target>
         
@@ -3186,7 +3186,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="runMergetoolToolStripMenuItem.Text">
-        <source>Solve mergeconflicts...</source>
+        <source>Solve merge conflicts...</source>
         <target>Разрешить конфликты...</target>
         
       </trans-unit>
@@ -3938,7 +3938,7 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Есть неразрешенные конфликты</target>
         
@@ -4073,7 +4073,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_mergeConflicts.Text">
-        <source>There are unresolved mergeconflicts, solve mergeconflicts before committing.</source>
+        <source>There are unresolved merge conflicts, solve merge conflicts before committing.</source>
         <target>Есть конфликты слияния, решите их перед коммитом.</target>
         
       </trans-unit>
@@ -6161,7 +6161,7 @@ ancestor tree.</source>
   <file datatype="plaintext" original="FormModifiedDeletedCreated" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
-        <source>Solve mergeconflict</source>
+        <source>Solve merge conflict</source>
         <target>Разрешить конфликт слияния</target>
         
       </trans-unit>
@@ -6862,7 +6862,7 @@ Are you sure you want to push this branch?</source>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Неразрешенные конфликты</target>
         
@@ -7553,7 +7553,7 @@ Value has been reset to empty value.</source>
         
       </trans-unit>
       <trans-unit id="Rescan.Text">
-        <source>Rescan mergeconflicts</source>
+        <source>Rescan merge conflicts</source>
         <target>Пересканировать конфликты</target>
         
       </trans-unit>
@@ -7684,7 +7684,7 @@ This action cannot be made undone.</source>
         
       </trans-unit>
       <trans-unit id="allConflictsResolved.Text">
-        <source>All mergeconflicts are resolved, you can commit.
+        <source>All merge conflicts are resolved, you can commit.
 Do you want to commit now?</source>
         <target>Все конфликты были разрешены, вы можете зафиксировать изменения.
 Хотите зафиксировать сейчас?</target>
@@ -7696,7 +7696,7 @@ Do you want to commit now?</source>
         
       </trans-unit>
       <trans-unit id="askMergeConflictSolved.Text">
-        <source>Is the mergeconflict solved?</source>
+        <source>Is the merge conflict solved?</source>
         <target>Конфликт разрешен?</target>
         
       </trans-unit>
@@ -7704,7 +7704,7 @@ Do you want to commit now?</source>
         <source>The merge conflict need to be solved and the result must be saved as:
 {0}
 
-Is the mergeconflict solved?</source>
+Is the merge conflict solved?</source>
         <target>Конфликт должен быть разрешен, и результат должен быть сохранен как:
 {0}
 

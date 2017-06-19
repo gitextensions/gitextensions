@@ -160,7 +160,7 @@ namespace GitPlugin
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "CreateBranch",        "Create bra&nch", "Create new branch", 10, n++);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "Merge",               "&Merge", "merge", 18, n++);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "Rebase",              "R&ebase", "Rebase", 19, n++);
-                    _gitPlugin.AddPopupCommand(mainMenuPopup, "SolveMergeConflicts", "Sol&ve mergeconflicts", "Solve mergeconflicts", 0, n++);
+                    _gitPlugin.AddPopupCommand(mainMenuPopup, "SolveMergeConflicts", "Sol&ve merge conflicts", "Solve merge conflicts", 0, n++);
                     _gitPlugin.AddPopupCommand(mainMenuPopup, "CherryPick",          "Cherry &pick", "Cherry pick commit", 15, n++);
                 }
 
