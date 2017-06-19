@@ -600,7 +600,9 @@ namespace GitUI.Editor
 
             if (File.Exists(path))
             {
-                using (var reader = new StreamReader(path, Module.FilesEncoding))
+                // StreamReader disposes of 'fileStream'.
+                var fileStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using (var reader = new StreamReader(fileStream, Module.FilesEncoding))
                 {
                     var content = reader.ReadToEnd();
                     FilePreamble = reader.CurrentEncoding.GetPreamble();
