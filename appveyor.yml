@@ -24,6 +24,10 @@ cache:
 
 install:
 - cmd: git submodule update --init --recursive
+- cmd: |-
+    cd Setup
+    python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%Dev@%APPVEYOR_REPO_COMMIT:~0,5%
+    cd ..
 
 build_script:
 - ps: |
