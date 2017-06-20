@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _enterCommitMessageHint = new TranslationString("Enter commit message");
 
         private readonly TranslationString _mergeConflicts =
-            new TranslationString("There are unresolved mergeconflicts, solve mergeconflicts before committing.");
+            new TranslationString("There are unresolved merge conflicts, solve merge conflicts before committing.");
 
         private readonly TranslationString _mergeConflictsCaption = new TranslationString("Merge conflicts");
 
