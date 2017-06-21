@@ -86,5 +86,29 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 LoadClick(null, null);
             }
         }
+
+        private void folderGoUpbutton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DirectoryInfo currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
+                if (currentDirectory.Parent == null)
+                    return;
+                string parentPath = currentDirectory.Parent.FullName.TrimEnd('\\');
+                _NO_TRANSLATE_Directory.Text = parentPath;
+                _NO_TRANSLATE_Directory.Focus();
+                _NO_TRANSLATE_Directory.Select(_NO_TRANSLATE_Directory.Text.Length, 0);
+                SendKeys.Send(@"\");
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void _NO_TRANSLATE_Directory_TextChanged(object sender, EventArgs e)
+        {
+            DirectoryInfo currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
+            folderGoUpbutton.Enabled = (currentDirectory.Parent != null);
+        }
     }
 }
