@@ -2445,21 +2445,21 @@ namespace GitUI
             RefreshOwnScripts();
         }
 
-        private ISet<string> _AmbiguosuRefs;
+        private ISet<string> _AmbiguousRefs;
         private ISet<string> AmbiguousRefs
         {
             get
             {
-                if (_AmbiguosuRefs == null)
+                if (_AmbiguousRefs == null)
                 {
-                    _AmbiguosuRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
+                    _AmbiguousRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
                 }
-                return _AmbiguosuRefs;
+                return _AmbiguousRefs;
             }
 
             set
             {
-                _AmbiguosuRefs = value;
+                _AmbiguousRefs = value;
             }            
         }
             
