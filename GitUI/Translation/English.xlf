@@ -1248,7 +1248,7 @@ Do you want to open it?</source>
         <target />
       </trans-unit>
       <trans-unit id="_DiffWithParent.Text">
-        <source>Diff with parent</source>
+        <source>Diff with:</source>
         <target />
       </trans-unit>
       <trans-unit id="_UnsupportedMultiselectAction.Text">
