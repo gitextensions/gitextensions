@@ -96,10 +96,20 @@ namespace GitUI
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
         private GitRevision _baseCommitToCompare = null;
+
+        private IEnumerable<IGitRef> _LatestRefs = Enumerable.Empty<IGitRef>();
         /// <summary>
         /// Refs loaded while the latest processing of git log
         /// </summary>
-        private IEnumerable<IGitRef> LatestRefs = Enumerable.Empty<IGitRef>();
+        private IEnumerable<IGitRef> LatestRefs
+        {
+            get { return _LatestRefs;  }
+            set
+            {
+                _LatestRefs = value;
+                AmbiguousRefs = null;
+            }
+        }
 
         public RevisionGrid()
         {
@@ -849,6 +859,27 @@ namespace GitUI
         public List<GitRevision> GetSelectedRevisions()
         {
             return GetSelectedRevisions(null);
+        }
+
+        public string DescribeRevision(GitRevision revision)
+        {
+            var gitRefListsForRevision = new GitRefListsForRevision(revision);
+            var descriptiveRefs = gitRefListsForRevision.AllBranches.Concat(gitRefListsForRevision.AllTags);
+
+            string description;
+
+            if (descriptiveRefs.Any())
+            {
+                description = GetRefUnambiguousName(descriptiveRefs.First());
+            }
+            else
+            {
+                description = revision.Subject;
+            }
+
+            description = description + " @" + revision.Guid.Substring(0, 4);
+
+            return description;
         }
 
         public List<GitRevision> GetSelectedRevisions(SortDirection? direction)
@@ -2284,17 +2315,6 @@ namespace GitUI
             var rebaseDropDown = new ContextMenuStrip();
             var renameDropDown = new ContextMenuStrip();
 
-            ISet<string> ambiguosuRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
-            Func<IGitRef, string> getRefUnambiguousName = (IGitRef gitRef) =>
-            {
-                if (ambiguosuRefs.Contains(gitRef.Name))
-                {
-                    return gitRef.CompleteName;
-                }
-
-                return gitRef.Name;
-            };
-
             var revision = LatestSelectedRevision;
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
             foreach (var head in gitRefListsForRevision.AllTags)
@@ -2305,7 +2325,7 @@ namespace GitUI
                 deleteTagDropDown.Items.Add(toolStripItem);
 
                 toolStripItem = new ToolStripMenuItem(head.Name);
-                toolStripItem.Tag = getRefUnambiguousName(head);
+                toolStripItem.Tag = GetRefUnambiguousName(head);
                 toolStripItem.Click += ToolStripItemClickMergeBranch;
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
@@ -2322,12 +2342,12 @@ namespace GitUI
                 else
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = getRefUnambiguousName(head);
+                    toolStripItem.Tag = GetRefUnambiguousName(head);
                     toolStripItem.Click += ToolStripItemClickMergeBranch;
                     mergeBranchDropDown.Items.Add(toolStripItem);
 
                     toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = getRefUnambiguousName(head);
+                    toolStripItem.Tag = GetRefUnambiguousName(head);
                     toolStripItem.Click += ToolStripItemClickRebaseBranch;
                     rebaseDropDown.Items.Add(toolStripItem);
                 }
@@ -2429,6 +2449,34 @@ namespace GitUI
             openBuildReportToolStripMenuItem.Visible = (revision.BuildStatus != null && !string.IsNullOrWhiteSpace(revision.BuildStatus.Url));
 
             RefreshOwnScripts();
+        }
+
+        private ISet<string> _AmbiguousRefs;
+        private ISet<string> AmbiguousRefs
+        {
+            get
+            {
+                if (_AmbiguousRefs == null)
+                {
+                    _AmbiguousRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
+                }
+                return _AmbiguousRefs;
+            }
+
+            set
+            {
+                _AmbiguousRefs = value;
+            }            
+        }
+            
+        private string GetRefUnambiguousName(IGitRef gitRef)
+        {
+            if (AmbiguousRefs.Contains(gitRef.Name))
+            {
+                return gitRef.CompleteName;
+            }
+
+            return gitRef.Name;
         }
 
         private void ToolStripItemClickDeleteTag(object sender, EventArgs e)

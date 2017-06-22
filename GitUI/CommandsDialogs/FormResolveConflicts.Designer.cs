@@ -473,7 +473,7 @@
             this.Rescan.Name = "Rescan";
             this.Rescan.Size = new System.Drawing.Size(140, 25);
             this.Rescan.TabIndex = 5;
-            this.Rescan.Text = "Rescan mergeconflicts";
+            this.Rescan.Text = "Rescan merge conflicts";
             this.Rescan.UseVisualStyleBackColor = true;
             this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
             // 

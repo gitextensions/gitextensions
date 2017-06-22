@@ -20,12 +20,14 @@ namespace GitUI
 {
     using GitItemsWithParents = IDictionary<string, IList<GitItemStatus>>;
 
+    public delegate string DescribeRevisionDelegate(string sha1);
+
     public sealed partial class FileStatusList : GitModuleControl
     {
         private readonly TranslationString _UnsupportedMultiselectAction =
             new TranslationString("Operation not supported");
         private readonly TranslationString _DiffWithParent =
-            new TranslationString("Diff with parent");
+            new TranslationString("Diff with:");
         public readonly TranslationString CombinedDiff =
             new TranslationString("Combined Diff");
 
@@ -36,6 +38,8 @@ namespace GitUI
 
         private bool _filterVisible;
         private ToolStripItem _openSubmoduleMenuItem;
+
+        public DescribeRevisionDelegate DescribeRevision;
 
         public FileStatusList()
         {
@@ -482,13 +486,13 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IEnumerable<Tuple<GitItemStatus, string>> SelectedItemsWithParent
+        public IEnumerable<GitItemStatusWithParent> SelectedItemsWithParent
         {
             get
             {
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>()
                     .Where(i => i.Group != null) // Or maybe return null parents?
-                    .Select(i => new Tuple<GitItemStatus, string>((GitItemStatus)i.Tag, (string)i.Group.Tag));
+                    .Select(i => new GitItemStatusWithParent((GitItemStatus)i.Tag, (string)i.Group.Tag));
             }
         }
 
@@ -760,8 +764,7 @@ namespace GitUI
                         }
                         else
                         {
-                            string shortHash = pair.Key.Length > 8 ? pair.Key.Substring(0, 8) : pair.Key;
-                            groupName = _DiffWithParent.Text + " " + shortHash;
+                            groupName = _DiffWithParent.Text + " " + GetDescriptionForRevision(pair.Key);
                         }
 
                         group = new ListViewGroup(groupName);
@@ -804,6 +807,16 @@ namespace GitUI
             FileStatusListView_SizeChanged(null, null);
             FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
             FileStatusListView.EndUpdate();
+        }
+
+        private string GetDescriptionForRevision(string sha1)
+        {
+            if (DescribeRevision != null)
+            {
+                return DescribeRevision(sha1);
+            }
+
+            return sha1.ShortenTo(8);
         }
 
         [DefaultValue(true)]
@@ -1140,6 +1153,18 @@ namespace GitUI
         private Regex _filter;
 
         #endregion Filtering
+    }
+
+    public class GitItemStatusWithParent
+    {
+        public readonly GitItemStatus Item;
+        public readonly string ParentGuid;
+
+        public GitItemStatusWithParent(GitItemStatus anItem, string aParentGuid)
+        {
+            Item = anItem;
+            ParentGuid = aParentGuid;
+        }
     }
 
 }

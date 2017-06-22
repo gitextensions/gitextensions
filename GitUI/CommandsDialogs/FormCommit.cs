@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _enterCommitMessageHint = new TranslationString("Enter commit message");
 
         private readonly TranslationString _mergeConflicts =
-            new TranslationString("There are unresolved mergeconflicts, solve mergeconflicts before committing.");
+            new TranslationString("There are unresolved merge conflicts, solve merge conflicts before committing.");
 
         private readonly TranslationString _mergeConflictsCaption = new TranslationString("Merge conflicts");
 
@@ -507,7 +507,7 @@ namespace GitUI.CommandsDialogs
             if (!_currentItemStaged && _currentItem.IsNew)
                 patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name,
                     SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(),
-                    SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, false, SelectedDiff.FilePreabmle);
+                    SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, false, SelectedDiff.FilePreamble);
             else
                 patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
@@ -587,7 +587,7 @@ namespace GitUI.CommandsDialogs
             else if (_currentItem.IsNew)
                 patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name,
                     SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),
-                    SelectedDiff.Encoding, true, SelectedDiff.FilePreabmle);
+                    SelectedDiff.Encoding, true, SelectedDiff.FilePreamble);
             else
                 patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(),

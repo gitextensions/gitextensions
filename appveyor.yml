@@ -1,6 +1,11 @@
-version: 2.49.90.{build}
+version: 2.49.91.{build}
 
 os: Visual Studio 2015
+
+branches:
+  except:
+    - configdata
+    - gh-pages
 
 environment:
   matrix:
@@ -19,6 +24,10 @@ cache:
 
 install:
 - cmd: git submodule update --init --recursive
+- cmd: |-
+    cd Setup
+    python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%Dev@%APPVEYOR_REPO_COMMIT:~0,5%
+    cd ..
 
 build_script:
 - ps: |

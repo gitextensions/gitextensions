@@ -1746,7 +1746,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.runMergetoolToolStripMenuItem.Name = "runMergetoolToolStripMenuItem";
             this.runMergetoolToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.runMergetoolToolStripMenuItem.Text = "Solve mergeconflicts...";
+            this.runMergetoolToolStripMenuItem.Text = "Solve merge conflicts...";
             this.runMergetoolToolStripMenuItem.Click += new System.EventHandler(this.RunMergetoolToolStripMenuItemClick);
             // 
             // toolStripSeparator45

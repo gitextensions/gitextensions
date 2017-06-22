@@ -416,7 +416,7 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
         
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
-        <source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</source>
+        <source>You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).</source>
         <target>Necesita configurar la herramienta de fusión para resolver conflictos de fusión (kdiff3 por ejemplo).</target>
         
       </trans-unit>
@@ -2162,7 +2162,7 @@ Tendrá acceso para hacer Push. {2}</target>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Hay conflictos de fusión sin resolver</target>
         
@@ -3178,7 +3178,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="runMergetoolToolStripMenuItem.Text">
-        <source>Solve mergeconflicts...</source>
+        <source>Solve merge conflicts...</source>
         <target>Resolver conflictos de fusión...</target>
         
       </trans-unit>
@@ -3928,7 +3928,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Hay conflictos de fusión sin resolver</target>
         
@@ -4065,7 +4065,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_mergeConflicts.Text">
-        <source>There are unresolved mergeconflicts, solve mergeconflicts before committing.</source>
+        <source>There are unresolved merge conflicts, solve merge conflicts before committing.</source>
         <target>Hay conflictos de fusión sin resolver, solucionar conflictos antes de realizar el commit.</target>
         
       </trans-unit>
@@ -6144,7 +6144,7 @@ al árbol ancestro común.</target>
   <file datatype="plaintext" original="FormModifiedDeletedCreated" source-language="en" target-language="es">
     <body>
       <trans-unit id="$this.Text">
-        <source>Solve mergeconflict</source>
+        <source>Solve merge conflict</source>
         <target>Resolver conflicto de fusión</target>
         
       </trans-unit>
@@ -6841,7 +6841,7 @@ el remoto. ¿Está seguro de que desea hacer Push con esta rama?</target>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Hay conflictos sin resolver</target>
         
@@ -7529,7 +7529,7 @@ El valor se ha restablecido a un valor vacío.</target>
         
       </trans-unit>
       <trans-unit id="Rescan.Text">
-        <source>Rescan mergeconflicts</source>
+        <source>Rescan merge conflicts</source>
         <target>Volver a examinar conflictos</target>
         
       </trans-unit>
@@ -7659,7 +7659,7 @@ Esta acción no se puede deshacer.</target>
         
       </trans-unit>
       <trans-unit id="allConflictsResolved.Text">
-        <source>All mergeconflicts are resolved, you can commit.
+        <source>All merge conflicts are resolved, you can commit.
 Do you want to commit now?</source>
         <target>Todos los conflictos de fusión se resolvieron, puede hacer commit. 
 ¿Quiere hacer commit ahora?</target>
@@ -7671,7 +7671,7 @@ Do you want to commit now?</source>
         
       </trans-unit>
       <trans-unit id="askMergeConflictSolved.Text">
-        <source>Is the mergeconflict solved?</source>
+        <source>Is the merge conflict solved?</source>
         <target>¿Está resuelto el conflicto?</target>
         
       </trans-unit>
@@ -7679,7 +7679,7 @@ Do you want to commit now?</source>
         <source>The merge conflict need to be solved and the result must be saved as:
 {0}
 
-Is the mergeconflict solved?</source>
+Is the merge conflict solved?</source>
         <target>El conflicto de fusión necesita ser solucionado y el resultado guardado como:
 {0}
 

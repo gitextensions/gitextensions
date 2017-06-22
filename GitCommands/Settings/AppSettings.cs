@@ -1548,7 +1548,14 @@ namespace GitCommands
                 addEncoding(new UnicodeEncoding());
                 addEncoding(new UTF7Encoding());
                 addEncoding(new UTF8Encoding(false));
-                addEncoding(Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage));
+                try
+                {
+                    addEncoding(Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage));
+                }
+                catch
+                {
+                    //there are CultureInfos without a code page
+                }
             }
             else
             {
