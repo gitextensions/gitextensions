@@ -415,7 +415,7 @@ This action will be performed without warning while checking out branch.</source
         
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
-        <source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</source>
+        <source>You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).</source>
         <target>Stel een merge tool in om merge conflicten op te lossen (bijvoorbeeld kidff3).</target>
         
       </trans-unit>
@@ -2176,7 +2176,7 @@ U heeft rechten om commits te verzenden. {2}
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Er zijn niet opgeloste conflicten</target>
         
@@ -3198,7 +3198,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         
       </trans-unit>
       <trans-unit id="runMergetoolToolStripMenuItem.Text">
-        <source>Solve mergeconflicts...</source>
+        <source>Solve merge conflicts...</source>
         <target>Samenvoeg conflicten oplossen...</target>
         
       </trans-unit>
@@ -3963,7 +3963,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Er zijn niet opgeloste samenvoeg conflicten</target>
         
@@ -4099,7 +4099,7 @@ Weet u zeker dat u wilt doorgaan?</target>
         
       </trans-unit>
       <trans-unit id="_mergeConflicts.Text">
-        <source>There are unresolved mergeconflicts, solve mergeconflicts before committing.</source>
+        <source>There are unresolved merge conflicts, solve merge conflicts before committing.</source>
         <target>Er zijn niet opgeloste samenvoeg conflicten. Deze moeten opgelost worden voordat u een commit kunt maken.</target>
         
       </trans-unit>
@@ -6201,7 +6201,7 @@ De aanpassingen worden ook in gemeenschappelijke oorspronkelijke vertakking uitg
   <file datatype="plaintext" original="FormModifiedDeletedCreated" source-language="en" target-language="nl">
     <body>
       <trans-unit id="$this.Text">
-        <source>Solve mergeconflict</source>
+        <source>Solve merge conflict</source>
         <target>Samenvoeg conflicten oplossen</target>
         
       </trans-unit>
@@ -6913,7 +6913,7 @@ Weet u zeker dat u deze vertakking wilt verzenden?</target>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Er zijn niet opgeloste conflicten</target>
         
@@ -7633,7 +7633,7 @@ De waarde is teruggezet naar een lege waarde.</target>
         
       </trans-unit>
       <trans-unit id="Rescan.Text">
-        <source>Rescan mergeconflicts</source>
+        <source>Rescan merge conflicts</source>
         <target>Verversen</target>
         
       </trans-unit>
@@ -7761,7 +7761,7 @@ This action cannot be made undone.</source>
         
       </trans-unit>
       <trans-unit id="allConflictsResolved.Text">
-        <source>All mergeconflicts are resolved, you can commit.
+        <source>All merge conflicts are resolved, you can commit.
 Do you want to commit now?</source>
         <target>Alle samenvoeg conflicten zijn opgelost, u kunt nu committen.
 Wilt u nu committen?</target>
@@ -7773,7 +7773,7 @@ Wilt u nu committen?</target>
         
       </trans-unit>
       <trans-unit id="askMergeConflictSolved.Text">
-        <source>Is the mergeconflict solved?</source>
+        <source>Is the merge conflict solved?</source>
         <target>Is het samenvoeg conflict opgelost?</target>
         
       </trans-unit>
@@ -7781,7 +7781,7 @@ Wilt u nu committen?</target>
         <source>The merge conflict need to be solved and the result must be saved as:
 {0}
 
-Is the mergeconflict solved?</source>
+Is the merge conflict solved?</source>
         <target>Het samenvoeg conflict moet worden opgelost en het resultaat moet worden opgeslagen als: 
 {0} 
 

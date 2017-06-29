@@ -306,19 +306,15 @@ namespace GitUI.RevisionGridClasses
 
             public void Prune()
             {
-            // Remove all nodes that don't have a value associated with them.
-            start_over:
-                foreach (Node n in Nodes.Values)
+                Node[] nodesToRemove = Nodes.Values.Where(n => n.Data == null).ToArray();
+                // Remove all nodes that don't have a value associated with them.
+                foreach (Node n in nodesToRemove)
                 {
-                    if (n.Data == null)
+                    Nodes.Remove(n.Id);
+                    // This guy should have been at the end of some junctions
+                    foreach (Junction j in n.Descendants)
                     {
-                        Nodes.Remove(n.Id);
-                        // This guy should have been at the end of some junctions
-                        foreach (Junction j in n.Descendants)
-                        {
-                            j.Remove(n);
-                        }
-                        goto start_over;
+                        j.Remove(n);
                     }
                 }
             }

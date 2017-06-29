@@ -76,6 +76,7 @@
     <Compile Include="GitCommands\Patch\PatchManagerTest.cs" />
     <Compile Include="GitCommands\Patch\PatchTest.cs" />
     <Compile Include="GitUI\AuthorEmailBasedRevisionHighlightingFixture.cs" />
+    <Compile Include="GitUI\ConsoleEmulatorOutputControlFixture.cs" />
     <Compile Include="GitUI\Editor\Diff\DiffLineNumAnalyzerFixture.cs" />
     <Compile Include="GitUI\Editor\Diff\LinePrefixHelperFixture.cs" />
     <Compile Include="GitUI\FormUpdateFixture.cs" />
@@ -96,6 +97,10 @@
     <Compile Include="Translation\TranslationTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj">
+      <Project>{1DC7D403-484B-43B4-B017-1356397A32CB}</Project>
+      <Name>ConEmuWinForms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>

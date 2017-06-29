@@ -416,7 +416,7 @@ Při získávání větve bude tato akce provedena bez varování.</target>
         
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
-        <source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</source>
+        <source>You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).</source>
         <target>Musíte nastavit nástroj na rozdíly, abyste mohli řešit konflikty sloučení (např. kdiff3).</target>
         
       </trans-unit>
@@ -2159,7 +2159,7 @@ Budete moci odesílat. {2}</target>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Existují nevyřešené konflikty sloučení
 </target>
@@ -3177,7 +3177,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
         
       </trans-unit>
       <trans-unit id="runMergetoolToolStripMenuItem.Text">
-        <source>Solve mergeconflicts...</source>
+        <source>Solve merge conflicts...</source>
         <target>Vyřešit konflikty sloučení...</target>
         
       </trans-unit>
@@ -3930,7 +3930,7 @@ gitex.cmd / gitex (umístěný ve stejné složce jako GitExtensions.exe):</targ
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Existují nevyřešené konflikty sloučení</target>
         
@@ -4066,7 +4066,7 @@ Chcete pokračovat?</target>
         
       </trans-unit>
       <trans-unit id="_mergeConflicts.Text">
-        <source>There are unresolved mergeconflicts, solve mergeconflicts before committing.</source>
+        <source>There are unresolved merge conflicts, solve merge conflicts before committing.</source>
         <target>Existují nevyřešené konflikty sloučení. Před odevzdáním je musíte vyřešit.</target>
         
       </trans-unit>
@@ -6153,7 +6153,7 @@ Tato úprava je také provedena na stromě společného předka.</target>
   <file datatype="plaintext" original="FormModifiedDeletedCreated" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
-        <source>Solve mergeconflict</source>
+        <source>Solve merge conflict</source>
         <target>Vyřešit konflikt sloučení</target>
         
       </trans-unit>
@@ -6855,7 +6855,7 @@ Opravdu chcete odeslat tuto větev?</target>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Existují nevyřešené konflikty sloučení</target>
         
@@ -7548,7 +7548,7 @@ Hodnota byla změněna na prázdnou.</target>
         
       </trans-unit>
       <trans-unit id="Rescan.Text">
-        <source>Rescan mergeconflicts</source>
+        <source>Rescan merge conflicts</source>
         <target>Znovu skenovat konflikty sloučení</target>
         
       </trans-unit>
@@ -7676,7 +7676,7 @@ This action cannot be made undone.</source>
         
       </trans-unit>
       <trans-unit id="allConflictsResolved.Text">
-        <source>All mergeconflicts are resolved, you can commit.
+        <source>All merge conflicts are resolved, you can commit.
 Do you want to commit now?</source>
         <target>Všechny konflikty sloučení jsou vyřešené.Nyní můžete provést odevzdání.
 Chcete provést odevzdání?</target>
@@ -7688,7 +7688,7 @@ Chcete provést odevzdání?</target>
         
       </trans-unit>
       <trans-unit id="askMergeConflictSolved.Text">
-        <source>Is the mergeconflict solved?</source>
+        <source>Is the merge conflict solved?</source>
         <target>Je tento konflikt sloučení vyřešený?</target>
         
       </trans-unit>
@@ -7696,7 +7696,7 @@ Chcete provést odevzdání?</target>
         <source>The merge conflict need to be solved and the result must be saved as:
 {0}
 
-Is the mergeconflict solved?</source>
+Is the merge conflict solved?</source>
         <target>Konflikt sloučení musí být vyřešen a výsledek musí být uložen jako:
 {0}
 
