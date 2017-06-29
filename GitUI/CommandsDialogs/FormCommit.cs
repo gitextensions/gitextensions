@@ -221,15 +221,18 @@ namespace GitUI.CommandsDialogs
 
         private void AssignCommitMessageFromTemplate()
         {
-            // Check if commit.template is used
-            string fileName = Module.GetEffectivePathSetting("commit.template");
-            if (!string.IsNullOrEmpty(fileName))
+            if (IsUICommandsInitialized)
             {
-                using (var commitReader = new StreamReader(fileName))
+                // Check if commit.template is used
+                string fileName = Module.GetEffectivePathSetting("commit.template");
+                if (!string.IsNullOrEmpty(fileName))
                 {
-                    _commitTemplate = commitReader.ReadToEnd().Replace("\r", "");
+                    using (var commitReader = new StreamReader(fileName))
+                    {
+                        _commitTemplate = commitReader.ReadToEnd().Replace("\r", "");
+                    }
+                    Message.Text = _commitTemplate;
                 }
-                Message.Text = _commitTemplate;
             }
         }
 
