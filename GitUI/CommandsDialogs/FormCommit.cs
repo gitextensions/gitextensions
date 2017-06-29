@@ -1414,8 +1414,8 @@ namespace GitUI.CommandsDialogs
                     }
                     unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
                     unStagedFiles.RemoveAll(item => item.IsSubmodule && item.SubmoduleStatus.IsCompleted &&
-                        item.SubmoduleStatus.Result != null &&
-                        !item.SubmoduleStatus.Result.IsDirty && unstagedItems.Contains(item));
+                        (item.SubmoduleStatus.Result == null ||
+                        !item.SubmoduleStatus.Result.IsDirty && unstagedItems.Contains(item)));
                     foreach (var item in unstagedItems.Where(item => item.IsSubmodule &&
                         (item.SubmoduleStatus.Result == null ||
                         item.SubmoduleStatus.IsCompleted && item.SubmoduleStatus.Result.IsDirty)))
