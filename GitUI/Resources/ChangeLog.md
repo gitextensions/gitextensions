@@ -1,5 +1,92 @@
 Changelog
 =========
+
+### [Version 2.50] (23 June 2017)
+
+#### Features: 
+* Hotkey for "Stage All" button - Issue [3756]
+* Increased width for 'Open local repository' dialog. - PR [3644]
+* Shortcut key for "Create fixup commit" - Issue [3616]
+* Open diff form not in modal - PR [3598]
+* Git Worktree Support (Git 2.5) - Issue [3590]
+* File diff window always shows the top most file in a multiple selection - Issue [3510]
+* Feature request: assign F2 key to "Rename branch" - Issue [3503]
+* Feature proposal - turn remotes on/off - Issue [3456]
+* Autonormalise local branch at checkout - Issue [3450]
+* Warn the user if reseting a local branch is non fast forward. - Issue [3438]
+* AppVeyor CI plugin - PR [3426]
+* 2.49 RC2: Branch name not showing in VS 2015  - Issue [3393]
+* ConEmu settings - Issue [3392]
+* Atlassian Stash is now called Bitbucket Server - Issue [3334]
+* Feature: Support multi Selection in diff tab - Issue [3293]
+* Feature: Allow to run plugins from the scripts - Issue [3248]
+* Better ergonomic around commit form - PR [3245]
+* Feature/tfs2015 build integration - PR [3219]
+* Improve UI in 'merge branches'  - Issue [3208]
+* Add Build server integration for TFS-Build 2015 - Issue [3177]
+* Add Edit functionality in Advanced menu - Issue [3166]
+* "Add to gitignore" should include "/" prefix - Issue [3162]
+* Revert selected lines context option - Issue [3159]
+* Teamcity - log onto teamcity using HTTP NTLM authentication  - Issue [3119]
+* Need staged file count - Issue [3073]
+* Some fixes for a filter in "Commit" dialog - PR [3000]
+* Allow to change merge message - PR [2997]
+* Support for powershell scripts. - PR [2917]
+* Visual Studio 2008: File history/blame shows the current line  - Issue [2839]
+* Localizable phrases of ProxySwitcher's settings - PR [2802]
+* [Feature request] Improve usability for "revision links" feature - Issue [2768]
+* Detect hashes in commit messages and convert them to hyper links - Issue [2714]
+* Add option to open submodule from diff lists - Issue [2706]
+* Add --log option to merge window - Issue [2688]
+* Add ability to reveal certain commit from command line - Issue [2675]
+* Revision header's height is short if Japanese font is selected - Issue [2670]
+* Option to disable detached head dialogs - Issue [2460]
+* better ordering of branch names in "checkout branch" dialog - Issue [2455]
+* Expose the "repository excludes" file for configuration - Issue [2194]
+* Simplify calling "Prune remote branches" - Issue [2141]
+* Allow creating a new branch in the commit dialog - Issue [2016]
+* Add a checkbox to enable the --no-verify flag on commit - Issue [1982]
+* Support Meld as a mergetool - Issue [1975]
+* allow multi-select in resolve conflict window - Issue [1845]
+* Ability to clear recent repositories. - Issue [1064]
+
+
+#### Fixes: 
+* "Recover lost object" sometime doesn't show result - Issue [3777]
+* Very slow if "Show first parent" enabled - Issue [3767]
+* Win32Exception when clicking on Revision Link - Issue [3763]
+* Open Transifex website for translation - PR [3746]
+* mono: crash on an attempt to "Copy commit info" - Issue [3729]
+* The found text is not highlighted when searching in DiffView - Issue [3719]
+* Commit messages are corrupted if there are "mixed" encodings in log - Issue [3707]
+* Bug in Scripts - Issue [3691]
+* Portable mode & Gravatar Cache path - Issue [3594]
+* Commit dialog diff panel resizes inconsistently - Issue [3592]
+* Revision grid suddenly change selection after finish loading revisions - Issue [3583]
+* Don't use ResetMixed for "Unstage All" button when the commit is a merge - Issue [3565]
+* View Stash - window layout - Issue [3564]
+* Ctrl+R without Ctrl+L raise NullReferenceException - Issue [3534]
+* ConfigFile parser crashed if section contains ']' - Issue [3532]
+* WBEM_E_NOT_FOUND when clicking on matched Revision link - Issue [3515]
+* Checkout branch window doesn't rescale - Issue [3490]
+* Crash in main window after filenames are misaligned - Issue [3467]
+* Hotkeys lost in 2.49 - Issue [3432]
+* Branch rename does not autonormalise - Issue [3424]
+* Visual Studio 2008 AddIn isn't working anymore - Issue [3423]
+* 2.49RC2 Clean working directory single line log  - Issue [3383]
+* GitExtensions Merge ODS - Hangs Process - Issue [3218]
+* when merge ms-office-word file,it opened two local version. - Issue [3192]
+* Saving new remote clears URL entry - Issue [3154]
+* Delete selected, poor usability = lost changes - Issue [3127]
+* Revisiongrid doesnt keep the selection - Issue [2956]
+* Cannot paste into commit window - Issue [2926]
+* On Diff/File List pane got exception ArgumentOutOfRangeException InvalidArgument Value of -1 is not valid for index - Issue [2759]
+* Strip any ANSI escape codes from git command output - PR [2689]
+* Remote Repositories > Separate Push URL not working - Issue [2550]
+* In the statistics plugin, in the "Code by type" tab, allocation of space on the pie chart was wrong. - Issue [2530]
+* Commit selected is a random commit after deleting a branch - Issue [2446]
+* 2.47.x IME error with Spell checker - Issue [2301]
+
 ### Version 2.50RC2 (15 June 2017)
 #### Fixes: 
 * fix Teamcity build chooser [3762]
@@ -1703,6 +1790,13 @@ Changelog
 * Added visual studio 2008 plugin
 * Added standalone UI
 
+[Version 2.50]:https://github.com/gitextensions/gitextensions/releases/tag/v2.50
+[3777]:https://github.com/gitextensions/gitextensions/issues/3777
+[3767]:https://github.com/gitextensions/gitextensions/issues/3767
+[3763]:https://github.com/gitextensions/gitextensions/issues/3763
+[3756]:https://github.com/gitextensions/gitextensions/issues/3756
+[3746]:https://github.com/gitextensions/gitextensions/pull/3746
+[3729]:https://github.com/gitextensions/gitextensions/issues/3729
 [3719]:https://github.com/gitextensions/gitextensions/issues/3719
 [3707]:https://github.com/gitextensions/gitextensions/issues/3707
 [3691]:https://github.com/gitextensions/gitextensions/issues/3691
