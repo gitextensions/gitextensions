@@ -182,14 +182,7 @@ namespace GitUI.CommandsDialogs
             Unstaged.FilterVisible = true;
             Staged.SetNoFilesText(_noStagedChanges.Text);
 
-            Message.Enabled = _useFormCommitMessage;
-
-            commitMessageToolStripMenuItem.Enabled = _useFormCommitMessage;
-            commitTemplatesToolStripMenuItem.Enabled = _useFormCommitMessage;
-
-            Message.WatermarkText = _useFormCommitMessage
-                ? _enterCommitMessageHint.Text
-                : _commitMessageDisabled.Text;
+            ConfigureMessageBox();
 
             _commitKind = commitKind;
             _editedCommit = editedCommit;
@@ -210,6 +203,37 @@ namespace GitUI.CommandsDialogs
             toolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
+        }
+
+        private void ConfigureMessageBox()
+        {
+            Message.Enabled = _useFormCommitMessage;
+
+            commitMessageToolStripMenuItem.Enabled = _useFormCommitMessage;
+            commitTemplatesToolStripMenuItem.Enabled = _useFormCommitMessage;
+
+            Message.WatermarkText = _useFormCommitMessage
+                ? _enterCommitMessageHint.Text
+                : _commitMessageDisabled.Text;
+
+            AssignCommitMessageFromTemplate();
+        }
+
+        private void AssignCommitMessageFromTemplate()
+        {
+            if (IsUICommandsInitialized)
+            {
+                // Check if commit.template is used
+                string fileName = Module.GetEffectivePathSetting("commit.template");
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    using (var commitReader = new StreamReader(fileName))
+                    {
+                        _commitTemplate = commitReader.ReadToEnd().Replace("\r", "");
+                    }
+                    Message.Text = _commitTemplate;
+                }
+            }
         }
 
         void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -646,17 +670,6 @@ namespace GitUI.CommandsDialogs
             UpdateMergeHead();
 
             Message.TextBoxFont = AppSettings.CommitFont;
-
-            // Check if commit.template is used
-            string fileName = Module.GetEffectivePathSetting("commit.template");
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                using (var commitReader = new StreamReader(fileName))
-                {
-                    _commitTemplate = commitReader.ReadToEnd().Replace("\r", "");
-                }
-                Message.Text = _commitTemplate;
-            }
 
             Cursor.Current = Cursors.Default;
         }
@@ -1401,9 +1414,11 @@ namespace GitUI.CommandsDialogs
                     }
                     unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
                     unStagedFiles.RemoveAll(item => item.IsSubmodule && item.SubmoduleStatus.IsCompleted &&
-                        !item.SubmoduleStatus.Result.IsDirty && unstagedItems.Contains(item));
+                        (item.SubmoduleStatus.Result == null ||
+                        !item.SubmoduleStatus.Result.IsDirty && unstagedItems.Contains(item)));
                     foreach (var item in unstagedItems.Where(item => item.IsSubmodule &&
-                        item.SubmoduleStatus.IsCompleted && item.SubmoduleStatus.Result.IsDirty))
+                        (item.SubmoduleStatus.Result == null ||
+                        item.SubmoduleStatus.IsCompleted && item.SubmoduleStatus.Result.IsDirty)))
                     {
                         item.SubmoduleStatus.Result.Status = SubmoduleStatus.Unknown;
                     }
