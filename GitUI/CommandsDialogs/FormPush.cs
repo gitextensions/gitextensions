@@ -610,16 +610,20 @@ namespace GitUI.CommandsDialogs
             if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
                 RemoteBranch.Items.Add(_NO_TRANSLATE_Branch.Text);
 
-            foreach (var head in GetRemoteBranches(_selectedRemote.Name))
-                if (_NO_TRANSLATE_Branch.Text != head.LocalName)
-                    RemoteBranch.Items.Add(head.LocalName);
+            if (_selectedRemote != null)
+            {
+                foreach (var head in GetRemoteBranches(_selectedRemote.Name))
+                    if (_NO_TRANSLATE_Branch.Text != head.LocalName)
+                        RemoteBranch.Items.Add(head.LocalName);
 
-            var remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).ToHashSet(b => b.LocalName);
-            var onlyLocalBranches = GetLocalBranches().Where(b => !remoteBranchesSet.Contains(b.LocalName));
+                var remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).ToHashSet(b => b.LocalName);
+                var onlyLocalBranches = GetLocalBranches().Where(b => !remoteBranchesSet.Contains(b.LocalName));
 
-            foreach (var head in onlyLocalBranches)
-                if (_NO_TRANSLATE_Branch.Text != head.LocalName)
-                    RemoteBranch.Items.Add(head.LocalName);
+
+                foreach (var head in onlyLocalBranches)
+                    if (_NO_TRANSLATE_Branch.Text != head.LocalName)
+                        RemoteBranch.Items.Add(head.LocalName);
+            }
 
             ComboBoxHelper.ResizeComboBoxDropDownWidth(RemoteBranch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
