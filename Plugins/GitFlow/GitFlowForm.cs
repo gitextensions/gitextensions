@@ -31,6 +31,7 @@ namespace GitFlow
         enum Branch
         {
             feature,
+            bugfix,
             hotfix,
             release,
             support
@@ -160,7 +161,7 @@ namespace GitFlow
         private void LoadBaseBranches()
         {
             var branchType = cbType.SelectedValue.ToString();
-            var manageBaseBranch = (branchType == Branch.feature.ToString("G") || branchType == Branch.hotfix.ToString("G") || branchType == Branch.support.ToString("G"));
+            var manageBaseBranch = branchType != Branch.release.ToString("G");
             pnlBasedOn.Visible = manageBaseBranch;
 
             if (manageBaseBranch)
