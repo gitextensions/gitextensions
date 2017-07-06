@@ -52,6 +52,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             directories.AddRange(Repositories.RepositoryHistory.Repositories.Select(r => r.Path));
 
+            if (directories.Count == 0)
+            {
+                if (AppSettings.RecentWorkingDir.IsNotNullOrWhitespace())
+                {
+                    directories.Add(PathUtil.EnsureTrailingPathSeparator(AppSettings.RecentWorkingDir));
+                }
+
+                string homeDir = GitCommandHelpers.GetHomeDir();
+                if (homeDir.IsNotNullOrWhitespace())
+                {
+                    directories.Add(PathUtil.EnsureTrailingPathSeparator(homeDir));
+                }
+            }
+            
             return directories.Distinct().ToList();
         }
 
@@ -107,8 +121,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void _NO_TRANSLATE_Directory_TextChanged(object sender, EventArgs e)
         {
-            DirectoryInfo currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
-            folderGoUpbutton.Enabled = (currentDirectory.Parent != null);
+            try
+            {
+                DirectoryInfo currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
+                folderGoUpbutton.Enabled = currentDirectory.Exists && currentDirectory.Parent != null;
+            }
+            catch (Exception)
+            {
+                folderGoUpbutton.Enabled = false;
+            }
         }
     }
 }
