@@ -1,5 +1,15 @@
 Changelog
 =========
+### [Version 2.50.01] (07 July 2017)
+
+#### Fixes: 
+* Push branch with no upstream defaults to first remote and not to "origin" - Issue [3821]
+* [Bug] after 2.50 unable to use "Revert selected lines" from commit window - Issue [3819]
+* [Bug / Regression] It is not possible to run an external difftool (F3) in the diff view of "Commit index / Current unstaged changes" - Issue [3814]
+* Merge Conflict contextmenu items are disabled in 2.5.0 - Issue [3809]
+* GitExtensions gives continuous System.ArgumentNullException - Issue [3806]
+* SEG FAULT on every git operation. - Issue [3804]
+* Amend Commit is not working in Version 2.5 - Issue [3786]
 
 ### [Version 2.50] (23 June 2017)
 
@@ -1874,3 +1884,12 @@ Changelog
 [3761]:https://github.com/gitextensions/gitextensions/issues/3761
 [3755]:https://github.com/gitextensions/gitextensions/issues/3755
 [3762]:https://github.com/gitextensions/gitextensions/pull/3762
+
+[Version 2.50.01]:https://github.com/gitextensions/gitextensions/releases/tag/v2.50.01
+[3821]:https://github.com/gitextensions/gitextensions/issues/3821
+[3819]:https://github.com/gitextensions/gitextensions/issues/3819
+[3814]:https://github.com/gitextensions/gitextensions/issues/3814
+[3809]:https://github.com/gitextensions/gitextensions/issues/3809
+[3806]:https://github.com/gitextensions/gitextensions/issues/3806
+[3804]:https://github.com/gitextensions/gitextensions/issues/3804
+[3786]:https://github.com/gitextensions/gitextensions/issues/3786
