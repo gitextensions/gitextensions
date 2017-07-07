@@ -191,21 +191,25 @@ namespace GitUI.CommandsDialogs
             {
                 Branches.Items.Clear();
 
+                IEnumerable<string> branchNames;
+
                 if (_containRevisons == null)
                 {
                     if (LocalBranch.Checked)
                     {
-                        Branches.Items.AddRange(GetLocalBranches().Select(b => b.Name).ToArray());
+                        branchNames = GetLocalBranches().Select(b => b.Name);                        
                     }
                     else
                     {
-                        Branches.Items.AddRange(GetRemoteBranches().Select(b => b.Name).ToArray());
+                        branchNames = GetRemoteBranches().Select(b => b.Name);
                     }
                 }
                 else
                 {
-                    Branches.Items.AddRange(GetContainsRevisionBranches().ToArray());
+                    branchNames = GetContainsRevisionBranches();
                 }
+
+                Branches.Items.AddRange(branchNames.Where(name => name.IsNotNullOrWhitespace()).ToArray());
 
                 if (_containRevisons != null && Branches.Items.Count == 1)
                     Branches.SelectedIndex = 0;
