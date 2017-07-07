@@ -956,7 +956,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    SetAvailableCommands(false);
+                    SetAvailableCommands(true);
                     DisableInvalidEntriesInCoflictedFilesContextMenu(fileName);
                 }
             }
