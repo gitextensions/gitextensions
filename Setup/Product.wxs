@@ -900,7 +900,7 @@
         <?if $(var.IncludeRequiredSoftware) = 1 ?>
         <Binary Id="KDiff" SourceFile="cache\KDiff3-32bit-Setup_0.9.97.exe" />
         <CustomAction Id="InstallKDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore" />
-        <Binary Id="Git" SourceFile="cache\Git-2.12.2-32-bit.exe" />
+        <Binary Id="Git" SourceFile="cache\Git-2.13.2-32-bit.exe" />
         <CustomAction Id="InstallGit" Impersonate="no" BinaryKey="Git" Execute="deferred" ExeCommand="/COMPONENTS=&quot;assoc,assoc_sh&quot;" Return="ignore" />
         <InstallExecuteSequence>
             <Custom Action="InstallKDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
