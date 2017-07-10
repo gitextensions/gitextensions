@@ -2629,6 +2629,16 @@ namespace GitUI.CommandsDialogs
         {
             UICommands.StartCreateBranchDialog(this, null);
         }
+
+        private void Message_Enter(object sender, EventArgs e)
+        {
+            if(Staged.AllItems.Count() != 0 && Staged.SelectedItems.Count() == 0)
+            {
+                _currentFilesList = Staged;
+                Staged.SelectedIndex = 0;
+                StagedSelectionChanged(null, null);
+            }
+        }
     }
 
     /// <summary>
