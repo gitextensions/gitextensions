@@ -152,9 +152,9 @@ namespace GitFlow
             }
 
             btnFinish.Enabled = isThereABranch &&(branchType != Branch.support.ToString("G"));
-            btnPublish.Enabled = isThereABranch;
-            btnPull.Enabled = isThereABranch;
-            pnlPull.Enabled = (branchType == Branch.feature.ToString("G"));
+            btnPublish.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
+            btnPull.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
+            pnlPull.Enabled = (branchType != Branch.support.ToString("G"));
         }
 
         private void LoadBaseBranches()
@@ -205,17 +205,19 @@ namespace GitFlow
 
         private void btnPublish_Click(object sender, EventArgs e)
         {
-            RunCommand("flow feature publish " + cbBranches.SelectedValue);
+            var branchType = cbType.SelectedValue.ToString();
+            RunCommand(string.Format("flow {0} publish {1}", branchType, cbBranches.SelectedValue));
         }
 
         private void btnPull_Click(object sender, EventArgs e)
         {
-            RunCommand("flow feature pull " + cbRemote.SelectedValue + " " + cbBranches.SelectedValue);
+            var branchType = cbType.SelectedValue.ToString();
+            RunCommand(string.Format("flow {0} pull {1} {2}" + branchType, cbRemote.SelectedValue, cbBranches.SelectedValue));
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
         {
-            RunCommand("flow " + cbManageType.SelectedValue + " finish " + cbBranches.SelectedValue);
+            RunCommand(string.Format("flow {0} finish {1}", cbManageType.SelectedValue, cbBranches.SelectedValue));
         }
 
         private bool RunCommand(string commandText)
