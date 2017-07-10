@@ -400,6 +400,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSplitStash.Size = new System.Drawing.Size(32, 22);
             this.toolStripSplitStash.ToolTipText = "Stash changes";
             this.toolStripSplitStash.ButtonClick += new System.EventHandler(this.ToolStripSplitStashButtonClick);
+            this.toolStripSplitStash.DropDownOpened += new System.EventHandler(this.toolStripSplitStash_DropDownOpened);
             // 
             // stashChangesToolStripMenuItem
             // 
