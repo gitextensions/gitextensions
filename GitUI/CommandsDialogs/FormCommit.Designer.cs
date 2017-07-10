@@ -636,7 +636,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.Size = new System.Drawing.Size(397, 274);
             this.toolStripContainer1.TabIndex = 13;
-            this.toolStripContainer1.TabStop = false;
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
