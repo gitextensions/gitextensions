@@ -1169,6 +1169,11 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Unstaged;
                 _skipUpdate = false;
+                if (Unstaged.AllItems.Count() != 0 && Unstaged.SelectedIndex == -1)
+                {
+                    Unstaged.SelectedIndex = 0;
+                }
+
                 UnstagedSelectionChanged(Unstaged, null);
             }
         }
@@ -1345,6 +1350,10 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Staged;
                 _skipUpdate = false;
+                if(Staged.AllItems.Count() != 0 && Staged.SelectedIndex == -1)
+                {
+                    Staged.SelectedIndex = 0;
+                }
                 StagedSelectionChanged(Staged, null);
             }
         }
