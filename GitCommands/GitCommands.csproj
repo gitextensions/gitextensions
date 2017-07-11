@@ -107,6 +107,7 @@
     <Compile Include="Git\Tag\TagOperation.cs" />
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="Settings\BranchOrdering.cs" />
+    <Compile Include="Git\GitGpgController.cs" />
     <Compile Include="SshPathLocator.cs" />
     <Compile Include="Git\IndexLockManager.cs" />
     <Compile Include="Git\GitTreeParser.cs" />
