@@ -120,4 +120,17 @@
   <metadata name="ttHints.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="cbDownloadFullHistory.ToolTip" xml:space="preserve">
+    <value>The default Git behavior is to download all historical revisions.
+If you turn this off, we'll only download the latest revision for all branches.
+
+Actual command line (if unchecked): --depth 1 --no-single-branch</value>
+  </data>
+  <data name="cbLfs.ToolTip" xml:space="preserve">
+    <value>Use the Git Large File Storage extension for cloning.
+This will make the cloning process faster on LFS-enabled repositories, and will install LFS hooks.
+
+If checked, the "git lfs clone" command will be used instead of "git clone".
+</value>
+  </data>
 </root>
