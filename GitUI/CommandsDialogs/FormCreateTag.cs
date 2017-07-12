@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
             }
-            if (annotate.Checked)
+            if (annotate.SelectedIndex == 0)
             {
                 if (string.IsNullOrEmpty(tagMessage.Text))
                 {
@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs
                 File.WriteAllText(Path.Combine(Module.GetGitDirectory(), "TAGMESSAGE"), tagMessage.Text);
             }
 
-            var s = Module.Tag(textBoxTagName.Text, revision, annotate.Checked, ForceTag.Checked);
+            var s = Module.Tag(textBoxTagName.Text, revision, ForceTag.Checked, annotate.SelectedIndex, textBoxGpgKey.Text);
 
             if (!string.IsNullOrEmpty(s))
                 MessageBox.Show(this, s, _messageCaption.Text);
@@ -111,9 +111,11 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void AnnotateCheckedChanged(object sender, EventArgs e)
+        private void AnnotateDropDownChanged(object sender, EventArgs e)
         {
-            tagMessage.Enabled = annotate.Checked;
+            textBoxGpgKey.Enabled = annotate.SelectedIndex == 3;
+            keyIdLbl.Enabled = annotate.SelectedIndex == 3;
+            tagMessage.Enabled = annotate.SelectedIndex > 0;
         }
     }
 }

@@ -252,7 +252,7 @@ namespace GitUI.CommandsDialogs
             foreach (var lostObject in selectedLostObjects)
             {
                 currentTag++;
-                Module.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false, false);
+                Module.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false);
             }
 
             return currentTag;
