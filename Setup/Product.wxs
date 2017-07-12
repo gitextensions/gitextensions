@@ -231,7 +231,7 @@
                 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll" />
             </Component>
             <Component Id="Newtonsoft.Json.dll" Guid="*">
-                <File Source="..\packages\Newtonsoft.Json.10.0.2\lib\net40\Newtonsoft.Json.dll" />
+                <File Source="..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll" />
             </Component>
             <!--Remove unused dll, installed in versions <= 2.31-->
             <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
