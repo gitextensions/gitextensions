@@ -16,6 +16,7 @@ namespace GitUI.CommandsDialogs
     public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
+        // ReSharper disable InconsistentNaming
         private readonly TranslationString uskUseCustomMergeScript = new TranslationString("There is a custom merge script ({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
         private readonly TranslationString uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
         private readonly TranslationString fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
@@ -26,6 +27,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString askMergeConflictSolved = new TranslationString("Is the merge conflict solved?");
         private readonly TranslationString askMergeConflictSolvedCaption = new TranslationString("Conflict solved?");
         private readonly TranslationString noMergeTool = new TranslationString("There is no mergetool configured. Please go to settings and set a mergetool!");
+        private readonly TranslationString noMergeToolConfigured = new TranslationString("The mergetool is not correctly configured. Please go to settings and configure the mergetool!");
         private readonly TranslationString stageFilename = new TranslationString("Stage {0}");
 
         private readonly TranslationString noBaseRevision = new TranslationString("There is no base revision for {0}.\nFall back to 2-way merge?");
@@ -46,6 +48,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString deleteFileButtonText = new TranslationString("Delete file");
         private readonly TranslationString keepModifiedButtonText = new TranslationString("Keep modified");
         private readonly TranslationString keepBaseButtonText = new TranslationString("Keep base file");
+        // ReSharper restore InconsistentNaming
 
         private readonly TranslationString _conflictedFilesContextMenuText = new TranslationString("Solve");
         private readonly TranslationString _openMergeToolItemText = new TranslationString("Open in");
@@ -162,7 +165,11 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            InitMergetool();
+            if (!InitMergetool())
+            {
+                Close();
+                return;
+            }
 
             ConflictedFilesContextMenu.Text = _conflictedFilesContextMenuText.Text;
             OpenMergetool.Text = _openMergeToolItemText.Text + " " + _mergetool;
@@ -499,39 +506,50 @@ namespace GitUI.CommandsDialogs
                 File.Delete(filenames[2]);
         }
 
-        private void InitMergetool()
+        private bool InitMergetool()
         {
             _mergetool = Module.GetEffectiveSetting("merge.tool");
-
             if (string.IsNullOrEmpty(_mergetool))
             {
                 MessageBox.Show(this, noMergeTool.Text);
-                return;
+                return false;
             }
+
             Cursor.Current = Cursors.WaitCursor;
 
-            _mergetoolCmd = Module.GetEffectivePathSetting(string.Format("mergetool.{0}.cmd", _mergetool));
-
-            _mergetoolPath = Module.GetEffectivePathSetting(string.Format("mergetool.{0}.path", _mergetool));
+            _mergetoolCmd = Module.GetEffectivePathSetting($"mergetool.{_mergetool}.cmd");
+            _mergetoolPath = Module.GetEffectivePathSetting($"mergetool.{_mergetool}.path");
 
             if (string.IsNullOrEmpty(_mergetool) || _mergetool == "kdiff3")
             {
                 if (string.IsNullOrEmpty(_mergetoolPath))
+                {
                     _mergetoolPath = "kdiff3";
+                }
                 _mergetoolCmd = "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
             }
             else
             {
-                //This only works when on Windows....
-                const string executablePattern = ".exe";
-                int idx = _mergetoolCmd.IndexOf(executablePattern);
-                if (idx >= 0)
+                if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
                 {
-                    _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] { '\"', ' ' });
-                    _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
+                    MessageBox.Show(this, noMergeToolConfigured.Text);
+                    return false;
+                }
+
+                if (EnvUtils.RunningOnWindows())
+                {
+                    //This only works when on Windows....
+                    const string executablePattern = ".exe";
+                    int idx = _mergetoolCmd.IndexOf(executablePattern);
+                    if (idx >= 0)
+                    {
+                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] {'\"', ' '});
+                        _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
+                    }
                 }
             }
             Cursor.Current = Cursors.Default;
+            return true;
         }
 
         private bool ShowAbortMessage()
@@ -956,7 +974,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    SetAvailableCommands(false);
+                    SetAvailableCommands(true);
                     DisableInvalidEntriesInCoflictedFilesContextMenu(fileName);
                 }
             }

@@ -1,4 +1,4 @@
-version: 2.50.00.{build}
+version: 2.50.01.{build}
 
 os: Visual Studio 2015
 

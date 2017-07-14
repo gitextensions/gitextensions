@@ -2883,12 +2883,15 @@ namespace GitCommands
 
                 var completeName = itemsString.Substring(41).Trim();
                 var guid = itemsString.Substring(0, 40);
-                var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
-                var head = new GitRef(this, guid, completeName, remoteName);
-                if (DefaultHeadPattern.IsMatch(completeName))
-                    defaultHeads[remoteName] = head;
-                else
-                    gitRefs.Add(head);
+                if (GitRevision.IsFullSha1Hash(guid) && completeName.StartsWith("refs/"))
+                {
+                    var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
+                    var head = new GitRef(this, guid, completeName, remoteName);
+                    if (DefaultHeadPattern.IsMatch(completeName))
+                        defaultHeads[remoteName] = head;
+                    else
+                        gitRefs.Add(head);
+                }
             }
 
             // do not show default head if remote has a branch on the same commit
