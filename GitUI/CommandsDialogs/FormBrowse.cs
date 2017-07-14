@@ -967,7 +967,7 @@ namespace GitUI.CommandsDialogs
         private void RebaseClick(object sender, EventArgs e)
         {
             if (Module.InTheMiddleOfRebase())
-                UICommands.StartRebaseDialog(this, null);
+                UICommands.ContinueRebase(this);
             else
                 UICommands.StartApplyPatchDialog(this);
         }
@@ -1387,11 +1387,11 @@ namespace GitUI.CommandsDialogs
                     from = revisions[0].Guid.Substring(0, 8);
                     to = currentBranch;
                 }
-                UICommands.StartRebaseDialog(this, from, to, null);
+                UICommands.StartRebaseDialog(this, from, to, null, interactive: false, startRebaseImmediately: false);
             }
             else
             {
-                UICommands.StartRebaseDialog(this, null);
+                UICommands.StartRebaseDialog(this, revisions.First().Guid);
             }
         }
 

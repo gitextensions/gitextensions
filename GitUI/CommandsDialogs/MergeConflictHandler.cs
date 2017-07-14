@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (MessageBoxes.MiddleOfRebase(owner))
                 {
-                    aCommands.StartRebaseDialog(owner, null);
+                    aCommands.ContinueRebase(owner);
                 }
             }
 

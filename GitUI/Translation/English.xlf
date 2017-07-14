@@ -8303,6 +8303,18 @@ If this is a central repository (bare repository without a working directory):
         <source>Rebase current branch on</source>
         <target />
       </trans-unit>
+      <trans-unit id="rebaseToolStripMenuItem.Text">
+        <source>Selected commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="rebaseInteractivelyToolStripMenuItem.Text">
+        <source>Selected commit interactively</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="rebaseWithAdvOptionsToolStripMenuItem.Text">
+        <source>Selected commit with advanced options...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="renameBranchToolStripMenuItem.Text">
         <source>Rename branch</source>
         <target />
