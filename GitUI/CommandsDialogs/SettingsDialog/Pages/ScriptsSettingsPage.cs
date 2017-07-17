@@ -262,6 +262,8 @@ Current Branch:
                 moveDownButton.Enabled = false;
                 ClearScriptDetails();
             }
+
+            UpdateIconVisibility();
         }
 
         private void ScriptInfoEdit_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -309,25 +311,15 @@ Current Branch:
 
         private void scriptEvent_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (scriptEvent.Text == ScriptEvent.ShowInUserMenuBar.ToString())
-            {
-                /*
-                string icon_name = IconName;
-                if (ScriptList.RowCount > 0)
-                {
-                    ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                    icon_name = scriptInfo.Icon;
-                }*/
+            UpdateIconVisibility();
+        }
 
-                sbtn_icon.Visible = true;
-                lbl_icon.Visible = true;
-            }
-            else
-            {
-                //not a menubar item, so hide the text label and dropdown button
-                sbtn_icon.Visible = false;
-                lbl_icon.Visible = false;
-            }
+        private void UpdateIconVisibility()
+        {
+            bool showIcon = scriptEvent.Text == ScriptEvent.ShowInUserMenuBar.ToString() || inMenuCheckBox.Checked;
+
+            sbtn_icon.Visible = showIcon;
+            lbl_icon.Visible = showIcon;
         }
 
         private void buttonShowArgumentsHelp_Click(object sender, EventArgs e)
@@ -346,6 +338,11 @@ Current Branch:
                 ((RichTextBox)sender).Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
                 e.Handled = true;
             }
+        }
+
+        private void inMenuCheckBox_CheckedChanged( object sender, EventArgs e )
+        {
+            UpdateIconVisibility();
         }
     }
 }
