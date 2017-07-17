@@ -476,7 +476,7 @@ namespace GitCommands
 
         public static string CloneCmd(string fromPath, string toPath)
         {
-            return CloneCmd(fromPath, toPath, false, false, string.Empty, null);
+            return CloneCmd(fromPath, toPath, false, false, string.Empty, null, null, false);
         }
 
         /// <summary>
@@ -497,8 +497,9 @@ namespace GitCommands
         /// <para><c>False</c>: --no-single-branch.</para>
         /// <para><c>NULL</c>: don't pass any such param to git.</para>
         /// </param>
+        /// <param name="lfs">True to use the <c>git lfs clone</c> command instead of <c>git clone</c>.</param>
         /// <returns></returns>
-        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, [CanBeNull] string branch, int? depth, [Optional] bool? isSingleBranch)
+        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, [CanBeNull] string branch, int? depth, bool? isSingleBranch, bool lfs)
         {
             var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
             var to = toPath.ToPosixPath();
@@ -519,7 +520,9 @@ namespace GitCommands
             options.Add(string.Format("\"{0}\"", from.Trim()));
             options.Add(string.Format("\"{0}\"", to.Trim()));
 
-            return "clone " + string.Join(" ", options.ToArray());
+            var command = lfs ? "lfs clone " : "clone ";
+
+            return command + string.Join(" ", options.ToArray());
         }
 
         public static string CheckoutCmd(string branchOrRevisionName, LocalChangesAction changesAction)

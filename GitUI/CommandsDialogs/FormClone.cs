@@ -131,6 +131,10 @@ namespace GitUI.CommandsDialogs
                 _NO_TRANSLATE_To.Text = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
 
             FromTextUpdate(null, null);
+
+            cbLfs.Enabled = Module.HasLfsSupport();
+            if (!cbLfs.Enabled)
+                cbLfs.Checked = false;
         }
 
         private bool CanBeGitURL(string anURL)
@@ -184,7 +188,7 @@ namespace GitUI.CommandsDialogs
                     branch = null;
                 
                 var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
-                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, branch, depth, isSingleBranch);
+                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, branch, depth, isSingleBranch, cbLfs.Checked);
                 using (var fromProcess = new FormRemoteProcess(Module, AppSettings.GitCommand, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
