@@ -472,6 +472,7 @@
             this.inMenuCheckBox.TabIndex = 9;
             this.inMenuCheckBox.Text = "Add to revision grid context menu";
             this.inMenuCheckBox.UseVisualStyleBackColor = true;
+            this.inMenuCheckBox.CheckedChanged += new System.EventHandler( this.inMenuCheckBox_CheckedChanged );
             this.inMenuCheckBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // scriptIsPowerShell
