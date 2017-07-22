@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
             }
-            if (annotate.SelectedIndex == 0)
+            if (annotate.SelectedIndex > 0)
             {
                 if (string.IsNullOrEmpty(tagMessage.Text))
                 {
