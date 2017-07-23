@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs
         {
             using (var dialog = new OpenFileDialog
                              {
-                                 Filter = _patchFileFilterString.Text + "|*.Patch",
+                                 Filter = _patchFileFilterString.Text + "|*.patch",
                                  InitialDirectory = initialDirectory,
                                  Title = _patchFileFilterTitle.Text
                              })
