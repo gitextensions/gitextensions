@@ -8,7 +8,7 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=2.50.00
+set version=2.50.01
 if not "%APPVEYOR_BUILD_VERSION%"=="" set version=%APPVEYOR_BUILD_VERSION%
 set normal=GitExtensions-%version%-Mono.zip
 set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
@@ -36,10 +36,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\Gravatar.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\ICSharpCode.SharpZipLib.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1

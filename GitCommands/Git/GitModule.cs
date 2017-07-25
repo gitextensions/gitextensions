@@ -418,12 +418,12 @@ namespace GitCommands
             {
                 if (_GitCommonDirectory == null)
                 {
-                    _GitCommonDirectory = PathUtil.ToNativePath(RunGitCmd("rev-parse --git-common-dir").Trim());
-                    if (_GitCommonDirectory == ".git")
+                    var commDir = RunGitCmdResult("rev-parse --git-common-dir");
+                    _GitCommonDirectory = PathUtil.ToNativePath(commDir.StdOutput.Trim());
+                    if (!commDir.ExitedSuccessfully || _GitCommonDirectory == ".git" || !PathUtil.DirectoryExists(_GitCommonDirectory))
                     {
                         _GitCommonDirectory = GetGitDirectory();
                     }
-
                 }
 
                 return _GitCommonDirectory;
@@ -2698,12 +2698,15 @@ namespace GitCommands
 
                 var completeName = itemsString.Substring(41).Trim();
                 var guid = itemsString.Substring(0, 40);
-                var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
-                var head = new GitRef(this, guid, completeName, remoteName);
-                if (DefaultHeadPattern.IsMatch(completeName))
-                    defaultHeads[remoteName] = head;
-                else
-                    gitRefs.Add(head);
+                if (GitRevision.IsFullSha1Hash(guid) && completeName.StartsWith("refs/"))
+                {
+                    var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
+                    var head = new GitRef(this, guid, completeName, remoteName);
+                    if (DefaultHeadPattern.IsMatch(completeName))
+                        defaultHeads[remoteName] = head;
+                    else
+                        gitRefs.Add(head);
+                }
             }
 
             // do not show default head if remote has a branch on the same commit
@@ -3430,6 +3433,11 @@ namespace GitCommands
 
             patchManager.LoadPatch(patch, false, encoding);
             return GetPatch(patchManager, filePath, filePath).Text;
+        }
+
+        public bool HasLfsSupport()
+        {
+            return RunGitCmdResult("lfs version").ExitedSuccessfully;
         }
     }
 }

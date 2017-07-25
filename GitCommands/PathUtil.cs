@@ -193,6 +193,19 @@ namespace GitCommands
             return fi != null && fi.Exists;
         }
 
+        public static bool DirectoryExists(string aPath)
+        {
+            try
+            {
+                DirectoryInfo di = new DirectoryInfo(aPath);
+                return di.Exists;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public static bool TryFindFullPath(string aFileName, out string fullPath)
         {
             if (PathUtil.PathExists(aFileName))

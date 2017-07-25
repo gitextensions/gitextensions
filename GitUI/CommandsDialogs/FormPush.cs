@@ -180,10 +180,18 @@ namespace GitUI.CommandsDialogs
             }
             else if (_gitRemoteController.Remotes.Any())
             {
+                var defaultRemote = _gitRemoteController.Remotes.FirstOrDefault(x => x.Name.Equals("origin", StringComparison.OrdinalIgnoreCase));
                 // we couldn't find the default assigned remote for the selected branch
                 // it is usually gets mapped via FormRemotes -> "default pull behavior" tab
                 // so pick the default user remote
-                _NO_TRANSLATE_Remotes.SelectedIndex = 0;
+                if (defaultRemote == null)
+                {
+                    _NO_TRANSLATE_Remotes.SelectedIndex = 0;
+                }
+                else
+                {
+                    _NO_TRANSLATE_Remotes.SelectedItem = defaultRemote;
+                }
             }
             else
             {
@@ -610,16 +618,20 @@ namespace GitUI.CommandsDialogs
             if (!string.IsNullOrEmpty(_NO_TRANSLATE_Branch.Text))
                 RemoteBranch.Items.Add(_NO_TRANSLATE_Branch.Text);
 
-            foreach (var head in GetRemoteBranches(_selectedRemote.Name))
-                if (_NO_TRANSLATE_Branch.Text != head.LocalName)
-                    RemoteBranch.Items.Add(head.LocalName);
+            if (_selectedRemote != null)
+            {
+                foreach (var head in GetRemoteBranches(_selectedRemote.Name))
+                    if (_NO_TRANSLATE_Branch.Text != head.LocalName)
+                        RemoteBranch.Items.Add(head.LocalName);
 
-            var remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).ToHashSet(b => b.LocalName);
-            var onlyLocalBranches = GetLocalBranches().Where(b => !remoteBranchesSet.Contains(b.LocalName));
+                var remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).ToHashSet(b => b.LocalName);
+                var onlyLocalBranches = GetLocalBranches().Where(b => !remoteBranchesSet.Contains(b.LocalName));
 
-            foreach (var head in onlyLocalBranches)
-                if (_NO_TRANSLATE_Branch.Text != head.LocalName)
-                    RemoteBranch.Items.Add(head.LocalName);
+
+                foreach (var head in onlyLocalBranches)
+                    if (_NO_TRANSLATE_Branch.Text != head.LocalName)
+                        RemoteBranch.Items.Add(head.LocalName);
+            }
 
             ComboBoxHelper.ResizeComboBoxDropDownWidth(RemoteBranch, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }

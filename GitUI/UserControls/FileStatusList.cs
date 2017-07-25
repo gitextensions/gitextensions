@@ -491,8 +491,7 @@ namespace GitUI
             get
             {
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>()
-                    .Where(i => i.Group != null) // Or maybe return null parents?
-                    .Select(i => new GitItemStatusWithParent((GitItemStatus)i.Tag, (string)i.Group.Tag));
+                    .Select(i => new GitItemStatusWithParent((GitItemStatus)i.Tag, (string)i.Group?.Tag));
             }
         }
 

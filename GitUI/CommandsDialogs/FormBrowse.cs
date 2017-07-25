@@ -1659,14 +1659,9 @@ namespace GitUI.CommandsDialogs
 
         private void CherryPickToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revisions = RevisionGrid.GetSelectedRevisions();
-            if (revisions.Count != 1)
-            {
-                MessageBox.Show("Select exactly one revision.");
-                return;
-            }
+            var revisions = RevisionGrid.GetSelectedRevisions(System.DirectoryServices.SortDirection.Descending);
 
-            UICommands.StartCherryPickDialog(this, revisions.First());
+            UICommands.StartCherryPickDialog(this, revisions);
         }
 
         private void MergeBranchToolStripMenuItemClick(object sender, EventArgs e)

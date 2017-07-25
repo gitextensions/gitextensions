@@ -109,6 +109,7 @@ namespace GitUI.BuildServerIntegration
             lock (buildServerCredentialsLock)
             {
                 IBuildServerCredentials buildServerCredentials = new BuildServerCredentials { UseGuestAccess = true };
+                var foundInConfig = false;
 
                 const string CredentialsConfigName = "Credentials";
                 const string UseGuestAccessKey = "UseGuestAccess";
@@ -142,6 +143,7 @@ namespace GitUI.BuildServerIntegration
                                         true);
                                     buildServerCredentials.Username = section.GetValue(UsernameKey);
                                     buildServerCredentials.Password = section.GetValue(PasswordKey);
+                                    foundInConfig = true;
 
                                     if (useStoredCredentialsIfExisting)
                                     {
@@ -162,7 +164,7 @@ namespace GitUI.BuildServerIntegration
                     }
                 }
 
-                if (!useStoredCredentialsIfExisting)
+                if (!useStoredCredentialsIfExisting || !foundInConfig)
                 {
                     buildServerCredentials = ShowBuildServerCredentialsForm(buildServerAdapter.UniqueKey, buildServerCredentials);
 

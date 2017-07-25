@@ -294,6 +294,7 @@ namespace GitUI.Editor
             copyNewVersionToolStripMenuItem.Visible = visible;
             copyOldVersionToolStripMenuItem.Visible = visible;
             cherrypickSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff;
+            revertSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff;
             copyPatchToolStripMenuItem.Visible = visible;
         }
 
