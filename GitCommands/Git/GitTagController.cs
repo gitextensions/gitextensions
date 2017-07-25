@@ -66,11 +66,6 @@ namespace GitCommands.Git
 
             if (operationType > TagOperation.Lightweight)
             {
-                if (string.IsNullOrEmpty(tagMessage))
-                {
-                    return string.Empty;
-                }
-
                 File.WriteAllText(Path.Combine(_module.GetGitDirectory(), "TAGMESSAGE"), tagMessage);
             }
 

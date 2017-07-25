@@ -16,8 +16,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelected =
             new TranslationString("Select 1 revision to create the tag on.");
 
-        private readonly TranslationString _noTagMessage = new TranslationString("Please enter a tag message");
-
         private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
 
         private string _currentRemote = "";
@@ -74,12 +72,7 @@ namespace GitUI.CommandsDialogs
 
             GitTagController.TagOperation _tagOperation = (GitTagController.TagOperation) annotate.SelectedIndex;
             var s = _gitTagController.CreateTag(revision, textBoxTagName.Text, ForceTag.Checked, _tagOperation, tagMessage.Text, textBoxGpgKey.Text);
-            if (string.IsNullOrEmpty(s))
-            {
-                MessageBox.Show(this, _noTagMessage.Text, _messageCaption.Text);
-                return string.Empty;
-            }
-            else
+            if (!string.IsNullOrEmpty(s))
             {
                 MessageBox.Show(this, s, _messageCaption.Text);
             }
