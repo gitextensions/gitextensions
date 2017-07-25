@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
 using ResourceManager;
+using GitCommands.Git;
 
 namespace GitUI.CommandsDialogs
 {
@@ -28,9 +29,12 @@ namespace GitUI.CommandsDialogs
         private readonly SortableLostObjectsList filteredLostObjects = new SortableLostObjectsList();
         private readonly DataGridViewCheckBoxHeaderCell selectedItemsHeader = new DataGridViewCheckBoxHeaderCell();
 
+        private IGitTagController _gitTagController;
+
         private FormVerify()
             : this(null)
         {
+            _gitTagController = new GitTagController(Module);
         }
 
         public FormVerify(GitUICommands aCommands)
@@ -252,7 +256,7 @@ namespace GitUI.CommandsDialogs
             foreach (var lostObject in selectedLostObjects)
             {
                 currentTag++;
-                Module.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false);
+                _gitTagController.CreateTag(lostObject.Hash, $"{RestoredObjectsTagPrefix}{currentTag}", false);
             }
 
             return currentTag;
