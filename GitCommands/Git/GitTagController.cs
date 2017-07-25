@@ -19,7 +19,7 @@ namespace GitCommands.Git
         /// <param name="tagMessage">Tag Message</param>
         /// <param name="keyId">Specific Key ID to be used instead of default one</param>
         /// <returns>Output string from RunGitCmd.</returns>
-        string CreateTag(string revision, string tagName, bool force, GitTagController.TagOperation operationType, string tagMessage, string keyId = "");
+        string CreateTag(string revision, string tagName, bool force, GitTagController.TagOperation operationType = GitTagController.TagOperation.Lightweight, string tagMessage = "", string keyId = "");
     }
 
 
@@ -52,7 +52,7 @@ namespace GitCommands.Git
         /// <param name="tagMessage">Tag Message</param>
         /// <param name="keyId">Specific Key ID to be used instead of default one</param>
         /// <returns>Output string from RunGitCmd.</returns>
-        public string CreateTag(string revision, string tagName, bool force, TagOperation operationType, string tagMessage, string keyId = "")
+        public string CreateTag(string revision, string tagName, bool force, TagOperation operationType = TagOperation.Lightweight, string tagMessage = "", string keyId = "")
         {
             if (string.IsNullOrEmpty(revision))
             {
