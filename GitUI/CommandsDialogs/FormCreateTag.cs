@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Script;
 using ResourceManager;
+using GitCommands.Git;
 
 namespace GitUI.CommandsDialogs
 {
@@ -21,6 +22,8 @@ namespace GitUI.CommandsDialogs
 
         private string _currentRemote = "";
 
+        private IGitTagController _gitTagController;
+
         public FormCreateTag(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
@@ -31,6 +34,8 @@ namespace GitUI.CommandsDialogs
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
                 commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
+
+            _gitTagController = new GitTagController(Module);
         }
 
         private void FormCreateTag_Load(object sender, EventArgs e)
@@ -66,21 +71,18 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
             }
-            if (annotate.SelectedIndex > 0)
+
+            GitTagController.TagOperation _tagOperation = (GitTagController.TagOperation) annotate.SelectedIndex;
+            var s = _gitTagController.CreateTag(revision, textBoxTagName.Text, ForceTag.Checked, _tagOperation, tagMessage.Text, textBoxGpgKey.Text);
+            if (string.IsNullOrEmpty(s))
             {
-                if (string.IsNullOrEmpty(tagMessage.Text))
-                {
-                    MessageBox.Show(this, _noTagMessage.Text, _messageCaption.Text);
-                    return string.Empty;
-                }
-
-                File.WriteAllText(Path.Combine(Module.GetGitDirectory(), "TAGMESSAGE"), tagMessage.Text);
+                MessageBox.Show(this, _noTagMessage.Text, _messageCaption.Text);
+                return string.Empty;
             }
-
-            var s = Module.Tag(textBoxTagName.Text, revision, ForceTag.Checked, annotate.SelectedIndex, textBoxGpgKey.Text);
-
-            if (!string.IsNullOrEmpty(s))
+            else
+            {
                 MessageBox.Show(this, s, _messageCaption.Text);
+            }
 
             if (s.Contains("fatal:"))
                 return string.Empty;

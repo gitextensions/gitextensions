@@ -1508,36 +1508,6 @@ namespace GitCommands
             return result;
         }
 
-        public string Tag(string tagName, string revision, bool force, int tagIdx = 0, string keyId = "")
-        {
-            string strCommand = "";
-
-            switch (tagIdx)
-            {
-                /* Annotate */
-                case 1:
-                    strCommand = $"tag \"{tagName.Trim()}\" -a {(force ? " - f" : "")} -F \"{GetGitDirectory()}\\TAGMESSAGE\" -- \"{revision}\"";
-                    break;
-                
-                /* Sign with default GPG */
-                case 2:
-                    strCommand = $"tag \"{tagName.Trim()}\" -s {(force ? " - f" : "")} -F \"{GetGitDirectory()}\\TAGMESSAGE\" -- \"{revision}\"";
-                    break;
-                
-                /* Sign with specific GPG */
-                case 3:
-                    strCommand = $"tag \"{tagName.Trim()}\" -u {keyId} {(force ? " - f" : "")} -F \"{GetGitDirectory()}\\TAGMESSAGE\" -- \"{revision}\"";
-                    break;
-
-                /* Lightweight */
-                default:
-                    strCommand = $"tag {(force ? "-f" : "")} \"{tagName.Trim()}\" \"{revision}\"";
-                    break;
-            }
-
-            return RunGitCmd(strCommand);
-        }
-
         public string CheckoutFiles(IEnumerable<string> fileList, string revision, bool force)
         {
             string files = fileList.Select(s => s.Quote()).Join(" ");
