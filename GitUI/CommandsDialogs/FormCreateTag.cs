@@ -108,8 +108,8 @@ namespace GitUI.CommandsDialogs
         private void AnnotateDropDownChanged(object sender, EventArgs e)
         {
             TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
-            textBoxGpgKey.Enabled = tagOperation == TagOperation.SignWithSpecifiKey;
-            keyIdLbl.Enabled = tagOperation == TagOperation.SignWithSpecifiKey;
+            textBoxGpgKey.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
+            keyIdLbl.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
             tagMessage.Enabled = tagOperation > TagOperation.Lightweight;
         }
 
@@ -128,7 +128,7 @@ namespace GitUI.CommandsDialogs
                     returnValue = TagOperation.SignWithDefaultKey;
                     break;
                 case 3:
-                    returnValue = TagOperation.SignWithSpecifiKey;
+                    returnValue = TagOperation.SignWithSpecificKey;
                     break;
                 default:
                     throw new NotSupportedException("Invalid dropdownSelection");

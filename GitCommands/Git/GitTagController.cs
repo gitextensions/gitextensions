@@ -10,9 +10,9 @@ namespace GitCommands.Git
     public enum TagOperation
     {
         Lightweight = 0,
-        Annotate = 1,
-        SignWithDefaultKey = 2,
-        SignWithSpecifiKey = 3
+        Annotate,
+        SignWithDefaultKey,
+        SignWithSpecificKey 
     };
 
     public interface IGitTagController
@@ -90,7 +90,7 @@ namespace GitCommands.Git
                     break;
 
                 /* Sign with specific GPG */
-                case TagOperation.SignWithSpecifiKey:
+                case TagOperation.SignWithSpecificKey:
                     if(string.IsNullOrEmpty(keyId))
                     {
                         throw new ArgumentNullException("keyId");
