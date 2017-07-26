@@ -23,7 +23,7 @@ namespace GitCommands.Git
         /// <param name="revision">Commit revision to be tagged</param>
         /// <param name="tagName">Name of tag</param>
         /// <param name="force">Force parameter</param>
-        /// <param name="operationType">Available tag operationType (Lightweight, Annotate, Sign with defaul key, Sign with specific key)</param>
+        /// <param name="operationType">The operation to perform on the tag  (Lightweight, Annotate, Sign with defaul key, Sign with specific key)</param>
         /// <param name="tagMessage">Tag Message</param>
         /// <param name="keyId">Specific Key ID to be used instead of default one</param>
         /// <returns>Output string from RunGitCmd.</returns>
@@ -44,20 +44,20 @@ namespace GitCommands.Git
         /// Create the Tag depending on input parameter.
         /// </summary>
         /// <param name="revision">Commit revision to be tagged</param>
-        /// <param name="tagName">Name of tag</param>
+        /// <param name="inputTagName">Name of tag</param>
         /// <param name="force">Force parameter</param>
-        /// <param name="operation">Available tag operationType (Lightweight, Annotate, Sign with defaul key, Sign with specific key)</param>
+        /// <param name="operation">The operation to perform on the tag (Lightweight, Annotate, Sign with defaul key, Sign with specific key)</param>
         /// <param name="tagMessage">Tag Message</param>
         /// <param name="keyId">Specific Key ID to be used instead of default one</param>
         /// <returns>Output string from RunGitCmd.</returns>
-        public string CreateTag(string revision, string tagName, bool force, TagOperation operationType = TagOperation.Lightweight, string tagMessage = "", string keyId = "")
+        public string CreateTag(string revision, string inputTagName, bool force, TagOperation operationType = TagOperation.Lightweight, string tagMessage = "", string keyId = "")
         {
             if (string.IsNullOrEmpty(revision))
             {
                 throw new ArgumentNullException("revision");
             }
 
-            if (string.IsNullOrEmpty(tagName))
+            if (string.IsNullOrEmpty(inputTagName))
             {
                 throw new ArgumentNullException("tagName");
             }
@@ -68,25 +68,25 @@ namespace GitCommands.Git
             }
 
             string strCommand = "";
-            string _tagName = tagName.Trim();
-            string _forced = force ? " - f" : "";
-            string _directory = _module.GetGitDirectory();
+            string tagName = inputTagName.Trim();
+            string forced = force ? " - f" : "";
+            string directory = _module.GetGitDirectory();
 
             switch (operationType)
             {
                 /* Lightweight */
                 case TagOperation.Lightweight:
-                    strCommand = $"tag {_forced} \"{_tagName}\" \"{revision}\"";
+                    strCommand = $"tag {forced} \"{tagName}\" \"{revision}\"";
                     break;
 
                 /* Annotate */
                 case TagOperation.Annotate:
-                    strCommand = $"tag \"{_tagName}\" -a {_forced} -F \"{_directory}\\TAGMESSAGE\" -- \"{revision}\"";
+                    strCommand = $"tag \"{tagName}\" -a {forced} -F \"{directory}\\TAGMESSAGE\" -- \"{revision}\"";
                     break;
 
                 /* Sign with default GPG */
                 case TagOperation.SignWithDefaultKey:
-                    strCommand = $"tag \"{_tagName}\" -s {_forced} -F \"{_directory}\\TAGMESSAGE\" -- \"{revision}\"";
+                    strCommand = $"tag \"{tagName}\" -s {forced} -F \"{directory}\\TAGMESSAGE\" -- \"{revision}\"";
                     break;
 
                 /* Sign with specific GPG */
@@ -95,7 +95,7 @@ namespace GitCommands.Git
                     {
                         throw new ArgumentNullException("keyId");
                     }
-                    strCommand = $"tag \"{_tagName}\" -u {keyId} {_forced} -F \"{_directory}\\TAGMESSAGE\" -- \"{revision}\"";
+                    strCommand = $"tag \"{tagName}\" -u {keyId} {forced} -F \"{directory}\\TAGMESSAGE\" -- \"{revision}\"";
                     break;
                     
                 /* Error */
