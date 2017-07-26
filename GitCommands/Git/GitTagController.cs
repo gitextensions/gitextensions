@@ -68,7 +68,7 @@ namespace GitCommands.Git
             }
 
             string tagName = inputTagName.Trim();
-            string forced = force ? " - f" : "";
+            string forced = force ? "-f" : "";
             string directory = _module.GetGitDirectory();
 
             string tagSwitch = "";
