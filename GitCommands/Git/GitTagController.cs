@@ -67,26 +67,27 @@ namespace GitCommands.Git
                 File.WriteAllText(Path.Combine(_module.GetGitDirectory(), "TAGMESSAGE"), tagMessage);
             }
 
-            string strCommand = "";
             string tagName = inputTagName.Trim();
             string forced = force ? " - f" : "";
             string directory = _module.GetGitDirectory();
+
+            string tagSwitch = "";
 
             switch (operationType)
             {
                 /* Lightweight */
                 case TagOperation.Lightweight:
-                    strCommand = $"tag {forced} \"{tagName}\" \"{revision}\"";
+                    /* tagSwitch is already ok */
                     break;
 
                 /* Annotate */
                 case TagOperation.Annotate:
-                    strCommand = $"tag \"{tagName}\" -a {forced} -F \"{directory}\\TAGMESSAGE\" -- \"{revision}\"";
+                    tagSwitch = $"-a -F \"{directory}\\TAGMESSAGE\"";
                     break;
 
                 /* Sign with default GPG */
                 case TagOperation.SignWithDefaultKey:
-                    strCommand = $"tag \"{tagName}\" -s {forced} -F \"{directory}\\TAGMESSAGE\" -- \"{revision}\"";
+                    tagSwitch = $"-s -F \"{directory}\\TAGMESSAGE\"";
                     break;
 
                 /* Sign with specific GPG */
@@ -95,7 +96,7 @@ namespace GitCommands.Git
                     {
                         throw new ArgumentNullException("keyId");
                     }
-                    strCommand = $"tag \"{tagName}\" -u {keyId} {forced} -F \"{directory}\\TAGMESSAGE\" -- \"{revision}\"";
+                    tagSwitch = $"-u {keyId} -F \"{directory}\\TAGMESSAGE\"";
                     break;
                     
                 /* Error */
@@ -103,7 +104,7 @@ namespace GitCommands.Git
                     throw new NotSupportedException("Invalid TagOperation");
             }
 
-            return _module.RunGitCmd(strCommand);
+            return _module.RunGitCmd($"tag {forced} {tagSwitch} \"{tagName}\" -- \"{revision}\"");
         }
     }
 }
