@@ -70,8 +70,7 @@ namespace GitUI.CommandsDialogs
                 return string.Empty;
             }
 
-            GitTagController.TagOperation _tagOperation = (GitTagController.TagOperation) annotate.SelectedIndex;
-            var s = _gitTagController.CreateTag(revision, textBoxTagName.Text, ForceTag.Checked, _tagOperation, tagMessage.Text, textBoxGpgKey.Text);
+            var s = _gitTagController.CreateTag(revision, textBoxTagName.Text, ForceTag.Checked, GetSelectedOperation(annotate.SelectedIndex), tagMessage.Text, textBoxGpgKey.Text);
             if (!string.IsNullOrEmpty(s))
             {
                 MessageBox.Show(this, s, _messageCaption.Text);
@@ -108,9 +107,33 @@ namespace GitUI.CommandsDialogs
 
         private void AnnotateDropDownChanged(object sender, EventArgs e)
         {
-            textBoxGpgKey.Enabled = annotate.SelectedIndex == 3;
-            keyIdLbl.Enabled = annotate.SelectedIndex == 3;
-            tagMessage.Enabled = annotate.SelectedIndex > 0;
+            TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
+            textBoxGpgKey.Enabled = tagOperation == TagOperation.SignWithSpecifiKey;
+            keyIdLbl.Enabled = tagOperation == TagOperation.SignWithSpecifiKey;
+            tagMessage.Enabled = tagOperation > TagOperation.Lightweight;
+        }
+
+        private TagOperation GetSelectedOperation(int dropdownSelection)
+        {
+            TagOperation returnValue = TagOperation.Lightweight;
+            switch(dropdownSelection)
+            {
+                case 0:
+                    returnValue = TagOperation.Lightweight;
+                    break;
+                case 1:
+                    returnValue = TagOperation.Annotate;
+                    break;
+                case 2:
+                    returnValue = TagOperation.SignWithDefaultKey;
+                    break;
+                case 3:
+                    returnValue = TagOperation.SignWithSpecifiKey;
+                    break;
+                default:
+                    throw new NotSupportedException("Invalid dropdownSelection");
+            }
+            return returnValue;
         }
     }
 }
