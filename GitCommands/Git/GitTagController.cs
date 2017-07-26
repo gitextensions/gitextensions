@@ -7,6 +7,14 @@ using System.Text;
 
 namespace GitCommands.Git
 {
+    public enum TagOperation
+    {
+        Lightweight = 0,
+        Annotate = 1,
+        SignWithDefaultKey = 2,
+        SignWithSpecifiKey = 3
+    };
+
     public interface IGitTagController
     {
         /// <summary>
@@ -19,23 +27,13 @@ namespace GitCommands.Git
         /// <param name="tagMessage">Tag Message</param>
         /// <param name="keyId">Specific Key ID to be used instead of default one</param>
         /// <returns>Output string from RunGitCmd.</returns>
-        string CreateTag(string revision, string tagName, bool force, GitTagController.TagOperation operationType = GitTagController.TagOperation.Lightweight, string tagMessage = "", string keyId = "");
+        string CreateTag(string revision, string tagName, bool force, TagOperation operationType = TagOperation.Lightweight, string tagMessage = "", string keyId = "");
     }
 
 
     public class GitTagController : IGitTagController
     {
         private IGitModule _module;
-
-
-        public enum TagOperation
-        {
-            Lightweight = 0,
-            Annotate = 1,
-            SignWithDefaultKey = 2,
-            SignWithSpecifiKey = 3
-        };
-
 
         public GitTagController(IGitModule module)
         {
