@@ -92,8 +92,7 @@ namespace GitUI.CommandsDialogs
             this.annotate.Size = new System.Drawing.Size(150, 19);
             this.annotate.TabIndex = 3;
             this.annotate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            string[] tagKind = new string[] { "Lightweight tag", "Annotated tag", "Sign with default GPG", "Sign with specific GPG" };
-            this.annotate.Items.AddRange(tagKind);
+            this.annotate.Items.AddRange(dropwdownTagOperation);
             this.annotate.SelectedIndex = 0;
             this.annotate.SelectedIndexChanged += new System.EventHandler(this.AnnotateDropDownChanged);
             // 

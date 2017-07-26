@@ -22,6 +22,14 @@ namespace GitUI.CommandsDialogs
 
         private IGitTagController _gitTagController;
 
+        private static readonly TranslationString _trsLigthweight = new TranslationString("Lightweight tag");
+        private static readonly TranslationString _trsAnnotated = new TranslationString("Annotated tag");
+        private static readonly TranslationString _trsSignDefault = new TranslationString("Sign with default GPG");
+        private static readonly TranslationString _trsSignSpecificKey = new TranslationString("Sign with specific GPG");
+
+        private static readonly string[] dropwdownTagOperation = new string[] { _trsLigthweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text };
+
+
         public FormCreateTag(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
