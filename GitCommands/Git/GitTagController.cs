@@ -102,7 +102,7 @@ namespace GitCommands.Git
                     
                 /* Error */
                 default:
-                    throw new ArgumentException("Invalid TagOperation");
+                    throw new NotSupportedException("Invalid TagOperation");
             }
 
             return _module.RunGitCmd(strCommand);
