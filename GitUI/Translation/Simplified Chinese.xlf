@@ -1400,22 +1400,27 @@ Do you want to open it?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Detailed</source>
+        <target>详细</target>
         
       </trans-unit>
       <trans-unit id="PushWindowGB.Text">
         <source>Push window</source>
+        <target>推送窗口</target>
         
       </trans-unit>
       <trans-unit id="addLogMessages.Text">
         <source>Add log messages</source>
+        <target>新增日志信息</target>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
         <source>Get remote branches directly from the remote</source>
+        <target>直接从远程获取远程分支</target>
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
         <source>Merge window</source>
+        <target>合并窗口</target>
         
       </trans-unit>
     </body>
@@ -1424,34 +1429,42 @@ Do you want to open it?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Diff Viewer</source>
+        <target>差异查看器</target>
         
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
         <source>Omit uninteresting changes from combined diff</source>
+        <target>忽略差异合并中不要的变更</target>
         
       </trans-unit>
       <trans-unit id="chkOpenSubmoduleDiffInSeparateWindow.Text">
         <source>Open Submodule Diff in separate window</source>
+        <target>在单独的窗口中查看子模块的差异</target>
         
       </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
         <source>Remember the 'Ignore whitespaces' preference</source>
+        <target>记住“忽略空白字符”的偏好</target>
         
       </trans-unit>
       <trans-unit id="chkRememberNumberOfContextLines.Text">
         <source>Remember the 'Number of context lines' preference</source>
+        <target>记住“上下文行数”偏好</target>
         
       </trans-unit>
       <trans-unit id="chkRememberShowEntireFilePreference.Text">
         <source>Remember the 'Show entire file' preference</source>
+        <target>记住“显示整个文件”的偏好</target>
         
       </trans-unit>
       <trans-unit id="chkRememberShowNonPrintingCharsPreference.Text">
         <source>Remember the 'Show nonprinting characters' preference</source>
+        <target>记住“显示非打印字符”的偏好</target>
         
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog.</source>
+        <target>在浏览对话框中显示对所有父的文件差异</target>
         
       </trans-unit>
     </body>
