@@ -135,7 +135,8 @@ Inactive remote is completely invisible to git.");
                 // default fallback - if the preselection didn't work select the first available one
                 if (Remotes.SelectedIndices.Count < 1)
                 {
-                    Remotes.Items[0].Selected = true;
+                    var group = _lvgEnabled.Items.Count > 0 ? _lvgEnabled : _lvgDisabled;
+                    group.Items[0].Selected = true;
                 }
                 Remotes.Select();
             }

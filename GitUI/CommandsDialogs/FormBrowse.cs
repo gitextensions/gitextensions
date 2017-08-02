@@ -2163,6 +2163,7 @@ namespace GitUI.CommandsDialogs
                 RefreshWorkingDirCombo();
             };
 
+            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         public void SetWorkingDir(string path)
@@ -2476,6 +2477,7 @@ namespace GitUI.CommandsDialogs
                     break;
             }
 
+            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
@@ -3330,9 +3332,44 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void PreventToolStripSplitButtonClosing(ToolStripSplitButton control)
+        {
+            if (control == null || toolStripBranchFilterComboBox.Focused || toolStripRevisionFilterTextBox.Focused)
+            {
+                return;
+            }
+
+            control.Tag = this.FindFocusedControl();
+            control.DropDownClosed += ToolStripSplitButtonDropDownClosed;
+            toolStripBranchFilterComboBox.Focus();
+        }
+
+        private void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
+        {
+            var control = sender as ToolStripSplitButton;
+
+            if (control == null)
+            {
+                return;
+            }
+
+            control.DropDownClosed -= ToolStripSplitButtonDropDownClosed;
+
+            var controlToFocus = control.Tag as Control;
+
+            if (controlToFocus == null)
+            {
+                return;
+            }
+
+            controlToFocus.Focus();
+            control.Tag = null;
+        }
+
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
         {
             LoadSubmodulesIntoDropDownMenu();
+            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         private void RemoveSubmoduleButtons()
@@ -3670,6 +3707,7 @@ namespace GitUI.CommandsDialogs
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
             setNextPullActionAsDefaultToolStripMenuItem.Checked = Settings.SetNextPullActionAsDefault;
+            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         private void FormBrowse_Activated(object sender, EventArgs e)
@@ -3926,6 +3964,11 @@ namespace GitUI.CommandsDialogs
                 var newModule = new GitModule(formCreateWorktree.WorktreeDirectory);
                 SetGitModule(this, new GitModuleEventArgs(newModule));
             }
+        }
+
+        private void toolStripSplitStash_DropDownOpened(object sender, EventArgs e)
+        {
+            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
     }
 }
