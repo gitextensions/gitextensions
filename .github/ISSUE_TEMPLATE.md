@@ -6,4 +6,10 @@
 
 **What is the expected behavior?**
 
-**Which versions of GitExtensions, GIT and Windows are affected by this issue? Did this work in previous versions of our tool?**
+**Environment you encounter the issue:**
+
+- GitExtensions version:
+- GIT version: 
+- OS version: 
+
+**Did this work in previous version of GitExtensions (which)?**
