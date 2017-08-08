@@ -235,8 +235,6 @@ namespace GitUI.SpellChecker
             _customUnderlines = new SpellCheckEditControl(TextBox);
             TextBox.SelectionChanged += TextBox_SelectionChanged;
 
-            SpellCheckTimer.Enabled = false;
-
             EnabledChanged += EditNetSpellEnabledChanged;
 
             ShowWatermark();
@@ -269,11 +267,12 @@ namespace GitUI.SpellChecker
             _spelling.ReplacedWord += SpellingReplacedWord;
             _spelling.DeletedWord += SpellingDeletedWord;
             _spelling.MisspelledWord += SpellingMisspelledWord;
-
             //
             // wordDictionary
             //
             LoadDictionary();
+
+            SpellCheckTimer.Enabled = true;
         }
 
         private void LoadDictionary()
@@ -605,11 +604,6 @@ namespace GitUI.SpellChecker
                 SpellCheckTimer.Interval = 250;
                 SpellCheckTimer.Enabled = true;
             }
-        }
-
-        private void TextBoxSizeChanged(object sender, EventArgs e)
-        {
-            SpellCheckTimer.Enabled = true;
         }
 
         private void TextBoxLeave(object sender, EventArgs e)
