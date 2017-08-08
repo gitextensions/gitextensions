@@ -56,7 +56,6 @@
             this.TextBox.Size = new System.Drawing.Size(386, 336);
             this.TextBox.TabIndex = 1;
             this.TextBox.Text = "";
-            this.TextBox.SelectionChanged += new System.EventHandler(this.TextBox_SelectionChanged);
             this.TextBox.SizeChanged += new System.EventHandler(this.TextBoxSizeChanged);
             this.TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             this.TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
@@ -98,7 +97,6 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "EditNetSpell";
             this.Size = new System.Drawing.Size(386, 336);
-            this.Load += new System.EventHandler(this.EditNetSpellLoad);
             this.SpellCheckContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
