@@ -49,13 +49,11 @@
             this.truncateLongFilenames = new System.Windows.Forms.Label();
             this.truncatePathMethod = new System.Windows.Forms.ComboBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.AuthorImageSize = new System.Windows.Forms.ComboBox();
             this.NoImageService = new System.Windows.Forms.ComboBox();
             this.label53 = new System.Windows.Forms.Label();
             this.label47 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
             this.label46 = new System.Windows.Forms.Label();
-            this.label44 = new System.Windows.Forms.Label();
             this.ClearImageCache = new System.Windows.Forms.Button();
             this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
@@ -78,9 +76,9 @@
             this.groupBox13.Controls.Add(this.downloadDictionary);
             this.groupBox13.Controls.Add(this.Language);
             this.groupBox13.Controls.Add(this.helpTranslate);
-            this.groupBox13.Location = new System.Drawing.Point(3, 443);
+            this.groupBox13.Location = new System.Drawing.Point(3, 409);
             this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(1781, 84);
+            this.groupBox13.Size = new System.Drawing.Size(1274, 84);
             this.groupBox13.TabIndex = 60;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "Language";
@@ -156,9 +154,9 @@
             this.groupBox15.Controls.Add(this.applicationFontChangeButton);
             this.groupBox15.Controls.Add(this.label26);
             this.groupBox15.Controls.Add(this.label56);
-            this.groupBox15.Location = new System.Drawing.Point(3, 322);
+            this.groupBox15.Location = new System.Drawing.Point(3, 288);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(1777, 115);
+            this.groupBox15.Size = new System.Drawing.Size(1200, 115);
             this.groupBox15.TabIndex = 59;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "Fonts";
@@ -237,7 +235,7 @@
             this.groupBox14.Controls.Add(this.truncatePathMethod);
             this.groupBox14.Location = new System.Drawing.Point(3, 3);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(1777, 136);
+            this.groupBox14.Size = new System.Drawing.Size(1200, 136);
             this.groupBox14.TabIndex = 57;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "General";
@@ -266,7 +264,7 @@
             // 
             this.chkEnableAutoScale.AutoSize = true;
             this.chkEnableAutoScale.Location = new System.Drawing.Point(10, 75);
-            this.chkEnableAutoScale.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkEnableAutoScale.Margin = new System.Windows.Forms.Padding(4);
             this.chkEnableAutoScale.Name = "chkEnableAutoScale";
             this.chkEnableAutoScale.Size = new System.Drawing.Size(254, 17);
             this.chkEnableAutoScale.TabIndex = 3;
@@ -299,42 +297,25 @@
             // 
             this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox6.Controls.Add(this.AuthorImageSize);
             this.groupBox6.Controls.Add(this.NoImageService);
             this.groupBox6.Controls.Add(this.label53);
             this.groupBox6.Controls.Add(this.label47);
             this.groupBox6.Controls.Add(this._NO_TRANSLATE_DaysToCacheImages);
             this.groupBox6.Controls.Add(this.label46);
-            this.groupBox6.Controls.Add(this.label44);
             this.groupBox6.Controls.Add(this.ClearImageCache);
             this.groupBox6.Controls.Add(this.ShowAuthorGravatar);
             this.groupBox6.Location = new System.Drawing.Point(3, 145);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(1777, 171);
+            this.groupBox6.Size = new System.Drawing.Size(1200, 137);
             this.groupBox6.TabIndex = 58;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Author images";
-            // 
-            // AuthorImageSize
-            // 
-            this.AuthorImageSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.AuthorImageSize.FormattingEnabled = true;
-            this.AuthorImageSize.Items.AddRange(new object[] {
-            "Small (80x80)",
-            "Normal (160x160)",
-            "Large (240x240)",
-            "Extra Large (320x320)"});
-            this.AuthorImageSize.Location = new System.Drawing.Point(221, 45);
-            this.AuthorImageSize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.AuthorImageSize.Name = "AuthorImageSize";
-            this.AuthorImageSize.Size = new System.Drawing.Size(142, 21);
-            this.AuthorImageSize.TabIndex = 12;
             // 
             // NoImageService
             // 
             this.NoImageService.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.NoImageService.FormattingEnabled = true;
-            this.NoImageService.Location = new System.Drawing.Point(221, 100);
+            this.NoImageService.Location = new System.Drawing.Point(221, 71);
             this.NoImageService.Name = "NoImageService";
             this.NoImageService.Size = new System.Drawing.Size(142, 21);
             this.NoImageService.TabIndex = 17;
@@ -342,7 +323,7 @@
             // label53
             // 
             this.label53.AutoSize = true;
-            this.label53.Location = new System.Drawing.Point(10, 103);
+            this.label53.Location = new System.Drawing.Point(10, 74);
             this.label53.Name = "label53";
             this.label53.Size = new System.Drawing.Size(88, 13);
             this.label53.TabIndex = 16;
@@ -351,7 +332,7 @@
             // label47
             // 
             this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(304, 74);
+            this.label47.Location = new System.Drawing.Point(304, 45);
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(30, 13);
             this.label47.TabIndex = 15;
@@ -359,7 +340,7 @@
             // 
             // _NO_TRANSLATE_DaysToCacheImages
             // 
-            this._NO_TRANSLATE_DaysToCacheImages.Location = new System.Drawing.Point(221, 73);
+            this._NO_TRANSLATE_DaysToCacheImages.Location = new System.Drawing.Point(221, 44);
             this._NO_TRANSLATE_DaysToCacheImages.Maximum = new decimal(new int[] {
             400,
             0,
@@ -372,24 +353,15 @@
             // label46
             // 
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(10, 75);
+            this.label46.Location = new System.Drawing.Point(10, 46);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(73, 13);
             this.label46.TabIndex = 13;
             this.label46.Text = "Cache images";
             // 
-            // label44
-            // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(10, 48);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(58, 13);
-            this.label44.TabIndex = 11;
-            this.label44.Text = "Image size";
-            // 
             // ClearImageCache
             // 
-            this.ClearImageCache.Location = new System.Drawing.Point(10, 131);
+            this.ClearImageCache.Location = new System.Drawing.Point(10, 102);
             this.ClearImageCache.Name = "ClearImageCache";
             this.ClearImageCache.Size = new System.Drawing.Size(142, 25);
             this.ClearImageCache.TabIndex = 18;
@@ -433,7 +405,7 @@
             this.Controls.Add(this.groupBox6);
             this.MinimumSize = new System.Drawing.Size(515, 510);
             this.Name = "AppearanceSettingsPage";
-            this.Size = new System.Drawing.Size(899, 550);
+            this.Size = new System.Drawing.Size(908, 532);
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             this.groupBox15.ResumeLayout(false);
@@ -473,7 +445,6 @@
         private System.Windows.Forms.Label label47;
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_DaysToCacheImages;
         private System.Windows.Forms.Label label46;
-        private System.Windows.Forms.Label label44;
         private System.Windows.Forms.Button ClearImageCache;
         private System.Windows.Forms.CheckBox ShowAuthorGravatar;
         private System.Windows.Forms.FontDialog diffFontDialog;
@@ -481,6 +452,5 @@
         private System.Windows.Forms.Button commitFontChangeButton;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.FontDialog commitFontDialog;
-        private System.Windows.Forms.ComboBox AuthorImageSize;
     }
 }

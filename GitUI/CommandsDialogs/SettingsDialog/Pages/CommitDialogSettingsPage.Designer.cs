@@ -1,4 +1,4 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     partial class CommitDialogSettingsPage
     {
@@ -114,7 +114,7 @@
             // 
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(313, 108);
             this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Maximum = new decimal(new int[] {
-            10,
+            999,
             0,
             0,
             0});
