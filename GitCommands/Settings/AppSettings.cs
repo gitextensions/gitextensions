@@ -482,11 +482,11 @@ namespace GitCommands
             set { SetString("iconstyle", value); }
         }
 
-        public static int AuthorImageSize
-        {
-            get { return GetInt("authorimagesize", 80); }
-            set { SetInt("authorimagesize", value); }
-        }
+        /// <summary>
+        /// Gets the size of the commit author avatar. Set to 80px.
+        /// </summary>
+        /// <remarks>The value should be scaled with DPI.</remarks>
+        public static int AuthorImageSize => 80;
 
         public static int AuthorImageCacheDays
         {
@@ -914,7 +914,7 @@ namespace GitCommands
             set { SetInt("revisiongridquicksearchtimeout", value); }
         }
 
-        public static string GravatarFallbackService
+        public static string GravatarDefaultImageType
         {
             get { return GetString("gravatarfallbackservice", "Identicon"); }
             set { SetString("gravatarfallbackservice", value); }

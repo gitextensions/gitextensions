@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using Gravatar;
@@ -20,6 +19,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private Font _diffFont;
         private Font _applicationFont;
         private Font commitFont;
+        private readonly IImageCache _avatarCache;
+
 
         public AppearanceSettingsPage()
         {
@@ -27,7 +28,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Appearance";
             Translate();
 
-            NoImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
+            _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
+
+            NoImageService.Items.AddRange(Enum.GetNames(typeof(DefaultImageType)));
         }
 
         protected override string GetCommaSeparatedKeywordList()
@@ -71,16 +74,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AuthorImageCacheDays;
-            if (AppSettings.AuthorImageSize <= 120)
-                AuthorImageSize.SelectedIndex = 0;
-            else if (AppSettings.AuthorImageSize <= 200)
-                AuthorImageSize.SelectedIndex = 1;
-            else if (AppSettings.AuthorImageSize <= 280)
-                AuthorImageSize.SelectedIndex = 2;
-            else
-                AuthorImageSize.SelectedIndex = 3;
             ShowAuthorGravatar.Checked = AppSettings.ShowAuthorGravatar;
-            NoImageService.Text = AppSettings.GravatarFallbackService;
+            NoImageService.Text = AppSettings.GravatarDefaultImageType;
 
             Language.Items.Clear();
             Language.Items.Add("English");
@@ -109,35 +104,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
             AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
 
-            int authorImageSize;
-            switch (AuthorImageSize.SelectedIndex)
-            {
-                case 1:
-                    authorImageSize = 160;
-                    break;
-                case 2:
-                    authorImageSize = 240;
-                    break;
-                case 3:
-                    authorImageSize = 320;
-                    break;
-                default:
-                    authorImageSize = 80;
-                    break;
-            }
-            if (authorImageSize != AppSettings.AuthorImageSize)
-            {
-                AppSettings.AuthorImageSize = authorImageSize;
-                GravatarService.ClearImageCache();
-            }
-
             AppSettings.Translation = Language.Text;
             Strings.Reinit();
 
             AppSettings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
             AppSettings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
-            AppSettings.GravatarFallbackService = NoImageService.Text;
+            AppSettings.GravatarDefaultImageType = NoImageService.Text;
 
             AppSettings.RelativeDate = chkShowRelativeDate.Checked;
 
@@ -226,7 +199,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ClearImageCache_Click(object sender, EventArgs e)
         {
-            GravatarService.ClearImageCache();
+            _avatarCache.ClearAsync();
         }
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
