@@ -12,7 +12,7 @@ namespace JiraCommitTipPlugin
     {
         private const string description = "Jira Commit Tip";
         private Jira jira;
-        private JiraNamedEntity filter;
+        private JiraFilter filter;
         private readonly StringSetting url = new StringSetting("Jira URL", @"https://jira.atlassian.com");
         private readonly StringSetting user = new StringSetting("Jira user", string.Empty);
         private readonly PasswordSetting password = new PasswordSetting("Jira password", string.Empty);
@@ -48,12 +48,10 @@ namespace JiraCommitTipPlugin
 
         private void UpdateJiraSettings()
         {
-            jira = new Jira(url[Settings], user[Settings], password[Settings]);
+            jira = Jira.CreateRestClient(url[Settings], user[Settings], password[Settings]);
             try
             {
-                if (jira.GetAccessToken() == null)
-                    return;
-                filter = jira.GetFilters().FirstOrDefault(f => f.Name.Equals(filterName[Settings]));
+                filter = jira.Filters.GetFavouritesAsync().Result.FirstOrDefault(f => f.Name.Equals(filterName[Settings]));
             }
             catch (Exception ex)
             {
@@ -91,11 +89,11 @@ namespace JiraCommitTipPlugin
             try
             {
                 return string.Join(Environment.NewLine,
-                    jira.GetIssuesFromFilter(filter.Name).Select(i => i.Key + " " + i.Summary));
+                    jira.Issues.GetIssuesFromJqlAsync(filter.Jql).Result.Select(i => i.Key + " " + i.Summary));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return "<! No connection to Jira !> ";
+                return ex.Message;
             }
         }
     }

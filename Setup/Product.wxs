@@ -742,6 +742,8 @@
         <Feature Id="JiraCommitTipPlugin" Title="Jira Commit Tip Plugin" Level="1">
           <ComponentRef Id="JiraCommitTipPlugin.dll" />
           <ComponentRef Id="Atlassian.Jira.dll" />
+          <ComponentRef Id="RestSharp.dll" />
+          <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
       </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
