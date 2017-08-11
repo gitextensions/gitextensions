@@ -104,7 +104,6 @@ namespace GitExtensions
     {
         public class Exterior
         {
-            public DirectoryGateway Directory = DirectoryGateway.Inst;
             //ad hoc variables (without a dedicated Gateway)
             public bool StartWithRecentWorkingDir = AppSettings.StartWithRecentWorkingDir;
             //There should be a global instance of AppSettings that could be mocked.
@@ -112,8 +111,6 @@ namespace GitExtensions
             //the same happens here
             public Func<string, string> FindGitWorkingDir = (dirPath) => GitModule.FindGitWorkingDir(dirPath);
             public Func<string, bool> IsValidGitWorkingDir = (dirPath) => GitModule.IsValidGitWorkingDir(dirPath);
-
-
         }
 
         private Exterior Ext;
@@ -160,7 +157,7 @@ namespace GitExtensions
             if (string.IsNullOrEmpty(workingDir))
             {
                 //Get DirectoryGateway from Ext.Directory
-                string findWorkingDir = Ext.FindGitWorkingDir(Ext.Directory.CurrentDirectory);
+                string findWorkingDir = Ext.FindGitWorkingDir(DirectoryGateway.Inst.CurrentDirectory);
                 if (Ext.IsValidGitWorkingDir(findWorkingDir))
                     workingDir = findWorkingDir;
             }
