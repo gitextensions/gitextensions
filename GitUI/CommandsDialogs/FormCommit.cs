@@ -2461,25 +2461,20 @@ namespace GitUI.CommandsDialogs
         {
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
-            CommitTemplateItem[] commitTemplates = CommitTemplateItem.LoadFromRegistrated();
+            var fromSettings = CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>().Where(t => !t.Name.IsNullOrEmpty()).ToArray();
+            var commitTemplates = new CommitTemplateManager().RegisteredTemplates
+               .Union(new[] { (CommitTemplateItem)null })
+               .Union(fromSettings)
+               .Union(fromSettings.Length > 0 ? new[] { (CommitTemplateItem)null } : Array.Empty<CommitTemplateItem>())
+               .ToArray();
 
             if (commitTemplates.Length > 0)
             {
                 foreach (CommitTemplateItem item in commitTemplates)
-                    AddTemplateCommitMessageToMenu(item, item.Name);
-                commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
-            }
-
-            commitTemplates = CommitTemplateItem.LoadFromSettings();
-            if (null != commitTemplates)
-            {
-                for (int i = 0; i < commitTemplates.Length; i++)
-                {
-                    if (!commitTemplates[i].Name.IsNullOrEmpty())
-                        AddTemplateCommitMessageToMenu(commitTemplates[i], commitTemplates[i].Name);
-                }
-                if (commitTemplates.Any(i => !i.Name.IsNullOrEmpty()))
-                    commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                    if (item == null)
+                        commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                    else
+                        AddTemplateCommitMessageToMenu(item, item.Name);
             }
 
             var toolStripItem = new ToolStripMenuItem(_commitTemplateSettings.Text);

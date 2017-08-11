@@ -917,14 +917,15 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreSparseWorkingCopy, PostSparseWorkingCopy, action);
         }
 
+        private readonly CommitTemplateManager commitTemplateManager = new CommitTemplateManager();
         public void AddCommitTemplate(string key, Func<string> addingText)
         {
-            CommitTemplateItem.TryRegistrate(key, addingText);
+            commitTemplateManager.Register(key, addingText);
         }
 
         public void RemoveCommitTemplate(string key)
         {
-            CommitTemplateItem.UnRegistrate(key);
+            commitTemplateManager.Unregister(key);
         }
 
         public bool StartFormatPatchDialog(IWin32Window owner)

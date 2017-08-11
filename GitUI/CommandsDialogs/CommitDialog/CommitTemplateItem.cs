@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands.Utils;
-using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.CommitDialog
 {
@@ -113,28 +110,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
             return commitTemplateItem;
         }
-
-        private static readonly Dictionary<string, Func<string>> RegistratedTemplates = new Dictionary<string, Func<string>>();
-        [NotNull]
-        public static CommitTemplateItem[] LoadFromRegistrated()
-        {
-            return RegistratedTemplates.Select(item => new CommitTemplateItem(item.Key, item.Value())).ToArray();
-        }
-
-        public static bool TryRegistrate(string key, Func<string> item)
-        {
-            if (RegistratedTemplates.ContainsKey(key))
-                return false;
-            RegistratedTemplates.Add(key, item);
-            return true;
-        }
-
-        public static void UnRegistrate(string key)
-        {
-            if (RegistratedTemplates.ContainsKey(key))
-                RegistratedTemplates.Remove(key);
-        }
-
+    
     }
 
     public sealed class MoveNamespaceDeserializationBinder : SerializationBinder
