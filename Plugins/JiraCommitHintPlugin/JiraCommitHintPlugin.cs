@@ -6,11 +6,11 @@ using Atlassian.Jira;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace JiraCommitTipPlugin
+namespace JiraCommitHintPlugin
 {
-    public class JiraCommitPlugin : GitPluginBase, IGitPluginForRepository
+    public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForRepository
     {
-        private const string description = "Jira Commit Tip";
+        private const string description = "Jira Commit Hint";
         private Jira jira;
         private JiraFilter filter;
         private readonly StringSetting url = new StringSetting("Jira URL", @"https://jira.atlassian.com");
@@ -18,7 +18,7 @@ namespace JiraCommitTipPlugin
         private readonly PasswordSetting password = new PasswordSetting("Jira password", string.Empty);
         private readonly StringSetting filterName = new StringSetting("Filter name", "[Filter should be in your favorites]");
 
-        public JiraCommitPlugin()
+        public JiraCommitHintPlugin()
         {
             Description = description;
         }
@@ -74,7 +74,7 @@ namespace JiraCommitTipPlugin
 
         private void gitUiCommands_PreCommit(object sender, GitUIBaseEventArgs e)
         {
-           e.GitUICommands.AddCommitTemplate(description, GetMessageToCommit);
+            e.GitUICommands.AddCommitTemplate(description, GetMessageToCommit);
         }
 
         private void gitUiCommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)

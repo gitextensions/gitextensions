@@ -233,8 +233,8 @@
       <Component Id="Newtonsoft.Json.dll" Guid="*">
         <File Source="..\packages\Newtonsoft.Json.10.0.3\lib\net40\Newtonsoft.Json.dll" />
       </Component>
-      <Component Id="JiraCommitTipPlugin.dll" Guid="*">
-        <File Source="..\Plugins\JiraCommitTipPlugin\bin\Release\JiraCommitTipPlugin.dll" />
+      <Component Id="JiraCommitHintPlugin.dll" Guid="*">
+        <File Source="..\Plugins\JiraCommitHintPlugin\bin\Release\JiraCommitHintPlugin.dll" />
       </Component>
       <Component Id="Atlassian.Jira.dll" Guid="*">
         <File Source="..\Plugins\JiraCommitTipPlugin\bin\Release\Atlassian.Jira.dll" />
@@ -739,8 +739,8 @@
           <ComponentRef Id="Microsoft.VisualStudio.Services.WebApi.dll" />
           <ComponentRef Id="System.Net.Http.Formatting.dll" />
         </Feature>
-        <Feature Id="JiraCommitTipPlugin" Title="Jira Commit Tip Plugin" Level="1">
-          <ComponentRef Id="JiraCommitTipPlugin.dll" />
+        <Feature Id="JiraCommitHintPlugin" Title="Jira Commit Hint Plugin" Level="1">
+          <ComponentRef Id="JiraCommitHintPlugin.dll" />
           <ComponentRef Id="Atlassian.Jira.dll" />
           <ComponentRef Id="RestSharp.dll" />
           <ComponentRef Id="Newtonsoft.Json.dll" />

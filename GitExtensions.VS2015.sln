@@ -141,7 +141,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManagerTests", "Uni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GravatarTests", "UnitTests\GravatarTests\GravatarTests.csproj", "{93CE3A27-5A63-4436-8C64-CBCA75322C5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraCommitTipPlugin", "Plugins\JiraCommitTipPlugin\JiraCommitTipPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraCommitHintPlugin", "Plugins\JiraCommitHintPlugin\JiraCommitHintPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
