@@ -38,6 +38,19 @@ namespace GitExtensions
         }
     }
 
+    public interface IInstanceFactory
+    {
+        T CreateInstance<T>() where T : class, new();
+    }
+
+    public class NewInstanceFactory : IInstanceFactory
+    {
+        public T CreateInstance<T>() where T : class, new()
+        {
+            return new T();
+        }
+    }
+
     public class StaticDI
     {
         private static ConcurrentBag<Action> clearActions = new ConcurrentBag<Action>();
@@ -52,12 +65,15 @@ namespace GitExtensions
                 return (T)fakeObj;
             }
 
-            return new T();
+            return InstanceFactory.CreateInstance<T>();
         }
 
+        public static IInstanceFactory InstanceFactory = new NewInstanceFactory();
+        
         public static void ClearInstances()
         {
-            foreach (Action clearAction in clearActions)
+            Action clearAction;
+            while (clearActions.TryTake(out clearAction))
             {
                 clearAction();
             }
