@@ -29,7 +29,7 @@ namespace GitExtensionsTest
         public void ReturnsRecentDirectory_if_RecentDirectory_IsValidGitWorkingDir()
         {
             //arange
-            _ext.Directory.CurrentDirectory.Returns(string.Empty);
+            DirectoryGateway.Inst.CurrentDirectory.Returns(string.Empty);
             _ext.StartWithRecentWorkingDir = true;
             string unitTestRecentWorkingDir = "unitTestRecentWorkingDir";
             _ext.RecentWorkingDir = unitTestRecentWorkingDir;
@@ -44,7 +44,7 @@ namespace GitExtensionsTest
         public void ReturnsRecentDirectory_if_RecentDirectory_is_not_ValidGitWorkingDir()
         {
             //arange
-            _ext.Directory.CurrentDirectory.Returns(string.Empty);
+            DirectoryGateway.Inst.CurrentDirectory.Returns(string.Empty);
             _ext.StartWithRecentWorkingDir = true;
             string unitTestRecentWorkingDir = "unitTestRecentWorkingDir";
             _ext.RecentWorkingDir = unitTestRecentWorkingDir;
@@ -95,7 +95,10 @@ namespace GitExtensionsTest
 
     [Serializable()]
     public class UnconfiguredCallException : Exception
-    { }
+    {
+        public UnconfiguredCallException() : base() { }
+        public UnconfiguredCallException(string message) : base(message) { }
+    }
 
     class ThrowIfUnconfigured : ICallHandler
     {
@@ -108,17 +111,24 @@ namespace GitExtensionsTest
     public class NSubstituteHelper : IInstanceFactory
     {
         private static List<object> substitutes = new List<object>();
+        private static bool _ThrowOnUnconfiguredCall = false;
+        private static CallHandlerFactory throwingFactory = s => new ThrowIfUnconfigured();
 
         public static void RegisterAsInstanceFactory()
         {
             ClearStaticInstances();
             StaticDI.InstanceFactory = new NSubstituteHelper();
+            _ThrowOnUnconfiguredCall = false;
         }
 
         public T CreateInstance<T>() where T : class, new()
         {
             T sut = Substitute.For<T>();
             substitutes.Add(sut);
+            if (_ThrowOnUnconfiguredCall)
+            {
+                RegisterThrowingCallHandlerFactory(sut);
+            }
 
             return sut;
         }
@@ -131,13 +141,20 @@ namespace GitExtensionsTest
 
         public static void ThrowOnUnconfiguredCall()
         {
-            CallHandlerFactory throwingFactory = s => new ThrowIfUnconfigured();
+            _ThrowOnUnconfiguredCall = true;
+            
             foreach (object sut in substitutes)
             {
-                var sub = SubstitutionContext.Current.GetCallRouterFor(sut);
-                sub.RegisterCustomCallHandlerFactory(throwingFactory);
+                RegisterThrowingCallHandlerFactory(sut);
             }
         }
+
+        private static void RegisterThrowingCallHandlerFactory(object substitute)
+        {
+            var sub = SubstitutionContext.Current.GetCallRouterFor(substitute);
+            sub.RegisterCustomCallHandlerFactory(throwingFactory);
+        }
+
     }
 }
 
