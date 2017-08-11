@@ -1,19 +1,103 @@
 ﻿using GitCommands;
 using System;
 using System.IO;
+using System.Collections.Concurrent;
 
 namespace GitExtensions
 {
+
+    internal class DIObjectInstance<T> where T : class, new()
+    {
+        private static object lockObj = new object();
+        private T _Inst;
+        public T Inst
+        {
+            get
+            {
+                if (_Inst == null)
+                {
+                    lock (lockObj)
+                    {
+                        if (_Inst == null)
+                        {
+                            _Inst = StaticDI.CreateInstance<T>(ClearInst);
+                        }
+                    }
+                }
+
+                return _Inst;
+            }
+        }
+
+        private void ClearInst()
+        {
+            lock(lockObj)
+            {
+                _Inst = null;
+            }            
+        }
+    }
+
+    public class StaticDI
+    {
+        private static ConcurrentBag<Action> clearActions = new ConcurrentBag<Action>();
+        private static ConcurrentDictionary<Type, object> fakeInstances = new ConcurrentDictionary<Type, object>();
+
+        public static T CreateInstance<T>(Action clearAction) where T : class, new()
+        {
+            clearActions.Add(clearAction);
+            object fakeObj;
+            if(fakeInstances.TryGetValue(typeof(T), out fakeObj))
+            {
+                return (T)fakeObj;
+            }
+
+            return new T();
+        }
+
+        public static void ClearInstances()
+        {
+            foreach (Action clearAction in clearActions)
+            {
+                clearAction();
+            }
+        }
+
+        public static void RegisterFakeInstance<T>(T instacne)
+        {
+            fakeInstances[typeof(T)] = instacne;
+        }
+
+    }
+
+    public class DirectoryGateway
+    {
+        private static DIObjectInstance<DirectoryGateway> _diInst = new DIObjectInstance<DirectoryGateway>();
+        public static DirectoryGateway Inst => _diInst.Inst;
+
+        public virtual bool DirectoryExists(string dirPath)
+        {
+            return Directory.Exists(dirPath);
+        }
+
+        public virtual string CurrentDirectory => Directory.GetCurrentDirectory();
+    }
+
+
     public class WorkingPathProvider
     {
         public class Exterior
         {
-            public Func<string, bool> DirectoryExists = (dirPath) => Directory.Exists(dirPath);
-            public Func<string, string> FindGitWorkingDir = (dirPath) => GitModule.FindGitWorkingDir(dirPath);
+            public DirectoryGateway Directory = DirectoryGateway.Inst;
+            //ad hoc variables (without a dedicated Gateway)
             public bool StartWithRecentWorkingDir = AppSettings.StartWithRecentWorkingDir;
+            //There should be a global instance of AppSettings that could be mocked.
             public string RecentWorkingDir = AppSettings.RecentWorkingDir;
+            //the same happens here
+            public Func<string, string> FindGitWorkingDir = (dirPath) => GitModule.FindGitWorkingDir(dirPath);
             public Func<string, bool> IsValidGitWorkingDir = (dirPath) => GitModule.IsValidGitWorkingDir(dirPath);
-            public string CurrentDirectory = Directory.GetCurrentDirectory();
+
+
         }
 
         private Exterior Ext;
@@ -36,7 +120,8 @@ namespace GitExtensions
                 //while parsing command line arguments, it unescapes " incorectly
                 //https://github.com/gitextensions/gitextensions/issues/3489
                 string dirArg = args[2].TrimEnd('"');
-                if (Ext.DirectoryExists(dirArg))
+                //Get DirectoryGateway from the global injected instance, needs to call before each test StaticDI.ClearInstances();
+                if (DirectoryGateway.Inst.DirectoryExists(dirArg))
                     workingDir = Ext.FindGitWorkingDir(dirArg);
                 else
                 {
@@ -58,7 +143,8 @@ namespace GitExtensions
 
             if (string.IsNullOrEmpty(workingDir))
             {
-                string findWorkingDir = Ext.FindGitWorkingDir(Ext.CurrentDirectory);
+                //Get DirectoryGateway from Ext.Directory
+                string findWorkingDir = Ext.FindGitWorkingDir(Ext.Directory.CurrentDirectory);
                 if (Ext.IsValidGitWorkingDir(findWorkingDir))
                     workingDir = findWorkingDir;
             }
@@ -68,4 +154,5 @@ namespace GitExtensions
 
 
     }
+
 }
