@@ -127,20 +127,26 @@ namespace GitUI.Hotkey
 
             Dictionary<string, HotkeyCommand> defaultCommands = new Dictionary<string, HotkeyCommand>();
             FillDictionaryWithCommands(defaultCommands, defaultSettings);
-            AssignKotkeysFromLoaded(defaultCommands, loadedSettings);
+            AssignHotkeysFromLoaded(defaultCommands, loadedSettings);
         }
 
-        private static void AssignKotkeysFromLoaded(Dictionary<string, HotkeyCommand> defaultCommands, HotkeySettings[] loadedSettings)
+        private static void AssignHotkeysFromLoaded(Dictionary<string, HotkeyCommand> defaultCommands, HotkeySettings[] loadedSettings)
         {
             foreach (HotkeySettings setting in loadedSettings)
             {
-                foreach (HotkeyCommand command in setting.Commands)
+                if (setting != null)
                 {
-                    string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                    HotkeyCommand defaultCommand;
-                    if (defaultCommands.TryGetValue(dictKey, out defaultCommand))
+                    foreach (HotkeyCommand command in setting.Commands)
                     {
-                        defaultCommand.KeyData = command.KeyData;
+                        if (command != null)
+                        {
+                            string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
+                            HotkeyCommand defaultCommand;
+                            if (defaultCommands.TryGetValue(dictKey, out defaultCommand))
+                            {
+                                defaultCommand.KeyData = command.KeyData;
+                            }
+                        }
                     }
                 }
             }
