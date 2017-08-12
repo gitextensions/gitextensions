@@ -127,10 +127,10 @@ namespace GitUI.Hotkey
 
             Dictionary<string, HotkeyCommand> defaultCommands = new Dictionary<string, HotkeyCommand>();
             FillDictionaryWithCommands(defaultCommands, defaultSettings);
-            AssignKotkeysFromLoaded(defaultCommands, loadedSettings);
+            AssignHotkeysFromLoaded(defaultCommands, loadedSettings);
         }
 
-        private static void AssignKotkeysFromLoaded(Dictionary<string, HotkeyCommand> defaultCommands, HotkeySettings[] loadedSettings)
+        private static void AssignHotkeysFromLoaded(Dictionary<string, HotkeyCommand> defaultCommands, HotkeySettings[] loadedSettings)
         {
             foreach (HotkeySettings setting in loadedSettings)
             {
