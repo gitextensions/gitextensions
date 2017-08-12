@@ -79,6 +79,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="StaticDependencyInjection.cs" />
     <Compile Include="WorkingPathProvider.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
