@@ -134,13 +134,19 @@ namespace GitUI.Hotkey
         {
             foreach (HotkeySettings setting in loadedSettings)
             {
-                foreach (HotkeyCommand command in setting.Commands)
+                if (setting != null)
                 {
-                    string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                    HotkeyCommand defaultCommand;
-                    if (defaultCommands.TryGetValue(dictKey, out defaultCommand))
+                    foreach (HotkeyCommand command in setting.Commands)
                     {
-                        defaultCommand.KeyData = command.KeyData;
+                        if (command != null)
+                        {
+                            string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
+                            HotkeyCommand defaultCommand;
+                            if (defaultCommands.TryGetValue(dictKey, out defaultCommand))
+                            {
+                                defaultCommand.KeyData = command.KeyData;
+                            }
+                        }
                     }
                 }
             }
