@@ -1,12 +1,9 @@
 ﻿using FluentAssertions;
-using GitCommands;
 using GitExtensions;
-using GitUIPluginInterfaces;
 using NSubstitute;
 using NSubstitute.Core;
 using NUnit.Framework;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace GitExtensionsTest
@@ -33,7 +30,7 @@ namespace GitExtensionsTest
             _ext.StartWithRecentWorkingDir = true;
             string unitTestRecentWorkingDir = "unitTestRecentWorkingDir";
             _ext.RecentWorkingDir = unitTestRecentWorkingDir;
-            _ext.IsValidGitWorkingDir = (dirPath) => unitTestRecentWorkingDir.Equals(dirPath);
+            GitModuleGateway.Inst.IsValidGitWorkingDir(unitTestRecentWorkingDir).Returns(true);
             //act
             string workingDir = _workingPathProvider.GetWorkingDir(new string[0]);
             //assert
@@ -48,7 +45,7 @@ namespace GitExtensionsTest
             _ext.StartWithRecentWorkingDir = true;
             string unitTestRecentWorkingDir = "unitTestRecentWorkingDir";
             _ext.RecentWorkingDir = unitTestRecentWorkingDir;
-            _ext.IsValidGitWorkingDir = (dirPath) => unitTestRecentWorkingDir.Equals(dirPath);
+            GitModuleGateway.Inst.IsValidGitWorkingDir(unitTestRecentWorkingDir).Returns(true);
             //act
             string workingDir = _workingPathProvider.GetWorkingDir(new string[0]);
             //assert
@@ -64,7 +61,7 @@ namespace GitExtensionsTest
                 _ext.StartWithRecentWorkingDir = false;
                 string unitTestRecentWorkingDir = "unitTestRecentWorkingDir";
                 _ext.RecentWorkingDir = unitTestRecentWorkingDir;
-                _ext.IsValidGitWorkingDir = (dirPath) => unitTestRecentWorkingDir.Equals(dirPath);
+                GitModuleGateway.Inst.IsValidGitWorkingDir(unitTestRecentWorkingDir).Returns(true);
                 NSubstituteHelper.ThrowOnUnconfiguredCall();
                 //act
                 string workingDir = _workingPathProvider.GetWorkingDir(new string[0]);
@@ -82,7 +79,7 @@ namespace GitExtensionsTest
             _ext.StartWithRecentWorkingDir = false;
             string unitTestRecentWorkingDir = "unitTestRecentWorkingDir";
             _ext.RecentWorkingDir = unitTestRecentWorkingDir;
-            _ext.IsValidGitWorkingDir = (dirPath) => unitTestRecentWorkingDir.Equals(dirPath);
+            GitModuleGateway.Inst.IsValidGitWorkingDir(unitTestRecentWorkingDir).Returns(true);
             //act
             string workingDir = _workingPathProvider.GetWorkingDir(new string[0]);
             //assert

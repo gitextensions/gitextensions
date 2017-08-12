@@ -99,6 +99,21 @@ namespace GitExtensions
         public virtual string CurrentDirectory => Directory.GetCurrentDirectory();
     }
 
+    public class GitModuleGateway
+    {
+        private static DIObjectInstance<GitModuleGateway> _diInst = new DIObjectInstance<GitModuleGateway>();
+        public static GitModuleGateway Inst => _diInst.Inst;
+
+        public virtual string FindGitWorkingDir(string dirPath)
+        {
+            return GitModule.FindGitWorkingDir(dirPath);
+        }
+
+        public virtual bool IsValidGitWorkingDir(string dirPath)
+        {
+            return GitModule.IsValidGitWorkingDir(dirPath);
+        }
+    }
 
     public class WorkingPathProvider
     {
@@ -108,9 +123,6 @@ namespace GitExtensions
             public bool StartWithRecentWorkingDir = AppSettings.StartWithRecentWorkingDir;
             //There should be a global instance of AppSettings that could be mocked.
             public string RecentWorkingDir = AppSettings.RecentWorkingDir;
-            //the same happens here
-            public Func<string, string> FindGitWorkingDir = (dirPath) => GitModule.FindGitWorkingDir(dirPath);
-            public Func<string, bool> IsValidGitWorkingDir = (dirPath) => GitModule.IsValidGitWorkingDir(dirPath);
         }
 
         private Exterior Ext;
@@ -135,11 +147,11 @@ namespace GitExtensions
                 string dirArg = args[2].TrimEnd('"');
                 //Get DirectoryGateway from the global injected instance, needs to call before each test StaticDI.ClearInstances();
                 if (DirectoryGateway.Inst.DirectoryExists(dirArg))
-                    workingDir = Ext.FindGitWorkingDir(dirArg);
+                    workingDir = GitModuleGateway.Inst.FindGitWorkingDir(dirArg);
                 else
                 {
                     workingDir = Path.GetDirectoryName(dirArg);
-                    workingDir = Ext.FindGitWorkingDir(workingDir);
+                    workingDir = GitModuleGateway.Inst.FindGitWorkingDir(workingDir);
                 }
 
                 //Do not add this working directory to the recent repositories. It is a nice feature, but it
@@ -150,15 +162,15 @@ namespace GitExtensions
 
             if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && Ext.StartWithRecentWorkingDir)
             {
-                if (Ext.IsValidGitWorkingDir(Ext.RecentWorkingDir))
+                if (GitModuleGateway.Inst.IsValidGitWorkingDir(Ext.RecentWorkingDir))
                     workingDir = Ext.RecentWorkingDir;
             }
 
             if (string.IsNullOrEmpty(workingDir))
             {
                 //Get DirectoryGateway from Ext.Directory
-                string findWorkingDir = Ext.FindGitWorkingDir(DirectoryGateway.Inst.CurrentDirectory);
-                if (Ext.IsValidGitWorkingDir(findWorkingDir))
+                string findWorkingDir = GitModuleGateway.Inst.FindGitWorkingDir(DirectoryGateway.Inst.CurrentDirectory);
+                if (GitModuleGateway.Inst.IsValidGitWorkingDir(findWorkingDir))
                     workingDir = findWorkingDir;
             }
 
