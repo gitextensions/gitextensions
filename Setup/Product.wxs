@@ -237,7 +237,7 @@
         <File Source="..\Plugins\JiraCommitHintPlugin\bin\Release\JiraCommitHintPlugin.dll" />
       </Component>
       <Component Id="Atlassian.Jira.dll" Guid="*">
-        <File Source="..\Plugins\JiraCommitTipPlugin\bin\Release\Atlassian.Jira.dll" />
+        <File Source="..\Plugins\JiraCommitHintPlugin\bin\Release\Atlassian.Jira.dll" />
       </Component>
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
