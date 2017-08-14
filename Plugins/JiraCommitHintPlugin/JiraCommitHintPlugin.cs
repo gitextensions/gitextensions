@@ -12,11 +12,11 @@ namespace JiraCommitHintPlugin
     {
         private const string description = "Jira Commit Hint";
         private Jira jira;
-        private JiraFilter filter;
+        private string query;
         private readonly StringSetting url = new StringSetting("Jira URL", @"https://jira.atlassian.com");
         private readonly StringSetting user = new StringSetting("Jira user", string.Empty);
         private readonly PasswordSetting password = new PasswordSetting("Jira password", string.Empty);
-        private readonly StringSetting filterName = new StringSetting("Filter name", "[Filter should be in your favorites]");
+        private readonly StringSetting jdlQuery = new StringSetting("JDL Query", "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
         private JiraTaskDTO[] currentMessages;
 
         public JiraCommitHintPlugin()
@@ -35,7 +35,7 @@ namespace JiraCommitHintPlugin
             yield return url;
             yield return user;
             yield return password;
-            yield return filterName;
+            yield return jdlQuery;
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -50,14 +50,7 @@ namespace JiraCommitHintPlugin
         private void UpdateJiraSettings()
         {
             jira = Jira.CreateRestClient(url[Settings], user[Settings], password[Settings]);
-            try
-            {
-                filter = jira.Filters.GetFavouritesAsync().Result.FirstOrDefault(f => f.Name.Equals(filterName[Settings]));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            query = jdlQuery[Settings];
         }
 
         private void gitUiCommands_PostSettings(object sender, GitUIPostActionEventArgs e)
@@ -95,11 +88,9 @@ namespace JiraCommitHintPlugin
 
         private JiraTaskDTO[] GetMessageToCommit()
         {
-            if (filter == null)
-                return new[] { new JiraTaskDTO($"{description} error", "<! Your Jira Commit Hint Plugin not configured !> ") };
             try
             {
-                return jira.Issues.GetIssuesFromJqlAsync(filter.Jql).Result.Select(i => i.Key + " " + i.Summary).Select(i => new JiraTaskDTO(i, i)).ToArray();
+                return jira.Issues.GetIssuesFromJqlAsync(query).Result.Select(i => i.Key + " " + i.Summary).Select(i => new JiraTaskDTO(i, i)).ToArray();
             }
             catch (Exception ex)
             {
