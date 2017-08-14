@@ -17,6 +17,7 @@ namespace JiraCommitHintPlugin
         private readonly StringSetting user = new StringSetting("Jira user", string.Empty);
         private readonly PasswordSetting password = new PasswordSetting("Jira password", string.Empty);
         private readonly StringSetting filterName = new StringSetting("Filter name", "[Filter should be in your favorites]");
+        private JiraTaskDTO[] currentMessages;
 
         public JiraCommitHintPlugin()
         {
@@ -25,7 +26,7 @@ namespace JiraCommitHintPlugin
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            MessageBox.Show(GetMessageToCommit());
+            MessageBox.Show(string.Join(Environment.NewLine, GetMessageToCommit().Select(t => t.Text).ToArray()));
             return false;
         }
 
@@ -74,26 +75,47 @@ namespace JiraCommitHintPlugin
 
         private void gitUiCommands_PreCommit(object sender, GitUIBaseEventArgs e)
         {
-            e.GitUICommands.AddCommitTemplate(description, GetMessageToCommit);
+            currentMessages = GetMessageToCommit();
+            foreach (var message in currentMessages)
+            {
+                e.GitUICommands.AddCommitTemplate(message.Title, () => message.Text);
+            }
         }
 
         private void gitUiCommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
-            e.GitUICommands.RemoveCommitTemplate(description);
+            if (currentMessages == null)
+                return;
+            foreach (var message in currentMessages)
+            {
+                e.GitUICommands.RemoveCommitTemplate(message.Title);
+            }
+            currentMessages = null;
         }
 
-        private string GetMessageToCommit()
+        private JiraTaskDTO[] GetMessageToCommit()
         {
             if (filter == null)
-                return "<! Your Jira Commit Tip Plugin not configured !> ";
+                return new[] { new JiraTaskDTO($"{description} error", "<! Your Jira Commit Hint Plugin not configured !> ") };
             try
             {
-                return string.Join(Environment.NewLine,
-                    jira.Issues.GetIssuesFromJqlAsync(filter.Jql).Result.Select(i => i.Key + " " + i.Summary));
+                return jira.Issues.GetIssuesFromJqlAsync(filter.Jql).Result.Select(i => i.Key + " " + i.Summary).Select(i => new JiraTaskDTO(i, i)).ToArray();
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return new[] { new JiraTaskDTO($"{description} error",  ex.Message )};
+            }
+        }
+
+        private class JiraTaskDTO
+        {
+            public string Title { get; }
+            public string Text { get; }
+
+            public JiraTaskDTO(string title, string text)
+            {
+                Title = title;
+                Text = text;
             }
         }
     }
