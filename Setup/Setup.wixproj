@@ -13,8 +13,6 @@
     <OutputName>GitExtensions</OutputName>
     <OutputType>Package</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -91,12 +89,4 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\WiX.3.11.0\build\wix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WiX.3.11.0\build\wix.props'))" />
   </Target>
-  <!--
-	To modify your build process, add your task inside one of the targets below and uncomment it.
-	Other similar extension points exist, see Wix.targets.
-	<Target Name="BeforeBuild">
-	</Target>
-	<Target Name="AfterBuild">
-	</Target>
-	-->
 </Project>
