@@ -245,7 +245,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="@(PluginBinary)">
+      <None Include="@(PluginBinary)" Exclude="..\Plugins\**\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll;..\Plugins\**\Microsoft.WITDataStore.dll">
         <Link>Plugins\%(Filename)%(Extension)</Link>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
