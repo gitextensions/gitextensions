@@ -107,7 +107,7 @@ namespace GitUI
                     {
                         // To prevent future authentication errors, save this key for this remote.
                         if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) && 
-                            String.IsNullOrEmpty(Module.GetPathSetting("remote.{0}.puttykeyfile")))
+                            String.IsNullOrEmpty(Module.GetSetting("remote.{0}.puttykeyfile")))
                             Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
 
                         // Retry the command.
@@ -121,7 +121,7 @@ namespace GitUI
 
                     if (string.IsNullOrEmpty(UrlTryingToConnect))
                     {
-                        remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                        remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                         if (string.IsNullOrEmpty(remoteUrl))
                             remoteUrl = Remote;
                     }
@@ -166,7 +166,7 @@ namespace GitUI
                         string remoteUrl;
                         if (string.IsNullOrEmpty(UrlTryingToConnect))
                         {
-                            remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
+                            remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                             remoteUrl = string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl;
                         }
                         else
