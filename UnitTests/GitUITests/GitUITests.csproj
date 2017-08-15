@@ -73,6 +73,7 @@
     <Compile Include="UserManual\StandardHtmlUserManualFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Editor\Diff\Sample.diff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
