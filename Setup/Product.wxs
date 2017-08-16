@@ -239,6 +239,12 @@
       <Component Id="Atlassian.Jira.dll" Guid="*">
         <File Source="..\Plugins\JiraCommitHintPlugin\bin\Release\Atlassian.Jira.dll" />
       </Component>
+      <Component Id="NString.dll" Guid="*">
+        <File Source="..\Plugins\JiraCommitHintPlugin\bin\Release\NString.dll" />
+      </Component>
+      <Component Id="System.Collections.Immutable.dll" Guid="*">
+        <File Source="..\Plugins\JiraCommitHintPlugin\bin\Release\System.Collections.Immutable.dll" />
+      </Component>
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
         <RemoveFile Name="Github.dll" Id="Github.dll" On="both" />
@@ -747,6 +753,8 @@
           <ComponentRef Id="Atlassian.Jira.dll" />
           <ComponentRef Id="RestSharp.dll" />
           <ComponentRef Id="Newtonsoft.Json.dll" />
+          <ComponentRef Id="NString.dll" />
+          <ComponentRef Id="System.Collections.Immutable.dll" />
         </Feature>
       </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">

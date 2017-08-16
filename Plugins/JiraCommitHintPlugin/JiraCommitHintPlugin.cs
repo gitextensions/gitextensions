@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Atlassian.Jira;
 using GitUIPluginInterfaces;
+using NString;
 using ResourceManager;
 
 namespace JiraCommitHintPlugin
@@ -11,13 +12,18 @@ namespace JiraCommitHintPlugin
     public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForRepository
     {
         private const string description = "Jira Commit Hint";
+        private const string defaultFormat = "{Key} {Summary}";
         private Jira jira;
         private string query;
-        private readonly StringSetting url = new StringSetting("Jira URL", @"https://jira.atlassian.com");
-        private readonly StringSetting user = new StringSetting("Jira user", string.Empty);
-        private readonly PasswordSetting password = new PasswordSetting("Jira password", string.Empty);
-        private readonly StringSetting jdlQuery = new StringSetting("JDL Query", "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
+        private string stringTemplate = defaultFormat;
+        private readonly StringSetting urlSettings = new StringSetting("Jira URL", @"https://jira.atlassian.com");
+        private readonly StringSetting userSettings = new StringSetting("Jira user", string.Empty);
+        private readonly PasswordSetting passwordSettings = new PasswordSetting("Jira password", string.Empty);
+        private readonly StringSetting jdlQuerySettings = new StringSetting("JDL Query", "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
+        private readonly StringSetting stringTemplateSetting = new StringSetting("Jira Message Template", "Message Template", defaultFormat);
+        private readonly StringSetting jiraFields = new StringSetting("Jira fields", $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}}");
         private JiraTaskDTO[] currentMessages;
+        private Button btnPreview;
 
         public JiraCommitHintPlugin()
         {
@@ -26,16 +32,44 @@ namespace JiraCommitHintPlugin
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            MessageBox.Show(string.Join(Environment.NewLine, GetMessageToCommit().Select(t => t.Text).ToArray()));
+            MessageBox.Show(string.Join(Environment.NewLine, GetMessageToCommit(jira, query, stringTemplate).Select(t => t.Text).ToArray()));
             return false;
         }
 
         public override IEnumerable<ISetting> GetSettings()
         {
-            yield return url;
-            yield return user;
-            yield return password;
-            yield return jdlQuery;
+            jiraFields.CustomControl = new TextBox { ReadOnly = true, Multiline = true, Height = 55, BorderStyle = BorderStyle.None };
+            yield return jiraFields;
+            urlSettings.CustomControl = new TextBox();
+            yield return urlSettings;
+            userSettings.CustomControl = new TextBox();
+            yield return userSettings;
+            passwordSettings.CustomControl = new TextBox { UseSystemPasswordChar = true };
+            yield return passwordSettings;
+            jdlQuerySettings.CustomControl = new TextBox();
+            yield return jdlQuerySettings;
+            var txtTemplate = new TextBox { Height = 75, Multiline = true, ScrollBars = ScrollBars.Horizontal };
+            btnPreview = new Button { Text = "Preview", Top = 45, Anchor = AnchorStyles.Right };
+            btnPreview.Click += btnPreviewClick;
+            txtTemplate.Controls.Add(btnPreview);
+            stringTemplateSetting.CustomControl = txtTemplate;
+            yield return stringTemplateSetting;
+        }
+
+        private void btnPreviewClick(object sender, EventArgs eventArgs)
+        {
+            try
+            {
+                var localJira = Jira.CreateRestClient(urlSettings.CustomControl.Text, userSettings.CustomControl.Text, passwordSettings.CustomControl.Text);
+                var localQuery = jdlQuerySettings.CustomControl.Text;
+                var localStringTemplate = stringTemplateSetting.CustomControl.Text;
+                var preview = GetMessageToCommit(localJira, localQuery, localStringTemplate).FirstOrDefault();
+                MessageBox.Show($"First Task Preview:{Environment.NewLine}{Environment.NewLine}{(preview == null ? "[Empty Jira Query Result]" : preview.Text)}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -49,8 +83,13 @@ namespace JiraCommitHintPlugin
 
         private void UpdateJiraSettings()
         {
-            jira = Jira.CreateRestClient(url[Settings], user[Settings], password[Settings]);
-            query = jdlQuery[Settings];
+            jira = Jira.CreateRestClient(urlSettings[Settings], userSettings[Settings], passwordSettings[Settings]);
+            query = jdlQuerySettings[Settings] ?? jdlQuerySettings.DefaultValue;
+            stringTemplate = stringTemplateSetting[Settings] ?? stringTemplateSetting.DefaultValue;
+            if (btnPreview == null)
+                return;
+            btnPreview.Click -= btnPreviewClick;
+            btnPreview = null;
         }
 
         private void gitUiCommands_PostSettings(object sender, GitUIPostActionEventArgs e)
@@ -68,7 +107,7 @@ namespace JiraCommitHintPlugin
 
         private void gitUiCommands_PreCommit(object sender, GitUIBaseEventArgs e)
         {
-            currentMessages = GetMessageToCommit();
+            currentMessages = GetMessageToCommit(jira, query, stringTemplate);
             foreach (var message in currentMessages)
             {
                 e.GitUICommands.AddCommitTemplate(message.Title, () => message.Text);
@@ -86,15 +125,18 @@ namespace JiraCommitHintPlugin
             currentMessages = null;
         }
 
-        private JiraTaskDTO[] GetMessageToCommit()
+        private static JiraTaskDTO[] GetMessageToCommit(Jira jira, string query, string stringTemplate)
         {
             try
             {
-                return jira.Issues.GetIssuesFromJqlAsync(query).Result.Select(i => i.Key + " " + i.Summary).Select(i => new JiraTaskDTO(i, i)).ToArray();
+                return jira.Issues.GetIssuesFromJqlAsync(query).Result
+                    .Select(issue => new { title = issue.Key + " " + issue.Summary, message = StringTemplate.Format(stringTemplate, issue) })
+                    .Select(i => new JiraTaskDTO(i.title, i.message))
+                    .ToArray();
             }
             catch (Exception ex)
             {
-                return new[] { new JiraTaskDTO($"{description} error",  ex.Message )};
+                return new[] { new JiraTaskDTO($"{description} error", ex.Message) };
             }
         }
 
