@@ -715,6 +715,7 @@
         </Feature>
         <Feature Id="Stash" Title="Atlassian Stash integration" Level="1">
           <ComponentRef Id="Stash.dll" />
+          <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="AppVeyorIntegration" Title="AppVeyor integration" Level="1">
           <ComponentRef Id="AppVeyorIntegration.dll" />
@@ -725,6 +726,7 @@
         </Feature>
         <Feature Id="JenkinsIntegration" Title="Jenkins integration" Level="1">
           <ComponentRef Id="JenkinsIntegration.dll" />
+          <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="TfsIntegration" Title="Tfs integration" Level="1">
           <ComponentRef Id="TfsIntegration.dll" />
@@ -738,6 +740,7 @@
           <ComponentRef Id="Microsoft.VisualStudio.Services.Common.dll" />
           <ComponentRef Id="Microsoft.VisualStudio.Services.WebApi.dll" />
           <ComponentRef Id="System.Net.Http.Formatting.dll" />
+          <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="JiraCommitHintPlugin" Title="Jira Commit Hint Plugin" Level="1">
           <ComponentRef Id="JiraCommitHintPlugin.dll" />
