@@ -77,6 +77,7 @@ namespace JiraCommitHintPlugin
             base.Register(gitUiCommands);
             gitUiCommands.PostSettings += gitUiCommands_PostSettings;
             gitUiCommands.PreCommit += gitUiCommands_PreCommit;
+            gitUiCommands.PostCommit += gitUiCommands_PostRepositoryChanged;
             gitUiCommands.PostRepositoryChanged += gitUiCommands_PostRepositoryChanged;
             UpdateJiraSettings();
         }
@@ -101,6 +102,7 @@ namespace JiraCommitHintPlugin
         {
             base.Unregister(gitUiCommands);
             gitUiCommands.PreCommit -= gitUiCommands_PreCommit;
+            gitUiCommands.PostCommit -= gitUiCommands_PostRepositoryChanged;
             gitUiCommands.PostSettings -= gitUiCommands_PostSettings;
             gitUiCommands.PostRepositoryChanged -= gitUiCommands_PostRepositoryChanged;
         }
