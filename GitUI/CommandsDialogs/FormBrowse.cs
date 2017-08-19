@@ -73,8 +73,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _saveFileFilterAllFiles =
             new TranslationString("All files");
 
-        private readonly TranslationString _indexLockDeleted =
-            new TranslationString("index.lock deleted.");
         private readonly TranslationString _indexLockCantDelete =
             new TranslationString("Failed to delete index.lock.");
         private readonly TranslationString _indexLockNotFound =
@@ -1387,7 +1385,7 @@ namespace GitUI.CommandsDialogs
             {
                 openSubmoduleMenuItem.Visible = false;
             }
-            
+
             saveAsToolStripMenuItem.Visible = enableItems;
             openFileToolStripMenuItem.Visible = enableItems;
             openFileWithToolStripMenuItem.Visible = enableItems;
@@ -1877,7 +1875,7 @@ namespace GitUI.CommandsDialogs
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            if ( AppSettings.OpenSubmoduleDiffInSeparateWindow && DiffFiles.SelectedItem.IsSubmodule)
+            if (AppSettings.OpenSubmoduleDiffInSeparateWindow && DiffFiles.SelectedItem.IsSubmodule)
             {
                 var submoduleName = DiffFiles.SelectedItem.Name;
                 DiffFiles.SelectedItem.SubmoduleStatus.ContinueWith(
@@ -2014,7 +2012,8 @@ namespace GitUI.CommandsDialogs
             Repositories.RepositoryHistory.Repositories.Clear();
             Repositories.SaveSettings();
             // Force clear recent repositories list from dashboard.
-            if (this._dashboard != null) {
+            if (this._dashboard != null)
+            {
                 _dashboard.ShowRecentRepositories();
             }
         }
@@ -2350,15 +2349,14 @@ namespace GitUI.CommandsDialogs
             Clipboard.SetText(fileNames.ToString());
         }
 
-        private void deleteIndexlockToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DeleteIndexLock(string path)
         {
-            string fileName = Path.Combine(Module.GetGitDirectory(), "index.lock");
+            string fileName = Path.Combine(path, "index.lock");
             if (File.Exists(fileName))
             {
                 try
                 {
                     File.Delete(fileName);
-                    MessageBox.Show(this, _indexLockDeleted.Text);
                 }
                 catch (Exception ex)
                 {
@@ -2369,6 +2367,18 @@ namespace GitUI.CommandsDialogs
             {
                 MessageBox.Show(this, _indexLockNotFound.Text + " " + fileName);
             }
+        }
+
+        private void deleteIndexlockToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteIndexLock(Module.GetGitDirectory());
+
+            var submodules = Module.GetSubmodulesLocalPaths();
+            submodules.ForEach(sm =>
+            {
+                var smPath = Module.GetSubmoduleFullPath(sm);
+                DeleteIndexLock(smPath);
+            });
         }
 
         private void saveAsToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -3834,7 +3844,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 string cmdPath = exeList.
-                      Select(shell => {
+                      Select(shell =>
+                      {
                           string shellPath;
                           if (PathUtil.TryFindShellPath(shell, out shellPath))
                               return shellPath;
