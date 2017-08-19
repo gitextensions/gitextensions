@@ -186,17 +186,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     if (String.IsNullOrEmpty(difftoolPath))
                     {
                         exeName = "TortoiseMerge.exe";
-                        difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\");
-                        if (String.IsNullOrEmpty(difftoolPath))
-                            difftoolPath = FindFileInFolders(exeName, @"TortoiseSVN\bin\");
+                        difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\", @"TortoiseSVN\bin\");
                     }
                     return difftoolPath;
                 case "winmerge":
                     exeName = "winmergeu.exe";
                     string winmergepath = UnquoteString(GetGlobalSetting(settings, "difftool.winmerge.path"));
-
-                    return FindFileInFolders("winmergeu.exe", winmergepath,
-                                                          @"WinMerge\");
+                    return FindFileInFolders(exeName, winmergepath, @"WinMerge\");
                 case "vsdiffmerge":
                     string vsdiffmergepath = UnquoteString(GetGlobalSetting(settings, "difftool.vsdiffmerge.path"));
                     string regvsdiffmergepath = GetVisualStudioPath() + "vsdiffmerge.exe";
@@ -327,9 +323,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     if (string.IsNullOrEmpty(path))
                     {
                         exeName = "TortoiseMerge.exe";
-                        path = FindFileInFolders(exeName, @"TortoiseGit\bin\");
-                        if (string.IsNullOrEmpty(path))
-                            path = FindFileInFolders(exeName, @"TortoiseSVN\bin\");
+                        path = FindFileInFolders(exeName, @"TortoiseGit\bin\", @"TortoiseSVN\bin\");
                     }
                     return path;
                 case "winmerge":
