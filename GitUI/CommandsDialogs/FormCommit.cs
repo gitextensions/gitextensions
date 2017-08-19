@@ -2070,6 +2070,41 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void FormCommit_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.P)
+            {
+                SelectPreviousFile();
+                e.Handled = true;
+            }
+            if (e.Control && e.KeyCode == Keys.N)
+            {
+                SelectNextFile();
+                e.Handled = true;
+            }
+        }
+
+        private void SelectNextFile()
+        {
+            SelectFileInListWithDirection(+1);
+        }
+
+        private void SelectPreviousFile()
+        {
+            SelectFileInListWithDirection(-1);
+        }
+
+        private void SelectFileInListWithDirection(int direction)
+        {
+            var list = Message.Focused ? Staged : _currentFilesList;
+            _currentFilesList = list;
+            var itemsCount = list.AllItems.Count();
+            if (itemsCount != 0)
+            {
+                list.SelectedIndex = (list.SelectedIndex + direction + itemsCount) % itemsCount;
+            }
+        }
+
         private void ExecuteCommitCommand()
         {
             CheckForStagedAndCommit(Amend.Checked, false);

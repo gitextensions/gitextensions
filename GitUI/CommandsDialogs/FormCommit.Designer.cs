@@ -1384,6 +1384,7 @@ namespace GitUI.CommandsDialogs
             this.ClientSize = new System.Drawing.Size(918, 644);
             this.Controls.Add(this.splitMain);
             this.Controls.Add(this.commitStatusStrip);
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(600, 297);
             this.Name = "FormCommit";
@@ -1393,6 +1394,7 @@ namespace GitUI.CommandsDialogs
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitFormClosing);
             this.Load += new System.EventHandler(this.FormCommit_Load);
             this.Shown += new System.EventHandler(this.FormCommitShown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormCommit_KeyUp);
             this.UnstagedFileContext.ResumeLayout(false);
             this.StagedFileContext.ResumeLayout(false);
             this.UnstagedSubmoduleContext.ResumeLayout(false);
