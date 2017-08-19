@@ -404,6 +404,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private static string GetVisualStudioPath()
         {
+            var vsVersionNumber = new string[] { "2020", "2019", "2018", "2017" };
+            var vsVersionType = new string[] { "Professional", "Community" };
+            string pathFormat = @"Microsoft Visual Studio\{0}\{1}\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\";
+
+            foreach (var number in vsVersionNumber)
+            {
+                foreach (var type in vsVersionType)
+                {
+                    var vsPath = string.Format(pathFormat, number, type);
+                    string path = FindFileInFolders("vsDiffMerge.exe", vsPath);
+
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        return path;
+                    }
+                }
+            }
+
             var vsVersions = new string[] { "14.0", "12.0", "11.0" };
 
             foreach (var version in vsVersions)
