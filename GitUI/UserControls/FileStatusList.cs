@@ -159,7 +159,7 @@ namespace GitUI
         {
             get
             {
-                return FileStatusListView.Focused;
+                return FileStatusListView.Focused || FilterComboBox.Focused;
             }
         }
 
