@@ -148,25 +148,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             switch (diffTool)
             {
                 case "beyondcompare3":
-                    string bcomppath = UnquoteString(GetGlobalSetting(settings, "difftool.beyondcompare3.path"));
-                    return FindFileInFolders(exeName, bcomppath,
+                    return FindDiffToolFullPath(settings, exeName, "difftool.beyondcompare3.path",
                                                           @"Beyond Compare 3 (x86)\",
                                                           @"Beyond Compare 3\");
                 case "beyondcompare4":
-                    string bcomppath4 = UnquoteString(GetGlobalSetting(settings, "difftool.beyondcompare4.path"));
-                    return FindFileInFolders(exeName, bcomppath4,
+                    return FindDiffToolFullPath(settings, exeName, "difftool.beyondcompare4.path",
                                                           @"Beyond Compare 4 (x86)\",
                                                           @"Beyond Compare 4\");
                 case "kdiff3":
-                    string kdiff3path = UnquoteString(GetGlobalSetting(settings, "difftool.kdiff3.path"));
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
-                    return FindFileInFolders(exeName, kdiff3path, @"KDiff3\", regkdiff3path);
+                    return FindDiffToolFullPath(settings, exeName, "difftool.kdiff3.path", @"KDiff3\", regkdiff3path);
                 case "p4merge":
-                    string p4mergepath = UnquoteString(GetGlobalSetting(settings, "difftool.p4merge.path"));
-                    return FindFileInFolders(exeName, p4mergepath, @"Perforce\");
+                    return FindDiffToolFullPath(settings, exeName, "difftool.p4merge.path", @"Perforce\");
                 case "meld":
-                    string difftoolMeldPath = UnquoteString(GetGlobalSetting(settings, "difftool.meld.path"));
-                    return FindFileInFolders(exeName, difftoolMeldPath, @"Meld\", @"Meld (x86)\");
+                    return FindDiffToolFullPath(settings, exeName, "difftool.meld.path", @"Meld\", @"Meld (x86)\");
                 case "semanticdiff":
                     string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                     folder = Path.Combine(folder, @"PlasticSCM4\semanticmerge\");
@@ -181,18 +176,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
                     return difftoolPath;
                 case "winmerge":
-                    string winmergepath = UnquoteString(GetGlobalSetting(settings, "difftool.winmerge.path"));
-                    return FindFileInFolders(exeName, winmergepath, @"WinMerge\");
+                    return FindDiffToolFullPath(settings, exeName, "difftool.winmerge.path", @"WinMerge\");
                 case "vsdiffmerge":
-                    string vsdiffmergepath = UnquoteString(GetGlobalSetting(settings, "difftool.vsdiffmerge.path"));
-                    string regvsdiffmergepath = GetVisualStudioPath() + exeName;
-                    return FindFileInFolders(exeName, vsdiffmergepath, regvsdiffmergepath);
+                    return FindDiffToolFullPath(settings, exeName, "difftool.vsdiffmerge.path", GetVsDiffMergePath());
                 case "vscode":
-                    string vscodepath = UnquoteString(GetGlobalSetting(settings, "difftool.vscode.path"));
-                    return FindFileInFolders(exeName, vscodepath, @"Microsoft VS Code");
+                    return FindDiffToolFullPath(settings, exeName, "difftool.vscode.path", @"Microsoft VS Code");
             }
             exeName = difftoolText + ".exe";
             return GetFullPath(exeName);
+        }
+
+        private static string FindDiffToolFullPath(ConfigFileSettingsSet settings, string exeName, string settingsKey, params string[] pathToSearch)
+        {
+            string exePathFromSettings = UnquoteString(GetGlobalSetting(settings, settingsKey));
+            var paths = new string[pathToSearch.Length + 1];
+            paths[0] = exePathFromSettings;
+            Array.Copy(pathToSearch, 0, paths, 1, pathToSearch.Length);
+            return FindFileInFolders(exeName, paths);
         }
 
         public static string DiffToolCmdSuggest(string diffToolText, string exeFile)
@@ -252,30 +252,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                                                         @"Araxis 6.5\Araxis Merge\",
                                                         @"Araxis\Araxis Merge v6.5\");
                 case "beyondcompare3":
-                    string bcomppath = UnquoteString(GetGlobalSetting(settings, "mergetool.beyondcompare3.path"));
-
-                    return FindFileInFolders(exeName, bcomppath, @"Beyond Compare 3 (x86)\",
-                                                                 @"Beyond Compare 3\");
+                    return FindDiffToolFullPath(settings, exeName, "mergetool.beyondcompare3.path",
+                        @"Beyond Compare 3 (x86)\",
+                        @"Beyond Compare 3\");
                 case "beyondcompare4":
-                    string bcomppath4 = UnquoteString(GetGlobalSetting(settings, "mergetool.beyondcompare4.path"));
-
-                    return FindFileInFolders(exeName, bcomppath4, @"Beyond Compare 4 (x86)\",
-                                                                  @"Beyond Compare 4\");
+                    return FindDiffToolFullPath(settings, exeName, "mergetool.beyondcompare4.path",
+                        @"Beyond Compare 4 (x86)\",
+                        @"Beyond Compare 4\");
                 case "diffmerge":
                     return FindFileInFolders(exeName, @"SourceGear\Common\DiffMerge\", @"SourceGear\DiffMerge\");
                 case "kdiff3":
-                    string kdiff3path = UnquoteString(GetGlobalSetting(settings, "mergetool.kdiff3.path"));
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "");
                     if (regkdiff3path != "")
                         regkdiff3path += "\\" + exeName;
-
-                    return FindFileInFolders(exeName, kdiff3path, @"KDiff3\", regkdiff3path);
+                    return FindDiffToolFullPath(settings, exeName, "mergetool.kdiff3.path", @"KDiff3\", regkdiff3path);
                 case "meld":
-                    string mergetoolMeldPath = UnquoteString(GetGlobalSetting(settings, "mergetool.meld.path"));
-                    return FindFileInFolders(exeName, mergetoolMeldPath, @"Meld\", @"Meld (x86)\");
+                    return FindDiffToolFullPath(settings, exeName, "mergetool.meld.path", @"Meld\", @"Meld (x86)\");
                 case "p4merge":
-                    string p4mergepath = UnquoteString(GetGlobalSetting(settings, "mergetool.p4merge.path"));
-                    return FindFileInFolders(exeName, p4mergepath, @"Perforce\");
+                    return FindDiffToolFullPath(settings, exeName, "mergetool.p4merge.path", @"Perforce\");
                 case "semanticmerge":
                     string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                     folder = Path.Combine(folder, @"PlasticSCM4\semanticmerge\");
@@ -290,16 +284,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
                     return path;
                 case "winmerge":
-                    string winmergepath = UnquoteString(GetGlobalSetting(settings, "mergetool.winmerge.path"));
-
-                    return FindFileInFolders(exeName, winmergepath, @"WinMerge\");
+                    return FindDiffToolFullPath(settings, exeName, "mergetool.winmerge.path", @"WinMerge\");
                 case "vsdiffmerge":
-                    string vsdiffmergepath = UnquoteString(GetGlobalSetting(settings, "mergetool.vsdiffmerge.path"));
-                    string regvsdiffmergepath = GetVisualStudioPath() + exeName;
-                    return FindFileInFolders(exeName, vsdiffmergepath, regvsdiffmergepath);
+                    return FindDiffToolFullPath(settings, exeName, "mergetool.vsdiffmerge.path", GetVsDiffMergePath());
                 case "vscode":
-                    string vscodepath = UnquoteString(GetGlobalSetting(settings, "mergetool.vscode.path"));
-                    return FindFileInFolders(exeName, vscodepath, @"Microsoft VS Code");
+                    return FindDiffToolFullPath(settings, exeName, "mergetool.vscode.path", @"Microsoft VS Code");
             }
             exeName = mergeToolText + ".exe";
             return GetFullPath(exeName);
@@ -372,11 +361,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return value ?? string.Empty;
         }
 
-        private static string GetVisualStudioPath()
+        private static string GetVsDiffMergePath()
         {
             //%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe
             var vsVersionNumber = new string[] { "2020", "2019", "2018", "2017" };
             var vsVersionType = new string[] { "Professional", "Community" };
+            const string exeName = "vsDiffMerge.exe";
             string pathFormat = @"Microsoft Visual Studio\{0}\{1}\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\";
 
             foreach (var number in vsVersionNumber)
@@ -384,7 +374,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 foreach (var type in vsVersionType)
                 {
                     var vsPath = string.Format(pathFormat, number, type);
-                    string path = FindFileInFolders("vsDiffMerge.exe", vsPath);
+                    string path = FindFileInFolders(exeName, vsPath);
 
                     if (!string.IsNullOrEmpty(path))
                     {
@@ -405,7 +395,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         var path = localMachineKey.GetValue("InstallDir") as string;
                         if (!string.IsNullOrEmpty(path))
                         {
-                            return path;
+                            return Path.Combine(path, exeName);
                         }
                     }
                 }
