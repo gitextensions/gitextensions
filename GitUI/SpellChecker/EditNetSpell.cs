@@ -234,6 +234,7 @@ namespace GitUI.SpellChecker
 
             _customUnderlines = new SpellCheckEditControl(TextBox);
             TextBox.SelectionChanged += TextBox_SelectionChanged;
+            TextBox.TextChanged += TextBoxTextChanged;
 
             EnabledChanged += EditNetSpellEnabledChanged;
 
