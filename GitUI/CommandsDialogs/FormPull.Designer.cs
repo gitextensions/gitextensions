@@ -314,7 +314,6 @@
             // Merge
             // 
             this.Merge.AutoSize = true;
-            this.Merge.Checked = true;
             this.Merge.Image = global::GitUI.Properties.Resources.IconMerge;
             this.Merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Merge.Location = new System.Drawing.Point(3, 3);
