@@ -7,7 +7,7 @@ using Microsoft.Win32;
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
     static class MergeToolsHelper
-    {     
+    {
         private static string GetGlobalSetting(ConfigFileSettingsSet settings, string setting)
         {
             return settings.GlobalSettings.GetValue(setting);
@@ -133,6 +133,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "winmergeu.exe";
                 case "vsdiffmerge":
                     return "vsdiffmerge.exe";
+                case "vscode":
+                    return "code.exe";
             }
             return null;
         }
@@ -144,7 +146,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 case "beyondcompare3":
                     string bcomppath = UnquoteString(GetGlobalSetting(settings, "difftool.beyondcompare3.path"));
-                    
+
                     exeName = "bcomp.exe";
 
                     return FindFileInFolders(exeName, bcomppath,
@@ -200,6 +202,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     string regvsdiffmergepath = GetVisualStudioPath() + "vsdiffmerge.exe";
                     exeName = "vsdiffmerge.exe";
                     return FindFileInFolders(exeName, vsdiffmergepath, regvsdiffmergepath);
+                case "vscode":
+                    exeName = "code.exe";
+                    string vscodepath = UnquoteString(GetGlobalSetting(settings, "difftool.vscode.path"));
+                    return FindFileInFolders(exeName, vscodepath, @"Microsoft VS Code");
             }
             exeName = difftoolText + ".exe";
             return GetFullPath(exeName);
@@ -228,6 +234,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "\"" + exeFile + "\" -e -u \"$LOCAL\" \"$REMOTE\"";
                 case "vsdiffmerge":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "vscode":
+                    return "\"" + exeFile + "\" --wait --diff \"$LOCAL\" \"$REMOTE\"";
             }
             return "";
         }
@@ -260,6 +268,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "winmergeu.exe";
                 case "vsdiffmerge":
                     return "vsdiffmerge.exe";
+                case "vscode":
+                    return "vscode.exe";
             }
             return null;
         }
@@ -332,6 +342,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     string regvsdiffmergepath = GetVisualStudioPath() + "vsdiffmerge.exe";
                     exeName = "vsdiffmerge.exe";
                     return FindFileInFolders(exeName, vsdiffmergepath, regvsdiffmergepath);
+                case "vscode":
+                    exeName = "code.exe";
+                    string vscodepath = UnquoteString(GetGlobalSetting(settings, "mergetool.vscode.path"));
+                    return FindFileInFolders(exeName, vscodepath, @"Microsoft VS Code");
             }
             exeName = mergeToolText + ".exe";
             return GetFullPath(exeName);
@@ -375,6 +389,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         command = command.Replace("/", "-");
 
                     return String.Format(command, exeFile);
+                case "vscode":
+                    return "\"" + exeFile + "\" --wait \"$MERGED\" ";
                 case "vsdiffmerge":
                     return "\"" + exeFile + "\" /m \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
             }
@@ -404,6 +420,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private static string GetVisualStudioPath()
         {
+            //%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe
             var vsVersionNumber = new string[] { "2020", "2019", "2018", "2017" };
             var vsVersionType = new string[] { "Professional", "Community" };
             string pathFormat = @"Microsoft Visual Studio\{0}\{1}\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\";
