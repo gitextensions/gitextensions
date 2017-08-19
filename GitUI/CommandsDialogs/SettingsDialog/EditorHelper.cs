@@ -16,6 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 "notepad",
                 GetNotepadPP(),
                 GetSublimeText3(),
+                GetVsCode(),
             };
         }
 
@@ -23,6 +24,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private static string GetNotepadPP()
         {
             return GetEditorCommandLine("Notepad++", "notepad++.exe", " -multiInst -nosession", "notepad++");
+        }
+
+        [NotNull]
+        private static string GetVsCode()
+        {
+            return GetEditorCommandLine("Visual Studio Code", "code.exe", " --wait", "Microsoft VS Code");
         }
 
         [NotNull]
