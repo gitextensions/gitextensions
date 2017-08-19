@@ -22,26 +22,25 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         [NotNull]
         private static string GetNotepadPP()
         {
-            string npp = MergeToolsHelper.FindFileInFolders("notepad++.exe", "Notepad++");
-            if (String.IsNullOrEmpty(npp))
-                npp = "notepad++";
-            else
-                npp = "\"" + npp + "\"";
-            npp = npp + " -multiInst -nosession";
-            return npp;
+            return GetEditorCommandLine("Notepad++", "notepad++.exe", " -multiInst -nosession", "notepad++");
         }
 
         [NotNull]
         private static string GetSublimeText3()
         {
-            string exec = MergeToolsHelper.FindFileInFolders("sublime_text.exe", "Sublime Text 3");
+            //http://stackoverflow.com/questions/8951275/git-config-core-editor-how-to-make-sublime-text-the-default-editor-for-git-on
+            return GetEditorCommandLine("SublimeText", "sublime_text.exe", " -w --multiinstance", "Sublime Text 3");
+        }
+
+        private static string GetEditorCommandLine(string editorName, string executableName, string commandLineParameter, params string[] installFolders)
+        {
+            string exec = MergeToolsHelper.FindFileInFolders(executableName, installFolders);
             if (String.IsNullOrEmpty(exec))
-                exec = "SublimeText";
+                exec = editorName;
             else
                 exec = "\"" + exec + "\"";
-            //http://stackoverflow.com/questions/8951275/git-config-core-editor-how-to-make-sublime-text-the-default-editor-for-git-on
-            exec = exec + " -w --multiinstance";
-            return exec;
+            return exec + commandLineParameter;
         }
+
     }
 }
