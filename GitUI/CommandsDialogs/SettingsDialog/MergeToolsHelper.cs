@@ -119,6 +119,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "bcomp.exe";
                 case "beyondcompare4":
                     return "bcomp.exe";
+                case "diffmerge":
+                    return "DiffMerge.exe";
                 case "kdiff3":
                     return "kdiff3.exe";
                 case "meld":
@@ -202,6 +204,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "beyondcompare4":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "diffmerge":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "kdiff3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "meld":
@@ -225,33 +229,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public static string GetMergeToolExeFile(string mergeToolText)
         {
             string mergeTool = mergeToolText.ToLowerInvariant();
+            var exeName = GetDiffToolExeFile(mergeTool);
+            if (exeName != null)
+                return exeName;
 
             switch (mergeTool)
             {
-                case "araxis":
-                    return "Compare.exe";
-                case "beyondcompare3":
-                    return "bcomp.exe";
-                case "beyondcompare4":
-                    return "bcomp.exe";
-                case "diffmerge":
-                    return "DiffMerge.exe";
-                case "kdiff3":
-                    return "kdiff3.exe";
-                case "meld":
-                    return "meld.exe";
-                case "p4merge":
-                    return "p4merge.exe";
-                case "semanticmerge":
-                    return "semanticmergetool.exe";
                 case "tortoisemerge":
                     return "TortoiseMerge.exe";
-                case "winmerge":
-                    return "winmergeu.exe";
-                case "vsdiffmerge":
-                    return "vsdiffmerge.exe";
-                case "vscode":
-                    return "vscode.exe";
             }
             return null;
         }

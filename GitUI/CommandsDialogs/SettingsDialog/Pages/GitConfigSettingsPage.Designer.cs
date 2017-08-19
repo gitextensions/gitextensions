@@ -202,6 +202,7 @@
             "beyondcompare3",
             "beyondcompare4",
             "diffuse",
+            "diffmerge",
             "ecmerge",
             "emerge",
             "gvimdiff",
