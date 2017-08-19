@@ -2072,6 +2072,11 @@ namespace GitUI.CommandsDialogs
 
         private void FormCommit_KeyUp(object sender, KeyEventArgs e)
         {
+            if (e.Control && e.KeyCode == Keys.Enter && !Message.Focused)
+            {
+                FocusCommitMessage();
+                e.Handled = true;
+            }
             if (e.Control && e.KeyCode == Keys.P)
             {
                 SelectPreviousFile();
