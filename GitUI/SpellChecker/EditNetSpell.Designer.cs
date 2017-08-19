@@ -57,7 +57,6 @@
             this.TextBox.Size = new System.Drawing.Size(386, 336);
             this.TextBox.TabIndex = 1;
             this.TextBox.Text = "";
-            this.TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
             this.TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
             this.TextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             this.TextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyUp);
