@@ -303,8 +303,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "";
                 case "winmerge":
                     return "\"" + exeFile + "\" -e -u -dl \"Original\" -dr \"Modified\" \"$MERGED\" \"$REMOTE\"";
-                case "vsdiffmerge":
-                    return "\"" + exeFile + "\" /m \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\" ";
             }
             return AutoConfigMergeToolCmd(mergeToolText, exeFile);
         }
