@@ -663,7 +663,7 @@ namespace GitUI.CommandsDialogs
             this.Unstaged.Name = "Unstaged";
             this.Unstaged.SelectFirstItemOnSetItems = false;
             this.Unstaged.Size = new System.Drawing.Size(397, 249);
-            this.Unstaged.TabIndex = 1;
+            this.Unstaged.TabIndex = 0;
             this.Unstaged.SelectedIndexChanged += new System.EventHandler(this.UnstagedSelectionChanged);
             this.Unstaged.DataSourceChanged += new System.EventHandler(this.Staged_DataSourceChanged);
             this.Unstaged.DoubleClick += new System.EventHandler(this.Unstaged_DoubleClick);
@@ -844,7 +844,7 @@ namespace GitUI.CommandsDialogs
             this.selectionFilter});
             this.toolbarSelectionFilter.Location = new System.Drawing.Point(3, 0);
             this.toolbarSelectionFilter.Name = "toolbarSelectionFilter";
-            this.toolbarSelectionFilter.Size = new System.Drawing.Size(252, 25);
+            this.toolbarSelectionFilter.Size = new System.Drawing.Size(219, 25);
             this.toolbarSelectionFilter.TabIndex = 13;
             this.toolbarSelectionFilter.Visible = false;
             // 
@@ -883,8 +883,7 @@ namespace GitUI.CommandsDialogs
             this.Staged.Name = "Staged";
             this.Staged.SelectFirstItemOnSetItems = false;
             this.Staged.Size = new System.Drawing.Size(397, 316);
-            this.Staged.TabIndex = 16;
-            this.Staged.TabStop = false;
+            this.Staged.TabIndex = 0;
             this.Staged.SelectedIndexChanged += new System.EventHandler(this.StagedSelectionChanged);
             this.Staged.DataSourceChanged += new System.EventHandler(this.Staged_DataSourceChanged);
             this.Staged.DoubleClick += new System.EventHandler(this.Staged_DoubleClick);
@@ -1068,7 +1067,7 @@ namespace GitUI.CommandsDialogs
             this.Message.Margin = new System.Windows.Forms.Padding(0);
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(336, 158);
-            this.Message.TabIndex = 13;
+            this.Message.TabIndex = 0;
             this.Message.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F);
             this.Message.SelectionChanged += new System.EventHandler(this.Message_SelectionChanged);
             this.Message.Enter += new System.EventHandler(this.Message_Enter);
@@ -1102,7 +1101,7 @@ namespace GitUI.CommandsDialogs
             this.Commit.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
             this.Commit.Name = "Commit";
             this.Commit.Size = new System.Drawing.Size(171, 26);
-            this.Commit.TabIndex = 3;
+            this.Commit.TabIndex = 1;
             this.Commit.TabStop = false;
             this.Commit.Text = "&Commit";
             this.Commit.UseVisualStyleBackColor = true;
@@ -1145,6 +1144,7 @@ namespace GitUI.CommandsDialogs
             this.ResetUnStaged.Name = "ResetUnStaged";
             this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
             this.ResetUnStaged.TabIndex = 14;
+            this.ResetUnStaged.TabStop = false;
             this.ResetUnStaged.Text = "Reset unstaged changes";
             this.ResetUnStaged.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.ResetUnStaged.UseVisualStyleBackColor = true;
@@ -1156,7 +1156,7 @@ namespace GitUI.CommandsDialogs
             this.Amend.Location = new System.Drawing.Point(3, 152);
             this.Amend.Name = "Amend";
             this.Amend.Size = new System.Drawing.Size(97, 17);
-            this.Amend.TabIndex = 12;
+            this.Amend.TabIndex = 0;
             this.Amend.Text = "&Amend Commit";
             this.Amend.UseVisualStyleBackColor = true;
             this.Amend.CheckedChanged += new System.EventHandler(this.Amend_CheckedChanged);
