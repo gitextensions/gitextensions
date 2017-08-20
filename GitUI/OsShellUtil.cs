@@ -1,10 +1,7 @@
 ﻿namespace GitUI
 {
     using System.Diagnostics;
-    using System.Text.RegularExpressions;
     using System.Windows.Forms;
-
-    using Microsoft.Win32;
 #if !__MonoCS__
     using Microsoft.WindowsAPICodePack.Dialogs;
 #endif
@@ -37,13 +34,9 @@
         /// </summary>
         public static void OpenUrlInDefaultBrowser(string url)
         {
-            // Process.Start(url); / does not work with anchors: http://stackoverflow.com/questions/2404449/process-starturl-with-anchor-in-the-url
-            var openSubKey = Registry.ClassesRoot.OpenSubKey(@"\http\shell\open\command\");
-            if (openSubKey != null)
+            if (!string.IsNullOrWhiteSpace(url))
             {
-                var browserRegistryString  = openSubKey.GetValue("").ToString();
-                var defaultBrowserPath = Regex.Match(browserRegistryString, @"(\"".*?\"")").Captures[0].ToString();
-                Process.Start(defaultBrowserPath, url);
+                Process.Start(url);
             }
         }
 
