@@ -361,10 +361,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private static string GetVsDiffMergePath()
         {
+            const string exeName = "vsDiffMerge.exe";
+            if (!EnvUtils.RunningOnWindows())
+            {
+                return exeName;
+            }
+
             //%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe
             var vsVersionNumber = new string[] { "2020", "2019", "2018", "2017" };
             var vsVersionType = new string[] { "Professional", "Community" };
-            const string exeName = "vsDiffMerge.exe";
             string pathFormat = @"Microsoft Visual Studio\{0}\{1}\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\";
 
             foreach (var number in vsVersionNumber)
@@ -398,7 +403,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
                 }
             }
-            return string.Empty;
+            return exeName;
         }
     }
 }
