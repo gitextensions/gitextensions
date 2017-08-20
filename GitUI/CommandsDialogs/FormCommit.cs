@@ -2077,12 +2077,16 @@ namespace GitUI.CommandsDialogs
                 FocusCommitMessage();
                 e.Handled = true;
             }
-            if (e.Control && e.KeyCode == Keys.P)
+            if (e.Control && e.KeyCode == Keys.P
+                || e.Alt && e.KeyCode == Keys.Up
+                || e.Alt && e.KeyCode == Keys.Left)
             {
                 SelectPreviousFile();
                 e.Handled = true;
             }
-            if (e.Control && e.KeyCode == Keys.N)
+            if (e.Control && e.KeyCode == Keys.N
+                || e.Alt && e.KeyCode == Keys.Down
+                || e.Alt && e.KeyCode == Keys.Right)
             {
                 SelectNextFile();
                 e.Handled = true;
