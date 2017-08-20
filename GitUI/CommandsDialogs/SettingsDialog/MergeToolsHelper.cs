@@ -369,7 +369,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             //%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe
             var vsVersionNumber = new string[] { "2020", "2019", "2018", "2017" };
-            var vsVersionType = new string[] { "Professional", "Community" };
+            var vsVersionType = new string[] { "Entreprise", "Professional", "Community"};
             string pathFormat = @"Microsoft Visual Studio\{0}\{1}\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\";
 
             foreach (var number in vsVersionNumber)
