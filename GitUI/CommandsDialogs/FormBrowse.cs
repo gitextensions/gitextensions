@@ -75,6 +75,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _indexLockDeleted =
             new TranslationString("index.lock deleted.");
+        private readonly TranslationString _indexLockCantDelete =
+            new TranslationString("Failed to delete index.lock.");
         private readonly TranslationString _indexLockNotFound =
             new TranslationString("index.lock not found at:");
 
@@ -2228,9 +2230,9 @@ namespace GitUI.CommandsDialogs
             var item = GitTree.SelectedNode.Tag as GitItem;
 
             if (item.IsCommit)
-	        {
+            {
                 SpawnCommitBrowser(item);
-	        }
+            }
         }
 
         public void SaveAsOnClick(object sender, EventArgs e)
@@ -2351,14 +2353,22 @@ namespace GitUI.CommandsDialogs
         private void deleteIndexlockToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = Path.Combine(Module.GetGitDirectory(), "index.lock");
-
             if (File.Exists(fileName))
             {
-                File.Delete(fileName);
-                MessageBox.Show(this, _indexLockDeleted.Text);
+                try
+                {
+                    File.Delete(fileName);
+                    MessageBox.Show(this, _indexLockDeleted.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, $"{_indexLockCantDelete.Text}{Environment.NewLine}{ex.Message}");
+                }
             }
             else
+            {
                 MessageBox.Show(this, _indexLockNotFound.Text + " " + fileName);
+            }
         }
 
         private void saveAsToolStripMenuItem1_Click(object sender, EventArgs e)
