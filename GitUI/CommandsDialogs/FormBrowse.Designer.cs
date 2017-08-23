@@ -717,7 +717,6 @@ namespace GitUI.CommandsDialogs
             // 
             // FileTreeSplitContainer
             // 
-            this.FileTreeSplitContainer.DataBindings.Add(new System.Windows.Forms.Binding("SplitterDistance", global::GitUI.Properties.Settings.Default, "FormBrowse_FileTreeSplitContainer_SplitterDistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.FileTreeSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileTreeSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.FileTreeSplitContainer.Location = new System.Drawing.Point(3, 3);
@@ -731,6 +730,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.FileTreeSplitContainer.Panel2.Controls.Add(this.FileText);
             this.FileTreeSplitContainer.Size = new System.Drawing.Size(909, 251);
+            this.FileTreeSplitContainer.SplitterDistance = 300;
             this.FileTreeSplitContainer.TabIndex = 1;
             // 
             // GitTree
@@ -740,7 +740,7 @@ namespace GitUI.CommandsDialogs
             this.GitTree.HideSelection = false;
             this.GitTree.Location = new System.Drawing.Point(0, 0);
             this.GitTree.Name = "GitTree";
-            this.GitTree.Size = new System.Drawing.Size(50, 251);
+            this.GitTree.Size = new System.Drawing.Size(300, 251);
             this.GitTree.TabIndex = 0;
             this.GitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTreeBeforeExpand);
             this.GitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.GitTree_AfterSelect);
@@ -927,7 +927,7 @@ namespace GitUI.CommandsDialogs
             this.FileText.Location = new System.Drawing.Point(0, 0);
             this.FileText.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.FileText.Name = "FileText";
-            this.FileText.Size = new System.Drawing.Size(855, 251);
+            this.FileText.Size = new System.Drawing.Size(605, 251);
             this.FileText.TabIndex = 0;
             // 
             // DiffTabPage
@@ -943,7 +943,6 @@ namespace GitUI.CommandsDialogs
             // 
             // DiffSplitContainer
             // 
-            this.DiffSplitContainer.DataBindings.Add(new System.Windows.Forms.Binding("SplitterDistance", global::GitUI.Properties.Settings.Default, "FormBrowse_DiffSplitContainer_SplitterDistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.DiffSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.DiffSplitContainer.Location = new System.Drawing.Point(3, 3);
@@ -957,6 +956,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.DiffSplitContainer.Panel2.Controls.Add(this.DiffText);
             this.DiffSplitContainer.Size = new System.Drawing.Size(909, 251);
+            this.DiffSplitContainer.SplitterDistance = 300;
             this.DiffSplitContainer.TabIndex = 0;
             // 
             // DiffFiles
@@ -967,7 +967,7 @@ namespace GitUI.CommandsDialogs
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(50, 251);
+            this.DiffFiles.Size = new System.Drawing.Size(300, 251);
             this.DiffFiles.TabIndex = 1;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFilesSelectedIndexChanged);
             this.DiffFiles.DataSourceChanged += new System.EventHandler(this.DiffFiles_DataSourceChanged);
@@ -1166,7 +1166,7 @@ namespace GitUI.CommandsDialogs
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DiffText.Name = "DiffText";
-            this.DiffText.Size = new System.Drawing.Size(855, 251);
+            this.DiffText.Size = new System.Drawing.Size(605, 251);
             this.DiffText.TabIndex = 0;
             // 
             // FilterToolTip
