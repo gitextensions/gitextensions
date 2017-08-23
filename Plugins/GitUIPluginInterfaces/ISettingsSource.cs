@@ -50,6 +50,25 @@ namespace GitUIPluginInterfaces
             });
         }
 
+        public void SetFloat(string name, float? value)
+        {
+            SetValue<float?>(name, value, (float? b) => b.HasValue ? b.ToString() : null);
+        }
+
+        public float? GetFloat(string name)
+        {
+            return GetValue<float?>(name, null, x =>
+            {
+                float result;
+                if (float.TryParse(x, out result))
+                {
+                    return result;
+                }
+
+                return null;
+            });
+        }
+
         public DateTime GetDate(string name, DateTime defaultValue)
         {
             return GetDate(name) ?? defaultValue;

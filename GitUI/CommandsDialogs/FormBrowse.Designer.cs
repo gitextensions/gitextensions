@@ -717,7 +717,6 @@ namespace GitUI.CommandsDialogs
             // 
             // FileTreeSplitContainer
             // 
-            this.FileTreeSplitContainer.DataBindings.Add(new System.Windows.Forms.Binding("SplitterDistance", global::GitUI.Properties.Settings.Default, "FormBrowse_FileTreeSplitContainer_SplitterDistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.FileTreeSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileTreeSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.FileTreeSplitContainer.Location = new System.Drawing.Point(3, 3);
@@ -943,7 +942,6 @@ namespace GitUI.CommandsDialogs
             // 
             // DiffSplitContainer
             // 
-            this.DiffSplitContainer.DataBindings.Add(new System.Windows.Forms.Binding("SplitterDistance", global::GitUI.Properties.Settings.Default, "FormBrowse_DiffSplitContainer_SplitterDistance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.DiffSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.DiffSplitContainer.Location = new System.Drawing.Point(3, 3);
