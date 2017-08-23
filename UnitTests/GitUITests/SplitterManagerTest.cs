@@ -220,8 +220,8 @@ namespace GitUITests
                 splitManager.RestoreSplitters();
                 //assert
                 float scaleFactor = 1F * (_designTimeFontSize + deltaFontSize) / _designTimeFontSize;
-                int expectedDistance = Convert.ToInt32(splitterDistance * scaleFactor);
-                splitter.SplitterDistance.Should().Be(expectedDistance);
+                int expectedPanel1Width = Convert.ToInt32(splitterDistance * scaleFactor);
+                splitter.SplitterDistance.Should().Be(expectedPanel1Width);
             }
         }
 
@@ -253,9 +253,9 @@ namespace GitUITests
                 splitManager.RestoreSplitters();
                 //assert
                 float scaleFactor = 1F * (_designTimeFontSize + deltaFontSize) / _designTimeFontSize;
-                int expectedDistance = Convert.ToInt32(panel2Width * scaleFactor);
+                int expectedPanel2Width = Convert.ToInt32(panel2Width * scaleFactor);
                 int newPanel2Width = splitter.Width - splitter.SplitterDistance;
-                newPanel2Width.Should().Be(expectedDistance);
+                newPanel2Width.Should().Be(expectedPanel2Width);
             }
         }
 
