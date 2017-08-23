@@ -76,6 +76,9 @@
       <Component Id="Gravatar.dll" Guid="*">
         <File Source="..\Gravatar\bin\Release\Gravatar.dll" />
       </Component>
+      <Component Id="System.IO.Abstractions.dll" Guid="*">
+        <File Source="..\Gravatar\bin\Release\System.IO.Abstractions.dll" />
+      </Component>
       <Component Id="GitCommands.dll" Guid="*">
         <File Source="..\GitCommands\bin\Release\GitCommands.dll" />
       </Component>
@@ -645,6 +648,7 @@
       <ComponentRef Id="PSTaskDialog.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
+      <ComponentRef Id="System.IO.Abstractions.dll" />
       <ComponentRef Id="System.Reactive.Core.dll" />
       <ComponentRef Id="System.Reactive.Interfaces.dll" />
       <ComponentRef Id="System.Reactive.Linq.dll" />

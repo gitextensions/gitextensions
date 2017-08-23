@@ -73,8 +73,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _saveFileFilterAllFiles =
             new TranslationString("All files");
 
-        private readonly TranslationString _indexLockDeleted =
-            new TranslationString("index.lock deleted.");
         private readonly TranslationString _indexLockCantDelete =
             new TranslationString("Failed to delete index.lock.");
         private readonly TranslationString _indexLockNotFound =
@@ -167,6 +165,7 @@ namespace GitUI.CommandsDialogs
 #pragma warning disable 0414
         private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
 #pragma warning restore 0414
+        private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
 
         /// <summary>
         /// For VS designer
@@ -290,7 +289,7 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.ShowRevisionInfoNextToRevisionGrid.ValueOrDefault)
             {
                 RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
-                RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - 500;
+                RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - 420;
                 RevisionInfo.DisplayAvatarOnRight();
                 CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
@@ -1387,7 +1386,7 @@ namespace GitUI.CommandsDialogs
             {
                 openSubmoduleMenuItem.Visible = false;
             }
-            
+
             saveAsToolStripMenuItem.Visible = enableItems;
             openFileToolStripMenuItem.Visible = enableItems;
             openFileWithToolStripMenuItem.Visible = enableItems;
@@ -1722,7 +1721,6 @@ namespace GitUI.CommandsDialogs
         private static void SaveApplicationSettings()
         {
             AppSettings.SaveSettings();
-            Properties.Settings.Default.Save();
         }
 
         private void SaveUserMenuPosition()
@@ -1877,7 +1875,7 @@ namespace GitUI.CommandsDialogs
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            if ( AppSettings.OpenSubmoduleDiffInSeparateWindow && DiffFiles.SelectedItem.IsSubmodule)
+            if (AppSettings.OpenSubmoduleDiffInSeparateWindow && DiffFiles.SelectedItem.IsSubmodule)
             {
                 var submoduleName = DiffFiles.SelectedItem.Name;
                 DiffFiles.SelectedItem.SubmoduleStatus.ContinueWith(
@@ -2014,7 +2012,8 @@ namespace GitUI.CommandsDialogs
             Repositories.RepositoryHistory.Repositories.Clear();
             Repositories.SaveSettings();
             // Force clear recent repositories list from dashboard.
-            if (this._dashboard != null) {
+            if (this._dashboard != null)
+            {
                 _dashboard.ShowRecentRepositories();
             }
         }
@@ -2350,15 +2349,14 @@ namespace GitUI.CommandsDialogs
             Clipboard.SetText(fileNames.ToString());
         }
 
-        private void deleteIndexlockToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DeleteIndexLock(string path)
         {
-            string fileName = Path.Combine(Module.GetGitDirectory(), "index.lock");
+            string fileName = Path.Combine(path, "index.lock");
             if (File.Exists(fileName))
             {
                 try
                 {
                     File.Delete(fileName);
-                    MessageBox.Show(this, _indexLockDeleted.Text);
                 }
                 catch (Exception ex)
                 {
@@ -2369,6 +2367,18 @@ namespace GitUI.CommandsDialogs
             {
                 MessageBox.Show(this, _indexLockNotFound.Text + " " + fileName);
             }
+        }
+
+        private void deleteIndexlockToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteIndexLock(Module.GetGitDirectory());
+
+            var submodules = Module.GetSubmodulesLocalPaths();
+            submodules.ForEach(sm =>
+            {
+                var smPath = Module.GetSubmoduleFullPath(sm);
+                DeleteIndexLock(smPath);
+            });
         }
 
         private void saveAsToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -2907,48 +2917,18 @@ namespace GitUI.CommandsDialogs
 
         protected void SetSplitterPositions()
         {
-            try
-            {
-                int deviceDpi = GetCurrentDeviceDpi();
-                int browseFormDpi = Properties.Settings.Default.FormBrowse_DeviceDpi;
-                int mainSplitContainerSplitterDistance = Properties.Settings.Default.FormBrowse_MainSplitContainer_SplitterDistance;
-                int fileTreeSplitContainerSplitterDistance = Properties.Settings.Default.FormBrowse_FileTreeSplitContainer_SplitterDistance;
-                int diffSplitContainerSplitterDistance = Properties.Settings.Default.FormBrowse_DiffSplitContainer_SplitterDistance;
-
-                float scaleFactor = 1.0f * deviceDpi / browseFormDpi;
-                mainSplitContainerSplitterDistance = (int)(scaleFactor * mainSplitContainerSplitterDistance);
-                fileTreeSplitContainerSplitterDistance = (int)(scaleFactor * fileTreeSplitContainerSplitterDistance);
-                diffSplitContainerSplitterDistance = (int)(scaleFactor * diffSplitContainerSplitterDistance);
-                if (Properties.Settings.Default.FormBrowse_RevisionsSplitContainer_SplitterDistance > 0)
-                {
-                    RevisionsSplitContainer.SplitterDistance = (int)(scaleFactor * Properties.Settings.Default.FormBrowse_RevisionsSplitContainer_SplitterDistance);
-                }
-
-                if (mainSplitContainerSplitterDistance != 0)
-                    MainSplitContainer.SplitterDistance = mainSplitContainerSplitterDistance;
-                FileTreeSplitContainer.SplitterDistance = fileTreeSplitContainerSplitterDistance;
-                DiffSplitContainer.SplitterDistance = diffSplitContainerSplitterDistance;
-            }
-            catch (ConfigurationException)
-            {
-            }
+            _splitterManager.AddSplitter(RevisionsSplitContainer, "RevisionsSplitContainer");
+            _splitterManager.AddSplitter(MainSplitContainer, "MainSplitContainer");
+            _splitterManager.AddSplitter(FileTreeSplitContainer, "FileTreeSplitContainer");
+            _splitterManager.AddSplitter(DiffSplitContainer, "DiffSplitContainer");
+            //hide status in order to restore splitters against the full height (the most common case)
+            statusStrip.Hide();
+            _splitterManager.RestoreSplitters();
         }
 
         protected void SaveSplitterPositions()
         {
-            try
-            {
-                Properties.Settings.Default.FormBrowse_DeviceDpi = GetCurrentDeviceDpi();
-                Properties.Settings.Default.FormBrowse_MainSplitContainer_SplitterDistance = MainSplitContainer.SplitterDistance;
-                Properties.Settings.Default.FormBrowse_FileTreeSplitContainer_SplitterDistance = FileTreeSplitContainer.SplitterDistance;
-                Properties.Settings.Default.FormBrowse_DiffSplitContainer_SplitterDistance = DiffSplitContainer.SplitterDistance;
-                Properties.Settings.Default.FormBrowse_RevisionsSplitContainer_SplitterDistance = RevisionsSplitContainer.SplitterDistance;
-                Properties.Settings.Default.Save();
-            }
-            catch (ConfigurationException)
-            {
-                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
-            }
+            _splitterManager.SaveSplitters();
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -3834,7 +3814,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 string cmdPath = exeList.
-                      Select(shell => {
+                      Select(shell =>
+                      {
                           string shellPath;
                           if (PathUtil.TryFindShellPath(shell, out shellPath))
                               return shellPath;
