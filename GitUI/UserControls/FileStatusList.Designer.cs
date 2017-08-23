@@ -54,7 +54,7 @@ namespace GitUI
             this.FileStatusListView.ShowItemToolTips = true;
             this.FileStatusListView.Size = new System.Drawing.Size(682, 464);
             this.FileStatusListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.FileStatusListView.TabIndex = 0;
+            this.FileStatusListView.TabIndex = 1;
             this.FileStatusListView.UseCompatibleStateImageBehavior = false;
             this.FileStatusListView.View = System.Windows.Forms.View.Details;
             this.FileStatusListView.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.FileStatusListView_DrawItem);
@@ -85,7 +85,7 @@ namespace GitUI
             this.FilterComboBox.Location = new System.Drawing.Point(0, 0);
             this.FilterComboBox.Name = "FilterComboBox";
             this.FilterComboBox.Size = new System.Drawing.Size(682, 21);
-            this.FilterComboBox.TabIndex = 2;
+            this.FilterComboBox.TabIndex = 0;
             this.FilterComboBox.SelectedIndexChanged += new System.EventHandler(this.FilterComboBox_SelectedIndexChanged);
             this.FilterComboBox.TextUpdate += new System.EventHandler(this.FilterComboBox_TextUpdate);
             this.FilterComboBox.GotFocus += new System.EventHandler(this.FilterComboBox_GotFocus);
