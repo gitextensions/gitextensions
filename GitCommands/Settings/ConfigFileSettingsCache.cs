@@ -43,7 +43,6 @@ namespace GitCommands.Settings
 
         protected override void ClearImpl()
         {
-            base.ClearImpl();
             ReadSettings(SettingsFilePath);
         }
 

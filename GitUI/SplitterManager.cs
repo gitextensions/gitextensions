@@ -18,7 +18,7 @@ namespace GitUI
             _designTimeFontSize = designTimeFontSize;
         }
 
-        public SplitterData AddSplitter(SplitContainer splitter, string settingName, int? defaultDistance = null)
+        public void AddSplitter(SplitContainer splitter, string settingName, int? defaultDistance = null)
         {
             var data = new SplitterData()
             {
@@ -28,8 +28,6 @@ namespace GitUI
                 DesignTimeFontSize = _designTimeFontSize
             };
             splitters.Add(data);
-
-            return data;
         }
 
         public void RestoreSplitters()
@@ -47,7 +45,7 @@ namespace GitUI
             splitters.ForEach(s => s.AdjustToCurrentFontSize());
         }
 
-        public class SplitterData
+        private class SplitterData
         {
             public SplitContainer Splitter;
             public string SettingName;

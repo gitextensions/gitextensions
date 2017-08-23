@@ -46,15 +46,15 @@ namespace GitCommands
         protected abstract void SetValueImpl(string key, string value);        
         protected abstract string GetValueImpl(string key);
         protected abstract bool NeedRefresh();
-
-        protected virtual void ClearImpl()
-        {
-            ByNameMap.Clear();
-        }
+        protected abstract void ClearImpl();
 
         private void Clear()
         {
-            LockedAction(ClearImpl);
+            LockedAction(() =>
+            {
+                ClearImpl();
+                ByNameMap.Clear();
+            });
         }
 
         public void Save()
