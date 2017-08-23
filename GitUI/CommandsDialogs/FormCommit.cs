@@ -1161,6 +1161,11 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Unstaged;
                 _skipUpdate = false;
+                if (Unstaged.AllItems.Count() != 0 && Unstaged.SelectedIndex == -1)
+                {
+                    Unstaged.SelectedIndex = 0;
+                }
+
                 UnstagedSelectionChanged(Unstaged, null);
             }
         }
@@ -1337,6 +1342,10 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Staged;
                 _skipUpdate = false;
+                if(Staged.AllItems.Count() != 0 && Staged.SelectedIndex == -1)
+                {
+                    Staged.SelectedIndex = 0;
+                }
                 StagedSelectionChanged(Staged, null);
             }
         }
@@ -2053,6 +2062,50 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void FormCommit_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Enter && !Message.Focused)
+            {
+                FocusCommitMessage();
+                e.Handled = true;
+            }
+            if (e.Control && e.KeyCode == Keys.P
+                || e.Alt && e.KeyCode == Keys.Up
+                || e.Alt && e.KeyCode == Keys.Left)
+            {
+                SelectPreviousFile();
+                e.Handled = true;
+            }
+            if (e.Control && e.KeyCode == Keys.N
+                || e.Alt && e.KeyCode == Keys.Down
+                || e.Alt && e.KeyCode == Keys.Right)
+            {
+                SelectNextFile();
+                e.Handled = true;
+            }
+        }
+
+        private void SelectNextFile()
+        {
+            SelectFileInListWithDirection(+1);
+        }
+
+        private void SelectPreviousFile()
+        {
+            SelectFileInListWithDirection(-1);
+        }
+
+        private void SelectFileInListWithDirection(int direction)
+        {
+            var list = Message.Focused ? Staged : _currentFilesList;
+            _currentFilesList = list;
+            var itemsCount = list.AllItems.Count();
+            if (itemsCount != 0)
+            {
+                list.SelectedIndex = (list.SelectedIndex + direction + itemsCount) % itemsCount;
+            }
+        }
+
         private void ExecuteCommitCommand()
         {
             CheckForStagedAndCommit(Amend.Checked, false);
@@ -2620,6 +2673,16 @@ namespace GitUI.CommandsDialogs
         private void createBranchToolStripButton_Click(object sender, EventArgs e)
         {
             UICommands.StartCreateBranchDialog(this, null);
+        }
+
+        private void Message_Enter(object sender, EventArgs e)
+        {
+            if(Staged.AllItems.Count() != 0 && Staged.SelectedItems.Count() == 0)
+            {
+                _currentFilesList = Staged;
+                Staged.SelectedIndex = 0;
+                StagedSelectionChanged(null, null);
+            }
         }
     }
 
