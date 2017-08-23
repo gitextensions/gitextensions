@@ -2064,7 +2064,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormCommit_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.Enter && !Message.Focused)
+            if (e.Control && e.KeyCode == Keys.Enter && !Message.ContainsFocus)
             {
                 FocusCommitMessage();
                 e.Handled = true;
@@ -2677,7 +2677,7 @@ namespace GitUI.CommandsDialogs
 
         private void Message_Enter(object sender, EventArgs e)
         {
-            if(Staged.AllItems.Count() != 0 && Staged.SelectedItems.Count() == 0)
+            if(Staged.AllItems.Count() != 0 && !Staged.SelectedItems.Any())
             {
                 _currentFilesList = Staged;
                 Staged.SelectedIndex = 0;
