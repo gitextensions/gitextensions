@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 var strings = current.Split(' ');
                 if (strings[0] == "worktree")
                 {
-                    currentWorktree = new WorkTree { Path = strings[1] };
+                    currentWorktree = new WorkTree { Path = current.Substring(9) };
                     currentWorktree.IsDeleted = !Directory.Exists(currentWorktree.Path);
                     _worktrees.Add(currentWorktree);
                 }
