@@ -68,7 +68,7 @@ namespace GitCommands
                 throw new FileNotFoundException("File not found", fileName);
             }
 
-            string commitTemplate = _fileSystem.File.ReadAllText(fileName).Replace("\r", "");
+            string commitTemplate = _fileSystem.File.ReadAllText(fileName, _module.CommitEncoding).Replace("\r", "");
             return commitTemplate;
         }
     }
