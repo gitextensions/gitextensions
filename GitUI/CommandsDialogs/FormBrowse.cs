@@ -1685,6 +1685,8 @@ namespace GitUI.CommandsDialogs
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             RevisionGrid.ReloadHotkeys();
             RevisionGrid.ReloadTranslation();
+            FileText.ReloadHotkeys();
+            DiffText.ReloadHotkeys();
         }
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
