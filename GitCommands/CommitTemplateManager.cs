@@ -50,7 +50,8 @@ namespace GitCommands
         /// </remarks>
         public string LoadGitCommitTemplate()
         {
-            string fileName = _module.GetEffectiveSetting("commit.template");
+            string fileNameFromSettings = _module.GetEffectiveSetting("commit.template");
+            string fileName = fileNameFromSettings;
             if (string.IsNullOrEmpty(fileName))
             {
                 return null;
@@ -65,10 +66,10 @@ namespace GitCommands
 
             if (!_fileSystem.File.Exists(fileName))
             {
-                throw new FileNotFoundException("File not found", fileName);
+                throw new FileNotFoundException("File not found", fileNameFromSettings);
             }
 
-            string commitTemplate = _fileSystem.File.ReadAllText(fileName).Replace("\r", "");
+            string commitTemplate = _fileSystem.File.ReadAllText(fileNameFromSettings).Replace("\r", "");
             return commitTemplate;
         }
     }
