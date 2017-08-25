@@ -269,6 +269,13 @@ namespace GitCommands
             get { return LocalConfigFile; }
         }
 
+
+        IConfigFileSettings IGitModule.EffectiveConfigFile
+        {
+            get { return EffectiveConfigFile; }
+        }
+
+
         //encoding for files paths
         private static Encoding _systemEncoding;
         public static Encoding SystemEncoding

@@ -9,6 +9,7 @@ namespace GitUIPluginInterfaces
     public interface IGitModule
     {
         IConfigFileSettings LocalConfigFile { get; }
+        IConfigFileSettings EffectiveConfigFile { get; }
 
         string AddRemote(string remoteName, string path);
         IList<IGitRef> GetRefs(bool tags = true, bool branches = true);

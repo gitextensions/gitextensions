@@ -50,7 +50,7 @@ namespace GitCommands
         /// </remarks>
         public string LoadGitCommitTemplate()
         {
-            string fileName = _module.GetEffectiveSetting("commit.template");
+            string fileName = _module.EffectiveConfigFile.GetValue("commit.template");
             if (string.IsNullOrEmpty(fileName))
             {
                 return null;
