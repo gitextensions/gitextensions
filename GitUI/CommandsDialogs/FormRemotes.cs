@@ -440,7 +440,7 @@ Inactive remote is completely invisible to git.");
                 return;
             }
 
-            var remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentSelectedRemote));
+            var remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentSelectedRemote));
             if (string.IsNullOrEmpty(remoteUrl))
             {
                 return;

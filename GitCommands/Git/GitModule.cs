@@ -737,7 +737,7 @@ namespace GitCommands
 
         public void EditNotes(string revision)
         {
-            string editor = GetEffectivePathSetting("core.editor").ToLower();
+            string editor = GetEffectiveSetting("core.editor").ToLower();
             if (editor.Contains("gitextensions") || editor.Contains("notepad") ||
                 editor.Contains("notepad++"))
             {
@@ -1566,7 +1566,7 @@ namespace GitCommands
                 !GitCommandHelpers.Plink())
                 return "";
 
-            return GetPathSetting(string.Format("remote.{0}.puttykeyfile", remote));
+            return GetSetting(string.Format("remote.{0}.puttykeyfile", remote));
         }
 
         public static bool PathIsUrl(string path)
@@ -1620,7 +1620,7 @@ namespace GitCommands
             }
 
             string localBranchArguments;
-            var remoteUrl = GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+            var remoteUrl = GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
 
             if (PathIsUrl(remote) && !string.IsNullOrEmpty(localBranch) && string.IsNullOrEmpty(remoteUrl))
                 localBranchArguments = ":" + GitCommandHelpers.GetFullBranchName(localBranch);
@@ -2137,19 +2137,9 @@ namespace GitCommands
             return LocalConfigFile.GetValue(setting);
         }
 
-        public string GetPathSetting(string setting)
-        {
-            return GetSetting(setting);
-        }
-
         public string GetEffectiveSetting(string setting)
         {
             return EffectiveConfigFile.GetValue(setting);
-        }
-
-        public string GetEffectivePathSetting(string setting)
-        {
-            return GetEffectiveSetting(setting);
         }
 
         public void UnsetSetting(string setting)
