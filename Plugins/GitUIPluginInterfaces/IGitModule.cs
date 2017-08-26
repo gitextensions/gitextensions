@@ -8,6 +8,8 @@ namespace GitUIPluginInterfaces
     /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule
     {
+        Encoding CommitEncoding { get; }
+
         IConfigFileSettings LocalConfigFile { get; }
 
         string AddRemote(string remoteName, string path);
@@ -105,6 +107,7 @@ namespace GitUIPluginInterfaces
         string[] GetRemotes(bool allowEmpty);
 
         string GetSetting(string setting);
+        string GetEffectiveSetting(string setting);
 
         bool StartPageantForRemote(string remote);
 
