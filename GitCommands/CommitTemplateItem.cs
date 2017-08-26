@@ -2,11 +2,9 @@
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml;
-using System.Xml.Serialization;
 using GitCommands.Utils;
 
-namespace GitUI.CommandsDialogs.CommitDialog
+namespace GitCommands
 {
     [Serializable]
     public sealed class CommitTemplateItem : ISerializable
@@ -52,12 +50,12 @@ namespace GitUI.CommandsDialogs.CommitDialog
         public static void SaveToSettings(CommitTemplateItem[] items)
         {
             string strVal = SerializeCommitTemplates(items);
-            GitCommands.AppSettings.CommitTemplates = strVal ?? string.Empty;
+            AppSettings.CommitTemplates = strVal ?? string.Empty;
         }
 
         public static CommitTemplateItem[] LoadFromSettings()
         {
-            string serializedString = GitCommands.AppSettings.CommitTemplates;
+            string serializedString = AppSettings.CommitTemplates;
             bool shouldBeUpdated;
             var templates = DeserializeCommitTemplates(serializedString, out shouldBeUpdated);
             if (shouldBeUpdated)
@@ -85,6 +83,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
             }
             catch (Exception)
             {
+                // do nothing
             }
 
             if (commitTemplateItem == null)
@@ -115,8 +114,8 @@ namespace GitUI.CommandsDialogs.CommitDialog
 
     public sealed class MoveNamespaceDeserializationBinder : SerializationBinder
     {
-        private const string OldNamespace = "GitUI";
-        private const string NewNamespace = "GitUI.CommandsDialogs.CommitDialog";
+        private const string OldNamespace = "GitUI.CommandsDialogs.CommitDialog";
+        private const string NewNamespace = "GitCommands";
 
         public override Type BindToType(string assemblyName, string typeName)
         {

@@ -317,7 +317,6 @@
     <Compile Include="UserControls\CommitSummaryUserControl.Designer.cs">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
     <Compile Include="UserControls\ConsoleEmulatorOutputControl.cs">
       <SubType>Component</SubType>
     </Compile>
