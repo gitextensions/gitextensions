@@ -147,6 +147,9 @@ namespace GitExtensions
                     workingDir = GitModule.FindGitWorkingDir(workingDir);
                 }
 
+                if (Directory.Exists(workingDir))
+                    workingDir = Path.GetFullPath(workingDir);
+
                 //Do not add this working directory to the recent repositories. It is a nice feature, but it
                 //also increases the startup time
                 //if (Module.ValidWorkingDir())
