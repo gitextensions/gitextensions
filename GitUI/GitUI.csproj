@@ -1876,6 +1876,7 @@
     <Content Include="Resources\Icons\BuildFailed.png" />
     <Content Include="Resources\Icons\BuildSuccessful.png" />
     <Content Include="Resources\Icons\decrease.png" />
+    <Content Include="Resources\Icons\gitex.png" />
     <Content Include="Resources\Icons\HelpCommandMerge.png" />
     <Content Include="Resources\Icons\HelpCommandRebase.png" />
     <Content Include="Resources\Icons\HelpPullFetch.png" />

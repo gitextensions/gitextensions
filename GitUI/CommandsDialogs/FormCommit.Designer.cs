@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
             this.openWithToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.openWithToolStripMenuItem.Text = "Open with";
+            this.openWithToolStripMenuItem.Text = "Open with...";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.OpenWithToolStripMenuItemClick);
             // 
             // openWithDifftoolToolStripMenuItem
@@ -474,10 +474,11 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator16,
             this.copyFolderNameMenuItem});
             this.UnstagedSubmoduleContext.Name = "UnstagedFileContext";
-            this.UnstagedSubmoduleContext.Size = new System.Drawing.Size(229, 242);
+            this.UnstagedSubmoduleContext.Size = new System.Drawing.Size(229, 264);
             // 
             // commitSubmoduleChanges
             // 
+            this.commitSubmoduleChanges.Image = global::GitUI.Properties.Resources.IconDirtySubmodules;
             this.commitSubmoduleChanges.Name = "commitSubmoduleChanges";
             this.commitSubmoduleChanges.Size = new System.Drawing.Size(228, 22);
             this.commitSubmoduleChanges.Text = "Commit submodule changes";
@@ -485,6 +486,7 @@ namespace GitUI.CommandsDialogs
             // 
             // resetSubmoduleChanges
             // 
+            this.resetSubmoduleChanges.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
             this.resetSubmoduleChanges.Name = "resetSubmoduleChanges";
             this.resetSubmoduleChanges.Size = new System.Drawing.Size(228, 22);
             this.resetSubmoduleChanges.Text = "Reset submodule changes";
@@ -492,6 +494,7 @@ namespace GitUI.CommandsDialogs
             // 
             // stashSubmoduleChangesToolStripMenuItem
             // 
+            this.stashSubmoduleChangesToolStripMenuItem.Image = global::GitUI.Properties.Resources.stash;
             this.stashSubmoduleChangesToolStripMenuItem.Name = "stashSubmoduleChangesToolStripMenuItem";
             this.stashSubmoduleChangesToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.stashSubmoduleChangesToolStripMenuItem.Text = "Stash submodule changes";
@@ -499,6 +502,7 @@ namespace GitUI.CommandsDialogs
             // 
             // updateSubmoduleMenuItem
             // 
+            this.updateSubmoduleMenuItem.Image = global::GitUI.Properties.Resources.IconSubmodulesUpdate;
             this.updateSubmoduleMenuItem.Name = "updateSubmoduleMenuItem";
             this.updateSubmoduleMenuItem.Size = new System.Drawing.Size(228, 22);
             this.updateSubmoduleMenuItem.Tag = "1";
@@ -520,6 +524,7 @@ namespace GitUI.CommandsDialogs
             // 
             // viewHistoryMenuItem
             // 
+            this.viewHistoryMenuItem.Image = global::GitUI.Properties.Resources.IconFileHistory;
             this.viewHistoryMenuItem.Name = "viewHistoryMenuItem";
             this.viewHistoryMenuItem.Size = new System.Drawing.Size(228, 22);
             this.viewHistoryMenuItem.Text = "View history";
@@ -532,6 +537,7 @@ namespace GitUI.CommandsDialogs
             // 
             // openSubmoduleMenuItem
             // 
+            this.openSubmoduleMenuItem.Image = global::GitUI.Properties.Resources.gitex;
             this.openSubmoduleMenuItem.Name = "openSubmoduleMenuItem";
             this.openSubmoduleMenuItem.Size = new System.Drawing.Size(228, 22);
             this.openSubmoduleMenuItem.Tag = "1";
@@ -540,17 +546,19 @@ namespace GitUI.CommandsDialogs
             // 
             // openFolderMenuItem
             // 
+            this.openFolderMenuItem.Image = global::GitUI.Properties.Resources.IconFolderSubmodule;
             this.openFolderMenuItem.Name = "openFolderMenuItem";
             this.openFolderMenuItem.Size = new System.Drawing.Size(228, 22);
-            this.openFolderMenuItem.Text = "Open folder";
+            this.openFolderMenuItem.Text = "Open containing folder";
             this.openFolderMenuItem.Click += new System.EventHandler(this.openFolderMenuItem_Click);
             // 
             // openDiffMenuItem
             // 
+            this.openDiffMenuItem.Image = global::GitUI.Properties.Resources.IconDiffTool;
             this.openDiffMenuItem.Name = "openDiffMenuItem";
             this.openDiffMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.openDiffMenuItem.Size = new System.Drawing.Size(228, 22);
-            this.openDiffMenuItem.Text = "Open with Difftool";
+            this.openDiffMenuItem.Text = "Open with difftool";
             this.openDiffMenuItem.Click += new System.EventHandler(this.openDiffMenuItem_Click);
             // 
             // toolStripSeparator16
@@ -560,6 +568,7 @@ namespace GitUI.CommandsDialogs
             // 
             // copyFolderNameMenuItem
             // 
+            this.copyFolderNameMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.copyFolderNameMenuItem.Name = "copyFolderNameMenuItem";
             this.copyFolderNameMenuItem.Size = new System.Drawing.Size(228, 22);
             this.copyFolderNameMenuItem.Text = "Copy folder name";
