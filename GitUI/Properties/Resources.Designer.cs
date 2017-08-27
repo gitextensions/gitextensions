@@ -582,6 +582,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap gitex {
+            get {
+                object obj = ResourceManager.GetObject("gitex", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap HelpCommandMerge {
             get {
                 object obj = ResourceManager.GetObject("HelpCommandMerge", resourceCulture);
