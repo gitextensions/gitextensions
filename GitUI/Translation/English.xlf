@@ -3518,11 +3518,11 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="openDiffMenuItem.Text">
-        <source>Open with Difftool</source>
+        <source>Open with difftool</source>
         <target />
       </trans-unit>
       <trans-unit id="openFolderMenuItem.Text">
-        <source>Open folder</source>
+        <source>Open containing folder</source>
         <target />
       </trans-unit>
       <trans-unit id="openSubmoduleMenuItem.Text">
@@ -3538,7 +3538,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
-        <source>Open with</source>
+        <source>Open with...</source>
         <target />
       </trans-unit>
       <trans-unit id="refreshDialogOnFormFocusToolStripMenuItem.Text">
