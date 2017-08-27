@@ -225,7 +225,7 @@ namespace GitUI.CommandsDialogs
             if (IsUICommandsInitialized)
             {
                 // Check if commit.template is used
-                string fileName = Module.GetEffectivePathSetting("commit.template");
+                string fileName = Module.GetEffectiveSetting("commit.template");
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     using (var commitReader = new StreamReader(fileName))
