@@ -915,7 +915,7 @@ namespace GitCommands
 
                 if (line != null)
                 {
-                    var match = Regex.Match(line, @"diff --git a/(.+)\sb/(.+)");
+                    var match = Regex.Match(line, @"diff --git (?:a|i)/(.+)\s(?:b|w)/(.+)");
                     if (match.Groups.Count > 1)
                     {
                         status.Name = match.Groups[1].Value;
