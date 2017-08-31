@@ -39,8 +39,8 @@ namespace GitUI.CommandsDialogs
             resetCurrentBranchOnThisCommitToolStripMenuItem.Enabled = _isBranchCheckedOut;
 
             var branches = new List<string> { "HEAD" };
-            branches.AddRange(UICommands.Module.GetRefs(false, true).Select(r => r.Name));
-            branches.AddRange(UICommands.Module.GetRemoteBranches().Select(r=>r.Name));
+            branches.AddRange(UICommands.Module.GetRefs(false, true).Select(r => r.Name).OrderBy(n => n));
+            branches.AddRange(UICommands.Module.GetRemoteBranches().Select(r=>r.Name).OrderBy(n => n));
             Branches.DataSource = branches;
         }
 
