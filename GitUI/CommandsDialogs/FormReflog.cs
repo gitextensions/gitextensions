@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new TranslationString("You've got changes in your working directory that could be lost.\n\nDo you want to continue?");
         private readonly TranslationString _continueResetCurrentBranchCaptionText = new TranslationString("Changes not committed...");
 
-        private readonly Regex _regexReflog = new Regex("^([^ ]+) ([^:]+): (.+): (.+)$", RegexOptions.Compiled);
+        private readonly Regex _regexReflog = new Regex("^([^ ]+) ([^:]+): (.+)$", RegexOptions.Compiled);
 
         private string _currentBranch;
         private bool _isBranchCheckedOut;
@@ -39,7 +39,8 @@ namespace GitUI.CommandsDialogs
             resetCurrentBranchOnThisCommitToolStripMenuItem.Enabled = _isBranchCheckedOut;
 
             var branches = new List<string> { "HEAD" };
-            branches.AddRange(UICommands.Module.GetRefs(false, true).Select(r => r.Name));
+            branches.AddRange(UICommands.Module.GetRefs(false, true).Select(r => r.Name).OrderBy(n => n));
+            branches.AddRange(UICommands.Module.GetRemoteBranches().Select(r=>r.Name).OrderBy(n => n));
             Branches.DataSource = branches;
         }
 
@@ -70,7 +71,6 @@ namespace GitUI.CommandsDialogs
                         Sha = match.Groups[1].Value,
                         Ref = match.Groups[2].Value,
                         Action = match.Groups[3].Value,
-                        Message = match.Groups[4].Value
                     });
                 }
             }
@@ -165,6 +165,5 @@ namespace GitUI.CommandsDialogs
         public string Sha { get; set; }
         public string Ref { get; set; }
         public string Action { get; set; }
-        public string Message { get; set; }
     }
 }
