@@ -16,6 +16,7 @@ namespace JiraCommitHintPlugin
         private Jira jira;
         private string query;
         private string stringTemplate = defaultFormat;
+        private readonly BoolSetting enabledSettings = new BoolSetting("Jira hint plugin enabled", false);
         private readonly StringSetting urlSettings = new StringSetting("Jira URL", @"https://jira.atlassian.com");
         private readonly StringSetting userSettings = new StringSetting("Jira user", string.Empty);
         private readonly PasswordSetting passwordSettings = new PasswordSetting("Jira password", string.Empty);
@@ -38,6 +39,7 @@ namespace JiraCommitHintPlugin
 
         public override IEnumerable<ISetting> GetSettings()
         {
+            yield return enabledSettings;
             jiraFields.CustomControl = new TextBox { ReadOnly = true, Multiline = true, Height = 55, BorderStyle = BorderStyle.None };
             yield return jiraFields;
             urlSettings.CustomControl = new TextBox();
@@ -84,14 +86,15 @@ namespace JiraCommitHintPlugin
 
         private void UpdateJiraSettings()
         {
+            if (!enabledSettings[Settings].GetValueOrDefault())
+                return;
+
             var url = urlSettings[Settings];
             var userName = userSettings[Settings];
             var password = passwordSettings[Settings];
 
             if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(userName))
-            {
                 return;
-            }
 
             jira = Jira.CreateRestClient(url, userName, password);
             query = jdlQuerySettings[Settings] ?? jdlQuerySettings.DefaultValue;
@@ -118,10 +121,10 @@ namespace JiraCommitHintPlugin
 
         private void gitUiCommands_PreCommit(object sender, GitUIBaseEventArgs e)
         {
-            if (jira?.Issues == null)
-            {
+            if (!enabledSettings[Settings].GetValueOrDefault())
                 return;
-            }
+            if (jira?.Issues == null)
+                return;
 
             currentMessages = GetMessageToCommit(jira, query, stringTemplate);
             foreach (var message in currentMessages)
@@ -132,6 +135,8 @@ namespace JiraCommitHintPlugin
 
         private void gitUiCommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
+            if (!enabledSettings[Settings].GetValueOrDefault())
+                return;
             if (currentMessages == null)
                 return;
             foreach (var message in currentMessages)
