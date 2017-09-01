@@ -51,7 +51,7 @@ namespace GitCommands.Git
         /// <param name="revision">Commit revision to be tagged</param>
         /// <param name="inputTagName">Name of tag</param>
         /// <param name="force">Force parameter</param>
-        /// <param name="operation">The operation to perform on the tag (Lightweight, Annotate, Sign with defaul key, Sign with specific key)</param>
+        /// <param name="operationType">The operation to perform on the tag (Lightweight, Annotate, Sign with defaul key, Sign with specific key)</param>
         /// <param name="tagMessage">Tag Message</param>
         /// <param name="keyId">Specific Key ID to be used instead of default one</param>
         /// <returns>Output string from RunGitCmd.</returns>
