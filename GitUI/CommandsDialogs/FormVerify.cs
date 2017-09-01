@@ -29,12 +29,9 @@ namespace GitUI.CommandsDialogs
         private readonly SortableLostObjectsList filteredLostObjects = new SortableLostObjectsList();
         private readonly DataGridViewCheckBoxHeaderCell selectedItemsHeader = new DataGridViewCheckBoxHeaderCell();
 
-        private IGitTagController _gitTagController;
-
         private FormVerify()
             : this(null)
         {
-            _gitTagController = new GitTagController(Module);
         }
 
         public FormVerify(GitUICommands aCommands)
@@ -253,6 +250,7 @@ namespace GitUI.CommandsDialogs
                 return 0;
             }
             var currentTag = 0;
+            IGitTagController _gitTagController = new GitTagController(Module);
             foreach (var lostObject in selectedLostObjects)
             {
                 currentTag++;

@@ -20,8 +20,6 @@ namespace GitUI.CommandsDialogs
 
         private string _currentRemote = "";
 
-        private IGitTagController _gitTagController;
-
         private static readonly TranslationString _trsLigthweight = new TranslationString("Lightweight tag");
         private static readonly TranslationString _trsAnnotated = new TranslationString("Annotated tag");
         private static readonly TranslationString _trsSignDefault = new TranslationString("Sign with default GPG");
@@ -40,8 +38,6 @@ namespace GitUI.CommandsDialogs
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
                 commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
-
-            _gitTagController = new GitTagController(Module);
         }
 
         private void FormCreateTag_Load(object sender, EventArgs e)
@@ -78,6 +74,7 @@ namespace GitUI.CommandsDialogs
                 return string.Empty;
             }
 
+            IGitTagController _gitTagController = new GitTagController(Module);
             var s = _gitTagController.CreateTag(revision, textBoxTagName.Text, ForceTag.Checked, GetSelectedOperation(annotate.SelectedIndex), tagMessage.Text, textBoxGpgKey.Text);
             if (!string.IsNullOrEmpty(s))
             {
