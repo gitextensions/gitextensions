@@ -37,7 +37,12 @@ namespace GitCommands.Git
 
         public GitTagController(IGitModule module)
         {
-            _module = module ?? throw new ArgumentNullException("module");
+            if(module == null)
+            {
+                throw new ArgumentNullException("module");
+            }
+
+            _module = module;
         }
 
         /// <summary>
