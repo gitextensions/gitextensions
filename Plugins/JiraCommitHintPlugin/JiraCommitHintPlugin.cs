@@ -33,6 +33,10 @@ namespace JiraCommitHintPlugin
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
+            if (enabledSettings.ValueOrDefault(Settings))
+                return false;
+            if (jira == null)
+                return false;
             MessageBox.Show(string.Join(Environment.NewLine, GetMessageToCommit(jira, query, stringTemplate).Select(t => t.Text).ToArray()));
             return false;
         }
@@ -86,19 +90,19 @@ namespace JiraCommitHintPlugin
 
         private void UpdateJiraSettings()
         {
-            if (!enabledSettings[Settings].GetValueOrDefault())
+            if (!enabledSettings.ValueOrDefault(Settings))
                 return;
 
-            var url = urlSettings[Settings];
-            var userName = userSettings[Settings];
-            var password = passwordSettings[Settings];
+            var url = urlSettings.ValueOrDefault(Settings);
+            var userName = userSettings.ValueOrDefault(Settings);
+            var password = passwordSettings.ValueOrDefault(Settings);
 
             if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(userName))
                 return;
 
             jira = Jira.CreateRestClient(url, userName, password);
-            query = jdlQuerySettings[Settings] ?? jdlQuerySettings.DefaultValue;
-            stringTemplate = stringTemplateSetting[Settings] ?? stringTemplateSetting.DefaultValue;
+            query = jdlQuerySettings.ValueOrDefault(Settings) ?? jdlQuerySettings.DefaultValue;
+            stringTemplate = stringTemplateSetting.ValueOrDefault(Settings) ?? stringTemplateSetting.DefaultValue;
             if (btnPreview == null)
                 return;
             btnPreview.Click -= btnPreviewClick;
@@ -121,7 +125,7 @@ namespace JiraCommitHintPlugin
 
         private void gitUiCommands_PreCommit(object sender, GitUIBaseEventArgs e)
         {
-            if (!enabledSettings[Settings].GetValueOrDefault())
+            if (!enabledSettings.ValueOrDefault(Settings))
                 return;
             if (jira?.Issues == null)
                 return;
@@ -135,7 +139,7 @@ namespace JiraCommitHintPlugin
 
         private void gitUiCommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
-            if (!enabledSettings[Settings].GetValueOrDefault())
+            if (!enabledSettings.ValueOrDefault(Settings))
                 return;
             if (currentMessages == null)
                 return;
