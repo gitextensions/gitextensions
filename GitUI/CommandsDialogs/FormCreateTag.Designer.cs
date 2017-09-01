@@ -33,7 +33,9 @@ namespace GitUI.CommandsDialogs
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
             this.textBoxTagName = new System.Windows.Forms.TextBox();
-            this.annotate = new System.Windows.Forms.CheckBox();
+            this.annotate = new System.Windows.Forms.ComboBox();
+            this.keyIdLbl = new System.Windows.Forms.Label();
+            this.textBoxGpgKey = new System.Windows.Forms.TextBox();
             this.pushTag = new System.Windows.Forms.CheckBox();
             this.tagMessage = new GitUI.SpellChecker.EditNetSpell();
             this.label2 = new System.Windows.Forms.Label();
@@ -87,11 +89,30 @@ namespace GitUI.CommandsDialogs
             this.annotate.AutoSize = true;
             this.annotate.Location = new System.Drawing.Point(103, 3);
             this.annotate.Name = "annotate";
-            this.annotate.Size = new System.Drawing.Size(137, 19);
+            this.annotate.Size = new System.Drawing.Size(150, 19);
             this.annotate.TabIndex = 3;
-            this.annotate.Text = "Create annotated tag";
-            this.annotate.UseVisualStyleBackColor = true;
-            this.annotate.CheckedChanged += new System.EventHandler(this.AnnotateCheckedChanged);
+            this.annotate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.annotate.Items.AddRange(dropwdownTagOperation);
+            this.annotate.SelectedIndex = 0;
+            this.annotate.SelectedIndexChanged += new System.EventHandler(this.AnnotateDropDownChanged);
+            // 
+            // keyIdLbl
+            // 
+            this.keyIdLbl.AutoSize = true;
+            this.keyIdLbl.Location = new System.Drawing.Point(270, 6);
+            this.keyIdLbl.Name = "keyIdLbl";
+            this.keyIdLbl.Size = new System.Drawing.Size(60, 19);
+            this.keyIdLbl.Text = "Specific Key Id:";
+            this.keyIdLbl.Enabled = false;
+            //
+            // textBoxGpgKey
+            //
+            this.textBoxGpgKey.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left));
+            this.textBoxGpgKey.Location = new System.Drawing.Point(370, 3);
+            this.textBoxGpgKey.Name = "textBoxGpgKey";
+            this.textBoxGpgKey.Size = new System.Drawing.Size(60, 80);
+            this.textBoxGpgKey.Enabled = false;
+            this.textBoxGpgKey.MaxLength = 8;
             // 
             // pushTag
             // 
@@ -203,6 +224,8 @@ namespace GitUI.CommandsDialogs
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.tagMessage);
             this.panel2.Controls.Add(this.annotate);
+            this.panel2.Controls.Add(this.keyIdLbl);
+            this.panel2.Controls.Add(this.textBoxGpgKey);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 114);
             this.panel2.Name = "panel2";
@@ -239,7 +262,9 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.TextBox textBoxTagName;
-        private System.Windows.Forms.CheckBox annotate;
+        private System.Windows.Forms.ComboBox annotate;
+        private System.Windows.Forms.Label keyIdLbl;
+        private System.Windows.Forms.TextBox textBoxGpgKey;
         private System.Windows.Forms.CheckBox pushTag;
         private EditNetSpell tagMessage;
         private System.Windows.Forms.Label label2;

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
 using ResourceManager;
+using GitCommands.Git;
 
 namespace GitUI.CommandsDialogs
 {
@@ -249,10 +250,11 @@ namespace GitUI.CommandsDialogs
                 return 0;
             }
             var currentTag = 0;
+            IGitTagController _gitTagController = new GitTagController(Module);
             foreach (var lostObject in selectedLostObjects)
             {
                 currentTag++;
-                Module.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false, false);
+                _gitTagController.CreateTag(lostObject.Hash, $"{RestoredObjectsTagPrefix}{currentTag}", false);
             }
 
             return currentTag;

@@ -517,8 +517,8 @@ namespace GitUI.CommandsDialogs
 
             Cursor.Current = Cursors.WaitCursor;
 
-            _mergetoolCmd = Module.GetEffectivePathSetting($"mergetool.{_mergetool}.cmd");
-            _mergetoolPath = Module.GetEffectivePathSetting($"mergetool.{_mergetool}.path");
+            _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
+            _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
 
             if (string.IsNullOrEmpty(_mergetool) || _mergetool == "kdiff3")
             {

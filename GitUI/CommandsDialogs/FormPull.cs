@@ -855,7 +855,7 @@ namespace GitUI.CommandsDialogs
             ResetRemoteHeads();
 
             // update the text box of the Remote Url combobox to show the URL of selected remote
-            comboBoxPullSource.Text = Module.GetPathSetting(
+            comboBoxPullSource.Text = Module.GetSetting(
                 string.Format(SettingKeyString.RemoteUrl, _NO_TRANSLATE_Remotes.Text));
 
             // update merge options radio buttons
