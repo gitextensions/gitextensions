@@ -101,8 +101,8 @@ namespace JiraCommitHintPlugin
                 return;
 
             jira = Jira.CreateRestClient(url, userName, password);
-            query = jdlQuerySettings.ValueOrDefault(Settings) ?? jdlQuerySettings.DefaultValue;
-            stringTemplate = stringTemplateSetting.ValueOrDefault(Settings) ?? stringTemplateSetting.DefaultValue;
+            query = jdlQuerySettings.ValueOrDefault(Settings);
+            stringTemplate = stringTemplateSetting.ValueOrDefault(Settings);
             if (btnPreview == null)
                 return;
             btnPreview.Click -= btnPreviewClick;
