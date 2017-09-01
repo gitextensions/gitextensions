@@ -13,7 +13,7 @@ namespace GitExtensionsTest.GitCommands.Git
         private const string Revision = "0123456789";
         private const string TagMessage = "foo";
         private const string KeyId = "A9876F";
-        private const string WorkingDir = "C:\\";
+        private string WorkingDir = TestContext.CurrentContext.TestDirectory;
         private IGitModule _module;
         private IGitTagController _controller;
 
