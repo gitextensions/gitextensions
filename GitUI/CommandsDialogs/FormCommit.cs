@@ -2504,20 +2504,23 @@ namespace GitUI.CommandsDialogs
 
         private void LoadCommitTemplates()
         {
-            CommitTemplateItem[] commitTemplates = CommitTemplateItem.LoadFromSettings();
-
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
-            if (null != commitTemplates)
-            {
-                for (int i = 0; i < commitTemplates.Length; i++)
-                {
-                    if (!commitTemplates[i].Name.IsNullOrEmpty())
-                        AddTemplateCommitMessageToMenu(commitTemplates[i], commitTemplates[i].Name);
-                }
-            }
+            var fromSettings = CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>().Where(t => !t.Name.IsNullOrEmpty()).ToArray();
+            var commitTemplates = new CommitTemplateManager().RegisteredTemplates
+               .Union(new[] { (CommitTemplateItem)null })
+               .Union(fromSettings)
+               .Union(fromSettings.Length > 0 ? new[] { (CommitTemplateItem)null } : Array.Empty<CommitTemplateItem>())
+               .ToArray();
 
-            commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            if (commitTemplates.Length > 0)
+            {
+                foreach (CommitTemplateItem item in commitTemplates)
+                    if (item == null)
+                        commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                    else
+                        AddTemplateCommitMessageToMenu(item, item.Name);
+            }
 
             var toolStripItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
             toolStripItem.Click += commitTemplatesConfigtoolStripMenuItem_Click;
