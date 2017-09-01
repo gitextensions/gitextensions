@@ -84,7 +84,16 @@ namespace JiraCommitHintPlugin
 
         private void UpdateJiraSettings()
         {
-            jira = Jira.CreateRestClient(urlSettings[Settings], userSettings[Settings], passwordSettings[Settings]);
+            var url = urlSettings[Settings];
+            var userName = userSettings[Settings];
+            var password = passwordSettings[Settings];
+
+            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(userName))
+            {
+                return;
+            }
+
+            jira = Jira.CreateRestClient(url, userName, password);
             query = jdlQuerySettings[Settings] ?? jdlQuerySettings.DefaultValue;
             stringTemplate = stringTemplateSetting[Settings] ?? stringTemplateSetting.DefaultValue;
             if (btnPreview == null)
@@ -109,6 +118,11 @@ namespace JiraCommitHintPlugin
 
         private void gitUiCommands_PreCommit(object sender, GitUIBaseEventArgs e)
         {
+            if (jira?.Issues == null)
+            {
+                return;
+            }
+
             currentMessages = GetMessageToCommit(jira, query, stringTemplate);
             foreach (var message in currentMessages)
             {
