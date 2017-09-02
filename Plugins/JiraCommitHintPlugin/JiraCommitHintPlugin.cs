@@ -74,7 +74,7 @@ namespace JiraCommitHintPlugin
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -161,7 +161,7 @@ namespace JiraCommitHintPlugin
             }
             catch (Exception ex)
             {
-                return new[] { new JiraTaskDTO($"{description} error", ex.Message) };
+                return new[] { new JiraTaskDTO($"{description} error", ex.ToString()) };
             }
         }
 
