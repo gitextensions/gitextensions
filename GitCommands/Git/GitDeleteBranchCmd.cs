@@ -24,7 +24,7 @@ namespace GitCommands
             return "branch";
         }
 
-        public override IEnumerable<string> CollectArguments()
+        protected override IEnumerable<string> CollectArguments()
         {
             yield return force ? "-D" : "-d";
 
