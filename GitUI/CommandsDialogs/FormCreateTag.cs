@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs
             TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
             textBoxGpgKey.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
             keyIdLbl.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
-            tagMessage.Enabled = tagOperation > TagOperation.Lightweight;
+            tagMessage.Enabled = tagOperation.CanProvideMessage();
         }
 
         private TagOperation GetSelectedOperation(int dropdownSelection)

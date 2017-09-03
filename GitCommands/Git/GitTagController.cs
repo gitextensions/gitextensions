@@ -15,6 +15,24 @@ namespace GitCommands.Git
         SignWithSpecificKey 
     };
 
+    public static class TagOperationExtensions
+    {
+        public static bool CanProvideMessage(this TagOperation operationType)
+        {
+            switch (operationType)
+            {
+                case TagOperation.Lightweight:
+                    return false;
+                case TagOperation.Annotate:
+                case TagOperation.SignWithDefaultKey:
+                case TagOperation.SignWithSpecificKey:
+                    return true;
+                default:
+                    throw new NotSupportedException("Invalid TagOperation: " + operationType);
+            }
+        }
+    }
+
     public interface IGitTagController
     {
         /// <summary>
@@ -67,14 +85,15 @@ namespace GitCommands.Git
                 throw new ArgumentNullException("tagName");
             }
 
-            if (operationType > TagOperation.Lightweight)
+            string tagMessageFileName = Path.Combine(_module.GetGitDirectory(), "TAGMESSAGE");
+
+            if (operationType.CanProvideMessage())
             {
-                File.WriteAllText(Path.Combine(_module.GetGitDirectory(), "TAGMESSAGE"), tagMessage);
+                File.WriteAllText(tagMessageFileName, tagMessage);
             }
 
             string tagName = inputTagName.Trim();
             string forced = force ? "-f" : "";
-            string directory = _module.GetGitDirectory();
 
             string tagSwitch = "";
 
@@ -87,12 +106,12 @@ namespace GitCommands.Git
 
                 /* Annotate */
                 case TagOperation.Annotate:
-                    tagSwitch = $"-a -F \"{directory}\\TAGMESSAGE\"";
+                    tagSwitch = "-a";
                     break;
 
                 /* Sign with default GPG */
                 case TagOperation.SignWithDefaultKey:
-                    tagSwitch = $"-s -F \"{directory}\\TAGMESSAGE\"";
+                    tagSwitch = "-s";
                     break;
 
                 /* Sign with specific GPG */
@@ -101,12 +120,17 @@ namespace GitCommands.Git
                     {
                         throw new ArgumentNullException("keyId");
                     }
-                    tagSwitch = $"-u {keyId} -F \"{directory}\\TAGMESSAGE\"";
+                    tagSwitch = $"-u {keyId}";
                     break;
                     
                 /* Error */
                 default:
-                    throw new NotSupportedException("Invalid TagOperation");
+                    throw new NotSupportedException("Invalid TagOperation: " + operationType);
+            }
+
+            if (operationType.CanProvideMessage())
+            {
+                tagSwitch = tagSwitch + " -F " + tagMessageFileName.Quote();
             }
 
             return _module.RunGitCmd($"tag {forced} {tagSwitch} \"{tagName}\" -- \"{revision}\"");
