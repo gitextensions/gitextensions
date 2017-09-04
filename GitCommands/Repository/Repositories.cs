@@ -14,7 +14,6 @@ namespace GitCommands.Repository
         private static Task<RepositoryHistory> _repositoryHistory;
         private static RepositoryHistory _remoteRepositoryHistory;
         private static BindingList<RepositoryCategory> _repositoryCategories;
-        private const int DefaultRepositoriesCount = 30;
 
         public static Task<RepositoryHistory> LoadRepositoryHistoryAsync()
         {
@@ -26,7 +25,7 @@ namespace GitCommands.Repository
 
         private static RepositoryHistory LoadRepositoryHistory()
         {
-            int size = AppSettings.GetInt("history size", DefaultRepositoriesCount);
+            int size = AppSettings.RecentRepositoriesHistorySize;
             object setting = AppSettings.GetString("history", null);
             if (setting == null)
             {
@@ -77,17 +76,19 @@ namespace GitCommands.Repository
             {
                 if (_repositoryHistory != null && _repositoryHistory.Status == TaskStatus.Running)
                     _repositoryHistory.Wait();
+
+                int size = AppSettings.RecentRepositoriesHistorySize;
                 if (_remoteRepositoryHistory == null)
                 {
                     object setting = AppSettings.GetString("history remote", null);
                     if (setting != null)
                     {
                         _remoteRepositoryHistory = DeserializeHistoryFromXml(setting.ToString());
-                        _remoteRepositoryHistory.MaxCount = DefaultRepositoriesCount;
+                        _remoteRepositoryHistory.MaxCount = size;
                     }
                 }
 
-                return _remoteRepositoryHistory ?? (_remoteRepositoryHistory = new RepositoryHistory(DefaultRepositoriesCount));
+                return _remoteRepositoryHistory ?? (_remoteRepositoryHistory = new RepositoryHistory(size));
             }
         }
 

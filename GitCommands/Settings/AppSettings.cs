@@ -1244,6 +1244,12 @@ namespace GitCommands
             set { SetInt("MaxMostRecentRepositories", value); }
         }
 
+        public static int RecentRepositoriesHistorySize
+        {
+            get { return GetInt("history size", 30); }
+            set { SetInt("history size", value); }
+        }
+
         public static int RecentReposComboMinWidth
         {
             get { return GetInt("RecentReposComboMinWidth", 0); }
