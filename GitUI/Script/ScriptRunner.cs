@@ -340,7 +340,7 @@ namespace GitUI.Script
             }
 
             if (!scriptInfo.RunInBackground)
-                FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
+                FormProcess.ShowStandardProcessDialog(owner, command, argument, aModule.WorkingDir, null, true);
             else
             {
                 if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
