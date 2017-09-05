@@ -91,6 +91,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pruneFromCaption = new TranslationString("Prune remote branches from {0}");
 
         private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
+        private readonly TranslationString _formTitlePull = new TranslationString("Pull ({0})");
+        private readonly TranslationString _formTitleFetch = new TranslationString("Fetch ({0}");
         #endregion
 
         public bool ErrorOccurred { get; private set; }
@@ -721,7 +723,7 @@ namespace GitUI.CommandsDialogs
         {
             _NO_TRANSLATE_Remotes.Select();
 
-            Text = string.Format("Pull ({0})", Module.WorkingDir);
+            FillFormTitle();
         }
 
         private void FillPullSourceDropDown()
@@ -730,6 +732,14 @@ namespace GitUI.CommandsDialogs
             comboBoxPullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             comboBoxPullSource.DisplayMember = "Path";
             comboBoxPullSource.Text = prevUrl;
+        }
+
+        private void FillFormTitle()
+        {
+            if (Fetch.Checked)
+                Text = string.Format(_formTitleFetch.Text, Module.WorkingDir);
+            else
+                Text = string.Format(_formTitlePull.Text, Module.WorkingDir);
         }
 
         private void StashClick(object sender, EventArgs e)
@@ -835,6 +845,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
             Prune.Enabled = true;
+            FillFormTitle();
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)
