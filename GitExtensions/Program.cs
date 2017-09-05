@@ -139,11 +139,15 @@ namespace GitExtensions
             string workingDir = string.Empty;
             if (args.Length >= 3)
             {
-                if (Directory.Exists(args[2]))
-                    workingDir = GitModule.FindGitWorkingDir(args[2]);
+                //there is bug in .net
+                //while parsing command line arguments, it unescapes " incorectly
+                //https://github.com/gitextensions/gitextensions/issues/3489
+                string dirArg = args[2].TrimEnd('"');
+                if (Directory.Exists(dirArg))
+                    workingDir = GitModule.FindGitWorkingDir(dirArg);
                 else
                 {
-                    workingDir = Path.GetDirectoryName(args[2]);
+                    workingDir = Path.GetDirectoryName(dirArg);
                     workingDir = GitModule.FindGitWorkingDir(workingDir);
                 }
 
