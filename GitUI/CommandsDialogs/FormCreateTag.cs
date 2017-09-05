@@ -66,23 +66,26 @@ namespace GitUI.CommandsDialogs
 
         private string CreateTag()
         {
-            string revision = commitPickerSmallControl1.SelectedCommitHash;
+            GitCreateTagArgs createTagArgs = new GitCreateTagArgs();
+            createTagArgs.Revision = commitPickerSmallControl1.SelectedCommitHash;
 
-            if (revision.IsNullOrEmpty())
+            if (createTagArgs.Revision.IsNullOrEmpty())
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
             }
 
-            IGitTagController _gitTagController = new GitTagController(Module);
-            var s = _gitTagController.CreateTag(revision, textBoxTagName.Text, ForceTag.Checked, GetSelectedOperation(annotate.SelectedIndex), tagMessage.Text, textBoxGpgKey.Text);
-            if (!string.IsNullOrEmpty(s))
-            {
-                MessageBox.Show(this, s, _messageCaption.Text);
-            }
+            createTagArgs.TagName = textBoxTagName.Text;
+            createTagArgs.Force = ForceTag.Checked;
+            createTagArgs.OperationType = GetSelectedOperation(annotate.SelectedIndex);
+            createTagArgs.TagMessage = tagMessage.Text;
+            createTagArgs.SignKeyId = textBoxGpgKey.Text;
 
-            if (s.Contains("fatal:"))
+            IGitTagController _gitTagController = new GitTagController(UICommands, Module);
+            if (!_gitTagController.CreateTag(createTagArgs, this))
+            {
                 return string.Empty;
+            }
 
             DialogResult = DialogResult.OK;
             return textBoxTagName.Text;
