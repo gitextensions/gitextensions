@@ -1607,7 +1607,7 @@ namespace GitUI.CommandsDialogs
             this.pullToolStripMenuItem.Name = "pullToolStripMenuItem";
             this.pullToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
             this.pullToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.pullToolStripMenuItem.Text = "Pull...";
+            this.pullToolStripMenuItem.Text = "Pull/Fetch...";
             this.pullToolStripMenuItem.Click += new System.EventHandler(this.PullToolStripMenuItemClick);
             // 
             // pushToolStripMenuItem
