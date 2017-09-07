@@ -1,8 +1,8 @@
 **Do you want to request a *feature* or report a *bug*?**
 
--[x] Bug
+- [x] Bug
 
--[ ] Feature
+- [ ] Feature
 
 **What is the current behavior?**
 
