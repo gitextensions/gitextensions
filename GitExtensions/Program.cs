@@ -182,6 +182,7 @@ namespace GitExtensions
         /// <param name="ce"></param>
         private static void HandleConfigurationException(System.Configuration.ConfigurationException ce)
         {
+            bool exceptionHandled = false;
             try
             {
                 // perhaps this should be checked for if it is null
@@ -228,11 +229,15 @@ namespace GitExtensions
                         string messageContent = String.Format("There is a problem with the application settings XML configuration file.{0}{0}The error message was: {1}{0}{0}Problems with configuration can usually be solved by deleting the configuration file.", Environment.NewLine, in3.Message);
                         MessageBox.Show(messageContent, "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    exceptionHandled = true;
                 }
             }
             finally // if we fail in this somehow at least this message might get somewhere
             {
-                System.Console.WriteLine("Configuration Error");
+                if (!exceptionHandled)
+                {
+                    MessageBox.Show(ce.ToString(), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 System.Environment.Exit(1);
             }
         }
