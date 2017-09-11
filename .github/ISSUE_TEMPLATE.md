@@ -1,4 +1,4 @@
-**What is the issue kind?
+**What is the issue kind?**
 
 - feature request
 - bug report
