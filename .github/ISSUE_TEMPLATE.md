@@ -1,8 +1,7 @@
-**Do you want to request a *feature* or report a *bug*?**
+**What is the issue kind?
 
-- [x] Bug
-
-- [ ] Feature
+- feature request
+- bug report
 
 **What is the current behavior?**
 
