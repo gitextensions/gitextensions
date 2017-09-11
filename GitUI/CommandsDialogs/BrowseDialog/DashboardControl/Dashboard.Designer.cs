@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.splitContainer5 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer6 = new System.Windows.Forms.SplitContainer();
+            this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.commonSplitContainer = new System.Windows.Forms.SplitContainer();
             this.CommonActions = new DashboardCategory();
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
             this.RecentRepositories = new DashboardCategory();
@@ -38,17 +38,17 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).BeginInit();
 
-            this.splitContainer5.Panel1.SuspendLayout();
-            this.splitContainer5.Panel2.SuspendLayout();
-            this.splitContainer5.SuspendLayout();
+            this.mainSplitContainer.Panel1.SuspendLayout();
+            this.mainSplitContainer.Panel2.SuspendLayout();
+            this.mainSplitContainer.SuspendLayout();
 
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commonSplitContainer)).BeginInit();
 
-            this.splitContainer6.Panel1.SuspendLayout();
-            this.splitContainer6.Panel2.SuspendLayout();
-            this.splitContainer6.SuspendLayout();
+            this.commonSplitContainer.Panel1.SuspendLayout();
+            this.commonSplitContainer.Panel2.SuspendLayout();
+            this.commonSplitContainer.SuspendLayout();
 
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).BeginInit();
 
@@ -59,52 +59,52 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // splitContainer5
+            // mainSplitContainer
             // 
-            this.splitContainer5.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer5.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.splitContainer5.Name = "splitContainer5";
+            this.mainSplitContainer.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.mainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.mainSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.mainSplitContainer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.mainSplitContainer.Name = "mainSplitContainer";
             // 
-            // splitContainer5.Panel1
+            // mainSplitContainer.Panel1
             // 
-            this.splitContainer5.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer5.Panel1.Controls.Add(this.splitContainer6);
+            this.mainSplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.mainSplitContainer.Panel1.Controls.Add(this.commonSplitContainer);
             // 
-            // splitContainer5.Panel2
+            // mainSplitContainer.Panel2
             // 
-            this.splitContainer5.Panel2.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer5.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.splitContainer5.Panel2.Controls.Add(this.tableLayoutPanel1);
-            this.splitContainer5.Size = new System.Drawing.Size(972, 623);
-            this.splitContainer5.SplitterDistance = 314;
-            this.splitContainer5.SplitterWidth = 5;
-            this.splitContainer5.TabIndex = 9;
+            this.mainSplitContainer.Panel2.BackColor = System.Drawing.SystemColors.Control;
+            this.mainSplitContainer.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.mainSplitContainer.Panel2.Controls.Add(this.tableLayoutPanel1);
+            this.mainSplitContainer.Size = new System.Drawing.Size(972, 623);
+            this.mainSplitContainer.SplitterDistance = 314;
+            this.mainSplitContainer.SplitterWidth = 5;
+            this.mainSplitContainer.TabIndex = 9;
             // 
-            // splitContainer6
+            // commonSplitContainer
             // 
-            this.splitContainer6.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer6.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer6.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.splitContainer6.Name = "splitContainer6";
-            this.splitContainer6.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.commonSplitContainer.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.commonSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commonSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.commonSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.commonSplitContainer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.commonSplitContainer.Name = "commonSplitContainer";
+            this.commonSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer6.Panel1
+            // commonSplitContainer.Panel1
             // 
-            this.splitContainer6.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer6.Panel1.Controls.Add(this.CommonActions);
+            this.commonSplitContainer.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.commonSplitContainer.Panel1.Controls.Add(this.CommonActions);
             // 
-            // splitContainer6.Panel2
+            // commonSplitContainer.Panel2
             // 
-            this.splitContainer6.Panel2.Controls.Add(this.splitContainer7);
-            this.splitContainer6.Size = new System.Drawing.Size(314, 623);
-            this.splitContainer6.SplitterDistance = 126;
-            this.splitContainer6.SplitterWidth = 5;
-            this.splitContainer6.TabIndex = 0;
+            this.commonSplitContainer.Panel2.Controls.Add(this.splitContainer7);
+            this.commonSplitContainer.Size = new System.Drawing.Size(314, 623);
+            this.commonSplitContainer.SplitterDistance = 126;
+            this.commonSplitContainer.SplitterWidth = 5;
+            this.commonSplitContainer.TabIndex = 0;
             // 
             // CommonActions
             // 
@@ -222,23 +222,23 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.Controls.Add(this.splitContainer5);
+            this.Controls.Add(this.mainSplitContainer);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Dashboard";
             this.Size = new System.Drawing.Size(972, 623);
-            this.splitContainer5.Panel1.ResumeLayout(false);
-            this.splitContainer5.Panel2.ResumeLayout(false);
+            this.mainSplitContainer.Panel1.ResumeLayout(false);
+            this.mainSplitContainer.Panel2.ResumeLayout(false);
 
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainSplitContainer)).EndInit();
 
-            this.splitContainer5.ResumeLayout(false);
-            this.splitContainer6.Panel1.ResumeLayout(false);
-            this.splitContainer6.Panel1.PerformLayout();
-            this.splitContainer6.Panel2.ResumeLayout(false);
+            this.mainSplitContainer.ResumeLayout(false);
+            this.commonSplitContainer.Panel1.ResumeLayout(false);
+            this.commonSplitContainer.Panel1.PerformLayout();
+            this.commonSplitContainer.Panel2.ResumeLayout(false);
 
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commonSplitContainer)).EndInit();
 
-            this.splitContainer6.ResumeLayout(false);
+            this.commonSplitContainer.ResumeLayout(false);
             this.splitContainer7.Panel1.ResumeLayout(false);
             this.splitContainer7.Panel1.PerformLayout();
             this.splitContainer7.Panel2.ResumeLayout(false);
@@ -256,8 +256,8 @@
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer5;
-        private System.Windows.Forms.SplitContainer splitContainer6;
+        private System.Windows.Forms.SplitContainer mainSplitContainer;
+        private System.Windows.Forms.SplitContainer commonSplitContainer;
         private System.Windows.Forms.SplitContainer splitContainer7;
         private DashboardCategory RecentRepositories;
         private DashboardCategory CommonActions;

@@ -8,7 +8,7 @@
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GitExtensions")]
 [assembly: AssemblyProduct("GitExtensions")]
-[assembly: AssemblyCopyright("Copyright © 2008-2016 GitExt Team")]
+[assembly: AssemblyCopyright("Copyright © 2008-2017 GitExt Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,6 +19,6 @@
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.49.00")]
-[assembly: AssemblyFileVersion("2.49.00")]
-[assembly: AssemblyInformationalVersion("2.49")]
+[assembly: AssemblyVersion("2.50.02")]
+[assembly: AssemblyFileVersion("2.50.02")]
+[assembly: AssemblyInformationalVersion("2.50.02")]

@@ -32,11 +32,10 @@
             // 
             // AutoLayoutSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoScroll = true;
             this.Name = "AutoLayoutSettingsPage";
-            this.Size = new System.Drawing.Size(951, 518);
+            this.Size = new System.Drawing.Size(1109, 461);
             this.ResumeLayout(false);
 
         }

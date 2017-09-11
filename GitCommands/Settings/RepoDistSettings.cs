@@ -30,7 +30,7 @@ namespace GitCommands.Settings
         {
             //if (aModule.IsBareRepository()
             return new RepoDistSettings(aLowerPriority,
-                GitExtSettingsCache.Create(Path.Combine(aModule.GetGitDirectory(), AppSettings.SettingsFileName), allowCache));
+                GitExtSettingsCache.Create(Path.Combine(aModule.GitCommonDirectory, AppSettings.SettingsFileName), allowCache));
         }
 
         public static RepoDistSettings CreateLocal(GitModule aModule, bool allowCache = true)
@@ -130,22 +130,25 @@ namespace GitCommands.Settings
         {
             get
             {
-                return new SettingsPath(this, Type.Value);
+                return new SettingsPath(this, Type.ValueOrDefault);
             }
         }
     }
 
     public class DetailedGroup : SettingsPath
     {
-        public readonly BoolNullableSetting ShowConEmuTab;
         public readonly BoolNullableSetting GetRemoteBranchesDirectlyFromRemote;
+        public readonly BoolNullableSetting AddMergeLogMessages;
+        public readonly IntNullableSetting MergeLogMessagesCount;
 
         public DetailedGroup(RepoDistSettings container)
             : base(container, "Detailed")
         {
-            ShowConEmuTab = new BoolNullableSetting("ShowConEmuTab", this, true);
             GetRemoteBranchesDirectlyFromRemote = new BoolNullableSetting("GetRemoteBranchesDirectlyFromRemote", this, false);
+            AddMergeLogMessages = new BoolNullableSetting("AddMergeLogMessages", this, false);
+            MergeLogMessagesCount = new IntNullableSetting("MergeLogMessagesCount", this, 20);
         }
+
     }
 
 }

@@ -45,20 +45,20 @@
             // 
             this.LocalHttpProxy_Label.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.LocalHttpProxy_Label.AutoSize = true;
-            this.LocalHttpProxy_Label.Location = new System.Drawing.Point(7, 6);
+            this.LocalHttpProxy_Label.Location = new System.Drawing.Point(8, 6);
             this.LocalHttpProxy_Label.Margin = new System.Windows.Forms.Padding(3);
             this.LocalHttpProxy_Label.Name = "LocalHttpProxy_Label";
-            this.LocalHttpProxy_Label.Size = new System.Drawing.Size(85, 13);
+            this.LocalHttpProxy_Label.Size = new System.Drawing.Size(90, 13);
             this.LocalHttpProxy_Label.TabIndex = 0;
             this.LocalHttpProxy_Label.Text = "Local http.proxy:";
             // 
             // LocalHttpProxy_TextBox
             // 
             this.LocalHttpProxy_TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LocalHttpProxy_TextBox.Location = new System.Drawing.Point(98, 3);
+            this.LocalHttpProxy_TextBox.Location = new System.Drawing.Point(104, 3);
             this.LocalHttpProxy_TextBox.Name = "LocalHttpProxy_TextBox";
             this.LocalHttpProxy_TextBox.ReadOnly = true;
-            this.LocalHttpProxy_TextBox.Size = new System.Drawing.Size(240, 20);
+            this.LocalHttpProxy_TextBox.Size = new System.Drawing.Size(234, 21);
             this.LocalHttpProxy_TextBox.TabIndex = 1;
             // 
             // GlobalHttpProxy_Label
@@ -68,17 +68,17 @@
             this.GlobalHttpProxy_Label.Location = new System.Drawing.Point(3, 32);
             this.GlobalHttpProxy_Label.Margin = new System.Windows.Forms.Padding(3);
             this.GlobalHttpProxy_Label.Name = "GlobalHttpProxy_Label";
-            this.GlobalHttpProxy_Label.Size = new System.Drawing.Size(89, 13);
+            this.GlobalHttpProxy_Label.Size = new System.Drawing.Size(95, 13);
             this.GlobalHttpProxy_Label.TabIndex = 0;
             this.GlobalHttpProxy_Label.Text = "Global http.proxy:";
             // 
             // GlobalHttpProxy_TextBox
             // 
             this.GlobalHttpProxy_TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GlobalHttpProxy_TextBox.Location = new System.Drawing.Point(98, 29);
+            this.GlobalHttpProxy_TextBox.Location = new System.Drawing.Point(104, 29);
             this.GlobalHttpProxy_TextBox.Name = "GlobalHttpProxy_TextBox";
             this.GlobalHttpProxy_TextBox.ReadOnly = true;
-            this.GlobalHttpProxy_TextBox.Size = new System.Drawing.Size(240, 20);
+            this.GlobalHttpProxy_TextBox.Size = new System.Drawing.Size(234, 21);
             this.GlobalHttpProxy_TextBox.TabIndex = 1;
             // 
             // ApplyGlobally_CheckBox
@@ -86,9 +86,9 @@
             this.ApplyGlobally_CheckBox.AutoSize = true;
             this.ApplyGlobally_CheckBox.Checked = true;
             this.ApplyGlobally_CheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ApplyGlobally_CheckBox.Location = new System.Drawing.Point(98, 55);
+            this.ApplyGlobally_CheckBox.Location = new System.Drawing.Point(104, 55);
             this.ApplyGlobally_CheckBox.Name = "ApplyGlobally_CheckBox";
-            this.ApplyGlobally_CheckBox.Size = new System.Drawing.Size(90, 17);
+            this.ApplyGlobally_CheckBox.Size = new System.Drawing.Size(92, 17);
             this.ApplyGlobally_CheckBox.TabIndex = 2;
             this.ApplyGlobally_CheckBox.Text = "Apply globally";
             this.ApplyGlobally_CheckBox.UseVisualStyleBackColor = true;
@@ -158,8 +158,8 @@
             // 
             // ProxySwitcherForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(341, 106);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;

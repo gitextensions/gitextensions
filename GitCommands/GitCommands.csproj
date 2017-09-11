@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -32,8 +32,9 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -47,6 +48,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1573</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,11 +58,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SmartFormat, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SmartFormat.NET.1.6.1.0\lib\net40-Client\SmartFormat.dll</HintPath>
+    <Reference Include="SmartFormat, Version=2.0.0.0, Culture=neutral, PublicKeyToken=568866805651201f, processorArchitecture=MSIL">
+      <HintPath>..\packages\SmartFormat.NET.2.0.0.0\lib\net45\SmartFormat.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -86,14 +89,20 @@
     <Compile Include="Git\AuthorEmailEqualityComparer.cs" />
     <Compile Include="Git\GitBranchNameNormaliser.cs" />
     <Compile Include="Git\GitBranchNameOptions.cs" />
+    <Compile Include="Git\GitTagController.cs" />
     <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="RemoteActionResult.cs" />
+    <Compile Include="Remote\GitRemote.cs" />
+    <Compile Include="Remote\GitRemoteController.cs" />
+    <Compile Include="Remote\GitRemoteSaveResult.cs" />
     <Compile Include="Settings\BasicSettingTypes.cs" />
     <Compile Include="Settings\CommonSettingsTypes.cs" />
     <Compile Include="Settings\ConfigFileSettings.cs" />
     <Compile Include="Settings\ConfigFileSettingsCache.cs" />
     <Compile Include="Settings\FileSettingsCache.cs" />
     <Compile Include="Settings\GitExtSettingsCache.cs" />
+    <Compile Include="Settings\MemorySettings.cs" />
+    <Compile Include="Settings\MemorySettingsCache.cs" />
     <Compile Include="Settings\RepoDistSettings.cs" />
     <Compile Include="Settings\Setting.cs" />
     <Compile Include="Settings\SettingsCache.cs" />

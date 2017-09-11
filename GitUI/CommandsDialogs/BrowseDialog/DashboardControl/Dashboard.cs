@@ -31,6 +31,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString directoryIsNotAValidRepositoryOpenIt = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to open it?");
         private readonly TranslationString _showCurrentBranch = new TranslationString("Show current branch");
         private bool initialized;
+        private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("Dashboard"));
 
         public Dashboard()
         {
@@ -159,16 +160,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void SaveSplitterPositions()
         {
-            try
-            {
-                Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance = splitContainer5.SplitterDistance;
-                Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance = splitContainer6.SplitterDistance;
-                Properties.Settings.Default.Save();
-            }
-            catch (ConfigurationException)
-            {
-                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
-            }
+            _splitterManager.SaveSplitters();
         }
 
         public event EventHandler<GitModuleEventArgs> GitModuleChanged;
@@ -230,8 +222,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 initialized = true;
             }
 
-            splitContainer6.Panel1MinSize = 1;
-            splitContainer6.Panel2MinSize = 1;
+            commonSplitContainer.Panel1MinSize = 1;
+            commonSplitContainer.Panel2MinSize = 1;
             splitContainer7.Panel1MinSize = 1;
             splitContainer7.Panel2MinSize = 1;
 
@@ -253,8 +245,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             RecentRepositories.RepositoryCategory = filteredRecentRepositoryHistory;
 
             pictureBox1.BringToFront();
-
-            SetSplitterPositions();
         }
 
         void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
@@ -265,75 +255,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             Refresh();
         }
 
-        private void SetSplitterPositions()
+        public void SetSplitterPositions()
         {
-            try
-            {
-                SetSplitterDistance(
-                    splitContainer6,
-                    Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance,
-                    Math.Max(2, (int)(CommonActions.Height * 1.2)));
-
-                SetSplitterDistance(
-                    splitContainer7,
-                    0, // No settings property for this splitter. Will use default always.
-                    Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25)));
-
-                SetSplitterDistance(
-                    splitContainer5,
-                    Properties.Settings.Default.Dashboard_MainSplitContainer_SplitterDistance,
-                    315);
-            }
-            catch (ConfigurationException)
-            {
-                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
-            }
-        }
-
-        private void SetSplitterDistance(SplitContainer splitContainer, int value, int @default)
-        {
-            try
-            {
-                if (isValidSplit(splitContainer,value))
-                {
-                    splitContainer.SplitterDistance = value;
-                }
-                else if (isValidSplit(splitContainer, @default))
-                {
-                    splitContainer.SplitterDistance = @default;
-                }
-                else
-                {
-                    // Both the value and default are invalid.
-                    // Don't attempt to change the SplitterDistance
-                }
-            }
-            catch (SystemException)
-            {
-                // The attempt to set even the default value has failed.
-            }
-        }
-
-        /// <summary>
-        /// Determine whether a given splitter value would be permitted for a given SplitContainer
-        /// </summary>
-        /// <param name="splitcontainer">The SplitContainer to check</param>
-        /// <param name="value">The potential SplitterDistance to try </param>
-        /// <returns>true if it is expected that setting a SplitterDistance of value would succeed
-        /// </returns>
-        bool isValidSplit(SplitContainer splitcontainer, int value)
-        {
-            bool valid;
-            int limit = (splitcontainer.Orientation == Orientation.Horizontal)
-                ? splitcontainer.Height
-                : splitcontainer.Width;
-            valid = (value > splitcontainer.Panel1MinSize) && (value < limit - splitcontainer.Panel2MinSize);
-            return valid;
+            _splitterManager.AddSplitter(commonSplitContainer, "commonSplitContainer", Math.Max(2, (int)(CommonActions.Height * 1.2)));
+            _splitterManager.AddSplitter(splitContainer7, "splitContainer7", Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25)));
+            _splitterManager.AddSplitter(mainSplitContainer, "mainSplitContainer", 315);
+            _splitterManager.RestoreSplitters();
         }
 
         private void TranslateItem_Click(object sender, EventArgs e)
         {
-            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TranslationApp.exe"));
+            Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
         }
 
         private static void GitHubItem_Click(object sender, EventArgs e)
@@ -370,7 +302,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             if (!module.IsValidGitWorkingDir())
             {
-                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, 
+                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text,
                     directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Cancel)
@@ -391,7 +323,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void openItem_Click(object sender, EventArgs e)
         {
-            GitModule module = FormOpenDirectory.OpenModule(this);
+            GitModule module = FormOpenDirectory.OpenModule(this, currentModule: null);
             if (module != null)
                 OnModuleChanged(this, new GitModuleEventArgs(module));
         }
@@ -413,8 +345,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private static void DonateItem_Click(object sender, EventArgs e)
         {
-            Process.Start(
-                @"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
+            Process.Start(FormDonate.DonationUrl);
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -438,7 +369,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                     if (!module.IsValidGitWorkingDir())
                     {
-                        DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepositoryOpenIt.Text, 
+                        DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepositoryOpenIt.Text,
                             directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,
                             MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                         if (dialogResult == DialogResult.No)

@@ -37,6 +37,8 @@ fatcow
 database_save_a*.png
 database*.png
 fatcow_*
+light-bulb-icon-on-16.png
+light-bulb-icon-off-16.png
 
 icons.lisisoft.com
 ==================

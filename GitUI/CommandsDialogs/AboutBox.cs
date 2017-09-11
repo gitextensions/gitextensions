@@ -3,6 +3,7 @@ using System.Drawing;
 using GitUI.Properties;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using ResourceManager;
+using GitUI.CommandsDialogs.BrowseDialog;
 
 namespace GitUI.CommandsDialogs
 {
@@ -50,7 +51,7 @@ namespace GitUI.CommandsDialogs
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=WAL2SSDV8ND54&lc=US&item_name=GitExtensions&no_note=1&no_shipping=1&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
+            System.Diagnostics.Process.Start(FormDonate.DonationUrl);
         }
 
         private void AboutBox_Load(object sender, EventArgs e)

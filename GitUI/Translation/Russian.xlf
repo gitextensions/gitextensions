@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49RC2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AboutBox" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
@@ -39,11 +39,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <target>Переключиться</target>
         
       </trans-unit>
-      <trans-unit id="DiffViewerGB.Text">
-        <source>Diff Viewer</source>
-        <target>Просмотр изменений</target>
-        
-      </trans-unit>
       <trans-unit id="GeneralGB.Text">
         <source>General</source>
         <target>Общие</target>
@@ -77,16 +72,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       <trans-unit id="chkDontSHowHelpImages.Text">
         <source>Don't show help images</source>
         <target>Не показывать справочные картинки</target>
-        
-      </trans-unit>
-      <trans-unit id="chkOmitUninterestingDiff.Text">
-        <source>Omit uninteresting changes from combined diff</source>
-        <target>Не включать неинтересные изменения в объединенный список изменений</target>
-        
-      </trans-unit>
-      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
-        <source>Remember the ignore-white-space preference</source>
-        <target>Запоминать настройку игнорировать-пробелы</target>
         
       </trans-unit>
       <trans-unit id="chkUseLocalChangesAction.Text">
@@ -431,7 +416,7 @@ This action will be performed without warning while checking out branch.</source
         
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
-        <source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</source>
+        <source>You need to configure merge tool in order to solve merge conflicts (kdiff3 for example).</source>
         <target>Необходимо настроить инструмент слияния для решения конфликтов (например, kdiff3).</target>
         
       </trans-unit>
@@ -843,6 +828,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Зафиксировать</target>
         
       </trans-unit>
+      <trans-unit id="cbRememberAmendCommitState.Text">
+        <source>Remember 'Amend commit' checkbox on commit form close</source>
+        
+      </trans-unit>
       <trans-unit id="chkAddNewlineToCommitMessageWhenMissing.Text">
         <source>Ensure the second line of commit message is empty</source>
         <target>Убедитесь что вторая строка сообщение коммита пустая</target>
@@ -1041,9 +1030,25 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Применить изменения из спрятанных после успешного получения (запись из спрятанных изменений удалится автоматически)</target>
         
       </trans-unit>
+      <trans-unit id="chkCommitAfterConflictsResolved.Text">
+        <source>Commit changes after conflicts have been resolved</source>
+        
+      </trans-unit>
+      <trans-unit id="chkCommitIfNoBranch.Text">
+        <source>Commit when no branch is currently checked out (headless state)</source>
+        
+      </trans-unit>
       <trans-unit id="chkPushNewBranch.Text">
         <source>Push a new branch for the remote</source>
         <target>Отправить новую ветку во внешний репозиторий</target>
+        
+      </trans-unit>
+      <trans-unit id="chkResolveConflicts.Text">
+        <source>Resolve conflicts</source>
+        
+      </trans-unit>
+      <trans-unit id="chkSecondAbortConfirmation.Text">
+        <source>Confirm for the second time to abort a merge</source>
         
       </trans-unit>
       <trans-unit id="chkUpdateModules.Text">
@@ -1398,24 +1403,65 @@ Do you want to open it?</source>
         <target>Подробнее</target>
         
       </trans-unit>
-      <trans-unit id="BrowseRepoGB.Text">
-        <source>Browse repository window</source>
-        <target>Открыть окно репозитория</target>
-        
-      </trans-unit>
       <trans-unit id="PushWindowGB.Text">
         <source>Push window</source>
         <target>Окно отправки</target>
         
       </trans-unit>
-      <trans-unit id="chkChowConsoleTab.Text">
-        <source>Show the Console tab</source>
-        <target>Показать вкладку Консоль</target>
+      <trans-unit id="addLogMessages.Text">
+        <source>Add log messages</source>
         
       </trans-unit>
       <trans-unit id="chkRemotesFromServer.Text">
         <source>Get remote branches directly from the remote</source>
         <target>Получить удалённые ветки напрямую с внешнего репозитория</target>
+        
+      </trans-unit>
+      <trans-unit id="mergeWindowGroup.Text">
+        <source>Merge window</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DiffViewerSettingsPage" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Diff Viewer</source>
+        <target>Просмотр изменений</target>
+        
+      </trans-unit>
+      <trans-unit id="chkOmitUninterestingDiff.Text">
+        <source>Omit uninteresting changes from combined diff</source>
+        <target>Не включать неинтересные изменения в объединенный список изменений</target>
+        
+      </trans-unit>
+      <trans-unit id="chkOpenSubmoduleDiffInSeparateWindow.Text">
+        <source>Open Submodule Diff in separate window</source>
+        
+      </trans-unit>
+      <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
+        <source>Remember the 'Ignore whitespaces' preference</source>
+        <target>Запомнить настройку &quot;Игнорировать пробелы&quot;</target>
+        
+      </trans-unit>
+      <trans-unit id="chkRememberNumberOfContextLines.Text">
+        <source>Remember the 'Number of context lines' preference</source>
+        <target>Запомнить настройку &quot;Количество строк контекста&quot;</target>
+        
+      </trans-unit>
+      <trans-unit id="chkRememberShowEntireFilePreference.Text">
+        <source>Remember the 'Show entire file' preference</source>
+        <target>Запомнить настройку &quot;Показать весь файл&quot;</target>
+        
+      </trans-unit>
+      <trans-unit id="chkRememberShowNonPrintingCharsPreference.Text">
+        <source>Remember the 'Show nonprinting characters' preference</source>
+        <target>Запомнить настройку &quot;Показывать непечатные символы&quot;</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowDiffForAllParents.Text">
+        <source>Show file differences for all parents in browse dialog.</source>
+        <target>Показать различия между файлами для всех родителей в диалоге обзора.</target>
         
       </trans-unit>
     </body>
@@ -1501,6 +1547,11 @@ Do you want to open it?</source>
         <target>Операция не поддерживается</target>
         
       </trans-unit>
+      <trans-unit id="_openSubmoduleMenuItem.Text">
+        <source>Open with Git Extensions</source>
+        <target>Открыть в Git Extensions...</target>
+        
+      </trans-unit>
       <trans-unit id="columnHeader1.Text">
         <source>Files</source>
         <target>Файлы</target>
@@ -1583,6 +1634,16 @@ Do you want to open it?</source>
       <trans-unit id="previousChangeButton.ToolTipText">
         <source>Previous change</source>
         <target>Предыдущее изменение</target>
+        
+      </trans-unit>
+      <trans-unit id="revertSelectedLinesToolStripMenuItem.Text">
+        <source>Revert selected lines</source>
+        <target>Сбросить выбранные строки</target>
+        
+      </trans-unit>
+      <trans-unit id="settingsButton.ToolTipText">
+        <source>Settings</source>
+        <target>Настройки</target>
         
       </trans-unit>
       <trans-unit id="showEntireFileButton.ToolTipText">
@@ -2007,6 +2068,10 @@ You will have push access. {2}</source>
         <target>Игнорировать</target>
         
       </trans-unit>
+      <trans-unit id="_addToLocalExcludeTitle.Text">
+        <source>Add file(s) to .git/info/exclude</source>
+        
+      </trans-unit>
       <trans-unit id="_matchingFilesString.Text">
         <source>{0} file(s) matched</source>
         <target>{0} файл(ов) найдено</target>
@@ -2102,7 +2167,7 @@ You will have push access. {2}</source>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Неразрешенные конфликты</target>
         
@@ -2228,6 +2293,33 @@ revision:</source>
 compare with first:</source>
         <target>Выберите ревизию для
 сравнения с первой:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormAvailableEncodings" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Configure available encodings</source>
+        
+      </trans-unit>
+      <trans-unit id="ButtonCancel.Text">
+        <source>Cancel</source>
+        <target>Отмена</target>
+        
+      </trans-unit>
+      <trans-unit id="ButtonOk.Text">
+        <source>OK</source>
+        <target>OK</target>
+        
+      </trans-unit>
+      <trans-unit id="lAvaolableEncodings.Text">
+        <source>Available:</source>
+        
+      </trans-unit>
+      <trans-unit id="lSelectedEncodings.Text">
+        <source>Selected:</source>
+        <target>Выбранная:</target>
         
       </trans-unit>
     </body>
@@ -2642,6 +2734,10 @@ compare with first:</source>
         <target>Очистить рабочий каталог...</target>
         
       </trans-unit>
+      <trans-unit id="clearRecentRepositoriesListMenuItem.Text">
+        <source>Clear List</source>
+        
+      </trans-unit>
       <trans-unit id="cloneSVNToolStripMenuItem.Text">
         <source>Clone SVN repository...</source>
         <target>Клонировать SVN репозиторий...</target>
@@ -2695,6 +2791,10 @@ compare with first:</source>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
         <source>Copy full path(s)</source>
         <target>Копировать имя файла(ов) в буфер обмена</target>
+        
+      </trans-unit>
+      <trans-unit id="createWorktreeToolStripMenuItem.Text">
+        <source>Create a worktree...</source>
         
       </trans-unit>
       <trans-unit id="dashboardToolStripMenuItem.Text">
@@ -2764,6 +2864,11 @@ Do you want to abort and remove it from the recent repositories list?</source>
       <trans-unit id="editgitignoreToolStripMenuItem1.Text">
         <source>Edit .gitignore</source>
         <target>Редактировать .gitignore</target>
+        
+      </trans-unit>
+      <trans-unit id="editgitinfoexcludeToolStripMenuItem.Text">
+        <source>Edit .git/info/exclude</source>
+        <target>Редактировать .git/info/exclude</target>
         
       </trans-unit>
       <trans-unit id="editmailmapToolStripMenuItem.Text">
@@ -2901,6 +3006,10 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <target>Субмодулями</target>
         
       </trans-unit>
+      <trans-unit id="manageWorktreeToolStripMenuItem.Text">
+        <source>Manage worktrees...</source>
+        
+      </trans-unit>
       <trans-unit id="menuitemSparse.Text">
         <source>Sparse Working Copy</source>
         <target>Разреженная рабочая копия</target>
@@ -2934,6 +3043,11 @@ Do you want to abort and remove it from the recent repositories list?</source>
       <trans-unit id="openFileWithToolStripMenuItem.Text">
         <source>Open this revision with... (temp file)</source>
         <target>Открыть эту ревизию с помощью ... (временный файл)</target>
+        
+      </trans-unit>
+      <trans-unit id="openSubmoduleMenuItem.Text">
+        <source>Open with Git Extensions</source>
+        <target>Открыть в Git Extensions...</target>
         
       </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
@@ -3018,7 +3132,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="remoteToolStripMenuItem.Text">
         <source>Remote</source>
-        <target>Внешний репозиторий</target>
+        <target>Внешнее репозиторий</target>
         
       </trans-unit>
       <trans-unit id="repoSettingsToolStripMenuItem.Text">
@@ -3072,7 +3186,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="runMergetoolToolStripMenuItem.Text">
-        <source>Solve mergeconflicts...</source>
+        <source>Solve merge conflicts...</source>
         <target>Разрешить конфликты...</target>
         
       </trans-unit>
@@ -3166,6 +3280,14 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <target>Ветки:</target>
         
       </trans-unit>
+      <trans-unit id="toolStripMenuItemReflog.Text">
+        <source>Show reflog...</source>
+        
+      </trans-unit>
+      <trans-unit id="toolStripMenuItemWorktrees.Text">
+        <source>Worktrees</source>
+        
+      </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
         <target>Фильтр:</target>
@@ -3214,6 +3336,56 @@ Do you want to abort and remove it from the recent repositories list?</source>
       <trans-unit id="viewToolStripMenuItem.Text">
         <source>View</source>
         <target>Показать</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormBrowseRepoSettingsPage" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Browse repository window</source>
+        <target>Открыть окно репозитория</target>
+        
+      </trans-unit>
+      <trans-unit id="ConEmuGB.Text">
+        <source>Console emulator</source>
+        
+      </trans-unit>
+      <trans-unit id="cboTerminal.Item0">
+        <source>bash</source>
+        
+      </trans-unit>
+      <trans-unit id="cboTerminal.Item1">
+        <source>cmd</source>
+        
+      </trans-unit>
+      <trans-unit id="cboTerminal.Item2">
+        <source>powershell</source>
+        
+      </trans-unit>
+      <trans-unit id="chkChowConsoleTab.Text">
+        <source>Show the Console tab</source>
+        <target>Показать вкладку Консоль</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowRevisionInfoNextToRevisionGrid.Text">
+        <source>Show revision details next to the revision list (restart required)</source>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxConsoleSettings.Text">
+        <source>Console settings (a restart is needed to take effect)</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Console style</source>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Shell to run</source>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Font size</source>
         
       </trans-unit>
     </body>
@@ -3283,6 +3455,13 @@ Enter valid branch name or select predefined value.</source>
         <target>Не показывать это сообщение снова.</target>
         
       </trans-unit>
+      <trans-unit id="_resetNonFastForwardBranch.Text">
+        <source>You are going to reset the “{0}” branch to a new location
+discarding ALL the commited changes since the {1} revision.
+
+Are you sure?</source>
+        
+      </trans-unit>
       <trans-unit id="chkSetLocalChangesActionAsDefault.Text">
         <source>Set as default</source>
         <target>Установить по умолчанию</target>
@@ -3331,6 +3510,11 @@ Enter valid branch name or select predefined value.</source>
       <trans-unit id="rbStash.Text">
         <source>Stash</source>
         <target>Спрятанные изменения</target>
+        
+      </trans-unit>
+      <trans-unit id="resetCaption.Text">
+        <source>Reset branch</source>
+        <target>Откатить ветку</target>
         
       </trans-unit>
     </body>
@@ -3754,7 +3938,7 @@ gitex.cmd / gitex (находится в той же папке, что и GitEx
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Есть неразрешенные конфликты</target>
         
@@ -3889,7 +4073,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_mergeConflicts.Text">
-        <source>There are unresolved mergeconflicts, solve mergeconflicts before committing.</source>
+        <source>There are unresolved merge conflicts, solve merge conflicts before committing.</source>
         <target>Есть конфликты слияния, решите их перед коммитом.</target>
         
       </trans-unit>
@@ -4036,6 +4220,11 @@ Do you want to continue?</source>
         <target>Добавить файлы в .gitignore</target>
         
       </trans-unit>
+      <trans-unit id="addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Text">
+        <source>Add file to .git/info/exclude</source>
+        <target>Добавить файл в .git/info/exclude</target>
+        
+      </trans-unit>
       <trans-unit id="assumeUnchangedToolStripMenuItem.Text">
         <source>Assume unchanged</source>
         <target>Предполагать неизмененные</target>
@@ -4071,6 +4260,10 @@ Do you want to continue?</source>
         <target>&amp;Сообщение коммита</target>
         
       </trans-unit>
+      <trans-unit id="commitStagedCountLabel.Text">
+        <source>Staged</source>
+        
+      </trans-unit>
       <trans-unit id="commitSubmoduleChanges.Text">
         <source>Commit submodule changes</source>
         <target>Зафиксировать изменения субмодуля</target>
@@ -4084,6 +4277,11 @@ Do you want to continue?</source>
       <trans-unit id="copyFolderNameMenuItem.Text">
         <source>Copy folder name</source>
         <target>Скопировать имя папки</target>
+        
+      </trans-unit>
+      <trans-unit id="createBranchToolStripButton.Text">
+        <source>Create branch</source>
+        <target>Создать ветку</target>
         
       </trans-unit>
       <trans-unit id="deleteAllUntrackedFilesToolStripMenuItem.Text">
@@ -4116,6 +4314,10 @@ Do you want to continue?</source>
         <target>Редактировать игнорируемые файлы</target>
         
       </trans-unit>
+      <trans-unit id="editLocallyIgnoredFilesToolStripMenuItem.Text">
+        <source>Edit locally ignored files</source>
+        
+      </trans-unit>
       <trans-unit id="filenameToClipboardToolStripMenuItem.Text">
         <source>Copy full path</source>
         <target>Имя файла в буфер обмена</target>
@@ -4134,6 +4336,10 @@ Do you want to continue?</source>
       <trans-unit id="llShowPreview.Text">
         <source>This file is over 5 MB. Click to show preview</source>
         <target>Этот файл больше 5 Мб. Нажмите для просмотра</target>
+        
+      </trans-unit>
+      <trans-unit id="noVerifyToolStripMenuItem.Text">
+        <source>No verify</source>
         
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
@@ -4573,6 +4779,39 @@ Do you want to continue?</source>
       <trans-unit id="pushTag.Text">
         <source>Push tag to '{0}'</source>
         <target>Отправить метку в {0}</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormCreateWorktree" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create a new worktree</source>
+        
+      </trans-unit>
+      <trans-unit id="createWorktreeButton.Text">
+        <source>Create the new worktree</source>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxWhatToCheckout.Text">
+        <source>What to checkout: </source>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>New worktree directory:</source>
+        
+      </trans-unit>
+      <trans-unit id="openWorktreeCheckBox.Text">
+        <source>Open the new worktree after the creation</source>
+        
+      </trans-unit>
+      <trans-unit id="radioButtonCheckoutExistingBranch.Text">
+        <source>Checkout an existing branch:</source>
+        
+      </trans-unit>
+      <trans-unit id="radioButtonCreateNewBranch.Text">
+        <source>Create a new branch:
+ (from current commit) </source>
         
       </trans-unit>
     </body>
@@ -5308,6 +5547,11 @@ Check if file is accessible.</source>
         <target>Failed to save .gitignore</target>
         
       </trans-unit>
+      <trans-unit id="_editLocalExcludeTitle.Text">
+        <source>Edit .git/info/exclude</source>
+        <target>Редактировать .git/info/exclude</target>
+        
+      </trans-unit>
       <trans-unit id="_gitignoreOnlyInWorkingDirSupported.Text">
         <source>.gitignore is only supported when there is a working directory.</source>
         <target>.gitignore поддерживается только в рабочем каталоге.</target>
@@ -5326,6 +5570,11 @@ Check if file is accessible.</source>
       <trans-unit id="_saveFileQuestionCaption.Text">
         <source>Save changes?</source>
         <target>Сохранить изменения?</target>
+        
+      </trans-unit>
+      <trans-unit id="btnCancel.Text">
+        <source>Cancel</source>
+        <target>Отмена</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -5628,6 +5877,99 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormManageWorktree" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Existing worktrees</source>
+        
+      </trans-unit>
+      <trans-unit id="BName.HeaderText">
+        <source>Name</source>
+        <target>Имя</target>
+        
+      </trans-unit>
+      <trans-unit id="Branch.HeaderText">
+        <source>Branch</source>
+        <target>Ветка</target>
+        
+      </trans-unit>
+      <trans-unit id="Delete.HeaderText">
+        <source>Delete</source>
+        <target>Удалить</target>
+        
+      </trans-unit>
+      <trans-unit id="IsDeleted.HeaderText">
+        <source>Deleted</source>
+        
+      </trans-unit>
+      <trans-unit id="Open.HeaderText">
+        <source>Open</source>
+        <target>Открыть</target>
+        
+      </trans-unit>
+      <trans-unit id="Path.HeaderText">
+        <source>Path</source>
+        <target>Путь</target>
+        
+      </trans-unit>
+      <trans-unit id="Sha1.HeaderText">
+        <source>Sha1</source>
+        
+      </trans-unit>
+      <trans-unit id="Type.HeaderText">
+        <source>Type</source>
+        <target>Тип</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonClose.Text">
+        <source>Close</source>
+        <target>Закрыть</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonPruneWorktrees.Text">
+        <source>Prune the deleted worktrees</source>
+        
+      </trans-unit>
+      <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
+        <source>Deleted</source>
+        
+      </trans-unit>
+      <trans-unit id="dataGridViewImageColumn1.HeaderText">
+        <source>Open</source>
+        <target>Открыть</target>
+        
+      </trans-unit>
+      <trans-unit id="dataGridViewImageColumn2.HeaderText">
+        <source>Delete</source>
+        <target>Удалить</target>
+        
+      </trans-unit>
+      <trans-unit id="dataGridViewTextBoxColumn1.HeaderText">
+        <source>Name</source>
+        <target>Имя</target>
+        
+      </trans-unit>
+      <trans-unit id="dataGridViewTextBoxColumn2.HeaderText">
+        <source>Type</source>
+        <target>Тип</target>
+        
+      </trans-unit>
+      <trans-unit id="dataGridViewTextBoxColumn3.HeaderText">
+        <source>Branch</source>
+        <target>Ветка</target>
+        
+      </trans-unit>
+      <trans-unit id="dataGridViewTextBoxColumn4.HeaderText">
+        <source>Sha1</source>
+        
+      </trans-unit>
+      <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
+        <source>Branch</source>
+        <target>Ветка</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormMergeBranch" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
@@ -5636,8 +5978,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         
       </trans-unit>
       <trans-unit id="Currentbranch.Text">
-        <source>Current branch</source>
-        <target>Текущая ветка</target>
+        <source>Into current branch</source>
         
       </trans-unit>
       <trans-unit id="NonDefaultMergeStrategy.Text">
@@ -5705,9 +6046,21 @@ ancestor tree.</source>
 предка дерева.</target>
         
       </trans-unit>
+      <trans-unit id="addLogMessages.Text">
+        <source>Add log messages</source>
+        
+      </trans-unit>
+      <trans-unit id="addMergeMessage.Text">
+        <source>Specify merge message</source>
+        
+      </trans-unit>
       <trans-unit id="advanced.Text">
         <source>Show advanced options</source>
         <target>Показать расширенные настройки</target>
+        
+      </trans-unit>
+      <trans-unit id="allowUnrelatedHistories.Text">
+        <source>Allow unrelated histories</source>
         
       </trans-unit>
       <trans-unit id="fastForward.Text">
@@ -5720,14 +6073,8 @@ ancestor tree.</source>
         <target>Объединить</target>
         
       </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Merge branch into current branch</source>
-        <target>Слияние ветки с текущей веткой</target>
-        
-      </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Merge with</source>
-        <target>Объединить с</target>
+        <source>Merge branch</source>
         
       </trans-unit>
       <trans-unit id="noCommit.Text">
@@ -5801,7 +6148,7 @@ ancestor tree.</source>
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>Remote:</source>
-        <target>Внешний репозиторий:</target>
+        <target>Внешнее репозиторий:</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
@@ -5814,7 +6161,7 @@ ancestor tree.</source>
   <file datatype="plaintext" original="FormModifiedDeletedCreated" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
-        <source>Solve mergeconflict</source>
+        <source>Solve merge conflict</source>
         <target>Разрешить конфликт слияния</target>
         
       </trans-unit>
@@ -5896,6 +6243,11 @@ ancestor tree.</source>
         <target>Забрать без меток</target>
         
       </trans-unit>
+      <trans-unit id="Prune.Text">
+        <source>Prune remote branches</source>
+        <target>Удалить несуществующие ветки</target>
+        
+      </trans-unit>
       <trans-unit id="Pull.Text">
         <source>&amp;Pull</source>
         <target>&amp;Получить</target>
@@ -5908,7 +6260,7 @@ ancestor tree.</source>
       </trans-unit>
       <trans-unit id="PullFromUrl.Text">
         <source>Url</source>
-        <target>Ссылка</target>
+        <target>Url</target>
         
       </trans-unit>
       <trans-unit id="ReachableTags.Text">
@@ -6205,7 +6557,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="PushToUrl.Text">
         <source>Url</source>
-        <target>Ссылка</target>
+        <target>Url</target>
         
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item0">
@@ -6431,6 +6783,42 @@ Are you sure you want to push this branch?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormQuickGitRefSelector" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="_actionDelete.Text">
+        <source>Delete</source>
+        
+      </trans-unit>
+      <trans-unit id="_actionRename.Text">
+        <source>Rename</source>
+        
+      </trans-unit>
+      <trans-unit id="_tag.Text">
+        <source>tag</source>
+        
+      </trans-unit>
+      <trans-unit id="btnAction.Text">
+        <source>Action</source>
+        
+      </trans-unit>
+      <trans-unit id="lbxRefs.Item0">
+        <source>local1 (ref)</source>
+        
+      </trans-unit>
+      <trans-unit id="lbxRefs.Item1">
+        <source>local2 (ref)</source>
+        
+      </trans-unit>
+      <trans-unit id="lbxRefs.Item2">
+        <source>tag1 (tag)</source>
+        
+      </trans-unit>
+      <trans-unit id="lbxRefs.Item3">
+        <source>tag2 (tag)</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormRebase" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
@@ -6474,7 +6862,7 @@ Are you sure you want to push this branch?</source>
         
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved mergeconflicts
+        <source>There are unresolved merge conflicts
 </source>
         <target>Неразрешенные конфликты</target>
         
@@ -6610,9 +6998,23 @@ Nothing to rebase.</source>
         <target>Отметить как самый последний репозиторий</target>
         
       </trans-unit>
+      <trans-unit id="chdrRepository.Text">
+        <source>Header</source>
+        <target>Заголовок</target>
+        
+      </trans-unit>
+      <trans-unit id="chdrRepository1.Text">
+        <source>Header</source>
+        <target>Заголовок</target>
+        
+      </trans-unit>
       <trans-unit id="comboMinWidthLabel.Text">
         <source>Combobox minimum width (0 = Autosize)</source>
         <target>Минимальная ширина выпадающего списка (0 = задавать автоматически)</target>
+        
+      </trans-unit>
+      <trans-unit id="comboMinWidthNote.Text">
+        <source>NB: The width of the columns helps to visualise how the repository name will be shown in the combobox.</source>
         
       </trans-unit>
       <trans-unit id="dontShortenRB.Text">
@@ -6667,11 +7069,79 @@ Nothing to rebase.</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormReflog" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Reflog</source>
+        
+      </trans-unit>
+      <trans-unit id="Action.HeaderText">
+        <source>Action</source>
+        
+      </trans-unit>
+      <trans-unit id="Message.HeaderText">
+        <source>Message</source>
+        <target>Сообщение</target>
+        
+      </trans-unit>
+      <trans-unit id="Ref.HeaderText">
+        <source>Ref</source>
+        
+      </trans-unit>
+      <trans-unit id="Sha.HeaderText">
+        <source>Sha-1</source>
+        
+      </trans-unit>
+      <trans-unit id="_continueResetCurrentBranchCaptionText.Text">
+        <source>Changes not committed...</source>
+        
+      </trans-unit>
+      <trans-unit id="_continueResetCurrentBranchEvenWithChangesText.Text">
+        <source>You've got changes in your working directory that could be lost.
+
+Do you want to continue?</source>
+        
+      </trans-unit>
+      <trans-unit id="copySha1ToolStripMenuItem.Text">
+        <source>Copy Sha1</source>
+        
+      </trans-unit>
+      <trans-unit id="createABranchOnThisCommitToolStripMenuItem.Text">
+        <source>Create a branch on this commit</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Display reflog for:</source>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Reference:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblDirtyWorkingDirectory.Text">
+        <source>Warning: you've got changes in your working directory that could be lost if you want to reset the current branch to another commit.
+Stash them before if you don't want to lost them.</source>
+        
+      </trans-unit>
+      <trans-unit id="linkCurrentBranch.Text">
+        <source>(Current branch name)</source>
+        
+      </trans-unit>
+      <trans-unit id="linkHead.Text">
+        <source>HEAD</source>
+        
+      </trans-unit>
+      <trans-unit id="resetCurrentBranchOnThisCommitToolStripMenuItem.Text">
+        <source>Reset current branch on this commit</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormRemotes" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
         <source>Remote repositories</source>
-        <target>Внешние репозитории</target>
+        <target>Внешнее репозиторий</target>
         
       </trans-unit>
       <trans-unit id="BName.HeaderText">
@@ -6684,11 +7154,6 @@ Nothing to rebase.</source>
         <target>Имя локальной ветки</target>
         
       </trans-unit>
-      <trans-unit id="Delete.Text">
-        <source>Delete</source>
-        <target>Удалить</target>
-        
-      </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
         <source>Load SSH key</source>
         <target>Загрузить SSH ключ</target>
@@ -6699,19 +7164,9 @@ Nothing to rebase.</source>
         <target>По умолчанию объединить с</target>
         
       </trans-unit>
-      <trans-unit id="New.Text">
-        <source>New</source>
-        <target>Новый</target>
-        
-      </trans-unit>
       <trans-unit id="Prune.Text">
         <source>Prune remote branches</source>
         <target>Удалить несуществующие ветки</target>
-        
-      </trans-unit>
-      <trans-unit id="lblMgtPuttyPanelHeader.Text">
-        <source>PuTTY SSH</source>
-        <target>PuTTY SSH</target>
         
       </trans-unit>
       <trans-unit id="RemoteCombo.HeaderText">
@@ -6725,13 +7180,12 @@ Nothing to rebase.</source>
         
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
-        <source>Save</source>
+        <source>Save changes</source>
         <target>Сохранить изменения</target>
         
       </trans-unit>
       <trans-unit id="SshBrowse.Text">
-        <source>Browse</source>
-        <target>Обзор</target>
+        <source> Browse...</source>
         
       </trans-unit>
       <trans-unit id="TestConnection.Text">
@@ -6744,6 +7198,31 @@ Nothing to rebase.</source>
         <target>Обновить внешние ветки</target>
         
       </trans-unit>
+      <trans-unit id="_btnDeleteTooltip.Text">
+        <source>Delete the selected remote</source>
+        
+      </trans-unit>
+      <trans-unit id="_btnNewTooltip.Text">
+        <source>Add a new remote</source>
+        
+      </trans-unit>
+      <trans-unit id="_btnToggleStateTooltip_Activate.Text">
+        <source>Activate the selected remote</source>
+        
+      </trans-unit>
+      <trans-unit id="_btnToggleStateTooltip_Deactivate.Text">
+        <source>Deactivate the selected remote.
+Inactive remote is completely invisible to git.</source>
+        
+      </trans-unit>
+      <trans-unit id="_gbMgtPanelHeaderEdit.Text">
+        <source>Edit Remote Details</source>
+        
+      </trans-unit>
+      <trans-unit id="_gbMgtPanelHeaderNew.Text">
+        <source>Create New Remote</source>
+        
+      </trans-unit>
       <trans-unit id="_gitMessage.Text">
         <source>Message</source>
         <target>Сообщение</target>
@@ -6751,12 +7230,20 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="_labelUrlAsFetch.Text">
         <source>Fetch Url</source>
-        <target>Забирать по ссылке</target>
+        <target>Забрать по Url</target>
         
       </trans-unit>
       <trans-unit id="_labelUrlAsFetchPush.Text">
         <source>Url</source>
-        <target>Ссылка</target>
+        <target>Url</target>
+        
+      </trans-unit>
+      <trans-unit id="_lvgDisabledHeader.Text">
+        <source>Inactive</source>
+        
+      </trans-unit>
+      <trans-unit id="_lvgEnabledHeader.Text">
+        <source>Active</source>
         
       </trans-unit>
       <trans-unit id="_questionAutoPullBehaviour.Text">
@@ -6768,12 +7255,12 @@ Do you want to automatically configure the default push and pull behavior for th
       </trans-unit>
       <trans-unit id="_questionAutoPullBehaviourCaption.Text">
         <source>New remote</source>
-        <target>Новый внешний репозиторий</target>
+        <target>Новое внешнее репозиторий</target>
         
       </trans-unit>
       <trans-unit id="_questionDeleteRemote.Text">
         <source>Are you sure you want to delete this remote?</source>
-        <target>Вы уверены, что хотите удалить это внешний репозиторий?</target>
+        <target>Вы уверены, что хотите удалить это внешнее репозиторий?</target>
         
       </trans-unit>
       <trans-unit id="_questionDeleteRemoteCaption.Text">
@@ -6798,37 +7285,23 @@ Value has been reset to empty value.</source>
         <target>Закрытый ключ (*.ppk)</target>
         
       </trans-unit>
-      <trans-unit id="_gbMgtPanelHeaderNew.Text">
-        <source>Create new remote</source>
-        <target>Создать новый внешний репозиторий</target>
-      </trans-unit>
-      <trans-unit id="_gbMgtPanelHeaderEdit.Text">
-        <source>Edit remote details</source>
-        <target>Изменить внешний репозиторий</target>
-      </trans-unit>
       <trans-unit id="_warningNoKeyEntered.Text">
         <source>No SSH key file entered</source>
         <target>Файл ключа SSH не введен</target>
         
       </trans-unit>
-      <trans-unit id="_warningValidRemote.Text">
-        <source>You need to configure a valid url for this remote</source>
-        <target>Вам нужно настроить действительный URL для данного внешнего репозитория</target>
-        
-      </trans-unit>
-      <trans-unit id="_warningValidRemoteCaption.Text">
-        <source>Url needed</source>
-        <target>Необходима ссылка</target>
-        
-      </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
         <source>Separate Push Url</source>
-        <target>Отдельная ссылка для отправки</target>
+        <target>Отдельный Url для отправки</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewTextBoxColumn1.HeaderText">
         <source>Name</source>
         <target>Имя</target>
+        
+      </trans-unit>
+      <trans-unit id="gbMgtPanel.Text">
+        <source>Create New Remote</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -6838,7 +7311,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Url</source>
-        <target>Ссылка</target>
+        <target>Url</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -6863,7 +7336,12 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="labelPushUrl.Text">
         <source>Push Url</source>
-        <target>Отправлять по ссылке</target>
+        <target>Url отправки</target>
+        
+      </trans-unit>
+      <trans-unit id="lblMgtPuttyPanelHeader.Text">
+        <source>PuTTY SSH</source>
+        <target>PuTTY SSH</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -6871,9 +7349,19 @@ Value has been reset to empty value.</source>
         <target>Ветка</target>
         
       </trans-unit>
+      <trans-unit id="pnlMgtDetails.Text">
+        <source>Details</source>
+        <target>Подробно</target>
+        
+      </trans-unit>
+      <trans-unit id="pnlMgtPuttySsh.Text">
+        <source>PuTTY SSH</source>
+        <target>PuTTY SSH</target>
+        
+      </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Remote repositories</source>
-        <target>Внешние репозитории</target>
+        <target>Внешние репозитория</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
@@ -7065,7 +7553,7 @@ Value has been reset to empty value.</source>
         
       </trans-unit>
       <trans-unit id="Rescan.Text">
-        <source>Rescan mergeconflicts</source>
+        <source>Rescan merge conflicts</source>
         <target>Пересканировать конфликты</target>
         
       </trans-unit>
@@ -7196,7 +7684,7 @@ This action cannot be made undone.</source>
         
       </trans-unit>
       <trans-unit id="allConflictsResolved.Text">
-        <source>All mergeconflicts are resolved, you can commit.
+        <source>All merge conflicts are resolved, you can commit.
 Do you want to commit now?</source>
         <target>Все конфликты были разрешены, вы можете зафиксировать изменения.
 Хотите зафиксировать сейчас?</target>
@@ -7208,7 +7696,7 @@ Do you want to commit now?</source>
         
       </trans-unit>
       <trans-unit id="askMergeConflictSolved.Text">
-        <source>Is the mergeconflict solved?</source>
+        <source>Is the merge conflict solved?</source>
         <target>Конфликт разрешен?</target>
         
       </trans-unit>
@@ -7216,7 +7704,7 @@ Do you want to commit now?</source>
         <source>The merge conflict need to be solved and the result must be saved as:
 {0}
 
-Is the mergeconflict solved?</source>
+Is the merge conflict solved?</source>
         <target>Конфликт должен быть разрешен, и результат должен быть сохранен как:
 {0}
 
@@ -7693,18 +8181,15 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="Apply.Text">
-        <source>Apply Selected</source>
-        <target>Применить выбранный</target>
+        <source>Apply Selected Stash</source>
         
       </trans-unit>
       <trans-unit id="Clear.Text">
-        <source>Delete Selected</source>
-        <target>Удалить выбранный stash</target>
+        <source>Drop Selected Stash</source>
         
       </trans-unit>
       <trans-unit id="Stash.Text">
-        <source>Save Changes</source>
-        <target>Stash всех изменений</target>
+        <source>Save Changes to New Stash</source>
         
       </trans-unit>
       <trans-unit id="StashKeepIndex.Text">
@@ -7813,7 +8298,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
 Это вызывает зависание процесса и поэтому он автоматически останавливается.
 
 При открытии соединения отдельно от Git и GitExtensions, отпечаток пальцев хоста может быть зарегистрирован.
-Кроме того вы можете также вручную добавить отпечаток хоста или запустить &quot;Проверить соединение&quot; из диалогового окна &quot;Внешние репозитории&quot;.
+Кроме того вы можете также вручную добавить отпечаток хоста или запустить &quot;Проверить соединение&quot; из диалогового окна &quot;Внешние репозитория&quot;.
 
 Вы хотите зарегистрировать отпечаток хоста и перезапустить процесс?</target>
         
@@ -8376,6 +8861,10 @@ Context menu for additional operations</source>
         <target>Обзор</target>
         
       </trans-unit>
+      <trans-unit id="ConfigureEncoding.Text">
+        <source>Configure</source>
+        
+      </trans-unit>
       <trans-unit id="DiffToolCmdSuggest.Text">
         <source>Suggest</source>
         <target>Предложить</target>
@@ -8550,19 +9039,13 @@ global settings.
         <target>Показывать текущие изменения в списке коммитов (медленно!)</target>
         
       </trans-unit>
-      <trans-unit id="chkShowDiffForAllParents.Text">
-        <source>Show file differences for all parents in browse dialog.</source>
-        <target>Показать различия между файлами для всех родителей в диалоге обзора.</target>
-        
-      </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
         <source>Show console window when executing git process</source>
         <target>Показать окно консоли при выполнении git процесса </target>
         
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show repository status in browse dialog (number of changes in toolbar, restart required)</source>
-        <target>Отображать статус репозитория в диалоге обзора (количество изменений на панели инструментов, необходим перезапуск)</target>
+        <source>Show number of changed files on commit button (restart required)</source>
         
       </trans-unit>
       <trans-unit id="chkShowStashCountInBrowseWindow.Text">
@@ -9171,9 +9654,13 @@ This will just checkout on the submodule the commit determined by the superproje
         <target>Перейти к родительскому коммиту</target>
         
       </trans-unit>
+      <trans-unit id="IdDataGridViewColumn.HeaderText">
+        <source>SHA1</source>
+        
+      </trans-unit>
       <trans-unit id="InitRepository.Text">
         <source>Initialize repository</source>
-        <target>Инициализировать репозиторий</target>
+        <target>Инициировать репозиторий</target>
         
       </trans-unit>
       <trans-unit id="MessageDataGridViewColumn.HeaderText">
@@ -9251,6 +9738,10 @@ This will just checkout on the submodule the commit determined by the superproje
         <target>Изменить разметку вида коммита</target>
         
       </trans-unit>
+      <trans-unit id="_baseForCompareNotSelectedError.Text">
+        <source>Base commit for compare is not selected.</source>
+        
+      </trans-unit>
       <trans-unit id="_cannotHighlightSelectedBranch.Text">
         <source>Cannot highlight selected branch when revision graph is loading.</source>
         <target>Не возможно подсветить выделенную ветку, когда граф ревизий загружается.</target>
@@ -9274,6 +9765,11 @@ This will just checkout on the submodule the commit determined by the superproje
       <trans-unit id="_revisionFilter.Text">
         <source>Filter</source>
         <target>Фильтр</target>
+        
+      </trans-unit>
+      <trans-unit id="_strError.Text">
+        <source>Error</source>
+        <target>Ошибка</target>
         
       </trans-unit>
       <trans-unit id="archiveRevisionToolStripMenuItem.Text">
@@ -9366,6 +9862,10 @@ This will just checkout on the submodule the commit determined by the superproje
         <target>Отображать неродственные ветки серыми</target>
         
       </trans-unit>
+      <trans-unit id="editCommitToolStripMenuItem.Text">
+        <source>Edit commit</source>
+        
+      </trans-unit>
       <trans-unit id="filterToolStripMenuItem.Text">
         <source>Set advanced filter</source>
         <target>Настроить расширенный фильтр</target>
@@ -9440,6 +9940,10 @@ If this is a central repository (bare repository without a working directory):
         <target>Навигация</target>
         
       </trans-unit>
+      <trans-unit id="openBuildReportToolStripMenuItem.Text">
+        <source>Open build report in the browser</source>
+        
+      </trans-unit>
       <trans-unit id="orderRevisionsByDateToolStripMenuItem.Text">
         <source>Order revisions by date</source>
         <target>Сортировать ревизии по дате</target>
@@ -9463,6 +9967,10 @@ If this is a central repository (bare repository without a working directory):
       <trans-unit id="revertCommitToolStripMenuItem.Text">
         <source>Revert commit</source>
         <target>Отменить коммит</target>
+        
+      </trans-unit>
+      <trans-unit id="rewordCommitToolStripMenuItem.Text">
+        <source>Reword commit</source>
         
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
@@ -9594,6 +10102,18 @@ If this is a central repository (bare repository without a working directory):
         <target>URI</target>
         
       </trans-unit>
+      <trans-unit id="chkOnlyFirstRemote.Text">
+        <source>Only use the first match</source>
+        
+      </trans-unit>
+      <trans-unit id="chxPushURL.Text">
+        <source>Push URL</source>
+        
+      </trans-unit>
+      <trans-unit id="chxURL.Text">
+        <source>URL</source>
+        
+      </trans-unit>
       <trans-unit id="dataGridViewTextBoxColumn1.HeaderText">
         <source>Title</source>
         <target>Заголовок</target>
@@ -9604,14 +10124,14 @@ If this is a central repository (bare repository without a working directory):
         <target>Имя</target>
         
       </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Search in</source>
-        <target>Поиск в</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
+      <trans-unit id="label2.Text">
         <source>Search pattern</source>
         <target>Шаблон поиска</target>
+        
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Search in</source>
+        <target>Поиск в</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
@@ -9619,9 +10139,31 @@ If this is a central repository (bare repository without a working directory):
         <target>Ссылки</target>
         
       </trans-unit>
+      <trans-unit id="lblRemoteSearchIn.Text">
+        <source>Search in</source>
+        <target>Поиск в</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSearchRemotePattern.Text">
+        <source>Search pattern</source>
+        <target>Шаблон поиска</target>
+        
+      </trans-unit>
+      <trans-unit id="lblUseRemotes.Text">
+        <source>Use remotes</source>
+        
+      </trans-unit>
       <trans-unit id="nestedPatternLab.Text">
         <source>Nested pattern</source>
         <target>Вложенный шаблон</target>
+        
+      </trans-unit>
+      <trans-unit id="remoteGrp.Text">
+        <source>Remote data</source>
+        
+      </trans-unit>
+      <trans-unit id="revisionDataGrp.Text">
+        <source>Revision data</source>
         
       </trans-unit>
     </body>
@@ -9790,6 +10332,10 @@ Current Branch:
       <trans-unit id="scriptEnabled.Text">
         <source>Enabled</source>
         <target>Включить</target>
+        
+      </trans-unit>
+      <trans-unit id="scriptIsPowerShell.Text">
+        <source>Is PowerShell</source>
         
       </trans-unit>
       <trans-unit id="scriptNeedsConfirmation.Text">
@@ -10227,10 +10773,8 @@ When OpenSSH is used, command line dialogs are shown!
         
       </trans-unit>
       <trans-unit id="_strRemoteAlreadyExist.Text">
-        <source>ERROR: Remote with name {0} already exists but it does not point to the same repository!
+        <source>ERROR: Remote with name {0} already exists but it points to a different repository!
 Details: Is {1} expected {2}</source>
-        <target>ОШИБКА: Внешний репозиторий с именем {0} уже существует, но не указывает на тот же репозиторий!
-Подробности: {1} ожидалось {2}</target>
         
       </trans-unit>
       <trans-unit id="_strUnableUnderstandPatch.Text">

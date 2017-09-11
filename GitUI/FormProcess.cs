@@ -8,6 +8,7 @@ using GitCommands;
 using GitUI.UserControls;
 
 using ResourceManager;
+using System.Collections.Generic;
 
 namespace GitUI
 {
@@ -28,13 +29,14 @@ namespace GitUI
         public string ProcessInput { get; set; }
         public readonly string WorkingDirectory;
         public HandleOnExit HandleOnExitCallback { get; set; }
+        public readonly Dictionary<string, string> ProcessEnvVariables = new Dictionary<string, string>();
 
         protected FormProcess()
             : base(true)
         { }
 
-        protected FormProcess(string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
-            : base(useDialogSettings)
+        public FormProcess(ConsoleOutputControl outputControl, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+            : base(outputControl, useDialogSettings)
         {
             ProcessCallback = processStart;
             AbortCallback = processAbort;
@@ -47,6 +49,11 @@ namespace GitUI
 
             ConsoleOutput.ProcessExited += delegate { OnExit(ConsoleOutput.ExitCode); };
             ConsoleOutput.DataReceived += DataReceivedCore;
+        }
+
+        public FormProcess(string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+            : this(null, process, arguments, aWorkingDirectory, input, useDialogSettings)
+        {
         }
 
         public static bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
@@ -88,6 +95,17 @@ namespace GitUI
                 return !formProcess.ErrorOccurred();
             }
         }
+
+        public static bool ShowStandardProcessDialog(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+        {
+            var outputCtrl = new EditboxBasedConsoleOutputControl();
+            using (var formProcess = new FormProcess(outputCtrl, process, arguments, aWorkingDirectory, input, useDialogSettings))
+            {
+                formProcess.ShowDialog(owner);
+                return !formProcess.ErrorOccurred();
+            }
+        }
+
 
         public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
         {
@@ -133,7 +151,7 @@ namespace GitUI
 
             try
             {
-                ConsoleOutput.StartProcess(ProcessString, ProcessArguments, WorkingDirectory);
+                ConsoleOutput.StartProcess(ProcessString, ProcessArguments, WorkingDirectory, ProcessEnvVariables);
 
                 if (!string.IsNullOrEmpty(ProcessInput))
                 {
@@ -232,7 +250,7 @@ namespace GitUI
             OutputLog.Append(line);
 
             // To the display control
-            AddMessageLine(line);
+            AddMessage(line);
         }
 
         public static bool IsOperationAborted(string dialogResult)

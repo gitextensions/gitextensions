@@ -265,5 +265,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             CommitTemplatePath.Text = CommonLogic.SelectFile(".", "*.txt (*.txt)|*.txt", CommitTemplatePath.Text);
         }
+
+        private void ConfigureEncoding_Click(object sender, EventArgs e)
+        {
+            using (var encodingDlg = new FormAvailableEncodings())
+            {
+                if (encodingDlg.ShowDialog() == DialogResult.OK)
+                {
+                    Global_FilesEncoding.Items.Clear();
+                    CommonLogic.FillEncodings(Global_FilesEncoding);
+                }
+            }
+        }
     }
 }

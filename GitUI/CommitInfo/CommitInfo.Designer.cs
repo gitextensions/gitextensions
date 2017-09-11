@@ -95,6 +95,7 @@
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.Text = "";
             this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
+            this.RevisionInfo.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
             // 
             // commitInfoContextMenuStrip
             // 
@@ -183,6 +184,7 @@
             this._RevisionHeader.Size = new System.Drawing.Size(780, 93);
             this._RevisionHeader.TabIndex = 0;
             this._RevisionHeader.Text = "";
+            this._RevisionHeader.ContentsResized += new System.Windows.Forms.ContentsResizedEventHandler(this._RevisionHeader_ContentsResized);
             this._RevisionHeader.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
             this._RevisionHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
             // 

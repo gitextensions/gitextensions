@@ -39,7 +39,7 @@
             this.branchSelector.Location = new System.Drawing.Point(8, 8);
             this.branchSelector.Margin = new System.Windows.Forms.Padding(8);
             this.branchSelector.Name = "branchSelector";
-            this.branchSelector.Size = new System.Drawing.Size(371, 60);
+            this.branchSelector.Size = new System.Drawing.Size(325, 54);
             this.branchSelector.TabIndex = 0;
             // 
             // btnCompare
@@ -47,9 +47,9 @@
             this.btnCompare.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.btnCompare.AutoSize = true;
             this.btnCompare.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnCompare.Location = new System.Drawing.Point(352, 80);
+            this.btnCompare.Location = new System.Drawing.Point(358, 80);
             this.btnCompare.Name = "btnCompare";
-            this.btnCompare.Size = new System.Drawing.Size(66, 25);
+            this.btnCompare.Size = new System.Drawing.Size(60, 23);
             this.btnCompare.TabIndex = 1;
             this.btnCompare.Text = "Compare";
             this.btnCompare.UseVisualStyleBackColor = true;
@@ -58,8 +58,8 @@
             // FormCompareToBranch
             // 
             this.AcceptButton = this.btnCompare;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(434, 110);

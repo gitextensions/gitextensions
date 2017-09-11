@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitUI.BuildServerIntegration
@@ -27,7 +28,7 @@ namespace GitUI.BuildServerIntegration
                         buildStatusImage = Resources.BuildCancelled;
                         break;
                     case BuildInfo.BuildStatus.InProgress:
-                        buildStatusImage = Resources.Icon_77;
+                        buildStatusImage = Resources.Settings;
                         break;
                     case BuildInfo.BuildStatus.Unstable:
                         buildStatusImage = Resources.IconMixed;
@@ -44,33 +45,34 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Brush foreBrush, Font rowFont)
+        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Color foreColor, Font rowFont)
         {
             if (revision.BuildStatus != null)
             {
-                Brush buildStatusForebrush = foreBrush;
+                var buildStatusForeColor = foreColor;
 
                 switch (revision.BuildStatus.Status)
                 {
                     case BuildInfo.BuildStatus.Success:
-                        buildStatusForebrush = Brushes.DarkGreen;
+                        buildStatusForeColor = Color.DarkGreen;
                         break;
                     case BuildInfo.BuildStatus.Failure:
-                        buildStatusForebrush = Brushes.DarkRed;
+                        buildStatusForeColor = Color.DarkRed;
                         break;
                     case BuildInfo.BuildStatus.InProgress:
-                        buildStatusForebrush = Brushes.Blue;
+                        buildStatusForeColor = Color.Blue;
                         break;
                     case BuildInfo.BuildStatus.Unstable:
-                        buildStatusForebrush = Brushes.OrangeRed;
+                        buildStatusForeColor = Color.OrangeRed;
                         break;
                     case BuildInfo.BuildStatus.Stopped:
-                        buildStatusForebrush = Brushes.Gray;
+                        buildStatusForeColor = Color.Gray;
                         break;
                 }
 
                 var text = (string)e.FormattedValue;
-                e.Graphics.DrawString(text, rowFont, buildStatusForebrush, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                var rect = RevisionGridUtils.GetCellRectangle(e);
+                RevisionGridUtils.DrawColumnText(e.Graphics, text, rowFont, buildStatusForeColor, rect);
             }
         }
 

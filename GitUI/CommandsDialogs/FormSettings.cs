@@ -96,8 +96,11 @@ namespace GitUI.CommandsDialogs
             SettingsPageReference advancedPageRef = AdvancedSettingsPage.GetPageReference();
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DetailedSettingsPage>(this), gitExtPageRef);
+            var detailedSettingsPage = DetailedSettingsPage.GetPageReference();
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConfirmationsSettingsPage>(this), advancedPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<FormBrowseRepoSettingsPage>(this), detailedSettingsPage);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DiffViewerSettingsPage>(this), detailedSettingsPage);
 
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null);
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
@@ -126,7 +129,7 @@ namespace GitUI.CommandsDialogs
 
             }
 
-            return result;            
+            return result;
         }
 
         private void FormSettings_Load(object sender, EventArgs e)
@@ -301,6 +304,6 @@ namespace GitUI.CommandsDialogs
             LoadSettings();
         }
 
-        public CheckSettingsLogic CheckSettingsLogic { get { return _checkSettingsLogic; } } 
+        public CheckSettingsLogic CheckSettingsLogic { get { return _checkSettingsLogic; } }
     }
 }

@@ -16,6 +16,8 @@ namespace GitUI.CommandsDialogs
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            _asyncLoader.Cancel();
+            _asyncLoader.Dispose();
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -107,8 +109,8 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(280, 650);
             this.tableLayoutPanel2.TabIndex = 2;
@@ -146,7 +148,7 @@ namespace GitUI.CommandsDialogs
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(264, 31);
             this.Stash.TabIndex = 15;
-            this.Stash.Text = "Save Changes";
+            this.Stash.Text = "Save Changes to New Stash";
             this.toolTip.SetToolTip(this.Stash, "Save local changes to a new stash, then revert local changes");
             this.Stash.UseVisualStyleBackColor = true;
             this.Stash.Click += new System.EventHandler(this.StashClick);
@@ -186,8 +188,8 @@ namespace GitUI.CommandsDialogs
             this.Apply.Name = "Apply";
             this.Apply.Size = new System.Drawing.Size(264, 31);
             this.Apply.TabIndex = 17;
-            this.Apply.Text = "Apply Selected";
-            this.toolTip.SetToolTip(this.Apply, "Apply selected stash on top of current working directory state");
+            this.Apply.Text = "Apply Selected Stash";
+            this.toolTip.SetToolTip(this.Apply, "Apply the selected stash on top of the current working directory state");
             this.Apply.UseVisualStyleBackColor = true;
             this.Apply.Click += new System.EventHandler(this.ApplyClick);
             // 
@@ -200,8 +202,8 @@ namespace GitUI.CommandsDialogs
             this.Clear.Name = "Clear";
             this.Clear.Size = new System.Drawing.Size(264, 31);
             this.Clear.TabIndex = 16;
-            this.Clear.Text = "Delete Selected";
-            this.toolTip.SetToolTip(this.Clear, "Remove selected stash from the list");
+            this.Clear.Text = "Drop Selected Stash";
+            this.toolTip.SetToolTip(this.Clear, "Remove the selected stash from the list");
             this.Clear.UseVisualStyleBackColor = true;
             this.Clear.Click += new System.EventHandler(this.ClearClick);
             // 

@@ -1,5 +1,5 @@
 ﻿using System;
-using GitUI.Objects;
+using GitCommands.Remote;
 
 namespace GitUI.UserControls
 {

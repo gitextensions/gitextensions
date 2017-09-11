@@ -144,17 +144,16 @@ namespace GitCommands
         {
             SetEnvironmentVariable();
 
-            string quotedCmd = fileName;
-            if (quotedCmd.IndexOf(' ') != -1)
-                quotedCmd = quotedCmd.Quote();
-
             var executionStartTimestamp = DateTime.Now;
 
             var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
             var startProcess = Process.Start(startInfo);
-
+            startProcess.EnableRaisingEvents = true;
             startProcess.Exited += (sender, args) =>
             {
+                string quotedCmd = fileName;
+                if (quotedCmd.IndexOf(' ') != -1)
+                    quotedCmd = quotedCmd.Quote();
                 var executionEndTimestamp = DateTime.Now;
                 AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
             };
@@ -476,7 +475,7 @@ namespace GitCommands
 
         public static string CloneCmd(string fromPath, string toPath)
         {
-            return CloneCmd(fromPath, toPath, false, false, string.Empty, null);
+            return CloneCmd(fromPath, toPath, false, false, string.Empty, null, null, false);
         }
 
         /// <summary>
@@ -497,8 +496,9 @@ namespace GitCommands
         /// <para><c>False</c>: --no-single-branch.</para>
         /// <para><c>NULL</c>: don't pass any such param to git.</para>
         /// </param>
+        /// <param name="lfs">True to use the <c>git lfs clone</c> command instead of <c>git clone</c>.</param>
         /// <returns></returns>
-        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, [CanBeNull] string branch, int? depth, [Optional] bool? isSingleBranch)
+        public static string CloneCmd(string fromPath, string toPath, bool central, bool initSubmodules, [CanBeNull] string branch, int? depth, bool? isSingleBranch, bool lfs)
         {
             var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
             var to = toPath.ToPosixPath();
@@ -519,7 +519,9 @@ namespace GitCommands
             options.Add(string.Format("\"{0}\"", from.Trim()));
             options.Add(string.Format("\"{0}\"", to.Trim()));
 
-            return "clone " + string.Join(" ", options.ToArray());
+            var command = lfs ? "lfs clone " : "clone ";
+
+            return command + string.Join(" ", options.ToArray());
         }
 
         public static string CheckoutCmd(string branchOrRevisionName, LocalChangesAction changesAction)
@@ -913,7 +915,7 @@ namespace GitCommands
 
                 if (line != null)
                 {
-                    var match = Regex.Match(line, @"diff --git a/(.+)\sb/(.+)");
+                    var match = Regex.Match(line, @"diff --git (?:a|i|c)/(.+)\s(?:b|w|i)/(.+)");
                     if (match.Groups.Count > 1)
                     {
                         status.Name = match.Groups[1].Value;
@@ -1138,7 +1140,7 @@ namespace GitCommands
             return string.Empty;
         }
 
-        public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy)
+        public static string MergeBranchCmd(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string message, int? log)
         {
             StringBuilder command = new StringBuilder("merge");
 
@@ -1153,6 +1155,14 @@ namespace GitCommands
                 command.Append(" --squash");
             if (noCommit)
                 command.Append(" --no-commit");
+            if (allowUnrelatedHistories)
+                command.Append(" --allow-unrelated-histories");
+
+            if (!string.IsNullOrEmpty(message))
+                command.AppendFormat(" -m {0}", message.Quote());
+
+            if (log.HasValue)
+                command.AppendFormat(" --log={0}", log.Value);
 
             command.Append(" ");
             command.Append(branch);

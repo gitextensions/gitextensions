@@ -37,7 +37,6 @@ namespace GitCommands.Settings
 
         protected override void ClearImpl()
         {
-            base.ClearImpl();
             EncodedNameMap.Clear();
         }
 

@@ -192,7 +192,7 @@ namespace GitUI.Script
                             remote = selectedRemotes[0];
                         else
                             remote = askToSpecify(selectedRemotes, "Selected Revision Remote");
-                        url = aModule.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         argument = argument.Replace(option, url);
                         break;
                     case "{sRemotePathFromUrl}":
@@ -205,7 +205,7 @@ namespace GitUI.Script
                             remote = selectedRemotes[0];
                         else
                             remote = askToSpecify(selectedRemotes, "Selected Revision Remote");
-                        url = aModule.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         argument = argument.Replace(option, GetRemotePath(url));
                         break;
                     case "{sHash}":
@@ -295,7 +295,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
-                        url = aModule.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                        url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                         argument = argument.Replace(option, url);
                         break;
                     case "{cDefaultRemotePathFromUrl}":
@@ -304,7 +304,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
-                        url = aModule.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                        url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                         argument = argument.Replace(option, GetRemotePath(url));
                         break;
                     case "{UserInput}":
@@ -319,10 +319,28 @@ namespace GitUI.Script
                         break;
                 }
             }
-            command = ExpandCommandVariables(command,aModule);
+            command = ExpandCommandVariables(command, aModule);
+
+            if (scriptInfo.IsPowerShell)
+            {
+                PowerShellHelper.RunPowerShell(command, argument, aModule.WorkingDir, scriptInfo.RunInBackground);
+                return false;
+            }
+
+            if (command.StartsWith(PluginPrefix))
+            {
+                command = command.Replace(PluginPrefix, "");
+                foreach (var plugin in Plugin.LoadedPlugins.Plugins)
+                    if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        var eventArgs = new GitUIEventArgs(owner, revisionGrid.UICommands, argument);
+                        return plugin.Execute(eventArgs);
+                    }
+                return false;
+            }
 
             if (!scriptInfo.RunInBackground)
-                FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
+                FormProcess.ShowStandardProcessDialog(owner, command, argument, aModule.WorkingDir, null, true);
             else
             {
                 if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
@@ -330,6 +348,7 @@ namespace GitUI.Script
                 else
                     aModule.RunExternalCmdDetached(command, argument);
             }
+
             return !scriptInfo.RunInBackground;
         }
 
@@ -343,7 +362,7 @@ namespace GitUI.Script
                                                              List<string> selectedRemotes, List<IGitRef> selectedLocalBranches,
                                                              List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
-            GitRevision selectedRevision = revisionGrid.GetRevision(revisionGrid.LastRowIndex);
+            GitRevision selectedRevision = revisionGrid.LatestSelectedRevision;
             foreach (GitRef head in selectedRevision.Refs)
             {
                 if (head.IsTag)
@@ -441,6 +460,8 @@ namespace GitUI.Script
             }
         }
 
+        private static string PluginPrefix = "plugin:";
+
         private static string OverrideCommandWhenNecessary(string originalCommand)
         {
             //Make sure we are able to run git, even if git is not in the path
@@ -456,6 +477,12 @@ namespace GitUI.Script
 
             if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))
                 return "explorer";
+
+            //Prefix should be {plugin:pluginname},{plugin=pluginname}
+            var match = System.Text.RegularExpressions.Regex.Match(originalCommand, @"\{plugin.(.+)\}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            if (match.Success && match.Groups.Count > 1)
+                originalCommand = string.Format("{0}{1}", PluginPrefix, match.Groups[1].Value.ToLower());
+
             return originalCommand;
         }
 

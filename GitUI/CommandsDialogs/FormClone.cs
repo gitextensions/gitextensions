@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
-            if (url.IsNotNullOrWhitespace())
+            if (CanBeGitURL(url) || GitModule.IsValidGitWorkingDir(url))
             {
                 _NO_TRANSLATE_From.Text = url;
             }
@@ -79,10 +79,7 @@ namespace GitUI.CommandsDialogs
                         string text = Clipboard.GetText(TextDataFormat.Text) ?? string.Empty;
 
                         // See if it's a valid URL.
-                        string lowerText = text.ToLowerInvariant();
-                        if (lowerText.StartsWith("http") ||
-                            lowerText.StartsWith("git") ||
-                            lowerText.StartsWith("ssh"))
+                        if (CanBeGitURL(text))
                         {
                             _NO_TRANSLATE_From.Text = text;
                         }
@@ -107,27 +104,52 @@ namespace GitUI.CommandsDialogs
                             currentBranchRemote = remotes.FirstOrDefault();
                     }
 
-                    string pushUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemotePushUrl, currentBranchRemote));
+                    string pushUrl = Module.GetSetting(string.Format(SettingKeyString.RemotePushUrl, currentBranchRemote));
                     if (pushUrl.IsNullOrEmpty())
                     {
-                        pushUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentBranchRemote));
+                        pushUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentBranchRemote));
                     }
 
-
                     _NO_TRANSLATE_From.Text = pushUrl;
+
+                    try
+                    {
+                        // If the from directory is filled with the pushUrl from current working directory, set the destination directory to the parent
+                        if (pushUrl.IsNotNullOrWhitespace() && _NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+                            _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
+
+                    }
+                    catch (Exception)
+                    {
+                        // Exceptions on setting the destination directory can be ingnored
+                    }
                 }
             }
 
-            try
-            {
-                //if there is no destination directory, then use the parent directory of the current repository
-                if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
-                    _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
-            }
-            catch (Exception)
-            { }
+            //if there is no destination directory, then use current working directory
+            if (_NO_TRANSLATE_To.Text.IsNullOrWhiteSpace() && Module.WorkingDir.IsNotNullOrWhitespace())
+                _NO_TRANSLATE_To.Text = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
 
             FromTextUpdate(null, null);
+
+            cbLfs.Enabled = Module.HasLfsSupport();
+            if (!cbLfs.Enabled)
+                cbLfs.Checked = false;
+        }
+
+        private bool CanBeGitURL(string anURL)
+        {
+            if (anURL == null)
+            {
+                return false;
+            }
+
+            string anURLLowered = anURL.ToLowerInvariant();
+
+            return (anURLLowered.StartsWith("http") ||
+                anURLLowered.StartsWith("git") ||
+                anURLLowered.StartsWith("ssh"));
+
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -166,7 +188,7 @@ namespace GitUI.CommandsDialogs
                     branch = null;
                 
                 var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
-                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, branch, depth, isSingleBranch);
+                            CentralRepository.Checked, cbIntializeAllSubmodules.Checked, branch, depth, isSingleBranch, cbLfs.Checked);
                 using (var fromProcess = new FormRemoteProcess(Module, AppSettings.GitCommand, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);

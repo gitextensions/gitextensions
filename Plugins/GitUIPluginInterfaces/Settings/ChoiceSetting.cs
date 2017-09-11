@@ -1,41 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
 {
     public class ChoiceSetting: ISetting
     {
-        public ChoiceSetting(string aName, List<string> values, string aDefaultValue = null)
+        public ChoiceSetting(string aName, IList<string> values, string aDefaultValue = null)
             : this(aName, aName, values, aDefaultValue)
         {
         }
 
-        public ChoiceSetting(string aName, string aCaption, List<string> values, string aDefaultValue = null)
+        public ChoiceSetting(string aName, string aCaption, IList<string> values, string aDefaultValue = null)
         {
             Name = aName;
             Caption = aCaption;
             DefaultValue = aDefaultValue;
             Values = values;
-            if (DefaultValue == null && values.Count != 0)
-                DefaultValue = values[0];
+            if (DefaultValue == null && values.Any())
+                DefaultValue = values.First();
         }
 
         public string Name { get; private set; }
         public string Caption { get; private set; }
         public string DefaultValue { get; set; }
-        public List<string> Values { get; set; }
+        public IList<string> Values { get; set; }
+        public ComboBox CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()
         {
-            return new ComboBoxBinding(this);
+            return new ComboBoxBinding(this, CustomControl);
     }
 
         private class ComboBoxBinding : SettingControlBinding<ChoiceSetting, ComboBox>
         {
 
-            public ComboBoxBinding(ChoiceSetting aSetting)
-                : base(aSetting)
+            public ComboBoxBinding(ChoiceSetting aSetting, ComboBox aCustomControl)
+                : base(aSetting, aCustomControl)
             { }
 
             public override ComboBox CreateControl()
@@ -58,11 +60,24 @@ namespace GitUIPluginInterfaces
                 }
 
                 control.SelectedIndex = Setting.Values.IndexOf(settingVal);
+                if (control.SelectedIndex == -1)
+                {
+                    control.Text = settingVal;
+                }
             }
 
-            public override void SaveSetting(ISettingsSource settings, ComboBox control)
+            public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, ComboBox control)
             {
-                Setting[settings] = control.SelectedItem.ToString();
+                var controlValue = control.SelectedItem?.ToString();
+                if (areSettingsEffective)
+                {
+                    if (Setting.ValueOrDefault(settings) == controlValue)
+                    {
+                        return;
+                    }
+                }
+
+                Setting[settings] = controlValue;
             }
         }
 

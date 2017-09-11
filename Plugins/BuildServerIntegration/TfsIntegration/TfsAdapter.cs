@@ -47,7 +47,7 @@ namespace TfsIntegration
         string _projectName;
         Regex _tfsBuildDefinitionNameFilter;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
             if (_buildServerWatcher != null)
                 throw new InvalidOperationException("Already initialized");
@@ -69,7 +69,8 @@ namespace TfsIntegration
                 && !string.IsNullOrEmpty(_tfsTeamCollectionName)
                 && !string.IsNullOrEmpty(_projectName))
             {
-                _tfsHelper = LoadAssemblyAndConnectToServer("TfsInterop.Vs2013")
+                _tfsHelper = LoadAssemblyAndConnectToServer("TfsInterop.Vs2015")
+                    ?? LoadAssemblyAndConnectToServer("TfsInterop.Vs2013")
                     ?? LoadAssemblyAndConnectToServer("TfsInterop.Vs2012");
 
                 if (_tfsHelper == null)
@@ -159,7 +160,8 @@ namespace TfsIntegration
                 Status = (BuildInfo.BuildStatus)buildDetail.Status,
                 Description = buildDetail.Label + " (" + buildDetail.Description + ")",
                 CommitHashList = new[] { sha },
-                Url = buildDetail.Url
+                Url = buildDetail.Url,
+                ShowInBuildReportTab = false
             };
 
             return buildInfo;

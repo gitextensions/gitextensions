@@ -25,9 +25,9 @@ namespace TeamCityIntegration
 
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class TeamCityIntegrationMetadata : BuildServerAdapterMetadataAttribute
+    public class TeamCityIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
     {
-        public TeamCityIntegrationMetadata(string buildServerType)
+        public TeamCityIntegrationMetadataAttribute(string buildServerType)
             : base(buildServerType)
         {
         }
@@ -51,19 +51,53 @@ namespace TeamCityIntegration
     {
         private IBuildServerWatcher buildServerWatcher;
 
+        private HttpClientHandler httpClientHandler;
         private HttpClient httpClient;
 
         private string httpClientHostSuffix;
 
-        private List<Task<IEnumerable<string>>> getBuildTypesTask = new List<Task<IEnumerable<string>>>();
+        private readonly List<Task<IEnumerable<string>>> getBuildTypesTask = new List<Task<IEnumerable<string>>>();
+
+        private CookieContainer _teamCityNtlmAuthCookie;
+
+        private string HostName { get; set; }
 
         private string[] ProjectNames { get; set; }
 
         private Regex BuildIdFilter { get; set; }
 
+        private CookieContainer GetTeamCityNtlmAuthCookie (string serverUrl, IBuildServerCredentials buildServerCredentials)
+        {
+            if (_teamCityNtlmAuthCookie != null)
+            {
+                return _teamCityNtlmAuthCookie;
+            }
+
+            string url = serverUrl + "ntlmLogin.html";
+            var cookieContainer = new CookieContainer();
+            var request = (HttpWebRequest)HttpWebRequest.Create (url);
+            request.CookieContainer = cookieContainer;
+
+            if (buildServerCredentials != null
+                && !String.IsNullOrEmpty(buildServerCredentials.Username)
+                && !String.IsNullOrEmpty(buildServerCredentials.Password))
+            {
+                request.Credentials = new NetworkCredential(buildServerCredentials.Username, buildServerCredentials.Password);
+            }
+            else
+            {
+                request.Credentials = CredentialCache.DefaultCredentials;
+            }
+            request.PreAuthenticate = true;
+            request.GetResponse();
+
+            _teamCityNtlmAuthCookie = cookieContainer;
+            return _teamCityNtlmAuthCookie;
+        }
+
         public string LogAsGuestUrlParameter { get; set; }
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
             if (this.buildServerWatcher != null)
                 throw new InvalidOperationException("Already initialized");
@@ -78,13 +112,12 @@ namespace TeamCityIntegration
                 return;
             }
             BuildIdFilter = new Regex(buildIdFilerSetting, RegexOptions.Compiled);
-            var hostName = config.GetString("BuildServerUrl", null);
+            HostName = config.GetString("BuildServerUrl", null);
             LogAsGuestUrlParameter = config.GetBool("LogAsGuest", false) ? "&guest=1" : string.Empty;
 
-            if (!string.IsNullOrEmpty(hostName))
+            if (!string.IsNullOrEmpty(HostName))
             {
-                InitializeHttpClient(hostName, () => buildServerWatcher.GetBuildServerCredentials(this, true));
-
+                InitializeHttpClient(HostName);
                 if (ProjectNames.Length > 0)
                 {
                     getBuildTypesTask.Clear();
@@ -97,19 +130,21 @@ namespace TeamCityIntegration
                                    select element.Attribute("id").Value,
                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent));
                     }
+
                 }
             }
         }
 
-        public void InitializeHttpClient(string hostName, Func<IBuildServerCredentials> getBuildServerCredentials = null)
+        public void InitializeHttpClient(string hostname)
         {
-            SetHttpClient(hostName);
-            UpdateHttpClientOptions(getBuildServerCredentials != null ? getBuildServerCredentials() : null);
+            CreateNewHttpClient(hostname);
+            UpdateHttpClientOptionsGuestAuth();
         }
 
-        private void SetHttpClient(string hostName)
+        private void CreateNewHttpClient(string hostName)
         {
-            httpClient = new HttpClient
+            httpClientHandler = new HttpClientHandler();
+            httpClient = new HttpClient(httpClientHandler)
             {
                 Timeout = TimeSpan.FromMinutes(2),
                 BaseAddress = hostName.Contains("://")
@@ -221,7 +256,7 @@ namespace TeamCityIntegration
                             cancellationToken,
                             TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously,
                             TaskScheduler.Current);
-                
+
                 tasks.Add(notifyObserverTask);
                 --buildsLeft;
 
@@ -296,12 +331,6 @@ namespace TeamCityIntegration
             return buildInfo;
         }
 
-        private static AuthenticationHeaderValue CreateBasicHeader(string username, string password)
-        {
-            byte[] byteArray = Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password));
-            return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-        }
-
         private static BuildInfo.BuildStatus ParseBuildStatus(string statusValue)
         {
             switch (statusValue)
@@ -333,7 +362,7 @@ namespace TeamCityIntegration
 #if !__MonoCS__
             bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
             bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
-                                task.Result.StatusCode == HttpStatusCode.Unauthorized;
+                                task.Result.StatusCode == HttpStatusCode.Unauthorized || task.Result.StatusCode == HttpStatusCode.Forbidden;
 
             if (!retry)
             {
@@ -360,13 +389,19 @@ namespace TeamCityIntegration
 
             if (unauthorized)
             {
-                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, false);
-
-                if (buildServerCredentials != null)
+                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
+                var useBuildServerCredentials = buildServerCredentials != null
+                                                && !buildServerCredentials.UseGuestAccess
+                                                && (string.IsNullOrWhiteSpace(buildServerCredentials.Username) && string.IsNullOrWhiteSpace(buildServerCredentials.Password));
+                if (useBuildServerCredentials)
                 {
-                    UpdateHttpClientOptions(buildServerCredentials);
-
-                    return GetStreamAsync(restServicePath, cancellationToken);
+                    UpdateHttpClientOptionsCredentialsAuth (buildServerCredentials);
+                    return GetStreamAsync (restServicePath, cancellationToken);
+                }
+                else
+                {
+                    UpdateHttpClientOptionsNtlmAuth(buildServerCredentials);
+                    return GetStreamAsync (restServicePath, cancellationToken);
                 }
 
                 throw new OperationCanceledException(task.Result.ReasonPhrase);
@@ -378,20 +413,41 @@ namespace TeamCityIntegration
 #endif
         }
 
-        private void UpdateHttpClientOptions(IBuildServerCredentials buildServerCredentials)
+        public void UpdateHttpClientOptionsNtlmAuth(IBuildServerCredentials buildServerCredentials)
         {
-            var useGuestAccess = buildServerCredentials == null || buildServerCredentials.UseGuestAccess;
+            try
+            {
+                httpClient.Dispose();
+                httpClientHandler.Dispose();
 
-            if (useGuestAccess)
-            {
-                httpClientHostSuffix = "guestAuth";
-                httpClient.DefaultRequestHeaders.Authorization = null;
-            }
-            else
-            {
                 httpClientHostSuffix = "httpAuth";
-                httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(buildServerCredentials.Username, buildServerCredentials.Password);
+                CreateNewHttpClient (HostName);
+                httpClientHandler.CookieContainer = GetTeamCityNtlmAuthCookie(httpClient.BaseAddress.AbsoluteUri, buildServerCredentials);
             }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
+
+        }
+
+        public void UpdateHttpClientOptionsGuestAuth()
+        {
+            httpClientHostSuffix = "guestAuth";
+            httpClient.DefaultRequestHeaders.Authorization = null;
+        }
+
+        private void UpdateHttpClientOptionsCredentialsAuth(IBuildServerCredentials buildServerCredentials)
+        {
+            httpClientHostSuffix = "httpAuth";
+            httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader (buildServerCredentials.Username, buildServerCredentials.Password);
+        }
+
+        private static AuthenticationHeaderValue CreateBasicHeader(string username, string password)
+        {
+          byte[] byteArray = Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password));
+          return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
         }
 
         private Task<XDocument> GetXmlResponseAsync(string relativePath, CancellationToken cancellationToken)
@@ -406,8 +462,8 @@ namespace TeamCityIntegration
                             return XDocument.Load(responseStream);
                         }
                     },
-                cancellationToken, 
-                TaskContinuationOptions.AttachedToParent, 
+                cancellationToken,
+                TaskContinuationOptions.AttachedToParent,
                 TaskScheduler.Current);
         }
 

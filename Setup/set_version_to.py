@@ -1,4 +1,5 @@
 import argparse, sys
+import re
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -93,11 +94,11 @@ if __name__ == '__main__':
     makeInstallers = open(filename, "r").readlines()
     for i in range(len(makeInstallers)):
         line = makeInstallers[i]
-        if line.find("set numericVersion=") != -1:
+        if line.find("set numericVersion=") == 0:
             data = line.split('=')
             data[1] = '.'.join(verSplitted) + '\n'
             makeInstallers[i] = '='.join(data)
-        if line.find("set version=") != -1:
+        if line.find("set version=") == 0:
             data = line.split('=')
             data[1] = args.text + '\n'
             makeInstallers[i] = '='.join(data)
@@ -108,7 +109,7 @@ if __name__ == '__main__':
     makeInstallers = open(filename, "r").readlines()
     for i in range(len(makeInstallers)):
         line = makeInstallers[i]
-        if line.find("set version=") != -1:
+        if line.find("set version=") == 0:
             data = line.split('=')
             data[1] = args.text + '\n'
             makeInstallers[i] = '='.join(data)
@@ -129,3 +130,13 @@ if __name__ == '__main__':
             docoConf[i] = " = '".join(data) + "'\n"
     outfile = open(filename, "w")
     outfile.writelines(docoConf)
+    
+    filename = "..\GitExtensionsVSIX\source.extension.vsixmanifest"
+    vsixManifest = open(filename, "r").readlines()
+    for i in range(len(vsixManifest)):
+        line = vsixManifest[i]
+        if line.find("<Identity Publisher=\"GitExt Team\" Version=") != -1:
+            line = re.sub("<Identity Publisher=\"GitExt Team\" Version=\"[0-9\.]+", "<Identity Publisher=\"GitExt Team\" Version=\"" + '.'.join(verSplitted), line)
+            vsixManifest[i] = line
+    outfile = open(filename, "w")
+    outfile.writelines(vsixManifest)    

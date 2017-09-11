@@ -15,21 +15,29 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void SettingsToPage()
         {
             chkAmend.Checked = AppSettings.DontConfirmAmend;
+            chkCommitIfNoBranch.Checked = AppSettings.DontConfirmCommitIfNoBranch;
             chkAutoPopStashAfterPull.CheckState = AppSettings.AutoPopStashAfterPull.ToCheckboxState();
             chkAutoPopStashAfterCheckout.CheckState = AppSettings.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
             chkPushNewBranch.Checked = AppSettings.DontConfirmPushNewBranch;
             chkAddTrackingRef.Checked = AppSettings.DontConfirmAddTrackingRef;
             chkUpdateModules.CheckState = AppSettings.UpdateSubmodulesOnCheckout.ToCheckboxState();
+            chkResolveConflicts.Checked = AppSettings.DontConfirmResolveConflicts;
+            chkCommitAfterConflictsResolved.Checked = AppSettings.DontConfirmCommitAfterConflictsResolved;
+            chkSecondAbortConfirmation.Checked = AppSettings.DontConfirmSecondAbortConfirmation;
         }
 
         protected override void PageToSettings()
         {
             AppSettings.DontConfirmAmend = chkAmend.Checked;
+            AppSettings.DontConfirmCommitIfNoBranch = chkCommitIfNoBranch.Checked;
             AppSettings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();
             AppSettings.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
             AppSettings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
             AppSettings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
             AppSettings.UpdateSubmodulesOnCheckout = chkUpdateModules.CheckState.ToBoolean();
+            AppSettings.DontConfirmResolveConflicts = chkResolveConflicts.Checked;
+            AppSettings.DontConfirmCommitAfterConflictsResolved = chkCommitAfterConflictsResolved.Checked;
+            AppSettings.DontConfirmSecondAbortConfirmation = chkSecondAbortConfirmation.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

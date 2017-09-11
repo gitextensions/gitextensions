@@ -8,14 +8,25 @@ namespace GitUIPluginInterfaces
     /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule
     {
-        ISettingsValueGetter LocalConfigFile { get; }
+        IConfigFileSettings LocalConfigFile { get; }
 
-        string AddRemote(string name, string path);
+        string AddRemote(string remoteName, string path);
         IList<IGitRef> GetRefs(bool tags = true, bool branches = true);
         IEnumerable<string> GetSettings(string setting);
         IList<IGitItem> GetTree(string id, bool full);
-        string RemoveRemote(string name);
-        string RenameRemote(string name, string newName);
+
+        /// <summary>
+        /// Removes the registered remote by running <c>git remote rm</c> command.
+        /// </summary>
+        /// <param name="remoteName">The remote name.</param>
+        string RemoveRemote(string remoteName);
+
+        /// <summary>
+        /// Renames the registered remote by running <c>git remote rename</c> command.
+        /// </summary>
+        /// <param name="remoteName">The current remote name.</param>
+        /// <param name="newName">The new remote name.</param>
+        string RenameRemote(string remoteName, string newName);
         void SetSetting(string setting, string value);
         void UnsetSetting(string setting);
 
@@ -52,6 +63,15 @@ namespace GitUIPluginInterfaces
         /// <summary>Gets the ".git" directory path.</summary>
         string GetGitDirectory();
 
+        /// <summary>
+        /// Asks git to resolve the given relativePath
+        /// git special folders are located in different directories depending on the kind of repo: submodule, worktree, main
+        /// See https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-pathltpathgt
+        /// </summary>
+        /// <param name="relativePath">A path relative to the .git directory</param>
+        /// <returns></returns>
+        string ResolveGitInternalPath(string relativePath);
+
         /// <summary>Indicates whether the specified directory contains a git repository.</summary>
         bool IsValidGitWorkingDir();
 
@@ -71,7 +91,18 @@ namespace GitUIPluginInterfaces
 
         IGitModule GetSubmodule(string submoduleName);
 
-        string[] GetRemotes(bool allowEmpty = true);
+        /// <summary>
+        /// Retrieves registered remotes by running <c>git remote show</c> command.
+        /// </summary>
+        /// <returns>Registered remotes.</returns>
+        string[] GetRemotes();
+
+        /// <summary>
+        /// Retrieves registered remotes by running <c>git remote show</c> command.
+        /// </summary>
+        /// <param name="allowEmpty"></param>
+        /// <returns>Registered remotes.</returns>
+        string[] GetRemotes(bool allowEmpty);
 
         string GetSetting(string setting);
 

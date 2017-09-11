@@ -12,7 +12,7 @@ namespace Stash
 {
     public partial class StashPullRequestForm : GitExtensionsFormBase
     {
-        private readonly TranslationString _yourRepositoryIsNotInStash = new TranslationString("Your repository is not hosted in Stash.");
+        private readonly TranslationString _yourRepositoryIsNotInStash = new TranslationString("Your repository is not hosted in Bitbucket.");
         private readonly TranslationString _commited = new TranslationString("{0} committed\n{1}");
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
@@ -60,10 +60,10 @@ namespace Stash
                 }
                 catch (System.InvalidOperationException)
                 {
-                    return;
                 }
             });
         }
+
         private void StashViewPullRequestFormLoad(object sender, EventArgs e)
         {
             if (_settings == null)

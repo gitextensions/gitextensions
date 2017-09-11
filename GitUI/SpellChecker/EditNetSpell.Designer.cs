@@ -44,6 +44,7 @@
             // 
             this.SpellCheckTimer.Interval = 250;
             this.SpellCheckTimer.Tick += new System.EventHandler(this.SpellCheckTimerTick);
+            this.SpellCheckTimer.Enabled = false;
             // 
             // TextBox
             // 
@@ -56,14 +57,12 @@
             this.TextBox.Size = new System.Drawing.Size(386, 336);
             this.TextBox.TabIndex = 1;
             this.TextBox.Text = "";
-            this.TextBox.SelectionChanged += new System.EventHandler(this.TextBox_SelectionChanged);
-            this.TextBox.SizeChanged += new System.EventHandler(this.TextBoxSizeChanged);
-            this.TextBox.TextChanged += new System.EventHandler(this.TextBoxTextChanged);
-            this.TextBox.Enter += new System.EventHandler(this.TextBox_Enter);
             this.TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyDown);
             this.TextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             this.TextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TextBox_KeyUp);
             this.TextBox.Leave += new System.EventHandler(this.TextBoxLeave);
+            this.TextBox.GotFocus += TextBox_GotFocus;
+            this.TextBox.LostFocus += TextBox_LostFocus;
             // 
             // AutoComplete
             // 
@@ -97,7 +96,6 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "EditNetSpell";
             this.Size = new System.Drawing.Size(386, 336);
-            this.Load += new System.EventHandler(this.EditNetSpellLoad);
             this.SpellCheckContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 

@@ -21,10 +21,11 @@ namespace GitUIPluginInterfaces
         public string Name { get; private set; }
         public string Caption { get; private set; }
         public bool DefaultValue { get; set; }
+        public CheckBox CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()
         {
-            return new CheckBoxBinding(this);
+            return new CheckBoxBinding(this, CustomControl);
         }
 
         public bool? this[ISettingsSource settings]
@@ -47,8 +48,8 @@ namespace GitUIPluginInterfaces
 
         private class CheckBoxBinding : SettingControlBinding<BoolSetting, CheckBox>
         {
-            public CheckBoxBinding(BoolSetting aSetting)
-                : base(aSetting)
+            public CheckBoxBinding(BoolSetting aSetting, CheckBox aCustomControl)
+                : base(aSetting, aCustomControl)
             { }
 
             public override CheckBox CreateControl()
@@ -73,9 +74,18 @@ namespace GitUIPluginInterfaces
                 control.SetNullableChecked(settingVal);
             }
 
-            public override void SaveSetting(ISettingsSource settings, CheckBox control)
+            public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, CheckBox control)
             {
-                Setting[settings] = control.GetNullableChecked();
+                var controlValue = control.GetNullableChecked();
+                if (areSettingsEffective)
+                {
+                    if (Setting.ValueOrDefault(settings) == controlValue)
+                    {
+                        return;
+                    }
+                }
+
+                Setting[settings] = controlValue;
             }
         }
     }

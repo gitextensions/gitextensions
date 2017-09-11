@@ -144,6 +144,7 @@ Current Branch:
             commandTextBox.Text = scriptInfo.Command;
             argumentsTextBox.Text = scriptInfo.Arguments;
             scriptRunInBackground.Checked = scriptInfo.RunInBackground;
+            scriptIsPowerShell.Checked = scriptInfo.IsPowerShell;
             inMenuCheckBox.Checked = scriptInfo.AddToRevisionGridContextMenu;
             scriptEnabled.Checked = scriptInfo.Enabled;
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
@@ -163,7 +164,8 @@ Current Branch:
         private void addScriptButton_Click(object sender, EventArgs e)
         {
             ScriptList.ClearSelection();
-            ScriptManager.GetScripts().AddNew();
+            ScriptInfo script = ScriptManager.GetScripts().AddNew();
+            script.HotkeyCommandIdentifier = ScriptManager.NextHotkeyCommandIdentifier();
             ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
             ScriptList_SelectionChanged(null, null); //needed for linux
         }
@@ -183,13 +185,13 @@ Current Branch:
             if (ScriptList.SelectedRows.Count > 0)
             {
                 ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                selectedScriptInfo.HotkeyCommandIdentifier = ScriptList.SelectedRows[0].Index + 9000;
                 selectedScriptInfo.Name = nameTextBox.Text;
                 selectedScriptInfo.Command = commandTextBox.Text;
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;
                 selectedScriptInfo.AddToRevisionGridContextMenu = inMenuCheckBox.Checked;
                 selectedScriptInfo.Enabled = scriptEnabled.Checked;
                 selectedScriptInfo.RunInBackground = scriptRunInBackground.Checked;
+                selectedScriptInfo.IsPowerShell = scriptIsPowerShell.Checked;
                 selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
                 selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
                 selectedScriptInfo.Icon = IconName;
@@ -260,6 +262,8 @@ Current Branch:
                 moveDownButton.Enabled = false;
                 ClearScriptDetails();
             }
+
+            UpdateIconVisibility();
         }
 
         private void ScriptInfoEdit_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -307,25 +311,15 @@ Current Branch:
 
         private void scriptEvent_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (scriptEvent.Text == ScriptEvent.ShowInUserMenuBar.ToString())
-            {
-                /*
-                string icon_name = IconName;
-                if (ScriptList.RowCount > 0)
-                {
-                    ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                    icon_name = scriptInfo.Icon;
-                }*/
+            UpdateIconVisibility();
+        }
 
-                sbtn_icon.Visible = true;
-                lbl_icon.Visible = true;
-            }
-            else
-            {
-                //not a menubar item, so hide the text label and dropdown button
-                sbtn_icon.Visible = false;
-                lbl_icon.Visible = false;
-            }
+        private void UpdateIconVisibility()
+        {
+            bool showIcon = scriptEvent.Text == ScriptEvent.ShowInUserMenuBar.ToString() || inMenuCheckBox.Checked;
+
+            sbtn_icon.Visible = showIcon;
+            lbl_icon.Visible = showIcon;
         }
 
         private void buttonShowArgumentsHelp_Click(object sender, EventArgs e)
@@ -335,6 +329,20 @@ Current Branch:
             helpDisplayDialog.ContentText = @_scriptSettingsPageHelpDisplayContent.Text.Replace("\n", Environment.NewLine);
 
             helpDisplayDialog.ShowDialog();
+        }
+
+        private void argumentsTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.Control && e.KeyCode == Keys.V) || (e.Shift && e.KeyCode == Keys.Insert))
+            {
+                ((RichTextBox)sender).Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
+                e.Handled = true;
+            }
+        }
+
+        private void inMenuCheckBox_CheckedChanged( object sender, EventArgs e )
+        {
+            UpdateIconVisibility();
         }
     }
 }

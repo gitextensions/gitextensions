@@ -1,38 +1,85 @@
 using System;
+using System.Linq;
 using System.Net;
 using GitCommands;
+using System.Collections.Concurrent;
 
 namespace ResourceManager
 {
     public class LinkFactory
     {
-        public static string CreateLink(string caption, string uri)
+        private ConcurrentDictionary<string, string> _linksMap = new ConcurrentDictionary<string, string>();
+
+        public void Clear()
         {
-            return "<a href="+WebUtility.HtmlEncode(uri).Quote()+">" + WebUtility.HtmlEncode(caption) + "</a>";
+            _linksMap.Clear();
         }
 
-        public static string CreateTagLink(string tag)
+        public string CreateLink(string caption, string uri)
+        {
+            return AddLink(caption, uri);
+        }
+
+        private string AddLink(string caption, string uri)
+        {
+            string htmlUri = WebUtility.HtmlEncode(uri);
+            string rtfLinkText = caption + "#" + htmlUri;
+            _linksMap[rtfLinkText] = htmlUri;
+
+            string htmlLink = "<a href=" + htmlUri.Quote("'") + ">" + WebUtility.HtmlEncode(caption) + "</a>";
+            return htmlLink;
+        }
+
+        public string CreateTagLink(string tag)
         {
             if (tag != "…")
-                return "<a href='gitext://gototag/" + tag + "'>" + WebUtility.HtmlEncode(tag) + "</a>";
+                return AddLink(tag, "gitext://gototag/" + tag);
             return WebUtility.HtmlEncode(tag);
         }
 
-        public static string CreateBranchLink(string noPrefixBranch)
+        public string CreateBranchLink(string noPrefixBranch)
         {
             if (noPrefixBranch != "…")
-                return "<a href='gitext://gotobranch/" + noPrefixBranch + "'>" + WebUtility.HtmlEncode(noPrefixBranch) + "</a>";
+                return AddLink(noPrefixBranch, "gitext://gotobranch/" + noPrefixBranch);
             return WebUtility.HtmlEncode(noPrefixBranch);
         }
 
-        public static string CreateCommitLink(string guid)
+        public string CreateCommitLink(string guid, string linkText = null, bool preserveGuidInLinkText = false)
         {
-            if (GitRevision.UnstagedGuid == guid)
-                return "<a href='gitext://gotocommit/" + guid + "'>" + Strings.GetCurrentUnstagedChanges() + "</a>";
-            else if (GitRevision.IndexGuid == guid)
-                return "<a href='gitext://gotocommit/" + guid + "'>" + Strings.GetCurrentIndex() + "</a>";
-            else
-                return "<a href='gitext://gotocommit/" + guid + "'>" + guid.Substring(0, 10) + "</a>";
+            if (linkText == null)
+            {
+                if (GitRevision.UnstagedGuid == guid)
+                    linkText = Strings.GetCurrentUnstagedChanges();
+                else if (GitRevision.IndexGuid == guid)
+                    linkText = Strings.GetCurrentIndex();
+                else
+                {
+                    linkText = preserveGuidInLinkText || guid.Length < 10
+                        ? guid
+                        : guid.Substring(0, 10);
+                }
+            }
+            return AddLink(linkText, "gitext://gotocommit/" + guid);
+        }
+
+        public string ParseLink(string aLinkText)
+        {
+            string linkUri;
+            if (_linksMap.TryGetValue(aLinkText, out linkUri))
+            {
+                return linkUri;
+            }
+
+            string uriCandidate = aLinkText;
+            while (uriCandidate != null)
+            {
+                Uri uri;
+                if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out uri))
+                    return uri.AbsoluteUri;
+                uriCandidate = uriCandidate.SkipStr("#");
+            }
+
+            return aLinkText;
         }
     }
 }

@@ -109,6 +109,7 @@ namespace GitUI.BuildServerIntegration
             lock (buildServerCredentialsLock)
             {
                 IBuildServerCredentials buildServerCredentials = new BuildServerCredentials { UseGuestAccess = true };
+                var foundInConfig = false;
 
                 const string CredentialsConfigName = "Credentials";
                 const string UseGuestAccessKey = "UseGuestAccess";
@@ -134,7 +135,7 @@ namespace GitUI.BuildServerIntegration
                                     credentialsConfig.LoadFromString(textReader.ReadToEnd());
                                 }
 
-                                ConfigSection section = credentialsConfig.FindConfigSection(CredentialsConfigName);
+                                var section = credentialsConfig.FindConfigSection(CredentialsConfigName);
 
                                 if (section != null)
                                 {
@@ -142,6 +143,7 @@ namespace GitUI.BuildServerIntegration
                                         true);
                                     buildServerCredentials.Username = section.GetValue(UsernameKey);
                                     buildServerCredentials.Password = section.GetValue(PasswordKey);
+                                    foundInConfig = true;
 
                                     if (useStoredCredentialsIfExisting)
                                     {
@@ -153,7 +155,7 @@ namespace GitUI.BuildServerIntegration
                         catch (CryptographicException)
                         {
                             // As per MSDN, the ProtectedData.Unprotect method is per user,
-                            // it will throw the CryptographicException if the current user 
+                            // it will throw the CryptographicException if the current user
                             // is not the one who protected the data.
 
                             // Set this variable to false so the user can reset the credentials.
@@ -162,7 +164,7 @@ namespace GitUI.BuildServerIntegration
                     }
                 }
 
-                if (!useStoredCredentialsIfExisting)
+                if (!useStoredCredentialsIfExisting || !foundInConfig)
                 {
                     buildServerCredentials = ShowBuildServerCredentialsForm(buildServerAdapter.UniqueKey, buildServerCredentials);
 
@@ -170,7 +172,7 @@ namespace GitUI.BuildServerIntegration
                     {
                         ConfigFile credentialsConfig = new ConfigFile("", true);
 
-                        ConfigSection section = credentialsConfig.FindOrCreateConfigSection(CredentialsConfigName);
+                        var section = credentialsConfig.FindOrCreateConfigSection(CredentialsConfigName);
 
                         section.SetValueAsBool(UseGuestAccessKey, buildServerCredentials.UseGuestAccess);
                         section.SetValue(UsernameKey, buildServerCredentials.Username);
@@ -227,6 +229,7 @@ namespace GitUI.BuildServerIntegration
                                                      AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                                                      Width = 16,
                                                      ReadOnly = true,
+                                                     Resizable = DataGridViewTriState.False,
                                                      SortMode = DataGridViewColumnSortMode.NotSortable
                                                  };
                 BuildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
@@ -238,6 +241,7 @@ namespace GitUI.BuildServerIntegration
                                                 {
                                                     AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                                                     ReadOnly = true,
+                                                    FillWeight = 50,
                                                     SortMode = DataGridViewColumnSortMode.NotSortable
                                                 };
 
@@ -260,13 +264,15 @@ namespace GitUI.BuildServerIntegration
                         buildInfo.StartDate >= rowData.BuildStatus.StartDate)
                     {
                         rowData.BuildStatus = buildInfo;
-
-                        if (BuildStatusImageColumnIndex != -1 &&
-                            revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
-                            revisions.UpdateCellValue(BuildStatusImageColumnIndex, index.Value);
-                        if (BuildStatusMessageColumnIndex != -1 &&
-                            revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
-                            revisions.UpdateCellValue(BuildStatusMessageColumnIndex, index.Value);
+                        if (index.Value < revisions.RowCount)
+                        {
+                            if (BuildStatusImageColumnIndex != -1 &&
+                                revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
+                                revisions.UpdateCellValue(BuildStatusImageColumnIndex, index.Value);
+                            if (BuildStatusMessageColumnIndex != -1 &&
+                                revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
+                                revisions.UpdateCellValue(BuildStatusMessageColumnIndex, index.Value);
+                        }
                     }
                 }
             }
@@ -278,7 +284,7 @@ namespace GitUI.BuildServerIntegration
             {
                 if (!Module.EffectiveSettings.BuildServer.EnableIntegration.ValueOrDefault)
                     return null;
-                var buildServerType = Module.EffectiveSettings.BuildServer.Type.Value;
+                var buildServerType = Module.EffectiveSettings.BuildServer.Type.ValueOrDefault;
                 if (string.IsNullOrEmpty(buildServerType))
                     return null;
                 var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
@@ -295,7 +301,7 @@ namespace GitUI.BuildServerIntegration
                             return null;
                         }
                         var buildServerAdapter = export.Value;
-                        buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings);
+                        buildServerAdapter.Initialize(this, Module.EffectiveSettings.BuildServer.TypeSettings, sha1 => revisionGrid.GetRevision(sha1) != null);
                         return buildServerAdapter;
                     }
                     catch (InvalidOperationException ex)

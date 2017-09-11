@@ -41,7 +41,7 @@ namespace GitUIPluginInterfaces
         /// Saves value from Control to settings
         /// </summary>
         /// <param name="settings"></param>
-        void SaveSetting(ISettingsSource settings);
+        void SaveSetting(ISettingsSource settings, bool areSettingsEffective);
 
         /// <summary>
         /// returns caption assotiated with this control or null if the control layouts
@@ -57,9 +57,10 @@ namespace GitUIPluginInterfaces
         private T _control;
         protected readonly S Setting;
 
-        protected SettingControlBinding(S aSetting)
+        protected SettingControlBinding(S aSetting, T aCustomControl)
         {
             Setting = aSetting;
+            _control = aCustomControl;
         }
 
         private T Control
@@ -87,9 +88,9 @@ namespace GitUIPluginInterfaces
         /// Saves value from Control to settings
         /// </summary>
         /// <param name="settings"></param>
-        public void SaveSetting(ISettingsSource settings)
+        public void SaveSetting(ISettingsSource settings, bool areSettingsEffective)
         {
-            SaveSetting(settings, Control);
+            SaveSetting(settings, areSettingsEffective, Control);
         }
 
         public virtual string Caption()
@@ -116,7 +117,7 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Saves value from Control to settings
         /// </summary>
-        public abstract void SaveSetting(ISettingsSource settings, T control);
+        public abstract void SaveSetting(ISettingsSource settings, bool areSettingsEffective, T control);
     }
 
 }

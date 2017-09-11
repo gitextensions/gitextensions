@@ -129,7 +129,7 @@ namespace GitUIPluginInterfaces
         bool StartCreateTagDialog();
         bool StartDeleteBranchDialog(string branch);
         bool StartDeleteTagDialog();
-        bool StartEditGitIgnoreDialog();
+        bool StartEditGitIgnoreDialog(bool localExcludes);
         void StartFileHistoryDialog(string fileName);
         bool StartFormatPatchDialog();
         bool StartGitCommandProcessDialog(string arguments);
@@ -156,5 +156,7 @@ namespace GitUIPluginInterfaces
         bool StartVerifyDatabaseDialog();
         bool StartViewPatchDialog();
         bool StartSparseWorkingCopyDialog();
+        void AddCommitTemplate(string key, Func<string> addingText);
+        void RemoveCommitTemplate(string key);
     }
 }

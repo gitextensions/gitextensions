@@ -1,4 +1,16 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="cbGitHubPullRequest.Text">
+        <source>display github pull requests builds. GithubToken:</source>
+        
+      </trans-unit>
+      <trans-unit id="cbLoadTestResults.Text">
+        <source>display tests results in build status summary for each build result (network intensive!)</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="nl">
     <body>
       <trans-unit id="Description.Text">
@@ -958,6 +970,10 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
         <target>Github</target>
         
       </trans-unit>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="nl">
@@ -1124,14 +1140,14 @@ Wilt het het pad opnieuw instellen?</target>
   </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="nl">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        <target>Projectnaam</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
+      <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
         <target>URL van Jenkins server</target>
+        
+      </trans-unit>
+      <trans-unit id="lblProjectName.Text">
+        <source>Project name</source>
+        <target>Projectnaam</target>
         
       </trans-unit>
     </body>
@@ -1185,6 +1201,23 @@ Wilt het het pad opnieuw instellen?</target>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
         <target>Proxy Switcher</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
+        
+      </trans-unit>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
+        
+      </trans-unit>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>Gebruikersnaam</target>
         
       </trans-unit>
     </body>
@@ -1314,8 +1347,23 @@ branch namen of tag namen zijn)</target>
   <file datatype="plaintext" original="StashPlugin" source-language="en" target-language="nl">
     <body>
       <trans-unit id="Description.Text">
-        <source>Create Stash Pull Request</source>
-        <target>Maak Pull Request voor Stash</target>
+        <source>Create Bitbucket Pull Request</source>
+        
+      </trans-unit>
+      <trans-unit id="StashBaseUrl.Caption">
+        <source>Specify the base URL to Bitbucket</source>
+        
+      </trans-unit>
+      <trans-unit id="StashDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        
+      </trans-unit>
+      <trans-unit id="StashPassword.Caption">
+        <source>Bitbucket Password</source>
+        
+      </trans-unit>
+      <trans-unit id="StashUsername.Caption">
+        <source>Bitbucket Username</source>
         
       </trans-unit>
     </body>
@@ -1350,8 +1398,7 @@ branch namen of tag namen zijn)</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInStash.Text">
-        <source>Your repository is not hosted in Stash.</source>
-        <target>Uw repository wordt niet gehost in Stash.</target>
+        <source>Your repository is not hosted in Bitbucket.</source>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
@@ -1503,9 +1550,33 @@ branch namen of tag namen zijn)</target>
         <target>Log als gast om het bouw rapport weer te geven</target>
         
       </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Build url not valid</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy in the clipboard the url of the build before retrying.
+(Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectCaption.Text">
+        <source>Error when loading the projects and build list</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectMessage.Text">
+        <source>Failed to load the projects and build list.
+Please verify the server url.</source>
+        
+      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
         <target>De regular expressie voor &quot;Bouw Id Filter&quot; is niet geldig en wordt niet opgeslagen!</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
+        <source>Extract the data from the build url copied in the clipboard</source>
         
       </trans-unit>
     </body>

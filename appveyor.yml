@@ -1,0 +1,37 @@
+version: 2.50.02.{build}
+
+os: Visual Studio 2015
+
+branches:
+  except:
+    - configdata
+    - gh-pages
+
+environment:
+  matrix:
+  - IdeVersion: VS2015
+  #- IdeVersion: Mono
+  SKIP_PAUSE: TRUE
+  ARCHIVE_WITH_PDB: TRUE
+
+build:
+  verbosity: minimal
+
+cache:
+  #- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  - packages\WiX.3.11.0 -> Setup\packages.config
+  - Setup\cache -> Setup\DownloadExternals.cmd
+
+install:
+- cmd: git submodule update --init --recursive
+- cmd: |-
+    cd Setup
+    python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%Dev@%APPVEYOR_REPO_COMMIT:~0,5%
+    cd ..
+
+build_script:
+- ps: |
+    Write-Output "Platform: $env:IdeVersion"
+    & Setup\BuildInstallers.$env:IdeVersion.cmd
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    Get-ChildItem Setup\GitExtensions-*-Mono.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace GitCommands.Repository
 {
@@ -18,6 +19,8 @@ namespace GitCommands.Repository
 
 
         private int _maxCount;
+
+        [XmlIgnore]
         public int MaxCount
         {
             get

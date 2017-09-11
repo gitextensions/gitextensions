@@ -6,8 +6,12 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=2.49
-set numericVersion=2.49.00
+set version=2.50.02
+set numericVersion=2.50.02
+if not "%APPVEYOR_BUILD_VERSION%"=="" (
+    set version=%APPVEYOR_BUILD_VERSION%
+    set numericVersion=%APPVEYOR_BUILD_VERSION%
+)
 
 set normal=GitExtensions-%Version%-Setup.msi
 set complete=GitExtensions-%Version%-SetupComplete.msi

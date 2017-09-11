@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -32,10 +32,11 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -49,6 +50,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1573</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -58,6 +60,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PSTaskDialog">
@@ -70,20 +73,20 @@
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Core.2.2.5\lib\net40\System.Reactive.Core.dll</HintPath>
+    <Reference Include="System.Reactive.Core, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Core.3.1.1\lib\net46\System.Reactive.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net40\System.Reactive.Interfaces.dll</HintPath>
+    <Reference Include="System.Reactive.Interfaces, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Interfaces.3.1.1\lib\net45\System.Reactive.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net40\System.Reactive.Linq.dll</HintPath>
+    <Reference Include="System.Reactive.Linq, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Linq.3.1.1\lib\net46\System.Reactive.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net40\System.Reactive.PlatformServices.dll</HintPath>
+    <Reference Include="System.Reactive.PlatformServices, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.PlatformServices.3.1.1\lib\net46\System.Reactive.PlatformServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Security" />
@@ -133,6 +136,7 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
+    <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateManager.cs" />
     <Compile Include="CommandsDialogs\FormCompareToBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,6 +184,18 @@
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.Designer.cs">
+      <DependentUpon>FormAvailableEncodings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\DiffViewerSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\DiffViewerSettingsPage.Designer.cs">
+      <DependentUpon>DiffViewerSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -205,7 +221,25 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.Designer.cs">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.Designer.cs">
+      <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormStatusOutputLog.cs" />
+    <Compile Include="CommandsDialogs\WorktreeDialog\FormCreateWorktree.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\WorktreeDialog\FormCreateWorktree.Designer.cs">
+      <DependentUpon>FormCreateWorktree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\WorktreeDialog\FormManageWorktree.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\WorktreeDialog\FormManageWorktree.Designer.cs">
+      <DependentUpon>FormManageWorktree.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\Diff\CombinedDiffHighlightService.cs" />
     <Compile Include="Editor\Diff\DiffHighlightService.cs" />
     <Compile Include="Editor\Diff\DiffLineNumAnalyzer.cs" />
@@ -256,11 +290,10 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
-    <Compile Include="Objects\GitRemote.cs" />
-    <Compile Include="Objects\GitRemoteController.cs" />
-    <Compile Include="Objects\GitRemoteSaveResult.cs" />
+    <Compile Include="Script\PowerShellHelper.cs" />
     <Compile Include="RepoHosts.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
+    <Compile Include="SplitterManager.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -313,6 +346,13 @@
     <Compile Include="UserControls\RevisionGridClasses\NavigationHistory.cs" />
     <Compile Include="UserControls\RevisionGridClasses\ParentChildNavigationHistory.cs" />
     <Compile Include="UserControls\AuthorEmailBasedRevisionHighlighting.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.Designer.cs">
+      <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\RevisionGridUtils.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\WebBrowserCtrl.cs">
       <SubType>Component</SubType>
@@ -1079,6 +1119,12 @@
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.resx">
+      <DependentUpon>FormAvailableEncodings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DiffViewerSettingsPage.resx">
+      <DependentUpon>DiffViewerSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.resx">
       <DependentUpon>BuildServerIntegrationSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
@@ -1091,8 +1137,19 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.resx">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.resx">
+      <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.resx">
       <DependentUpon>RepoDistSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\WorktreeDialog\FormCreateWorktree.resx">
+      <DependentUpon>FormCreateWorktree.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\WorktreeDialog\FormManageWorktree.resx">
+      <DependentUpon>FormManageWorktree.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="HelperDialogs\FormBuildServerCredentials.resx">
       <DependentUpon>FormBuildServerCredentials.cs</DependentUpon>
@@ -1506,6 +1563,9 @@
       <DependentUpon>RevisionGrid.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.resx">
+      <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\ToolStripGitStatus.resx">
       <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1555,6 +1615,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Bin\Logo\git-extensions-logo-final-128.png">
+      <Link>Resources\Icons\git-extensions-logo-final-128.png</Link>
+    </None>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -1582,6 +1645,121 @@
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
+    <None Include="Resources\Icons\3.png" />
+    <None Include="Resources\Icons\33.png" />
+    <None Include="Resources\Icons\35.png" />
+    <None Include="Resources\Icons\4.png" />
+    <None Include="Resources\Icons\40.png" />
+    <None Include="Resources\Icons\50.png" />
+    <None Include="Resources\Icons\7.png" />
+    <None Include="Resources\Icons\71.png" />
+    <None Include="Resources\Icons\77.png" />
+    <None Include="Resources\Icons\82.png" />
+    <None Include="Resources\Icons\Added.png" />
+    <None Include="Resources\Icons\arrow_refresh.png" />
+    <None Include="Resources\Icons\arrow_refresh_dirty.png" />
+    <None Include="Resources\Icons\bash.png" />
+    <None Include="Resources\Icons\BranchCheckout.png" />
+    <None Include="Resources\Icons\BranchCreate.png" />
+    <None Include="Resources\Icons\BranchDelete.png" />
+    <None Include="Resources\Icons\bug.png" />
+    <None Include="Resources\Icons\Copied.png" />
+    <None Include="Resources\Icons\Cow.png" />
+    <None Include="Resources\Icons\Cow_sunglass.png" />
+    <None Include="Resources\Icons\Cow_xmass.png" />
+    <None Include="Resources\Icons\Delete.png" />
+    <None Include="Resources\Icons\develop.ico" />
+    <None Include="Resources\Icons\dollar.ico" />
+    <None Include="Resources\Icons\Donate.jpg" />
+    <None Include="Resources\Icons\double_arrow_down.png" />
+    <None Include="Resources\Icons\double_arrow_up.png" />
+    <None Include="Resources\Icons\edit_clear_2_16.png" />
+    <None Include="Resources\Icons\error.png" />
+    <None Include="Resources\Icons\folder_remote_2_16.png" />
+    <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
+    <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
+    <None Include="Resources\Icons\history.png" />
+    <None Include="Resources\Icons\IconAddToGitIgnore.png" />
+    <None Include="Resources\Icons\IconBlame.png" />
+    <None Include="Resources\Icons\IconBlank.png" />
+    <None Include="Resources\Icons\IconCherryPick.png" />
+    <None Include="Resources\Icons\IconClean.png" />
+    <None Include="Resources\Icons\IconCloneRepoGit.png" />
+    <None Include="Resources\Icons\IconCloneRepoGithub.png" />
+    <None Include="Resources\Icons\IconCloneRepoSvn.png" />
+    <None Include="Resources\Icons\IconCommit.png" />
+    <None Include="Resources\Icons\IconCopyToClipboard.png" />
+    <None Include="Resources\Icons\IconDiff.png" />
+    <None Include="Resources\Icons\IconDiffTool.png" />
+    <None Include="Resources\Icons\IconDirty.png" />
+    <None Include="Resources\Icons\IconDirtySubmodules.png" />
+    <None Include="Resources\Icons\IconEditFile.png" />
+    <None Include="Resources\Icons\IconEditGitIgnore.png" />
+    <None Include="Resources\Icons\IconFileHistory.png" />
+    <None Include="Resources\Icons\IconFileStatusUnknown.png" />
+    <None Include="Resources\Icons\IconFileTree.png" />
+    <None Include="Resources\Icons\IconFilter.png" />
+    <None Include="Resources\Icons\IconFind.png" />
+    <None Include="Resources\Icons\IconGotoCommit.png" />
+    <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
+    <None Include="Resources\Icons\IconGotoManual.png" />
+    <None Include="Resources\Icons\IconMixed.png" />
+    <None Include="Resources\Icons\IconPreview.png" />
+    <None Include="Resources\Icons\IconRecoverLostObjects.png" />
+    <None Include="Resources\Icons\IconRepoCreate.png" />
+    <None Include="Resources\Icons\IconRepoOpen.png" />
+    <None Include="Resources\Icons\IconResetCurrentBranchToHere.png" />
+    <None Include="Resources\Icons\IconResetFileTo.png" />
+    <None Include="Resources\Icons\IconResetWorkingDirChanges.png" />
+    <None Include="Resources\Icons\IconRevertCommit.png" />
+    <None Include="Resources\Icons\IconSave.png" />
+    <None Include="Resources\Icons\IconSelectBranch.png" />
+    <None Include="Resources\Icons\IconSelectRevision.png" />
+    <None Include="Resources\Icons\IconShowFirstParent.png" />
+    <None Include="Resources\Icons\IconStage.png" />
+    <None Include="Resources\Icons\IconStageAll.png" />
+    <None Include="Resources\Icons\IconStaged.png" />
+    <None Include="Resources\Icons\IconSubmoduleDirty.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionDown.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionDownDirty.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiDown.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiDownDirty.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiUp.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionSemiUpDirty.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionUp.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionUpDirty.png" />
+    <None Include="Resources\Icons\IconSubmodulesManage.png" />
+    <None Include="Resources\Icons\IconSubmodulesSync.png" />
+    <None Include="Resources\Icons\IconSubmodulesUpdate.png" />
+    <None Include="Resources\Icons\IconUnstage.png" />
+    <None Include="Resources\Icons\IconUnstageAll.png" />
+    <None Include="Resources\Icons\IconViewFile.png" />
+    <None Include="Resources\Icons\IconWarning.png" />
+    <None Include="Resources\Icons\loadingpanel.gif" />
+    <None Include="Resources\Icons\loadingpanel_static.png" />
+    <None Include="Resources\Icons\Modified.png" />
+    <None Include="Resources\Icons\nonprintchar.png" />
+    <None Include="Resources\Icons\pageant.png" />
+    <None Include="Resources\Icons\pageant_16.png" />
+    <None Include="Resources\Icons\PullFetch.png" />
+    <None Include="Resources\Icons\PullFetchAll.png" />
+    <None Include="Resources\Icons\PullMerge.png" />
+    <None Include="Resources\Icons\PullRebase.png" />
+    <None Include="Resources\Icons\putty.png" />
+    <None Include="Resources\Icons\puttygen.png" />
+    <None Include="Resources\Icons\RecentRepositories.png" />
+    <None Include="Resources\Icons\Removed.png" />
+    <None Include="Resources\Icons\Renamed.png" />
+    <None Include="Resources\Icons\RevisionCheckout.png" />
+    <None Include="Resources\Icons\rss.png" />
+    <None Include="Resources\Icons\showEntireFile.png" />
+    <None Include="Resources\Icons\SplitViewLayout.png" />
+    <None Include="Resources\Icons\stash.png" />
+    <None Include="Resources\Icons\statistic.png" />
+    <None Include="Resources\Icons\StatusHourglass.png" />
+    <None Include="Resources\Icons\success.png" />
+    <None Include="Resources\Icons\TagCreate.png" />
+    <None Include="Resources\Icons\TagDelete.png" />
     <None Include="Resources\Icons\User.PNG" />
     <None Include="Translation\Czech.Plugins.xlf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1683,8 +1861,45 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Icons\IconShowFirstParent.png" />
+    <Content Include="Resources\Icons\14.png" />
+    <Content Include="Resources\Icons\2.png" />
+    <Content Include="Resources\Icons\21.png" />
+    <Content Include="Resources\Icons\24.png" />
+    <Content Include="Resources\Icons\26.png" />
+    <Content Include="Resources\Icons\27.png" />
+    <Content Include="Resources\Icons\49.png" />
+    <Content Include="Resources\Icons\5.png" />
+    <Content Include="Resources\Icons\52.png" />
+    <Content Include="Resources\Icons\53.png" />
+    <Content Include="Resources\Icons\6.png" />
+    <Content Include="Resources\Icons\8.png" />
     <Content Include="Resources\Icons\86.png" />
+    <Content Include="Resources\Icons\90.png" />
+    <Content Include="Resources\Icons\BuildCancelled.png" />
+    <Content Include="Resources\Icons\BuildFailed.png" />
+    <Content Include="Resources\Icons\BuildSuccessful.png" />
+    <Content Include="Resources\Icons\decrease.png" />
+    <Content Include="Resources\Icons\gitex.png" />
+    <Content Include="Resources\Icons\HelpCommandMerge.png" />
+    <Content Include="Resources\Icons\HelpCommandRebase.png" />
+    <Content Include="Resources\Icons\HelpPullFetch.png" />
+    <Content Include="Resources\Icons\HelpPullMerge.png" />
+    <Content Include="Resources\Icons\HelpPullRebase.png" />
+    <Content Include="Resources\Icons\IconArchiveRevision.png" />
+    <Content Include="Resources\Icons\IconBranchCheckout.png" />
+    <Content Include="Resources\Icons\IconBranchCreate.png" />
+    <Content Include="Resources\Icons\IconBrowseFileExplorer.png" />
+    <Content Include="Resources\Icons\IconConsole.png" />
+    <Content Include="Resources\Icons\IconFolderSubmodule.png" />
+    <Content Include="Resources\Icons\IconManageRemotes.png" />
+    <Content Include="Resources\Icons\IconMerge.png" />
+    <Content Include="Resources\Icons\IconRebase.png" />
+    <Content Include="Resources\Icons\IconSaveAs.png" />
+    <Content Include="Resources\Icons\IconSubmoduleAdded.png" />
+    <Content Include="Resources\Icons\increase.png" />
+    <Content Include="Resources\Icons\light_bulb_icon_off_16.png" />
+    <Content Include="Resources\Icons\light_bulb_icon_on_16.png" />
+    <Content Include="Resources\Icons\whitespace.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1751,9 +1966,6 @@
     <None Include="..\Bin\Logo\cow-head.ico">
       <Link>Resources\ApplicationIcons\cow-head.ico</Link>
     </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final-128.png">
-      <Link>Resources\Icons\git-extensions-logo-final-128.png</Link>
-    </None>
     <None Include="..\Bin\Logo\git-extensions-logo-final.ico">
       <Link>Resources\ApplicationIcons\git-extensions-logo-final.ico</Link>
     </None>
@@ -1817,120 +2029,9 @@
     <None Include="..\Bin\Logo\x-with-arrow_yellow.ico">
       <Link>Resources\ApplicationIcons\x-with-arrow_yellow.ico</Link>
     </None>
-    <None Include="Resources\Icons\IconDirty.png" />
-    <None Include="Resources\Icons\IconMixed.png" />
-    <None Include="Resources\Icons\IconClean.png" />
-    <None Include="Resources\Icons\arrow_refresh_dirty.png" />
-    <None Include="Resources\Icons\double_arrow_down.png" />
-    <None Include="Resources\Icons\double_arrow_up.png" />
-    <None Include="Resources\Icons\Added.png" />
-    <None Include="Resources\Icons\Modified.png" />
-    <None Include="Resources\Icons\pageant.png" />
-    <None Include="Resources\Icons\putty.png" />
-    <None Include="Resources\Icons\success.png" />
-    <None Include="Resources\Icons\rss.png" />
-    <None Include="Resources\Icons\history.png" />
-    <None Include="Resources\Icons\IconDirtySubmodules.png" />
-    <None Include="Resources\Icons\stash.png" />
-    <None Include="Resources\Icons\50.png" />
-    <None Include="Resources\Icons\showEntireFile.png" />
-    <None Include="Resources\Icons\33.png" />
-    <None Include="Resources\Icons\35.png" />
-    <None Include="Resources\Icons\3.png" />
-    <None Include="Resources\Icons\4.png" />
-    <None Include="Resources\Icons\bash.png" />
-    <None Include="Resources\Icons\40.png" />
-    <None Include="Resources\Icons\71.png" />
-    <None Include="Resources\Icons\77.png" />
-    <None Include="Resources\Icons\pageant_16.png" />
-    <None Include="Resources\Icons\puttygen.png" />
-    <None Include="Resources\Icons\82.png" />
-    <None Include="Resources\Icons\statistic.png" />
-    <None Include="Resources\Icons\PullFetch.png" />
-    <None Include="Resources\Icons\PullMerge.png" />
-    <None Include="Resources\Icons\PullRebase.png" />
-    <None Include="Resources\Icons\PullFetchAll.png" />
-    <None Include="Resources\Icons\loadingpanel_static.png" />
-    <None Include="Resources\Icons\Delete.png" />
-    <None Include="Resources\Icons\edit_clear_2_16.png" />
-    <None Include="Resources\Icons\folder_remote_2_16.png" />
-    <None Include="Resources\Icons\BranchCreate.png" />
-    <None Include="Resources\Icons\TagCreate.png" />
-    <None Include="Resources\Icons\BranchCheckout.png" />
-    <None Include="Resources\Icons\RevisionCheckout.png" />
-    <None Include="Resources\Icons\BranchDelete.png" />
-    <None Include="Resources\Icons\IconCherryPick.png" />
-    <None Include="Resources\Icons\TagDelete.png" />
-    <None Include="Resources\Icons\IconPreview.png" />
-    <None Include="Resources\Icons\7.png" />
-    <None Include="Resources\Icons\StatusHourglass.png" />
-    <None Include="Resources\Icons\IconResetWorkingDirChanges.png" />
-    <None Include="Resources\Icons\IconResetCurrentBranchToHere.png" />
-    <None Include="Resources\Icons\IconFileHistory.png" />
-    <None Include="Resources\Icons\IconCopyToClipboard.png" />
-    <None Include="Resources\Icons\IconBlame.png" />
-    <None Include="Resources\Icons\IconEditFile.png" />
-    <None Include="Resources\Icons\IconFind.png" />
-    <None Include="Resources\Icons\IconDiff.png" />
-    <None Include="Resources\Icons\IconRecoverLostObjects.png" />
-    <None Include="Resources\Icons\IconViewFile.png" />
-    <None Include="Resources\Icons\IconFileTree.png" />
-    <None Include="Resources\Icons\IconCommit.png" />
-    <None Include="Resources\Icons\IconFilter.png" />
-    <None Include="Resources\Icons\IconDiffTool.png" />
-    <None Include="Resources\Icons\IconCloneRepoGit.png" />
-    <None Include="Resources\Icons\IconCloneRepoGithub.png" />
-    <None Include="Resources\Icons\IconCloneRepoSvn.png" />
-    <None Include="Resources\Icons\IconSave.png" />
-    <None Include="Resources\Icons\IconResetFileTo.png" />
-    <None Include="Resources\Icons\IconGotoCommit.png" />
-    <None Include="Resources\Icons\IconSelectBranch.png" />
-    <None Include="Resources\Icons\IconSelectRevision.png" />
-    <None Include="Resources\Icons\IconEditGitIgnore.png" />
-    <None Include="Resources\Icons\IconAddToGitIgnore.png" />
-    <None Include="Resources\Icons\IconStage.png" />
-    <None Include="Resources\Icons\IconStageAll.png" />
-    <None Include="Resources\Icons\IconSubmodulesManage.png" />
-    <None Include="Resources\Icons\IconSubmodulesSync.png" />
-    <None Include="Resources\Icons\IconSubmodulesUpdate.png" />
-    <None Include="Resources\Icons\IconUnstage.png" />
-    <None Include="Resources\Icons\IconUnstageAll.png" />
-    <None Include="Resources\Icons\RecentRepositories.png" />
-    <None Include="Resources\Icons\IconRepoCreate.png" />
-    <None Include="Resources\Icons\IconRepoOpen.png" />
-    <None Include="Resources\Icons\IconSubmoduleDirty.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionDown.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionUp.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionDownDirty.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionUpDirty.png" />
-    <None Include="Resources\Icons\IconRevertCommit.png" />
-    <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
-    <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
-    <Content Include="Resources\Icons\BuildCancelled.png" />
-    <Content Include="Resources\Icons\BuildFailed.png" />
-    <Content Include="Resources\Icons\BuildSuccessful.png" />
-    <None Include="Resources\Icons\IconGotoManual.png" />
-    <None Include="Resources\Icons\IconWarning.png" />
-    <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
-    <None Include="Resources\Icons\IconFileStatusUnknown.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionSemiDown.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionSemiDownDirty.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionSemiUp.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionSemiUpDirty.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <None Include="Properties\DataSources\GitUI.Script.ScriptInfo.datasource" />
-    <None Include="Resources\Icons\nonprintchar.png" />
-    <None Include="Resources\Icons\bug.png" />
-    <None Include="Resources\Icons\arrow_refresh.png" />
-    <None Include="Resources\Icons\Renamed.png" />
-    <None Include="Resources\Icons\Copied.png" />
-    <None Include="Resources\Icons\SplitViewLayout.png" />
-    <None Include="Resources\Icons\Cow_sunglass.png" />
-    <None Include="Resources\Icons\Cow_xmass.png" />
-    <None Include="Resources\Icons\develop.ico" />
-    <None Include="Resources\Icons\dollar.ico" />
     <None Include="Properties\DataSources\GitCommands.Repository.datasource" />
-    <None Include="Resources\Icons\Removed.png" />
     <None Include="Properties\DataSources\GitCommands.GitSubmodule.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -1941,11 +2042,6 @@
     <None Include="Properties\DataSources\GitCommands.GitHead.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitStash.datasource" />
     <None Include="Properties\DataSources\PatchApply.PatchFile.datasource" />
-    <None Include="Resources\Icons\Donate.jpg" />
-    <None Include="Resources\Icons\Cow.png" />
-    <None Include="Resources\Icons\IconStaged.png" />
-    <None Include="Resources\Icons\error.png" />
-    <None Include="Resources\Icons\loadingpanel.gif" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -1968,5 +2064,20 @@
   <Import Project="..\FxCop.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
-  <Import Project="..\packages\ConEmu.Core.16.7.10.0\Build\ConEmu.Core.Targets" Condition="Exists('..\packages\ConEmu.Core.16.7.10.0\Build\ConEmu.Core.Targets')" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy TabWidth="4" IndentWidth="4" RemoveTrailingWhitespace="True" NoTabsAfterNonTabs="False" EolMarker="Native" FileWidth="80" TabsToSpaces="True" scope="text/x-csharp">
+            <inheritsSet />
+            <inheritsScope />
+          </TextStylePolicy>
+          <CSharpFormattingPolicy IndentBlock="True" IndentBraces="False" IndentSwitchCaseSection="True" LabelPositioning="OneLess" NewLinesForBracesInTypes="True" NewLinesForBracesInMethods="True" SpaceWithinMethodDeclarationParenthesis="False" SpaceBetweenEmptyMethodDeclarationParentheses="False" SpaceWithinMethodCallParentheses="False" SpaceBetweenEmptyMethodCallParentheses="False" SpaceAfterControlFlowStatementKeyword="True" SpaceWithinExpressionParentheses="False" SpaceWithinCastParentheses="False" SpaceWithinOtherParentheses="False" SpaceAfterCast="False" SpacesIgnoreAroundVariableDeclaration="False" SpaceBetweenEmptySquareBrackets="False" SpaceWithinSquareBrackets="False" SpaceAfterColonInBaseTypeDeclaration="True" SpaceAfterComma="True" SpaceAfterDot="False" SpaceAfterSemicolonsInForStatement="True" SpaceBeforeColonInBaseTypeDeclaration="True" SpaceBeforeComma="False" SpaceBeforeDot="False" SpaceBeforeSemicolonsInForStatement="False" SpacingAroundBinaryOperator="Single" WrappingPreserveSingleLine="True" WrappingKeepStatementsOnSingleLine="True" PlaceSystemDirectiveFirst="True" IndentSwitchSection="True" NewLinesForBracesInProperties="True" NewLinesForBracesInAccessors="True" NewLinesForBracesInAnonymousMethods="True" NewLinesForBracesInControlBlocks="True" NewLinesForBracesInAnonymousTypes="True" NewLinesForBracesInObjectCollectionArrayInitializers="True" NewLinesForBracesInLambdaExpressionBody="True" NewLineForElse="True" NewLineForCatch="True" NewLineForFinally="True" NewLineForMembersInObjectInit="True" NewLineForMembersInAnonymousTypes="True" NewLineForClausesInQuery="True" SpacingAfterMethodDeclarationName="False" SpaceAfterMethodCallName="False" SpaceBeforeOpenSquareBracket="False" scope="text/x-csharp">
+            <inheritsSet />
+            <inheritsScope />
+          </CSharpFormattingPolicy>
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>

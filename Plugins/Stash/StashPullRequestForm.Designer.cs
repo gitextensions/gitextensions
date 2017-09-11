@@ -42,8 +42,8 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ddlRepositorySource = new System.Windows.Forms.ComboBox();
             this.ddlBranchSource = new System.Windows.Forms.ComboBox();
-            this.ddlBranchTarget = new System.Windows.Forms.ComboBox();
             this.lblCommitInfoSource = new System.Windows.Forms.Label();
+            this.ddlBranchTarget = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ddlRepositoryTarget = new System.Windows.Forms.ComboBox();
             this.lblCommitInfoTarget = new System.Windows.Forms.Label();
@@ -110,7 +110,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(14, 59);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 13);
+            this.label1.Size = new System.Drawing.Size(40, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Branch";
             // 
@@ -119,7 +119,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(14, 59);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 13);
+            this.label2.Size = new System.Drawing.Size(40, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "Branch";
             // 
@@ -128,7 +128,7 @@
             this.lblReviewers.AutoSize = true;
             this.lblReviewers.Location = new System.Drawing.Point(15, 38);
             this.lblReviewers.Name = "lblReviewers";
-            this.lblReviewers.Size = new System.Drawing.Size(63, 13);
+            this.lblReviewers.Size = new System.Drawing.Size(65, 13);
             this.lblReviewers.TabIndex = 4;
             this.lblReviewers.Text = "Reviewer(s)";
             // 
@@ -143,7 +143,7 @@
             // 
             // txtDescription
             // 
-            this.txtDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDescription.Location = new System.Drawing.Point(128, 221);
             this.txtDescription.Multiline = true;
@@ -164,7 +164,7 @@
             // 
             // ReviewersDataGrid
             // 
-            this.ReviewersDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.ReviewersDataGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ReviewersDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ReviewersDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -184,13 +184,13 @@
             // 
             // txtTitle
             // 
-            this.txtTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtTitle.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtTitle.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.txtTitle.Location = new System.Drawing.Point(129, 189);
             this.txtTitle.Name = "txtTitle";
-            this.txtTitle.Size = new System.Drawing.Size(593, 20);
+            this.txtTitle.Size = new System.Drawing.Size(593, 21);
             this.txtTitle.TabIndex = 1;
             // 
             // label4
@@ -207,7 +207,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(14, 29);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(57, 13);
+            this.label5.Size = new System.Drawing.Size(59, 13);
             this.label5.TabIndex = 0;
             this.label5.Text = "Repository";
             // 
@@ -228,21 +228,21 @@
             // 
             // ddlRepositorySource
             // 
-            this.ddlRepositorySource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.ddlRepositorySource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ddlRepositorySource.DisplayMember = "DisplayName";
             this.ddlRepositorySource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlRepositorySource.Enabled = false;
             this.ddlRepositorySource.FormattingEnabled = true;
             this.ddlRepositorySource.Location = new System.Drawing.Point(128, 26);
             this.ddlRepositorySource.Name = "ddlRepositorySource";
             this.ddlRepositorySource.Size = new System.Drawing.Size(178, 21);
             this.ddlRepositorySource.TabIndex = 0;
-            this.ddlRepositorySource.Enabled = false;
             this.ddlRepositorySource.SelectedValueChanged += new System.EventHandler(this.DdlRepositorySourceSelectedValueChanged);
             // 
             // ddlBranchSource
             // 
-            this.ddlBranchSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.ddlBranchSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ddlBranchSource.DisplayMember = "DisplayName";
             this.ddlBranchSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -255,13 +255,26 @@
             // 
             // lblCommitInfoSource
             // 
-            this.lblCommitInfoSource.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.lblCommitInfoSource.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCommitInfoSource.Location = new System.Drawing.Point(127, 90);
             this.lblCommitInfoSource.Name = "lblCommitInfoSource";
             this.lblCommitInfoSource.Size = new System.Drawing.Size(237, 62);
             this.lblCommitInfoSource.TabIndex = 2;
+            // 
+            // ddlBranchTarget
+            // 
+            this.ddlBranchTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ddlBranchTarget.DisplayMember = "DisplayName";
+            this.ddlBranchTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlBranchTarget.FormattingEnabled = true;
+            this.ddlBranchTarget.Location = new System.Drawing.Point(127, 58);
+            this.ddlBranchTarget.Name = "ddlBranchTarget";
+            this.ddlBranchTarget.Size = new System.Drawing.Size(178, 21);
+            this.ddlBranchTarget.TabIndex = 0;
+            this.ddlBranchTarget.SelectedValueChanged += new System.EventHandler(this.DdlBranchTargetSelectedValueChanged);
             // 
             // groupBox2
             // 
@@ -280,35 +293,22 @@
             // 
             // ddlRepositoryTarget
             // 
-            this.ddlRepositoryTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.ddlRepositoryTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ddlRepositoryTarget.DisplayMember = "DisplayName";
             this.ddlRepositoryTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ddlRepositoryTarget.Enabled = false;
             this.ddlRepositoryTarget.FormattingEnabled = true;
             this.ddlRepositoryTarget.Location = new System.Drawing.Point(128, 26);
             this.ddlRepositoryTarget.Name = "ddlRepositoryTarget";
             this.ddlRepositoryTarget.Size = new System.Drawing.Size(178, 21);
             this.ddlRepositoryTarget.TabIndex = 0;
-            this.ddlRepositoryTarget.Enabled = false;
             this.ddlRepositoryTarget.SelectedValueChanged += new System.EventHandler(this.DdlRepositoryTargetSelectedValueChanged);
-            // 
-            // ddlBranchTarget
-            // 
-            this.ddlBranchTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ddlBranchTarget.DisplayMember = "DisplayName";
-            this.ddlBranchTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ddlBranchTarget.FormattingEnabled = true;
-            this.ddlBranchTarget.Location = new System.Drawing.Point(127, 58);
-            this.ddlBranchTarget.Name = "ddlBranchTarget";
-            this.ddlBranchTarget.Size = new System.Drawing.Size(178, 21);
-            this.ddlBranchTarget.TabIndex = 0;
-            this.ddlBranchTarget.SelectedValueChanged += new System.EventHandler(this.DdlBranchTargetSelectedValueChanged);
             // 
             // lblCommitInfoTarget
             // 
-            this.lblCommitInfoTarget.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.lblCommitInfoTarget.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCommitInfoTarget.Location = new System.Drawing.Point(127, 90);
             this.lblCommitInfoTarget.Name = "lblCommitInfoTarget";
@@ -320,7 +320,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(14, 29);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(57, 13);
+            this.label6.Size = new System.Drawing.Size(59, 13);
             this.label6.TabIndex = 12;
             this.label6.Text = "Repository";
             // 
@@ -357,8 +357,8 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabCreate);
             this.tabControl1.Controls.Add(this.tabView);
@@ -380,7 +380,6 @@
             this.tabCreate.TabIndex = 0;
             this.tabCreate.Text = "Create Pull Request";
             this.tabCreate.UseVisualStyleBackColor = true;
-            this.Load += new System.EventHandler(this.StashPullRequestFormLoad);
             // 
             // tabView
             // 
@@ -396,7 +395,6 @@
             this.tabView.TabIndex = 1;
             this.tabView.Text = "View Pull Requests";
             this.tabView.UseVisualStyleBackColor = true;
-            this.Load += new System.EventHandler(this.StashViewPullRequestFormLoad);
             // 
             // splitContainer3
             // 
@@ -451,7 +449,7 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(16, 23);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(38, 13);
+            this.label12.Size = new System.Drawing.Size(40, 13);
             this.label12.TabIndex = 7;
             this.label12.Text = "Author";
             // 
@@ -460,7 +458,7 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(16, 53);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(32, 13);
+            this.label16.Size = new System.Drawing.Size(33, 13);
             this.label16.TabIndex = 8;
             this.label16.Text = "State";
             // 
@@ -469,9 +467,8 @@
             this.lblPRAuthor.AutoSize = true;
             this.lblPRAuthor.Location = new System.Drawing.Point(130, 23);
             this.lblPRAuthor.Name = "lblPRAuthor";
-            this.lblPRAuthor.Size = new System.Drawing.Size(34, 13);
+            this.lblPRAuthor.Size = new System.Drawing.Size(0, 13);
             this.lblPRAuthor.TabIndex = 5;
-            this.lblPRAuthor.Text = "";
             // 
             // btnMerge
             // 
@@ -510,45 +507,44 @@
             // 
             // txtPRDescription
             // 
-            this.txtPRDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.txtPRDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPRDescription.Location = new System.Drawing.Point(131, 224);
             this.txtPRDescription.Multiline = true;
             this.txtPRDescription.Name = "txtPRDescription";
+            this.txtPRDescription.ReadOnly = true;
             this.txtPRDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtPRDescription.Size = new System.Drawing.Size(594, 138);
             this.txtPRDescription.TabIndex = 14;
-            this.txtPRDescription.ReadOnly = true;
             // 
             // txtPRTitle
             // 
-            this.txtPRTitle.AutoSize = true;
             this.txtPRTitle.Location = new System.Drawing.Point(131, 192);
             this.txtPRTitle.Name = "txtPRTitle";
-            this.txtPRTitle.Size = new System.Drawing.Size(593, 20);
-            this.txtPRTitle.TabIndex = 13;
             this.txtPRTitle.ReadOnly = true;
+            this.txtPRTitle.Size = new System.Drawing.Size(593, 21);
+            this.txtPRTitle.TabIndex = 13;
             // 
             // txtPRReviewers
             // 
-            this.txtPRReviewers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.txtPRReviewers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPRReviewers.Location = new System.Drawing.Point(128, 38);
             this.txtPRReviewers.Multiline = true;
             this.txtPRReviewers.Name = "txtPRReviewers";
+            this.txtPRReviewers.ReadOnly = true;
             this.txtPRReviewers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtPRReviewers.Size = new System.Drawing.Size(594, 138);
             this.txtPRReviewers.TabIndex = 12;
-            this.txtPRReviewers.ReadOnly = true;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(15, 38);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(63, 13);
+            this.label10.Size = new System.Drawing.Size(109, 13);
             this.label10.TabIndex = 4;
             this.label10.Text = "Reviewer (approved)";
             // 
@@ -621,7 +617,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(14, 25);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(57, 13);
+            this.label8.Size = new System.Drawing.Size(59, 13);
             this.label8.TabIndex = 0;
             this.label8.Text = "Repository";
             // 
@@ -630,7 +626,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(14, 55);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(41, 13);
+            this.label9.Size = new System.Drawing.Size(40, 13);
             this.label9.TabIndex = 0;
             this.label9.Text = "Branch";
             // 
@@ -661,7 +657,7 @@
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(16, 25);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(57, 13);
+            this.label17.Size = new System.Drawing.Size(59, 13);
             this.label17.TabIndex = 3;
             this.label17.Text = "Repository";
             // 
@@ -678,20 +674,19 @@
             this.label18.AutoSize = true;
             this.label18.Location = new System.Drawing.Point(16, 55);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(41, 13);
+            this.label18.Size = new System.Drawing.Size(40, 13);
             this.label18.TabIndex = 4;
             this.label18.Text = "Branch";
             // 
             // StashPullRequestForm
             // 
             this.AcceptButton = this.btnCreate;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(827, 667);
             this.Controls.Add(this.tabControl1);
             this.Name = "StashPullRequestForm";
             this.Text = "Create Pull Request";
-            //this.Load += new System.EventHandler(this.StashPullRequestFormLoad);
             ((System.ComponentModel.ISupportInitialize)(this.ReviewersDataGrid)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

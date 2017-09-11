@@ -437,6 +437,7 @@
             this.BranchGrid.Location = new System.Drawing.Point(3, 17);
             this.BranchGrid.Name = "BranchGrid";
             this.BranchGrid.RowHeadersVisible = false;
+            this.BranchGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.BranchGrid.Size = new System.Drawing.Size(594, 61);
             this.BranchGrid.TabIndex = 0;
             this.BranchGrid.CurrentCellDirtyStateChanged += new System.EventHandler(this.BranchGrid_CurrentCellDirtyStateChanged);
@@ -524,6 +525,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this._NO_TRANSLATE_Remotes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(128, 19);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
@@ -562,11 +564,13 @@
             // folderBrowserButton1
             // 
             this.folderBrowserButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderBrowserButton1.AutoSize = true;
+            this.folderBrowserButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.folderBrowserButton1.Enabled = false;
             this.folderBrowserButton1.Location = new System.Drawing.Point(454, 47);
             this.folderBrowserButton1.Name = "folderBrowserButton1";
             this.folderBrowserButton1.PathShowingControl = this.PushDestination;
-            this.folderBrowserButton1.Size = new System.Drawing.Size(150, 25);
+            this.folderBrowserButton1.Size = new System.Drawing.Size(100, 25);
             this.folderBrowserButton1.TabIndex = 5;
             // 
             // Pull

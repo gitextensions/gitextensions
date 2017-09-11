@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
-using GitUI.Objects;
+using GitCommands.Remote;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -16,6 +16,7 @@ namespace GitUI.CommandsDialogs
     {
         private IGitRemoteController _gitRemoteController;
         private GitRemote _selectedRemote;
+        private readonly ListViewGroup _lvgEnabled, _lvgDisabled;
 
         #region Translation
         private readonly TranslationString _remoteBranchDataError =
@@ -58,6 +59,25 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _gbMgtPanelHeaderEdit =
             new TranslationString("Edit Remote Details");
+
+        private readonly TranslationString _btnDeleteTooltip =
+            new TranslationString("Delete the selected remote");
+
+        private readonly TranslationString _btnNewTooltip =
+            new TranslationString("Add a new remote");
+
+        private readonly TranslationString _btnToggleStateTooltip_Activate =
+            new TranslationString("Activate the selected remote");
+
+        private readonly TranslationString _btnToggleStateTooltip_Deactivate =
+            new TranslationString(@"Deactivate the selected remote.
+Inactive remote is completely invisible to git.");
+
+        private readonly TranslationString _lvgEnabledHeader =
+            new TranslationString("Active");
+
+        private readonly TranslationString _lvgDisabledHeader =
+            new TranslationString("Inactive");
         #endregion
 
 
@@ -70,6 +90,12 @@ namespace GitUI.CommandsDialogs
             // remove text from 'new' and 'delete' buttons because now they are represented by icons
             New.Text = string.Empty;
             Delete.Text = string.Empty;
+            toolTip1.SetToolTip(New, _btnNewTooltip.Text);
+            toolTip1.SetToolTip(Delete, _btnDeleteTooltip.Text);
+
+            _lvgEnabled = new ListViewGroup(_lvgEnabledHeader.Text, HorizontalAlignment.Left);
+            _lvgDisabled = new ListViewGroup(_lvgDisabledHeader.Text, HorizontalAlignment.Left);
+            Remotes.Groups.AddRange(new[] { _lvgEnabled, _lvgDisabled });
 
             Application.Idle += application_Idle;
         }
@@ -80,6 +106,59 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         public string PreselectRemoteOnLoad { get; set; }
 
+
+        private void BindRemotes(string preselectRemote)
+        {
+            // we need to unwire and rewire the events to avoid excessive flickering
+            Remotes.SelectedIndexChanged -= Remotes_SelectedIndexChanged;
+            Remotes.Items.Clear();
+            Remotes.Items.AddRange(_gitRemoteController.Remotes.Select(remote =>
+            {
+                var group = remote.Disabled ? _lvgDisabled : _lvgEnabled;
+                var color = remote.Disabled ? SystemColors.GrayText : SystemColors.WindowText;
+                return new ListViewItem(group) { Text = remote.Name, Tag = remote, ForeColor = color };
+            }).ToArray());
+            Remotes.SelectedIndexChanged += Remotes_SelectedIndexChanged;
+
+            Remotes.SelectedIndices.Clear();
+            if (_gitRemoteController.Remotes.Any())
+            {
+                if (!string.IsNullOrEmpty(preselectRemote))
+                {
+                    var lvi = Remotes.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Text == preselectRemote);
+                    if (lvi != null)
+                    {
+                        lvi.Selected = true;
+                        flpnlRemoteManagement.Enabled = !((GitRemote)lvi.Tag).Disabled;
+                    }
+                }
+                // default fallback - if the preselection didn't work select the first available one
+                if (Remotes.SelectedIndices.Count < 1)
+                {
+                    var group = _lvgEnabled.Items.Count > 0 ? _lvgEnabled : _lvgDisabled;
+                    group.Items[0].Selected = true;
+                }
+                Remotes.Select();
+            }
+            else
+            {
+                RemoteName.Focus();
+            }
+        }
+
+        private void BindBtnToggleState(bool disabled)
+        {
+            if (disabled)
+            {
+                btnToggleState.Image = Properties.Resources.light_bulb_icon_off_16;
+                toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Activate.Text ?? "").Trim());
+            }
+            else
+            {
+                btnToggleState.Image = Properties.Resources.light_bulb_icon_on_16;
+                toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Deactivate.Text ?? "").Trim());
+            }
+        }
 
         private IGitRef GetHeadForSelectedRemoteBranch()
         {
@@ -94,7 +173,7 @@ namespace GitUI.CommandsDialogs
         private void Initialize(string preselectRemote = null)
         {
             // refresh registered git remotes
-            _gitRemoteController.LoadRemotes();
+            _gitRemoteController.LoadRemotes(true);
 
             InitialiseTabRemotes(preselectRemote);
             InitialiseTabBehaviors();
@@ -123,29 +202,7 @@ namespace GitUI.CommandsDialogs
                 comboBoxPushUrl.DisplayMember = "Path";
                 comboBoxPushUrl.SelectedItem = null;
 
-                // we need to unwire and rewire the events to avoid excessive flickering
-                Remotes.SelectedIndexChanged -= Remotes_SelectedIndexChanged;
-                Remotes.DataSource = _gitRemoteController.Remotes;
-                Remotes.DisplayMember = "Name";
-                Remotes.SelectedIndexChanged += Remotes_SelectedIndexChanged;
-
-                Remotes.SelectedItem = null;
-                if (_gitRemoteController.Remotes.Any())
-                {
-                    if (!string.IsNullOrEmpty(preselectRemote))
-                    {
-                        Remotes.Text = preselectRemote;
-                    }
-                    // default fallback - if the preselection didn't work select the first available one
-                    if (Remotes.SelectedItem == null)
-                    {
-                        Remotes.SelectedItem = _gitRemoteController.Remotes.First();
-                    }
-                }
-                else
-                {
-                    RemoteName.Focus();
-                }
+                BindRemotes(preselectRemote);
             }
             finally
             {
@@ -203,6 +260,19 @@ namespace GitUI.CommandsDialogs
             Initialize(PreselectRemoteOnLoad);
         }
 
+        private void btnToggleState_Click(object sender, EventArgs e)
+        {
+            if (_selectedRemote == null)
+            {
+                btnToggleState.Visible = false;
+                return;
+            }
+            _selectedRemote.Disabled = !_selectedRemote.Disabled;
+            _gitRemoteController.ToggleRemoteState(_selectedRemote.Name, _selectedRemote.Disabled);
+            BindBtnToggleState(_selectedRemote.Disabled);
+            BindRemotes(_selectedRemote.Name);
+        }
+
         private void SaveClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(RemoteName.Text))
@@ -255,7 +325,7 @@ namespace GitUI.CommandsDialogs
 
         private void NewClick(object sender, EventArgs e)
         {
-            Remotes.SelectedItem = null;
+            Remotes.SelectedIndices.Clear();
             RemoteName.Focus();
         }
 
@@ -370,7 +440,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentSelectedRemote));
+            var remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentSelectedRemote));
             if (string.IsNullOrEmpty(remoteUrl))
             {
                 return;
@@ -416,13 +486,12 @@ namespace GitUI.CommandsDialogs
 
         private void Remotes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_selectedRemote == Remotes.SelectedItem)
+            if (Remotes.SelectedIndices.Count > 0 && _selectedRemote == Remotes.SelectedItems[0].Tag)
             {
                 return;
             }
 
-            // reset all controls and disable all buttons until we have a selection
-            New.Enabled = Delete.Enabled = false;
+            New.Enabled = Delete.Enabled = btnToggleState.Enabled = false;
             RemoteName.Text = string.Empty;
             Url.Text = string.Empty;
             comboBoxPushUrl.Text = string.Empty;
@@ -430,19 +499,29 @@ namespace GitUI.CommandsDialogs
             PuttySshKey.Text = string.Empty;
             gbMgtPanel.Text = _gbMgtPanelHeaderNew.Text;
 
-            _selectedRemote = Remotes.SelectedItem as GitRemote;
+            if (Remotes.SelectedIndices.Count < 1)
+            {
+                _selectedRemote = null;
+                return;
+            }
+
+            // reset all controls and disable all buttons until we have a selection
+            _selectedRemote = Remotes.SelectedItems[0].Tag as GitRemote;
             if (_selectedRemote == null)
             {
                 return;
             }
 
-            New.Enabled = Delete.Enabled = true;
+            New.Enabled = Delete.Enabled = btnToggleState.Enabled = true;
             RemoteName.Text = _selectedRemote.Name;
             Url.Text = _selectedRemote.Url;
             comboBoxPushUrl.Text = _selectedRemote.PushUrl;
             checkBoxSepPushUrl.Checked = !string.IsNullOrEmpty(_selectedRemote.PushUrl);
             PuttySshKey.Text = _selectedRemote.PuttySshKey;
             gbMgtPanel.Text = _gbMgtPanelHeaderEdit.Text;
+            BindBtnToggleState(_selectedRemote.Disabled);
+            btnToggleState.Visible = true;
+            flpnlRemoteManagement.Enabled = !_selectedRemote.Disabled;
         }
 
         private void UpdateBranchClick(object sender, EventArgs e)
@@ -453,6 +532,11 @@ namespace GitUI.CommandsDialogs
         private void checkBoxSepPushUrl_CheckedChanged(object sender, EventArgs e)
         {
             ShowSeparatePushUrl(checkBoxSepPushUrl.Checked);
+        }
+
+        private void Remotes_MouseUp(object sender, MouseEventArgs e)
+        {
+            flpnlRemoteManagement.Enabled = !_selectedRemote?.Disabled ?? true;
         }
 
         private void ShowSeparatePushUrl(bool visible)

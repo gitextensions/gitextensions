@@ -21,6 +21,8 @@ namespace GitUI.CommandsDialogs
         readonly TranslationString areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
         readonly TranslationString dontShowAgain = new TranslationString("Don't show me this message again.");
 
+        private AsyncLoader _asyncLoader = new AsyncLoader();
+
         private FormStash()
             : this(null)
         { }
@@ -59,7 +61,7 @@ namespace GitUI.CommandsDialogs
         {
             IList<GitStash> stashedItems = Module.GetStashes();
 
-            currentWorkingDirStashItem = new GitStash
+            currentWorkingDirStashItem = new GitStash("currentWorkingDirStashItem")
             {
                 Name = currentWorkingDirChanges.Text,
                 Message = currentWorkingDirChanges.Text
@@ -70,6 +72,7 @@ namespace GitUI.CommandsDialogs
             Stashes.Text = "";
             StashMessage.Text = "";
             Stashes.SelectedItem = null;
+            Stashes.ComboBox.DisplayMember = "Message";
             Stashes.Items.Clear();
             foreach (GitStash stashedItem in stashedItems)
                 Stashes.Items.Add(stashedItem);
@@ -96,17 +99,13 @@ namespace GitUI.CommandsDialogs
             else if(gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
-                Task.Factory.StartNew(() => Module.GetAllChangedFiles())
-                    .ContinueWith((task) => LoadGitItemStatuses(task.Result),
-                        TaskScheduler.FromCurrentSynchronizationContext());
+                _asyncLoader.Load(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
                 Clear.Enabled = false; // disallow Drop  (of current working directory)
                 Apply.Enabled = false; // disallow Apply (of current working directory)
             }
             else
             {
-                Task.Factory.StartNew(() => Module.GetStashDiffFiles(gitStash.Name))
-                    .ContinueWith((task) => LoadGitItemStatuses(task.Result),
-                        TaskScheduler.FromCurrentSynchronizationContext());
+                _asyncLoader.Load(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
                 Clear.Enabled = true; // allow Drop
                 Apply.Enabled = true; // allow Apply
             }
@@ -180,7 +179,7 @@ namespace GitUI.CommandsDialogs
         private void ClearClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-
+            var stashName = GetStashName();
             if (AppSettings.StashConfirmDropShow)
             {
                 DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
@@ -196,7 +195,7 @@ namespace GitUI.CommandsDialogs
                                        PSTaskDialog.eSysIcons.Information);
                 if (res == DialogResult.OK)
                 {
-                    UICommands.StashDrop(this, Stashes.Text);
+                    UICommands.StashDrop(this, stashName);
                     Initialize();
                     Cursor.Current = Cursors.Default;
                 }
@@ -208,15 +207,20 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                UICommands.StashDrop(this, Stashes.Text);
+                UICommands.StashDrop(this, stashName); 
                 Initialize();
                 Cursor.Current = Cursors.Default;
             }
         }
 
+        private string GetStashName()
+        {
+            return ((GitStash)Stashes.SelectedItem).Name;
+        }
+
         private void ApplyClick(object sender, EventArgs e)
         {
-            UICommands.StashApply(this, Stashes.Text);
+            UICommands.StashApply(this, GetStashName());
             Initialize();
         }
 

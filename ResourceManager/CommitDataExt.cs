@@ -49,14 +49,13 @@ namespace ResourceManager
         /// Generate header.
         /// </summary>
         /// <returns></returns>
-        public static string GetHeader(this CommitData commitData, bool showRevisionsAsLinks)
+        public static string GetHeader(this CommitData commitData, LinkFactory linkFactory, bool showRevisionsAsLinks)
         {
             StringBuilder header = new StringBuilder();
             string authorEmail = GetEmail(commitData.Author);
             header.AppendLine(
                 FillToLength(WebUtility.HtmlEncode(Strings.GetAuthorText()) + ":", COMMITHEADER_STRING_LENGTH) +
-                "<a href='mailto:" + WebUtility.HtmlEncode(authorEmail) + "'>" +
-                WebUtility.HtmlEncode(commitData.Author) + "</a>");
+                linkFactory.CreateLink(commitData.Author, "mailto:" + authorEmail));
             header.AppendLine(
                 FillToLength(WebUtility.HtmlEncode(Strings.GetAuthorDateText()) + ":",
                     COMMITHEADER_STRING_LENGTH) +
@@ -67,8 +66,7 @@ namespace ResourceManager
             header.AppendLine(
                 FillToLength(WebUtility.HtmlEncode(Strings.GetCommitterText()) + ":",
                     COMMITHEADER_STRING_LENGTH) +
-                "<a href='mailto:" + WebUtility.HtmlEncode(committerEmail) + "'>" +
-                WebUtility.HtmlEncode(commitData.Committer) + "</a>");
+                linkFactory.CreateLink(commitData.Committer, "mailto:" + committerEmail));
             header.AppendLine(
                 FillToLength(WebUtility.HtmlEncode(Strings.GetCommitDateText()) + ":",
                     COMMITHEADER_STRING_LENGTH) +
@@ -85,7 +83,7 @@ namespace ResourceManager
                 header.AppendLine();
                 string commitsString;
                 if (showRevisionsAsLinks)
-                    commitsString = commitData.ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                    commitsString = commitData.ChildrenGuids.Select(g => linkFactory.CreateCommitLink(g)).Join(" ");
                 else
                     commitsString = commitData.ChildrenGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
                 header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetChildrenText()) + ":",
@@ -98,7 +96,7 @@ namespace ResourceManager
                 header.AppendLine();
                 string commitsString;
                 if (showRevisionsAsLinks)
-                    commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                    commitsString = parentGuids.Select(g => linkFactory.CreateCommitLink(g)).Join(" ");
                 else
                     commitsString = parentGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
                 header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetParentsText()) + ":",

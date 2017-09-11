@@ -1,4 +1,18 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.49a1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="2.49.03" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="cbGitHubPullRequest.Text">
+        <source>display github pull requests builds. GithubToken:</source>
+        <target>Zeige die Builds der Pull Request auf GitHub. GitHub Token:</target>
+        
+      </trans-unit>
+      <trans-unit id="cbLoadTestResults.Text">
+        <source>display tests results in build status summary for each build result (network intensive!)</source>
+        <target>Zeige Testergebnisse in der Buildstatus Übersicht für jedes Buildergebnis (viel Netzwerkverkehr!)</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="de">
     <body>
       <trans-unit id="Description.Text">
@@ -960,6 +974,11 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
         <target>Github</target>
         
       </trans-unit>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        <target>OAuth Token</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="de">
@@ -1126,14 +1145,14 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
   </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="de">
     <body>
-      <trans-unit id="label1.Text">
-        <source>Project name</source>
-        <target>Projektname</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
+      <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
         <target>Jenkins Server-URL</target>
+        
+      </trans-unit>
+      <trans-unit id="lblProjectName.Text">
+        <source>Project name</source>
+        <target>Projektname</target>
         
       </trans-unit>
     </body>
@@ -1187,6 +1206,26 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
         <target>Proxy Wechsler</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
+        <target>HTTP Proxy</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
+        <target>HTTP Proxy Port</target>
+        
+      </trans-unit>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
+        <target>Passwort</target>
+        
+      </trans-unit>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>Benutzername</target>
         
       </trans-unit>
     </body>
@@ -1316,8 +1355,28 @@ Branchnamen oder Tag-Namen sein.)</target>
   <file datatype="plaintext" original="StashPlugin" source-language="en" target-language="de">
     <body>
       <trans-unit id="Description.Text">
-        <source>Create Stash Pull Request</source>
-        <target>Stash Pull Request erzeugen</target>
+        <source>Create Bitbucket Pull Request</source>
+        <target>Erzeuge einen Pull Request auf Bitbucket</target>
+        
+      </trans-unit>
+      <trans-unit id="StashBaseUrl.Caption">
+        <source>Specify the base URL to Bitbucket</source>
+        <target>Geben Sie die Bitbucket Basis-URL an</target>
+        
+      </trans-unit>
+      <trans-unit id="StashDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>SSL Verifikation abschalten</target>
+        
+      </trans-unit>
+      <trans-unit id="StashPassword.Caption">
+        <source>Bitbucket Password</source>
+        <target>Bitbucket Passwort</target>
+        
+      </trans-unit>
+      <trans-unit id="StashUsername.Caption">
+        <source>Bitbucket Username</source>
+        <target>Bitbucket Benutzername</target>
         
       </trans-unit>
     </body>
@@ -1352,8 +1411,8 @@ Branchnamen oder Tag-Namen sein.)</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInStash.Text">
-        <source>Your repository is not hosted in Stash.</source>
-        <target>Ihr Repository ist nicht bei Stash gehostet.</target>
+        <source>Your repository is not hosted in Bitbucket.</source>
+        <target>Ihr Repository ist nicht auf Bitbucket gehostet.</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
@@ -1505,9 +1564,42 @@ Branchnamen oder Tag-Namen sein.)</target>
         <target>Logge als Gast um den Build Report anzuzeigen</target>
         
       </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Build url not valid</source>
+        <target>Build URL ist ungültig</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy in the clipboard the url of the build before retrying.
+(Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        <target>Die Zwischenablage enthält keine gültige Build-URL. 
+
+Bitte kopieren Sie die URL des Builds in die Zwischenablage bevor Sie es erneut versuchen.
+(Sollte mindestens den Parameter &quot;buildTypeId&quot; enthalten)</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectCaption.Text">
+        <source>Error when loading the projects and build list</source>
+        <target>Fehler beim Laden der Projekte und der Liste der Builds</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectMessage.Text">
+        <source>Failed to load the projects and build list.
+Please verify the server url.</source>
+        <target>Fehler beim Laden der Build- und  Projekt-Listen.
+Bitte die Server-URL überprüfen.</target>
+        
+      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
         <target>Der reguläre Ausdruck &quot;Build Id Filter&quot; validiert nicht und wird nicht gespeichert!</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
+        <source>Extract the data from the build url copied in the clipboard</source>
+        <target>Extrahiere die Daten aus der Build URL die sich in der Zwischenablage befindet</target>
         
       </trans-unit>
     </body>

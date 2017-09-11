@@ -26,8 +26,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkDontSHowHelpImages.Checked = AppSettings.DontShowHelpImages;
             chkAlwaysShowAdvOpt.Checked = AppSettings.AlwaysShowAdvOpt;
             chkCheckForRCVersions.Checked = AppSettings.CheckForReleaseCandidates;
-            chkRememberIgnoreWhiteSpacePreference.Checked = AppSettings.RememberIgnoreWhiteSpacePreference;
-            chkOmitUninterestingDiff.Checked = AppSettings.OmitUninterestingDiff;
             chkConsoleEmulator.Checked = AppSettings.UseConsoleEmulatorForCommands;
             chkAutoNormaliseBranchName.Checked = AppSettings.AutoNormaliseBranchName;
             cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
@@ -41,8 +39,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
             AppSettings.AlwaysShowAdvOpt = chkAlwaysShowAdvOpt.Checked;
             AppSettings.CheckForReleaseCandidates = chkCheckForRCVersions.Checked;
-            AppSettings.RememberIgnoreWhiteSpacePreference = chkRememberIgnoreWhiteSpacePreference.Checked;
-            AppSettings.OmitUninterestingDiff = chkOmitUninterestingDiff.Checked;
             AppSettings.UseConsoleEmulatorForCommands = chkConsoleEmulator.Checked;
             AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.Checked;
             AppSettings.AutoNormaliseSymbol = (string)cboAutoNormaliseSymbol.SelectedValue;

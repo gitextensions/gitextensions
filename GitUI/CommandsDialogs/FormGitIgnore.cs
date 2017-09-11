@@ -10,6 +10,9 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormGitIgnore : GitModuleForm
     {
+        private readonly TranslationString _editLocalExcludeTitle =
+            new TranslationString("Edit .git/info/exclude");
+
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
             new TranslationString(".gitignore is only supported when there is a working directory.");
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupportedCaption =
@@ -25,6 +28,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _saveFileQuestionCaption =
             new TranslationString("Save changes?");
 
+        private bool _localExclude;
         private string _originalGitIgnoreFileContent = string.Empty;
 
         #region default patterns
@@ -65,12 +69,34 @@ namespace GitUI.CommandsDialogs
         };
         #endregion
 
-        public FormGitIgnore(GitUICommands aCommands)
+        public FormGitIgnore(GitUICommands aCommands, bool localExclude)
             : base(aCommands)
         {
+            _localExclude = localExclude;
             InitializeComponent();
             Translate();
+
+            if (localExclude)
+            {
+                Text = _editLocalExcludeTitle.Text;
+            }
         }
+
+        private string ExcludeFile
+        {
+            get
+            {
+                if (!_localExclude)
+                {
+                    return Path.Combine(Module.WorkingDir, ".gitignore");
+                }
+                else
+                {
+                    return Path.Combine(Module.ResolveGitInternalPath("info"), "exclude");
+                }
+            }
+        }
+
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
@@ -79,12 +105,24 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+                Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+
         private void LoadGitIgnore()
         {
             try
             {
-                if (File.Exists(Module.WorkingDir + ".gitignore"))
-                    _NO_TRANSLATE_GitIgnoreEdit.ViewFile(Module.WorkingDir + ".gitignore");
+                if (File.Exists(ExcludeFile))
+                    _NO_TRANSLATE_GitIgnoreEdit.ViewFile(ExcludeFile);
             }
             catch (Exception ex)
             {
@@ -106,7 +144,7 @@ namespace GitUI.CommandsDialogs
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        Module.WorkingDir + ".gitignore",
+                        ExcludeFile,
                         x =>
                         {
                             var fileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
@@ -167,7 +205,7 @@ namespace GitUI.CommandsDialogs
             // workaround to prevent GitIgnoreFileLoaded event handling (it causes wrong _originalGitIgnoreFileContent update)
             // TODO: implement in FileViewer separate events for loading text from file and for setting text directly via ViewText
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded -= GitIgnoreFileLoaded;
-            _NO_TRANSLATE_GitIgnoreEdit.ViewText(".gitignore",
+            _NO_TRANSLATE_GitIgnoreEdit.ViewText(ExcludeFile,
                 currentFileContent + Environment.NewLine +
                 string.Join(Environment.NewLine, patternsToAdd) + Environment.NewLine + string.Empty);
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
@@ -176,7 +214,7 @@ namespace GitUI.CommandsDialogs
         private void AddPattern_Click(object sender, EventArgs e)
         {
             SaveGitIgnore();
-            UICommands.StartAddToGitIgnoreDialog(this, "*.dll");
+            UICommands.StartAddToGitIgnoreDialog(this, _localExclude, "*.dll");
             LoadGitIgnore();
         }
 
@@ -198,6 +236,11 @@ namespace GitUI.CommandsDialogs
         private void lnkGitIgnoreGenerate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"https://www.gitignore.io/");
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

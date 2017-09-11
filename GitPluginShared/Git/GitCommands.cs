@@ -62,7 +62,7 @@ namespace GitPluginShared.Git
             };
         }
 
-        public static Process RunGitEx(string command, string filename)
+        public static Process RunGitEx(string command, string filename, string[] arguments = null)
         {
             if (!string.IsNullOrEmpty(filename))
             {
@@ -74,6 +74,11 @@ namespace GitPluginShared.Git
                 }
 
                 command += " \"" + filename + "\"";
+            }
+
+            if (arguments != null && arguments.Length > 0)
+            {
+                command += " " + string.Join(" ", arguments);
             }
 
             string path = GetGitExRegValue("InstallDir");
