@@ -6446,7 +6446,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_pruneBranchesBranch.Text">
-        <source>Do you want deletes all stale remote-tracking branches?</source>
+        <source>Do you want to delete all stale remote-tracking branches?</source>
         <target>[Ḓǿ ẏǿŭ ẇȧƞŧ ḓḗŀḗŧḗş ȧŀŀ şŧȧŀḗ řḗḿǿŧḗ-ŧřȧƈķīƞɠ ƀřȧƞƈħḗş? ΰϵ ϖ鶱ς ǲ]</target>
         
       </trans-unit>
