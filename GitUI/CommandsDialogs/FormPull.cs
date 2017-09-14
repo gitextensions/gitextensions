@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pruneBranchesCaption = new TranslationString("Pull was rejected");
         private readonly TranslationString _pruneBranchesMainInstruction = new TranslationString("Remote branch no longer exist");
         private readonly TranslationString _pruneBranchesBranch =
-            new TranslationString("Do you want deletes all stale remote-tracking branches?");
+            new TranslationString("Do you want to delete all stale remote-tracking branches?");
         private readonly TranslationString _pruneBranchesButtons = new TranslationString("Deletes stale branches|Cancel");
 
         private readonly TranslationString _pruneFromCaption = new TranslationString("Prune remote branches from {0}");

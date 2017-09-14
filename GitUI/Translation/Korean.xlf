@@ -6144,7 +6144,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_pruneBranchesBranch.Text">
-        <source>Do you want deletes all stale remote-tracking branches?</source>
+        <source>Do you want to delete all stale remote-tracking branches?</source>
         <target>모든 Stale 원격-트래킹 브랜치를 삭제 하시겠습니까?</target>
         
       </trans-unit>
