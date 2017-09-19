@@ -113,6 +113,7 @@
             this.Name = "FormUpdates";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Check for update";
+            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 
