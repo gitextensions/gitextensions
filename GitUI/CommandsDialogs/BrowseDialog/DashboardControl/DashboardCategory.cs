@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Repository;
 using ResourceManager;
@@ -54,17 +53,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             set
             {
                 m_repositoryCategory = value;
-
-                if (m_repositoryCategory != null && m_repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed)
-                {
-                    Task.Factory.StartNew(() => m_repositoryCategory.DownloadRssFeed())
-                        .ContinueWith((task) => InitRepositoryCategory(),
-                        TaskScheduler.FromCurrentSynchronizationContext());
-                }
-                else
-                {
-                    InitRepositoryCategory();
-                }
+                InitRepositoryCategory();
             }
         }
 
@@ -113,15 +102,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             SuspendLayout();
             flowLayoutPanel.SuspendLayout();
-            
+
             foreach (Repository repository in m_repositoryCategory.Repositories)
             {
                 var dashboardItem = new DashboardItem(repository);
                 dashboardItem.Click += dashboardItem_Click;
                 dashboardItem.Tag = repository;
 
-                if (m_repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
-                    dashboardItem.ContextMenuStrip = contextMenu;
+                dashboardItem.ContextMenuStrip = contextMenu;
                 AddItem(dashboardItem);
             }
 
@@ -190,11 +178,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             foreach (RepositoryCategory repositoryCategory in Repositories.RepositoryCategories)
             {
-                if (repositoryCategory.CategoryType == RepositoryCategoryType.Repositories)
-                {
-                    ToolStripItem addToItem = moveToMenuItem.DropDownItems.Add(repositoryCategory.Description);
-                    addToItem.Click += addToItem_Click;
-                }
+                ToolStripItem addToItem = moveToMenuItem.DropDownItems.Add(repositoryCategory.Description);
+                addToItem.Click += addToItem_Click;
             }
 
             if (moveToMenuItem.DropDownItems.Count > 0)

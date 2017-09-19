@@ -231,7 +231,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             RepositoryCategory filteredRecentRepositoryHistory = new RepositoryCategory();
             filteredRecentRepositoryHistory.Description = Repositories.RepositoryHistory.Description;
-            filteredRecentRepositoryHistory.CategoryType = Repositories.RepositoryHistory.CategoryType;
 
             foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {

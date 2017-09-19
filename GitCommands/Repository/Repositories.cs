@@ -158,27 +158,21 @@ namespace GitCommands.Repository
             try
             {
                 var serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
-                StringReader stringReader = null;
-                try
+                using (var stringReader = new StringReader(xml))
                 {
-                    stringReader = new StringReader(xml);
                     using (var xmlReader = new XmlTextReader(stringReader))
                     {
-                        stringReader = null;
-                        repositories = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
-                        if (repositories != null)
+                        var repos = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
+                        if (repos != null)
                         {
-                            foreach (var repositoryCategory in repositories)
+                            repositories = new BindingList<RepositoryCategory>();
+                            foreach (var repositoryCategory in repos.Where(r => r.CategoryType == RepositoryCategoryType.Repositories))
                             {
                                 repositoryCategory.SetIcon();
+                                repositories.Add(repositoryCategory);
                             }
                         }
                     }
-                }
-                finally
-                {
-                    if (stringReader != null)
-                        stringReader.Dispose();
                 }
             }
             catch (Exception ex)
