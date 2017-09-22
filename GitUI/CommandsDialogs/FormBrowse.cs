@@ -3963,5 +3963,10 @@ namespace GitUI.CommandsDialogs
         {
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
+
+        private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
+        {
+            toolStripBranchFilterComboBox.DroppedDown = true;
+        }
     }
 }
