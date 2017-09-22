@@ -2325,13 +2325,13 @@ namespace GitUI
             }
 
             //For now there is no action that could be done on currentBranch
-            string currentBranch = Module.GetSelectedBranch();
+            string currentBranchRef = GitRef.RefsHeadsPrefix + Module.GetSelectedBranch();
             var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
-                if (head.Name.Equals(currentBranch))
+                if (head.CompleteName.Equals(currentBranchRef))
                     currentBranchPointsToRevision = true;
                 else
                 {
@@ -2389,7 +2389,7 @@ namespace GitUI
                 //skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
                 {
-                    if (!head.Name.Equals(currentBranch))
+                    if (!head.CompleteName.Equals(currentBranchRef))
                     {
                         toolStripItem = new ToolStripMenuItem(head.Name);
                         toolStripItem.Tag = head.Name;
@@ -2403,7 +2403,7 @@ namespace GitUI
                     renameDropDown.Items.Add(toolStripItem); //Add to rename branch
                 }
 
-                if (!head.Name.Equals(currentBranch))
+                if (!head.CompleteName.Equals(currentBranchRef))
                 {
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     if (head.IsRemote)
