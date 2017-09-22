@@ -44,6 +44,7 @@ namespace GitUI.CommandsDialogs
             this.setNextPullActionAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButtonPush = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripFileExplorer = new System.Windows.Forms.ToolStripButton();
             this.GitBash = new System.Windows.Forms.ToolStripButton();
             this.EditSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
@@ -311,6 +312,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripButtonPull,
             this.toolStripButtonPush,
             this.toolStripSeparator2,
+            this.toolStripFileExplorer,
             this.GitBash,
             this.EditSettings,
             this.toolStripSeparator5,
@@ -527,6 +529,17 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripFileExplorer
+            // 
+            this.toolStripFileExplorer.CheckOnClick = true;
+            this.toolStripFileExplorer.Enabled = false;
+            this.toolStripFileExplorer.Image = global::GitUI.Properties.Resources.Folder;
+            this.toolStripFileExplorer.ImageTransparentColor = System.Drawing.Color.Gray;
+            this.toolStripFileExplorer.Name = "toolStripFileExplorer";
+            this.toolStripFileExplorer.Size = new System.Drawing.Size(23, 22);
+            this.toolStripFileExplorer.ToolTipText = "File Explorer";
+            this.toolStripFileExplorer.Click += new System.EventHandler(this.ToolStripFileExplorerClick);
             // 
             // GitBash
             // 
@@ -2330,5 +2343,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem toolStripMenuItemWorktrees;
         private ToolStripMenuItem clearRecentRepositoriesListMenuItem;
         private ToolStripSeparator clearRecentRepositoriesListToolStripMenuItem;
+        private ToolStripButton toolStripFileExplorer;
     }
 }

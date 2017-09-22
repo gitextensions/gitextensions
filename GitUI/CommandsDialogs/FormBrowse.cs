@@ -571,6 +571,7 @@ namespace GitUI.CommandsDialogs
             dashboardToolStripMenuItem.Visible = !validWorkingDir;
             repositoryToolStripMenuItem.Visible = validWorkingDir;
             commandsToolStripMenuItem.Visible = validWorkingDir;
+            toolStripFileExplorer.Enabled = validWorkingDir;
             if (validWorkingDir)
             {
                 refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
@@ -1900,6 +1901,18 @@ namespace GitUI.CommandsDialogs
         private void ToolStripButtonPushClick(object sender, EventArgs e)
         {
             PushToolStripMenuItemClick(sender, e);
+        }
+
+        private void ToolStripFileExplorerClick(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(Module.WorkingDir);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message);
+            }
         }
 
         private void ManageSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
