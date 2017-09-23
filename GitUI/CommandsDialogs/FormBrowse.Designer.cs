@@ -545,8 +545,6 @@ namespace GitUI.CommandsDialogs
             // 
             // toolStripBranchFilterComboBox
             // 
-            this.toolStripBranchFilterComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.toolStripBranchFilterComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.toolStripBranchFilterComboBox.AutoSize = false;
             this.toolStripBranchFilterComboBox.DropDownWidth = 300;
             this.toolStripBranchFilterComboBox.Name = "toolStripBranchFilterComboBox";

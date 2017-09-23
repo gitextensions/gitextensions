@@ -313,6 +313,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripBranchFilterComboBox.Name = "toolStripBranchFilterComboBox";
             this.toolStripBranchFilterComboBox.Size = new System.Drawing.Size(150, 25);
+            this.toolStripBranchFilterComboBox.Click += new System.EventHandler(this.toolStripBranchFilterComboBox_Click);
             // 
             // toolStripBranchFilterDropDownButton
             // 
