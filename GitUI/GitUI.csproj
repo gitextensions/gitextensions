@@ -137,6 +137,12 @@
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateManager.cs" />
+    <Compile Include="CommandsDialogs\RevisionFileTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\RevisionFileTree.Designer.cs">
+      <DependentUpon>RevisionFileTree.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\FormCompareToBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1090,6 +1096,9 @@
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormUpdates.resx">
       <DependentUpon>FormUpdates.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\RevisionFileTree.resx">
+      <DependentUpon>RevisionFileTree.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormCompareToBranch.resx">
       <DependentUpon>FormCompareToBranch.cs</DependentUpon>

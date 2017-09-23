@@ -632,16 +632,19 @@ namespace GitUI.CommandsDialogs
             ResetUnStaged.Enabled = Unstaged.AllItems.Any();
         }
 
+        private void SetDialogTitle()
+        {
+            Task.Run(() => string.Format(_formTitle.Text, Module.GetSelectedBranch(), Module.WorkingDir))
+                .ContinueWith(task => Text = task.Result, _taskScheduler);
+        }
+
         private bool _initialized;
 
         private void Initialize(bool loadUnstaged)
         {
             _initialized = true;
 
-            Task.Factory.StartNew(() => string.Format(_formTitle.Text, Module.GetSelectedBranch(),
-                                      Module.WorkingDir))
-                .ContinueWith(task => Text = task.Result, _taskScheduler);
-
+            SetDialogTitle();
             Cursor.Current = Cursors.WaitCursor;
 
             if (loadUnstaged)
@@ -2628,8 +2631,7 @@ namespace GitUI.CommandsDialogs
         {
             if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
-                Message.Text = Module.GetPreviousCommitMessages(1).FirstOrDefault().Trim();
-                return;
+                Message.Text = Module.GetPreviousCommitMessages(1).FirstOrDefault()?.Trim();
             }
         }
 
@@ -2666,16 +2668,19 @@ namespace GitUI.CommandsDialogs
                     _interactiveAddBashCloseWaitCts.Dispose();
                     _interactiveAddBashCloseWaitCts = null;
                 }
-
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private void createBranchToolStripButton_Click(object sender, EventArgs e)
         {
-            UICommands.StartCreateBranchDialog(this, null);
+            var branchCreated = UICommands.StartCreateBranchDialog(this, null);
+            if (!branchCreated)
+            {
+                return;
+            }
+            SetDialogTitle();
         }
 
         private void Message_Enter(object sender, EventArgs e)
