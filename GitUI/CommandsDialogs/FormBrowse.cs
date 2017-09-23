@@ -531,6 +531,7 @@ namespace GitUI.CommandsDialogs
             dashboardToolStripMenuItem.Visible = !validWorkingDir;
             repositoryToolStripMenuItem.Visible = validWorkingDir;
             commandsToolStripMenuItem.Visible = validWorkingDir;
+            toolStripFileExplorer.Enabled = validWorkingDir;
             if (validWorkingDir)
             {
                 refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
