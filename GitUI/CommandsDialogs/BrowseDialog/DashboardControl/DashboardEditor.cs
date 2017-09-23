@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (_NO_TRANSLATE_Categories.SelectedItem == null)
                 return;
 
-            var repositoryCategory = (RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem;
+            var repositoryCategory = (RepositoryCategory)_NO_TRANSLATE_Categories.SelectedItem;
             repositoryCategory.SetIcon();
         }
 
@@ -51,9 +51,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             RepositoriesGrid.DataSource = repositoryCategory.Repositories;
 
             _NO_TRANSLATE_Caption.Text = repositoryCategory.Description;
-            RssFeedType.Checked = repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed;
-            RepositoriesType.Checked = !RssFeedType.Checked;
-            _NO_TRANSLATE_RssFeed.Text = repositoryCategory.RssFeedUrl;
 
             RssFeedType_CheckedChanged(this, null);
         }
@@ -70,7 +67,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (_NO_TRANSLATE_Categories.SelectedItem == null)
                 return;
 
-            Repositories.RepositoryCategories.Remove((RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem);
+            Repositories.RepositoryCategories.Remove((RepositoryCategory)_NO_TRANSLATE_Categories.SelectedItem);
             Categories_SelectedIndexChanged(null, null);
         }
 
@@ -79,7 +76,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (_NO_TRANSLATE_Categories.SelectedItem == null)
                 return;
 
-            var repositoryCategory = (RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem;
+            var repositoryCategory = (RepositoryCategory)_NO_TRANSLATE_Categories.SelectedItem;
             repositoryCategory.Description = _NO_TRANSLATE_Caption.Text;
             Initialize();
         }
@@ -89,47 +86,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (_NO_TRANSLATE_Categories.SelectedItem == null)
                 return;
 
-            var repositoryCategory = (RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem;
+            var repositoryCategory = (RepositoryCategory)_NO_TRANSLATE_Categories.SelectedItem;
 
-
-            if (RssFeedType.Checked)
-            {
-                RepositoriesGrid.ReadOnly = true;
-                RepositoriesGrid.Enabled = false;
-                RepositoriesGrid.BackgroundColor = Color.Gray;
-                _NO_TRANSLATE_RssFeed.Enabled = true;
-                repositoryCategory.CategoryType = RepositoryCategoryType.RssFeed;
-            }
-
-            if (RepositoriesType.Checked)
-            {
-                RepositoriesGrid.ReadOnly = false;
-                RepositoriesGrid.Enabled = true;
-                RepositoriesGrid.BackgroundColor = Color.White;
-                _NO_TRANSLATE_RssFeed.Enabled = false;
-                repositoryCategory.CategoryType = RepositoryCategoryType.Repositories;
-            }
+            RepositoriesGrid.ReadOnly = false;
+            RepositoriesGrid.Enabled = true;
+            RepositoriesGrid.BackgroundColor = Color.White;
 
             repositoryCategory.SetIcon();
-        }
-
-        private void RssFeed_TextChanged(object sender, EventArgs e)
-        {
-            if (_NO_TRANSLATE_Categories.SelectedItem == null)
-                return;
-
-            var repositoryCategory = (RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem;
-            repositoryCategory.RssFeedUrl = _NO_TRANSLATE_RssFeed.Text;
-        }
-
-        private void RssFeed_Validating(object sender, CancelEventArgs e)
-        {
-            if (_NO_TRANSLATE_Categories.SelectedItem == null)
-                return;
-
-            var repositoryCategory = (RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem;
-            if (repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed)
-                repositoryCategory.DownloadRssFeed();
         }
 
         private void Caption_Validating(object sender, CancelEventArgs e)
@@ -137,25 +100,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (_NO_TRANSLATE_Categories.SelectedItem == null)
                 return;
 
-            var repositoryCategory = (RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem;
-            repositoryCategory.SetIcon();
-        }
-
-        private void RssFeedType_Validating(object sender, CancelEventArgs e)
-        {
-            if (_NO_TRANSLATE_Categories.SelectedItem == null)
-                return;
-
-            var repositoryCategory = (RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem;
-            repositoryCategory.SetIcon();
-        }
-
-        private void RepositoriesType_Validating(object sender, CancelEventArgs e)
-        {
-            if (_NO_TRANSLATE_Categories.SelectedItem == null)
-                return;
-
-            var repositoryCategory = (RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem;
+            var repositoryCategory = (RepositoryCategory)_NO_TRANSLATE_Categories.SelectedItem;
             repositoryCategory.SetIcon();
         }
 
@@ -164,7 +109,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (_NO_TRANSLATE_Categories.SelectedItem == null)
                 return;
 
-            var repositoryCategory = (RepositoryCategory) _NO_TRANSLATE_Categories.SelectedItem;
+            var repositoryCategory = (RepositoryCategory)_NO_TRANSLATE_Categories.SelectedItem;
             repositoryCategory.SetIcon();
         }
 
@@ -175,8 +120,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (e.Row.DataBoundItem == null)
                 return;
 
-            var datasource = ((BindingList<Repository>) ((DataGridView) sender).DataSource);
-            var repositoryToRemove = (Repository) e.Row.DataBoundItem;
+            var datasource = ((BindingList<Repository>)((DataGridView)sender).DataSource);
+            var repositoryToRemove = (Repository)e.Row.DataBoundItem;
 
             RepositoriesGrid.DataSource = null;
             datasource.Remove(repositoryToRemove);
