@@ -496,5 +496,10 @@ namespace GitUI.CommandsDialogs
             }
             base.Dispose(disposing);
         }
+
+        private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
+        {
+            toolStripBranchFilterComboBox.DroppedDown = true;
+        }
     }
 }
