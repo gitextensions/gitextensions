@@ -1903,18 +1903,6 @@ namespace GitUI.CommandsDialogs
             PushToolStripMenuItemClick(sender, e);
         }
 
-        private void ToolStripFileExplorerClick(object sender, EventArgs e)
-        {
-            try
-            {
-                Process.Start(Module.WorkingDir);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message);
-            }
-        }
-
         private void ManageSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartSubmodulesDialog(this);

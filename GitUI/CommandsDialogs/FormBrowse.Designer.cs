@@ -539,7 +539,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripFileExplorer.Name = "toolStripFileExplorer";
             this.toolStripFileExplorer.Size = new System.Drawing.Size(23, 22);
             this.toolStripFileExplorer.ToolTipText = "File Explorer";
-            this.toolStripFileExplorer.Click += new System.EventHandler(this.ToolStripFileExplorerClick);
+            this.toolStripFileExplorer.Click += new System.EventHandler(this.FileExplorerToolStripMenuItemClick);
             // 
             // GitBash
             // 
