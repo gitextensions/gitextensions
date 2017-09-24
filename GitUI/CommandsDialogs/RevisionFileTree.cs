@@ -284,7 +284,7 @@ namespace GitUI.CommandsDialogs
         }
 
 
-        private void GitTree_AfterSelect(object sender, TreeViewEventArgs e)
+        private void tvGitTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             var item = e.Node.Tag as GitItem;
             if (item == null)
@@ -298,7 +298,7 @@ namespace GitUI.CommandsDialogs
                 FileText.ViewText("", "");
         }
 
-        private void GitTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        private void tvGitTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             if (e.Node.IsExpanded)
                 return;
@@ -309,12 +309,12 @@ namespace GitUI.CommandsDialogs
             LoadInTree(item.SubItems, e.Node.Nodes);
         }
 
-        private void GitTree_DoubleClick(object sender, EventArgs e)
+        private void tvGitTree_DoubleClick(object sender, EventArgs e)
         {
             OnItemActivated();
         }
 
-        private void GitTree_KeyDown(object sender, KeyEventArgs e)
+        private void tvGitTree_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
             {
@@ -326,7 +326,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void GitTree_MouseDown(object sender, MouseEventArgs e)
+        private void tvGitTree_MouseDown(object sender, MouseEventArgs e)
         {
             //DRAG
             if (e.Button == MouseButtons.Left)
@@ -346,7 +346,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void GitTree_MouseMove(object sender, MouseEventArgs e)
+        private void tvGitTree_MouseMove(object sender, MouseEventArgs e)
         {
             var gitTree = (TreeView)sender;
 
