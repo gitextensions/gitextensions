@@ -24,7 +24,6 @@ namespace GitUI.CommandsDialogs
 
         //store strings to not keep references to nodes
         private readonly Stack<string> _lastSelectedNodes = new Stack<string>();
-        private Rectangle _gitTreeDragBoxFromMouseDown;
         private GitRevision _revision;
 
 
@@ -314,68 +313,33 @@ namespace GitUI.CommandsDialogs
             OnItemActivated();
         }
 
+        private void tvGitTree_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            var item = (e.Item as TreeNode)?.Tag as GitItem;
+            if (item == null)
+            {
+                return;
+            }
+
+            var fileList = new StringCollection();
+            var fileName = Path.Combine(Module.WorkingDir, item.FileName);
+
+            fileList.Add(fileName.ToNativePath());
+
+            var obj = new DataObject();
+            obj.SetFileDropList(fileList);
+
+            DoDragDrop(obj, DragDropEffects.Copy);
+        }
+
         private void tvGitTree_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            if (tvGitTree.SelectedNode == null || e.KeyCode != Keys.Enter)
             {
-                if (tvGitTree.SelectedNode != null)
-                {
-                    OnItemActivated();
-                    e.Handled = true;
-                }
+                return;
             }
-        }
-
-        private void tvGitTree_MouseDown(object sender, MouseEventArgs e)
-        {
-            //DRAG
-            if (e.Button == MouseButtons.Left)
-            {
-                // Remember the point where the mouse down occurred.
-                // The DragSize indicates the size that the mouse can move
-                // before a drag event should be started.
-                var dragSize = SystemInformation.DragSize;
-
-                // Create a rectangle using the DragSize, with the mouse position being
-                // at the center of the rectangle.
-                _gitTreeDragBoxFromMouseDown = new Rectangle(new Point(e.X - dragSize.Width / 2, e.Y - dragSize.Height / 2), dragSize);
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                tvGitTree.SelectedNode = tvGitTree.GetNodeAt(e.X, e.Y);
-            }
-        }
-
-        private void tvGitTree_MouseMove(object sender, MouseEventArgs e)
-        {
-            var gitTree = (TreeView)sender;
-
-            //DRAG
-            // If the mouse moves outside the rectangle, start the drag.
-            if (_gitTreeDragBoxFromMouseDown != Rectangle.Empty &&
-                !_gitTreeDragBoxFromMouseDown.Contains(e.X, e.Y))
-            {
-                var fileList = new StringCollection();
-
-                //foreach (GitItemStatus item in SelectedItems)
-                if (gitTree.SelectedNode != null)
-                {
-                    var item = gitTree.SelectedNode.Tag as GitItem;
-                    if (item != null)
-                    {
-                        var fileName = Path.Combine(Module.WorkingDir, item.FileName);
-
-                        fileList.Add(fileName.ToNativePath());
-                    }
-
-                    var obj = new DataObject();
-                    obj.SetFileDropList(fileList);
-
-                    // Proceed with the drag and drop, passing in the list item.
-                    DoDragDrop(obj, DragDropEffects.Copy);
-                    _gitTreeDragBoxFromMouseDown = Rectangle.Empty;
-                }
-            }
+            OnItemActivated();
+            e.Handled = true;
         }
 
 

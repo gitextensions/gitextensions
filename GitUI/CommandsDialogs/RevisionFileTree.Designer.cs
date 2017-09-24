@@ -88,11 +88,10 @@
             this.tvGitTree.Size = new System.Drawing.Size(300, 303);
             this.tvGitTree.TabIndex = 0;
             this.tvGitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvGitTree_BeforeExpand);
+            this.tvGitTree.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tvGitTree_ItemDrag);
             this.tvGitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvGitTree_AfterSelect);
             this.tvGitTree.DoubleClick += new System.EventHandler(this.tvGitTree_DoubleClick);
             this.tvGitTree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tvGitTree_KeyDown);
-            this.tvGitTree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tvGitTree_MouseDown);
-            this.tvGitTree.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tvGitTree_MouseMove);
             // 
             // FileTreeContextMenu
             // 
