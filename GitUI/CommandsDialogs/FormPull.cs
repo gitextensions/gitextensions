@@ -149,7 +149,6 @@ namespace GitUI.CommandsDialogs
         private void Init(string defaultRemote)
         {
             _branch = Module.GetSelectedBranch();
-            localBranch.Text = _branch;
             BindRemotesDropDown(defaultRemote);
         }
 
@@ -841,6 +840,7 @@ namespace GitUI.CommandsDialogs
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = true;
+            localBranch.Text = string.Empty;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
