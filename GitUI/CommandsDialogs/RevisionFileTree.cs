@@ -287,22 +287,36 @@ namespace GitUI.CommandsDialogs
         {
             var item = e.Node.Tag as GitItem;
             if (item == null)
+            {
                 return;
+            }
 
             if (item.IsBlob)
+            {
                 FileText.ViewGitItem(item.FileName, item.Guid);
+            }
             else if (item.IsCommit)
+            {
                 FileText.ViewText(item.FileName, LocalizationHelpers.GetSubmoduleText(Module, item.FileName, item.Guid));
+            }
             else
+            {
                 FileText.ViewText("", "");
+                e.Node.Toggle();
+            }
         }
 
         private void tvGitTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             if (e.Node.IsExpanded)
+            {
                 return;
-
-            var item = (IGitItem)e.Node.Tag;
+            }
+            var item = e.Node.Tag as GitItem;
+            if (item == null)
+            {
+                return;
+            }
 
             e.Node.Nodes.Clear();
             LoadInTree(item.SubItems, e.Node.Nodes);
