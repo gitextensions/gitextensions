@@ -9,6 +9,7 @@ using GitCommands.Config;
 using GitCommands.Utils;
 using Microsoft.Win32;
 using ResourceManager;
+using System.Linq;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -333,6 +334,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SaveAndRescan_Click(null, null);
         }
 
+        private readonly string[] AutoConfigMergeTools = new[] { "p4merge", "TortoiseMerge", "meld", "beyondcompare3", "beyondcompare4", "diffmerge", "semanticmerge", "vscode", "vsdiffmerge" };
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(CommonLogic.GetGlobalMergeTool()))
@@ -355,7 +357,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 CheckSettingsLogic.SolveMergeToolPathForKDiff();
             }
-            else if (CommonLogic.IsMergeTool("p4merge") || CommonLogic.IsMergeTool("TortoiseMerge") || CommonLogic.IsMergeTool("meld"))
+            else if (AutoConfigMergeTools.Any(tool => CommonLogic.IsMergeTool(tool)))
             {
                 CheckSettingsLogic.AutoConfigMergeToolCmd();
 

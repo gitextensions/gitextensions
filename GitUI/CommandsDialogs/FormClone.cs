@@ -104,10 +104,10 @@ namespace GitUI.CommandsDialogs
                             currentBranchRemote = remotes.FirstOrDefault();
                     }
 
-                    string pushUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemotePushUrl, currentBranchRemote));
+                    string pushUrl = Module.GetSetting(string.Format(SettingKeyString.RemotePushUrl, currentBranchRemote));
                     if (pushUrl.IsNullOrEmpty())
                     {
-                        pushUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentBranchRemote));
+                        pushUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentBranchRemote));
                     }
 
                     _NO_TRANSLATE_From.Text = pushUrl;

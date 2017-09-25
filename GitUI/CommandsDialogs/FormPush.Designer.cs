@@ -84,7 +84,7 @@
             this.ForcePushOptionPanel.Margin = new System.Windows.Forms.Padding(0);
             this.ForcePushOptionPanel.Name = "ForcePushOptionPanel";
             this.ForcePushOptionPanel.Size = new System.Drawing.Size(194, 23);
-            this.ForcePushOptionPanel.TabIndex = 28;
+            this.ForcePushOptionPanel.TabIndex = 0;
             // 
             // ckForceWithLease
             // 
@@ -93,7 +93,7 @@
             this.ckForceWithLease.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ckForceWithLease.Name = "ckForceWithLease";
             this.ckForceWithLease.Size = new System.Drawing.Size(109, 17);
-            this.ckForceWithLease.TabIndex = 3;
+            this.ckForceWithLease.TabIndex = 0;
             this.ckForceWithLease.Text = "Force With &Lease";
             this.ckForceWithLease.UseVisualStyleBackColor = true;
             this.ckForceWithLease.CheckedChanged += new System.EventHandler(this.ForceWithLeaseCheckedChanged);
@@ -104,7 +104,7 @@
             this.ForcePushBranches.Location = new System.Drawing.Point(112, 3);
             this.ForcePushBranches.Name = "ForcePushBranches";
             this.ForcePushBranches.Size = new System.Drawing.Size(79, 17);
-            this.ForcePushBranches.TabIndex = 3;
+            this.ForcePushBranches.TabIndex = 1;
             this.ForcePushBranches.Text = "&Force Push";
             this.ForcePushBranches.UseVisualStyleBackColor = true;
             this.ForcePushBranches.CheckedChanged += new System.EventHandler(this.ForcePushBranchesCheckedChanged);
@@ -143,7 +143,7 @@
             this.Push.Location = new System.Drawing.Point(519, 219);
             this.Push.Name = "Push";
             this.Push.Size = new System.Drawing.Size(101, 25);
-            this.Push.TabIndex = 9;
+            this.Push.TabIndex = 4;
             this.Push.Text = "&Push";
             this.Push.UseVisualStyleBackColor = true;
             this.Push.Click += new System.EventHandler(this.PushClick);
@@ -164,7 +164,7 @@
             this.TabControlTagBranch.SelectedIndex = 0;
             this.TabControlTagBranch.ShowToolTips = true;
             this.TabControlTagBranch.Size = new System.Drawing.Size(614, 113);
-            this.TabControlTagBranch.TabIndex = 6;
+            this.TabControlTagBranch.TabIndex = 1;
             this.TabControlTagBranch.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabControlTagBranch_Selected);
             // 
             // BranchTab
@@ -213,7 +213,7 @@
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(470, 29);
-            this.tableLayoutPanel1.TabIndex = 27;
+            this.tableLayoutPanel1.TabIndex = 1;
             // 
             // _NO_TRANSLATE_Branch
             // 
@@ -236,7 +236,7 @@
             this.labelTo.Name = "labelTo";
             this.labelTo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.labelTo.Size = new System.Drawing.Size(17, 29);
-            this.labelTo.TabIndex = 21;
+            this.labelTo.TabIndex = 1;
             this.labelTo.Text = "to";
             this.labelTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -249,7 +249,7 @@
             this.RemoteBranch.Location = new System.Drawing.Point(249, 3);
             this.RemoteBranch.Name = "RemoteBranch";
             this.RemoteBranch.Size = new System.Drawing.Size(218, 21);
-            this.RemoteBranch.TabIndex = 1;
+            this.RemoteBranch.TabIndex = 2;
             // 
             // ShowOptions
             // 
@@ -257,7 +257,7 @@
             this.ShowOptions.Location = new System.Drawing.Point(26, 54);
             this.ShowOptions.Name = "ShowOptions";
             this.ShowOptions.Size = new System.Drawing.Size(71, 13);
-            this.ShowOptions.TabIndex = 26;
+            this.ShowOptions.TabIndex = 2;
             this.ShowOptions.TabStop = true;
             this.ShowOptions.Text = "Show options";
             this.ShowOptions.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ShowOptions_LinkClicked);
@@ -274,7 +274,7 @@
             this.PushOptionsPanel.Location = new System.Drawing.Point(47, 61);
             this.PushOptionsPanel.Name = "PushOptionsPanel";
             this.PushOptionsPanel.Size = new System.Drawing.Size(514, 20);
-            this.PushOptionsPanel.TabIndex = 25;
+            this.PushOptionsPanel.TabIndex = 3;
             this.PushOptionsPanel.Visible = false;
             // 
             // flowLayoutPanel1
@@ -287,7 +287,7 @@
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(215, 25);
-            this.flowLayoutPanel1.TabIndex = 27;
+            this.flowLayoutPanel1.TabIndex = 2;
             this.flowLayoutPanel1.WrapContents = false;
             // 
             // label2
@@ -298,7 +298,7 @@
             this.label2.Margin = new System.Windows.Forms.Padding(0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(113, 13);
-            this.label2.TabIndex = 26;
+            this.label2.TabIndex = 0;
             this.label2.Text = "Recursive submodules";
             // 
             // RecursiveSubmodules
@@ -313,7 +313,7 @@
             this.RecursiveSubmodules.Margin = new System.Windows.Forms.Padding(2);
             this.RecursiveSubmodules.Name = "RecursiveSubmodules";
             this.RecursiveSubmodules.Size = new System.Drawing.Size(98, 21);
-            this.RecursiveSubmodules.TabIndex = 27;
+            this.RecursiveSubmodules.TabIndex = 1;
             // 
             // ReplaceTrackingReference
             // 
@@ -321,7 +321,7 @@
             this.ReplaceTrackingReference.Location = new System.Drawing.Point(0, 37);
             this.ReplaceTrackingReference.Name = "ReplaceTrackingReference";
             this.ReplaceTrackingReference.Size = new System.Drawing.Size(155, 17);
-            this.ReplaceTrackingReference.TabIndex = 25;
+            this.ReplaceTrackingReference.TabIndex = 1;
             this.ReplaceTrackingReference.Text = "Replace tracking reference";
             this.ReplaceTrackingReference.UseVisualStyleBackColor = true;
             // 
@@ -331,7 +331,7 @@
             this._createPullRequestCB.Location = new System.Drawing.Point(280, 37);
             this._createPullRequestCB.Name = "_createPullRequestCB";
             this._createPullRequestCB.Size = new System.Drawing.Size(171, 17);
-            this._createPullRequestCB.TabIndex = 22;
+            this._createPullRequestCB.TabIndex = 3;
             this._createPullRequestCB.Text = "Create pull request after push";
             this._createPullRequestCB.UseVisualStyleBackColor = true;
             // 
@@ -341,7 +341,7 @@
             this.labelFrom.Location = new System.Drawing.Point(6, 26);
             this.labelFrom.Name = "labelFrom";
             this.labelFrom.Size = new System.Drawing.Size(79, 13);
-            this.labelFrom.TabIndex = 17;
+            this.labelFrom.TabIndex = 0;
             this.labelFrom.Text = "Branch to push";
             // 
             // TagTab
@@ -366,7 +366,7 @@
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(600, 81);
-            this.groupBox3.TabIndex = 23;
+            this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Tag";
             // 
@@ -376,7 +376,7 @@
             this.ForcePushTags.Location = new System.Drawing.Point(160, 50);
             this.ForcePushTags.Name = "ForcePushTags";
             this.ForcePushTags.Size = new System.Drawing.Size(79, 17);
-            this.ForcePushTags.TabIndex = 22;
+            this.ForcePushTags.TabIndex = 2;
             this.ForcePushTags.Text = "&Force Push";
             this.ForcePushTags.UseVisualStyleBackColor = true;
             // 
@@ -386,7 +386,7 @@
             this.label1.Location = new System.Drawing.Point(6, 22);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 13);
-            this.label1.TabIndex = 17;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Tag to push";
             // 
             // TagComboBox
@@ -397,7 +397,7 @@
             this.TagComboBox.Location = new System.Drawing.Point(160, 19);
             this.TagComboBox.Name = "TagComboBox";
             this.TagComboBox.Size = new System.Drawing.Size(297, 21);
-            this.TagComboBox.TabIndex = 18;
+            this.TagComboBox.TabIndex = 1;
             // 
             // MultipleBranchTab
             // 
@@ -425,6 +425,8 @@
             // 
             this.BranchGrid.AllowUserToAddRows = false;
             this.BranchGrid.AllowUserToDeleteRows = false;
+            this.BranchGrid.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.BranchGrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.BranchGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.BranchGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.LocalColumn,
@@ -497,7 +499,7 @@
             this.LoadSSHKey.Location = new System.Drawing.Point(372, 219);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(137, 25);
-            this.LoadSSHKey.TabIndex = 8;
+            this.LoadSSHKey.TabIndex = 3;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
@@ -515,7 +517,7 @@
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(614, 80);
-            this.groupBox2.TabIndex = 21;
+            this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Push to";
             // 
@@ -525,6 +527,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_Remotes.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this._NO_TRANSLATE_Remotes.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this._NO_TRANSLATE_Remotes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(128, 19);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
@@ -578,7 +581,7 @@
             this.Pull.Location = new System.Drawing.Point(12, 219);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(101, 25);
-            this.Pull.TabIndex = 7;
+            this.Pull.TabIndex = 2;
             this.Pull.Text = "Pull";
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.PullClick);

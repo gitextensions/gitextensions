@@ -85,12 +85,14 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pruneBranchesCaption = new TranslationString("Pull was rejected");
         private readonly TranslationString _pruneBranchesMainInstruction = new TranslationString("Remote branch no longer exist");
         private readonly TranslationString _pruneBranchesBranch =
-            new TranslationString("Do you want deletes all stale remote-tracking branches?");
+            new TranslationString("Do you want to delete all stale remote-tracking branches?");
         private readonly TranslationString _pruneBranchesButtons = new TranslationString("Deletes stale branches|Cancel");
 
         private readonly TranslationString _pruneFromCaption = new TranslationString("Prune remote branches from {0}");
 
         private readonly TranslationString _hoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
+        private readonly TranslationString _formTitlePull = new TranslationString("Pull ({0})");
+        private readonly TranslationString _formTitleFetch = new TranslationString("Fetch ({0}");
         #endregion
 
         public bool ErrorOccurred { get; private set; }
@@ -488,7 +490,7 @@ namespace GitUI.CommandsDialogs
 
             Debug.Assert(Merge.Checked || Rebase.Checked);
 
-            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
+            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked, Prune.Checked))
                        {
                            HandleOnExitCallback = HandlePullOnExit
                        };
@@ -721,7 +723,7 @@ namespace GitUI.CommandsDialogs
         {
             _NO_TRANSLATE_Remotes.Select();
 
-            Text = string.Format("Pull ({0})", Module.WorkingDir);
+            FillFormTitle();
         }
 
         private void FillPullSourceDropDown()
@@ -730,6 +732,14 @@ namespace GitUI.CommandsDialogs
             comboBoxPullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             comboBoxPullSource.DisplayMember = "Path";
             comboBoxPullSource.Text = prevUrl;
+        }
+
+        private void FillFormTitle()
+        {
+            if (Fetch.Checked)
+                Text = string.Format(_formTitleFetch.Text, Module.WorkingDir);
+            else
+                Text = string.Format(_formTitlePull.Text, Module.WorkingDir);
         }
 
         private void StashClick(object sender, EventArgs e)
@@ -835,6 +845,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
             Prune.Enabled = true;
+            FillFormTitle();
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)
@@ -855,7 +866,7 @@ namespace GitUI.CommandsDialogs
             ResetRemoteHeads();
 
             // update the text box of the Remote Url combobox to show the URL of selected remote
-            comboBoxPullSource.Text = Module.GetPathSetting(
+            comboBoxPullSource.Text = Module.GetSetting(
                 string.Format(SettingKeyString.RemoteUrl, _NO_TRANSLATE_Remotes.Text));
 
             // update merge options radio buttons

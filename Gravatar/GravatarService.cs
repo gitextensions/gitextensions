@@ -1,219 +1,126 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Net;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Gravatar
 {
-    /// <summary>
-    /// Services that gravatar provides in order to provide avatars in
-    /// the absence of a user-uploaded image.
-    /// </summary>
-    public enum FallBackService
+    public interface IAvatarService
     {
         /// <summary>
-        /// Return an HTTP 404 respose.
+        /// Loads avatar either from the local cache or from the remote service.
         /// </summary>
-        None,
+        Task<Image> GetAvatarAsync(string email, int imageSize, string defaultImageType);
 
         /// <summary>
-        /// Return a cartoon-style silhouette.
+        /// Removes the avatar from the local cache.
         /// </summary>
-        MysteryMan,
+        Task DeleteAvatarAsync(string email);
 
         /// <summary>
-        /// Return a generated monster based on the email hash.
+        /// Translates the serialised image type into the corresponding enum value.
         /// </summary>
-        MonsterId,
-
-        /// <summary>
-        /// Return a generated face based on the email hash.
-        /// </summary>
-        Wavatar,
-
-        /// <summary>
-        /// Return a geometric pattern based on the email hash.
-        /// </summary>
-        Identicon,
-
-        /// <summary>
-        /// Return an 8-bit-style face based on the email hash.
-        /// </summary>
-        Retro,
+        /// <param name="imageType">The serialised image type.</param>
+        DefaultImageType GetDefaultImageType(string imageType);
     }
 
-    /// <summary>
-    /// Specifies the maximum rating of a given gravatar image request.
-    /// </summary>
-    public enum Rating
+    public class GravatarService : IAvatarService
     {
-        /// <summary>
-        /// Suitable for all audiences.
-        /// </summary>
-        G,
+        private readonly IImageCache _cache;
+        private readonly IImageNameProvider _avatarImageNameProvider;
+
+
+        public GravatarService(IImageCache imageCache, IImageNameProvider avatarImageNameProvider)
+        {
+            _cache = imageCache;
+            _avatarImageNameProvider = avatarImageNameProvider;
+        }
+
+        public GravatarService(IImageCache imageCache)
+            : this(imageCache, new AvatarImageNameProvider())
+        {
+        }
+
 
         /// <summary>
-        /// May contain rude gestures, provocatively dressed indiviiduals,
-        /// the lesser swear words, or mild violence
+        /// Loads avatar either from the local cache or from the remote service.
         /// </summary>
-        PG,
+        public async Task<Image> GetAvatarAsync(string email, int imageSize, string defaultImageType)
+        {
+            var imageFileName = _avatarImageNameProvider.Get(email);
+            var image = await _cache.GetImageAsync(imageFileName, null);
+            if (image == null)
+            {
+                image = await LoadFromGravatarAsync(imageFileName, email, imageSize, GetDefaultImageType(defaultImageType));
+            }
+            return image;
+        }
 
         /// <summary>
-        /// May contain such things as harsh profanity, intense violence,
-        /// nudity, or hard drug use.
+        /// Removes the avatar from the local cache.
         /// </summary>
-        R,
+        public async Task DeleteAvatarAsync(string email)
+        {
+            var imageFileName = _avatarImageNameProvider.Get(email);
+            await _cache.DeleteImageAsync(imageFileName);
+        }
 
         /// <summary>
-        /// May contain hardcore sexual imagery or extremely disturbing
-        /// violence.
+        /// Translates the serialised image type into the corresponding enum value.
         /// </summary>
-        X,
-    }
+        /// <param name="imageType">The serialised image type.</param>
+        public DefaultImageType GetDefaultImageType(string imageType)
+        {
+            DefaultImageType defaultImageType;
+            if (!Enum.TryParse(imageType, true, out defaultImageType))
+            {
+                defaultImageType = DefaultImageType.None;
+            }
+            return defaultImageType;
+        }
 
-    public class GravatarService
-    {
-        static IImageCache cache;
-        static object gravatarServiceLock = new object();
+
+        /// <summary>
+        /// Builds a <see cref="Uri"/> corresponding to a given email address.
+        /// </summary>
+        /// <param name="email">The email address for which to build the <see cref="Uri"/>.</param>
+        /// <param name="size">The size of the image to request.  The default is 32.</param>
+        /// <param name="useHttps">Indicates whether or not the request should be performed over Secure HTTP.</param>
+        /// <param name="rating">The mazimum rating of the returned image.</param>
+        /// <param name="defaultImageType">The Gravatar service that will be used for fall-back.</param>
+        /// <returns>The constructed <see cref="Uri"/>.</returns>
+        private static Uri BuildGravatarUrl(string email, int size, bool useHttps, Rating rating, DefaultImageType defaultImageType)
+        {
+            var builder = new UriBuilder("http://www.gravatar.com/avatar/");
+            if (useHttps)
+            {
+                builder.Scheme = "https";
+            }
+            builder.Path += HashEmail(email);
+
+            var query = string.Format("s={0}&r={1}&d={2}",
+                size,
+                rating.ToString().ToLowerInvariant(),
+                GetDefaultImageString(defaultImageType));
+
+            builder.Query = query;
+
+            return builder.Uri;
+        }
 
         /// <summary>
         /// Provides a mapping for the image defaults.
         /// </summary>
-        private static Dictionary<FallBackService, string> fallBackStrings = new Dictionary<FallBackService, string>
+        private static string GetDefaultImageString(DefaultImageType defaultImageType)
         {
-            { FallBackService.None, "404" },
-            { FallBackService.Identicon, "identicon" },
-            { FallBackService.MonsterId, "monsterid" },
-            { FallBackService.Wavatar, "wavatar" },
-            { FallBackService.Retro, "retro" },
-        };
-
-        /// <summary>
-        /// Gets a collection of <see cref="FallBackService"/> for which
-        /// the <see cref="GravatarService"/> will provide dynamically
-        /// generated avatars.
-        /// </summary>
-        /// <remarks>
-        /// This collection will also contain <see cref="FallBackService.None"/>,
-        /// so it is suitable for display directly to end users.
-        /// </remarks>
-        public static ICollection<FallBackService> DynamicServices
-        {
-            get
+            switch (defaultImageType)
             {
-                return fallBackStrings.Keys;
-            }
-        }
-
-        public static void ClearImageCache()
-        {
-            if (cache != null)
-            {
-                cache.ClearCache();
-            }
-        }
-
-        public static void RemoveImageFromCache(string imageFileName)
-        {
-            if (cache != null)
-            {
-                cache.DeleteCachedFile(imageFileName);
-            }
-        }
-
-        public static Image GetImageFromCache(string imageFileName, string email, int cacheDays,
-                                             int imageSize, string imageCachePath, FallBackService fallBack)
-        {
-            try
-            {
-                if (cache == null)
-                    cache = new DirectoryImageCache(imageCachePath); //or: new IsolatedStorageImageCache();
-
-                // If the user image is not cached yet, download it from gravatar and store it in the isolatedStorage
-                if (!cache.FileIsCached(imageFileName) ||
-                    cache.FileIsExpired(imageFileName, cacheDays))
-                {
-                    return null;
-                }
-                if (cache.FileIsCached(imageFileName))
-                {
-                    return cache.LoadImageFromCache(imageFileName, null);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                //catch IO errors
-                Trace.WriteLine(ex.Message);
-            }
-            return null;
-        }
-
-        static bool IsValidEmail(string strIn)
-        {
-            // Return true if strIn is in valid e-mail format.
-            return Regex.IsMatch(strIn, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
-        }
-
-        public static void CacheImage(string imageFileName, string email, int imageSize, 
-                                        FallBackService fallBack)
-        {
-            try
-            {
-                if (cache == null)
-                    return;
-
-                if (IsValidEmail(email) && !cache.FileIsCached(imageFileName))
-                {
-                    //Lock added to make sure gravatar doesn't block this ip..
-                    lock (gravatarServiceLock)
-                    {
-                        GetImageFromGravatar(imageFileName, email, imageSize, fallBack);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //catch IO errors
-                Trace.WriteLine(ex.Message);
-            }
-        }
-
-        public static void LoadCachedImage(string imageFileName, string email, Bitmap defaultBitmap, int cacheDays,
-                                             int imageSize, string imageCachePath, Action<Image> onChangedImage,
-                                             FallBackService fallBack)
-        {
-            Image image = GetImageFromCache(imageFileName, email, cacheDays, imageSize, imageCachePath, fallBack);
-
-            try
-            {
-                if (image == null)
-                {
-                    onChangedImage(defaultBitmap);
-
-                    //Lock added to make sure gravatar doesn't block this ip..
-                    lock (gravatarServiceLock)
-                    {
-                        if (GetImageFromCache(imageFileName, email, cacheDays, imageSize, imageCachePath, fallBack) == null)
-                            GetImageFromGravatar(imageFileName, email, imageSize, fallBack);
-                    }
-                }
-                image = GetImageFromCache(imageFileName, email, cacheDays, imageSize, imageCachePath, fallBack);
-                if (image != null)
-                {
-                    onChangedImage(image);
-                }
-                else
-                {
-                    onChangedImage(defaultBitmap);
-                }
-            }
-            catch (Exception ex)
-            {
-                //catch IO errors
-                Trace.WriteLine(ex.Message);
+                case DefaultImageType.Identicon: return "identicon";
+                case DefaultImageType.MonsterId: return "monsterid";
+                case DefaultImageType.Wavatar: return "wavatar";
+                case DefaultImageType.Retro: return "retro";
+                default: return "404";
             }
         }
 
@@ -230,84 +137,28 @@ namespace Gravatar
             return MD5.CalcMD5(email.Trim().ToLowerInvariant());
         }
 
-
-        /// <summary>
-        /// BuildGravatarUrl with default parameters
-        /// </summary>
-        /// <param name="email">The email address for which to build the <see cref="System.Uri"/>.</param>
-        /// <returns>The constructed <see cref="System.Uri"/>.</returns>
-        private static Uri BuildGravatarUrl(string email)
-        {
-            return BuildGravatarUrl(email, 32, false, Rating.G, FallBackService.None);
-        }
-
-        /// <summary>
-        /// Builds a <see cref="System.Uri"/> corresponding to a given email address.
-        /// </summary>
-        /// <param name="email">The email address for which to build the <see cref="System.Uri"/>.</param>
-        /// <param name="size">The size of the image to request.  The default is 32.</param>
-        /// <param name="useHttps">Indicates whether or not the request should be performed over Secure HTTP.</param>
-        /// <param name="rating">The mazimum rating of the returned image.</param>
-        /// <param name="fallBack">The Gravatar service that will be used for fall-back.</param>
-        /// <returns>The constructed <see cref="System.Uri"/>.</returns>
-        private static Uri BuildGravatarUrl(string email, int size, bool useHttps, Rating rating, FallBackService fallBack)
-        {
-            var builder = new UriBuilder("http://www.gravatar.com/avatar/");
-
-            if (useHttps)
-            {
-                builder.Scheme = "https";
-            }
-
-            builder.Path += HashEmail(email);
-
-            string d;
-            if (!fallBackStrings.TryGetValue(fallBack, out d))
-            {
-                d = "404";
-            }
-
-            var query = string.Format("s={0}&r={1}&d={2}",
-                size.ToString(),
-                rating.ToString().ToLowerInvariant(),
-                d);
-
-            builder.Query = query;
-
-            return builder.Uri;
-        }
-
-        public static void GetImageFromGravatar(string imageFileName, string email, int authorImageSize, FallBackService fallBack)
+        private async Task<Image> LoadFromGravatarAsync(string imageFileName, string email, int imageSize, DefaultImageType defaultImageType)
         {
             try
             {
-                var imageUrl = BuildGravatarUrl(email,
-                    authorImageSize,
-                    false,
-                    Rating.G,
-                    fallBack);
-
-                var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
-                webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
-
-                var imageStream = webClient.OpenRead(imageUrl);
-
-                cache.CacheImage(imageFileName, imageStream);
+                var imageUrl = BuildGravatarUrl(email, imageSize, false, Rating.G, defaultImageType);
+                using (var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy })
+                {
+                    webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
+                    using (var imageStream = await webClient.OpenReadTaskAsync(imageUrl))
+                    {
+                        await _cache.AddImageAsync(imageFileName, imageStream);
+                    }
+                    return await _cache.GetImageAsync(imageFileName, null);
+                }
             }
             catch (Exception ex)
             {
                 //catch IO errors
                 Trace.WriteLine(ex.Message);
             }
+            return null;
         }
 
-        public static void OpenGravatarRegistration()
-        {
-            new Process
-                {
-                    EnableRaisingEvents = false,
-                    StartInfo = { FileName = @"http://www.gravatar.com" }
-                }.Start();
-        }
     }
 }

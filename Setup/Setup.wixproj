@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="..\packages\WiX.3.11.0\build\wix.props" Condition="Exists('..\packages\WiX.3.11.0\build\wix.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -12,8 +13,9 @@
     <OutputName>GitExtensions</OutputName>
     <OutputType>Package</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
-  <Import Project="..\packages\WiX.3.10.3\build\wix.props" Condition="Exists('..\packages\WiX.3.10.3\build\wix.props')" />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
@@ -82,12 +84,12 @@
   <ItemGroup>
     <Folder Include="UI" />
   </ItemGroup>
-  <Import Project="$(WixTargetsPath)" />
+  <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\WiX.3.10.3\build\wix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WiX.3.10.3\build\wix.props'))" />
+    <Error Condition="!Exists('..\packages\WiX.3.11.0\build\wix.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WiX.3.11.0\build\wix.props'))" />
   </Target>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.

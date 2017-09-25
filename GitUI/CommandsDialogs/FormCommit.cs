@@ -135,6 +135,7 @@ namespace GitUI.CommandsDialogs
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
         private string _userName = "";
         private string _userEmail = "";
+        private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -224,7 +225,7 @@ namespace GitUI.CommandsDialogs
             if (IsUICommandsInitialized)
             {
                 // Check if commit.template is used
-                string fileName = Module.GetEffectivePathSetting("commit.template");
+                string fileName = Module.GetEffectiveSetting("commit.template");
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     using (var commitReader = new StreamReader(fileName))
@@ -244,16 +245,9 @@ namespace GitUI.CommandsDialogs
 
         private void FormCommit_Load(object sender, EventArgs e)
         {
-            int deviceDpi = GetCurrentDeviceDpi();
-            int commitDialogDpi = AppSettings.CommitDialogDeviceDpi;
-            int commitDialogSplitter = AppSettings.CommitDialogSplitter;
-            int commitDialogRightSplitter = AppSettings.CommitDialogRightSplitter;
-
-            float scaleFactor = 1.0f * deviceDpi / commitDialogDpi;
-            if (commitDialogSplitter != -1)
-                splitMain.SplitterDistance = (int)(scaleFactor * commitDialogSplitter);
-            if (commitDialogRightSplitter != -1)
-                splitRight.SplitterDistance = (int)(scaleFactor * commitDialogRightSplitter);
+            _splitterManager.AddSplitter(splitMain, "splitMain");
+            _splitterManager.AddSplitter(splitRight, "splitRight");
+            _splitterManager.RestoreSplitters();
 
             SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
             Reset.Visible = AppSettings.ShowResetAllChanges;
@@ -279,9 +273,7 @@ namespace GitUI.CommandsDialogs
             if (CommitKind.Normal == _commitKind)
                 GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
 
-            AppSettings.CommitDialogDeviceDpi = GetCurrentDeviceDpi();
-            AppSettings.CommitDialogSplitter = splitMain.SplitterDistance;
-            AppSettings.CommitDialogRightSplitter = splitRight.SplitterDistance;
+            _splitterManager.SaveSplitters();
             AppSettings.CommitDialogSelectionFilter = toolbarSelectionFilter.Visible;
         }
 
@@ -640,16 +632,19 @@ namespace GitUI.CommandsDialogs
             ResetUnStaged.Enabled = Unstaged.AllItems.Any();
         }
 
+        private void SetDialogTitle()
+        {
+            Task.Run(() => string.Format(_formTitle.Text, Module.GetSelectedBranch(), Module.WorkingDir))
+                .ContinueWith(task => Text = task.Result, _taskScheduler);
+        }
+
         private bool _initialized;
 
         private void Initialize(bool loadUnstaged)
         {
             _initialized = true;
 
-            Task.Factory.StartNew(() => string.Format(_formTitle.Text, Module.GetSelectedBranch(),
-                                      Module.WorkingDir))
-                .ContinueWith(task => Text = task.Result, _taskScheduler);
-
+            SetDialogTitle();
             Cursor.Current = Cursors.WaitCursor;
 
             if (loadUnstaged)
@@ -960,7 +955,7 @@ namespace GitUI.CommandsDialogs
                 {
                     case 0:
                         string revision = _editedCommit != null ? _editedCommit.Guid : "";
-                        if (!UICommands.StartCheckoutBranch(this, new[] {revision}))
+                        if (!UICommands.StartCheckoutBranch(this, new[] { revision }))
                             return;
                         break;
                     case 1:
@@ -1169,6 +1164,11 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Unstaged;
                 _skipUpdate = false;
+                if (Unstaged.AllItems.Count() != 0 && Unstaged.SelectedIndex == -1)
+                {
+                    Unstaged.SelectedIndex = 0;
+                }
+
                 UnstagedSelectionChanged(Unstaged, null);
             }
         }
@@ -1191,79 +1191,79 @@ namespace GitUI.CommandsDialogs
                 if (_currentFilesList != null)
                     lastSelection = _currentSelection;
 
-                    toolStripProgressBar1.Visible = true;
-                    toolStripProgressBar1.Maximum = Staged.SelectedItems.Count() * 2;
-                    toolStripProgressBar1.Value = 0;
-                    Staged.StoreNextIndexToSelect();
+                toolStripProgressBar1.Visible = true;
+                toolStripProgressBar1.Maximum = Staged.SelectedItems.Count() * 2;
+                toolStripProgressBar1.Value = 0;
+                Staged.StoreNextIndexToSelect();
 
-                    var files = new List<GitItemStatus>();
-                    var allFiles = new List<GitItemStatus>();
+                var files = new List<GitItemStatus>();
+                var allFiles = new List<GitItemStatus>();
 
-                    foreach (var item in Staged.SelectedItems)
+                foreach (var item in Staged.SelectedItems)
+                {
+                    toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                    if (!item.IsNew)
                     {
                         toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                        if (!item.IsNew)
-                        {
-                            toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                            Module.UnstageFileToRemove(item.Name);
-
-                            if (item.IsRenamed)
-                                Module.UnstageFileToRemove(item.OldName);
-                        }
-                        else
-                        {
-                            files.Add(item);
-                        }
-                        allFiles.Add(item);
-                    }
-
-                    Module.UnstageFiles(files);
-
-                    _skipUpdate = true;
-                    InitializedStaged();
-                    var stagedFiles = Staged.GitItemStatuses.ToList();
-                    var unStagedFiles = Unstaged.GitItemStatuses.ToList();
-                    foreach (var item in allFiles)
-                    {
-                        var item1 = item;
-                        if (stagedFiles.Exists(i => i.Name == item1.Name))
-                            continue;
-
-                        var item2 = item;
-                        if (unStagedFiles.Exists(i => i.Name == item2.Name))
-                            continue;
-
-                        if (item.IsNew && !item.IsChanged && !item.IsDeleted)
-                            item.IsTracked = false;
-                        else
-                            item.IsTracked = true;
+                        Module.UnstageFileToRemove(item.Name);
 
                         if (item.IsRenamed)
-                        {
-                            var clone = new GitItemStatus
-                            {
-                                Name = item.OldName,
-                                IsDeleted = true,
-                                IsTracked = true,
-                                IsStaged = false
-                            };
-                            unStagedFiles.Add(clone);
-
-                            item.IsRenamed = false;
-                            item.IsNew = true;
-                            item.IsTracked = false;
-                            item.OldName = string.Empty;
-                        }
-
-                        item.IsStaged = false;
-                        unStagedFiles.Add(item);
+                            Module.UnstageFileToRemove(item.OldName);
                     }
-                    Staged.GitItemStatuses = stagedFiles;
-                    Unstaged.GitItemStatuses = unStagedFiles;
-                    _skipUpdate = false;
-                    Staged.SelectStoredNextIndex();
+                    else
+                    {
+                        files.Add(item);
+                    }
+                    allFiles.Add(item);
+                }
 
-                    toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
+                Module.UnstageFiles(files);
+
+                _skipUpdate = true;
+                InitializedStaged();
+                var stagedFiles = Staged.GitItemStatuses.ToList();
+                var unStagedFiles = Unstaged.GitItemStatuses.ToList();
+                foreach (var item in allFiles)
+                {
+                    var item1 = item;
+                    if (stagedFiles.Exists(i => i.Name == item1.Name))
+                        continue;
+
+                    var item2 = item;
+                    if (unStagedFiles.Exists(i => i.Name == item2.Name))
+                        continue;
+
+                    if (item.IsNew && !item.IsChanged && !item.IsDeleted)
+                        item.IsTracked = false;
+                    else
+                        item.IsTracked = true;
+
+                    if (item.IsRenamed)
+                    {
+                        var clone = new GitItemStatus
+                        {
+                            Name = item.OldName,
+                            IsDeleted = true,
+                            IsTracked = true,
+                            IsStaged = false
+                        };
+                        unStagedFiles.Add(clone);
+
+                        item.IsRenamed = false;
+                        item.IsNew = true;
+                        item.IsTracked = false;
+                        item.OldName = string.Empty;
+                    }
+
+                    item.IsStaged = false;
+                    unStagedFiles.Add(item);
+                }
+                Staged.GitItemStatuses = stagedFiles;
+                Unstaged.GitItemStatuses = unStagedFiles;
+                _skipUpdate = false;
+                Staged.SelectStoredNextIndex();
+
+                toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
 
                 toolStripProgressBar1.Visible = false;
 
@@ -1345,6 +1345,10 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Staged;
                 _skipUpdate = false;
+                if(Staged.AllItems.Count() != 0 && Staged.SelectedIndex == -1)
+                {
+                    Staged.SelectedIndex = 0;
+                }
                 StagedSelectionChanged(Staged, null);
             }
         }
@@ -1607,7 +1611,7 @@ namespace GitUI.CommandsDialogs
 
         private void resetUnstagedChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-          ResetUnStagedClick(null, null);
+            ResetUnStagedClick(null, null);
         }
 
         private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
@@ -1918,7 +1922,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var item in items)
             {
-                string output = Module.OpenWithDifftool(item.Name, null, null, null, staged? "--cached" : "");
+                string output = Module.OpenWithDifftool(item.Name, null, null, null, staged ? "--cached" : "");
                 if (!string.IsNullOrEmpty(output))
                     MessageBox.Show(this, output);
             }
@@ -2061,6 +2065,50 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void FormCommit_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Enter && !Message.ContainsFocus)
+            {
+                FocusCommitMessage();
+                e.Handled = true;
+            }
+            if (e.Control && e.KeyCode == Keys.P
+                || e.Alt && e.KeyCode == Keys.Up
+                || e.Alt && e.KeyCode == Keys.Left)
+            {
+                SelectPreviousFile();
+                e.Handled = true;
+            }
+            if (e.Control && e.KeyCode == Keys.N
+                || e.Alt && e.KeyCode == Keys.Down
+                || e.Alt && e.KeyCode == Keys.Right)
+            {
+                SelectNextFile();
+                e.Handled = true;
+            }
+        }
+
+        private void SelectNextFile()
+        {
+            SelectFileInListWithDirection(+1);
+        }
+
+        private void SelectPreviousFile()
+        {
+            SelectFileInListWithDirection(-1);
+        }
+
+        private void SelectFileInListWithDirection(int direction)
+        {
+            var list = Message.Focused ? Staged : _currentFilesList;
+            _currentFilesList = list;
+            var itemsCount = list.AllItems.Count();
+            if (itemsCount != 0)
+            {
+                list.SelectedIndex = (list.SelectedIndex + direction + itemsCount) % itemsCount;
+            }
+        }
+
         private void ExecuteCommitCommand()
         {
             CheckForStagedAndCommit(Amend.Checked, false);
@@ -2078,7 +2126,7 @@ namespace GitUI.CommandsDialogs
             // Format text, except when doing an undo, because
             // this would itself introduce more steps that
             // need to be undone.
-            if( !Message.IsUndoInProgress )
+            if (!Message.IsUndoInProgress)
             {
                 // always format from 0 to handle pasted text
                 FormatAllText(0);
@@ -2459,20 +2507,23 @@ namespace GitUI.CommandsDialogs
 
         private void LoadCommitTemplates()
         {
-            CommitTemplateItem[] commitTemplates = CommitTemplateItem.LoadFromSettings();
-
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
-            if (null != commitTemplates)
-            {
-                for (int i = 0; i < commitTemplates.Length; i++)
-                {
-                    if (!commitTemplates[i].Name.IsNullOrEmpty())
-                        AddTemplateCommitMessageToMenu(commitTemplates[i], commitTemplates[i].Name);
-                }
-            }
+            var fromSettings = CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>().Where(t => !t.Name.IsNullOrEmpty()).ToArray();
+            var commitTemplates = new CommitTemplateManager().RegisteredTemplates
+               .Union(new[] { (CommitTemplateItem)null })
+               .Union(fromSettings)
+               .Union(fromSettings.Length > 0 ? new[] { (CommitTemplateItem)null } : Array.Empty<CommitTemplateItem>())
+               .ToArray();
 
-            commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            if (commitTemplates.Length > 0)
+            {
+                foreach (CommitTemplateItem item in commitTemplates)
+                    if (item == null)
+                        commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                    else
+                        AddTemplateCommitMessageToMenu(item, item.Name);
+            }
 
             var toolStripItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
             toolStripItem.Click += commitTemplatesConfigtoolStripMenuItem_Click;
@@ -2580,8 +2631,7 @@ namespace GitUI.CommandsDialogs
         {
             if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
-                Message.Text = Module.GetPreviousCommitMessages(1).FirstOrDefault().Trim();
-                return;
+                Message.Text = Module.GetPreviousCommitMessages(1).FirstOrDefault()?.Trim();
             }
         }
 
@@ -2618,16 +2668,29 @@ namespace GitUI.CommandsDialogs
                     _interactiveAddBashCloseWaitCts.Dispose();
                     _interactiveAddBashCloseWaitCts = null;
                 }
-
-                if (components != null)
-                    components.Dispose();
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private void createBranchToolStripButton_Click(object sender, EventArgs e)
         {
-            UICommands.StartCreateBranchDialog(this, null);
+            var branchCreated = UICommands.StartCreateBranchDialog(this, null);
+            if (!branchCreated)
+            {
+                return;
+            }
+            SetDialogTitle();
+        }
+
+        private void Message_Enter(object sender, EventArgs e)
+        {
+            if(Staged.AllItems.Count() != 0 && !Staged.SelectedItems.Any())
+            {
+                _currentFilesList = Staged;
+                Staged.SelectedIndex = 0;
+                StagedSelectionChanged(null, null);
+            }
         }
     }
 

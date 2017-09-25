@@ -192,7 +192,7 @@ namespace GitUI.Script
                             remote = selectedRemotes[0];
                         else
                             remote = askToSpecify(selectedRemotes, "Selected Revision Remote");
-                        url = aModule.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         argument = argument.Replace(option, url);
                         break;
                     case "{sRemotePathFromUrl}":
@@ -205,7 +205,7 @@ namespace GitUI.Script
                             remote = selectedRemotes[0];
                         else
                             remote = askToSpecify(selectedRemotes, "Selected Revision Remote");
-                        url = aModule.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                         argument = argument.Replace(option, GetRemotePath(url));
                         break;
                     case "{sHash}":
@@ -295,7 +295,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
-                        url = aModule.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                        url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                         argument = argument.Replace(option, url);
                         break;
                     case "{cDefaultRemotePathFromUrl}":
@@ -304,7 +304,7 @@ namespace GitUI.Script
                             argument = argument.Replace(option, "");
                             break;
                         }
-                        url = aModule.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                        url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                         argument = argument.Replace(option, GetRemotePath(url));
                         break;
                     case "{UserInput}":
@@ -340,7 +340,7 @@ namespace GitUI.Script
             }
 
             if (!scriptInfo.RunInBackground)
-                FormProcess.ShowDialog(owner, command, argument, aModule.WorkingDir, null, true);
+                FormProcess.ShowStandardProcessDialog(owner, command, argument, aModule.WorkingDir, null, true);
             else
             {
                 if (originalCommand.Equals("{openurl}", StringComparison.CurrentCultureIgnoreCase))

@@ -19,6 +19,7 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Editor; // For ColorHelper
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
+using GitUI.Properties;
 using GitUI.RevisionGridClasses;
 using GitUI.Script;
 using GitUI.UserControls;
@@ -64,7 +65,9 @@ namespace GitUI
         private Brush _selectedItemBrush;
         private SolidBrush _authoredRevisionsBrush;
         private Brush _filledItemBrush; // disposable brush
-
+        private readonly IImageCache _avatarCache;
+        private readonly IAvatarService _gravatarService;
+        private readonly IImageNameProvider _avatarImageNameProvider;
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
         private RefsFiltringOptions _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
@@ -123,6 +126,11 @@ namespace GitUI
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
 
             Translate();
+
+            _avatarImageNameProvider = new AvatarImageNameProvider();
+            _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
+            _avatarCache.Invalidated += (s, e) => Revisions.Invalidate();
+            _gravatarService = new GravatarService(_avatarCache, _avatarImageNameProvider);
 
             _revisionGridMenuCommands = new RevisionGridMenuCommands(this);
             _revisionGridMenuCommands.CreateOrUpdateMenuCommands();
@@ -1693,18 +1701,15 @@ namespace GitUI
                         int gravatarTop = e.CellBounds.Top + textHeight + 6;
                         int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
 
-
-                        Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, FallBackService.MonsterId);
-
-                        if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
+                        var imageName = _avatarImageNameProvider.Get(revision.AuthorEmail);
+                        var gravatar = _avatarCache.GetImage(imageName, null);
+                        if (gravatar == null)
                         {
-                            ThreadPool.QueueUserWorkItem(o =>
-                            Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
+                            gravatar = Resources.User;
+                            // kick off download operation, will likely display the avatar during the next round of repaint
+                            _gravatarService.GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
                         }
-
-                        if (gravatar != null)
-                            e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
-
+                        e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
                         e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
 
                         string authorText;
@@ -2087,11 +2092,6 @@ namespace GitUI
             return Color.FromArgb(r, g, b);
         }
 
-        private void RefreshGravatar(Image image)
-        {
-            this.InvokeAsync(Revisions.Refresh);
-        }
-
         private void RevisionsDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left)
@@ -2331,13 +2331,13 @@ namespace GitUI
             }
 
             //For now there is no action that could be done on currentBranch
-            string currentBranch = Module.GetSelectedBranch();
+            string currentBranchRef = GitRef.RefsHeadsPrefix + Module.GetSelectedBranch();
             var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
-                if (head.Name.Equals(currentBranch))
+                if (head.CompleteName.Equals(currentBranchRef))
                     currentBranchPointsToRevision = true;
                 else
                 {
@@ -2395,7 +2395,7 @@ namespace GitUI
                 //skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
                 {
-                    if (!head.Name.Equals(currentBranch))
+                    if (!head.CompleteName.Equals(currentBranchRef))
                     {
                         toolStripItem = new ToolStripMenuItem(head.Name);
                         toolStripItem.Tag = head.Name;
@@ -2409,7 +2409,7 @@ namespace GitUI
                     renameDropDown.Items.Add(toolStripItem); //Add to rename branch
                 }
 
-                if (!head.Name.Equals(currentBranch))
+                if (!head.CompleteName.Equals(currentBranchRef))
                 {
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     if (head.IsRemote)

@@ -124,7 +124,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         private void CreateWorktree()
         {
             //https://git-scm.com/docs/git-worktree
-            var arguments = "worktree add " + WorktreeDirectory;
+            var arguments = "worktree add \"" + WorktreeDirectory + "\"";
             if (radioButtonCreateNewBranch.Checked)
             {
                 arguments += " -b " + textBoxNewBranchName.Text;
@@ -132,9 +132,9 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             else
             {
                 arguments += " " + ((GitRef)comboBoxBranches.SelectedItem).Name;
-
             }
-            UICommands.StartCommandLineProcessDialog("git", arguments);
+
+            UICommands.StartGitCommandProcessDialog(arguments);
             this.DialogResult = DialogResult.OK;
         }
 

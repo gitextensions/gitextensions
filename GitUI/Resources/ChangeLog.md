@@ -1,5 +1,28 @@
 Changelog
 =========
+
+### [Version 2.50.02] (06 September 2017)
+
+#### Features: 
+* Remote repositories modal defaults to inactive repo - Issue [3861]
+* Allow cherry-picking multiple commits from FormBrowse menu - PR [3852]
+
+#### Fixes: 
+* Clicking Commit causes a crash - Issue [3827]
+* 2.50.01 Quoting issues on git checkout command - Issue [3969]
+* Can't delete index.lock because it is being used by another process. - Issue [3902]
+* Missing Newtonsoft.Json on startup exception - Issue [3879]
+* 2.50.00/2.50.01 introduced issue parsing " in scripts - Issue [3864]
+* System.NullReferenceException when trying to push - Issue [3862]
+* GitExtensions 2.50.01 gives System.NullReferenceException at start - Issue [3855]
+* Application crashing on startup after upgrading to 2.50.01 - Issue [3845]
+* DirectoryNotFoundException in Remote Repositories dialog - Issue [3844]
+* help picture disappeared when opening pull dialog - Issue [3829]
+* Committing fails: could not read log file, Invalid argument - Issue [3800]
+* NRE when attempting to push with no remote configured - Issue [3794]
+* Exception "Illegal characters in path" when invoking "browse" via comman line parameter - Issue [3489]
+* Blows up when I click on Help in Branch dialog - Issue [3011]
+
 ### [Version 2.50.01] (07 July 2017)
 
 #### Fixes: 
@@ -1893,3 +1916,22 @@ Changelog
 [3806]:https://github.com/gitextensions/gitextensions/issues/3806
 [3804]:https://github.com/gitextensions/gitextensions/issues/3804
 [3786]:https://github.com/gitextensions/gitextensions/issues/3786
+
+
+[Version 2.50.02]:https://github.com/gitextensions/gitextensions/releases/tag/v2.50.02
+[3969]:https://github.com/gitextensions/gitextensions/issues/3969
+[3902]:https://github.com/gitextensions/gitextensions/issues/3902
+[3879]:https://github.com/gitextensions/gitextensions/issues/3879
+[3864]:https://github.com/gitextensions/gitextensions/issues/3864
+[3862]:https://github.com/gitextensions/gitextensions/issues/3862
+[3861]:https://github.com/gitextensions/gitextensions/issues/3861
+[3855]:https://github.com/gitextensions/gitextensions/issues/3855
+[3852]:https://github.com/gitextensions/gitextensions/pull/3852
+[3845]:https://github.com/gitextensions/gitextensions/issues/3845
+[3844]:https://github.com/gitextensions/gitextensions/issues/3844
+[3829]:https://github.com/gitextensions/gitextensions/issues/3829
+[3827]:https://github.com/gitextensions/gitextensions/issues/3827
+[3800]:https://github.com/gitextensions/gitextensions/issues/3800
+[3794]:https://github.com/gitextensions/gitextensions/issues/3794
+[3489]:https://github.com/gitextensions/gitextensions/issues/3489
+[3011]:https://github.com/gitextensions/gitextensions/issues/3011

@@ -31,6 +31,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString directoryIsNotAValidRepositoryOpenIt = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to open it?");
         private readonly TranslationString _showCurrentBranch = new TranslationString("Show current branch");
         private bool initialized;
+        private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("Dashboard"));
 
         public Dashboard()
         {
@@ -159,17 +160,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void SaveSplitterPositions()
         {
-            try
-            {
-                Settings.Default.Dashboard_DeviceDpi = GetCurrentDeviceDpi();
-                Settings.Default.Dashboard_MainSplitContainer_SplitterDistance = mainSplitContainer.SplitterDistance;
-                Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance = commonSplitContainer.SplitterDistance;
-                Settings.Default.Save();
-            }
-            catch (ConfigurationException)
-            {
-                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
-            }
+            _splitterManager.SaveSplitters();
         }
 
         public event EventHandler<GitModuleEventArgs> GitModuleChanged;
@@ -240,7 +231,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             RepositoryCategory filteredRecentRepositoryHistory = new RepositoryCategory();
             filteredRecentRepositoryHistory.Description = Repositories.RepositoryHistory.Description;
-            filteredRecentRepositoryHistory.CategoryType = Repositories.RepositoryHistory.CategoryType;
 
             foreach (Repository repository in Repositories.RepositoryHistory.Repositories)
             {
@@ -266,77 +256,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void SetSplitterPositions()
         {
-            try
-            {
-                int deviceDpi = GetCurrentDeviceDpi();
-                int dashboardDpi = Settings.Default.Dashboard_DeviceDpi;
-                int mainSplitterDistance = Settings.Default.Dashboard_MainSplitContainer_SplitterDistance;
-                int commonSplitterDistance = Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance;
-
-                float scaleFactor = 1.0f * deviceDpi / dashboardDpi;
-                mainSplitterDistance = (int)(scaleFactor * mainSplitterDistance);
-                commonSplitterDistance = (int)(scaleFactor * commonSplitterDistance);
-
-                SetSplitterDistance(
-                    commonSplitContainer,
-                    commonSplitterDistance,
-                    Math.Max(2, (int)(CommonActions.Height * 1.2)));
-
-                SetSplitterDistance(
-                    splitContainer7,
-                    0, // No settings property for this splitter. Will use default always.
-                    Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25)));
-
-                SetSplitterDistance(
-                    mainSplitContainer,
-                    mainSplitterDistance,
-                    315);
-            }
-            catch (ConfigurationException)
-            {
-                //TODO: howto restore a corrupted config? Properties.Settings.Default.Reset() doesn't work.
-            }
-        }
-
-        private void SetSplitterDistance(SplitContainer splitContainer, int value, int @default)
-        {
-            try
-            {
-                if (isValidSplit(splitContainer,value))
-                {
-                    splitContainer.SplitterDistance = value;
-                }
-                else if (isValidSplit(splitContainer, @default))
-                {
-                    splitContainer.SplitterDistance = @default;
-                }
-                else
-                {
-                    // Both the value and default are invalid.
-                    // Don't attempt to change the SplitterDistance
-                }
-            }
-            catch (SystemException)
-            {
-                // The attempt to set even the default value has failed.
-            }
-        }
-
-        /// <summary>
-        /// Determine whether a given splitter value would be permitted for a given SplitContainer
-        /// </summary>
-        /// <param name="splitcontainer">The SplitContainer to check</param>
-        /// <param name="value">The potential SplitterDistance to try </param>
-        /// <returns>true if it is expected that setting a SplitterDistance of value would succeed
-        /// </returns>
-        bool isValidSplit(SplitContainer splitcontainer, int value)
-        {
-            bool valid;
-            int limit = (splitcontainer.Orientation == Orientation.Horizontal)
-                ? splitcontainer.Height
-                : splitcontainer.Width;
-            valid = (value > splitcontainer.Panel1MinSize) && (value < limit - splitcontainer.Panel2MinSize);
-            return valid;
+            _splitterManager.AddSplitter(commonSplitContainer, "commonSplitContainer", Math.Max(2, (int)(CommonActions.Height * 1.2)));
+            _splitterManager.AddSplitter(splitContainer7, "splitContainer7", Math.Max(2, splitContainer7.Height - (DonateCategory.Height + 25)));
+            _splitterManager.AddSplitter(mainSplitContainer, "mainSplitContainer", 315);
+            _splitterManager.RestoreSplitters();
         }
 
         private void TranslateItem_Click(object sender, EventArgs e)

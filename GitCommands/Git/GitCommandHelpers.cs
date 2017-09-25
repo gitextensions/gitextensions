@@ -144,17 +144,16 @@ namespace GitCommands
         {
             SetEnvironmentVariable();
 
-            string quotedCmd = fileName;
-            if (quotedCmd.IndexOf(' ') != -1)
-                quotedCmd = quotedCmd.Quote();
-
             var executionStartTimestamp = DateTime.Now;
 
             var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
             var startProcess = Process.Start(startInfo);
-
+            startProcess.EnableRaisingEvents = true;
             startProcess.Exited += (sender, args) =>
             {
+                string quotedCmd = fileName;
+                if (quotedCmd.IndexOf(' ') != -1)
+                    quotedCmd = quotedCmd.Quote();
                 var executionEndTimestamp = DateTime.Now;
                 AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
             };
@@ -917,7 +916,7 @@ namespace GitCommands
 
                 if (line != null)
                 {
-                    var match = Regex.Match(line, @"diff --git a/(.+)\sb/(.+)");
+                    var match = Regex.Match(line, @"diff --git (?:a|i|c)/(.+)\s(?:b|w|i)/(.+)");
                     if (match.Groups.Count > 1)
                     {
                         status.Name = match.Groups[1].Value;

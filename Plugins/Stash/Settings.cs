@@ -26,7 +26,7 @@ namespace Stash
             var module = ((GitModule)gitModule);
 
             var remotes = module.GetRemotes()
-                .Select(r => module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, r)))
+                .Select(r => module.GetSetting(string.Format(SettingKeyString.RemoteUrl, r)))
                 .ToArray();
 
             foreach (var url in remotes)

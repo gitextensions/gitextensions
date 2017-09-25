@@ -127,20 +127,26 @@ namespace GitUI.Hotkey
 
             Dictionary<string, HotkeyCommand> defaultCommands = new Dictionary<string, HotkeyCommand>();
             FillDictionaryWithCommands(defaultCommands, defaultSettings);
-            AssignKotkeysFromLoaded(defaultCommands, loadedSettings);
+            AssignHotkeysFromLoaded(defaultCommands, loadedSettings);
         }
 
-        private static void AssignKotkeysFromLoaded(Dictionary<string, HotkeyCommand> defaultCommands, HotkeySettings[] loadedSettings)
+        private static void AssignHotkeysFromLoaded(Dictionary<string, HotkeyCommand> defaultCommands, HotkeySettings[] loadedSettings)
         {
             foreach (HotkeySettings setting in loadedSettings)
             {
-                foreach (HotkeyCommand command in setting.Commands)
+                if (setting != null)
                 {
-                    string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                    HotkeyCommand defaultCommand;
-                    if (defaultCommands.TryGetValue(dictKey, out defaultCommand))
+                    foreach (HotkeyCommand command in setting.Commands)
                     {
-                        defaultCommand.KeyData = command.KeyData;
+                        if (command != null)
+                        {
+                            string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
+                            HotkeyCommand defaultCommand;
+                            if (defaultCommands.TryGetValue(dictKey, out defaultCommand))
+                            {
+                                defaultCommand.KeyData = command.KeyData;
+                            }
+                        }
                     }
                 }
             }
@@ -152,8 +158,11 @@ namespace GitUI.Hotkey
             {
                 foreach (HotkeyCommand command in setting.Commands)
                 {
-                    string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                    dict.Add(dictKey, command);
+                    if (command != null)
+                    {
+                        string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
+                        dict.Add(dictKey, command);
+                    }
                 }
             }
         }
@@ -255,6 +264,8 @@ namespace GitUI.Hotkey
                     hk(FormBrowse.Commands.QuickFetch, Keys.Control | Keys.Shift | Keys.Down),
                     hk(FormBrowse.Commands.QuickPull, Keys.Control | Keys.Shift | Keys.P),
                     hk(FormBrowse.Commands.QuickPush, Keys.Control | Keys.Shift | Keys.Up),
+                    hk(FormBrowse.Commands.Stash, Keys.Control | Keys.Alt | Keys.Up),
+                    hk(FormBrowse.Commands.StashPop, Keys.Control | Keys.Alt | Keys.Down),
                     hk(FormBrowse.Commands.CloseRepositry, Keys.Control | Keys.W),
                     hk(FormBrowse.Commands.RotateApplicationIcon, Keys.Control | Keys.Shift | Keys.I)),
                 new HotkeySettings(RevisionGrid.HotkeySettingsName,
@@ -314,16 +325,10 @@ namespace GitUI.Hotkey
              * therefore execute the 'default' action
              */
 
-            int i=0;
-            foreach (GitUI.Script.ScriptInfo s in curScripts)
-            {
-                if (!string.IsNullOrEmpty(s.Name))
-                {
-                    scriptKeys[i] = new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) };
-                    i++;
-                }
-            }
-            return scriptKeys;
+            return curScripts.
+                Where(s => !s.Name.IsNullOrEmpty()).
+                Select(s => new HotkeyCommand((int)s.HotkeyCommandIdentifier, s.Name) { KeyData = (Keys.None) }
+            ).ToArray();
         }
 
     }

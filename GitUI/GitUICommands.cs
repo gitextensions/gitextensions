@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.Blame;
@@ -15,22 +16,24 @@ using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Notifications;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
-
 using JetBrains.Annotations;
-
-using Settings = GitCommands.AppSettings;
 
 namespace GitUI
 {
     /// <summary>Contains methods to invoke GitEx forms, dialogs, etc.</summary>
     public sealed class GitUICommands : IGitUICommands
     {
+        private readonly IAvatarService _gravatarService;
+
+
         public GitUICommands(GitModule module)
         {
             Module = module;
             RepoChangedNotifier = new ActionNotifier(
                 () => InvokeEvent(null, PostRepositoryChanged));
             Notifications = NotificationManager.Get(this);
+            IImageCache avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
+            _gravatarService = new GravatarService(avatarCache);
         }
 
         public GitUICommands(string workingDir)
@@ -219,18 +222,7 @@ namespace GitUI
 
         public void CacheAvatar(string email)
         {
-            FallBackService gravatarFallBack = FallBackService.Identicon;
-            try
-            {
-                gravatarFallBack =
-                    (FallBackService)Enum.Parse(typeof(FallBackService), Settings.GravatarFallbackService);
-            }
-            catch
-            {
-                Settings.GravatarFallbackService = gravatarFallBack.ToString();
-            }
-            GravatarService.CacheImage(email + ".png", email, Settings.AuthorImageSize,
-                gravatarFallBack);
+            _gravatarService.GetAvatarAsync(email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
         }
 
         public Icon FormIcon { get { return GitExtensionsForm.ApplicationIcon; } }
@@ -725,7 +717,7 @@ namespace GitUI
                 return false;
             Func<bool> action = () =>
             {
-                return FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
+                return FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
             };
 
             return DoActionOnRepo(owner, true, true, PreSvnDcommit, PostSvnDcommit, action);
@@ -742,7 +734,7 @@ namespace GitUI
                 return false;
             Func<bool> action = () =>
             {
-                FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
+                FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
                 return true;
             };
 
@@ -760,7 +752,7 @@ namespace GitUI
                 return false;
             Func<bool> action = () =>
             {
-                return FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.FetchCmd());
+                return FormProcess.ShowDialog(owner, Module, AppSettings.GitCommand, GitSvnCommandHelpers.FetchCmd());
             };
 
             return DoActionOnRepo(owner, true, true, PreSvnFetch, PostSvnFetch, action);
@@ -934,6 +926,17 @@ namespace GitUI
             };
 
             return DoActionOnRepo(owner, true, false, PreSparseWorkingCopy, PostSparseWorkingCopy, action);
+        }
+
+        private readonly CommitTemplateManager commitTemplateManager = new CommitTemplateManager();
+        public void AddCommitTemplate(string key, Func<string> addingText)
+        {
+            commitTemplateManager.Register(key, addingText);
+        }
+
+        public void RemoveCommitTemplate(string key)
+        {
+            commitTemplateManager.Unregister(key);
         }
 
         public bool StartFormatPatchDialog(IWin32Window owner)
@@ -2181,13 +2184,13 @@ namespace GitUI
         private static void UpdateSettingsBasedOnArguments(Dictionary<string, string> arguments)
         {
             if (arguments.ContainsKey("merge"))
-                Settings.FormPullAction = Settings.PullAction.Merge;
+                AppSettings.FormPullAction = AppSettings.PullAction.Merge;
             if (arguments.ContainsKey("rebase"))
-                Settings.FormPullAction = Settings.PullAction.Rebase;
+                AppSettings.FormPullAction = AppSettings.PullAction.Rebase;
             if (arguments.ContainsKey("fetch"))
-                Settings.FormPullAction = Settings.PullAction.Fetch;
+                AppSettings.FormPullAction = AppSettings.PullAction.Fetch;
             if (arguments.ContainsKey("autostash"))
-                Settings.AutoStash = true;
+                AppSettings.AutoStash = true;
         }
 
         internal void RaisePreBrowseInitialize(IWin32Window owner)

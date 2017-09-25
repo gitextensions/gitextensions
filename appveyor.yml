@@ -1,4 +1,4 @@
-version: 2.50.01.{build}
+version: 2.50.02.{build}
 
 os: Visual Studio 2015
 
@@ -19,7 +19,7 @@ build:
 
 cache:
   #- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
-  - packages\WiX.3.10.3 -> Setup\packages.config
+  - packages\WiX.3.11.0 -> Setup\packages.config
   - Setup\cache -> Setup\DownloadExternals.cmd
 
 install:

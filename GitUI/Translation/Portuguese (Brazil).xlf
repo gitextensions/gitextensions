@@ -3095,8 +3095,8 @@ Quer interromper e removê-lo da lista de repositórios recentes?</target>
         
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem.Text">
-        <source>Pull...</source>
-        <target>Pull...</target>
+        <source>Pull/Fetch...</source>
+        <target>Pull/Fetch...</target>
         
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
@@ -6299,7 +6299,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_pruneBranchesBranch.Text">
-        <source>Do you want deletes all stale remote-tracking branches?</source>
+        <source>Do you want to delete all stale remote-tracking branches?</source>
         
       </trans-unit>
       <trans-unit id="_pruneBranchesButtons.Text">
@@ -10155,8 +10155,8 @@ Current Branch:
         
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item11">
-        <source>Pull...</source>
-        <target>Pull...</target>
+        <source>Pull/Fetch...</source>
+        <target>Pull/Fetch...</target>
         
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item12">

@@ -1,124 +1,226 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.IO.Abstractions;
+using System.Threading.Tasks;
 
 namespace Gravatar
 {
-    internal class DirectoryImageCache : IImageCache
+    public interface IImageCache
     {
-        private static Object padlock = new Object();
+        /// <summary>
+        /// Occurs whenever the cache is invalidated.
+        /// </summary>
+        event EventHandler Invalidated;
 
-        string cachePath;
-        public string Path { get { return cachePath; } }
 
-        public DirectoryImageCache(string cachePath)
+        /// <summary>
+        /// Adds the image to the cache from the supplied stream.
+        /// </summary>
+        /// <param name="imageFileName">The image file name.</param>
+        /// <param name="imageStream">The stream which contains the image.</param>
+        Task AddImageAsync(string imageFileName, Stream imageStream);
+
+        /// <summary>
+        /// Clears the cache by deleting all images.
+        /// </summary>
+        Task ClearAsync();
+
+        /// <summary>
+        /// Deletes the specified image from the cache.
+        /// </summary>
+        /// <param name="imageFileName">The image file name.</param>
+        Task DeleteImageAsync(string imageFileName);
+
+        /// <summary>
+        /// Retrieves the image from the cache.
+        /// </summary>
+        /// <param name="imageFileName">The image file name.</param>
+        /// <param name="defaultBitmap">The default image to return 
+        /// if the requested image does not exist in the cache.</param>
+        Image GetImage(string imageFileName, Bitmap defaultBitmap);
+
+        /// <summary>
+        /// Retrieves the image from the cache.
+        /// </summary>
+        /// <param name="imageFileName">The image file name.</param>
+        /// <param name="defaultBitmap">The default image to return 
+        /// if the requested image does not exist in the cache.</param>
+        Task<Image> GetImageAsync(string imageFileName, Bitmap defaultBitmap);
+    }
+
+    public sealed class DirectoryImageCache : IImageCache
+    {
+        private const int DefaultCacheDays = 30;
+        private readonly string _cachePath;
+        private readonly int _cacheDays;
+        private readonly IFileSystem _fileSystem;
+
+
+        public DirectoryImageCache(string cachePath, int cacheDays, IFileSystem fileSystem)
         {
-            this.cachePath = cachePath;
+            _cachePath = cachePath;
+            _fileSystem = fileSystem;
+            _cacheDays = cacheDays;
+            if (_cacheDays < 1)
+            {
+                _cacheDays = DefaultCacheDays;
+            }
         }
 
-        public void ClearCache()
+        public DirectoryImageCache(string cachePath, int cacheDays)
+            : this(cachePath, cacheDays, new FileSystem())
         {
-            lock (padlock)
-            {
-                if (!Directory.Exists(cachePath))
-                    return;
+        }
 
-                foreach (string file in Directory.GetFiles(cachePath))
+
+        /// <summary>
+        /// Occurs whenever the cache is invalidated.
+        /// </summary>
+        public event EventHandler Invalidated;
+
+
+        /// <summary>
+        /// Adds the image to the cache from the supplied stream.
+        /// </summary>
+        /// <param name="imageFileName">The image file name.</param>
+        /// <param name="imageStream">The stream which contains the image.</param>
+        public async Task AddImageAsync(string imageFileName, Stream imageStream)
+        {
+            if (string.IsNullOrWhiteSpace(imageFileName) || imageStream == null)
+            {
+                return;
+            }
+            if (!_fileSystem.Directory.Exists(_cachePath))
+            {
+                _fileSystem.Directory.CreateDirectory(_cachePath);
+            }
+
+            try
+            {
+                string file = Path.Combine(_cachePath, imageFileName);
+                using (var output = new FileStream(file, FileMode.Create))
+                {
+                    await imageStream.CopyToAsync(output);
+                }
+            }
+            catch
+            {
+                // do nothing
+            }
+            OnInvalidated(EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Clears the cache by deleting all images.
+        /// </summary>
+        public async Task ClearAsync()
+        {
+            if (!_fileSystem.Directory.Exists(_cachePath))
+            {
+                return;
+            }
+            await Task.Run(() =>
+            {
+                foreach (var file in _fileSystem.Directory.GetFiles(_cachePath))
                 {
                     try
                     {
-                        File.Delete(file);
+                        _fileSystem.File.Delete(file);
                     }
                     catch
-                    { }
-                }
-            }
-        }
-
-        public void DeleteCachedFile(string imageFileName)
-        {
-            lock (padlock)
-            {
-                if (File.Exists(cachePath + imageFileName))
-                {
-                    try
                     {
-
-                        File.Delete(cachePath + imageFileName);
-                    }
-                    catch
-                    { }
-                }
-            }
-        }
-
-        public bool FileIsCached(string imageFileName)
-        {
-            lock (padlock)
-            {
-                return File.Exists(cachePath + imageFileName);
-            }
-        }
-
-        public bool FileIsExpired(string imageFileName, int cacheDays)
-        {
-            var file = new FileInfo(cachePath + imageFileName);
-            if (file.Exists)
-            {
-                if (file.LastWriteTime < DateTime.Now.AddDays(-cacheDays))
-                    return true;
-            }
-
-            return false;
-        }
-
-        public Image LoadImageFromCache(string imageFileName, Bitmap defaultBitmap)
-        {
-            lock (padlock)
-            {
-                try
-                {
-                    if (!File.Exists(cachePath + imageFileName))
-                        return null;
-
-                    using (Stream fileStream = new FileStream(cachePath + imageFileName, FileMode.Open, FileAccess.Read))
-                    {
-                        return Image.FromStream(fileStream);
+                        // do nothing
                     }
                 }
-                catch
+            });
+            OnInvalidated(EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Deletes the specified image from the cache.
+        /// </summary>
+        /// <param name="imageFileName">The image file name.</param>
+        public async Task DeleteImageAsync(string imageFileName)
+        {
+            if (string.IsNullOrWhiteSpace(imageFileName))
+            {
+                return;
+            }
+
+            string file = Path.Combine(_cachePath, imageFileName);
+            if (!_fileSystem.File.Exists(file))
+            {
+                return;
+            }
+            try
+            {
+                await Task.Run(() => _fileSystem.File.Delete(file));
+            }
+            catch
+            {
+                // do nothing
+            }
+            OnInvalidated(EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Retrieves the image from the cache.
+        /// </summary>
+        /// <param name="imageFileName">The image file name.</param>
+        /// <param name="defaultBitmap">The default image to return 
+        /// if the requested image does not exist in the cache.</param>
+        public Image GetImage(string imageFileName, Bitmap defaultBitmap)
+        {
+            if (string.IsNullOrWhiteSpace(imageFileName))
+            {
+                return null;
+            }
+
+            string file = Path.Combine(_cachePath, imageFileName);
+            try
+            {
+                if (HasExpired(file))
                 {
                     return null;
                 }
+                using (Stream fileStream = new FileStream(file, FileMode.Open, FileAccess.Read))
+                {
+                    return Image.FromStream(fileStream);
+                }
             }
-        }
-
-        public void CacheImage(string imageFileName, Stream imageStream)
-        {
-            if (!Directory.Exists(cachePath))
-                Directory.CreateDirectory(cachePath);
-
-            lock (padlock)
+            catch
             {
-                try
-                {
-                    using (var output = new FileStream(cachePath + imageFileName, FileMode.Create))
-                    {
-                        byte[] buffer = new byte[1024];
-                        int read;
-
-                        if (imageStream != null)
-                            while ((read = imageStream.Read(buffer, 0, buffer.Length)) > 0)
-                            {
-                                output.Write(buffer, 0, read);
-                            }
-                    }
-                }
-                catch
-                {
-                }
+                return null;
             }
         }
 
+        /// <summary>
+        /// Retrieves the image from the cache.
+        /// </summary>
+        /// <param name="imageFileName">The image file name.</param>
+        /// <param name="defaultBitmap">The default image to return 
+        /// if the requested image does not exist in the cache.</param>
+        public async Task<Image> GetImageAsync(string imageFileName, Bitmap defaultBitmap)
+        {
+            return await Task.Run(() => GetImage(imageFileName, defaultBitmap));
+        }
+
+
+        private bool HasExpired(string fileName)
+        {
+            var file = _fileSystem.FileInfo.FromFileName(fileName);
+            if (!file.Exists)
+            {
+                return true;
+            }
+            return file.LastWriteTime < DateTime.Now.AddDays(-_cacheDays);
+        }
+
+        private void OnInvalidated(EventArgs e)
+        {
+            var handler = Invalidated;
+            handler?.Invoke(this, e);
+        }
     }
 }

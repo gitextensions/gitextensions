@@ -202,6 +202,7 @@
             "beyondcompare3",
             "beyondcompare4",
             "diffuse",
+            "diffmerge",
             "ecmerge",
             "emerge",
             "gvimdiff",
@@ -216,6 +217,7 @@
             "vimdiff",
             "winmerge",
             "xxdiff",
+            "vscode",
             "vsdiffmerge"});
             this._NO_TRANSLATE_GlobalDiffTool.Location = new System.Drawing.Point(192, 265);
             this._NO_TRANSLATE_GlobalDiffTool.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -348,6 +350,7 @@
             "p4merge",
             "semanticmerge",
             "TortoiseMerge",
+            "vscode",
             "vsdiffmerge"});
             this._NO_TRANSLATE_GlobalMergeTool.Location = new System.Drawing.Point(192, 109);
             this._NO_TRANSLATE_GlobalMergeTool.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);

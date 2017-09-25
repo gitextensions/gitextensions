@@ -32,10 +32,11 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -49,6 +50,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1573</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -58,6 +60,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PSTaskDialog">
@@ -70,20 +73,20 @@
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Core.2.2.5\lib\net40\System.Reactive.Core.dll</HintPath>
+    <Reference Include="System.Reactive.Core, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Core.3.1.1\lib\net46\System.Reactive.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net40\System.Reactive.Interfaces.dll</HintPath>
+    <Reference Include="System.Reactive.Interfaces, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Interfaces.3.1.1\lib\net45\System.Reactive.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net40\System.Reactive.Linq.dll</HintPath>
+    <Reference Include="System.Reactive.Linq, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Linq.3.1.1\lib\net46\System.Reactive.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net40\System.Reactive.PlatformServices.dll</HintPath>
+    <Reference Include="System.Reactive.PlatformServices, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.PlatformServices.3.1.1\lib\net46\System.Reactive.PlatformServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Security" />
@@ -133,6 +136,13 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
+    <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateManager.cs" />
+    <Compile Include="CommandsDialogs\RevisionFileTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\RevisionFileTree.Designer.cs">
+      <DependentUpon>RevisionFileTree.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\FormCompareToBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -295,6 +305,7 @@
     <Compile Include="RepoHosts.cs" />
     <Compile Include="Script\ScriptRunner.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
+    <Compile Include="SplitterManager.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1140,6 +1151,9 @@
       <DependentUpon>FormUpdates.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\RevisionFileTree.resx">
+      <DependentUpon>RevisionFileTree.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormCompareToBranch.resx">
       <DependentUpon>FormCompareToBranch.cs</DependentUpon>
     </EmbeddedResource>
@@ -1935,6 +1949,7 @@
     <Content Include="Resources\Icons\BuildFailed.png" />
     <Content Include="Resources\Icons\BuildSuccessful.png" />
     <Content Include="Resources\Icons\decrease.png" />
+    <Content Include="Resources\Icons\gitex.png" />
     <Content Include="Resources\Icons\HelpCommandMerge.png" />
     <Content Include="Resources\Icons\HelpCommandRebase.png" />
     <Content Include="Resources\Icons\HelpPullFetch.png" />
@@ -1952,8 +1967,8 @@
     <Content Include="Resources\Icons\IconSaveAs.png" />
     <Content Include="Resources\Icons\IconSubmoduleAdded.png" />
     <Content Include="Resources\Icons\increase.png" />
-    <None Include="Resources\Icons\light-bulb-icon-on-16.png" />
-    <None Include="Resources\Icons\light-bulb-icon-off-16.png" />
+    <Content Include="Resources\Icons\light_bulb_icon_off_16.png" />
+    <Content Include="Resources\Icons\light_bulb_icon_on_16.png" />
     <Content Include="Resources\Icons\whitespace.png" />
     <Content Include="Resources\Icons\CollapseAll.png" />
     <Content Include="Resources\Icons\ExpandAll.png" />

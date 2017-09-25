@@ -20,13 +20,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             SetComboWidth();
         }
 
+
         private void LoadSettings()
         {
             SetShorteningStrategy(AppSettings.ShorteningRecentRepoPathStrategy);
             sortMostRecentRepos.Checked = AppSettings.SortMostRecentRepos;
             sortLessRecentRepos.Checked = AppSettings.SortLessRecentRepos;
-            _NO_TRANSLATE_maxRecentRepositories.Value = AppSettings.MaxMostRecentRepositories;
             comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
+            SetNumericUpDownValue(_NO_TRANSLATE_maxRecentRepositories, AppSettings.MaxMostRecentRepositories);
+            SetNumericUpDownValue(_NO_TRANSLATE_RecentRepositoriesHistorySize, AppSettings.RecentRepositoriesHistorySize);
         }
 
         private void SaveSettings()
@@ -36,6 +38,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             AppSettings.SortLessRecentRepos = sortLessRecentRepos.Checked;
             AppSettings.MaxMostRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
             AppSettings.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
+
+            var mustResizeRepositriesHistory = AppSettings.RecentRepositoriesHistorySize != (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
+            AppSettings.RecentRepositoriesHistorySize = (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
+            if (mustResizeRepositriesHistory)
+            {
+                Repositories.RepositoryHistory.MaxCount = AppSettings.RecentRepositoriesHistorySize;
+            }
         }
 
         private string GetShorteningStrategy()
@@ -107,6 +116,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 MostRecentLB.Columns[0].Width = width;
                 LessRecentLB.Columns[0].Width = width;
             }
+        }
+
+        private static void SetNumericUpDownValue(NumericUpDown control, int value)
+        {
+            control.Value = Math.Min(Math.Max(control.Minimum, value), control.Maximum);
         }
 
         private void sortMostRecentRepos_CheckedChanged(object sender, EventArgs e)

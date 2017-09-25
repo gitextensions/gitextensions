@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Script;
 using ResourceManager;
+using GitCommands.Git;
 
 namespace GitUI.CommandsDialogs
 {
@@ -15,11 +16,17 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelected =
             new TranslationString("Select 1 revision to create the tag on.");
 
-        private readonly TranslationString _noTagMessage = new TranslationString("Please enter a tag message");
-
         private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
 
         private string _currentRemote = "";
+
+        private static readonly TranslationString _trsLigthweight = new TranslationString("Lightweight tag");
+        private static readonly TranslationString _trsAnnotated = new TranslationString("Annotated tag");
+        private static readonly TranslationString _trsSignDefault = new TranslationString("Sign with default GPG");
+        private static readonly TranslationString _trsSignSpecificKey = new TranslationString("Sign with specific GPG");
+
+        private static readonly string[] dropwdownTagOperation = new string[] { _trsLigthweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text };
+
 
         public FormCreateTag(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
@@ -66,21 +73,13 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
             }
-            if (annotate.Checked)
-            {
-                if (string.IsNullOrEmpty(tagMessage.Text))
-                {
-                    MessageBox.Show(this, _noTagMessage.Text, _messageCaption.Text);
-                    return string.Empty;
-                }
 
-                File.WriteAllText(Path.Combine(Module.GetGitDirectory(), "TAGMESSAGE"), tagMessage.Text);
-            }
-
-            var s = Module.Tag(textBoxTagName.Text, revision, annotate.Checked, ForceTag.Checked);
-
+            IGitTagController _gitTagController = new GitTagController(Module);
+            var s = _gitTagController.CreateTag(revision, textBoxTagName.Text, ForceTag.Checked, GetSelectedOperation(annotate.SelectedIndex), tagMessage.Text, textBoxGpgKey.Text);
             if (!string.IsNullOrEmpty(s))
+            {
                 MessageBox.Show(this, s, _messageCaption.Text);
+            }
 
             if (s.Contains("fatal:"))
                 return string.Empty;
@@ -111,9 +110,35 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void AnnotateCheckedChanged(object sender, EventArgs e)
+        private void AnnotateDropDownChanged(object sender, EventArgs e)
         {
-            tagMessage.Enabled = annotate.Checked;
+            TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
+            textBoxGpgKey.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
+            keyIdLbl.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
+            tagMessage.Enabled = tagOperation.CanProvideMessage();
+        }
+
+        private TagOperation GetSelectedOperation(int dropdownSelection)
+        {
+            TagOperation returnValue = TagOperation.Lightweight;
+            switch(dropdownSelection)
+            {
+                case 0:
+                    returnValue = TagOperation.Lightweight;
+                    break;
+                case 1:
+                    returnValue = TagOperation.Annotate;
+                    break;
+                case 2:
+                    returnValue = TagOperation.SignWithDefaultKey;
+                    break;
+                case 3:
+                    returnValue = TagOperation.SignWithSpecificKey;
+                    break;
+                default:
+                    throw new NotSupportedException("Invalid dropdownSelection");
+            }
+            return returnValue;
         }
     }
 }

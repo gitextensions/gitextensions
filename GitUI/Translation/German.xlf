@@ -3108,8 +3108,8 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem.Text">
-        <source>Pull...</source>
-        <target>Pull...</target>
+        <source>Pull/Fetch...</source>
+        <target>Pull/Fetch...</target>
         
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
@@ -6462,7 +6462,7 @@ Wollen Sie trotzdem fortfahren?</target>
         
       </trans-unit>
       <trans-unit id="_pruneBranchesBranch.Text">
-        <source>Do you want deletes all stale remote-tracking branches?</source>
+        <source>Do you want to delete all stale remote-tracking branches?</source>
         <target>Wollen Sie alle stale remote-tracking Branches löschen ?</target>
         
       </trans-unit>
@@ -10533,8 +10533,8 @@ Aktueller Branch:
         
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item11">
-        <source>Pull...</source>
-        <target>Pull...</target>
+        <source>Pull/Fetch...</source>
+        <target>Pull/Fetch...</target>
         
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item12">

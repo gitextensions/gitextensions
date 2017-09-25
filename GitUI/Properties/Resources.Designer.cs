@@ -742,6 +742,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap gitex {
+            get {
+                object obj = ResourceManager.GetObject("gitex", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap HeadBranch {
             get {
                 object obj = ResourceManager.GetObject("HeadBranch", resourceCulture);
@@ -1652,6 +1662,26 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap light_bulb_icon_off_16 {
+            get {
+                object obj = ResourceManager.GetObject("light_bulb_icon_off_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap light_bulb_icon_on_16 {
+            get {
+                object obj = ResourceManager.GetObject("light_bulb_icon_on_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap loadingpanel_animated {
             get {
                 object obj = ResourceManager.GetObject("loadingpanel_animated", resourceCulture);
@@ -2048,26 +2078,6 @@ namespace GitUI.Properties {
             }
         }
 
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap light_bulb_icon_off_16 {
-            get {
-                object obj = ResourceManager.GetObject("light_bulb_icon_off_16", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap light_bulb_icon_on_16 {
-            get {
-                object obj = ResourceManager.GetObject("light_bulb_icon_on_16", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>

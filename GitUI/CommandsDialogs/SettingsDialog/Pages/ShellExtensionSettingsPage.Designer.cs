@@ -61,7 +61,7 @@
             "Create new repository...",
             "Open with difftool",
             "File history",
-            "Pull...",
+            "Pull/Fetch...",
             "Push...",
             "Reset file changes..",
             "Revert",
