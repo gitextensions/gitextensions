@@ -4,3 +4,7 @@ os: linux
 
 install:
   - nuget restore GitExtensionsMono.sln
+  - nuget install NUnit.Runners -Version 3.7.0 -OutputDirectory testrunner
+script:
+  - msbuild /p:Configuration=Debug GitExtensionsMono.sln
+  - mono ./testrunner/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe GitExtensionsMono.sln
