@@ -3,6 +3,7 @@ using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 using System;
+using System.IO;
 using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitExtensionsTest.GitCommands.Git
@@ -32,7 +33,7 @@ namespace GitExtensionsTest.GitCommands.Git
         {
             var result = _controller.CreateTag(Revision, TagName, force, TagOperation.SignWithDefaultKey, TagMessage);
 
-            _module.Received(1).RunGitCmd($"tag {(force ? "-f" : "")} -s -F \"{WorkingDir}\\TAGMESSAGE\" \"{TagName}\" -- \"{Revision}\"");
+            _module.Received(1).RunGitCmd($"tag {(force ? "-f" : "")} -s -F \"{Path.Combine(WorkingDir, "TAGMESSAGE")}\" \"{TagName}\" -- \"{Revision}\"");
         }
 
         [TestMethod]
@@ -78,13 +79,13 @@ namespace GitExtensionsTest.GitCommands.Git
                 case TagOperation.Lightweight:
                     break;
                 case TagOperation.Annotate:
-                    switches = $"-a -F \"{WorkingDir}\\TAGMESSAGE\"";
+                    switches = $"-a -F \"{Path.Combine(WorkingDir, "TAGMESSAGE")}\"";
                     break;
                 case TagOperation.SignWithDefaultKey:
-                    switches = $"-s -F \"{WorkingDir}\\TAGMESSAGE\"";
+                    switches = $"-s -F \"{Path.Combine(WorkingDir, "TAGMESSAGE")}\"";
                     break;
                 case TagOperation.SignWithSpecificKey:
-                    switches = $"-u {KeyId} -F \"{WorkingDir}\\TAGMESSAGE\"";
+                    switches = $"-u {KeyId} -F \"{Path.Combine(WorkingDir, "TAGMESSAGE")}\"";
                     break;
             }
 
