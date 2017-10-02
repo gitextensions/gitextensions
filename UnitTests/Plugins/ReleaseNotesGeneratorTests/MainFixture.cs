@@ -14,6 +14,7 @@ namespace ReleaseNotesGeneratorTests
         }
 
         [Test]
+        [Platform("Win")]
         public void CreateHtmlFormatClipboardDataObjectTest()
         {
             var dataObject = HtmlFragment.CreateHtmlFormatClipboardDataObject("<p>Hallo</p>");
