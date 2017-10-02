@@ -250,11 +250,14 @@ namespace GitUI.CommandsDialogs
                 return 0;
             }
             var currentTag = 0;
-            IGitTagController _gitTagController = new GitTagController(Module);
+            IGitTagController _gitTagController = new GitTagController(UICommands, Module);
             foreach (var lostObject in selectedLostObjects)
             {
                 currentTag++;
-                _gitTagController.CreateTag(lostObject.Hash, $"{RestoredObjectsTagPrefix}{currentTag}", false);
+                GitCreateTagArgs createTagArgs = new GitCreateTagArgs();
+                createTagArgs.Revision = lostObject.Hash;
+                createTagArgs.TagName = $"{RestoredObjectsTagPrefix}{currentTag}";
+                _gitTagController.CreateTag(createTagArgs, this);
             }
 
             return currentTag;

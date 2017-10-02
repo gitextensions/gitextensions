@@ -41,7 +41,7 @@ namespace GitCommands.Git
             return "checkout";
         }
 
-        public override IEnumerable<string> CollectArguments()
+        protected override IEnumerable<string> CollectArguments()
         {
             if (LocalChanges == LocalChangesAction.Merge)
                 yield return "--merge";
