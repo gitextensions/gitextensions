@@ -22,8 +22,15 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _nodeNotFoundNextAvailableParentSelected = new TranslationString("Node not found. The next available parent node will be selected.");
         private readonly TranslationString _nodeNotFoundSelectionNotChanged = new TranslationString("Node not found. File tree selection was not changed.");
 
+        private static class TreeNodeImages
+        {
+            public const int Folder = 1;
+            public const int Submodule = 2;
+        }
+
         //store strings to not keep references to nodes
         private readonly Stack<string> _lastSelectedNodes = new Stack<string>();
+        private readonly IFileAssociatedIconProvider _iconProvider;
         private GitRevision _revision;
 
 
@@ -32,7 +39,12 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            tvGitTree.ImageList = new ImageList();
+            _iconProvider = new FileAssociatedIconProvider();
+
+            tvGitTree.ImageList = new ImageList(components)
+            {
+                ColorDepth = ColorDepth.Depth32Bit
+            };
             tvGitTree.ImageList.Images.Add(Properties.Resources.New); //File
             tvGitTree.ImageList.Images.Add(Properties.Resources.Folder); //Folder
             tvGitTree.ImageList.Images.Add(Properties.Resources.IconFolderSubmodule); //Submodule
@@ -218,22 +230,35 @@ namespace GitUI.CommandsDialogs
                 if (gitItem == null)
                 {
                     subNode.Nodes.Add(new TreeNode());
+                    continue;
                 }
-                else
+
+                if (gitItem.IsTree)
                 {
-                    if (gitItem.IsTree)
+                    subNode.ImageIndex = subNode.SelectedImageIndex = TreeNodeImages.Folder;
+                    subNode.Nodes.Add(new TreeNode());
+                    continue;
+                }
+                if (gitItem.IsCommit)
+                {
+                    subNode.ImageIndex = subNode.SelectedImageIndex = TreeNodeImages.Submodule;
+                    subNode.Text = $@"{item.Name} (Submodule)";
+                    continue;
+                }
+                if (gitItem.IsBlob)
+                {
+                    var extension = Path.GetExtension(gitItem.FileName);
+                    if (string.IsNullOrWhiteSpace(extension))
                     {
-                        subNode.ImageIndex = 1;
-                        subNode.SelectedImageIndex = 1;
-                        subNode.Nodes.Add(new TreeNode());
+                        continue;
                     }
-                    else
-                    if (gitItem.IsCommit)
+                    var fileIcon = _iconProvider.Get(Path.Combine(Module.WorkingDir, gitItem.FileName));
+                    if (fileIcon == null)
                     {
-                        subNode.ImageIndex = 2;
-                        subNode.SelectedImageIndex = 2;
-                        subNode.Text = $@"{item.Name} (Submodule)";
+                        continue;
                     }
+                    tvGitTree.ImageList.Images.Add(extension, fileIcon);
+                    subNode.ImageKey = subNode.SelectedImageKey = extension;
                 }
             }
         }
@@ -543,9 +568,14 @@ namespace GitUI.CommandsDialogs
 
         private void resetToThisRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var item = tvGitTree.SelectedNode.Tag as GitItem;
+            if (item == null)
+            {
+                return;
+            }
+
             if (DialogResult.OK == MessageBox.Show(_resetFileText.Text, _resetFileCaption.Text, MessageBoxButtons.OKCancel))
             {
-                var item = tvGitTree.SelectedNode.Tag as GitItem;
                 var files = new List<string> { item.FileName };
                 Module.CheckoutFiles(files, _revision.Guid, false);
             }
