@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpellChecker\WordAtCursorExtractorTests.cs" />
     <Compile Include="SplitterManagerTest.cs" />
     <Compile Include="TranslationTest.cs" />
     <Compile Include="UserControls\AuthorEmailBasedRevisionHighlightingFixture.cs" />
