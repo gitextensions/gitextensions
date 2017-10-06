@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.FileTreeSplitContainer = new System.Windows.Forms.SplitContainer();
             this.tvGitTree = new System.Windows.Forms.TreeView();
-            this.FileText = new GitUI.Editor.FileViewer();
             this.FileTreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToThisRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,17 +52,19 @@
             this.toolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.FileText = new GitUI.Editor.FileViewer();
             ((System.ComponentModel.ISupportInitialize)(this.FileTreeSplitContainer)).BeginInit();
             this.FileTreeSplitContainer.Panel1.SuspendLayout();
             this.FileTreeSplitContainer.Panel2.SuspendLayout();
             this.FileTreeSplitContainer.SuspendLayout();
             this.FileTreeContextMenu.SuspendLayout();
             this.SuspendLayout();
+            // 
             // FileTreeSplitContainer
             // 
             this.FileTreeSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileTreeSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.FileTreeSplitContainer.Location = new System.Drawing.Point(3, 3);
+            this.FileTreeSplitContainer.Location = new System.Drawing.Point(0, 0);
             this.FileTreeSplitContainer.Name = "FileTreeSplitContainer";
             // 
             // FileTreeSplitContainer.Panel1
@@ -73,49 +74,48 @@
             // FileTreeSplitContainer.Panel2
             // 
             this.FileTreeSplitContainer.Panel2.Controls.Add(this.FileText);
-            this.FileTreeSplitContainer.Size = new System.Drawing.Size(909, 251);
+            this.FileTreeSplitContainer.Size = new System.Drawing.Size(793, 303);
             this.FileTreeSplitContainer.SplitterDistance = 300;
             this.FileTreeSplitContainer.TabIndex = 1;
             // 
-            // GitTree
+            // tvGitTree
             // 
             this.tvGitTree.ContextMenuStrip = this.FileTreeContextMenu;
             this.tvGitTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvGitTree.HideSelection = false;
             this.tvGitTree.Location = new System.Drawing.Point(0, 0);
             this.tvGitTree.Name = "tvGitTree";
-            this.tvGitTree.Size = new System.Drawing.Size(300, 251);
+            this.tvGitTree.Size = new System.Drawing.Size(300, 303);
             this.tvGitTree.TabIndex = 0;
-            this.tvGitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.GitTree_BeforeExpand);
-            this.tvGitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.GitTree_AfterSelect);
-            this.tvGitTree.DoubleClick += new System.EventHandler(this.GitTree_DoubleClick);
-            this.tvGitTree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GitTree_KeyDown);
-            this.tvGitTree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GitTree_MouseDown);
-            this.tvGitTree.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GitTree_MouseMove);
+            this.tvGitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvGitTree_BeforeExpand);
+            this.tvGitTree.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tvGitTree_ItemDrag);
+            this.tvGitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvGitTree_AfterSelect);
+            this.tvGitTree.DoubleClick += new System.EventHandler(this.tvGitTree_DoubleClick);
+            this.tvGitTree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tvGitTree_KeyDown);
             // 
             // FileTreeContextMenu
             // 
             this.FileTreeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.saveAsToolStripMenuItem,
-                this.resetToThisRevisionToolStripMenuItem,
-                this.toolStripSeparator30,
-                this.openSubmoduleMenuItem,
-                this.copyFilenameToClipboardToolStripMenuItem,
-                this.fileTreeOpenContainingFolderToolStripMenuItem,
-                this.fileTreeArchiveToolStripMenuItem,
-                this.fileTreeCleanWorkingTreeToolStripMenuItem,
-                this.toolStripSeparator31,
-                this.fileHistoryToolStripMenuItem,
-                this.blameToolStripMenuItem1,
-                this.findToolStripMenuItem,
-                this.toolStripSeparator20,
-                this.editCheckedOutFileToolStripMenuItem,
-                this.openFileToolStripMenuItem,
-                this.openFileWithToolStripMenuItem,
-                this.openWithToolStripMenuItem,
-                this.toolStripSeparator18,
-                this.expandAllToolStripMenuItem,
-                this.collapseAllToolStripMenuItem});
+            this.saveAsToolStripMenuItem,
+            this.resetToThisRevisionToolStripMenuItem,
+            this.toolStripSeparator30,
+            this.openSubmoduleMenuItem,
+            this.copyFilenameToClipboardToolStripMenuItem,
+            this.fileTreeOpenContainingFolderToolStripMenuItem,
+            this.fileTreeArchiveToolStripMenuItem,
+            this.fileTreeCleanWorkingTreeToolStripMenuItem,
+            this.toolStripSeparator31,
+            this.fileHistoryToolStripMenuItem,
+            this.blameToolStripMenuItem1,
+            this.findToolStripMenuItem,
+            this.toolStripSeparator20,
+            this.editCheckedOutFileToolStripMenuItem,
+            this.openFileToolStripMenuItem,
+            this.openFileWithToolStripMenuItem,
+            this.openWithToolStripMenuItem,
+            this.toolStripSeparator18,
+            this.expandAllToolStripMenuItem,
+            this.collapseAllToolStripMenuItem});
             this.FileTreeContextMenu.Name = "FileTreeContextMenu";
             this.FileTreeContextMenu.Size = new System.Drawing.Size(297, 380);
             this.FileTreeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.FileTreeContextMenu_Opening);
@@ -272,15 +272,15 @@
             this.FileText.Location = new System.Drawing.Point(0, 0);
             this.FileText.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.FileText.Name = "FileText";
-            this.FileText.Size = new System.Drawing.Size(605, 251);
+            this.FileText.Size = new System.Drawing.Size(489, 303);
             this.FileText.TabIndex = 0;
-            //             // 
-            // FileTreeControl
+            // 
+            // RevisionFileTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.FileTreeSplitContainer);
-            this.Name = "FileTreeControl";
+            this.Name = "RevisionFileTree";
             this.Size = new System.Drawing.Size(793, 303);
             this.FileTreeSplitContainer.Panel1.ResumeLayout(false);
             this.FileTreeSplitContainer.Panel2.ResumeLayout(false);
