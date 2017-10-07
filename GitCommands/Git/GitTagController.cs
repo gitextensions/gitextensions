@@ -1,11 +1,7 @@
-﻿using GitUIPluginInterfaces;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
 {
@@ -14,22 +10,16 @@ namespace GitCommands.Git
         /// <summary>
         /// Create the Tag depending on input parameter.
         /// </summary>
-        /// <param name="revision">Commit revision to be tagged</param>
-        /// <param name="tagName">Name of tag</param>
-        /// <param name="force">Force parameter</param>
-        /// <param name="operationType">The operation to perform on the tag  (Lightweight, Annotate, Sign with defaul key, Sign with specific key)</param>
-        /// <param name="tagMessage">Tag Message</param>
-        /// <param name="keyId">Specific Key ID to be used instead of default one</param>
-        /// <returns>True if create tag command succeeded, False otherwise</returns>
+        /// <returns><see langword="true"/> if create tag command succeeded, <see langword="false"/> otherwise</returns>
         bool CreateTag(GitCreateTagArgs args, IWin32Window parentForm);
     }
 
 
     public class GitTagController : IGitTagController
     {
-        private IGitUICommands _uiCommands;
-        private IGitModule _module;
-        private IFileSystem _fileSystem;
+        private readonly IGitUICommands _uiCommands;
+        private readonly IGitModule _module;
+        private readonly IFileSystem _fileSystem;
 
         public GitTagController(IGitUICommands uiCommands, IGitModule module, IFileSystem fileSystem)
         {
@@ -45,22 +35,17 @@ namespace GitCommands.Git
         /// <summary>
         /// Create the Tag depending on input parameter.
         /// </summary>
-        /// <param name="revision">Commit revision to be tagged</param>
-        /// <param name="inputTagName">Name of tag</param>
-        /// <param name="force">Force parameter</param>
-        /// <param name="operationType">The operation to perform on the tag (Lightweight, Annotate, Sign with defaul key, Sign with specific key)</param>
-        /// <param name="tagMessage">Tag Message</param>
-        /// <param name="keyId">Specific Key ID to be used instead of default one</param>
         /// <returns>Output string from RunGitCmd.</returns>
         public bool CreateTag(GitCreateTagArgs args, IWin32Window parentForm)
         {
-            GitCreateTagCmd createTagCmd = new GitCreateTagCmd(args);
-            if (args.OperationType.CanProvideMessage())
+            string tagMessageFileName = null;
+            if (args.Operation.CanProvideMessage())
             {
-                createTagCmd.TagMessageFileName = Path.Combine(_module.GetGitDirectory(), "TAGMESSAGE");
-                _fileSystem.File.WriteAllText(createTagCmd.TagMessageFileName, args.TagMessage);
+                tagMessageFileName = Path.Combine(_module.GetGitDirectory(), "TAGMESSAGE");
+                _fileSystem.File.WriteAllText(tagMessageFileName, args.TagMessage);
             }
 
+            var createTagCmd = new GitCreateTagCmd(args, tagMessageFileName);
             return _uiCommands.StartCommandLineProcessDialog(createTagCmd, parentForm);
         }
     }

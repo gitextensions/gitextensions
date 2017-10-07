@@ -1,21 +1,23 @@
-﻿using GitCommands.Git;
+﻿using System;
+using System.IO;
+using System.IO.Abstractions;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.IO;
-using System.IO.Abstractions;
 using TestMethod = NUnit.Framework.TestAttribute;
 
-namespace GitExtensionsTest.GitCommands.Git
+namespace GitCommandsTests.Git
 {
-    class GitTagControllerTest
+    [TestFixture]
+    public class GitTagControllerTest
     {
         private const string TagName = "bla";
         private const string Revision = "0123456789";
         private const string TagMessage = "foo";
         private const string KeyId = "A9876F";
-        private string WorkingDir = TestContext.CurrentContext.TestDirectory;
+        private readonly string _workingDir = TestContext.CurrentContext.TestDirectory;
+        private string _tagMessageFile;
         private IGitModule _module;
         private IGitTagController _controller;
         private IGitUICommands _uiCommands;
@@ -24,82 +26,71 @@ namespace GitExtensionsTest.GitCommands.Git
         [SetUp]
         public void Setup()
         {
+            _tagMessageFile = Path.Combine(_workingDir, "TAGMESSAGE");
             _module = Substitute.For<IGitModule>();
             _uiCommands = Substitute.For<IGitUICommands>();
-            _module.GetGitDirectory().Returns(x => WorkingDir);
+            _module.GetGitDirectory().Returns(x => _workingDir);
             _fileSystem = Substitute.For<IFileSystem>();
             _fileSystem.File.Returns(Substitute.For<FileBase>());
 
             _controller = new GitTagController(_uiCommands, _module, _fileSystem);
         }
 
-        private GitCreateTagArgs CreateDefaultArgs()
-        {
-            GitCreateTagArgs args = new GitCreateTagArgs();
-            args.Revision = Revision;
-            args.TagName = TagName;
-            args.TagMessage = TagMessage;
-            args.SignKeyId = KeyId;
-
-            return args;
-        }
-
-        private GitCreateTagCmd CreateDefaultCommand()
-        {
-            GitCreateTagCmd cmd = new GitCreateTagCmd(CreateDefaultArgs());
-            cmd.TagMessageFileName = Path.Combine(WorkingDir, "TAGMESSAGE");
-            return cmd;
-        }
-
         [TestCase(true)]
         [TestCase(false)]
         public void Tag_sign_with_default_gpg(bool force)
         {
-            GitCreateTagCmd cmd = CreateDefaultCommand();
-            cmd.Args.Force = force;
-            cmd.Args.OperationType = TagOperation.SignWithDefaultKey;
+            var args = new GitCreateTagArgs(TagName, Revision, TagOperation.SignWithDefaultKey, TagMessage, KeyId, force);
+            var cmd = new GitCreateTagCmd(args, _tagMessageFile);
 
-            string cmdLine = cmd.ToLine();
+            var cmdLine = cmd.ToLine();
 
-            string expectedCmdLine = $"tag{(force ? " -f" : "")} -s -F \"{Path.Combine(WorkingDir, "TAGMESSAGE")}\" \"{TagName}\" -- \"{Revision}\"";
+            var expectedCmdLine = $"tag{(force ? " -f" : "")} -s -F \"{_tagMessageFile}\" \"{TagName}\" -- \"{Revision}\"";
             Assert.AreEqual(expectedCmdLine, cmdLine);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public void Tag_name_null()
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("  ")]
+        [ExpectedException(typeof (ArgumentException))]
+        public void Tag_name_null(string tagName)
         {
-            GitCreateTagCmd cmd = CreateDefaultCommand();
-            cmd.Args.TagName = null;
-            cmd.Validate();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Tag_revision_null()
-        {
-            GitCreateTagCmd cmd = CreateDefaultCommand();
-            cmd.Args.Revision = null;
-            cmd.Validate();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Tag_key_id_null()
-        {
-            GitCreateTagCmd cmd = CreateDefaultCommand();
-            cmd.Args.OperationType = TagOperation.SignWithSpecificKey;
-            cmd.Args.SignKeyId = null;
+            var args = new GitCreateTagArgs(tagName, Revision);
+            var cmd = new GitCreateTagCmd(args, _tagMessageFile);
 
             cmd.Validate();
         }
 
-        [TestMethod]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("  ")]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Tag_revision_null(string revision)
+        {
+            var args = new GitCreateTagArgs(TagName, revision);
+            var cmd = new GitCreateTagCmd(args, _tagMessageFile);
+
+            cmd.Validate();
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("  ")]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Tag_key_id_null(string signKeyId)
+        {
+            var args = new GitCreateTagArgs(TagName, Revision, TagOperation.SignWithSpecificKey, signKeyId: signKeyId);
+            var cmd = new GitCreateTagCmd(args, _tagMessageFile);
+
+            cmd.Validate();
+        }
+
+        [Test]
         [ExpectedException(typeof(NotSupportedException))]
         public void Tag_operation_not_supported()
         {
-            GitCreateTagCmd cmd = CreateDefaultCommand();
-            cmd.Args.OperationType = (TagOperation)10;
+            var args = new GitCreateTagArgs(TagName, Revision, (TagOperation)10);
+            var cmd = new GitCreateTagCmd(args, _tagMessageFile);
 
             cmd.ToLine();
         }
@@ -110,30 +101,28 @@ namespace GitExtensionsTest.GitCommands.Git
         [TestCase(TagOperation.SignWithSpecificKey)]
         public void Tag_supported_operation(TagOperation operation)
         {
-            GitCreateTagCmd cmd = CreateDefaultCommand();
-            cmd.Args.OperationType = operation;
-            cmd.Args.Force = true;
+            var args = new GitCreateTagArgs(TagName, Revision, operation, signKeyId: KeyId, force: true);
+            var cmd = new GitCreateTagCmd(args, _tagMessageFile);
 
-            string actualCmdLine = cmd.ToLine();
+            var actualCmdLine = cmd.ToLine();
 
-            string switches = "";
-
+            var switches = "";
             switch (operation)
             {
                 case TagOperation.Lightweight:
                     break;
                 case TagOperation.Annotate:
-                    switches = $" -a -F \"{Path.Combine(WorkingDir, "TAGMESSAGE")}\"";
+                    switches = $" -a -F \"{_tagMessageFile}\"";
                     break;
                 case TagOperation.SignWithDefaultKey:
-                    switches = $" -s -F \"{Path.Combine(WorkingDir, "TAGMESSAGE")}\"";
+                    switches = $" -s -F \"{_tagMessageFile}\"";
                     break;
                 case TagOperation.SignWithSpecificKey:
-                    switches = $" -u {KeyId} -F \"{Path.Combine(WorkingDir, "TAGMESSAGE")}\"";
+                    switches = $" -u {KeyId} -F \"{_tagMessageFile}\"";
                     break;
             }
 
-            string expectedCmdLine = $"tag -f{switches} \"{TagName}\" -- \"{Revision}\"";
+            var expectedCmdLine = $"tag -f{switches} \"{TagName}\" -- \"{Revision}\"";
 
             Assert.AreEqual(expectedCmdLine, actualCmdLine);
         }
@@ -141,14 +130,13 @@ namespace GitExtensionsTest.GitCommands.Git
         [TestMethod]
         public void CreateTagWithMessageAssignsTagMessageFile()
         {
-            GitCreateTagArgs args = CreateDefaultArgs();
-            args.OperationType = TagOperation.Annotate;
+            var args = new GitCreateTagArgs(TagName, Revision, TagOperation.Annotate);
 
             _uiCommands.StartCommandLineProcessDialog(Arg.Do<IGitCommand>(
                 cmd =>
                 {
-                    GitCreateTagCmd createTagCmd = cmd as GitCreateTagCmd;
-                    Assert.AreEqual(Path.Combine(WorkingDir, "TAGMESSAGE"), createTagCmd.TagMessageFileName);
+                    var createTagCmd = cmd as GitCreateTagCmd;
+                    Assert.AreEqual(_tagMessageFile, createTagCmd.TagMessageFileName);
                 }
                 ), null);
 
@@ -159,13 +147,13 @@ namespace GitExtensionsTest.GitCommands.Git
         [TestMethod]
         public void CreateTagUsesGivenArgs()
         {
-            GitCreateTagArgs args = CreateDefaultArgs();
+            var args = new GitCreateTagArgs(TagName, Revision, TagOperation.Lightweight, TagMessage, KeyId);
 
             _uiCommands.StartCommandLineProcessDialog(Arg.Do<IGitCommand>(
                 cmd =>
                 {
-                    GitCreateTagCmd createTagCmd = cmd as GitCreateTagCmd;
-                    Assert.AreEqual(args, createTagCmd.Args);
+                    var createTagCmd = cmd as GitCreateTagCmd;
+                    Assert.AreEqual(args, createTagCmd.Arguments);
                 }
                 ), null);
 
@@ -176,23 +164,20 @@ namespace GitExtensionsTest.GitCommands.Git
         [TestMethod]
         public void CreateTagWithMessageWritesTagMessageFile()
         {
-            GitCreateTagArgs args = CreateDefaultArgs();
-            args.OperationType = TagOperation.Annotate;
+            var args = new GitCreateTagArgs(TagName, Revision, TagOperation.Annotate, TagMessage);
 
             _controller.CreateTag(args, null);
-            var tagMagPath = Path.Combine(WorkingDir, "TAGMESSAGE");
-            _fileSystem.File.Received(1).WriteAllText(tagMagPath, TagMessage);
+            _fileSystem.File.Received(1).WriteAllText(_tagMessageFile, TagMessage);
         }
 
         [TestCase(true)]
         [TestCase(false)]
         public void CreateTagReturnsCmdResult(bool expectedCmdResult)
         {
-            GitCreateTagArgs args = CreateDefaultArgs();
-            args.OperationType = TagOperation.Annotate;
+            var args = new GitCreateTagArgs(TagName, Revision, TagOperation.Annotate);
             _uiCommands.StartCommandLineProcessDialog(Arg.Any<IGitCommand>(), null).Returns(expectedCmdResult);
 
-            bool actualCmdResult = _controller.CreateTag(args, null);
+            var actualCmdResult = _controller.CreateTag(args, null);
             Assert.AreEqual(expectedCmdResult, actualCmdResult);
         }
 
