@@ -64,7 +64,7 @@
             panel1.Margin = new System.Windows.Forms.Padding(4);
             panel1.Name = "panel1";
             panel1.Padding = new System.Windows.Forms.Padding(0, 0, 10, 5);
-            panel1.Size = new System.Drawing.Size(268, 47);
+            panel1.Size = new System.Drawing.Size(269, 47);
             panel1.TabIndex = 5;
             // 
             // lnkGitIgnoreGenerate
@@ -72,14 +72,14 @@
             this.lnkGitIgnoreGenerate.AutoSize = true;
             this.lnkGitIgnoreGenerate.Dock = System.Windows.Forms.DockStyle.Right;
             this.lnkGitIgnoreGenerate.LinkColor = System.Drawing.SystemColors.HotTrack;
-            this.lnkGitIgnoreGenerate.Location = new System.Drawing.Point(9, 2);
+            this.lnkGitIgnoreGenerate.Location = new System.Drawing.Point(30, 2);
             this.lnkGitIgnoreGenerate.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.lnkGitIgnoreGenerate.Name = "lnkGitIgnoreGenerate";
             this.lnkGitIgnoreGenerate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lnkGitIgnoreGenerate.Size = new System.Drawing.Size(245, 17);
+            this.lnkGitIgnoreGenerate.Size = new System.Drawing.Size(225, 17);
             this.lnkGitIgnoreGenerate.TabIndex = 7;
             this.lnkGitIgnoreGenerate.TabStop = true;
-            this.lnkGitIgnoreGenerate.Text = "Generate a custom ignores/ignoring file";
+            this.lnkGitIgnoreGenerate.Text = "Generate a custom ignore file for git";
             this.lnkGitIgnoreGenerate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkGitIgnoreGenerate_LinkClicked);
             // 
             // lnkGitIgnorePatterns
@@ -87,14 +87,14 @@
             this.lnkGitIgnorePatterns.AutoSize = true;
             this.lnkGitIgnorePatterns.Dock = System.Windows.Forms.DockStyle.Right;
             this.lnkGitIgnorePatterns.LinkColor = System.Drawing.SystemColors.HotTrack;
-            this.lnkGitIgnorePatterns.Location = new System.Drawing.Point(59, 23);
+            this.lnkGitIgnorePatterns.Location = new System.Drawing.Point(98, 23);
             this.lnkGitIgnorePatterns.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.lnkGitIgnorePatterns.Name = "lnkGitIgnorePatterns";
             this.lnkGitIgnorePatterns.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lnkGitIgnorePatterns.Size = new System.Drawing.Size(195, 17);
+            this.lnkGitIgnorePatterns.Size = new System.Drawing.Size(157, 17);
             this.lnkGitIgnorePatterns.TabIndex = 6;
             this.lnkGitIgnorePatterns.TabStop = true;
-            this.lnkGitIgnorePatterns.Text = "More ignores/ignoring patterns";
+            this.lnkGitIgnorePatterns.Text = "Example ignore patterns";
             this.lnkGitIgnorePatterns.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkGitIgnorePatterns_LinkClicked);
             // 
             // flowLayoutPanel2
@@ -106,7 +106,7 @@
             flowLayoutPanel2.Location = new System.Drawing.Point(0, 484);
             flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new System.Drawing.Size(509, 42);
+            flowLayoutPanel2.Size = new System.Drawing.Size(508, 42);
             flowLayoutPanel2.TabIndex = 6;
             flowLayoutPanel2.WrapContents = false;
             // 
@@ -172,7 +172,7 @@
             this.splitContainer1.Panel2.Controls.Add(panel1);
             this.splitContainer1.Panel2MinSize = 250;
             this.splitContainer1.Size = new System.Drawing.Size(782, 526);
-            this.splitContainer1.SplitterDistance = 509;
+            this.splitContainer1.SplitterDistance = 508;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -185,7 +185,7 @@
             this._NO_TRANSLATE_GitIgnoreEdit.Location = new System.Drawing.Point(0, 0);
             this._NO_TRANSLATE_GitIgnoreEdit.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this._NO_TRANSLATE_GitIgnoreEdit.Name = "_NO_TRANSLATE_GitIgnoreEdit";
-            this._NO_TRANSLATE_GitIgnoreEdit.Size = new System.Drawing.Size(509, 484);
+            this._NO_TRANSLATE_GitIgnoreEdit.Size = new System.Drawing.Size(508, 484);
             this._NO_TRANSLATE_GitIgnoreEdit.TabIndex = 0;
             // 
             // label1
@@ -197,7 +197,7 @@
             this.label1.Multiline = true;
             this.label1.Name = "label1";
             this.label1.ReadOnly = true;
-            this.label1.Size = new System.Drawing.Size(268, 479);
+            this.label1.Size = new System.Drawing.Size(269, 479);
             this.label1.TabIndex = 4;
             this.label1.Text = resources.GetString("label1.Text");
             this.label1.WordWrap = false;

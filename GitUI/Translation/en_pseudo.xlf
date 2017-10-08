@@ -5670,10 +5670,10 @@ _ŘḗŞħȧřƥḗř*/ ıϖẛϰǈϑǈ ǅſſſǈΐϕΰςſǋ靐 靐ǈϰ ΰ鶱�
         
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
-        <source>Generate a custom ignores/ignoring file</source>
+        <source>Generate a custom ignore file for git</source>
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
-        <source>More ignores/ignoring patterns</source>
+        <source>Example ignore patterns</source>
       </trans-unit>
     </body>
   </file>
