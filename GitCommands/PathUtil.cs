@@ -90,38 +90,6 @@ namespace GitCommands
             return true;
         }
 
-        public static bool Equal(string path1, string path2)
-        {
-            path1 = Path.GetFullPath(path1).TrimEnd('\\');
-            path2 = Path.GetFullPath(path2).TrimEnd('\\');
-            StringComparison comprasion = EnvUtils.RunningOnUnix()
-                                              ? StringComparison.InvariantCulture
-                                              : StringComparison.InvariantCultureIgnoreCase;
-
-            return String.Compare(path1, path2, comprasion) == 0;
-        }
-
-        private class PathEqualityComparer : IEqualityComparer<string>
-        {
-            public bool Equals(string path1, string path2)
-            {
-                return Equal(path1, path2);
-            }
-
-            public int GetHashCode(string path)
-            {
-                path = Path.GetFullPath(path).TrimEnd('\\');
-                if (!EnvUtils.RunningOnUnix())
-                    path = path.ToLower();
-                return path.GetHashCode();
-            }
-        }
-
-        public static IEqualityComparer<string> CreatePathEqualityComparer()
-        {
-            return new PathEqualityComparer();
-        }
-
         public static string GetRepositoryName(string repositoryUrl)
         {
             string name = "";

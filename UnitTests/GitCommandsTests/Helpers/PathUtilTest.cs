@@ -120,21 +120,6 @@ namespace GitCommandsTests.Helpers
         }
 
         [Test]
-        public void EqualTest()
-        {
-            if (Path.DirectorySeparatorChar == '\\')
-            {
-                Assert.AreEqual(PathUtil.Equal("C:\\Work\\GitExtensions\\", "C:/Work/GitExtensions/"), true);
-                Assert.AreEqual(PathUtil.Equal("\\\\my-pc\\Work\\GitExtensions\\", "//my-pc/Work/GitExtensions/"), true);
-            }
-            else
-            {
-                Assert.AreEqual(PathUtil.Equal("/Work/GitExtensions/", "/Work/GitExtensions/"), true);
-                Assert.AreEqual(PathUtil.Equal("//my-pc/Work/GitExtensions/", "//my-pc/Work/GitExtensions/"), true);
-            }
-        }
-
-        [Test]
         public void GetRepositoryNameTest()
         {
             Assert.AreEqual(PathUtil.GetRepositoryName("https://github.com/gitextensions/gitextensions.git"), "gitextensions");

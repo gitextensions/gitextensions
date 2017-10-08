@@ -702,7 +702,7 @@ namespace GitUI.CommandsDialogs
 
             if (File.Exists(AppSettings.Pageant))
             {
-                HashSet<string> files = new HashSet<string>(PathUtil.CreatePathEqualityComparer());
+                HashSet<string> files = new HashSet<string>(new PathEqualityComparer());
                 foreach (var remote in GetSelectedRemotes())
                 {
                     var sshKeyFile = Module.GetPuttyKeyFileForRemote(remote);
