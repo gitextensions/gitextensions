@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GitCommands.Git
 {
@@ -16,9 +13,9 @@ namespace GitCommands.Git
 
     public static class TagOperationExtensions
     {
-        public static bool CanProvideMessage(this TagOperation operationType)
+        public static bool CanProvideMessage(this TagOperation operation)
         {
-            switch (operationType)
+            switch (operation)
             {
                 case TagOperation.Lightweight:
                     return false;
@@ -27,30 +24,52 @@ namespace GitCommands.Git
                 case TagOperation.SignWithSpecificKey:
                     return true;
                 default:
-                    throw new NotSupportedException("Invalid TagOperation: " + operationType);
+                    throw new NotSupportedException($"Invalid tag operation: {operation}");
             }
         }
     }
 
-    public sealed class GitCreateTagArgs
+    public class GitCreateTagArgs
     {
-        public string Revision;
-        public string TagName;
-        public bool Force = false;
-        public TagOperation OperationType = TagOperation.Lightweight;
-        public string TagMessage = "";
-        public string SignKeyId = "";
+        /// <summary>
+        /// Creates arguments for creation of a tag.
+        /// </summary>
+        /// <param name="tagName">Name of tag</param>
+        /// <param name="revision">Commit revision to be tagged</param>
+        /// <param name="operation">The operation to perform on the tag</param>
+        /// <param name="tagMessage">Tag Message</param>
+        /// <param name="signKeyId">Specific Key ID to be used instead of default one</param>
+        /// <param name="force">Force parameter</param>
+        public GitCreateTagArgs(string tagName, string revision, TagOperation operation = TagOperation.Lightweight, string tagMessage = "", string signKeyId = "", bool force = false)
+        {
+            TagName = tagName;
+            Revision = revision;
+            Operation = operation;
+            TagMessage = tagMessage;
+            SignKeyId = signKeyId;
+            Force = force;
+        }
+
+        public string Revision { get; }
+        public string TagName { get; }
+        public bool Force { get; }
+        public TagOperation Operation { get; }
+        public string TagMessage { get; }
+        public string SignKeyId { get; }
     }
 
     public sealed class GitCreateTagCmd : GitCommand
     {
-        public GitCreateTagArgs Args;
-        public string TagMessageFileName;
-
-        public GitCreateTagCmd(GitCreateTagArgs aArgs)
+        public GitCreateTagCmd(GitCreateTagArgs args, string tagMessageFileName)
         {
-            Args = aArgs;
+            Arguments = args;
+            TagMessageFileName = tagMessageFileName;
         }
+
+
+        public GitCreateTagArgs Arguments { get; }
+        public string TagMessageFileName { get; }
+
 
         public override string GitComandName()
         {
@@ -59,54 +78,50 @@ namespace GitCommands.Git
 
         protected override IEnumerable<string> CollectArguments()
         {
-            if (Args.Force)
+            if (Arguments.Force)
             {
                 yield return "-f";
             }
 
-            string operationArg;
-            if (GetArgumentForOperation(out operationArg))
+            string operationArg = GetArgumentForOperation();
+            if (!string.IsNullOrWhiteSpace(operationArg))
             {
                 yield return operationArg;
             }
 
-            if (Args.OperationType.CanProvideMessage())
+            if (Arguments.Operation.CanProvideMessage())
             {
                 yield return "-F " + TagMessageFileName.Quote();
             }
 
-            yield return Args.TagName.Trim().Quote();
+            yield return Arguments.TagName.Trim().Quote();
             yield return "--";
-            yield return Args.Revision.Quote();
+            yield return Arguments.Revision.Quote();
         }
 
-        private bool GetArgumentForOperation(out string operationArg)
+        private string GetArgumentForOperation()
         {
-            switch (Args.OperationType)
+            switch (Arguments.Operation)
             {
                 /* Lightweight */
                 case TagOperation.Lightweight:
-                    operationArg = null;
-                    return false;
+                    return null;
 
                 /* Annotate */
                 case TagOperation.Annotate:
-                    operationArg = "-a";
-                    return true;
+                    return "-a";
 
                 /* Sign with default GPG */
                 case TagOperation.SignWithDefaultKey:
-                    operationArg = "-s";
-                    return true;
+                    return "-s";
 
                 /* Sign with specific GPG */
                 case TagOperation.SignWithSpecificKey:
-                    operationArg = $"-u {Args.SignKeyId}";
-                    return true;
+                    return $"-u {Arguments.SignKeyId}";
 
                 /* Error */
                 default:
-                    throw new NotSupportedException("Invalid TagOperation: " + Args.OperationType);
+                    throw new NotSupportedException($"Invalid tag operation: {Arguments.Operation}");
             }
         }
 
@@ -122,24 +137,24 @@ namespace GitCommands.Git
 
         public override void Validate()
         {
-            if (string.IsNullOrEmpty(Args.Revision))
+            if (string.IsNullOrWhiteSpace(Arguments.Revision))
             {
-                throw new ArgumentNullException("Args.Revision");
+                throw new ArgumentException("Revision is required.");
             }
 
-            if (string.IsNullOrEmpty(Args.TagName))
+            if (string.IsNullOrWhiteSpace(Arguments.TagName))
             {
-                throw new ArgumentNullException("Args.TagName");
+                throw new ArgumentException("TagName is required.");
             }
 
-            if (Args.OperationType.CanProvideMessage() && TagMessageFileName.IsNullOrEmpty())
+            if (Arguments.Operation.CanProvideMessage() && string.IsNullOrWhiteSpace(TagMessageFileName))
             {
-                throw new ArgumentNullException("TagMessageFileName");
+                throw new ArgumentException("TagMessageFileName is required.");
             }
 
-            if (Args.OperationType == TagOperation.SignWithSpecificKey && string.IsNullOrEmpty(Args.SignKeyId))
+            if (Arguments.Operation == TagOperation.SignWithSpecificKey && string.IsNullOrWhiteSpace(Arguments.SignKeyId))
             {
-                throw new ArgumentNullException("Args.SignKeyId");
+                throw new ArgumentException("SignKeyId is required.");
             }
         }
     }

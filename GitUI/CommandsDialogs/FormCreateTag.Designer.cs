@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs
             this.annotate.Size = new System.Drawing.Size(150, 19);
             this.annotate.TabIndex = 3;
             this.annotate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.annotate.Items.AddRange(dropwdownTagOperation);
+            this.annotate.Items.AddRange(DropwdownTagOperation);
             this.annotate.SelectedIndex = 0;
             this.annotate.SelectedIndexChanged += new System.EventHandler(this.AnnotateDropDownChanged);
             // 
