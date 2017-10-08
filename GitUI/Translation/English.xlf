@@ -4531,11 +4531,11 @@ _ReSharper*/</source>
         <target />
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
-        <source>Generate a custom gitignore</source>
+        <source>Generate a custom ignores/ignoring file</source>
         <target />
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
-        <source>More gitignore patterns</source>
+        <source>More ignores/ignoring patterns</source>
         <target />
       </trans-unit>
     </body>
