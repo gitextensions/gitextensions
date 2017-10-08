@@ -814,6 +814,8 @@ namespace GitUI.CommandsDialogs
 
         private void MergeCheckedChanged(object sender, EventArgs e)
         {
+            if (!Merge.Checked)
+                return;
             localBranch.Enabled = false;
             localBranch.Text = _branch;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullMerge;
@@ -827,6 +829,8 @@ namespace GitUI.CommandsDialogs
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
         {
+            if (!Rebase.Checked)
+                return;
             localBranch.Enabled = false;
             localBranch.Text = _branch;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
@@ -839,6 +843,8 @@ namespace GitUI.CommandsDialogs
 
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
+            if (!Fetch.Checked)
+                return;
             localBranch.Enabled = true;
             localBranch.Text = string.Empty;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
