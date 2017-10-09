@@ -835,6 +835,10 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
         <target>Mémoriser l'état de la case à cocher 'Rectifier le commit' lors de la fermeture du formulaire de commit</target>
         
       </trans-unit>
+      <trans-unit id="cbCropPathToShowFileNmesInCommitDialog.Text">
+        <source>Crop path to show un/staged file names in commit dialog</source>
+        
+      </trans-unit>
       <trans-unit id="chkAddNewlineToCommitMessageWhenMissing.Text">
         <source>Ensure the second line of commit message is empty</source>
         <target>Assurez-vous que la 2ème ligne du message de commit soit vide</target>

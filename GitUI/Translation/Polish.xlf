@@ -832,6 +832,10 @@ Upewnij się, czy jest zainstalowany git (Git dla Windows lub cygwin) lub ustal 
         <source>Remember 'Amend commit' checkbox on commit form close</source>
         
       </trans-unit>
+      <trans-unit id="cbCropPathToShowFileNmesInCommitDialog.Text">
+        <source>Crop path to show un/staged file names in commit dialog</source>
+        
+      </trans-unit>
       <trans-unit id="chkAddNewlineToCommitMessageWhenMissing.Text">
         <source>Ensure the second line of commit message is empty</source>
         <target>Upewnij się, czy druga linia wiadomości zatwierdzenia jest pusta</target>

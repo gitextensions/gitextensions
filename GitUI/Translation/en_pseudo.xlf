@@ -833,6 +833,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>[Řḗḿḗḿƀḗř 'Ȧḿḗƞḓ ƈǿḿḿīŧ' ƈħḗƈķƀǿẋ ǿƞ ƈǿḿḿīŧ ƒǿřḿ ƈŀǿşḗ ǋϕ衋ϰΐϖǈſ]</target>
         
       </trans-unit>
+      <trans-unit id="cbCropPathToShowFileNmesInCommitDialog.Text">
+        <source>Crop path to show un/staged file names in commit dialog</source>
+        
+      </trans-unit>
       <trans-unit id="chkAddNewlineToCommitMessageWhenMissing.Text">
         <source>Ensure the second line of commit message is empty</source>
         <target>[Ḗƞşŭřḗ ŧħḗ şḗƈǿƞḓ ŀīƞḗ ǿƒ ƈǿḿḿīŧ ḿḗşşȧɠḗ īş ḗḿƥŧẏ 鶱ıς衋ΰǋ ςϱſ]</target>
