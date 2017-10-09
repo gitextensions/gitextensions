@@ -70,6 +70,10 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Abstractions, Version=2.0.0.144, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Abstractions.2.0.0.144\lib\net40\System.IO.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -85,11 +89,13 @@
     <Compile Include="Core\SimpleStructured.cs" />
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="ExceptionUtils.cs" />
+    <Compile Include="FileAssociatedIconProvider.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="Git\AuthorEmailEqualityComparer.cs" />
     <Compile Include="Git\GitDeleteRemoteBranchCmd.cs" />
     <Compile Include="Git\GitBranchNameNormaliser.cs" />
     <Compile Include="Git\GitBranchNameOptions.cs" />
+    <Compile Include="Git\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitTagController.cs" />
     <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="RemoteActionResult.cs" />

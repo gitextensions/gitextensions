@@ -208,7 +208,14 @@ namespace GitCommandsTests.Config
 
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                CheckValueIsEqual(configFile, "directory.first", @"c:/program files/gitextensions/gitextensions.exe");
+                if (Path.DirectorySeparatorChar == '\\')
+                {
+                    CheckValueIsEqual(configFile, "directory.first", @"c:/program files/gitextensions/gitextensions.exe");
+                }
+                else
+                {
+                    CheckValueIsEqual(configFile, "directory.first", @"c:\program files\gitextensions\gitextensions.exe");
+                }
             }
         }
 
@@ -224,7 +231,14 @@ namespace GitCommandsTests.Config
 
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                CheckValueIsEqual(configFile, "directory.first", @"c:/program files/gitextensions/gitextensions.exe");
+                if (Path.DirectorySeparatorChar == '\\')
+                {
+                    CheckValueIsEqual(configFile, "directory.first", @"c:/program files/gitextensions/gitextensions.exe");
+                }
+                else
+                {
+                    CheckValueIsEqual(configFile, "directory.first", @"c:\program files\gitextensions\gitextensions.exe");
+                }
             }
         }
 

@@ -248,7 +248,7 @@ namespace GitUI
             return StartBatchFileProcessDialog(null, batchFile);
         }
 
-        public bool StartCommandLineProcessDialog(GitCommand cmd, IWin32Window parentForm)
+        public bool StartCommandLineProcessDialog(IGitCommand cmd, IWin32Window parentForm)
         {
             bool executed;
 

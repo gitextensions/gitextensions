@@ -115,5 +115,7 @@ namespace GitCommands.Utils
 
             return s.Replace("\n", Environment.NewLine);
         }
+
+        public static char EnvVariableSeparator => RunningOnWindows() ? ';' : ':';
     }
 }

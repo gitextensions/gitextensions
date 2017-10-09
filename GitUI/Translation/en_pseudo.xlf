@@ -5670,14 +5670,10 @@ _ŘḗŞħȧřƥḗř*/ ıϖẛϰǈϑǈ ǅſſſǈΐϕΰςſǋ靐 靐ǈϰ ΰ鶱�
         
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
-        <source>Generate a custom gitignore</source>
-        <target>[Ɠḗƞḗřȧŧḗ ȧ ƈŭşŧǿḿ ɠīŧīɠƞǿřḗ ς靐ſ靐ǅϰẛ衋 ǋ]</target>
-        
+        <source>Generate a custom ignore file for git</source>
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
-        <source>More gitignore patterns</source>
-        <target>[Ḿǿřḗ ɠīŧīɠƞǿřḗ ƥȧŧŧḗřƞş ϑǅϵǋ 衋ϵǋϰΐǋ]</target>
-        
+        <source>Example ignore patterns</source>
       </trans-unit>
     </body>
   </file>

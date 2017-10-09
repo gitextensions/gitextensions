@@ -86,6 +86,7 @@
     <Compile Include="IBrowseRepo.cs" />
     <Compile Include="IConfigFileSettings.cs" />
     <Compile Include="IConfigSection.cs" />
+    <Compile Include="IGitCommand.cs" />
     <Compile Include="IGitItem.cs" />
     <Compile Include="IGitPluginForRepository.cs" />
     <Compile Include="IGitModule.cs" />

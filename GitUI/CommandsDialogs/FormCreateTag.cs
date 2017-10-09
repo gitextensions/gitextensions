@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Script;
@@ -25,7 +24,8 @@ namespace GitUI.CommandsDialogs
         private static readonly TranslationString _trsSignDefault = new TranslationString("Sign with default GPG");
         private static readonly TranslationString _trsSignSpecificKey = new TranslationString("Sign with specific GPG");
 
-        private static readonly string[] dropwdownTagOperation = new string[] { _trsLigthweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text };
+        private static readonly string[] DropwdownTagOperation = { _trsLigthweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text };
+        private readonly IGitTagController _gitTagController;
 
 
         public FormCreateTag(GitUICommands aCommands, GitRevision revision)
@@ -38,6 +38,11 @@ namespace GitUI.CommandsDialogs
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
                 commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
+
+            if (aCommands != null)
+            {
+                _gitTagController = new GitTagController(aCommands, aCommands.Module);
+            }
         }
 
         private void FormCreateTag_Load(object sender, EventArgs e)
@@ -66,23 +71,22 @@ namespace GitUI.CommandsDialogs
 
         private string CreateTag()
         {
-            string revision = commitPickerSmallControl1.SelectedCommitHash;
-
-            if (revision.IsNullOrEmpty())
+            if (string.IsNullOrWhiteSpace(commitPickerSmallControl1.SelectedCommitHash))
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
             }
 
-            IGitTagController _gitTagController = new GitTagController(Module);
-            var s = _gitTagController.CreateTag(revision, textBoxTagName.Text, ForceTag.Checked, GetSelectedOperation(annotate.SelectedIndex), tagMessage.Text, textBoxGpgKey.Text);
-            if (!string.IsNullOrEmpty(s))
+            var createTagArgs = new GitCreateTagArgs(textBoxTagName.Text,
+                                                     commitPickerSmallControl1.SelectedCommitHash,
+                                                     GetSelectedOperation(annotate.SelectedIndex),
+                                                     tagMessage.Text,
+                                                     textBoxGpgKey.Text,
+                                                     ForceTag.Checked);
+            if (!_gitTagController.CreateTag(createTagArgs, this))
             {
-                MessageBox.Show(this, s, _messageCaption.Text);
-            }
-
-            if (s.Contains("fatal:"))
                 return string.Empty;
+            }
 
             DialogResult = DialogResult.OK;
             return textBoxTagName.Text;
@@ -121,7 +125,7 @@ namespace GitUI.CommandsDialogs
         private TagOperation GetSelectedOperation(int dropdownSelection)
         {
             TagOperation returnValue = TagOperation.Lightweight;
-            switch(dropdownSelection)
+            switch (dropdownSelection)
             {
                 case 0:
                     returnValue = TagOperation.Lightweight;

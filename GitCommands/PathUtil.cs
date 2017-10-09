@@ -65,7 +65,16 @@ namespace GitCommands
             var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
             var pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
-                fileName = fileName.Substring(0, pos);
+            {
+                if (pos == 0 && fileName[0] == AppSettings.PosixPathSeparator)
+                {
+                    return fileName.Length == 1 ? string.Empty : AppSettings.PosixPathSeparator.ToString();
+                }
+                else
+                {
+                    fileName = fileName.Substring(0, pos);
+                }
+            }
             if (fileName.Length == 2 && char.IsLetter(fileName[0]) && fileName[1] == Path.VolumeSeparatorChar)
                 return "";
             return fileName;
@@ -153,7 +162,7 @@ namespace GitCommands
             if (aPathVariable.IsNullOrWhiteSpace())
                 yield break;
 
-            foreach (string rawdir in aPathVariable.Split(';'))
+            foreach (string rawdir in aPathVariable.Split(EnvUtils.EnvVariableSeparator))
             {
                 string dir = rawdir;
                 // Usually, paths with spaces are not quoted on %PATH%, but it's well possible, and .NET won't consume a quoted path

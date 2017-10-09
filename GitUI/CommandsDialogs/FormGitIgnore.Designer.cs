@@ -60,10 +60,11 @@
             panel1.Controls.Add(this.lnkGitIgnorePatterns);
             panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             panel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            panel1.Location = new System.Drawing.Point(0, 385);
+            panel1.Location = new System.Drawing.Point(0, 479);
+            panel1.Margin = new System.Windows.Forms.Padding(4);
             panel1.Name = "panel1";
-            panel1.Padding = new System.Windows.Forms.Padding(0, 0, 8, 4);
-            panel1.Size = new System.Drawing.Size(250, 38);
+            panel1.Padding = new System.Windows.Forms.Padding(0, 0, 10, 5);
+            panel1.Size = new System.Drawing.Size(269, 47);
             panel1.TabIndex = 5;
             // 
             // lnkGitIgnoreGenerate
@@ -71,14 +72,14 @@
             this.lnkGitIgnoreGenerate.AutoSize = true;
             this.lnkGitIgnoreGenerate.Dock = System.Windows.Forms.DockStyle.Right;
             this.lnkGitIgnoreGenerate.LinkColor = System.Drawing.SystemColors.HotTrack;
-            this.lnkGitIgnoreGenerate.Location = new System.Drawing.Point(96, 2);
-            this.lnkGitIgnoreGenerate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lnkGitIgnoreGenerate.Location = new System.Drawing.Point(30, 2);
+            this.lnkGitIgnoreGenerate.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.lnkGitIgnoreGenerate.Name = "lnkGitIgnoreGenerate";
             this.lnkGitIgnoreGenerate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lnkGitIgnoreGenerate.Size = new System.Drawing.Size(143, 13);
+            this.lnkGitIgnoreGenerate.Size = new System.Drawing.Size(225, 17);
             this.lnkGitIgnoreGenerate.TabIndex = 7;
             this.lnkGitIgnoreGenerate.TabStop = true;
-            this.lnkGitIgnoreGenerate.Text = "Generate a custom gitignore";
+            this.lnkGitIgnoreGenerate.Text = "Generate a custom ignore file for git";
             this.lnkGitIgnoreGenerate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkGitIgnoreGenerate_LinkClicked);
             // 
             // lnkGitIgnorePatterns
@@ -86,14 +87,14 @@
             this.lnkGitIgnorePatterns.AutoSize = true;
             this.lnkGitIgnorePatterns.Dock = System.Windows.Forms.DockStyle.Right;
             this.lnkGitIgnorePatterns.LinkColor = System.Drawing.SystemColors.HotTrack;
-            this.lnkGitIgnorePatterns.Location = new System.Drawing.Point(119, 19);
-            this.lnkGitIgnorePatterns.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lnkGitIgnorePatterns.Location = new System.Drawing.Point(98, 23);
+            this.lnkGitIgnorePatterns.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.lnkGitIgnorePatterns.Name = "lnkGitIgnorePatterns";
             this.lnkGitIgnorePatterns.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lnkGitIgnorePatterns.Size = new System.Drawing.Size(120, 13);
+            this.lnkGitIgnorePatterns.Size = new System.Drawing.Size(157, 17);
             this.lnkGitIgnorePatterns.TabIndex = 6;
             this.lnkGitIgnorePatterns.TabStop = true;
-            this.lnkGitIgnorePatterns.Text = "More gitignore patterns";
+            this.lnkGitIgnorePatterns.Text = "Example ignore patterns";
             this.lnkGitIgnorePatterns.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkGitIgnorePatterns_LinkClicked);
             // 
             // flowLayoutPanel2
@@ -102,9 +103,10 @@
             flowLayoutPanel2.Controls.Add(this.AddDefault);
             flowLayoutPanel2.Controls.Add(this.AddPattern);
             flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            flowLayoutPanel2.Location = new System.Drawing.Point(0, 391);
+            flowLayoutPanel2.Location = new System.Drawing.Point(0, 484);
+            flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new System.Drawing.Size(372, 32);
+            flowLayoutPanel2.Size = new System.Drawing.Size(508, 42);
             flowLayoutPanel2.TabIndex = 6;
             flowLayoutPanel2.WrapContents = false;
             // 
@@ -112,9 +114,10 @@
             // 
             this.AddDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.AddDefault.AutoSize = true;
-            this.AddDefault.Location = new System.Drawing.Point(3, 3);
+            this.AddDefault.Location = new System.Drawing.Point(4, 4);
+            this.AddDefault.Margin = new System.Windows.Forms.Padding(4);
             this.AddDefault.Name = "AddDefault";
-            this.AddDefault.Size = new System.Drawing.Size(160, 25);
+            this.AddDefault.Size = new System.Drawing.Size(200, 34);
             this.AddDefault.TabIndex = 2;
             this.AddDefault.Text = "Add default ignores";
             this.AddDefault.UseVisualStyleBackColor = true;
@@ -124,9 +127,10 @@
             // 
             this.AddPattern.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.AddPattern.AutoSize = true;
-            this.AddPattern.Location = new System.Drawing.Point(169, 3);
+            this.AddPattern.Location = new System.Drawing.Point(212, 4);
+            this.AddPattern.Margin = new System.Windows.Forms.Padding(4);
             this.AddPattern.Name = "AddPattern";
-            this.AddPattern.Size = new System.Drawing.Size(160, 25);
+            this.AddPattern.Size = new System.Drawing.Size(200, 34);
             this.AddPattern.TabIndex = 3;
             this.AddPattern.Text = "Add pattern";
             this.AddPattern.UseVisualStyleBackColor = true;
@@ -138,9 +142,10 @@
             this.Save.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Save.Image = global::GitUI.Properties.Resources.IconSave;
             this.Save.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Save.Location = new System.Drawing.Point(463, 3);
+            this.Save.Location = new System.Drawing.Point(578, 4);
+            this.Save.Margin = new System.Windows.Forms.Padding(4);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(160, 25);
+            this.Save.Size = new System.Drawing.Size(200, 34);
             this.Save.TabIndex = 1;
             this.Save.Text = "Save";
             this.Save.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -151,7 +156,8 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.Location = new System.Drawing.Point(4, 4);
+            this.splitContainer1.Location = new System.Drawing.Point(5, 5);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -165,8 +171,9 @@
             this.splitContainer1.Panel2.Controls.Add(this.label1);
             this.splitContainer1.Panel2.Controls.Add(panel1);
             this.splitContainer1.Panel2MinSize = 250;
-            this.splitContainer1.Size = new System.Drawing.Size(626, 423);
-            this.splitContainer1.SplitterDistance = 372;
+            this.splitContainer1.Size = new System.Drawing.Size(782, 526);
+            this.splitContainer1.SplitterDistance = 508;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
             // 
             // _NO_TRANSLATE_GitIgnoreEdit
@@ -176,9 +183,9 @@
             this._NO_TRANSLATE_GitIgnoreEdit.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_GitIgnoreEdit.IsReadOnly = false;
             this._NO_TRANSLATE_GitIgnoreEdit.Location = new System.Drawing.Point(0, 0);
-            this._NO_TRANSLATE_GitIgnoreEdit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this._NO_TRANSLATE_GitIgnoreEdit.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this._NO_TRANSLATE_GitIgnoreEdit.Name = "_NO_TRANSLATE_GitIgnoreEdit";
-            this._NO_TRANSLATE_GitIgnoreEdit.Size = new System.Drawing.Size(372, 391);
+            this._NO_TRANSLATE_GitIgnoreEdit.Size = new System.Drawing.Size(508, 484);
             this._NO_TRANSLATE_GitIgnoreEdit.TabIndex = 0;
             // 
             // label1
@@ -186,10 +193,11 @@
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Margin = new System.Windows.Forms.Padding(5);
             this.label1.Multiline = true;
             this.label1.Name = "label1";
             this.label1.ReadOnly = true;
-            this.label1.Size = new System.Drawing.Size(250, 385);
+            this.label1.Size = new System.Drawing.Size(269, 479);
             this.label1.TabIndex = 4;
             this.label1.Text = resources.GetString("label1.Text");
             this.label1.WordWrap = false;
@@ -201,18 +209,20 @@
             this.flowLayoutPanel1.Controls.Add(this.btnCancel);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(4, 427);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(5, 531);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(626, 31);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(782, 42);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
             // btnCancel
             // 
             this.btnCancel.AutoSize = true;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(382, 3);
+            this.btnCancel.Location = new System.Drawing.Point(476, 4);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(4);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 25);
+            this.btnCancel.Size = new System.Drawing.Size(94, 34);
             this.btnCancel.TabIndex = 2;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -220,15 +230,16 @@
             // 
             // FormGitIgnore
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(634, 462);
+            this.ClientSize = new System.Drawing.Size(792, 578);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.flowLayoutPanel1);
-            this.MinimumSize = new System.Drawing.Size(650, 500);
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.MinimumSize = new System.Drawing.Size(808, 613);
             this.Name = "FormGitIgnore";
-            this.Padding = new System.Windows.Forms.Padding(4);
+            this.Padding = new System.Windows.Forms.Padding(5);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit .gitignore";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGitIgnoreFormClosing);
@@ -238,6 +249,7 @@
             flowLayoutPanel2.ResumeLayout(false);
             flowLayoutPanel2.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

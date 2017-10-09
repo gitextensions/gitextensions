@@ -1656,26 +1656,19 @@ namespace GitCommands
             if (localBranch != null)
                 localBranch = localBranch.Replace(" ", "");
 
-            string remoteBranchArguments;
+            string branchArguments = "";
 
-            if (string.IsNullOrEmpty(remoteBranch))
-                remoteBranchArguments = "";
-            else
+            if (!string.IsNullOrEmpty(remoteBranch))
             {
                 if (remoteBranch.StartsWith("+"))
                     remoteBranch = remoteBranch.Remove(0, 1);
-                remoteBranchArguments = "+" + FormatBranchName(remoteBranch);
+                branchArguments = " +" + FormatBranchName(remoteBranch);
+
+                var remoteUrl = GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+
+                if (!string.IsNullOrEmpty(localBranch))
+                    branchArguments += ":" + GitCommandHelpers.GetFullBranchName(localBranch);
             }
-
-            string localBranchArguments;
-            var remoteUrl = GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
-
-            if (PathIsUrl(remote) && !string.IsNullOrEmpty(localBranch) && string.IsNullOrEmpty(remoteUrl))
-                localBranchArguments = ":" + GitCommandHelpers.GetFullBranchName(localBranch);
-            else if (string.IsNullOrEmpty(localBranch) || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
-                localBranchArguments = "";
-            else
-                localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch;
 
             string arguments = fetchTags == true ? " --tags" : fetchTags == false ? " --no-tags" : "";
 
@@ -1684,7 +1677,7 @@ namespace GitCommands
             if (isUnshallow)
                 arguments += " --unshallow";
 
-            return "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments + arguments + pruneArguments;
+            return "\"" + remote.Trim() + "\"" + branchArguments + arguments + pruneArguments;
         }
 
         public string GetRebaseDir()

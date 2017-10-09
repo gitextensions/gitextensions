@@ -266,32 +266,39 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             if (File.Exists(path))
             {
-                var pi = new ProcessStartInfo
+                try
                 {
-                    FileName = "regsvr32",
-                    Arguments = string.Format("\"{0}\"", path),
-                    Verb = "RunAs",
-                    UseShellExecute = true
-                };
-
-                var process = Process.Start(pi);
-                process.WaitForExit();
-
-                if (IntPtr.Size == 8)
-                {
-                    path = path.Replace(CommonLogic.GitExtensionsShellEx32Name, CommonLogic.GitExtensionsShellEx64Name);
-                    if (File.Exists(path))
+                    var pi = new ProcessStartInfo
                     {
-                        pi.Arguments = string.Format("\"{0}\"", path);
+                        FileName = "regsvr32",
+                        Arguments = string.Format("\"{0}\"", path),
+                        Verb = "RunAs",
+                        UseShellExecute = true
+                    };
 
-                        var process64 = Process.Start(pi);
-                        process64.WaitForExit();
-                    }
-                    else
+                    var process = Process.Start(pi);
+                    process.WaitForExit();
+
+                    if (IntPtr.Size == 8)
                     {
-                        MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name));
+                        path = path.Replace(CommonLogic.GitExtensionsShellEx32Name, CommonLogic.GitExtensionsShellEx64Name);
+                        if (File.Exists(path))
+                        {
+                            pi.Arguments = string.Format("\"{0}\"", path);
+
+                            var process64 = Process.Start(pi);
+                            process64.WaitForExit();
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name));
+                        }
                     }
                 }
+                catch(System.ComponentModel.Win32Exception)
+                {
+                    // User cancel operation, continue;
+                }               
             }
             else
             {

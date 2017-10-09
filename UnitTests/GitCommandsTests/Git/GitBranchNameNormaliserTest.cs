@@ -18,15 +18,14 @@ namespace GitCommandsTests.Git
         }
 
 
-        [TestCase("[BUG-1234] some long description located [//test/*/dir?/.lock]{3,} and <foo:bar\\can>...", "_", "_BUG-1234]_some_long_description_located__/test/_/dir_/_lock]{3,}_and__foo_bar_can__")]
-        [TestCase("[BUG-1234] some long description located [//test/*/dir?/.lock]{3,} and <foo:bar\\can>...", "-", "-BUG-1234]-some-long-description-located--/test/-/dir-/-lock]{3,}-and--foo-bar-can--")]
-        [TestCase("[BUG-1234] some long description located [//test/*/dir?/.lock]{3,} and <foo:bar\\can>...", "", "BUG-1234]somelongdescriptionlocated/test/dir/lock]{3,}andfoobarcan")]
+        [TestCase("[BUG-1234] some long description located [//test/*/dir?/.lock]{3,} and foo:bar\\can...", "_", "_BUG-1234]_some_long_description_located__/test/_/dir_/_lock]{3,}_and_foo_bar_can_")]
+        [TestCase("[BUG-1234] some long description located [//test/*/dir?/.lock]{3,} and foo:bar\\can...", "-", "-BUG-1234]-some-long-description-located--/test/-/dir-/-lock]{3,}-and-foo-bar-can-")]
+        [TestCase("[BUG-1234] some long description located [//test/*/dir?/.lock]{3,} and foo:bar\\can...", "", "BUG-1234]somelongdescriptionlocated/test/dir/lock]{3,}andfoobarcan")]
         public void Normalise(string input, string replacementToken, string expected)
         {
             _gitBranchNameOptions = new GitBranchNameOptions(replacementToken);
             _gitBranchNameNormaliser.Normalise(input, _gitBranchNameOptions).Should().Be(expected);
         }
-
 
         // They can include slash / for hierarchical (directory) grouping,
         // but no slash-separated component can begin with a dot . or end with the sequence .lock.

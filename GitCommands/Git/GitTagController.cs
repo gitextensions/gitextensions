@@ -1,139 +1,52 @@
-﻿using GitUIPluginInterfaces;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
+using System.IO.Abstractions;
+using System.Windows.Forms;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
 {
-    public enum TagOperation
-    {
-        Lightweight = 0,
-        Annotate,
-        SignWithDefaultKey,
-        SignWithSpecificKey 
-    };
-
-    public static class TagOperationExtensions
-    {
-        public static bool CanProvideMessage(this TagOperation operationType)
-        {
-            switch (operationType)
-            {
-                case TagOperation.Lightweight:
-                    return false;
-                case TagOperation.Annotate:
-                case TagOperation.SignWithDefaultKey:
-                case TagOperation.SignWithSpecificKey:
-                    return true;
-                default:
-                    throw new NotSupportedException("Invalid TagOperation: " + operationType);
-            }
-        }
-    }
-
     public interface IGitTagController
     {
         /// <summary>
         /// Create the Tag depending on input parameter.
         /// </summary>
-        /// <param name="revision">Commit revision to be tagged</param>
-        /// <param name="tagName">Name of tag</param>
-        /// <param name="force">Force parameter</param>
-        /// <param name="operationType">The operation to perform on the tag  (Lightweight, Annotate, Sign with defaul key, Sign with specific key)</param>
-        /// <param name="tagMessage">Tag Message</param>
-        /// <param name="keyId">Specific Key ID to be used instead of default one</param>
-        /// <returns>Output string from RunGitCmd.</returns>
-        string CreateTag(string revision, string tagName, bool force, TagOperation operationType = TagOperation.Lightweight, string tagMessage = "", string keyId = "");
+        /// <returns><see langword="true"/> if create tag command succeeded, <see langword="false"/> otherwise</returns>
+        bool CreateTag(GitCreateTagArgs args, IWin32Window parentForm);
     }
 
 
     public class GitTagController : IGitTagController
     {
-        private IGitModule _module;
+        private readonly IGitUICommands _uiCommands;
+        private readonly IGitModule _module;
+        private readonly IFileSystem _fileSystem;
 
-        public GitTagController(IGitModule module)
+        public GitTagController(IGitUICommands uiCommands, IGitModule module, IFileSystem fileSystem)
         {
-            if(module == null)
-            {
-                throw new ArgumentNullException("module");
-            }
-
             _module = module;
+            _uiCommands = uiCommands;
+            _fileSystem = fileSystem;
         }
+
+        public GitTagController(IGitUICommands uiCommands, IGitModule module)
+            : this(uiCommands, module, new FileSystem())
+        { }
 
         /// <summary>
         /// Create the Tag depending on input parameter.
         /// </summary>
-        /// <param name="revision">Commit revision to be tagged</param>
-        /// <param name="inputTagName">Name of tag</param>
-        /// <param name="force">Force parameter</param>
-        /// <param name="operationType">The operation to perform on the tag (Lightweight, Annotate, Sign with defaul key, Sign with specific key)</param>
-        /// <param name="tagMessage">Tag Message</param>
-        /// <param name="keyId">Specific Key ID to be used instead of default one</param>
         /// <returns>Output string from RunGitCmd.</returns>
-        public string CreateTag(string revision, string inputTagName, bool force, TagOperation operationType = TagOperation.Lightweight, string tagMessage = "", string keyId = "")
+        public bool CreateTag(GitCreateTagArgs args, IWin32Window parentForm)
         {
-            if (string.IsNullOrEmpty(revision))
+            string tagMessageFileName = null;
+            if (args.Operation.CanProvideMessage())
             {
-                throw new ArgumentNullException("revision");
+                tagMessageFileName = Path.Combine(_module.GetGitDirectory(), "TAGMESSAGE");
+                _fileSystem.File.WriteAllText(tagMessageFileName, args.TagMessage);
             }
 
-            if (string.IsNullOrEmpty(inputTagName))
-            {
-                throw new ArgumentNullException("tagName");
-            }
-
-            string tagMessageFileName = Path.Combine(_module.GetGitDirectory(), "TAGMESSAGE");
-
-            if (operationType.CanProvideMessage())
-            {
-                File.WriteAllText(tagMessageFileName, tagMessage);
-            }
-
-            string tagName = inputTagName.Trim();
-            string forced = force ? "-f" : "";
-
-            string tagSwitch = "";
-
-            switch (operationType)
-            {
-                /* Lightweight */
-                case TagOperation.Lightweight:
-                    /* tagSwitch is already ok */
-                    break;
-
-                /* Annotate */
-                case TagOperation.Annotate:
-                    tagSwitch = "-a";
-                    break;
-
-                /* Sign with default GPG */
-                case TagOperation.SignWithDefaultKey:
-                    tagSwitch = "-s";
-                    break;
-
-                /* Sign with specific GPG */
-                case TagOperation.SignWithSpecificKey:
-                    if(string.IsNullOrEmpty(keyId))
-                    {
-                        throw new ArgumentNullException("keyId");
-                    }
-                    tagSwitch = $"-u {keyId}";
-                    break;
-                    
-                /* Error */
-                default:
-                    throw new NotSupportedException("Invalid TagOperation: " + operationType);
-            }
-
-            if (operationType.CanProvideMessage())
-            {
-                tagSwitch = tagSwitch + " -F " + tagMessageFileName.Quote();
-            }
-
-            return _module.RunGitCmd($"tag {forced} {tagSwitch} \"{tagName}\" -- \"{revision}\"");
+            var createTagCmd = new GitCreateTagCmd(args, tagMessageFileName);
+            return _uiCommands.StartCommandLineProcessDialog(createTagCmd, parentForm);
         }
     }
 }
