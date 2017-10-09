@@ -16,7 +16,7 @@ namespace GitCommands.Git
             _branchName = branchName;
         }
 
-        public override IEnumerable<string> CollectArguments()
+        protected override IEnumerable<string> CollectArguments()
         {
             yield return "--delete";
             yield return _remote;
