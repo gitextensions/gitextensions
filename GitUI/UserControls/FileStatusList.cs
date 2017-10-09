@@ -221,15 +221,22 @@ namespace GitUI
             GitItemStatus gitItemStatus = (GitItemStatus)e.Item.Tag;
 
             string text = GetItemText(e.Graphics, gitItemStatus);
-
-            if (gitItemStatus.IsSubmodule && 
-                gitItemStatus.SubmoduleStatus != null && 
-                gitItemStatus.SubmoduleStatus.IsCompleted &&
-                gitItemStatus.SubmoduleStatus.Result != null)
-                text += gitItemStatus.SubmoduleStatus.Result.AddedAndRemovedString();
+            text = AppendItemSubmoduleStatus(text, gitItemStatus);
 
             e.Graphics.DrawString(text, e.Item.ListView.Font,
                                   new SolidBrush(color), e.Bounds.Left + ImageSize, e.Bounds.Top);
+        }
+
+        private string AppendItemSubmoduleStatus(string text, GitItemStatus item)
+        {
+            if (item.IsSubmodule &&
+                item.SubmoduleStatus != null &&
+                item.SubmoduleStatus.IsCompleted &&
+                item.SubmoduleStatus.Result != null)
+            {
+                text += item.SubmoduleStatus.Result.AddedAndRemovedString();
+            }
+            return text;
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
@@ -750,6 +757,9 @@ namespace GitUI
             FileStatusListView.Items.Clear();
             if (_itemsDictionary != null)
             {
+                var clientSizeWidth = AppSettings.TruncatePathMethod == "compact" || AppSettings.TruncatePathMethod == "trimstart";
+                var fileNameOnlyMode = AppSettings.TruncatePathMethod == "fileNameOnly";
+
                 var list = new List<ListViewItem>();
                 foreach (var pair in _itemsDictionary)
                 {
@@ -774,7 +784,21 @@ namespace GitUI
                     {
                         if (_filter.IsMatch(item.Name))
                         {
-                            var listItem = new ListViewItem(item.Name, group);
+                            var text = item.Name;
+                            if (clientSizeWidth)
+                            {
+                                // list-item has client width, so we don't need horizontal scrollbar (which is determined by this text width)
+                                text = string.Empty;
+                            }
+                            else if (fileNameOnlyMode)
+                            {
+                                // we need to put filename in list-item text -> then horizontal scrollbar
+                                // will have proper width (by the longest filename, and not all path)
+                                text = PathFormatter.FormatTextForFileNameOnly(item.Name, item.OldName);
+                                text = AppendItemSubmoduleStatus(text, item);
+                            }
+
+                            var listItem = new ListViewItem(text, group);
                             listItem.ImageIndex = GetItemImageIndex(item);
                             if (item.SubmoduleStatus != null && !item.SubmoduleStatus.IsCompleted)
                             {
