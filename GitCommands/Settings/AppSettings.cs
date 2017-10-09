@@ -97,6 +97,12 @@ namespace GitCommands
             set { SetBool("RememberAmendCommitState", value); }
         }
 
+        public static bool CropPathToShowFileNamesInCommitDialog
+        {
+            get { return GetBool("CropPathToShowFileNamesInCommitDialog", false); }
+            set { SetBool("CropPathToShowFileNamesInCommitDialog", value); }
+        }
+
         public static void UsingContainer(RepoDistSettings aSettingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>

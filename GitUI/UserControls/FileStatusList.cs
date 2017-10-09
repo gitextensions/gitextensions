@@ -39,6 +39,8 @@ namespace GitUI
         private bool _filterVisible;
         private ToolStripItem _openSubmoduleMenuItem;
 
+        private bool _cropPathToShowFileNamesInCommitDialog;
+
         public DescribeRevisionDelegate DescribeRevision;
 
         public FileStatusList()
@@ -81,6 +83,8 @@ namespace GitUI
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
 
             _filter = new Regex(".*");
+
+            _cropPathToShowFileNamesInCommitDialog = AppSettings.CropPathToShowFileNamesInCommitDialog;
         }
 
         private void CreateOpenSubmoduleMenuItem()
@@ -228,8 +232,13 @@ namespace GitUI
                 gitItemStatus.SubmoduleStatus.Result != null)
                 text += gitItemStatus.SubmoduleStatus.Result.AddedAndRemovedString();
 
-            e.Graphics.DrawString(text, e.Item.ListView.Font,
-                                  new SolidBrush(color), e.Bounds.Left + ImageSize, e.Bounds.Top);
+            if (_cropPathToShowFileNamesInCommitDialog)
+            {
+                var maxWidth = e.Item.ListView.ClientSize.Width - image.Width;
+                text = GetCroppedText(text, e.Graphics, e.Item.ListView.Font, maxWidth);
+            }
+
+            e.Graphics.DrawString(text, e.Item.ListView.Font, new SolidBrush(color), e.Bounds.Left + ImageSize, e.Bounds.Top);
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
@@ -774,7 +783,11 @@ namespace GitUI
                     {
                         if (_filter.IsMatch(item.Name))
                         {
-                            var listItem = new ListViewItem(item.Name, group);
+                            // if we crop text to fit its to window, then we don't need horizontal
+                            // scroll bar (which is determined by this text length)
+                            var text = _cropPathToShowFileNamesInCommitDialog ? string.Empty : item.Name;
+
+                            var listItem = new ListViewItem(text, group);
                             listItem.ImageIndex = GetItemImageIndex(item);
                             if (item.SubmoduleStatus != null && !item.SubmoduleStatus.IsCompleted)
                             {
@@ -806,6 +819,60 @@ namespace GitUI
             FileStatusListView_SizeChanged(null, null);
             FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
             FileStatusListView.EndUpdate();
+        }
+
+        private string GetCroppedText(string text, Graphics g, Font font, int maxWidth)
+        {
+            var textWidth = (int)g.MeasureString(text, font).Width;
+            if (textWidth > maxWidth)
+            {
+                // get path separator and its last pos
+                var lastSlashIndex = text.LastIndexOf('/');
+                var lastBackslashIndex = text.LastIndexOf('\\');
+                var lastSeparatorPos = lastSlashIndex > lastBackslashIndex ? lastSlashIndex : lastBackslashIndex;
+
+                if (lastSeparatorPos == -1)
+                {
+                    // only filename - nothing to crop
+                    return text;
+                }
+
+                // We need to cut the center part of text before filename.
+                // Ex.:
+                // "directory1/directory2/directory3/filename.ext"
+                // ->
+                // "directory1/directo.../filename.ext"
+
+                // Cut center text - do binary search.
+
+                var leftPos = 0;
+                var rightPos = lastSeparatorPos;
+                var pos = (leftPos + rightPos) / 2;
+
+                while (leftPos < rightPos - 1)
+                {
+                    pos = (leftPos + rightPos) / 2;
+
+                    var curText = text.Substring(0, pos) + "..." + text.Substring(lastSeparatorPos);
+                    var curTextWidth = (int)g.MeasureString(curText, font).Width;
+                    if (curTextWidth == maxWidth)
+                    {
+                        return curText;
+                    }
+                    if (curTextWidth > maxWidth)
+                    {
+                        rightPos = pos;
+                    }
+                    else
+                    {
+                        leftPos = pos;
+                    }
+                }
+                pos = leftPos;
+                return text.Substring(0, pos) + "..." + text.Substring(lastSeparatorPos);
+            }
+
+            return text;
         }
 
         private string GetDescriptionForRevision(string sha1)

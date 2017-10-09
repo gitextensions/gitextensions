@@ -831,6 +831,10 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
         <target>Vergeet de 'Wijzig commit' checkbox niet bij het sluiten van de commit form</target>
         
       </trans-unit>
+      <trans-unit id="cbCropPathToShowFileNmesInCommitDialog.Text">
+        <source>Crop path to show un/staged file names in commit dialog</source>
+        
+      </trans-unit>
       <trans-unit id="chkAddNewlineToCommitMessageWhenMissing.Text">
         <source>Ensure the second line of commit message is empty</source>
         <target>Controleer dat de twee regel van het bericht leeg is</target>
