@@ -5470,13 +5470,10 @@ _ReSharper*/</source>
         
       </trans-unit>
       <trans-unit id="lnkGitIgnoreGenerate.Text">
-        <source>Generate a custom gitignore</source>
-        
+        <source>Generate a custom ignore file for git</source>
       </trans-unit>
       <trans-unit id="lnkGitIgnorePatterns.Text">
-        <source>More gitignore patterns</source>
-        <target>更多.gitignore的範例patterns</target>
-        
+        <source>Example ignore patterns</source>
       </trans-unit>
     </body>
   </file>
