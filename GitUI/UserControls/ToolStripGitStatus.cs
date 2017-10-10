@@ -5,19 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.UserControls.ToolStripClasses;
 using GitUIPluginInterfaces;
 
 namespace GitUI
 {
     public sealed partial class ToolStripGitStatus : ToolStripMenuItem
     {
-        private static readonly Bitmap IconClean = Properties.Resources.IconClean;
-        private static readonly Bitmap IconDirty = Properties.Resources.IconDirty;
-        private static readonly Bitmap IconDirtySubmodules = Properties.Resources.IconDirtySubmodules;
-        private static readonly Bitmap IconStaged = Properties.Resources.IconStaged;
-        private static readonly Bitmap IconMixed = Properties.Resources.IconMixed;
-        private static readonly Bitmap IconUntrackedOnly = Properties.Resources.IconUntrackedOnly;
-
         /// <summary>
         /// We often change several files at once.
         /// Wait a second so they're all changed before we try to get the status.
@@ -45,6 +39,8 @@ namespace GitUI
         public string CommitTranslatedString { get; set; }
 
         private IGitUICommandsSource _UICommandsSource;
+        private ICommitIconProvider _commitIconProvider;
+
         public IGitUICommandsSource UICommandsSource
         {
             get
@@ -116,6 +112,8 @@ namespace GitUI
             _globalIgnoreWatcher.Error += WorkTreeWatcherError;
             _globalIgnoreWatcher.IncludeSubdirectories = false;
             _workTreeWatcher.NotifyFilter = NotifyFilters.LastWrite;
+
+            _commitIconProvider = new CommitIconProvider();
         }
 
         private void GlobalIgnoreChanged(object sender, FileSystemEventArgs e)
@@ -197,7 +195,7 @@ namespace GitUI
         {
             // reset status info, it was outdated
             Text = CommitTranslatedString;
-            Image = IconClean;
+            Image = _commitIconProvider.DefaultIcon;
 
             try
             {
@@ -354,12 +352,7 @@ namespace GitUI
             if (_statusIsUpToDate)
             {
                 var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(Module, updatedStatus);
-                var stagedCount = allChangedFiles.Count(status => status.IsStaged);
-                var unstagedCount = allChangedFiles.Count - stagedCount;
-                var unstagedSubmodulesCount = allChangedFiles.Count(status => status.IsSubmodule && !status.IsStaged);
-                var notTrackedCount = allChangedFiles.Count(status => !status.IsTracked);
-
-                Image = GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount, notTrackedCount);
+                Image = _commitIconProvider.GetCommitIcon(allChangedFiles);
 
                 if (allChangedFiles.Count == 0)
                     Text = CommitTranslatedString;
@@ -368,22 +361,6 @@ namespace GitUI
             }
             else
                 UpdateImmediately();
-        }
-
-        private static Image GetStatusIcon(int stagedCount, int unstagedCount, int unstagedSubmodulesCount, int notTrackedCount)
-        {
-            if (stagedCount == 0 && unstagedCount == 0)
-                return IconClean;
-
-            if (stagedCount == 0)
-            {
-                if (notTrackedCount == unstagedCount)
-                    return IconUntrackedOnly;
-
-                return unstagedCount != unstagedSubmodulesCount ? IconDirty : IconDirtySubmodules;
-            }
-
-            return unstagedCount == 0 ? IconStaged : IconMixed;
         }
 
         private void ScheduleNextJustInCaseUpdate()
