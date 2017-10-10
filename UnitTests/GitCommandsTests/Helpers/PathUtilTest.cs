@@ -4,6 +4,7 @@ using System.Linq;
 using GitCommands;
 using NUnit.Framework;
 using System.IO;
+using FluentAssertions;
 using GitCommands.Utils;
 
 namespace GitCommandsTests.Helpers
@@ -66,6 +67,7 @@ namespace GitCommandsTests.Helpers
                 Assert.AreEqual("/Work/GitExtensions\\".EnsureTrailingPathSeparator(), "/Work/GitExtensions\\/");
             }
         }
+
         [Test]
         public void IsLocalFileTest()
         {
@@ -203,20 +205,18 @@ namespace GitCommandsTests.Helpers
             CollectionAssert.AreEqual(GetValidPaths().ToArray(), validEnvPaths.ToArray());
         }
 
-        [Test]
-        public void ExistingPathsTest()
+        [Platform(Include = "Win")]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("a:\\folder\\filename.txt")]
+        [TestCase("a:\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\filename.txt")]
+        [TestCase("file:////folder/filename.txt")]
+        [TestCaseSource(nameof(GetInvalidPaths))]
+        public void TryFindFullPath_not_throw_if_file_not_exist(string fileName)
         {
-            Assert.IsTrue(PathUtil.PathExists(GetType().Assembly.Location));
-        }
-
-        [Test]
-        public void NonExistingPathsTest()
-        {
-            GetInvalidPaths().ForEach((path) =>
-            {
-                Assert.IsFalse(PathUtil.PathExists(path));
-            });
-            Assert.IsFalse(PathUtil.PathExists("c:\\94fc5ae63a6c5ed7c110219ade20374ea4d237b9.xyz"));
+            string fullPath;
+            PathUtil.TryFindFullPath(fileName, out fullPath).Should().BeFalse();
         }
 
         private static IEnumerable<string> GetValidPaths()
