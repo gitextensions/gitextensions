@@ -19,11 +19,11 @@ namespace GitUI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal partial class Resources
-    {
+    internal partial class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
@@ -163,14 +163,19 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Changelog
         ///=========
-        ///### Version 2.49 (no due date)
-        ///* Cherry pick selected file/selected lines.
-        ///* Added an option to remember the ignore-white-spaces preference for all the diff viewers.
-        ///* Fixed an intermittent bug where ObjectDisposedException occurs on launch.
-        ///* Fixed a bug where branch filter throws null reference exception when no repository selected
-        ///### Version 2.48.05 (16 May 2015)
-        ///* Fixed issue #2493: StartBrowseDialog failed after clone
-        ///* Fixed issue #2783: Fixed crash when right click on bl [rest of string was truncated]&quot;;.
+        ///
+        ///### [Version 2.50.02] (06 September 2017)
+        ///
+        ///#### Features: 
+        ///* Remote repositories modal defaults to inactive repo - Issue [3861]
+        ///* Allow cherry-picking multiple commits from FormBrowse menu - PR [3852]
+        ///
+        ///#### Fixes: 
+        ///* Clicking Commit causes a crash - Issue [3827]
+        ///* 2.50.01 Quoting issues on git checkout command - Issue [3969]
+        ///* Can&apos;t delete index.lock because it is being used by another process. - Issue [3902]
+        ///* Missing Newtonsoft.Json on startup exception - Issue [3879]
+        ///*  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -1432,6 +1437,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap IconUntrackedOnly {
+            get {
+                object obj = ResourceManager.GetObject("IconUntrackedOnly", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IconViewFile {
             get {
                 object obj = ResourceManager.GetObject("IconViewFile", resourceCulture);
@@ -1787,7 +1802,7 @@ namespace GitUI.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
@@ -1799,7 +1814,7 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, xaro, bleis-tift, Ralph Haußmann,
+        ///   Looks up a localized string similar to 79 collaborators on Transifex website, Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, xaro, bleis-tift, Ralph Haußmann,
         ///Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D&apos;Archivio, australiensun, Airat Salikhov, Dave Brotherstone,
         ///diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh, Victor Shih, bygreencn, mrahn80,
         ///Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87.

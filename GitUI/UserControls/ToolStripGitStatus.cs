@@ -16,6 +16,7 @@ namespace GitUI
         private static readonly Bitmap IconDirtySubmodules = Properties.Resources.IconDirtySubmodules;
         private static readonly Bitmap IconStaged = Properties.Resources.IconStaged;
         private static readonly Bitmap IconMixed = Properties.Resources.IconMixed;
+        private static readonly Bitmap IconUntrackedOnly = Properties.Resources.IconUntrackedOnly;
 
         /// <summary>
         /// We often change several files at once.
@@ -356,8 +357,9 @@ namespace GitUI
                 var stagedCount = allChangedFiles.Count(status => status.IsStaged);
                 var unstagedCount = allChangedFiles.Count - stagedCount;
                 var unstagedSubmodulesCount = allChangedFiles.Count(status => status.IsSubmodule && !status.IsStaged);
+                var notTrackedCount = allChangedFiles.Count(status => !status.IsTracked);
 
-                Image = GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount);
+                Image = GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount, notTrackedCount);
 
                 if (allChangedFiles.Count == 0)
                     Text = CommitTranslatedString;
@@ -368,13 +370,18 @@ namespace GitUI
                 UpdateImmediately();
         }
 
-        private static Image GetStatusIcon(int stagedCount, int unstagedCount, int unstagedSubmodulesCount)
+        private static Image GetStatusIcon(int stagedCount, int unstagedCount, int unstagedSubmodulesCount, int notTrackedCount)
         {
             if (stagedCount == 0 && unstagedCount == 0)
                 return IconClean;
 
             if (stagedCount == 0)
+            {
+                if (notTrackedCount == unstagedCount)
+                    return IconUntrackedOnly;
+
                 return unstagedCount != unstagedSubmodulesCount ? IconDirty : IconDirtySubmodules;
+            }
 
             return unstagedCount == 0 ? IconStaged : IconMixed;
         }
