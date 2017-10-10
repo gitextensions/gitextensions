@@ -80,6 +80,8 @@ namespace GitUI.CommandsDialogs
             this.resetFileToSecondToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetFileToSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetFileToParentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stageFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unstageFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cherryPickSelectedDiffFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator32 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFilenameToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -748,6 +750,8 @@ namespace GitUI.CommandsDialogs
             this.openWithDifftoolToolStripMenuItem,
             this.saveAsToolStripMenuItem1,
             this.resetFileToToolStripMenuItem,
+            this.stageFileToolStripMenuItem,
+            this.unstageFileToolStripMenuItem,
             this.cherryPickSelectedDiffFileToolStripMenuItem,
             this.toolStripSeparator32,
             this.copyFilenameToClipboardToolStripMenuItem1,
@@ -860,6 +864,22 @@ namespace GitUI.CommandsDialogs
             this.resetFileToParentToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.resetFileToParentToolStripMenuItem.Text = "Parent";
             this.resetFileToParentToolStripMenuItem.Click += new System.EventHandler(this.resetFileToParentToolStripMenuItem_Click);
+            // 
+            // stageFileToolStripMenuItem
+            // 
+            this.stageFileToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconStage;
+            this.stageFileToolStripMenuItem.Name = "stageFileToolStripMenuItem";
+            this.stageFileToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.stageFileToolStripMenuItem.Text = "Stage file(s)";
+            this.stageFileToolStripMenuItem.Click += new System.EventHandler(this.StageFileToolStripMenuItemClick);
+            // 
+            // unstageFileToolStripMenuItem
+            // 
+            this.unstageFileToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconUnstage;
+            this.unstageFileToolStripMenuItem.Name = "unstageFileToolStripMenuItem";
+            this.unstageFileToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.unstageFileToolStripMenuItem.Text = "Unstage file(s)";
+            this.unstageFileToolStripMenuItem.Click += new System.EventHandler(this.UnstageFileToolStripMenuItemClick);
             // 
             // cherryPickSelectedDiffFileToolStripMenuItem
             // 
@@ -2065,6 +2085,8 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem commitcountPerUserToolStripMenuItem;
         private ToolStripMenuItem gitcommandLogToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator7;
+        private ToolStripMenuItem stageFileToolStripMenuItem;
+        private ToolStripMenuItem unstageFileToolStripMenuItem;
         private ToolStripMenuItem cherryPickSelectedDiffFileToolStripMenuItem;
         private ToolStripMenuItem menuitemSparse;
         private ToolStripButton ShowFirstParent;

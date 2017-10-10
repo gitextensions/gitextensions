@@ -2314,6 +2314,13 @@ namespace GitUI.CommandsDialogs
             blameToolStripMenuItem.Enabled = isExactlyOneItemSelected;
             resetFileToToolStripMenuItem.Enabled = !isCombinedDiff;
 
+            stageFileToolStripMenuItem.Visible =
+                selectedRevisions.Count() >= 1 && selectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
+                selectedRevisions.Count() >= 2 && selectedRevisions[1].Guid == GitRevision.UnstagedGuid;
+            unstageFileToolStripMenuItem.Visible =
+                selectedRevisions.Count() >= 1 && selectedRevisions[0].Guid == GitRevision.IndexGuid ||
+                selectedRevisions.Count() >= 2 && selectedRevisions[1].Guid == GitRevision.IndexGuid;
+
             // openContainingFolderToolStripMenuItem.Enabled or not
             {
                 openContainingFolderToolStripMenuItem.Enabled = false;
@@ -3108,6 +3115,43 @@ namespace GitUI.CommandsDialogs
         private void FormBrowse_Activated(object sender, EventArgs e)
         {
             this.InvokeAsync(OnActivate);
+        }
+
+        private void StageFileToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var files = new List<GitItemStatus>();
+            foreach (var item in DiffFiles.SelectedItems)
+            {
+                files.Add(item);
+            }
+            bool err;
+            Module.StageFiles(files, out err);
+            RefreshRevisions();
+        }
+
+        private void UnstageFileToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var files = new List<GitItemStatus>();
+            foreach (var item in DiffFiles.SelectedItems)
+            {
+                if (item.IsStaged)
+                {
+                    if (!item.IsNew)
+                    {
+                        Module.UnstageFileToRemove(item.Name);
+
+                        if (item.IsRenamed)
+                            Module.UnstageFileToRemove(item.OldName);
+                    }
+                    else
+                    {
+                        files.Add(item);
+                    }
+                }
+            }
+
+            Module.UnstageFiles(files);
+            RefreshRevisions();
         }
 
         private void cherryPickSelectedDiffFileToolStripMenuItem_Click(object sender, EventArgs e)
