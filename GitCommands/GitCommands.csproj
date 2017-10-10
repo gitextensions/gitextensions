@@ -97,6 +97,7 @@
     <Compile Include="Git\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitTagController.cs" />
     <Compile Include="Logging\CommandLogEntry.cs" />
+    <Compile Include="PathEqualityComparer.cs" />
     <Compile Include="RemoteActionResult.cs" />
     <Compile Include="Remote\GitRemote.cs" />
     <Compile Include="Remote\GitRemoteController.cs" />
