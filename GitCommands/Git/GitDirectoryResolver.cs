@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 
 namespace GitCommands.Git
 {
@@ -77,25 +78,20 @@ namespace GitCommands.Git
             var gitpath = Path.Combine(repositoryPath, ".git");
             if (_fileSystem.File.Exists(gitpath))
             {
-                var lines = _fileSystem.File.ReadLines(gitpath);
-                foreach (string line in lines)
+                var line = _fileSystem.File.ReadLines(gitpath).FirstOrDefault(l => l.StartsWith("gitdir:"));
+                if (line != null)
                 {
-                    if (line.StartsWith("gitdir:"))
+                    string path = line.Substring(7).Trim().ToNativePath();
+                    if (Path.IsPathRooted(path))
                     {
-                        string path = line.Substring(7).Trim().ToNativePath();
-                        if (Path.IsPathRooted(path))
-                            return path.EnsureTrailingPathSeparator();
-                        else
-                            return
-                                Path.GetFullPath(Path.Combine(repositoryPath,
-                                    path.EnsureTrailingPathSeparator()));
+                        return path.EnsureTrailingPathSeparator();
                     }
+                    return Path.GetFullPath(Path.Combine(repositoryPath, path)).EnsureTrailingPathSeparator();
                 }
             }
+
             gitpath = gitpath.EnsureTrailingPathSeparator();
-            if (!_fileSystem.Directory.Exists(gitpath))
-                return repositoryPath;
-            return gitpath;
+            return !_fileSystem.Directory.Exists(gitpath) ? repositoryPath : gitpath;
         }
     }
 }
