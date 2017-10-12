@@ -941,7 +941,7 @@ namespace GitUI.CommandsDialogs
 
             AsyncLoader.DoAsync(
                 () => validWorkingDir && Module.InTheMiddleOfConflictedMerge() &&
-                      !Directory.Exists(Module.GetGitDirectory() + "rebase-apply\\"),
+                      !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\"),
                 (result) =>
                 {
                     if (result)
@@ -1963,7 +1963,7 @@ namespace GitUI.CommandsDialogs
 
         private void deleteIndexlockToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteIndexLock(Module.GetGitDirectory());
+            DeleteIndexLock(Module.WorkingDirGitDir);
 
             var submodules = Module.GetSubmodulesLocalPaths();
             submodules.ForEach(sm =>

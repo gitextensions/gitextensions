@@ -79,6 +79,7 @@
     <Compile Include="Git\GitCheckoutBranchCmdTest.cs" />
     <Compile Include="Git\GitCommandCacheTest.cs" />
     <Compile Include="Git\GitCommandHelpersTest.cs" />
+    <Compile Include="Git\GitDirectoryResolverTests.cs" />
     <Compile Include="Git\GitTagControllerTest.cs" />
     <Compile Include="Helpers\FileInfoExtensions.cs" />
     <Compile Include="Helpers\FileInfoExtensionsTest.cs" />

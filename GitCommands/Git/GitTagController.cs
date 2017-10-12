@@ -41,7 +41,7 @@ namespace GitCommands.Git
             string tagMessageFileName = null;
             if (args.Operation.CanProvideMessage())
             {
-                tagMessageFileName = Path.Combine(_module.GetGitDirectory(), "TAGMESSAGE");
+                tagMessageFileName = Path.Combine(_module.WorkingDirGitDir, "TAGMESSAGE");
                 _fileSystem.File.WriteAllText(tagMessageFileName, args.TagMessage);
             }
 

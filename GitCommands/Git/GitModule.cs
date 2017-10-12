@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
@@ -87,6 +88,7 @@ namespace GitCommands
         private static readonly Regex AnsiCodePattern = new Regex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private readonly object _lock = new object();
+        private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
         public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
         private const string DiffCommandWithStandardArgs = "diff --no-color ";
@@ -95,21 +97,24 @@ namespace GitCommands
         {
             _superprojectInit = false;
             _workingDir = (workingdir ?? "").EnsureTrailingPathSeparator();
+            WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(_workingDir);
         }
 
         #region IGitCommands
 
-        [NotNull]
         private readonly string _workingDir;
 
+        /// <summary>
+        /// Gets the directory which contains the git repository.
+        /// </summary>
         [NotNull]
-        public string WorkingDir
-        {
-            get
-            {
-                return _workingDir;
-            }
-        }
+        public string WorkingDir => _workingDir;
+
+        /// <summary>
+        /// Gets the location of .git directory for the current working folder.
+        /// </summary>
+        [NotNull]
+        public string WorkingDirGitDir { get; private set; }
 
         /// <summary>Gets the path to the git application executable.</summary>
         public string GitCommand
@@ -431,35 +436,14 @@ namespace GitCommands
         }
 
         /// <summary>Gets the ".git" directory path.</summary>
-        public string GetGitDirectory()
+        private string GetGitDirectory()
         {
             return GetGitDirectory(_workingDir);
         }
 
         public static string GetGitDirectory(string repositoryPath)
         {
-            var gitpath = Path.Combine(repositoryPath, ".git");
-            if (File.Exists(gitpath))
-            {
-                var lines = File.ReadLines(gitpath);
-                foreach (string line in lines)
-                {
-                    if (line.StartsWith("gitdir:"))
-                    {
-                        string path = line.Substring(7).Trim().ToNativePath();
-                        if (Path.IsPathRooted(path))
-                            return path.EnsureTrailingPathSeparator();
-                        else
-                            return
-                                Path.GetFullPath(Path.Combine(repositoryPath,
-                                    path.EnsureTrailingPathSeparator()));
-                    }
-                }
-            }
-            gitpath = gitpath.EnsureTrailingPathSeparator();
-            if (!Directory.Exists(gitpath))
-                return repositoryPath;
-            return gitpath;
+            return GitDirectoryResolverInstance.Resolve(repositoryPath);
         }
 
         public bool IsBareRepository()
@@ -1117,7 +1101,9 @@ namespace GitCommands
 
         public string Init(bool bare, bool shared)
         {
-            return RunGitCmd(Smart.Format("init{0: --bare|}{1: --shared=all|}", bare, shared));
+            var result = RunGitCmd(Smart.Format("init{0: --bare|}{1: --shared=all|}", bare, shared));
+            WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(_workingDir);
+            return result;
         }
 
         public bool IsMerge(string commit)

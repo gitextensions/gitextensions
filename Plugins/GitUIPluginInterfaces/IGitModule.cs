@@ -60,8 +60,10 @@ namespace GitUIPluginInterfaces
         /// <summary>Gets the directory which contains the git repository.</summary>
         string WorkingDir { get; }
 
-        /// <summary>Gets the ".git" directory path.</summary>
-        string GetGitDirectory();
+        /// <summary>
+        /// Gets the location of .git directory for the current working folder.
+        /// </summary>
+        string WorkingDirGitDir { get; }
 
         /// <summary>
         /// Asks git to resolve the given relativePath
