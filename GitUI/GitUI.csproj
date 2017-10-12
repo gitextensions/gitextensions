@@ -136,7 +136,6 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
-    <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateManager.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" />
@@ -327,7 +326,6 @@
     <Compile Include="UserControls\CommitSummaryUserControl.Designer.cs">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
     <Compile Include="UserControls\ConsoleEmulatorOutputControl.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommitInformationTest.cs" />
+    <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Helpers\FileInfoExtensions.cs" />
     <Compile Include="Helpers\FileInfoExtensionsTest.cs" />
     <Compile Include="Helpers\PathUtilTest.cs" />
+    <Compile Include="GitModuleTestHelper.cs" />
     <Compile Include="Patch\PatchManagerTest.cs" />
     <Compile Include="Patch\PatchTest.cs" />
     <Compile Include="PathEqualityComparerTests.cs" />

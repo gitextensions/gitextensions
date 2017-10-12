@@ -85,6 +85,8 @@
     <Compile Include="Annotations.cs" />
     <Compile Include="AsyncLoader.cs" />
     <Compile Include="CommitData.cs" />
+    <Compile Include="CommitTemplateItem.cs" />
+    <Compile Include="CommitTemplateManager.cs" />
     <Compile Include="Config\SettingKeyString.cs" />
     <Compile Include="Core\SimpleStructured.cs" />
     <Compile Include="DateTimeUtils.cs" />

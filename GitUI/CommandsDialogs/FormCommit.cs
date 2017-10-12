@@ -115,8 +115,13 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _commitAuthorInfo = new TranslationString("Author");
         private readonly TranslationString _commitCommitterInfo = new TranslationString("Committer");
         private readonly TranslationString _commitCommitterToolTip = new TranslationString("Click to change committer information.");
+
+        private readonly TranslationString _templateNotFoundCaption = new TranslationString("Template Error");
+        private readonly TranslationString _templateNotFound = new TranslationString($"Template not found: {{0}}.{Environment.NewLine}{Environment.NewLine}You can set your template:{Environment.NewLine}\t$ git config commit.template ./.git_commit_msg.txt{Environment.NewLine}You can unset the template:{Environment.NewLine}\t$ git config --unset commit.template");
+        private readonly TranslationString _templateLoadErrorCapion = new TranslationString("Template could not be loaded");
         #endregion
 
+        private readonly ICommitTemplateManager _commitTemplateManager;
         private FileStatusList _currentFilesList;
         private bool _skipUpdate;
         private readonly TaskScheduler _taskScheduler;
@@ -136,6 +141,7 @@ namespace GitUI.CommandsDialogs
         private string _userName = "";
         private string _userEmail = "";
         private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
+
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -162,7 +168,10 @@ namespace GitUI.CommandsDialogs
             Message.TextAssigned += Message_TextAssigned;
 
             if (Module != null)
+            {
                 Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(Module));
+                _commitTemplateManager = new CommitTemplateManager(Module);
+            }
 
             Loading.Image = Properties.Resources.loadingpanel;
 
@@ -222,19 +231,27 @@ namespace GitUI.CommandsDialogs
 
         private void AssignCommitMessageFromTemplate()
         {
-            if (IsUICommandsInitialized)
+            if (!IsUICommandsInitialized)
             {
-                // Check if commit.template is used
-                string fileName = Module.GetEffectiveSetting("commit.template");
-                if (!string.IsNullOrEmpty(fileName))
-                {
-                    using (var commitReader = new StreamReader(fileName))
-                    {
-                        _commitTemplate = commitReader.ReadToEnd().Replace("\r", "");
-                    }
-                    Message.Text = _commitTemplate;
-                }
+                return;
             }
+
+            try
+            {
+                Message.Text = _commitTemplate = _commitTemplateManager.LoadGitCommitTemplate();
+                return;
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show(this, string.Format(_templateNotFound.Text, ex.FileName),
+                    _templateNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message,
+                    _templateLoadErrorCapion.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            Message.Text = _commitTemplate = string.Empty;
         }
 
         void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -2510,7 +2527,7 @@ namespace GitUI.CommandsDialogs
             commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
             var fromSettings = CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>().Where(t => !t.Name.IsNullOrEmpty()).ToArray();
-            var commitTemplates = new CommitTemplateManager().RegisteredTemplates
+            var commitTemplates = _commitTemplateManager.RegisteredTemplates
                .Union(new[] { (CommitTemplateItem)null })
                .Union(fromSettings)
                .Union(fromSettings.Length > 0 ? new[] { (CommitTemplateItem)null } : Array.Empty<CommitTemplateItem>())
