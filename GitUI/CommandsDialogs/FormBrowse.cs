@@ -1306,6 +1306,7 @@ namespace GitUI.CommandsDialogs
         private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UICommands.StartResetChangesDialog(this);
+            RefreshRevisions();
         }
 
         private void RunMergetoolToolStripMenuItemClick(object sender, EventArgs e)
@@ -2618,6 +2619,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Module.CheckoutFiles(itemsToCheckout.Select(item => item.Name), revision, false);
+            RefreshRevisions();
         }
 
         private void resetFileToFirstToolStripMenuItem_Click(object sender, EventArgs e)
