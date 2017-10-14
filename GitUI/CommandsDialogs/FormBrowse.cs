@@ -195,7 +195,9 @@ namespace GitUI.CommandsDialogs
             {
                 _toolStripGitStatus = new ToolStripGitStatus
                 {
-                    ImageTransparentColor = Color.Magenta
+                    ImageTransparentColor = Color.Magenta,
+                    ImageScaling = ToolStripItemImageScaling.SizeToFit,
+                    Margin = new Padding(0, 1, 0, 2)
                 };
                 if (aCommands != null)
                     _toolStripGitStatus.UICommandsSource = this;
