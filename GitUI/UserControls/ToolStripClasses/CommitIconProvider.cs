@@ -7,35 +7,17 @@ namespace GitUI.UserControls.ToolStripClasses
 {
     internal class CommitIconProvider : ICommitIconProvider
     {
-        private static Bitmap IconClean
-        {
-            get { return Properties.Resources.IconClean; }
-        }
+        public static readonly Bitmap IconClean = Properties.Resources.IconClean;
 
-        private static Bitmap IconDirty
-        {
-            get { return Properties.Resources.IconDirty; }
-        }
+        public static readonly Bitmap IconDirty = Properties.Resources.IconDirty;
 
-        private static Bitmap IconDirtySubmodules
-        {
-            get { return Properties.Resources.IconDirtySubmodules; }
-        }
+        public static readonly Bitmap IconDirtySubmodules = Properties.Resources.IconDirtySubmodules;
 
-        private static Bitmap IconStaged
-        {
-            get { return Properties.Resources.IconStaged; }
-        }
+        public static readonly Bitmap IconStaged = Properties.Resources.IconStaged;
 
-        private static Bitmap IconMixed
-        {
-            get { return Properties.Resources.IconMixed; }
-        }
+        public static readonly Bitmap IconMixed = Properties.Resources.IconMixed;
 
-        private static Bitmap IconUntrackedOnly
-        {
-            get { return Properties.Resources.IconUntrackedOnly; }
-        }
+        public static readonly Bitmap IconUntrackedOnly = Properties.Resources.IconUntrackedOnly;
 
         public Image DefaultIcon
         {
@@ -52,7 +34,10 @@ namespace GitUI.UserControls.ToolStripClasses
             return GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount, notTrackedCount);
         }
 
-        private static Image GetStatusIcon(int stagedCount, int unstagedCount, int unstagedSubmodulesCount,
+        private static Image GetStatusIcon(
+            int stagedCount,
+            int unstagedCount,
+            int unstagedSubmodulesCount,
             int notTrackedCount)
         {
             if (stagedCount == 0 && unstagedCount == 0)
@@ -68,5 +53,11 @@ namespace GitUI.UserControls.ToolStripClasses
 
             return unstagedCount == 0 ? IconStaged : IconMixed;
         }
+    }
+
+    internal interface ICommitIconProvider
+    {
+        Image DefaultIcon { get; }
+        Image GetCommitIcon(IList<GitItemStatus> allChangedFiles);
     }
 }
