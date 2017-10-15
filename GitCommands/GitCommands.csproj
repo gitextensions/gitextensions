@@ -90,6 +90,7 @@
     <Compile Include="Config\SettingKeyString.cs" />
     <Compile Include="Core\SimpleStructured.cs" />
     <Compile Include="DateTimeUtils.cs" />
+    <Compile Include="EnvironmentAbstraction.cs" />
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileAssociatedIconProvider.cs" />
     <Compile Include="FileHelper.cs" />

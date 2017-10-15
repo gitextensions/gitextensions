@@ -9,6 +9,9 @@ namespace GitCommands
 {
     public static class PathUtil
     {
+        private static readonly IEnvironmentAbstraction EnvironmentAbstraction = new EnvironmentAbstraction();
+
+
         /// <summary>Replaces native path separator with posix path separator.</summary>
         public static string ToPosixPath(this string path)
         {
@@ -121,7 +124,7 @@ namespace GitCommands
 
         static IEnumerable<string> GetEnvironmentPaths()
         {
-            string pathVariable = Environment.GetEnvironmentVariable("PATH");
+            string pathVariable = EnvironmentAbstraction.GetEnvironmentVariable("PATH");
             return GetEnvironmentPaths(pathVariable);
         }
 
@@ -187,7 +190,7 @@ namespace GitCommands
         {
             try
             {
-                shellPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", shell);
+                shellPath = Path.Combine(EnvironmentAbstraction.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", shell);
                 if (File.Exists(shellPath))
                 {
                     return true;
