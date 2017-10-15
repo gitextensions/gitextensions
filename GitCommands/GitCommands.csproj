@@ -85,12 +85,15 @@
     <Compile Include="Annotations.cs" />
     <Compile Include="AsyncLoader.cs" />
     <Compile Include="CommitData.cs" />
+    <Compile Include="CommitTemplateItem.cs" />
+    <Compile Include="CommitTemplateManager.cs" />
     <Compile Include="Config\SettingKeyString.cs" />
     <Compile Include="Core\SimpleStructured.cs" />
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileAssociatedIconProvider.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="FullPathResolver.cs" />
     <Compile Include="Git\AuthorEmailEqualityComparer.cs" />
     <Compile Include="Git\GitDeleteRemoteBranchCmd.cs" />
     <Compile Include="Git\GitBranchNameNormaliser.cs" />
@@ -98,6 +101,7 @@
     <Compile Include="Git\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitTagController.cs" />
     <Compile Include="Logging\CommandLogEntry.cs" />
+    <Compile Include="PathEqualityComparer.cs" />
     <Compile Include="RemoteActionResult.cs" />
     <Compile Include="Remote\GitRemote.cs" />
     <Compile Include="Remote\GitRemoteController.cs" />

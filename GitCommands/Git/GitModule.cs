@@ -434,7 +434,7 @@ namespace GitCommands
                 {
                     var commDir = RunGitCmdResult("rev-parse --git-common-dir");
                     _GitCommonDirectory = PathUtil.ToNativePath(commDir.StdOutput.Trim());
-                    if (!commDir.ExitedSuccessfully || _GitCommonDirectory == ".git" || !PathUtil.DirectoryExists(_GitCommonDirectory))
+                    if (!commDir.ExitedSuccessfully || _GitCommonDirectory == ".git" || !Directory.Exists(_GitCommonDirectory))
                     {
                         _GitCommonDirectory = GetGitDirectory();
                     }

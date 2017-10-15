@@ -105,6 +105,7 @@ namespace GitUIPluginInterfaces
         string[] GetRemotes(bool allowEmpty);
 
         string GetSetting(string setting);
+        string GetEffectiveSetting(string setting);
 
         bool StartPageantForRemote(string remote);
 

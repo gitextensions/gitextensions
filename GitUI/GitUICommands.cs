@@ -24,11 +24,13 @@ namespace GitUI
     public sealed class GitUICommands : IGitUICommands
     {
         private readonly IAvatarService _gravatarService;
+        private readonly ICommitTemplateManager _commitTemplateManager;
 
 
         public GitUICommands(GitModule module)
         {
             Module = module;
+            _commitTemplateManager = new CommitTemplateManager(module);
             RepoChangedNotifier = new ActionNotifier(
                 () => InvokeEvent(null, PostRepositoryChanged));
             Notifications = NotificationManager.Get(this);
@@ -928,15 +930,14 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreSparseWorkingCopy, PostSparseWorkingCopy, action);
         }
 
-        private readonly CommitTemplateManager commitTemplateManager = new CommitTemplateManager();
         public void AddCommitTemplate(string key, Func<string> addingText)
         {
-            commitTemplateManager.Register(key, addingText);
+            _commitTemplateManager.Register(key, addingText);
         }
 
         public void RemoveCommitTemplate(string key)
         {
-            commitTemplateManager.Unregister(key);
+            _commitTemplateManager.Unregister(key);
         }
 
         public bool StartFormatPatchDialog(IWin32Window owner)

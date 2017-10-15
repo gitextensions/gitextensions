@@ -62,14 +62,7 @@ namespace GitUI
 
             if (truncatePathMethod.Equals("fileNameOnly"))
             {
-                name = name.TrimEnd(AppSettings.PosixPathSeparator);
-                var fileName = Path.GetFileName(name);
-                var oldFileName = Path.GetFileName(oldName);
-                
-                if (fileName.Equals(oldFileName))
-                    oldFileName = null;
-
-                return fileName.Combine(" ", oldFileName.AddParenthesesNE());
+                return FormatTextForFileNameOnly(name, oldName);
             }
 
             if ((!truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) || !EnvUtils.RunningOnWindows()) &&
@@ -93,6 +86,18 @@ namespace GitUI
             }
 
             return result;
+        }
+
+        public static string FormatTextForFileNameOnly(string name, string oldName)
+        {
+            name = name.TrimEnd(AppSettings.PosixPathSeparator);
+            var fileName = Path.GetFileName(name);
+            var oldFileName = Path.GetFileName(oldName);
+
+            if (fileName.Equals(oldFileName))
+                oldFileName = null;
+
+            return fileName.Combine(" ", oldFileName.AddParenthesesNE());
         }
 
         private static string FormatString(string name, string oldName, int step, bool isNameTruncated)
