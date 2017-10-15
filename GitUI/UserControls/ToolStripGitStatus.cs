@@ -173,7 +173,7 @@ namespace GitUI
                 UICommands.PostCheckoutRevision += GitUICommands_PostCheckout;
                 UICommands.PostEditGitIgnore += GitUICommands_PostEditGitIgnore;
                 
-                TryStartWatchingChanges(Module.WorkingDir, Module.GetGitDirectory());
+                TryStartWatchingChanges(Module.WorkingDir, Module.WorkingDirGitDir);
             }
         }
 

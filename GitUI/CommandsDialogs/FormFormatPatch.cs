@@ -105,7 +105,7 @@ namespace GitUI.CommandsDialogs
 
             if (!SaveToDir.Checked)
             {
-                savePatchesToDir = Path.Combine(Module.GetGitDirectory(), "PatchesToMail");
+                savePatchesToDir = Path.Combine(Module.WorkingDirGitDir, "PatchesToMail");
                 if (Directory.Exists(savePatchesToDir))
                 {
                     foreach (string file in Directory.GetFiles(savePatchesToDir, "*.patch"))

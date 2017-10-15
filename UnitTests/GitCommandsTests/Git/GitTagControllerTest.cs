@@ -29,7 +29,7 @@ namespace GitCommandsTests.Git
             _tagMessageFile = Path.Combine(_workingDir, "TAGMESSAGE");
             _module = Substitute.For<IGitModule>();
             _uiCommands = Substitute.For<IGitUICommands>();
-            _module.GetGitDirectory().Returns(x => _workingDir);
+            _module.WorkingDirGitDir.Returns(x => _workingDir);
             _fileSystem = Substitute.For<IFileSystem>();
             _fileSystem.File.Returns(Substitute.For<FileBase>());
 
