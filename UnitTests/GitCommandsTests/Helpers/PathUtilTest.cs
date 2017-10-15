@@ -145,51 +145,6 @@ namespace GitCommandsTests.Helpers
             }
         }
 
-        [Test]
-        public void IsValidPathTest()
-        {
-            if (Path.DirectorySeparatorChar == '\\')
-            {
-                Assert.IsTrue(PathUtil.IsValidPath("\\\\my-pc\\Work\\GitExtensions\\"), "\\\\my-pc\\Work\\GitExtensions");
-                Assert.IsTrue(PathUtil.IsValidPath("C:\\Work\\GitExtensions\\"), "C:\\Work\\GitExtensions");
-                Assert.IsTrue(PathUtil.IsValidPath("C:\\Work\\"), "C:\\Work");
-                Assert.IsTrue(PathUtil.IsValidPath("C:\\"), "");
-                Assert.IsTrue(PathUtil.IsValidPath("C:"), "");
-                Assert.IsFalse(PathUtil.IsValidPath(""), "");
-                Assert.IsFalse(PathUtil.IsValidPath("\"C:\\Work\\GitExtensions\\"), "C:\\Work\\GitExtensions\"");
-            }
-            else
-            {
-                string path = "//my-pc/Work/GitExtensions/";
-                Assert.IsTrue(PathUtil.IsValidPath(path), path);
-                path = "/my-pc/Work/GitExtensions/";
-                Assert.IsTrue(PathUtil.IsValidPath(path), path);
-                path = "/my-pc/Work/GitExtensions";
-                Assert.IsTrue(PathUtil.IsValidPath(path), path);
-            }
-        }
-
-        [Test]
-        public void GetEnvironmentPathsTest()
-        {
-            string pathVariable = string.Join(EnvUtils.EnvVariableSeparator.ToString(), 
-                GetValidPaths().Concat(GetInvalidPaths()));
-            var paths = PathUtil.GetEnvironmentPaths(pathVariable);
-            var validEnvPaths = PathUtil.GetValidPaths(paths);
-            CollectionAssert.AreEqual(GetValidPaths().ToArray(), validEnvPaths.ToArray());
-        }
-
-        [Test]
-        public void GetEnvironmentPathsQuotedTest()
-        {
-            var paths = GetValidPaths().Concat(GetInvalidPaths());
-            var quotedPaths = paths.Select(path => path.Quote(" ")).Select(path => path.Quote());
-            string pathVariable = string.Join(EnvUtils.EnvVariableSeparator.ToString(), quotedPaths);
-            var envPaths = PathUtil.GetEnvironmentPaths(pathVariable);
-            var validEnvPaths = PathUtil.GetValidPaths(envPaths);
-            CollectionAssert.AreEqual(GetValidPaths().ToArray(), validEnvPaths.ToArray());
-        }
-
         [Platform(Include = "Win")]
         [TestCase(null)]
         [TestCase("")]
@@ -202,23 +157,6 @@ namespace GitCommandsTests.Helpers
         {
             string fullPath;
             PathUtil.TryFindFullPath(fileName, out fullPath).Should().BeFalse();
-        }
-
-        private static IEnumerable<string> GetValidPaths()
-        {
-            if (Path.DirectorySeparatorChar == '\\')
-            {
-                yield return @"c:\work";
-                yield return @"c:\work\";
-                yield return @"c:\Program Files(86)\";
-                yield return @"c:\Program Files(86)\Git";
-            }
-            else
-            {
-                yield return "/etc/init.d/xvfb";
-                yield return "/var";
-                yield return "/";
-            }
         }
 
         private static IEnumerable<string> GetInvalidPaths()
