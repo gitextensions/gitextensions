@@ -7,17 +7,17 @@ namespace GitUI.UserControls.ToolStripClasses
 {
     internal class CommitIconProvider : ICommitIconProvider
     {
-        public static readonly Bitmap IconClean = Properties.Resources.IconClean;
+        internal static readonly Bitmap IconClean = Properties.Resources.IconClean;
 
-        public static readonly Bitmap IconDirty = Properties.Resources.IconDirty;
+        internal static readonly Bitmap IconDirty = Properties.Resources.IconDirty;
 
-        public static readonly Bitmap IconDirtySubmodules = Properties.Resources.IconDirtySubmodules;
+        internal static readonly Bitmap IconDirtySubmodules = Properties.Resources.IconDirtySubmodules;
 
-        public static readonly Bitmap IconStaged = Properties.Resources.IconStaged;
+        internal static readonly Bitmap IconStaged = Properties.Resources.IconStaged;
 
-        public static readonly Bitmap IconMixed = Properties.Resources.IconMixed;
+        internal static readonly Bitmap IconMixed = Properties.Resources.IconMixed;
 
-        public static readonly Bitmap IconUntrackedOnly = Properties.Resources.IconUntrackedOnly;
+        internal static readonly Bitmap IconUntrackedOnly = Properties.Resources.IconUntrackedOnly;
 
         public Image DefaultIcon
         {
