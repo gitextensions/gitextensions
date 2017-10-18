@@ -68,6 +68,7 @@
     <Compile Include="CommitInformationTest.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
+    <Compile Include="EnvironmentPathsProviderTests.cs" />
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
     <Compile Include="GitExtLinks\GitExtLinksTests.cs" />
