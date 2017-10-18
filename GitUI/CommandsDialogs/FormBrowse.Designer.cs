@@ -159,6 +159,9 @@ namespace GitUI.CommandsDialogs
             this.deleteTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.cherryPickToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffEditFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffDeleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffToolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.archiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bisectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -750,6 +753,9 @@ namespace GitUI.CommandsDialogs
             this.resetFileToToolStripMenuItem,
             this.cherryPickSelectedDiffFileToolStripMenuItem,
             this.toolStripSeparator32,
+            this.diffEditFileToolStripMenuItem,
+            this.diffDeleteFileToolStripMenuItem,
+            this.diffToolStripSeparator13,
             this.copyFilenameToClipboardToolStripMenuItem1,
             this.openContainingFolderToolStripMenuItem,
             this.diffShowInFileTreeToolStripMenuItem,
@@ -868,6 +874,27 @@ namespace GitUI.CommandsDialogs
             this.cherryPickSelectedDiffFileToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.cherryPickSelectedDiffFileToolStripMenuItem.Text = "Cherry pick file\'s changes";
             this.cherryPickSelectedDiffFileToolStripMenuItem.Click += new System.EventHandler(this.cherryPickSelectedDiffFileToolStripMenuItem_Click);
+            //
+            // diffEditFileToolStripMenuItem
+            // 
+            this.diffEditFileToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconEditFile;
+            this.diffEditFileToolStripMenuItem.Name = "diffEditFileToolStripMenuItem";
+            this.diffEditFileToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.diffEditFileToolStripMenuItem.Text = "Edit file";
+            this.diffEditFileToolStripMenuItem.Click += new System.EventHandler(this.diffEditFileToolStripMenuItem_Click);
+            // 
+            // diffDeleteFileToolStripMenuItem
+            // 
+            this.diffDeleteFileToolStripMenuItem.Name = "diffDeleteFileToolStripMenuItem";
+            this.diffDeleteFileToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.diffDeleteFileToolStripMenuItem.Text = "Delete file";
+            this.diffDeleteFileToolStripMenuItem.Click += new System.EventHandler(this.diffDeleteFileToolStripMenuItemClick);
+            // 
+            // diffToolStripSeparator13
+            // 
+            this.diffToolStripSeparator13.Name = "diffToolStripSeparator13";
+            this.diffToolStripSeparator13.Size = new System.Drawing.Size(225, 6);
+            this.diffToolStripSeparator13.Tag = "1";
             // 
             // toolStripSeparator32
             // 
@@ -2067,6 +2094,9 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem cherryPickSelectedDiffFileToolStripMenuItem;
         private ToolStripMenuItem menuitemSparse;
+        private ToolStripMenuItem diffEditFileToolStripMenuItem;
+        private ToolStripMenuItem diffDeleteFileToolStripMenuItem;
+        private ToolStripSeparator diffToolStripSeparator13;
         private ToolStripButton ShowFirstParent;
         private ToolTip FilterToolTip;
         private ToolStripSeparator toolStripSeparator10;

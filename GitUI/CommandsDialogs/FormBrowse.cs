@@ -16,6 +16,7 @@ using GitCommands.Utils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
+using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Plugin;
 using GitUI.Properties;
@@ -107,6 +108,11 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _diffNotSupported =
             new TranslationString("Diff (not supported)");
+
+        private readonly TranslationString _deleteSelectedFilesCaption = new TranslationString("Delete");
+        private readonly TranslationString _deleteSelectedFiles =
+            new TranslationString("Are you sure you want delete the selected file(s)?");
+        private readonly TranslationString _deleteFailed = new TranslationString("Delete file failed");
 
         private readonly TranslationString _pullFetch =
             new TranslationString("Pull - fetch");
@@ -240,6 +246,7 @@ namespace GitUI.CommandsDialogs
 
             FillBuildReport();  // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
+            diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
 
             _formBrowseMenuCommands = new FormBrowseMenuCommands(this);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
@@ -2148,7 +2155,8 @@ namespace GitUI.CommandsDialogs
             RotateApplicationIcon,
             CloseRepositry,
             Stash,
-            StashPop
+            StashPop,
+            DeleteSelectedFiles
         }
 
         private void AddNotes()
@@ -2193,6 +2201,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.CloseRepositry: CloseToolStripMenuItemClick(null, null); break;
                 case Commands.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
                 case Commands.StashPop: UICommands.StashPop(this); break;
+                case Commands.DeleteSelectedFiles: return DeleteSelectedFiles();
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -2313,6 +2322,14 @@ namespace GitUI.CommandsDialogs
             fileHistoryDiffToolstripMenuItem.Enabled = isExactlyOneItemSelected;
             blameToolStripMenuItem.Enabled = isExactlyOneItemSelected;
             resetFileToToolStripMenuItem.Enabled = !isCombinedDiff;
+
+            this.diffEditFileToolStripMenuItem.Visible =
+                this.diffDeleteFileToolStripMenuItem.Visible =
+                isExactlyOneItemSelected && !DiffFiles.SelectedItem.IsSubmodule && selectedRevisions[0].IsArtificial();
+
+            this.diffToolStripSeparator13.Visible = isExactlyOneItemSelected &&
+                (!DiffFiles.SelectedItem.IsSubmodule && selectedRevisions[0].IsArtificial() ||
+                DiffFiles.SelectedItem.IsSubmodule && selectedRevisions[0].Guid == GitRevision.UnstagedGuid);
 
             // openContainingFolderToolStripMenuItem.Enabled or not
             {
@@ -3088,6 +3105,16 @@ namespace GitUI.CommandsDialogs
             return null;
         }
 
+        private bool DeleteSelectedFiles()
+        {
+            if (DiffFiles.Focused)
+            {
+                diffDeleteFileToolStripMenuItemClick(this, null);
+                return true;
+            }
+            return false;
+        }
+
         private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new");
@@ -3115,8 +3142,64 @@ namespace GitUI.CommandsDialogs
             DiffText.CherryPickAllChanges();
         }
 
+        private void diffDeleteFileToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (DiffFiles.SelectedItem == null || !DiffFiles.Revision.IsArtificial() ||
+                    MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
+                    DialogResult.Yes)
+                {
+                    return;
+                }
+
+                var selectedItems = DiffFiles.SelectedItems;
+                if (DiffFiles.Revision.Guid == GitRevision.IndexGuid)
+                {
         /// <summary>
+                    var files = new List<GitItemStatus>();
+                    var stagedItems = selectedItems.Where(item => item.IsStaged);
+                    foreach (var item in stagedItems)
+                    {
+                        if (!item.IsNew)
+                        {
+                            Module.UnstageFileToRemove(item.Name);
+
+                            if (item.IsRenamed)
+                                Module.UnstageFileToRemove(item.OldName);
+                        }
+                        else
+                        {
+                            files.Add(item);
+                        }
+                    }
+                    Module.UnstageFiles(files);
+                }
+                DiffFiles.StoreNextIndexToSelect();
+                var items = DiffFiles.SelectedItems.Where(item => !item.IsSubmodule);
+                foreach (var item in items)
+                {
+                    File.Delete(Path.Combine(Module.WorkingDir, item.Name));
+                }
+                RefreshRevisions();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message);
+            }
+        }
+
+        private void diffEditFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = DiffFiles.SelectedItem;
+            var fileName = Path.Combine(Module.WorkingDir, item.Name);
+
+            UICommands.StartFileEditorDialog(fileName);
+            RefreshRevisions();
+        }
+
         /// Adds a tab with console interface to Git over the current working copy. Recreates the terminal on tab activation if user exits the shell.
+        /// </summary>
         /// </summary>
         private void FillTerminalTab()
         {
