@@ -2611,6 +2611,41 @@ namespace GitUI.CommandsDialogs
         {
             var selectedItems = DiffFiles.SelectedItems;
             IEnumerable<GitItemStatus> itemsToCheckout;
+
+            if (GitRevision.IsArtificial(revision))
+            {
+                //This option must be blocked, does not make sense
+                Debug.Assert(false, "Reset cannot be done to artificial revisions");
+            }
+            else if (DiffFiles.Revision.IsArtificial())
+            {
+                //Resetting for staged/unstaged is special as it involves the index
+                //only option is to reset to HEAD
+
+                //See also handling in FormCommit, but no popups
+                //Similar as reset/checkout for command line, submodules/new will just be unstaged
+                //For unstaged, Submodules will not be changed and new files will not be deleted
+
+                // Unstage file first, then reset
+                var files = new List<GitItemStatus>();
+                var stagedItems = selectedItems.Where(item => item.IsStaged);
+                foreach (var item in stagedItems)
+                {
+                    if (!item.IsNew)
+                    {
+                        Module.UnstageFileToRemove(item.Name);
+
+                        if (item.IsRenamed)
+                            Module.UnstageFileToRemove(item.OldName);
+                    }
+                    else
+                    {
+                        files.Add(item);
+                    }
+                }
+                Module.UnstageFiles(files);
+            }
+
             if (actsAsChild)
             {
                 var deletedItems = selectedItems.Where(item => item.IsDeleted);
