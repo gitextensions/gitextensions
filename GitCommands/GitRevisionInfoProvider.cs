@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 
 namespace GitCommands

@@ -2,42 +2,34 @@
 using System.Diagnostics;
 using GitUIPluginInterfaces;
 
-namespace GitCommands
+namespace GitCommands.Git
 {
     [DebuggerDisplay("GitItem( {FileName} )")]
     public class GitItem : IGitItem
     {
-        public GitItem(string mode, string itemType, string guid, string name)
+        public GitItem(string mode, string objectType, string guid, string name)
         {
             Mode = mode;
-            ItemType = itemType;
+            GitObjectType type;
+            Enum.TryParse(objectType, true, out type);
+            ObjectType = type;
             Guid = guid;
             FileName = Name = name;
         }
 
 
         public string Guid { get; }
-        public string ItemType { get; }
+        public GitObjectType ObjectType { get; }
         public string Name { get; }
         public string FileName { get; set; }
         public string Mode { get; }
-
-
-        public bool IsBlob
-        {
-            get { return ItemType == "blob"; }
-        }
-
-        public bool IsCommit
-        {
-            get { return ItemType == "commit"; }
-        }
-
-        public bool IsTree
-        {
-            get { return ItemType == "tree"; }
-        }
     }
 
+    public enum GitObjectType
+    {
+        None = 0,
+        Commit,
+        Tree,
+        Blob
     }
 }

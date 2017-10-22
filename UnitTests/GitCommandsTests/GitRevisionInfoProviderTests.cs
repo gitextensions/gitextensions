@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using FluentAssertions;
 using GitCommands;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;

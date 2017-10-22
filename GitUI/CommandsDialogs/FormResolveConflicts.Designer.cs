@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using GitCommands.Git;
+
+namespace GitUI.CommandsDialogs
 {
     partial class FormResolveConflicts
     {
@@ -299,7 +301,7 @@
             // 
             // gitItemBindingSource
             // 
-            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
+            this.gitItemBindingSource.DataSource = typeof(GitItem);
             // 
             // tableLayoutPanel1
             // 

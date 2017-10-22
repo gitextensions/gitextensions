@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUIPluginInterfaces;
 
@@ -103,37 +104,39 @@ namespace GitUI.CommandsDialogs
                     continue;
                 }
 
-                if (gitItem.IsTree)
+                switch (gitItem.ObjectType)
                 {
-                    subNode.ImageIndex = subNode.SelectedImageIndex = TreeNodeImages.Folder;
-                    subNode.Nodes.Add(new TreeNode());
-                    continue;
-                }
-
-                if (gitItem.IsCommit)
-                {
-                    subNode.ImageIndex = subNode.SelectedImageIndex = TreeNodeImages.Submodule;
-                    subNode.Text = $@"{childItem.Name} (Submodule)";
-                    continue;
-                }
-
-                if (gitItem.IsBlob)
-                {
-                    var extension = Path.GetExtension(gitItem.FileName);
-                    if (string.IsNullOrWhiteSpace(extension))
-                    {
-                        continue;
-                    }
-                    if (!imageCollection.ContainsKey(extension))
-                    {
-                        var fileIcon = _iconProvider.Get(_module.WorkingDir, gitItem.FileName);
-                        if (fileIcon == null)
+                    case GitObjectType.Tree:
                         {
-                            continue;
+                            subNode.ImageIndex = subNode.SelectedImageIndex = TreeNodeImages.Folder;
+                            subNode.Nodes.Add(new TreeNode());
+                            break;
                         }
-                        imageCollection.Add(extension, fileIcon);
-                    }
-                    subNode.ImageKey = subNode.SelectedImageKey = extension;
+                    case GitObjectType.Commit:
+                        {
+                            subNode.ImageIndex = subNode.SelectedImageIndex = TreeNodeImages.Submodule;
+                            subNode.Text = $@"{childItem.Name} (Submodule)";
+                            break;
+                        }
+                    case GitObjectType.Blob:
+                        {
+                            var extension = Path.GetExtension(gitItem.FileName);
+                            if (string.IsNullOrWhiteSpace(extension))
+                            {
+                                continue;
+                            }
+                            if (!imageCollection.ContainsKey(extension))
+                            {
+                                var fileIcon = _iconProvider.Get(_module.WorkingDir, gitItem.FileName);
+                                if (fileIcon == null)
+                                {
+                                    continue;
+                                }
+                                imageCollection.Add(extension, fileIcon);
+                            }
+                            subNode.ImageKey = subNode.SelectedImageKey = extension;
+                            break;
+                        }
                 }
             }
         }
