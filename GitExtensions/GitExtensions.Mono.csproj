@@ -217,14 +217,35 @@
   </ItemGroup>
   <Import Project="..\FxCop.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
-  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-    <PostBuildEvent>"$(ProjectDir)copy_plugins.cmd" $(ConfigurationName)</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
-    <PostBuildEvent>chmod ugo+x "$(ProjectDir)copy_plugins.sh"
-"$(ProjectDir)copy_plugins.sh" "$(SolutionDir)" $(ConfigurationName)</PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="AddPluginBinaries" AfterTargets="ResolveProjectReferences">
+    <ItemGroup>
+      <!-- Plugin binaries-->
+      <PluginBinary Include="..\Plugins\*\bin\$(Configuration)\*.dll" />
+      <PluginBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*.dll" />
+      <PluginBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*.dll" />
+
+      <!-- Plugin symbols-->
+      <PluginBinary Include="..\Plugins\*\bin\$(Configuration)\*.pdb" />
+      <PluginBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*.pdb" />
+      <PluginBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*.pdb" />
+
+      <!-- Plugin satellite assemblies -->
+      <PluginSatelliteBinary Include="..\Plugins\*\bin\$(Configuration)\*\*.dll" />
+      <PluginSatelliteBinary Include="..\Plugins\Statistics\*\bin\$(Configuration)\*\*.dll" />
+      <PluginSatelliteBinary Include="..\Plugins\BuildServerIntegration\*\bin\$(Configuration)\*\*.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="@(PluginBinary)" Exclude="..\Plugins\**\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll;..\Plugins\**\Microsoft.WITDataStore.dll">
+        <Link>Plugins\%(Filename)%(Extension)</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Include="@(PluginSatelliteBinary)">
+        <Link>Plugins\$([System.IO.Path]::GetFileName($([System.IO.Path]::GetDirectoryName(%(Identity)))))\%(Filename)%(Extension)</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

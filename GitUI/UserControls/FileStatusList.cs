@@ -90,7 +90,7 @@ namespace GitUI
                 Name = "openSubmoduleMenuItem",
                 Tag = "1",
                 Text = "Open with Git Extensions",
-                Image = Resources.IconFolderSubmodule
+                Image = Resources.gitex
             };
             _openSubmoduleMenuItem.Click += (s, ea) => { OpenSubmodule(); };
         }
