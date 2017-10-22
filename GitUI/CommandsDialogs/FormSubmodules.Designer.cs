@@ -435,7 +435,7 @@
             // Pull
             // 
             this.Pull.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.Pull.BackgroundImage = global::GitUI.Properties.Resources.Icon_4;
+            this.Pull.BackgroundImage = global::GitUI.Properties.Resources.IconPull;
             this.Pull.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.Pull.Location = new System.Drawing.Point(0, 0);
             this.Pull.Margin = new System.Windows.Forms.Padding(0);

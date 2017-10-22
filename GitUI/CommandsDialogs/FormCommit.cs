@@ -210,7 +210,7 @@ namespace GitUI.CommandsDialogs
             stagedResetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             deleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
             viewFileHistoryToolStripItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
-            toolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
+            stagedFileHistoryToolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
         }
@@ -2607,12 +2607,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void toolStripMenuItem9_Click(object sender, EventArgs e)
+        private void stagedOpenDifftoolToolStripMenuItem9_Click(object sender, EventArgs e)
         {
             OpenFilesWithDiffTool(Staged.SelectedItems, staged: true);
         }
 
-        private void toolStripMenuItem10_Click(object sender, EventArgs e)
+        private void openFolderToolStripMenuItem10_Click(object sender, EventArgs e)
         {
             OpenContainingFolder(Staged);
         }
