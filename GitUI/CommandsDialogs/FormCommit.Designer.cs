@@ -378,6 +378,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripMenuItem11});
             this.StagedFileContext.Name = "UnstagedFileContext";
             this.StagedFileContext.Size = new System.Drawing.Size(233, 198);
+            this.StagedFileContext.Opening += StagedFileContext_Opening;
             // 
             // stagedResetChanges
             // 
