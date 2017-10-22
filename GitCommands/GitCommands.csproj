@@ -104,6 +104,7 @@
     <Compile Include="Git\GitTagController.cs" />
     <Compile Include="SshPathLocator.cs" />
     <Compile Include="Git\IndexLockManager.cs" />
+    <Compile Include="Git\GitTreeParser.cs" />
     <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="PathEqualityComparer.cs" />
     <Compile Include="RemoteActionResult.cs" />

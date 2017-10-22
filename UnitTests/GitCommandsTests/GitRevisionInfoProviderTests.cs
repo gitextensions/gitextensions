@@ -51,7 +51,7 @@ namespace GitCommandsTests
 
             var children = _provider.LoadChildren(item);
 
-            children.Should().BeSameAs(items);
+            children.Should().BeEquivalentTo(items);
             _module.Received(1).GetTree(guid, false);
         }
 
@@ -59,14 +59,14 @@ namespace GitCommandsTests
         public void LoadChildren_should_return_shallow_tree_for_GitItem_with_updated_FileName()
         {
             var guid = Guid.NewGuid().ToString("N");
-            var item = new GitItem { Guid = guid, FileName = "folder" };
+            var item = new GitItem("", "", guid, "folder");
 
-            var items = new[] { Substitute.For<IGitItem>(), new GitItem { FileName = "file2" }, new GitItem { FileName = "file3" } };
+            var items = new[] { Substitute.For<IGitItem>(), new GitItem("", "", "", "file2"), new GitItem("", "", "", "file3") };
             _module.GetTree(guid, false).Returns(items);
 
             var children = _provider.LoadChildren(item);
 
-            children.Should().BeSameAs(items);
+            children.Should().BeEquivalentTo(items);
             ((GitItem)items[1]).FileName.Should().Be(Path.Combine(item.FileName, "file2"));
             ((GitItem)items[2]).FileName.Should().Be(Path.Combine(item.FileName, "file3"));
             _module.Received(1).GetTree(guid, false);

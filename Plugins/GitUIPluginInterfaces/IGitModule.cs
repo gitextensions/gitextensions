@@ -13,7 +13,7 @@ namespace GitUIPluginInterfaces
         string AddRemote(string remoteName, string path);
         IList<IGitRef> GetRefs(bool tags = true, bool branches = true);
         IEnumerable<string> GetSettings(string setting);
-        IList<IGitItem> GetTree(string id, bool full);
+        IEnumerable<IGitItem> GetTree(string id, bool full);
 
         /// <summary>
         /// Removes the registered remote by running <c>git remote rm</c> command.
