@@ -67,7 +67,8 @@ namespace GitUI.CommandsDialogs
 
             Diff.ExtraDiffArgumentsChanged += DiffExtraDiffArgumentsChanged;
 
-            if (revision != null && revision.IsArtificial()) //no blame for artificial
+            bool isSubmodule = GitModule.IsValidGitWorkingDir(Path.Combine(Module.WorkingDir, FileName));
+            if (revision != null && revision.IsArtificial() || isSubmodule) //no blame for artificial
                 tabControl1.RemoveIfExists(BlameTab);
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
@@ -75,7 +76,7 @@ namespace GitUI.CommandsDialogs
             UpdateFollowHistoryMenuItems();
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
             loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
-            loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow;
+            loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow && tabControl1.Contains(BlameTab);
 
             if (filterByRevision && revision != null && revision.Guid != null)
                 _filterBranchHelper.SetBranchFilter(revision.Guid, false);
@@ -237,8 +238,9 @@ namespace GitUI.CommandsDialogs
             var selectedRows = FileChanges.GetSelectedRevisions();
             if (selectedRows.Count > 0)
             {
+                bool isSubmodule = GitModule.IsValidGitWorkingDir(Path.Combine(Module.WorkingDir, FileName));
                 GitRevision revision = selectedRows[0];
-                if (revision.IsArtificial())
+                if (revision.IsArtificial() || isSubmodule)
                     tabControl1.RemoveIfExists(BlameTab);
                 else
                     tabControl1.InsertIfNotExists(2, BlameTab);
