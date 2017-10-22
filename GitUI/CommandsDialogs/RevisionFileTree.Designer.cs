@@ -143,7 +143,7 @@
             // 
             // openSubmoduleMenuItem
             // 
-            this.openSubmoduleMenuItem.Image = global::GitUI.Properties.Resources.IconFolderSubmodule;
+            this.openSubmoduleMenuItem.Image = global::GitUI.Properties.Resources.gitex;
             this.openSubmoduleMenuItem.Name = "openSubmoduleMenuItem";
             this.openSubmoduleMenuItem.Size = new System.Drawing.Size(296, 22);
             this.openSubmoduleMenuItem.Text = "Open with Git Extensions";
