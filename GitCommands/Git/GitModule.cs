@@ -980,7 +980,7 @@ namespace GitCommands
         {
             string str = RunGitCmd("ls-tree " + refName + " \"" + filename + "\"");
 
-            return GitItem.CreateGitItemFromString(this, str);
+            return GitItem.CreateGitItemFromString(str);
         }
 
         public int? GetCommitCount(string parentHash, string childHash)
@@ -2834,7 +2834,7 @@ namespace GitCommands
                 tree = this.RunCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
             }
 
-            return GitItem.CreateIGitItemsFromString(this, tree);
+            return GitItem.CreateIGitItemsFromString(tree);
         }
 
         public GitBlame Blame(string filename, string from, Encoding encoding)

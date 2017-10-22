@@ -44,7 +44,9 @@ namespace GitUI.CommandsDialogs
             GotFocus += (s, e) => tvGitTree.Focus();
             Load += (s, e) =>
             {
-                _revisionFileTreeController = new RevisionFileTreeController(Module, new FileAssociatedIconProvider());
+                _revisionFileTreeController = new RevisionFileTreeController(Module, 
+                                                                             new GitRevisionInfoProvider(Module), 
+                                                                             new FileAssociatedIconProvider());
             };
         }
 
@@ -122,6 +124,7 @@ namespace GitUI.CommandsDialogs
         public void LoadRevision(GitRevision revision)
         {
             _revision = revision;
+            _revisionFileTreeController.ResetCache();
 
             try
             {
@@ -144,7 +147,7 @@ namespace GitUI.CommandsDialogs
                 //restore selected file and scroll position when new selection is done
                 if (_revision != null)
                 {
-                    _revisionFileTreeController.LoadItemsInTreeView(_revision.SubItems, tvGitTree.Nodes, tvGitTree.ImageList.Images);
+                    _revisionFileTreeController.LoadChildren(_revision, tvGitTree.Nodes, tvGitTree.ImageList.Images);
                     //GitTree.Sort();
                     TreeNode lastMatchedNode = null;
                     // Load state
@@ -282,7 +285,7 @@ namespace GitUI.CommandsDialogs
             }
 
             e.Node.Nodes.Clear();
-            _revisionFileTreeController.LoadItemsInTreeView(item.SubItems, e.Node.Nodes, tvGitTree.ImageList.Images);
+            _revisionFileTreeController.LoadChildren(item, e.Node.Nodes, tvGitTree.ImageList.Images);
         }
 
         private void tvGitTree_DoubleClick(object sender, EventArgs e)

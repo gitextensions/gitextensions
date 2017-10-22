@@ -71,6 +71,7 @@
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
     <Compile Include="GitExtLinks\GitExtLinksTests.cs" />
+    <Compile Include="GitRevisionInfoProviderTests.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
     <Compile Include="Git\GitBlameHeaderTest.cs" />
     <Compile Include="Git\GitBlameTest.cs" />
