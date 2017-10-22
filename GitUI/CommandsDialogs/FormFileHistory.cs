@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using ResourceManager;
+using System.ComponentModel;
 
 namespace GitUI.CommandsDialogs
 {
@@ -66,6 +67,8 @@ namespace GitUI.CommandsDialogs
 
             Diff.ExtraDiffArgumentsChanged += DiffExtraDiffArgumentsChanged;
 
+            if (revision != null && revision.IsArtificial()) //no blame for artificial
+                tabControl1.RemoveIfExists(BlameTab);
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
 
@@ -317,7 +320,7 @@ namespace GitUI.CommandsDialogs
             {
                 orgFileName = selectedRows[0].Name;
             }
-            FileChanges.OpenWithDifftool(FileName, orgFileName, GitUIExtensions.DiffWithRevisionKind.DiffAB, null);
+            FileChanges.OpenWithDifftool(FileName, orgFileName, GitUIExtensions.DiffWithRevisionKind.DiffAB);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -399,6 +402,13 @@ namespace GitUI.CommandsDialogs
             FileChanges.ViewSelectedRevisions();
         }
 
+        private void FileHistoryContextMenuOpening(object sender, CancelEventArgs e)
+        {
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            diffToolremotelocalStripMenuItem.Enabled = selectedRevisions.Count != 1 || selectedRevisions[0].Guid != GitRevision.UnstagedGuid;
+            manipuleerCommitToolStripMenuItem.Enabled = viewCommitToolStripMenuItem.Enabled = selectedRevisions.Count > 0 && !selectedRevisions[0].IsArtificial();
+        }
+
         private const string FormBrowseName = "FormBrowse";
 
         public override void AddTranslationItems(ITranslation translation)
@@ -417,7 +427,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileChanges.OpenWithDifftool(FileName, string.Empty, GitUIExtensions.DiffWithRevisionKind.DiffBLocal, null);
+            FileChanges.OpenWithDifftool(FileName, string.Empty, GitUIExtensions.DiffWithRevisionKind.DiffBLocal);
         }
 
         private void toolStripSplitLoad_ButtonClick(object sender, EventArgs e)
@@ -462,7 +472,13 @@ namespace GitUI.CommandsDialogs
 
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            var selectedRows = FileChanges.GetSelectedRevisions();
+            if (selectedRows.Count > 0)
+            {
+                GitRevision revision = selectedRows[0];
+                viewCommitToolStripMenuItem.Enabled = manipuleerCommitToolStripMenuItem.Enabled = revision.IsArtificial();
+                diffToolremotelocalStripMenuItem.Enabled = revision.Guid != GitRevision.UnstagedGuid;
+            }
         }
 
         private void ToolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)

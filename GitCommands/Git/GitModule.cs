@@ -1287,6 +1287,11 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string localPath)
         {
+            if (localPath == null)
+            {
+                Debug.Assert(true, "No path for submodule - incorrectly parsed status?");
+                return "";
+            }
             string dir = Path.Combine(_workingDir, localPath.EnsureTrailingPathSeparator());
             return Path.GetFullPath(dir); // fix slashes
         }
@@ -2172,6 +2177,7 @@ namespace GitCommands
             var patchManager = new PatchManager();
             var arguments = String.Format(DiffCommandWithStandardArgs + "{0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange,
                 fileName.Quote(), oldFileName.Quote());
+            cacheResult = cacheResult && !GitRevision.IsArtificial(to) && !GitRevision.IsArtificial(from) && !to.IsNullOrEmpty() && !from.IsNullOrEmpty();
             string patch;
             if (cacheResult)
                 patch = RunCacheableCmd(AppSettings.GitCommand, arguments, LosslessEncoding);

@@ -1743,7 +1743,7 @@ namespace GitUI
                 }
                 else if (columnIndex == idColIndex)
                 {
-                    if (!revision.IsArtificial())
+                    if (!revision.IsArtificial()) //do not show artificial GUID
                     {
                         var text = revision.Guid;
                         var rect = RevisionGridUtils.GetCellRectangle(e);
@@ -1852,7 +1852,7 @@ namespace GitUI
             int dateColIndex = DateDataGridViewColumn.Index;
             int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
 
-            if (columnIndex == graphColIndex)
+            if (columnIndex == graphColIndex && !revision.IsArtificial()) //Do not show artificial guid
             {
                 e.Value = revision.Guid;
             }
@@ -2332,7 +2332,7 @@ namespace GitUI
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
                 if (head.CompleteName.Equals(currentBranchRef))
-                    currentBranchPointsToRevision = true;
+                    currentBranchPointsToRevision = !revision.IsArtificial();
                 else
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
@@ -2414,7 +2414,7 @@ namespace GitUI
                 }
             }
 
-            bool bareRepository = Module.IsBareRepository();
+            bool bareRepositoryOrArtificial = Module.IsBareRepository() || revision.IsArtificial();
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
             deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
 
@@ -2422,21 +2422,27 @@ namespace GitUI
             deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0;
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Enabled = !bareRepository && checkoutBranchDropDown.Items.Count > 0;
+            checkoutBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && checkoutBranchDropDown.Items.Count > 0;
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Enabled = !bareRepository && mergeBranchDropDown.Items.Count > 0;
+            mergeBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && mergeBranchDropDown.Items.Count > 0;
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
-            rebaseOnToolStripMenuItem.Enabled = !bareRepository && rebaseDropDown.Items.Count > 0;
+            rebaseOnToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && rebaseDropDown.Items.Count > 0;
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
 
-            checkoutRevisionToolStripMenuItem.Enabled = !bareRepository;
-            revertCommitToolStripMenuItem.Enabled = !bareRepository;
-            cherryPickCommitToolStripMenuItem.Enabled = !bareRepository;
-            manipulateCommitToolStripMenuItem.Enabled = !bareRepository;
+            checkoutRevisionToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+            revertCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+            cherryPickCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+            manipulateCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+
+            copyToClipboardToolStripMenuItem.Enabled = !revision.IsArtificial();
+            createNewBranchToolStripMenuItem.Enabled = !revision.IsArtificial();
+            resetCurrentBranchToHereToolStripMenuItem.Enabled = !revision.IsArtificial();
+            archiveRevisionToolStripMenuItem.Enabled = !revision.IsArtificial();
+            createTagToolStripMenuItem.Enabled = !revision.IsArtificial();
 
             toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 

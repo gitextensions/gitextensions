@@ -1089,7 +1089,7 @@ namespace GitUI.CommandsDialogs
 
                 case 1: // diff "parent" --> "selected revision"
                     var revision = revisions[0];
-                    if (revision != null && revision.ParentGuids != null && revision.ParentGuids.Length != 0)
+                    if (revision != null && revision.HasParent())
                         DiffTabPage.Text = _diffParentWithSelection.Text;
                     break;
 
@@ -1158,8 +1158,10 @@ namespace GitUI.CommandsDialogs
 
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
+                this.CommitInfoTabControl.SelectedIndexChanged -= new System.EventHandler(this.TabControl1SelectedIndexChanged);
                 if (revisions.Any() && GitRevision.IsArtificial(revisions[0].Guid))
                 {
+                    //Artificial commits cannot show tree (ls-tree) and has no commit info 
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                     CommitInfoTabControl.RemoveIfExists(TreeTabPage);
                 }
@@ -1171,6 +1173,7 @@ namespace GitUI.CommandsDialogs
                     }
                     CommitInfoTabControl.InsertIfNotExists(1, TreeTabPage);
                 }
+                this.CommitInfoTabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
 
                 //RevisionGrid.HighlightSelectedBranch();
 
