@@ -1053,10 +1053,7 @@ namespace GitUI
         }
 
         [Browsable(false)]
-        public Task<bool> UnstagedChanges { get; private set; }
-
-        [Browsable(false)]
-        public Task<bool> StagedChanges { get; private set; }
+        public Task<IList<GitItemStatus>> ChangedFiles { get; private set; }
 
         private string _filtredCurrentCheckout;
 
@@ -1083,10 +1080,8 @@ namespace GitUI
                 //Only check for tracked files. This usually makes more sense and it performs a lot
                 //better then checking for untracked files.
                 // TODO: Check FiltredFileName
-                Task<bool> unstagedChanges =
-                    Task.Factory.StartNew(() => Module.GetUnstagedFiles().Any());
-                Task<bool> stagedChanges =
-                    Task.Factory.StartNew(() => Module.GetStagedFiles().Any());
+                Task<IList<GitItemStatus>> changedFiles =
+                    Task.Factory.StartNew(() => Module.GetAllChangedFiles());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -1105,8 +1100,7 @@ namespace GitUI
                 _filtredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 SuperprojectCurrentCheckout = newSuperPrjectInfo;
-                UnstagedChanges = unstagedChanges;
-                StagedChanges = stagedChanges;
+                ChangedFiles = changedFiles;
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -2694,26 +2688,29 @@ namespace GitUI
 
         private void CheckUncommitedChanged(string filtredCurrentCheckout)
         {
-            if (UnstagedChanges.Result)
+            var staged = ChangedFiles.Result.Count(item => item.IsStaged);
+            var unstaged = ChangedFiles.Result.Count() - staged;
+
+            if (unstaged > 0)
             {
                 //Add working directory as virtual commit
                 var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
                 {
-                    Subject = Strings.GetCurrentUnstagedChanges(),
+                    Subject = "("+ unstaged +") "+ Strings.GetCurrentUnstagedChanges(),
                     ParentGuids =
-                        StagedChanges.Result
+                        staged > 0
                             ? new[] { GitRevision.IndexGuid }
                             : new[] { filtredCurrentCheckout }
                 };
                 Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
             }
 
-            if (StagedChanges.Result)
+            if (staged > 0)
             {
                 //Add index as virtual commit
                 var index = new GitRevision(Module, GitRevision.IndexGuid)
                 {
-                    Subject = Strings.GetCurrentIndex(),
+                    Subject = "(" + staged + ") " + Strings.GetCurrentIndex(),
                     ParentGuids = new[] { filtredCurrentCheckout }
                 };
                 Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
