@@ -1021,7 +1021,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.SolveMergeconflicts.BackColor = System.Drawing.Color.SeaShell;
             this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SolveMergeconflicts.Image = global::GitUI.Properties.Resources.Icon_50;
+            this.SolveMergeconflicts.Image = global::GitUI.Properties.Resources.IconSolveMerge;
             this.SolveMergeconflicts.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SolveMergeconflicts.Location = new System.Drawing.Point(14, 12);
             this.SolveMergeconflicts.Name = "SolveMergeconflicts";
