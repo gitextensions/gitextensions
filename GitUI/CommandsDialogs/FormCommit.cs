@@ -2685,7 +2685,10 @@ namespace GitUI.CommandsDialogs
                     _interactiveAddBashCloseWaitCts.Dispose();
                     _interactiveAddBashCloseWaitCts = null;
                 }
-                components?.Dispose();
+                if (components != null)
+                {
+                    components.Dispose();
+                }
             }
             base.Dispose(disposing);
         }
