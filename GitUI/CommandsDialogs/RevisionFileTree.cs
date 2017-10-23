@@ -22,6 +22,25 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _nodeNotFoundNextAvailableParentSelected = new TranslationString("Node not found. The next available parent node will be selected.");
         private readonly TranslationString _nodeNotFoundSelectionNotChanged = new TranslationString("Node not found. File tree selection was not changed.");
 
+        private readonly TranslationString _assumeUnchangedMessage = new TranslationString(@"This feature should be used for performance purpose when it is costly for git to check the state of a big file.
+
+
+Are you sure to assume this file won't change ?");
+        private readonly TranslationString _assumeUnchangedCaption = new TranslationString("Assume this file won't change");
+        private readonly TranslationString _assumeUnchangedFail = new TranslationString("Fail to assume unchanged the file '{0}'.");
+        private readonly TranslationString _assumeUnchangedSuccess = new TranslationString("File successfully assumed unchanged.");
+
+        private readonly TranslationString _stopTrackingMessage = new TranslationString(@"Are you sure you want to stop tracking the file
+'{0}'?");
+        private readonly TranslationString _stopTrackingCaption = new TranslationString("Stop tracking the file");
+        private readonly TranslationString _stopTrackingFail = new TranslationString("Fail to stop tracking the file '{0}'.");
+        private readonly TranslationString _stopTrackingSuccess = new TranslationString(@"File successfully untracked. Removal has been added to the staging area.
+
+See the changes in the commit form.");
+
+        private readonly TranslationString _success = new TranslationString("Success");
+        private readonly TranslationString _error = new TranslationString("Error");
+
         //store strings to not keep references to nodes
         private readonly Stack<string> _lastSelectedNodes = new Stack<string>();
         private IRevisionFileTreeController _revisionFileTreeController;
@@ -599,9 +618,7 @@ namespace GitUI.CommandsDialogs
             itemStatus.Name = GetSelectedFileInFileTree();
             if (itemStatus.Name == null)
                 return;
-            var answer = MessageBox.Show("This feature should be used for performance purpose when it is costly for git to check the state of a big file."
-                + Environment.NewLine + Environment.NewLine + "Are you sure to assume this file won't change ?", "Assume this file won't change",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var answer = MessageBox.Show(_assumeUnchangedMessage.Text, _assumeUnchangedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (answer == DialogResult.No)
                 return;
@@ -610,11 +627,11 @@ namespace GitUI.CommandsDialogs
 
             if (wereErrors)
             {
-                MessageBox.Show(string.Format("Fail to assume unchanged the file {0}", itemStatus.Name), "Error assume unchange", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(_assumeUnchangedFail.Text, itemStatus.Name), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                MessageBox.Show(string.Format("Fail to assume unchanged the file {0}", itemStatus.Name), "Error assume unchange", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_assumeUnchangedSuccess.Text, _success.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -624,12 +641,19 @@ namespace GitUI.CommandsDialogs
             if (filename == null)
                 return;
 
-            var answer = MessageBox.Show(string.Format("Are you sure you want to stop tracking the file" + Environment.NewLine + "'{0}'?", filename), "Stop tracking the file",
+            var answer = MessageBox.Show(string.Format(_stopTrackingMessage.Text, filename), _stopTrackingCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (answer == DialogResult.No)
                 return;
 
-            Module.StopTrackingFile(filename);
+            if(Module.StopTrackingFile(filename))
+            {
+                MessageBox.Show(_stopTrackingSuccess.Text, _success.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
