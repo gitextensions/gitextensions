@@ -572,5 +572,50 @@ namespace GitUI.CommandsDialogs
                 }
             }
         }
+
+        private string GetSelectedFileInFileTree()
+        {
+            var item = tvGitTree.SelectedNode.Tag as GitItem;
+
+            if (item == null || item.ObjectType == GitObjectType.Tree)
+                return null;
+
+
+            var filename = Path.Combine(Module.WorkingDir, item.FileName);
+            if (!File.Exists(filename))
+            {
+                MessageBox.Show(string.Format("The selected file '{0}' no more exists in the working directory." + Environment.NewLine + "No action could be made on it.", filename), "File not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
+
+            return filename;
+        }
+
+        private void assumeUnchangedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            bool wereErrors;
+            var itemStatus = new GitItemStatus();
+            itemStatus.Name = GetSelectedFileInFileTree();
+            if (itemStatus.Name == null)
+                return;
+            var answer = MessageBox.Show("This feature should be used for performance purpose when it is costly for git to check the state of a big file."
+                + Environment.NewLine + Environment.NewLine + "Are you sure to assume this file won't change ?", "Assume this file won't change",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (answer == DialogResult.No)
+                return;
+
+            Module.AssumeUnchangedFiles(new List<GitItemStatus> { itemStatus }, true, out wereErrors);
+
+            if (wereErrors)
+            {
+                MessageBox.Show(string.Format("Fail to assume unchanged the file {0}", itemStatus.Name), "Error assume unchange", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show(string.Format("Fail to assume unchanged the file {0}", itemStatus.Name), "Error assume unchange", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

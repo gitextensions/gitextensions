@@ -53,6 +53,7 @@
             this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileText = new GitUI.Editor.FileViewer();
+            this.assumeUnchangedTheFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.FileTreeSplitContainer)).BeginInit();
             this.FileTreeSplitContainer.Panel1.SuspendLayout();
             this.FileTreeSplitContainer.Panel2.SuspendLayout();
@@ -113,11 +114,12 @@
             this.openFileToolStripMenuItem,
             this.openFileWithToolStripMenuItem,
             this.openWithToolStripMenuItem,
+            this.assumeUnchangedTheFileToolStripMenuItem,
             this.toolStripSeparator18,
             this.expandAllToolStripMenuItem,
             this.collapseAllToolStripMenuItem});
             this.FileTreeContextMenu.Name = "FileTreeContextMenu";
-            this.FileTreeContextMenu.Size = new System.Drawing.Size(297, 380);
+            this.FileTreeContextMenu.Size = new System.Drawing.Size(297, 424);
             this.FileTreeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.FileTreeContextMenu_Opening);
             // 
             // saveAsToolStripMenuItem
@@ -275,6 +277,13 @@
             this.FileText.Size = new System.Drawing.Size(489, 303);
             this.FileText.TabIndex = 0;
             // 
+            // assumeUnchangedTheFileToolStripMenuItem
+            // 
+            this.assumeUnchangedTheFileToolStripMenuItem.Name = "assumeUnchangedTheFileToolStripMenuItem";
+            this.assumeUnchangedTheFileToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.assumeUnchangedTheFileToolStripMenuItem.Text = "Assume unchanged this file";
+            this.assumeUnchangedTheFileToolStripMenuItem.Click += new System.EventHandler(this.assumeUnchangedToolStripMenuItem_Click);
+            // 
             // RevisionFileTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -317,5 +326,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator18;
         private System.Windows.Forms.ToolStripMenuItem expandAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem collapseAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem assumeUnchangedTheFileToolStripMenuItem;
     }
 }
