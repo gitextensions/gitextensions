@@ -77,6 +77,7 @@ namespace GitUI.CommandsDialogs
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
             loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
             loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow && tabControl1.Contains(BlameTab);
+            saveAsToolStripMenuItem.Visible = !isSubmodule;
 
             if (filterByRevision && revision != null && revision.Guid != null)
                 _filterBranchHelper.SetBranchFilter(revision.Guid, false);
@@ -407,8 +408,15 @@ namespace GitUI.CommandsDialogs
         private void FileHistoryContextMenuOpening(object sender, CancelEventArgs e)
         {
             var selectedRevisions = FileChanges.GetSelectedRevisions();
-            diffToolremotelocalStripMenuItem.Enabled = selectedRevisions.Count != 1 || selectedRevisions[0].Guid != GitRevision.UnstagedGuid;
-            manipuleerCommitToolStripMenuItem.Enabled = viewCommitToolStripMenuItem.Enabled = selectedRevisions.Count > 0 && !selectedRevisions[0].IsArtificial();
+
+            diffToolremotelocalStripMenuItem.Enabled =
+                selectedRevisions.Count == 1 && selectedRevisions[0].Guid != GitRevision.UnstagedGuid;
+            openWithDifftoolToolStripMenuItem.Enabled =
+                selectedRevisions.Count >= 1 && selectedRevisions.Count <= 2;
+            manipuleerCommitToolStripMenuItem.Enabled =
+                viewCommitToolStripMenuItem.Enabled =
+                selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial();
+            saveAsToolStripMenuItem.Enabled = selectedRevisions.Count == 1;
         }
 
         private const string FormBrowseName = "FormBrowse";
@@ -470,22 +478,6 @@ namespace GitUI.CommandsDialogs
             {
                 FileChanges.NavigateForward();
             }
-        }
-
-        private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            var selectedRows = FileChanges.GetSelectedRevisions();
-            if (selectedRows.Count > 0)
-            {
-                GitRevision revision = selectedRows[0];
-                viewCommitToolStripMenuItem.Enabled = manipuleerCommitToolStripMenuItem.Enabled = revision.IsArtificial();
-                diffToolremotelocalStripMenuItem.Enabled = revision.Guid != GitRevision.UnstagedGuid;
-            }
-        }
-
-        private void ToolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
         }
 
         private void followFileHistoryRenamesToolStripMenuItem_Click(object sender, EventArgs e)
