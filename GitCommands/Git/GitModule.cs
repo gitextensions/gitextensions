@@ -3415,5 +3415,10 @@ namespace GitCommands
         {
             return RunGitCmdResult("lfs version").ExitedSuccessfully;
         }
+
+        public bool StopTrackingFile(string filename)
+        {
+            return RunGitCmdResult("rm --cached " + filename).ExitedSuccessfully;
+        }
     }
 }

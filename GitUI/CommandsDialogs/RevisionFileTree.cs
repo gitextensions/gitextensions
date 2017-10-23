@@ -617,5 +617,19 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(string.Format("Fail to assume unchanged the file {0}", itemStatus.Name), "Error assume unchange", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void stopTrackingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var filename = GetSelectedFileInFileTree();
+            if (filename == null)
+                return;
+
+            var answer = MessageBox.Show(string.Format("Are you sure you want to stop tracking the file" + Environment.NewLine + "'{0}'?", filename), "Stop tracking the file",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (answer == DialogResult.No)
+                return;
+
+            Module.StopTrackingFile(filename);
+        }
     }
 }
