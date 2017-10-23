@@ -8670,7 +8670,7 @@ global settings.
         
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
-        <source>Show current working directory changes in revision graph (slow!)</source>
+        <source>Show current working directory changes in revision graph</source>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
