@@ -20,6 +20,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkRememberNumberOfContextLines.Checked = AppSettings.RememberNumberOfContextLines;
             chkOpenSubmoduleDiffInSeparateWindow.Checked = AppSettings.OpenSubmoduleDiffInSeparateWindow;
             chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
+            VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
         }
 
         protected override void PageToSettings()
@@ -31,6 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RememberNumberOfContextLines = chkRememberNumberOfContextLines.Checked;
             AppSettings.OpenSubmoduleDiffInSeparateWindow = chkOpenSubmoduleDiffInSeparateWindow.Checked;
             AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
+            AppSettings.DiffVerticalRulerPosition = (int) VerticalRulerPosition.Value;
         }
 
         public static SettingsPageReference GetPageReference()
