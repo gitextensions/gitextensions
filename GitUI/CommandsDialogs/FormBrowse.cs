@@ -2527,7 +2527,7 @@ namespace GitUI.CommandsDialogs
                     break;
 
                 default:
-                    toolStripButtonPull.Image = Properties.Resources.Icon_4;
+                    toolStripButtonPull.Image = Properties.Resources.IconPull;
                     toolStripButtonPull.ToolTipText = _pullOpenDialog.Text;
                     break;
             }
