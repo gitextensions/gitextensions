@@ -20,8 +20,10 @@ namespace GitUITests.SpellChecker
         [TestCase("Add,git", ExpectedResult = "git")]
         [TestCase("Add (.git", ExpectedResult = ".git")]
         [TestCase("Introduce Tes", ExpectedResult = "Tes")]
-        [TestCase("Add).git", ExpectedResult = ".git")]
-        [TestCase("[Add].git", ExpectedResult = ".git")]
+        [TestCase("Add).git", ExpectedResult = "git")]
+        [TestCase("[Add].git", ExpectedResult = "git")]
+        [TestCase("Introduce .babeljs]", ExpectedResult = "")]
+        [TestCase("func().otherFun", ExpectedResult = "otherFun")]
         public string ExtractsMeaningfulWord(string text)
         {
             return _wordAtCursorExtractor.Extract(text, text.Length - 1);

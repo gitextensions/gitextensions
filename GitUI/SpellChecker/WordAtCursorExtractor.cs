@@ -32,7 +32,12 @@ namespace GitUI.SpellChecker
 
         private static bool IsLeadingChar(string text, int cursor)
         {
-            return cursor == 0 || text[cursor - 1].IsSeparator();
+            return cursor == 0 || IsSeparatorExceptClosingBrackets(text[cursor - 1]);
+        }
+
+        private static bool IsSeparatorExceptClosingBrackets(char c)
+        {
+            return c != ')' && c != ']' && c.IsSeparator();
         }
     }
 
