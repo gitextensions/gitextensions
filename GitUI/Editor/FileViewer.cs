@@ -101,13 +101,13 @@ namespace GitUI.Editor
 
         void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
         {
-            UICommandsSource.GitUICommandsChanged += WorkingDirChanged;
-            WorkingDirChanged(UICommandsSource, null);
+            UICommandsSource.GitUICommandsChanged += UICommandsSourceChanged;
+            UICommandsSourceChanged(UICommandsSource, null);
         }
 
         protected override void DisposeUICommandsSource()
         {
-            UICommandsSource.GitUICommandsChanged -= WorkingDirChanged;
+            UICommandsSource.GitUICommandsChanged -= UICommandsSourceChanged;
             base.DisposeUICommandsSource();
         }
 
@@ -182,7 +182,7 @@ namespace GitUI.Editor
         [Browsable(false)]
         public byte[] FilePreamble { get; private set; }
 
-        private void WorkingDirChanged(object sender, GitUICommandsChangedEventArgs e)
+        private void UICommandsSourceChanged(object sender, GitUICommandsChangedEventArgs e)
         {
             this.Encoding = null;
         }
