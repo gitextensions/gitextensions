@@ -184,7 +184,19 @@ namespace GitUI.Editor
 
         private void UICommandsSourceChanged(object sender, GitUICommandsChangedEventArgs e)
         {
+            if(e?.OldCommands != null)
+                e.OldCommands.PostSettings -= UICommands_PostSettings;
+
+            var commandSource = sender as IGitUICommandsSource;
+            if( commandSource?.UICommands != null)
+                commandSource.UICommands.PostSettings += UICommands_PostSettings;
+
             this.Encoding = null;
+        }
+
+        private void UICommands_PostSettings( object sender, GitUIPluginInterfaces.GitUIPostActionEventArgs e )
+        {
+            _internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
