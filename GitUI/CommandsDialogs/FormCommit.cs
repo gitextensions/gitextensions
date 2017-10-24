@@ -1311,6 +1311,21 @@ namespace GitUI.CommandsDialogs
                 Message.Focus();
         }
 
+        private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            bool isFile = false;
+            foreach(GitItemStatus item in Staged.SelectedItems)
+            {
+                if (!item.IsSubmodule) { isFile = true; }
+            }
+            this.stagedToolStripSeparator14.Visible = isFile;
+            this.stagedEditFileToolStripMenuItem11.Visible = isFile;
+            this.stagedOpenDifftoolToolStripMenuItem9.Visible = isFile;
+            this.stagedOpenToolStripMenuItem7.Visible = isFile;
+            this.stagedToolStripSeparator17.Visible = isFile;
+            this.stagedOpenWithToolStripMenuItem8.Visible = isFile;
+        }
+
         void Unstaged_DoubleClick(object sender, EventArgs e)
         {
             _currentFilesList = Unstaged;
