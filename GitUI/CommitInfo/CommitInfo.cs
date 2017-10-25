@@ -566,6 +566,11 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
+        private void copySelectionToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            Clipboard.SetText(SelectedText);
+        }
+
         private void copyCommitHashToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(_revision.Guid);
@@ -673,6 +678,23 @@ namespace GitUI.CommitInfo
         {
             // Cache desired size for commit header
             _headerResize = e.NewRectangle;
+        }
+        /// <summary>
+        /// Gets the selected text from both the header and the info panel
+        /// </summary>
+        private string SelectedText
+        {
+            get
+            {
+                var selectedText = string.Join( Environment.NewLine, _RevisionHeader.SelectedText, RevisionInfo.SelectedText );
+
+                return string.IsNullOrWhiteSpace( selectedText ) ? string.Empty : selectedText;
+            }
+        }
+
+        private void commitInfoContextMenuStrip_Opening( object sender, CancelEventArgs e )
+        {
+            copySelectionToolStripMenuItem.Enabled = SelectedText.Length > 0;
         }
     }
 }

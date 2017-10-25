@@ -35,6 +35,8 @@
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copySelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copySelectionToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.copyCommitHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCommitSubjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCommitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -122,6 +124,7 @@
             this.addNoteToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
             this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(454, 192);
+            this.commitInfoContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.commitInfoContextMenuStrip_Opening);
             // 
             // copyCommitInfoToolStripMenuItem
             // 
@@ -133,6 +136,8 @@
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copySelectionToolStripMenuItem,
+            this.copySelectionToolStripSeparator,
             this.copyCommitHashToolStripMenuItem,
             this.copyCommitSubjectToolStripMenuItem,
             this.copyCommitMessageToolStripMenuItem,
@@ -146,6 +151,18 @@
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyCommitHashToolStripMenuItem_Click);
+            // 
+            // copySelectionToolStripMenuItem
+            // 
+            this.copySelectionToolStripMenuItem.Name = "copySelectionToolStripMenuItem";
+            this.copySelectionToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.copySelectionToolStripMenuItem.Text = "Selection";
+            this.copySelectionToolStripMenuItem.Click += new System.EventHandler(this.copySelectionToolStripMenuItem_Click);
+            // 
+            // copySelectionToolStripSeparator
+            // 
+            this.copySelectionToolStripSeparator.Name = "copySelectionToolStripSeparator";
+            this.copySelectionToolStripSeparator.Size = new System.Drawing.Size(166, 6);
             // 
             // copyCommitHashToolStripMenuItem
             // 
@@ -319,5 +336,7 @@
         private System.Windows.Forms.ToolStripMenuItem copyCommitMessageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyCommitDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyCommitSubjectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copySelectionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator copySelectionToolStripSeparator;
     }
 }
