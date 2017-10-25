@@ -425,7 +425,7 @@ namespace GitUI.CommandsDialogs
             this.pullToolStripMenuItem1,
             this.fetchAllToolStripMenuItem,
             this.setNextPullActionAsDefaultToolStripMenuItem});
-            this.toolStripButtonPull.Image = global::GitUI.Properties.Resources.Icon_4;
+            this.toolStripButtonPull.Image = global::GitUI.Properties.Resources.IconPull;
             this.toolStripButtonPull.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonPull.Name = "toolStripButtonPull";
             this.toolStripButtonPull.Size = new System.Drawing.Size(32, 22);
@@ -464,7 +464,7 @@ namespace GitUI.CommandsDialogs
             // 
             // pullToolStripMenuItem1
             // 
-            this.pullToolStripMenuItem1.Image = global::GitUI.Properties.Resources.Icon_4;
+            this.pullToolStripMenuItem1.Image = global::GitUI.Properties.Resources.IconPull;
             this.pullToolStripMenuItem1.Name = "pullToolStripMenuItem1";
             this.pullToolStripMenuItem1.Size = new System.Drawing.Size(239, 22);
             this.pullToolStripMenuItem1.Text = "Open pull dialog...";
@@ -490,7 +490,7 @@ namespace GitUI.CommandsDialogs
             // toolStripButtonPush
             // 
             this.toolStripButtonPush.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonPush.Image = global::GitUI.Properties.Resources.Icon_3;
+            this.toolStripButtonPush.Image = global::GitUI.Properties.Resources.IconPush;
             this.toolStripButtonPush.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonPush.Name = "toolStripButtonPush";
             this.toolStripButtonPush.Size = new System.Drawing.Size(23, 22);
@@ -525,7 +525,7 @@ namespace GitUI.CommandsDialogs
             // EditSettings
             // 
             this.EditSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.EditSettings.Image = global::GitUI.Properties.Resources.Icon_71;
+            this.EditSettings.Image = global::GitUI.Properties.Resources.IconSettingsTools;
             this.EditSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.EditSettings.Name = "EditSettings";
             this.EditSettings.Size = new System.Drawing.Size(23, 22);
@@ -1256,7 +1256,7 @@ namespace GitUI.CommandsDialogs
             this.verifyGitDatabaseToolStripMenuItem,
             this.deleteIndexlockToolStripMenuItem,
             this.editLocalGitConfigToolStripMenuItem});
-            this.gitMaintenanceToolStripMenuItem.Image = global::GitUI.Properties.Resources.Icon_82;
+            this.gitMaintenanceToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconMaintenance;
             this.gitMaintenanceToolStripMenuItem.Name = "gitMaintenanceToolStripMenuItem";
             this.gitMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.gitMaintenanceToolStripMenuItem.Text = "Git maintenance";
@@ -1372,7 +1372,7 @@ namespace GitUI.CommandsDialogs
             // 
             // pullToolStripMenuItem
             // 
-            this.pullToolStripMenuItem.Image = global::GitUI.Properties.Resources.Icon_4;
+            this.pullToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconPull;
             this.pullToolStripMenuItem.Name = "pullToolStripMenuItem";
             this.pullToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Down)));
             this.pullToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
@@ -1381,7 +1381,7 @@ namespace GitUI.CommandsDialogs
             // 
             // pushToolStripMenuItem
             // 
-            this.pushToolStripMenuItem.Image = global::GitUI.Properties.Resources.Icon_3;
+            this.pushToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconPush;
             this.pushToolStripMenuItem.Name = "pushToolStripMenuItem";
             this.pushToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Up)));
             this.pushToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
@@ -1698,7 +1698,7 @@ namespace GitUI.CommandsDialogs
             // 
             // settingsToolStripMenuItem
             // 
-            this.settingsToolStripMenuItem.Image = global::GitUI.Properties.Resources.Icon_71;
+            this.settingsToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconSettingsTools;
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.settingsToolStripMenuItem.Text = "Settings";

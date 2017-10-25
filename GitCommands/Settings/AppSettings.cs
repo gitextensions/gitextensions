@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.IO.Abstractions;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -30,6 +31,7 @@ namespace GitCommands
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
         public static string ProductVersion { get { return Application.ProductVersion; } }
         public static readonly string SettingsFileName = "GitExtensions.settings";
+        private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
         public static readonly Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
@@ -134,11 +136,14 @@ namespace GitCommands
             string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
             string debugPath = @"GitExtensions\bin\Debug";
             int len = debugPath.Length;
-            var path = gitExtDir.Substring(gitExtDir.Length - len);
-            if (debugPath.ToPosixPath().Equals(path.ToPosixPath()))
+            if (gitExtDir.Length > len)
             {
-                string projectPath = gitExtDir.Substring(0, gitExtDir.Length - len);
-                return Path.Combine(projectPath, "Bin");
+                var path = gitExtDir.Substring(gitExtDir.Length - len);
+                if (debugPath.ToPosixPath().Equals(path.ToPosixPath()))
+                {
+                    string projectPath = gitExtDir.Substring(0, gitExtDir.Length - len);
+                    return Path.Combine(projectPath, "Bin");
+                }
             }
 #endif
             return GetInstallDir();
@@ -933,6 +938,12 @@ namespace GitCommands
             set { SetBool("showdiffforallparents", value); }
         }
 
+        public static int DiffVerticalRulerPosition
+        {
+            get { return GetInt( "diffverticalrulerposition", 80 ); }
+            set { SetInt( "diffverticalrulerposition", value ); }
+        }
+
         public static string RecentWorkingDir
         {
             get { return GetString("RecentWorkingDir", null); }
@@ -1192,7 +1203,7 @@ namespace GitCommands
             {
                 SettingsContainer.LockedAction(() =>
                 {
-                    SshPath = GitCommandHelpers.GetSsh();
+                    SshPath = SshPathLocatorInstance.Find(GitBinDir);
                     Repositories.SaveSettings();
 
                     SettingsContainer.Save();
