@@ -1074,7 +1074,7 @@ namespace GitUI
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
                 Task<SuperProjectInfo> newSuperPrjectInfo =
-                    Task.Factory.StartNew(() => GetSuperprojectCheckout(ShowRemoteRef));
+                    Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef));
                 newSuperPrjectInfo.ContinueWith((task) => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
                 //Only check for tracked files. This usually makes more sense and it performs a lot
