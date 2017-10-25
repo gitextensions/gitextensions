@@ -45,6 +45,7 @@ namespace GitUI.Editor
         bool ShowEOLMarkers { get; set; }
         bool ShowSpaces { get; set; }
         bool ShowTabs { get; set; }
+        int VRulerPosition { get; set; }
         bool IsReadOnly { get; set; }
         bool Visible { get; set; }
 

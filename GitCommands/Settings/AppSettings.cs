@@ -938,6 +938,12 @@ namespace GitCommands
             set { SetBool("showdiffforallparents", value); }
         }
 
+        public static int DiffVerticalRulerPosition
+        {
+            get { return GetInt( "diffverticalrulerposition", 80 ); }
+            set { SetInt( "diffverticalrulerposition", value ); }
+        }
+
         public static string RecentWorkingDir
         {
             get { return GetString("RecentWorkingDir", null); }
