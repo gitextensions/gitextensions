@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ConEmu.WinForms;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Repository;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -64,8 +65,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _indexLockCantDelete =
             new TranslationString("Failed to delete index.lock.");
-        private readonly TranslationString _indexLockNotFound =
-            new TranslationString("index.lock not found at:");
 
         private readonly TranslationString _errorCaption =
             new TranslationString("Error");
@@ -1764,36 +1763,16 @@ namespace GitUI.CommandsDialogs
             Clipboard.SetText(fileNames.ToString());
         }
 
-        private void DeleteIndexLock(string path)
-        {
-            string fileName = Path.Combine(path, "index.lock");
-            if (File.Exists(fileName))
-            {
-                try
-                {
-                    File.Delete(fileName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(this, $"{_indexLockCantDelete.Text}{Environment.NewLine}{ex.Message}");
-                }
-            }
-            else
-            {
-                MessageBox.Show(this, _indexLockNotFound.Text + " " + fileName);
-            }
-        }
-
         private void deleteIndexlockToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteIndexLock(Module.WorkingDirGitDir);
-
-            var submodules = Module.GetSubmodulesLocalPaths();
-            submodules.ForEach(sm =>
+            try
             {
-                var smPath = Module.GetSubmoduleFullPath(sm);
-                DeleteIndexLock(smPath);
-            });
+                Module.UnlockIndex(true);
+            }
+            catch (FileDeleteException ex)
+            {
+                MessageBox.Show(this, $@"{_indexLockCantDelete.Text}: {ex.FileName}{Environment.NewLine}{ex.Message}");
+            }
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)

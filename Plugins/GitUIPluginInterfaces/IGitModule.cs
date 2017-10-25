@@ -57,6 +57,20 @@ namespace GitUIPluginInterfaces
 
         string RunBatchFile(string batchFile);
 
+        /// <summary>
+        /// Determines whether the given repository has index.lock file.
+        /// </summary>
+        /// <returns><see langword="true"/> is index is locked; otherwise <see langword="false"/>.</returns>
+        bool IsIndexLocked();
+
+        /// <summary>
+        /// Delete index.lock in the current working folder.
+        /// </summary>
+        /// <param name="includeSubmodules">
+        ///     If <see langword="true"/> all submodules will be scanned for index.lock files and have them delete, if found.
+        /// </param>
+        void UnlockIndex(bool includeSubmodules);
+
         /// <summary>Gets the directory which contains the git repository.</summary>
         string WorkingDir { get; }
 
@@ -86,6 +100,8 @@ namespace GitUIPluginInterfaces
         Version AppVersion { get; }
 
         string GravatarCacheDir { get; }
+
+        string GetSubmoduleFullPath(string localPath);
 
         IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
 
