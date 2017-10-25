@@ -1080,8 +1080,8 @@ namespace GitUI
                 //Only check for tracked files. This usually makes more sense and it performs a lot
                 //better then checking for untracked files.
                 // TODO: Check FiltredFileName
-                Task<IList<GitItemStatus>> changedFiles =
-                    Task.Factory.StartNew(() => Module.GetAllChangedFiles());
+                Task<IList<GitItemStatus>> changedFilesTask =
+                    Task.Run(() => Module.GetAllChangedFiles());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -1100,7 +1100,7 @@ namespace GitUI
                 _filtredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 SuperprojectCurrentCheckout = newSuperPrjectInfo;
-                ChangedFiles = changedFiles;
+                ChangedFiles = changedFilesTask;
                 Revisions.Clear();
                 Error.Visible = false;
 
