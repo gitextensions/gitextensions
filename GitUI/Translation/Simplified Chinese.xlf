@@ -8924,8 +8924,8 @@ global settings.
         
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
-        <source>Show current working directory changes in revision graph (slow!)</source>
-        <target>在版本图里显示工作目录的改变(慢!)</target>
+        <source>Show current working directory changes in revision graph</source>
+        <target>在版本图里显示工作目录的改变</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">

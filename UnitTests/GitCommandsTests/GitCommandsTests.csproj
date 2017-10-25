@@ -90,6 +90,7 @@
     <Compile Include="PathEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\GitRemoteControllerTests.cs" />
+    <Compile Include="SshPathLocatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
