@@ -108,7 +108,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void Init(SplitterManager splitterManager)
+        public void InitSplitterManager(SplitterManager splitterManager)
         {
             splitterManager.AddSplitter(FileTreeSplitContainer, "FileTreeSplitContainer");
         }

@@ -135,6 +135,12 @@
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" />
+    <Compile Include="CommandsDialogs\RevisionDiff.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\RevisionDiff.Designer.cs">
+      <DependentUpon>RevisionDiff.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\RevisionFileTree.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1097,6 +1103,9 @@
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormUpdates.resx">
       <DependentUpon>FormUpdates.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\RevisionDiff.resx">
+      <DependentUpon>RevisionDiff.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\RevisionFileTree.resx">
       <DependentUpon>RevisionFileTree.cs</DependentUpon>

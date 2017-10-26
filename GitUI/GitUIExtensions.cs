@@ -155,14 +155,6 @@ namespace GitUI
                     diffArgs, encoding, cacheResult);
         }
 
-        public static string GetSelectedPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file)
-        {
-            IList<GitRevision> revisions = grid.GetSelectedRevisions();
-            string firstRevision = revisions.Count > 0 ? revisions[0].Guid : null;
-            string secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
-            return GetSelectedPatch(diffViewer, firstRevision, secondRevision, file);
-        }
-
         public static string GetSelectedPatch(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file)
         {
             if (firstRevision == null)
