@@ -8,8 +8,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     {
         public int Compare(IGitItem x, IGitItem y)
         {
-            var xGitItem = (GitItem)x;
-            var yGitItem = (GitItem)y;
+            var xGitItem = x as GitItem;
+            var yGitItem = y as GitItem;
+            if (xGitItem == null && yGitItem == null)
+            {
+                return 0;
+            }
+            if (xGitItem == null)
+            {
+                return 1;
+            }
+            if (yGitItem == null)
+            {
+                return -1;
+            }
 
             if ((xGitItem.IsTree || xGitItem.IsCommit) && yGitItem.IsBlob)
                 return -1;

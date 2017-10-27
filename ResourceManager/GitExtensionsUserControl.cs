@@ -94,6 +94,18 @@ namespace ResourceManager
             TranslationUtils.TranslateItemsFromFields(Name, this, translation);
         }
 
+        protected void TranslateItem(string itemName, object item)
+        {
+            var translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
+            if (translation.Count == 0)
+                return;
+            foreach (var pair in translation)
+            {
+                IEnumerable<Tuple<string, object>> itemsToTranslate = new[] { new Tuple<string, object>(itemName, item) };
+                TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
+            }
+        }
+
         #region Hotkeys
 
         /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>

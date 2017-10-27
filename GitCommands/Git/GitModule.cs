@@ -88,6 +88,7 @@ namespace GitCommands
         private static readonly Regex AnsiCodePattern = new Regex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private readonly object _lock = new object();
+        private readonly IIndexLockManager _indexLockManager;
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
         public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
@@ -98,6 +99,7 @@ namespace GitCommands
             _superprojectInit = false;
             _workingDir = (workingdir ?? "").EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(_workingDir);
+            _indexLockManager = new IndexLockManager(this);
         }
 
         #region IGitCommands
@@ -1479,6 +1481,26 @@ namespace GitCommands
             return RunGitCmd("checkout-index --index --force -- \"" + file + "\"");
         }
 
+        /// <summary>
+        /// Determines whether the given repository has index.lock file.
+        /// </summary>
+        /// <returns><see langword="true"/> is index is locked; otherwise <see langword="false"/>.</returns>
+        public bool IsIndexLocked()
+        {
+            return _indexLockManager.IsIndexLocked();
+        }
+
+        /// <summary>
+        /// Delete index.lock in the current working folder.
+        /// </summary>
+        /// <param name="includeSubmodules">
+        ///     If <see langword="true"/> all submodules will be scanned for index.lock files and have them delete, if found.
+        /// </param>
+        /// <exception cref="FileDeleteException">Unable to delete specific index.lock.</exception>
+        public void UnlockIndex(bool includeSubmodules)
+        {
+            _indexLockManager.UnlockIndex(includeSubmodules);
+        }
 
         public string FormatPatch(string from, string to, string output, int start)
         {
@@ -3093,22 +3115,9 @@ namespace GitCommands
             return fullBranchName;
         }
 
-        public bool IsLockedIndex()
-        {
-            return IsLockedIndex(_workingDir);
-        }
-
-        public static bool IsLockedIndex(string repositoryPath)
-        {
-            var gitDir = GetGitDirectory(repositoryPath);
-            var indexLockFile = Path.Combine(gitDir, "index.lock");
-
-            return File.Exists(indexLockFile);
-        }
-
         public bool IsRunningGitProcess()
         {
-            if (IsLockedIndex())
+            if (_indexLockManager.IsIndexLocked())
             {
                 return true;
             }
