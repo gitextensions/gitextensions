@@ -95,12 +95,14 @@
     <Compile Include="FileHelper.cs" />
     <Compile Include="FullPathResolver.cs" />
     <Compile Include="Git\AuthorEmailEqualityComparer.cs" />
+    <Compile Include="Git\FileDeleteException.cs" />
     <Compile Include="Git\GitBranchNameNormaliser.cs" />
     <Compile Include="Git\GitBranchNameOptions.cs" />
     <Compile Include="Git\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitDirectoryResolver.cs" />
     <Compile Include="Git\GitTagController.cs" />
     <Compile Include="SshPathLocator.cs" />
+    <Compile Include="Git\IndexLockManager.cs" />
     <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="PathEqualityComparer.cs" />
     <Compile Include="RemoteActionResult.cs" />
