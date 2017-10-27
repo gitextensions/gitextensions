@@ -792,7 +792,7 @@ namespace GitUI.SpellChecker
             {
                 var bullet = addBullet ? " - " : String.Empty;
                 var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
-                var newLine = (lineLength > 0) ? Environment.NewLine : String.Empty;
+                var newLine = Environment.NewLine;
                 var newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
                 TextBox.SelectionLength = 0;
                 TextBox.SelectionStart = indexOfLine;

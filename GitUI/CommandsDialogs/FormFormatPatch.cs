@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs
                     rev2 = revisions[1].Guid;
                     result = Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
-                else if (revisions.Count > 2)
+                else
                 {
                     int n = 0;
                     foreach (GitRevision revision in revisions)
