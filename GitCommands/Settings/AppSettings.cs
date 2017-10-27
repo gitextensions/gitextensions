@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.IO.Abstractions;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -30,6 +31,7 @@ namespace GitCommands
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
         public static string ProductVersion { get { return Application.ProductVersion; } }
         public static readonly string SettingsFileName = "GitExtensions.settings";
+        private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
         public static readonly Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
@@ -936,6 +938,12 @@ namespace GitCommands
             set { SetBool("showdiffforallparents", value); }
         }
 
+        public static int DiffVerticalRulerPosition
+        {
+            get { return GetInt( "diffverticalrulerposition", 80 ); }
+            set { SetInt( "diffverticalrulerposition", value ); }
+        }
+
         public static string RecentWorkingDir
         {
             get { return GetString("RecentWorkingDir", null); }
@@ -1195,7 +1203,7 @@ namespace GitCommands
             {
                 SettingsContainer.LockedAction(() =>
                 {
-                    SshPath = GitCommandHelpers.GetSsh();
+                    SshPath = SshPathLocatorInstance.Find(GitBinDir);
                     Repositories.SaveSettings();
 
                     SettingsContainer.Save();
