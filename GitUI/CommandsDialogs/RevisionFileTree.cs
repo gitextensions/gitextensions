@@ -8,7 +8,6 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -22,15 +21,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _nodeNotFoundNextAvailableParentSelected = new TranslationString("Node not found. The next available parent node will be selected.");
         private readonly TranslationString _nodeNotFoundSelectionNotChanged = new TranslationString("Node not found. File tree selection was not changed.");
 
-        private static class TreeNodeImages
-        {
-            public const int Folder = 1;
-            public const int Submodule = 2;
-        }
-
         //store strings to not keep references to nodes
         private readonly Stack<string> _lastSelectedNodes = new Stack<string>();
-        private readonly IFileAssociatedIconProvider _iconProvider;
+        private IRevisionFileTreeController _revisionFileTreeController;
         private GitRevision _revision;
 
 
@@ -39,7 +32,6 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            _iconProvider = new FileAssociatedIconProvider();
 
             tvGitTree.ImageList = new ImageList(components)
             {
@@ -50,6 +42,10 @@ namespace GitUI.CommandsDialogs
             tvGitTree.ImageList.Images.Add(Properties.Resources.IconFolderSubmodule); //Submodule
 
             GotFocus += (s, e) => tvGitTree.Focus();
+            Load += (s, e) =>
+            {
+                _revisionFileTreeController = new RevisionFileTreeController(Module, new FileAssociatedIconProvider());
+            };
         }
 
 
@@ -148,7 +144,7 @@ namespace GitUI.CommandsDialogs
                 //restore selected file and scroll position when new selection is done
                 if (_revision != null)
                 {
-                    LoadInTree(_revision.SubItems, tvGitTree.Nodes);
+                    _revisionFileTreeController.LoadItemsInTreeView(_revision.SubItems, tvGitTree.Nodes, tvGitTree.ImageList.Images);
                     //GitTree.Sort();
                     TreeNode lastMatchedNode = null;
                     // Load state
@@ -196,18 +192,6 @@ namespace GitUI.CommandsDialogs
         }
 
 
-        private static TreeNode Find(TreeNodeCollection nodes, string label)
-        {
-            for (var i = 0; i < nodes.Count; i++)
-            {
-                if (nodes[i].Text == label)
-                {
-                    return nodes[i];
-                }
-            }
-            return null;
-        }
-
         private IList<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree(_revision.TreeGuid);
@@ -215,52 +199,6 @@ namespace GitUI.CommandsDialogs
             var nameAsLower = name.ToLower();
 
             return candidates.Where(fileName => fileName.ToLower().Contains(nameAsLower)).ToList();
-        }
-
-        private void LoadInTree(IEnumerable<IGitItem> items, TreeNodeCollection node)
-        {
-            var sortedItems = items.OrderBy(gi => gi, new GitFileTreeComparer());
-
-            foreach (var item in sortedItems)
-            {
-                var subNode = node.Add(item.Name);
-                subNode.Tag = item;
-
-                var gitItem = item as GitItem;
-                if (gitItem == null)
-                {
-                    subNode.Nodes.Add(new TreeNode());
-                    continue;
-                }
-
-                if (gitItem.IsTree)
-                {
-                    subNode.ImageIndex = subNode.SelectedImageIndex = TreeNodeImages.Folder;
-                    subNode.Nodes.Add(new TreeNode());
-                    continue;
-                }
-                if (gitItem.IsCommit)
-                {
-                    subNode.ImageIndex = subNode.SelectedImageIndex = TreeNodeImages.Submodule;
-                    subNode.Text = $@"{item.Name} (Submodule)";
-                    continue;
-                }
-                if (gitItem.IsBlob)
-                {
-                    var extension = Path.GetExtension(gitItem.FileName);
-                    if (string.IsNullOrWhiteSpace(extension))
-                    {
-                        continue;
-                    }
-                    var fileIcon = _iconProvider.Get(Path.Combine(Module.WorkingDir, gitItem.FileName));
-                    if (fileIcon == null)
-                    {
-                        continue;
-                    }
-                    tvGitTree.ImageList.Images.Add(extension, fileIcon);
-                    subNode.ImageKey = subNode.SelectedImageKey = extension;
-                }
-            }
         }
 
         private void OnItemActivated()
@@ -344,7 +282,7 @@ namespace GitUI.CommandsDialogs
             }
 
             e.Node.Nodes.Clear();
-            LoadInTree(item.SubItems, e.Node.Nodes);
+            _revisionFileTreeController.LoadItemsInTreeView(item.SubItems, e.Node.Nodes, tvGitTree.ImageList.Images);
         }
 
         private void tvGitTree_DoubleClick(object sender, EventArgs e)
@@ -440,7 +378,7 @@ namespace GitUI.CommandsDialogs
 
             for (var i = 0; i < items.Length - 1; i++)
             {
-                var selectedNode = Find(nodes, items[i]);
+                var selectedNode = _revisionFileTreeController.Find(nodes, items[i]);
                 if (selectedNode == null)
                 {
                     return; //Item does not exist in the tree
@@ -450,7 +388,7 @@ namespace GitUI.CommandsDialogs
                 nodes = selectedNode.Nodes;
             }
 
-            var lastItem = Find(nodes, items[items.Length - 1]);
+            var lastItem = _revisionFileTreeController.Find(nodes, items[items.Length - 1]);
             if (lastItem != null)
             {
                 tvGitTree.SelectedNode = lastItem;

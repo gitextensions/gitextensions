@@ -188,6 +188,7 @@
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\RevisionFileTreeController.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.cs">
       <SubType>Form</SubType>
     </Compile>
