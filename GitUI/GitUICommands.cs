@@ -1523,6 +1523,8 @@ namespace GitUI
 
                     if (showBlame)
                         form.SelectBlameTab();
+                    else
+                        form.SelectDiffTab();
 
                     return form;
                 };
