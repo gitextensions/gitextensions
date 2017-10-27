@@ -1053,7 +1053,7 @@ namespace GitUI
         }
 
         [Browsable(false)]
-        public Task<IList<GitItemStatus>> ChangedFiles { get; private set; }
+        private Task<IList<GitItemStatus>> ChangedFiles { get; set; }
 
         private string _filtredCurrentCheckout;
 
