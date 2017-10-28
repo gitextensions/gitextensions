@@ -20,7 +20,7 @@ Changelog
 * help picture disappeared when opening pull dialog - Issue [3829]
 * Committing fails: could not read log file, Invalid argument - Issue [3800]
 * NRE when attempting to push with no remote configured - Issue [3794]
-* Exception "Illegal characters in path" when invoking "browse" via comman line parameter - Issue [3489]
+* Exception "Illegal characters in path" when invoking "browse" via command line parameter - Issue [3489]
 * Blows up when I click on Help in Branch dialog - Issue [3011]
 
 ### [Version 2.50.01] (07 July 2017)
@@ -46,7 +46,7 @@ Changelog
 * Feature request: assign F2 key to "Rename branch" - Issue [3503]
 * Feature proposal - turn remotes on/off - Issue [3456]
 * Autonormalise local branch at checkout - Issue [3450]
-* Warn the user if reseting a local branch is non fast forward. - Issue [3438]
+* Warn the user if resetting a local branch is non fast forward. - Issue [3438]
 * AppVeyor CI plugin - PR [3426]
 * 2.49 RC2: Branch name not showing in VS 2015  - Issue [3393]
 * ConEmu settings - Issue [3392]
@@ -111,7 +111,7 @@ Changelog
 * when merge ms-office-word file,it opened two local version. - Issue [3192]
 * Saving new remote clears URL entry - Issue [3154]
 * Delete selected, poor usability = lost changes - Issue [3127]
-* Revisiongrid doesnt keep the selection - Issue [2956]
+* Revisiongrid doesn't keep the selection - Issue [2956]
 * Cannot paste into commit window - Issue [2926]
 * On Diff/File List pane got exception ArgumentOutOfRangeException InvalidArgument Value of -1 is not valid for index - Issue [2759]
 * Strip any ANSI escape codes from git command output - PR [2689]
@@ -136,7 +136,7 @@ Changelog
 * Feature request: assign F2 key to "Rename branch" - Issue [3503]
 * Feature proposal - turn remotes on/off - Issue [3456]
 * Autonormalise local branch at checkout - Issue [3450]
-* Warn the user if reseting a local branch is non fast forward. - Issue [3438]
+* Warn the user if resetting a local branch is non fast forward. - Issue [3438]
 * AppVeyor CI plugin - PR [3426]
 * 2.49 RC2: Branch name not showing in VS 2015  - Issue [3393]
 * ConEmu settings - Issue [3392]
@@ -195,7 +195,7 @@ Changelog
 * when merge ms-office-word file,it opened two local version. - Issue [3192]
 * Saving new remote clears URL entry - Issue [3154]
 * Delete selected, poor usability = lost changes - Issue [3127]
-* Revisiongrid doesnt keep the selection - Issue [2956]
+* Revisiongrid doesn't keep the selection - Issue [2956]
 * Cannot paste into commit window - Issue [2926]
 * On Diff/File List pane got exception ArgumentOutOfRangeException InvalidArgument Value of -1 is not valid for index - Issue [2759]
 * Strip any ANSI escape codes from git command output - PR [2689]
@@ -206,7 +206,7 @@ Changelog
 
 ### Version 2.49.03 (26 March 2017)
 * Fixed issue #3605. NullReferenceException from CanBeGitUrl when trying to clone git repository from dashboard.
-* Fixed issue #3578. File history and blame not show when path to file contain cyrilic chars bug reproducible.
+* Fixed issue #3578. File history and blame not show when path to file contain Cyrilic chars bug reproducible.
 
 ### Version 2.49.02 (22 March 2017)
 * Fixed issue #3464. Background fetch plugin - Not working.
@@ -228,7 +228,7 @@ Changelog
 * Fixed issue #3441. Prompt to commit after resolving merge conflicts even when "Do not commit" is checked bug.
 * Fixed issue #3445. "Reset file(s) to" functionality doesn't work bug.
 * Fixed issue #2679. "Unsupported file" error with submodules
-* Fixed issue #3434. Filtering commits by unicode search text fails bug
+* Fixed issue #3434. Filtering commits by Unicode search text fails bug
 * Fixed issue #3412. Fix reset file menu item text.
 * Fix "Host Fingerprint not registered" Plink handling on clone. PR #3405
 * Fix crash when one of the stash is an autostash. PR #3410
@@ -346,7 +346,7 @@ Changelog
 * Fixed issue #3054: Changes to global gitignore do not properly propagate to the Commit button
 * Fixed issue #573: Push Multiple Branches hang if using OpenSSH for key mgmt
 * Fixed issue #3079: Hidden expandable column between message and author
-* Fixed issue #2813: Bisect labels size problems on french version
+* Fixed issue #2813: Bisect labels size problems on French version
 * Fixed issue #2965: Config Settings written with upper case True and False
 * Fixed issue #2292: Don't auto-remember the desired action 'Local changes' when checking out a branch
 * Fixed issue #3136: No option to pull request if host is stash/bit bucket but repo (or project) contains
@@ -410,12 +410,12 @@ Changelog
 * Support Git for Windows path for Linux tools
 
 ### Version 2.48.04 (8 May 2015)
-* Fixed issue #1643: Do stage of 16506 files and GUI becomes Not Respoding
+* Fixed issue #1643: Do stage of 16506 files and GUI becomes Not Responding
 * Fixed issue #2591: VSAddin solutionItem.ProjectItem == null when selected 'References' item in C# project
 * Fixed issue #2587, #2601: VSAddin fixed StackOverflowException
 * Fixed issue #2584: Escape the last backslash from paths before running GitExtensions to avoid escaping the double-quote
 * Fixed issue #2574: MSysGit updated to version 1.9.5-preview20141217
-* Fixed issue #2649: Refreshing the ignored files set every 10 minutes instead of every 500 miliseconds
+* Fixed issue #2649: Refreshing the ignored files set every 10 minutes instead of every 500 milliseconds
 * Fixed issue #2525: Additional handling for strings passed to RichTextBox
 * Fixed issue #2700: Fix filtering by branch name
 * Fixed 'ArgumentOutOfRangeException is thrown when right clicking of the table header of 'Resolve merge conflicts' window'
@@ -464,11 +464,11 @@ Changelog
 ### Version 2.48RC (13 July 2014)
 * Updated msysgit to 1.9.4
 * Implemented auto completion for commit message window.
-* Support intergration with TeamCity and Jenkins build server
+* Support integration with TeamCity and Jenkins build server
 * Support pull request for Atlassian Stash
 * GitExt suggest update submodules after changing revision. PR #2176
 * Show commit changes (i.e: -1+5) on Checkout Branch, CheckoutR evision, Create Branch and Create Tag dialogs
-* Sepatate windows to merge submodules
+* Separate windows to merge submodules
 * Increased performance and lowered memory footprint of DvcsGraph
 * Allow Create branch in Commit dialog
 * Added support for remote branches to the DeleteUnusedBranches plugin
@@ -477,7 +477,7 @@ Changelog
 * Added p4merge to the list of difftools
 * Added BeyondCompare4 to the list of diff and merge tools
 * Added SemanticMerge to the list of diff and merge tools
-* Added hotkey to close repositry via CTRL+W
+* Added hotkey to close repository via CTRL+W
 * Open .git/config fixed
 * "Back" button and history
 * Disabled by default: include untracked files in stash
@@ -1098,7 +1098,7 @@ Changelog
 * Various bugfixes and minor changes
 
 ### Version 2.08 (25 November 2010)
-* Fixed bug: installing MSysGit or KDiff3 using complete settup doesn't work when UAC is enabled
+* Fixed bug: installing MSysGit or KDiff3 using complete setup doesn't work when UAC is enabled
 * Fixed bug: slashes in tag name not supported
 * Fixed bug: filtering does not work with characters outside ASCII range
 * Fixed bug: bash does not work using Linux or cygwin

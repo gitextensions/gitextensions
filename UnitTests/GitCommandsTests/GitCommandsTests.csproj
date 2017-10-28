@@ -79,6 +79,7 @@
     <Compile Include="Git\GitCheckoutBranchCmdTest.cs" />
     <Compile Include="Git\GitCommandCacheTest.cs" />
     <Compile Include="Git\GitCommandHelpersTest.cs" />
+    <Compile Include="Git\IndexLockManagerTests.cs" />
     <Compile Include="Git\GitDirectoryResolverTests.cs" />
     <Compile Include="Git\GitTagControllerTest.cs" />
     <Compile Include="Helpers\FileInfoExtensions.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="PathEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\GitRemoteControllerTests.cs" />
+    <Compile Include="SshPathLocatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

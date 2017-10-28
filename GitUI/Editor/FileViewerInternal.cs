@@ -32,6 +32,8 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
 
             _lineNumbersControl = new DiffViewerLineNumberCtrl(TextEditor.ActiveTextAreaControl.TextArea);
+
+            VRulerPosition = GitCommands.AppSettings.DiffVerticalRulerPosition;
         }
 
         public new Font Font
@@ -262,6 +264,18 @@ namespace GitUI.Editor
             set
             {
                 TextEditor.ShowTabs = value;
+            }
+        }
+
+        public int VRulerPosition
+        {
+            get
+            {
+                return TextEditor.VRulerRow;
+            }
+            set
+            {
+                TextEditor.VRulerRow = value;
             }
         }
 
