@@ -105,6 +105,9 @@ namespace GitUI.SpellChecker
         public void ReplaceLine(int line, string withText)
         {
             var oldPos = TextBox.SelectionStart + TextBox.SelectionLength;
+            // Warning : GetFirstCharIndexFromLine takes a *displayed* line number
+            // this only matches the physical line of same number if there is no
+            // wrapping done in TextBox (TextBox.WordWrap set to false).
             var startIdx = TextBox.GetFirstCharIndexFromLine(line);
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = startIdx;
