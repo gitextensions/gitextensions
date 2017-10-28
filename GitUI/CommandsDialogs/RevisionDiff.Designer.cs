@@ -48,6 +48,11 @@ namespace GitUI.CommandsDialogs
             this.resetFileToParentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cherryPickSelectedDiffFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator32 = new System.Windows.Forms.ToolStripSeparator();
+            this.diffCommitSubmoduleChanges = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffResetSubmoduleChanges = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffStashSubmoduleChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffUpdateSubmoduleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffSubmoduleSummaryMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyFilenameToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffShowInFileTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -104,6 +109,11 @@ namespace GitUI.CommandsDialogs
             this.resetFileToToolStripMenuItem,
             this.cherryPickSelectedDiffFileToolStripMenuItem,
             this.toolStripSeparator32,
+            this.diffCommitSubmoduleChanges,
+            this.diffResetSubmoduleChanges,
+            this.diffStashSubmoduleChangesToolStripMenuItem,
+            this.diffUpdateSubmoduleMenuItem,
+            this.diffSubmoduleSummaryMenuItem,
             this.copyFilenameToClipboardToolStripMenuItem1,
             this.openContainingFolderToolStripMenuItem,
             this.diffShowInFileTreeToolStripMenuItem,
@@ -228,6 +238,46 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator32.Name = "toolStripSeparator32";
             this.toolStripSeparator32.Size = new System.Drawing.Size(207, 6);
             // 
+            // diffCommitSubmoduleChanges
+            // 
+            this.diffCommitSubmoduleChanges.Image = global::GitUI.Properties.Resources.IconDirtySubmodules;
+            this.diffCommitSubmoduleChanges.Name = "diffCommitSubmoduleChanges";
+            this.diffCommitSubmoduleChanges.Size = new System.Drawing.Size(228, 22);
+            this.diffCommitSubmoduleChanges.Text = "Commit submodule changes";
+            this.diffCommitSubmoduleChanges.Click += new System.EventHandler(this.diffCommitSubmoduleChanges_Click);
+            // 
+            // diffResetSubmoduleChanges
+            // 
+            this.diffResetSubmoduleChanges.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
+            this.diffResetSubmoduleChanges.Name = "diffResetSubmoduleChanges";
+            this.diffResetSubmoduleChanges.Size = new System.Drawing.Size(228, 22);
+            this.diffResetSubmoduleChanges.Text = "Reset submodule changes";
+            this.diffResetSubmoduleChanges.Click += new System.EventHandler(this.diffResetSubmoduleChanges_Click);
+            // 
+            // diffStashSubmoduleChangesToolStripMenuItem
+            // 
+            this.diffStashSubmoduleChangesToolStripMenuItem.Image = global::GitUI.Properties.Resources.stash;
+            this.diffStashSubmoduleChangesToolStripMenuItem.Name = "diffStashSubmoduleChangesToolStripMenuItem";
+            this.diffStashSubmoduleChangesToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.diffStashSubmoduleChangesToolStripMenuItem.Text = "Stash submodule changes";
+            this.diffStashSubmoduleChangesToolStripMenuItem.Click += new System.EventHandler(this.diffStashSubmoduleChangesToolStripMenuItem_Click);
+            // 
+            // diffUpdateSubmoduleMenuItem
+            // 
+            this.diffUpdateSubmoduleMenuItem.Image = global::GitUI.Properties.Resources.IconSubmodulesUpdate;
+            this.diffUpdateSubmoduleMenuItem.Name = "diffUpdateSubmoduleMenuItem";
+            this.diffUpdateSubmoduleMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.diffUpdateSubmoduleMenuItem.Tag = "1";
+            this.diffUpdateSubmoduleMenuItem.Text = "Update submodule";
+            this.diffUpdateSubmoduleMenuItem.Click += new System.EventHandler(this.diffUpdateSubmoduleMenuItem_Click);
+            // 
+            // diffSubmoduleSummaryMenuItem
+            // 
+            this.diffSubmoduleSummaryMenuItem.Name = "diffSubmoduleSummaryMenuItem";
+            this.diffSubmoduleSummaryMenuItem.Size = new System.Drawing.Size(228, 22);
+            this.diffSubmoduleSummaryMenuItem.Text = "View summary";
+            this.diffSubmoduleSummaryMenuItem.Click += new System.EventHandler(this.diffSubmoduleSummaryMenuItem_Click);
+            // 
             // copyFilenameToClipboardToolStripMenuItem1
             // 
             this.copyFilenameToClipboardToolStripMenuItem1.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
@@ -334,9 +384,14 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
         private ToolStripMenuItem copyFilenameToClipboardToolStripMenuItem1;
         private ToolStripMenuItem cherryPickSelectedDiffFileToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator32;
+        private ToolStripMenuItem diffUpdateSubmoduleMenuItem;
+        private ToolStripMenuItem diffSubmoduleSummaryMenuItem;
+        private ToolStripMenuItem diffResetSubmoduleChanges;
+        private ToolStripMenuItem diffCommitSubmoduleChanges;
+        private ToolStripMenuItem diffStashSubmoduleChangesToolStripMenuItem;
         private ToolStripMenuItem resetFileToToolStripMenuItem;
         private ToolStripMenuItem saveAsToolStripMenuItem1;
-        private ToolStripSeparator toolStripSeparator32;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private System.Windows.Forms.SplitContainer DiffSplitContainer;
