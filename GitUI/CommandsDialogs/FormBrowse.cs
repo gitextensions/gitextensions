@@ -2201,7 +2201,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.CloseRepositry: CloseToolStripMenuItemClick(null, null); break;
                 case Commands.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
                 case Commands.StashPop: UICommands.StashPop(this); break;
-                case Commands.DeleteSelectedFiles: return DeleteSelectedFiles();
+                case Commands.DeleteSelectedFiles: return DeleteSelectedDiffFiles();
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -3105,14 +3105,62 @@ namespace GitUI.CommandsDialogs
             return null;
         }
 
-        private bool DeleteSelectedFiles()
+        private bool DeleteSelectedDiffFiles()
         {
             if (DiffFiles.Focused)
             {
-                diffDeleteFileToolStripMenuItemClick(this, null);
-                return true;
+                return DeleteSelectedFiles();
             }
             return false;
+        }
+
+        private bool DeleteSelectedFiles()
+        {
+            try
+            {
+                if (DiffFiles.SelectedItem == null || !DiffFiles.Revision.IsArtificial() ||
+                    MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
+                    DialogResult.Yes)
+                {
+                    return false;
+                }
+
+                var selectedItems = DiffFiles.SelectedItems;
+                if (DiffFiles.Revision.Guid == GitRevision.IndexGuid)
+                {
+                    /// <summary>
+                    var files = new List<GitItemStatus>();
+                    var stagedItems = selectedItems.Where(item => item.IsStaged);
+                    foreach (var item in stagedItems)
+                    {
+                        if (!item.IsNew)
+                        {
+                            Module.UnstageFileToRemove(item.Name);
+
+                            if (item.IsRenamed)
+                                Module.UnstageFileToRemove(item.OldName);
+                        }
+                        else
+                        {
+                            files.Add(item);
+                        }
+                    }
+                    Module.UnstageFiles(files);
+                }
+                DiffFiles.StoreNextIndexToSelect();
+                var items = DiffFiles.SelectedItems.Where(item => !item.IsSubmodule);
+                foreach (var item in items)
+                {
+                    File.Delete(Path.Combine(Module.WorkingDir, item.Name));
+                }
+                RefreshRevisions();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message);
+                return false;
+            }
+            return true;
         }
 
         private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3144,49 +3192,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffDeleteFileToolStripMenuItemClick(object sender, EventArgs e)
         {
-            try
-            {
-                if (DiffFiles.SelectedItem == null || !DiffFiles.Revision.IsArtificial() ||
-                    MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
-                    DialogResult.Yes)
-                {
-                    return;
-                }
-
-                var selectedItems = DiffFiles.SelectedItems;
-                if (DiffFiles.Revision.Guid == GitRevision.IndexGuid)
-                {
-        /// <summary>
-                    var files = new List<GitItemStatus>();
-                    var stagedItems = selectedItems.Where(item => item.IsStaged);
-                    foreach (var item in stagedItems)
-                    {
-                        if (!item.IsNew)
-                        {
-                            Module.UnstageFileToRemove(item.Name);
-
-                            if (item.IsRenamed)
-                                Module.UnstageFileToRemove(item.OldName);
-                        }
-                        else
-                        {
-                            files.Add(item);
-                        }
-                    }
-                    Module.UnstageFiles(files);
-                }
-                DiffFiles.StoreNextIndexToSelect();
-                var items = DiffFiles.SelectedItems.Where(item => !item.IsSubmodule);
-                foreach (var item in items)
-                {
-                    File.Delete(Path.Combine(Module.WorkingDir, item.Name));
-                }
-                RefreshRevisions();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message);
-            }
+            DeleteSelectedFiles();
         }
 
         private void diffEditFileToolStripMenuItem_Click(object sender, EventArgs e)
