@@ -27,40 +27,41 @@ namespace GitCommandsTests
         }
 
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("aaaa")]
+        [TestCase(null, null)]
+        [TestCase("", "")]
+        [TestCase("aaaa", "")]
         [Platform(Include = "Mono")]
-        public void Get_should_always_return_null_under_mono(string fullPath)
+        public void Get_should_always_return_null_under_mono(string workingDirectory, string relativeFilePath)
         {
-            _iconProvider.Get(fullPath).Should().BeNull();
+            _iconProvider.Get(workingDirectory, relativeFilePath).Should().BeNull();
         }
 
-        [TestCase(null)]
-        [TestCase("")]
+        [TestCase(null, null)]
+        [TestCase("", "")]
         [Platform(Exclude = "Mono")]
-        public void Get_should_return_null_if_path_null_or_empty(string fullPath)
+        public void Get_should_return_null_if_path_null_or_empty(string workingDirectory, string relativeFilePath)
         {
-            _iconProvider.Get(fullPath).Should().BeNull();
+            _iconProvider.Get(workingDirectory, relativeFilePath).Should().BeNull();
         }
 
         [Test]
         [Platform(Exclude = "Mono")]
         public void Get_should_return_null_for_extensionless_file()
         {
-            _iconProvider.Get(@"c:\file").Should().BeNull();
+            _iconProvider.Get(@"c:\folder", "file").Should().BeNull();
         }
 
         [Test]
         [Platform(Exclude = "Mono")]
         public void Get_if_file_does_not_exist_create_temp()
         {
-            const string file = @"c:\file.txt";
+            const string folder = @"c:\non_existent_folder";
+            const string file = @"file.txt";
             _file.Exists(file).Returns(false);
 
-            _iconProvider.Get(file).Should().BeNull();
+            _iconProvider.Get(folder, file).Should().BeNull();
 
-            var tempPath = Path.Combine(Path.GetTempPath(), "file.txt");
+            var tempPath = Path.Combine(Path.GetTempPath(), file);
             _file.Received(1).WriteAllText(tempPath, string.Empty);
         }
 
@@ -68,6 +69,8 @@ namespace GitCommandsTests
         [Platform(Exclude = "Mono")]
         public void Get_if_temp_file_cant_be_delete_ignore()
         {
+            const string folder = @"c:\non_existent_folder";
+            const string file = @"file.txt";
             _file.Exists(Arg.Any<string>()).Returns(false);
             _file.When(x => x.Delete(Arg.Any<string>()))
                 .Do(x =>
@@ -75,9 +78,9 @@ namespace GitCommandsTests
                     throw new DivideByZeroException("boom");
                 });
 
-            _iconProvider.Get(@"c:\file.txt").Should().BeNull();
+            _iconProvider.Get(folder, file).Should().BeNull();
 
-            var tempPath = Path.Combine(Path.GetTempPath(), "file.txt");
+            var tempPath = Path.Combine(Path.GetTempPath(), file);
             _file.Received(1).WriteAllText(tempPath, string.Empty);
         }
 
@@ -89,12 +92,14 @@ namespace GitCommandsTests
             _iconProvider.ResetCache();
 
             var tempFile = Path.GetTempFileName();
+            string folder = Path.GetDirectoryName(tempFile);
+            string file = Path.GetFileName(tempFile);
 
             _iconProvider.CacheCount.Should().Be(0);
-            _iconProvider.Get(tempFile);
-            _iconProvider.Get(tempFile);
-            _iconProvider.Get(tempFile);
-            _iconProvider.Get(tempFile);
+            _iconProvider.Get(folder, file);
+            _iconProvider.Get(folder, file);
+            _iconProvider.Get(folder, file);
+            _iconProvider.Get(folder, file);
             _iconProvider.CacheCount.Should().Be(1);
 
             try

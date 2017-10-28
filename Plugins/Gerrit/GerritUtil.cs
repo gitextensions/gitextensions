@@ -12,6 +12,8 @@ namespace Gerrit
 {
     internal static class GerritUtil
     {
+        private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
+
         public static string RunGerritCommand([NotNull] IWin32Window owner, [NotNull] IGitModule aModule, [NotNull] string command, [NotNull] string remote, byte[] stdIn)
         {
             var fetchUrl = GetFetchUrl(aModule, remote);
@@ -43,7 +45,7 @@ namespace Gerrit
 
             StartAgent(owner, aModule, remote);
 
-            var sshCmd = GitCommandHelpers.GetSsh();
+            var sshCmd = SshPathLocatorInstance.Find(AppSettings.GitBinDir);
             if (GitCommandHelpers.Plink())
             {
                 sshCmd = AppSettings.Plink;
