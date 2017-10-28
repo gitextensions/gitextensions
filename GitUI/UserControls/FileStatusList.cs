@@ -858,7 +858,7 @@ namespace GitUI
                 if (sortedFirstGroupItem != null)
                     sortedFirstGroupItem.Selected = true;
             }
-            else if (FileStatusListView.Items.Count > 0)
+            else
                 FileStatusListView.Items[0].Selected = true;
         }
 
