@@ -280,19 +280,27 @@ namespace GitUI.CommandsDialogs
             if (selectedRevisions.Count > 1)
                 artificialRevSelected = artificialRevSelected || selectedRevisions[selectedRevisions.Count - 1].IsArtificial();
 
+            //Many options have no meaning for artificial commits or submodules
+            //Hide the obviously no action options when single selected, handle them in actions if multi select
+
             // disable items that need exactly one selected item
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
             var isCombinedDiff = isExactlyOneItemSelected &&
                 DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
             var isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
-            var enabled = isExactlyOneItemSelected && !isCombinedDiff;
+
             openWithDifftoolToolStripMenuItem.Enabled = !isAnyCombinedDiff;
-            saveAsToolStripMenuItem1.Enabled = enabled;
-            cherryPickSelectedDiffFileToolStripMenuItem.Enabled = enabled;
-            diffShowInFileTreeToolStripMenuItem.Enabled = isExactlyOneItemSelected;
-            fileHistoryDiffToolstripMenuItem.Enabled = isExactlyOneItemSelected;
-            blameToolStripMenuItem.Enabled = isExactlyOneItemSelected;
-            resetFileToToolStripMenuItem.Enabled = !isCombinedDiff;
+            saveAsToolStripMenuItem1.Visible = !isCombinedDiff && isExactlyOneItemSelected && !DiffFiles.SelectedItem.IsSubmodule;
+            cherryPickSelectedDiffFileToolStripMenuItem.Visible = !isCombinedDiff && isExactlyOneItemSelected &&
+                !(DiffFiles.SelectedItem.IsSubmodule || selectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
+                (DiffFiles.SelectedItem.IsNew || DiffFiles.SelectedItem.IsDeleted) && selectedRevisions[0].Guid == GitRevision.IndexGuid);
+            //Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
+            diffShowInFileTreeToolStripMenuItem.Visible = isExactlyOneItemSelected && !selectedRevisions[0].IsArtificial(); 
+            fileHistoryDiffToolstripMenuItem.Enabled = isExactlyOneItemSelected && !(DiffFiles.SelectedItem.IsNew && selectedRevisions[0].IsArtificial());
+            blameToolStripMenuItem.Enabled = isExactlyOneItemSelected && !(DiffFiles.SelectedItem.IsSubmodule || selectedRevisions[0].IsArtificial());
+            resetFileToToolStripMenuItem.Enabled = !isCombinedDiff &&
+                !(isExactlyOneItemSelected &&
+                (DiffFiles.SelectedItem.IsSubmodule || DiffFiles.SelectedItem.IsNew) && selectedRevisions[0].Guid == GitRevision.UnstagedGuid);
 
             this.diffCommitSubmoduleChanges.Visible =
                 this.diffResetSubmoduleChanges.Visible =
