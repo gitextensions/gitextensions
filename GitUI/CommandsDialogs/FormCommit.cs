@@ -142,6 +142,7 @@ namespace GitUI.CommandsDialogs
         private string _userEmail = "";
         private string _commentChar = "#";
         private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
+        private FormattedCommitMessage _formattedCommitMessage;
 
         /// <summary>
         /// For VS designer
@@ -194,6 +195,7 @@ namespace GitUI.CommandsDialogs
             Unstaged.FilterVisible = true;
             Staged.SetNoFilesText(_noStagedChanges.Text);
 
+            _formattedCommitMessage = new FormattedCommitMessage(_commentChar);
             ConfigureMessageBox();
 
             _commitKind = commitKind;
@@ -2161,7 +2163,7 @@ namespace GitUI.CommandsDialogs
             if (!Message.IsUndoInProgress)
             {
                 // always format from 0 to handle pasted text
-                FormatAllText(0);
+                FormatAllText();
             }
         }
 
@@ -2170,144 +2172,19 @@ namespace GitUI.CommandsDialogs
             Message_TextChanged(sender, e);
         }
 
-        private bool FormatLine(int line)
+        private void FormatAllText()
         {
-            int limit1 = AppSettings.CommitValidationMaxCntCharsFirstLine;
-            int limitX = AppSettings.CommitValidationMaxCntCharsPerLine;
-            bool empty2 = AppSettings.CommitValidationSecondLineMustBeEmpty;
-
-            var lines = Message.GetLines();
-            if (lines[line].StartsWith(_commentChar))
-                return false;
-
-            bool textHasChanged = false;
-
-            int actualLine = 0;  // only 0, 1, 2 = "more"
-            for (int i = 0; i <= line && actualLine < 2; i++)
+            // CurrentLine and CurrentColumn are 1-based for display purposes
+            var messageUpdate = _formattedCommitMessage.UpdateLines(Message.GetLines(), Message.CurrentLine - 1, Message.CurrentColumn - 1);
+            if (messageUpdate.NeedFullUpdate)
             {
-                if (lines[i].StartsWith(_commentChar))
-                    continue;
-                actualLine++;
+                Message.SetLines(_formattedCommitMessage.FormattedLines.ToArray(), messageUpdate.CursorLine, messageUpdate.CursorColumn);
+                foreach (var coloredLine in _formattedCommitMessage.ColoredLines)
+                    Message.ChangeTextColor(coloredLine.LineNumber, coloredLine.From, coloredLine.Length, Color.Red);
+                return;
             }
-            if (limit1 > 0 && actualLine == 0)
-            {
-                ColorTextAsNecessary(line, limit1, false);
-            }
-
-            if (empty2 && actualLine == 1)
-            {
-                // Ensure next line. Optionally add a bullet.
-                Message.EnsureEmptyLine(AppSettings.CommitValidationIndentAfterFirstLine, 1);
-                Message.ChangeTextColor(2, 0, Message.GetLines()[2].Length, Color.Black);
-                if (FormatLine(2))
-                {
-                    textHasChanged = true;
-                }
-            }
-
-            if (limitX > 0 && line >= (empty2 ? 2 : 1))
-            {
-                if (AppSettings.CommitValidationAutoWrap)
-                {
-                    if (WrapIfNecessary(line, limitX))
-                    {
-                        textHasChanged = true;
-                    }
-                }
-                ColorTextAsNecessary(line, limitX, textHasChanged);
-            }
-
-            return textHasChanged;
-        }
-
-        private bool WrapIfNecessary(int line, int lineLimit)
-        {
-            var lines = Message.GetLines();
-            if (lines[line].Length > lineLimit)
-            {
-                var oldText = lines[line];
-                var newText = WordWrapper.WrapSingleLine(oldText, lineLimit);
-                if (!String.Equals(oldText, newText))
-                {
-                    Message.ReplaceLine(line, newText);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private void ColorTextAsNecessary(int line, int lineLimit, bool fullRefresh)
-        {
-            var lines = Message.GetLines();
-            var lineLength = lines[line].Length;
-            int offset = 0;
-            bool textAppended = false;
-            if (!fullRefresh && formattedLines.Count > line)
-            {
-                offset = formattedLines[line].CommonPrefix(lines[line]).Length;
-                textAppended = offset > 0 && offset == formattedLines[line].Length;
-            }
-
-            int len = Math.Min(lineLimit, lineLength) - offset;
-
-            if (!textAppended && len > 0)
-                Message.ChangeTextColor(line, offset, len, Color.Black);
-
-            if (lineLength > lineLimit)
-            {
-                if (offset <= lineLimit || !textAppended)
-                {
-                    offset = Math.Max(offset, lineLimit);
-                    len = lineLength - offset;
-                    if (len > 0)
-                        Message.ChangeTextColor(line, offset, len, Color.Red);
-                }
-            }
-        }
-
-        private List<string> formattedLines = new List<string>();
-
-        private bool DidFormattedLineChange(int lineNumber)
-        {
-            //line not formated yet
-            if (formattedLines.Count <= lineNumber)
-                return true;
-
-            return !formattedLines[lineNumber].Equals(Message.GetLines()[lineNumber], StringComparison.OrdinalIgnoreCase);
-        }
-
-        private void TrimFormattedLines(int lineCount)
-        {
-            if (formattedLines.Count > lineCount)
-                formattedLines.RemoveRange(lineCount, formattedLines.Count - lineCount);
-        }
-
-        private void SetFormattedLine(int lineNumber)
-        {
-            //line not formated yet
-            if (lineNumber >= formattedLines.Count)
-            {
-                Debug.Assert(formattedLines.Count == lineNumber, formattedLines.Count + ":" + lineNumber);
-                formattedLines.Add(Message.GetLines()[lineNumber]);
-            }
-            else
-                formattedLines[lineNumber] = Message.GetLines()[lineNumber];
-        }
-
-        private void FormatAllText(int startLine)
-        {
-            var lineCount = Message.GetLines().Length;
-            TrimFormattedLines(lineCount);
-            for (int line = startLine; line < lineCount; line++)
-            {
-                if (DidFormattedLineChange(line))
-                {
-                    bool lineChanged = FormatLine(line);
-                    SetFormattedLine(line);
-                    if (lineChanged)
-                        FormatAllText(line);
-                }
-            }
+            foreach (var coloredLine in messageUpdate.NewColoredLines)
+                Message.ChangeTextColor(coloredLine.LineNumber, coloredLine.From, coloredLine.Length, Color.Red);
         }
 
         private void Message_SelectionChanged(object sender, EventArgs e)
