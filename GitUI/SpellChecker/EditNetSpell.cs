@@ -70,7 +70,6 @@ namespace GitUI.SpellChecker
             _wordAtCursorExtractor = new WordAtCursorExtractor();
         }
 
-
         public override string Text
         {
             get
@@ -97,9 +96,14 @@ namespace GitUI.SpellChecker
             }
         }
 
-        public string Line(int line)
+        /// <summary>
+        /// Get a copy of the lines.
+        /// Contrary to MS recommandation, TextBoxBase.Lines is rather expensive,
+        /// so it is exposed here as a method which conveys a bit more this.
+        /// </summary>
+        public string[] GetLines()
         {
-            return TextBox.Lines[line];
+            return TextBox.Lines;
         }
 
         public void ReplaceLine(int line, string withText)
@@ -111,20 +115,10 @@ namespace GitUI.SpellChecker
             var startIdx = TextBox.GetFirstCharIndexFromLine(line);
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = startIdx;
-            TextBox.SelectionLength = Line(line).Length;
+            TextBox.SelectionLength = GetLines()[line].Length;
             TextBox.SelectedText = withText;
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = oldPos;
-        }
-
-        public int LineLength(int line)
-        {
-            return LineCount() <= line ? 0 : TextBox.Lines[line].Length;
-        }
-
-        public int LineCount()
-        {
-            return TextBox.Lines.Length;
         }
 
         [Browsable(false)]
@@ -790,7 +784,7 @@ namespace GitUI.SpellChecker
         /// </summary>
         public void EnsureEmptyLine(bool addBullet, int afterLine)
         {
-            var lineLength = LineLength(afterLine);
+            var lineLength = GetLines()[afterLine].Length;
             if (lineLength > 0)
             {
                 var bullet = addBullet ? " - " : String.Empty;

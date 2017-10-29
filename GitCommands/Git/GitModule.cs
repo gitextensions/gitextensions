@@ -1921,7 +1921,7 @@ namespace GitCommands
 
             if (todoCommits != null)
             {
-                string commentChar = EffectiveConfigFile.GetString("core.commentChar", "#");
+                string commentChar = EffectiveConfigFile.GetString(SettingKeyString.CommentChar, "#");
 
                 foreach (string todoCommit in todoCommits)
                 {

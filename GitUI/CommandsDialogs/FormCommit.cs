@@ -140,6 +140,7 @@ namespace GitUI.CommandsDialogs
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
         private string _userName = "";
         private string _userEmail = "";
+        private string _commentChar = "#";
         private SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
 
         /// <summary>
@@ -171,6 +172,7 @@ namespace GitUI.CommandsDialogs
             {
                 Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(Module));
                 _commitTemplateManager = new CommitTemplateManager(Module);
+                _commentChar = Module.EffectiveConfigFile.GetString(SettingKeyString.CommentChar, "#");
             }
 
             Loading.Image = Properties.Resources.loadingpanel;
@@ -2050,10 +2052,8 @@ namespace GitUI.CommandsDialogs
         {
             _userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
             _userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
-
-
-
         }
+
         private bool SenderToFileStatusList(object sender, out FileStatusList list)
         {
             list = null;
@@ -2176,18 +2176,29 @@ namespace GitUI.CommandsDialogs
             int limitX = AppSettings.CommitValidationMaxCntCharsPerLine;
             bool empty2 = AppSettings.CommitValidationSecondLineMustBeEmpty;
 
+            var lines = Message.GetLines();
+            if (lines[line].StartsWith(_commentChar))
+                return false;
+
             bool textHasChanged = false;
 
-            if (limit1 > 0 && line == 0)
+            int actualLine = 0;  // only 0, 1, 2 = "more"
+            for (int i = 0; i <= line && actualLine < 2; i++)
+            {
+                if (lines[i].StartsWith(_commentChar))
+                    continue;
+                actualLine++;
+            }
+            if (limit1 > 0 && actualLine == 0)
             {
                 ColorTextAsNecessary(line, limit1, false);
             }
 
-            if (empty2 && line == 1)
+            if (empty2 && actualLine == 1)
             {
                 // Ensure next line. Optionally add a bullet.
                 Message.EnsureEmptyLine(AppSettings.CommitValidationIndentAfterFirstLine, 1);
-                Message.ChangeTextColor(2, 0, Message.LineLength(2), Color.Black);
+                Message.ChangeTextColor(2, 0, Message.GetLines()[2].Length, Color.Black);
                 if (FormatLine(2))
                 {
                     textHasChanged = true;
@@ -2211,9 +2222,10 @@ namespace GitUI.CommandsDialogs
 
         private bool WrapIfNecessary(int line, int lineLimit)
         {
-            if (Message.LineLength(line) > lineLimit)
+            var lines = Message.GetLines();
+            if (lines[line].Length > lineLimit)
             {
-                var oldText = Message.Line(line);
+                var oldText = lines[line];
                 var newText = WordWrapper.WrapSingleLine(oldText, lineLimit);
                 if (!String.Equals(oldText, newText))
                 {
@@ -2226,18 +2238,19 @@ namespace GitUI.CommandsDialogs
 
         private void ColorTextAsNecessary(int line, int lineLimit, bool fullRefresh)
         {
-            var lineLength = Message.LineLength(line);
+            var lines = Message.GetLines();
+            var lineLength = lines[line].Length;
             int offset = 0;
             bool textAppended = false;
             if (!fullRefresh && formattedLines.Count > line)
             {
-                offset = formattedLines[line].CommonPrefix(Message.Line(line)).Length;
+                offset = formattedLines[line].CommonPrefix(lines[line]).Length;
                 textAppended = offset > 0 && offset == formattedLines[line].Length;
             }
 
             int len = Math.Min(lineLimit, lineLength) - offset;
 
-            if (!textAppended && 0 < len)
+            if (!textAppended && len > 0)
                 Message.ChangeTextColor(line, offset, len, Color.Black);
 
             if (lineLength > lineLimit)
@@ -2260,7 +2273,7 @@ namespace GitUI.CommandsDialogs
             if (formattedLines.Count <= lineNumber)
                 return true;
 
-            return !formattedLines[lineNumber].Equals(Message.Line(lineNumber), StringComparison.OrdinalIgnoreCase);
+            return !formattedLines[lineNumber].Equals(Message.GetLines()[lineNumber], StringComparison.OrdinalIgnoreCase);
         }
 
         private void TrimFormattedLines(int lineCount)
@@ -2272,18 +2285,18 @@ namespace GitUI.CommandsDialogs
         private void SetFormattedLine(int lineNumber)
         {
             //line not formated yet
-            if (formattedLines.Count <= lineNumber)
+            if (lineNumber >= formattedLines.Count)
             {
                 Debug.Assert(formattedLines.Count == lineNumber, formattedLines.Count + ":" + lineNumber);
-                formattedLines.Add(Message.Line(lineNumber));
+                formattedLines.Add(Message.GetLines()[lineNumber]);
             }
             else
-                formattedLines[lineNumber] = Message.Line(lineNumber);
+                formattedLines[lineNumber] = Message.GetLines()[lineNumber];
         }
 
         private void FormatAllText(int startLine)
         {
-            var lineCount = Message.LineCount();
+            var lineCount = Message.GetLines().Length;
             TrimFormattedLines(lineCount);
             for (int line = startLine; line < lineCount; line++)
             {
