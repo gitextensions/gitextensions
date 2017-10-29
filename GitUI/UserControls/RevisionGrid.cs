@@ -3262,8 +3262,8 @@ namespace GitUI
             {
                 if (_parentChildNavigationHistory.HasPreviousParent)
                     _parentChildNavigationHistory.NavigateToPreviousParent(r.Guid);
-                else if (r.HasParent())
-                    _parentChildNavigationHistory.NavigateToParent(r.Guid, r.ParentGuids[0]);
+                else if (r.HasParent)
+                    _parentChildNavigationHistory.NavigateToParent(r.Guid, r.GetParentGuid);
             }
         }
 
@@ -3421,7 +3421,7 @@ namespace GitUI
             if (LatestSelectedRevision == null)
                 return;
 
-            String rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.ParentGuids[0],
+            String rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.GetParentGuid,
                 interactive: true, preserveMerges: false, autosquash: false, autostash: true);
 
             using (var formProcess = new FormProcess(null, rebaseCmd, Module.WorkingDir, null, true))

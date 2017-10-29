@@ -118,9 +118,20 @@ namespace GitCommands
                     guid == IndexGuid;
         }
 
-        public bool HasParent()
+        public bool HasParent
         {
-            return ParentGuids != null && ParentGuids.Length > 0;
+            get
+            {
+                return ParentGuids != null && ParentGuids.Length > 0;
+            }
+        }
+
+        public string GetParentGuid
+        {
+            get
+            {
+                return HasParent ? ParentGuids[0] : Guid + "^";
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

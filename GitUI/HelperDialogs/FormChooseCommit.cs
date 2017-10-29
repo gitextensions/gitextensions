@@ -88,7 +88,7 @@ namespace GitUI.HelperDialogs
             }
             SelectedRevision = revisions[0];
 
-            flowLayoutPanelParents.Visible = SelectedRevision.ParentGuids.Length != 0;
+            flowLayoutPanelParents.Visible = SelectedRevision.HasParent;
 
             if(!flowLayoutPanelParents.Visible)
                 return;
