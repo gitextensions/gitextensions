@@ -1025,7 +1025,7 @@ namespace GitUI
 
             if (revision == null)
                 GitItemStatuses = null;
-            else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
+            else if (!revision.HasParent)
                 GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
             else
             {
