@@ -80,7 +80,7 @@ namespace GitUI
                 {
                     GitRevision revision = revisions[0];
                     if (diffKind == DiffWithRevisionKind.DiffALocal)
-                        revisionToCmp = parentGuid ?? revision.GetParentGuid;
+                        revisionToCmp = parentGuid ?? revision.FirstParentGuid;
                     else if (diffKind == DiffWithRevisionKind.DiffBLocal)
                         revisionToCmp = revision.Guid;
                     else
@@ -97,10 +97,10 @@ namespace GitUI
                             revisionToCmp = revisions[0].Guid;
                             break;
                         case DiffWithRevisionKind.DiffAParentLocal:
-                            revisionToCmp = revisions[1].GetParentGuid;
+                            revisionToCmp = revisions[1].FirstParentGuid;
                             break;
                         case DiffWithRevisionKind.DiffBParentLocal:
-                            revisionToCmp = revisions[0].GetParentGuid;
+                            revisionToCmp = revisions[0].FirstParentGuid;
                             break;
                         default:
                             revisionToCmp = null;
@@ -196,7 +196,7 @@ namespace GitUI
             string firstRevisionGuid = firstRevision == null ? null : firstRevision.Guid;
             string parentRevisionGuid = revisions.Count == 2 ? revisions[1].Guid : null;
             if (parentRevisionGuid == null && firstRevision != null)
-                parentRevisionGuid = firstRevision.GetParentGuid;
+                parentRevisionGuid = firstRevision.FirstParentGuid;
             ViewChanges(diffViewer, firstRevisionGuid, parentRevisionGuid, file, defaultText);
         }
 

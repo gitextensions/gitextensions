@@ -126,7 +126,7 @@ namespace GitCommands
             }
         }
 
-        public string GetParentGuid
+        public string FirstParentGuid
         {
             get
             {

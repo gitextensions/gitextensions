@@ -502,7 +502,7 @@ namespace GitUI.CommandsDialogs
                 throw new ApplicationException("This menu should be disabled for revisions that don't have a parent.");
             }
 
-            ResetSelectedItemsTo(revisions[0].GetParentGuid, false);
+            ResetSelectedItemsTo(revisions[0].FirstParentGuid, false);
         }
 
         private void resetFileToSecondToolStripMenuItem_Click(object sender, EventArgs e)
@@ -544,7 +544,7 @@ namespace GitUI.CommandsDialogs
                 {
                     resetFileToParentToolStripMenuItem.Visible = true;
                     TranslateItem(resetFileToParentToolStripMenuItem.Name, resetFileToParentToolStripMenuItem);
-                    GitRevision parentRev = _revisionGrid.GetRevision(revisions[0].GetParentGuid);
+                    GitRevision parentRev = _revisionGrid.GetRevision(revisions[0].FirstParentGuid);
                     if (parentRev != null)
                     {
                         resetFileToParentToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(parentRev).ShortenTo(50) + ")";
