@@ -102,6 +102,11 @@ namespace GitUI.CommandsDialogs
             tabControl1.SelectedTab = BlameTab;
         }
 
+        public void SelectDiffTab()
+        {
+            tabControl1.SelectedTab = DiffTab;
+        }
+
         private void LoadFileHistory()
         {
             FileChanges.Visible = true;
