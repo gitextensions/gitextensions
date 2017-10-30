@@ -110,8 +110,7 @@ namespace TranslationApp
                         dict.Add(source, curItem.TranslatedValue);
 
                     // Source text changed
-                    if (!curItem.IsSourceEqual(item.NeutralValue) &&
-                        (!String.IsNullOrEmpty(curItem.TranslatedValue) && !curItem.IsSourceEqual(item.NeutralValue)))
+                    if (!String.IsNullOrEmpty(curItem.TranslatedValue) && !curItem.IsSourceEqual(item.NeutralValue))
                     {
                         curItem.TranslatedValue = "";
                     }
