@@ -135,7 +135,6 @@
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" />
-    <Compile Include="CommandsDialogs\RevisionDiffController.cs" />
     <Compile Include="CommandsDialogs\RevisionDiff.cs">
       <SubType>UserControl</SubType>
     </Compile>

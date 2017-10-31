@@ -1519,7 +1519,7 @@ namespace GitUI
         {
             Func<Form> provideForm = () =>
                 {
-                    var form = new FormFileHistory(this, fileName, revision, filterByRevision && revision!=null);
+                    var form = new FormFileHistory(this, fileName, revision, filterByRevision);
 
                     if (showBlame)
                         form.SelectBlameTab();
