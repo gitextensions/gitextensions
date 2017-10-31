@@ -29,6 +29,7 @@ namespace GitUI.CommandsDialogs
         private RevisionFileTree _revisionFileTree;
         private string _oldRevision;
         private GitItemStatus _oldDiffItem;
+        private IRevisionDiffController _revisionDiffController;
 
 
         public RevisionDiff()
@@ -42,6 +43,10 @@ namespace GitUI.CommandsDialogs
             DiffText.Font = AppSettings.DiffFont;
 
             GotFocus += (s, e) => DiffFiles.Focus();
+            Load += (s, e) =>
+            {
+                _revisionDiffController = new RevisionDiffController(Module);
+            };
         }
 
         public void ForceRefreshRevisions()
@@ -273,62 +278,43 @@ namespace GitUI.CommandsDialogs
 
         private void DiffContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            bool artificialRevSelected;
-
             IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
-
-            if (selectedRevisions.Count == 0)
-                artificialRevSelected = false;
-            else
-                artificialRevSelected = selectedRevisions[0].IsArtificial();
-            if (selectedRevisions.Count > 1)
-                artificialRevSelected = artificialRevSelected || selectedRevisions[selectedRevisions.Count - 1].IsArtificial();
 
             //Many options have no meaning for artificial commits or submodules
             //Hide the obviously no action options when single selected, handle them in actions if multi select
 
             // disable items that need exactly one selected item
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            var isCombinedDiff = isExactlyOneItemSelected &&
-                DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
+            var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
             var isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
+            var selectedItemStatus = DiffFiles.SelectedItem;
 
             openWithDifftoolToolStripMenuItem.Enabled = !isAnyCombinedDiff;
-            saveAsToolStripMenuItem1.Visible = !isCombinedDiff && isExactlyOneItemSelected && !DiffFiles.SelectedItem.IsSubmodule;
+            saveAsToolStripMenuItem1.Visible = _revisionDiffController.ShouldShowMenuSaveAs(selectedItemStatus, isExactlyOneItemSelected, isCombinedDiff);
 
-            stageFileToolStripMenuItem.Visible =
-                selectedRevisions.Count() >= 1 && selectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
-                selectedRevisions.Count() >= 2 && selectedRevisions[1].Guid == GitRevision.UnstagedGuid;
-            unstageFileToolStripMenuItem.Visible =
-                selectedRevisions.Count() >= 1 && selectedRevisions[0].Guid == GitRevision.IndexGuid ||
-                selectedRevisions.Count() >= 2 && selectedRevisions[1].Guid == GitRevision.IndexGuid;
+            stageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuStage(selectedRevisions);
+            unstageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuUnstage(selectedRevisions);
 
-            cherryPickSelectedDiffFileToolStripMenuItem.Visible = !isCombinedDiff && isExactlyOneItemSelected &&
-                !(DiffFiles.SelectedItem.IsSubmodule || selectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
-                (DiffFiles.SelectedItem.IsNew || DiffFiles.SelectedItem.IsDeleted) && selectedRevisions[0].Guid == GitRevision.IndexGuid);
+            cherryPickSelectedDiffFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuCherryPick(selectedItemStatus, isExactlyOneItemSelected, selectedRevisions[0], isCombinedDiff);
             //Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
-            diffShowInFileTreeToolStripMenuItem.Visible = isExactlyOneItemSelected && !selectedRevisions[0].IsArtificial(); 
-            fileHistoryDiffToolstripMenuItem.Enabled = isExactlyOneItemSelected && !(DiffFiles.SelectedItem.IsNew && selectedRevisions[0].IsArtificial());
-            blameToolStripMenuItem.Enabled = isExactlyOneItemSelected && !(DiffFiles.SelectedItem.IsSubmodule || selectedRevisions[0].IsArtificial());
-            resetFileToToolStripMenuItem.Enabled = !isCombinedDiff &&
-                !(isExactlyOneItemSelected &&
-                (DiffFiles.SelectedItem.IsSubmodule || DiffFiles.SelectedItem.IsNew) && selectedRevisions[0].Guid == GitRevision.UnstagedGuid);
+            diffShowInFileTreeToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFileTree(isExactlyOneItemSelected, selectedRevisions[0]);
+            fileHistoryDiffToolstripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectedItemStatus, isExactlyOneItemSelected, selectedRevisions[0]);
+            blameToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBlame(selectedItemStatus, isExactlyOneItemSelected, selectedRevisions[0]);
+            resetFileToToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuResetFile(selectedItemStatus, isExactlyOneItemSelected, selectedRevisions[0], isCombinedDiff);
 
-            this.diffEditFileToolStripMenuItem.Visible =
-               this.diffDeleteFileToolStripMenuItem.Visible =
-               isExactlyOneItemSelected && !DiffFiles.SelectedItem.IsSubmodule && selectedRevisions[0].IsArtificial();
+            diffEditFileToolStripMenuItem.Visible =
+               diffDeleteFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditFile(isExactlyOneItemSelected, selectedItemStatus, selectedRevisions[0]);
 
-            this.diffCommitSubmoduleChanges.Visible =
-                this.diffResetSubmoduleChanges.Visible =
-                this.diffStashSubmoduleChangesToolStripMenuItem.Visible =
-                this.diffUpdateSubmoduleMenuItem.Visible =
-                this.diffSubmoduleSummaryMenuItem.Visible =
-                isExactlyOneItemSelected && DiffFiles.SelectedItem.IsSubmodule && selectedRevisions[0].Guid == GitRevision.UnstagedGuid;
-            this.diffUpdateSubmoduleMenuItem.Visible = false; //TBD
+            diffCommitSubmoduleChanges.Visible =
+                diffResetSubmoduleChanges.Visible =
+                diffStashSubmoduleChangesToolStripMenuItem.Visible =
+                diffUpdateSubmoduleMenuItem.Visible =
+                diffSubmoduleSummaryMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectedItemStatus, isExactlyOneItemSelected, selectedRevisions[0]);
+            diffUpdateSubmoduleMenuItem.Visible = false; //TBD
 
-            this.diffToolStripSeparator13.Visible = isExactlyOneItemSelected &&
-                (!DiffFiles.SelectedItem.IsSubmodule && selectedRevisions[0].IsArtificial() ||
-                DiffFiles.SelectedItem.IsSubmodule && selectedRevisions[0].Guid == GitRevision.UnstagedGuid);
+            diffToolStripSeparator13.Visible = isExactlyOneItemSelected &&
+                (!selectedItemStatus.IsSubmodule && selectedRevisions[0].IsArtificial() ||
+                selectedItemStatus.IsSubmodule && selectedRevisions[0].Guid == GitRevision.UnstagedGuid);
 
             // openContainingFolderToolStripMenuItem.Enabled or not
             {
@@ -678,16 +664,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-
-        private bool DeleteSelectedDiffFiles()
-        {
-            if (DiffFiles.Focused)
-            {
-                return DeleteSelectedFiles();
-            }
-            return false;
-        }
-
         private bool DeleteSelectedFiles()
         {
             try
@@ -702,7 +678,6 @@ namespace GitUI.CommandsDialogs
                 var selectedItems = DiffFiles.SelectedItems;
                 if (DiffFiles.Revision.Guid == GitRevision.IndexGuid)
                 {
-                    /// <summary>
                     var files = new List<GitItemStatus>();
                     var stagedItems = selectedItems.Where(item => item.IsStaged);
                     foreach (var item in stagedItems)
@@ -737,7 +712,7 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
-        private void diffDeleteFileToolStripMenuItemClick(object sender, EventArgs e)
+        private void diffDeleteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DeleteSelectedFiles();
         }
@@ -751,7 +726,6 @@ namespace GitUI.CommandsDialogs
             //TBD RefreshRevisions();
         }
 
-        /// <summary>
         private void diffCommitSubmoduleChanges_Click(object sender, EventArgs e)
         {
             GitUICommands submodulCommands = new GitUICommands(Module.WorkingDir + DiffFiles.SelectedItem.Name.EnsureTrailingPathSeparator());
@@ -791,8 +765,8 @@ namespace GitUI.CommandsDialogs
                             else
                                 Directory.Delete(path, true);
                         }
-                        catch (System.IO.IOException) { }
-                        catch (System.UnauthorizedAccessException) { }
+                        catch (IOException) { }
+                        catch (UnauthorizedAccessException) { }
                     }
                 }
             }
