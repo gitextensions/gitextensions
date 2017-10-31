@@ -724,8 +724,7 @@ namespace GitCommands
         public void EditNotes(string revision)
         {
             string editor = GetEffectiveSetting("core.editor").ToLower();
-            if (editor.Contains("gitextensions") || editor.Contains("notepad") ||
-                editor.Contains("notepad++"))
+            if (editor.Contains("gitextensions") || editor.Contains("notepad"))
             {
                 RunGitCmd("notes edit " + revision);
             }
