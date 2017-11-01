@@ -159,7 +159,7 @@ namespace GitUI
         {
             get
             {
-                return FileStatusListView.Focused || FilterComboBox.Focused;
+                return FileStatusListView.Focused;
             }
         }
 
@@ -602,8 +602,8 @@ namespace GitUI
 
             if (isSubmoduleSelected)
             {
-                _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ? 
-                    new Font(_openSubmoduleMenuItem.Font,  FontStyle.Bold) : 
+                _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ?
+                    new Font(_openSubmoduleMenuItem.Font,  FontStyle.Bold) :
                     new Font(_openSubmoduleMenuItem.Font, FontStyle.Regular);
             }
         }
