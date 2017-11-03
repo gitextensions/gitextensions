@@ -175,6 +175,18 @@ namespace GitUI.CommandsDialogs
             return DiffText.GetSelectedPatch(firstRevision, secondRevision, file);
         }
 
+        private SelectionInfo GetSelectionInfo()
+        {
+            IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
+
+            bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
+            var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
+            var selectedItemStatus = DiffFiles.SelectedItem;
+
+            var selectionInfo = new SelectionInfo(selectedRevisions, selectedItemStatus, isExactlyOneItemSelected, isCombinedDiff);
+            return selectionInfo;
+        }
+
         private void ResetSelectedItemsTo(string revision, bool actsAsChild)
         {
             var selectedItems = DiffFiles.SelectedItems;
@@ -278,43 +290,39 @@ namespace GitUI.CommandsDialogs
 
         private void DiffContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
+            var isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
+            var selectionInfo = GetSelectionInfo();
 
             //Many options have no meaning for artificial commits or submodules
             //Hide the obviously no action options when single selected, handle them in actions if multi select
 
-            // disable items that need exactly one selected item
-            bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
-            var isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
-            var selectedItemStatus = DiffFiles.SelectedItem;
-
             openWithDifftoolToolStripMenuItem.Enabled = !isAnyCombinedDiff;
-            saveAsToolStripMenuItem1.Visible = _revisionDiffController.ShouldShowMenuSaveAs(selectedItemStatus, isExactlyOneItemSelected, isCombinedDiff);
+            saveAsToolStripMenuItem1.Visible = _revisionDiffController.ShouldShowMenuSaveAs(selectionInfo);
 
-            stageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuStage(selectedRevisions);
-            unstageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuUnstage(selectedRevisions);
+            stageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuStage(selectionInfo.SelectedRevisions);
+            unstageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuUnstage(selectionInfo.SelectedRevisions);
 
-            cherryPickSelectedDiffFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuCherryPick(selectedItemStatus, isExactlyOneItemSelected, selectedRevisions[0], isCombinedDiff);
+            cherryPickSelectedDiffFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuCherryPick(selectionInfo);
             //Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
-            diffShowInFileTreeToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFileTree(isExactlyOneItemSelected, selectedRevisions[0]);
-            fileHistoryDiffToolstripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectedItemStatus, isExactlyOneItemSelected, selectedRevisions[0]);
-            blameToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBlame(selectedItemStatus, isExactlyOneItemSelected, selectedRevisions[0]);
-            resetFileToToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuResetFile(selectedItemStatus, isExactlyOneItemSelected, selectedRevisions[0], isCombinedDiff);
+            diffShowInFileTreeToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+            fileHistoryDiffToolstripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
+            blameToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBlame(selectionInfo);
+            resetFileToToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuResetFile(selectionInfo);
 
             diffEditFileToolStripMenuItem.Visible =
-               diffDeleteFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditFile(isExactlyOneItemSelected, selectedItemStatus, selectedRevisions[0]);
+               diffDeleteFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditFile(selectionInfo);
 
             diffCommitSubmoduleChanges.Visible =
                 diffResetSubmoduleChanges.Visible =
                 diffStashSubmoduleChangesToolStripMenuItem.Visible =
                 diffUpdateSubmoduleMenuItem.Visible =
-                diffSubmoduleSummaryMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectedItemStatus, isExactlyOneItemSelected, selectedRevisions[0]);
+                diffSubmoduleSummaryMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
             diffUpdateSubmoduleMenuItem.Visible = false; //TBD
 
-            diffToolStripSeparator13.Visible = isExactlyOneItemSelected &&
-                (!selectedItemStatus.IsSubmodule && selectedRevisions[0].IsArtificial() ||
-                selectedItemStatus.IsSubmodule && selectedRevisions[0].Guid == GitRevision.UnstagedGuid);
+            // TODO: provide clarity about this. Can it be derived from one/many above menuItems .Visible or .Enabled properties?
+            diffToolStripSeparator13.Visible = selectionInfo.IsSingleGitItemSelected &&
+                (!selectionInfo.SelectedDiff.IsSubmodule && selectionInfo.SelectedRevisions[0].IsArtificial() ||
+                 selectionInfo.SelectedDiff.IsSubmodule && selectionInfo.SelectedRevisions[0].Guid == GitRevision.UnstagedGuid);
 
             // openContainingFolderToolStripMenuItem.Enabled or not
             {
