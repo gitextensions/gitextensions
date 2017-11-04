@@ -265,7 +265,10 @@ namespace GitUI.CommandsDialogs
             else
             {
                 FileText.ViewText("", "");
-                e.Node.Toggle();
+                if (e.Action == TreeViewAction.ByMouse)
+                {
+                    e.Node.Toggle();
+                }
             }
         }
 
