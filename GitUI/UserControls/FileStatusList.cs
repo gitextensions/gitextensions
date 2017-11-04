@@ -155,7 +155,7 @@ namespace GitUI
             }
         }
 
-        public override bool Focused
+        public bool FileListFocused
         {
             get
             {

@@ -322,7 +322,7 @@ namespace GitUI.CommandsDialogs
 
         private bool AddToGitIgnore()
         {
-            if (Unstaged.Focused)
+            if (Unstaged.FileListFocused)
             {
                 AddFileTogitignoreToolStripMenuItemClick(this, null);
                 return true;
@@ -332,7 +332,7 @@ namespace GitUI.CommandsDialogs
 
         private bool DeleteSelectedFiles()
         {
-            if (Unstaged.Focused)
+            if (Unstaged.FileListFocused)
             {
                 DeleteFileToolStripMenuItemClick(this, null);
                 return true;
@@ -366,7 +366,7 @@ namespace GitUI.CommandsDialogs
 
         private bool ResetSelectedFiles()
         {
-            if (Unstaged.Focused || Staged.Focused)
+            if (Unstaged.FileListFocused || Staged.FileListFocused)
             {
                 ResetSoftClick(this, null);
                 return true;
@@ -382,7 +382,7 @@ namespace GitUI.CommandsDialogs
 
         private bool StageSelectedFile()
         {
-            if (Unstaged.Focused)
+            if (Unstaged.FileListFocused)
             {
                 StageClick(this, null);
                 return true;
@@ -398,7 +398,7 @@ namespace GitUI.CommandsDialogs
 
         private bool UnStageSelectedFile()
         {
-            if (Staged.Focused)
+            if (Staged.FileListFocused)
             {
                 UnstageFilesClick(this, null);
                 return true;
@@ -426,7 +426,7 @@ namespace GitUI.CommandsDialogs
 
         private bool StartFileHistoryDialog()
         {
-            if (Staged.Focused || Unstaged.Focused)
+            if (Staged.FileListFocused || Unstaged.FileListFocused)
             {
                 if (_currentFilesList.SelectedItem != null)
                 {
