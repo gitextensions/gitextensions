@@ -319,10 +319,7 @@ namespace GitUI.CommandsDialogs
                 diffSubmoduleSummaryMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
             diffUpdateSubmoduleMenuItem.Visible = false; //TBD
 
-            // TODO: provide clarity about this. Can it be derived from one/many above menuItems .Visible or .Enabled properties?
-            diffToolStripSeparator13.Visible = selectionInfo.IsSingleGitItemSelected &&
-                (!selectionInfo.SelectedDiff.IsSubmodule && selectionInfo.SelectedRevisions[0].IsArtificial() ||
-                 selectionInfo.SelectedDiff.IsSubmodule && selectionInfo.SelectedRevisions[0].Guid == GitRevision.UnstagedGuid);
+            diffToolStripSeparator13.Visible = _revisionDiffController.ShouldShowMenuEditFile(selectionInfo) || _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
 
             // openContainingFolderToolStripMenuItem.Enabled or not
             {
@@ -340,9 +337,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        //
-        // diff context menu
-        //
         private void blameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GitItemStatus item = DiffFiles.SelectedItem;
