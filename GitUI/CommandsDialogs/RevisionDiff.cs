@@ -175,15 +175,16 @@ namespace GitUI.CommandsDialogs
             return DiffText.GetSelectedPatch(firstRevision, secondRevision, file);
         }
 
-        private SelectionInfo GetSelectionInfo()
+        private ContextMenuSelectionInfo GetSelectionInfo()
         {
             IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
 
+            bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
             var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
             var selectedItemStatus = DiffFiles.SelectedItem;
 
-            var selectionInfo = new SelectionInfo(selectedRevisions, selectedItemStatus, isExactlyOneItemSelected, isCombinedDiff);
+            var selectionInfo = new ContextMenuSelectionInfo(selectedRevisions, selectedItemStatus, isAnyCombinedDiff, isExactlyOneItemSelected, isCombinedDiff);
             return selectionInfo;
         }
 
@@ -290,13 +291,12 @@ namespace GitUI.CommandsDialogs
 
         private void DiffContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            var isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
             var selectionInfo = GetSelectionInfo();
 
             //Many options have no meaning for artificial commits or submodules
             //Hide the obviously no action options when single selected, handle them in actions if multi select
 
-            openWithDifftoolToolStripMenuItem.Enabled = !isAnyCombinedDiff;
+            openWithDifftoolToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowDifftoolMenus(selectionInfo);
             saveAsToolStripMenuItem1.Visible = _revisionDiffController.ShouldShowMenuSaveAs(selectionInfo);
 
             stageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuStage(selectionInfo.SelectedRevisions);
@@ -488,51 +488,65 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void openWithDifftoolToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
-            bool artificialRevSelected = false;
-            bool enableDiffDropDown = true;
-            bool showParentItems = false;
-
-            IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-
-            if (revisions.Count > 0)
+            IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
+            Debug.Assert(selectedRevisions.Count == 1 || selectedRevisions.Count == 2,
+                "Unexpectedly number of revisions for difftool" + selectedRevisions.Count);
+            if (selectedRevisions.Count < 1)
             {
-                artificialRevSelected = revisions[0].IsArtificial();
-
-                if (revisions.Count == 2)
-                {
-                    artificialRevSelected = artificialRevSelected || revisions[revisions.Count - 1].IsArtificial();
-                    showParentItems = true;
-                }
-                else
-                    enableDiffDropDown = revisions.Count == 1;
+                return null;
             }
 
-            aBToolStripMenuItem.Enabled = enableDiffDropDown;
-            bLocalToolStripMenuItem.Enabled = enableDiffDropDown;
-            aLocalToolStripMenuItem.Enabled = enableDiffDropDown;
-            parentOfALocalToolStripMenuItem.Enabled = enableDiffDropDown;
-            parentOfBLocalToolStripMenuItem.Enabled = enableDiffDropDown;
+            bool aIsLocal = false;
+            bool bIsLocal = false;
+            bool showParentItems = selectedRevisions.Count == 2;
 
-            parentOfALocalToolStripMenuItem.Visible = showParentItems;
-            parentOfBLocalToolStripMenuItem.Visible = showParentItems;
+            bool localExists = false;
+            bool bIsNormal = false; //B is not new or deleted (we cannot easily check A)
+            bIsLocal = selectedRevisions[0].Guid == GitRevision.UnstagedGuid;
 
-            if (!enableDiffDropDown)
-                return;
+            if (selectedRevisions.Count == 2)
+            {
+                aIsLocal = selectedRevisions[0].Guid == GitRevision.UnstagedGuid;
+            }
+            //Temporary, until parent is set to HEAD instead of staged
+            else
+            {
+                aIsLocal = bIsLocal;
+                bIsLocal = bIsLocal || selectedRevisions[0].Guid == GitRevision.IndexGuid;
+            }
+
             //enable *<->Local items only when local file exists
+            //no simple way to check if A (or A/B parents) is normal, ignore that some menus should be disabled
             foreach (var item in DiffFiles.SelectedItems)
             {
+                bIsNormal = bIsNormal || !(item.IsNew || item.IsDeleted);
                 string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(Module, item);
-                if (File.Exists(filePath))
+                if (File.Exists(filePath) || Directory.Exists(filePath))
                 {
-                    bLocalToolStripMenuItem.Enabled = !artificialRevSelected;
-                    aLocalToolStripMenuItem.Enabled = !artificialRevSelected;
-                    parentOfALocalToolStripMenuItem.Enabled = !artificialRevSelected;
-                    parentOfBLocalToolStripMenuItem.Enabled = !artificialRevSelected;
-                    return;
+                    localExists = true;
+                    if (localExists && bIsNormal)
+                        break;
                 }
             }
+
+            var selectionInfo = new ContextMenuDiffToolInfo(aIsLocal, bIsLocal, bIsNormal, localExists, showParentItems);
+            return selectionInfo;
+        }
+
+        private void openWithDifftoolToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            ContextMenuDiffToolInfo selectionInfo = GetContextMenuDiffToolInfo();
+
+            aBToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuAB(selectionInfo);
+            aLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuALocal(selectionInfo);
+            bLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBLocal(selectionInfo);
+            parentOfALocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuAParentLocal(selectionInfo);
+            parentOfBLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBParentLocal(selectionInfo);
+            //Nothing preventing to show the parents (as done in FormDiff)
+            parentOfALocalToolStripMenuItem.Visible =
+                parentOfBLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuParents(selectionInfo);
         }
 
         private void resetFileToFirstToolStripMenuItem_Click(object sender, EventArgs e)
