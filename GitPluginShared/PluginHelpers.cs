@@ -23,22 +23,29 @@ namespace GitPluginShared
             {
                 var cmdBars = (CommandBars)application.CommandBars;
                 CommandBar commandBar = cmdBars[commandBarName];
-                var cbcc = commandBar.Controls.Cast<CommandBarButton>().ToArray();
-                foreach (var control in cbcc)
+                var btn = FindCommandBarButton(commandBar, tooltipText.Trim());
+                if (btn != null)
                 {
-                    if (control.TooltipText.Trim().Equals(tooltipText.Trim(), StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        control.Caption = caption;
-                        control.Style = MsoButtonStyle.msoButtonIconAndCaption;
-                    }
+                    btn.Caption = caption;
+                    btn.Style = MsoButtonStyle.msoButtonIconAndCaption;
+                    return true;
                 }
-                return true;
+                return false;
             }
             catch (Exception)
             {
                 //ignore!
                 return false;
             }
+        }
+
+        private static CommandBarButton FindCommandBarButton(CommandBar commandBar, string tooltipText)
+        {
+            return commandBar.Controls
+                .Cast<CommandBarControl>()
+                .Where(control => (control.TooltipText.Trim().Equals(tooltipText)))
+                .Cast<CommandBarButton>()
+                .FirstOrDefault();
         }
 
         public static OutputWindowPane AquireOutputPane(DTE2 app, string name)
