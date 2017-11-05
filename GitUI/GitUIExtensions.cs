@@ -80,7 +80,7 @@ namespace GitUI
                 {
                     GitRevision revision = revisions[0];
                     if (diffKind == DiffWithRevisionKind.DiffALocal)
-                        revisionToCmp = parentGuid ?? (revision.ParentGuids.Length == 0 ? null : revision.ParentGuids[0]);
+                        revisionToCmp = parentGuid ?? revision.FirstParentGuid;
                     else if (diffKind == DiffWithRevisionKind.DiffBLocal)
                         revisionToCmp = revision.Guid;
                     else
@@ -97,10 +97,10 @@ namespace GitUI
                             revisionToCmp = revisions[0].Guid;
                             break;
                         case DiffWithRevisionKind.DiffAParentLocal:
-                            revisionToCmp = revisions[1].ParentGuids.Length == 0 ? null : revisions[1].ParentGuids[0];
+                            revisionToCmp = revisions[1].FirstParentGuid;
                             break;
                         case DiffWithRevisionKind.DiffBParentLocal:
-                            revisionToCmp = revisions[0].ParentGuids.Length == 0 ? null : revisions[0].ParentGuids[0];
+                            revisionToCmp = revisions[0].FirstParentGuid;
                             break;
                         default:
                             revisionToCmp = null;
@@ -200,8 +200,8 @@ namespace GitUI
             var firstRevision = revisions.Count > 0 ? revisions[0] : null;
             string firstRevisionGuid = firstRevision == null ? null : firstRevision.Guid;
             string parentRevisionGuid = revisions.Count == 2 ? revisions[1].Guid : null;
-            if (parentRevisionGuid == null && firstRevision != null && firstRevision.ParentGuids != null && firstRevision.ParentGuids.Length > 0)
-                parentRevisionGuid = firstRevision.ParentGuids[0];
+            if (parentRevisionGuid == null && firstRevision != null)
+                parentRevisionGuid = firstRevision.FirstParentGuid;
             ViewChanges(diffViewer, firstRevisionGuid, parentRevisionGuid, file, defaultText);
         }
 
