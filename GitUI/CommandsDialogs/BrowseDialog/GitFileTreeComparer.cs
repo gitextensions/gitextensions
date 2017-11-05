@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GitCommands;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -23,9 +24,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return -1;
             }
 
-            if ((xGitItem.IsTree || xGitItem.IsCommit) && yGitItem.IsBlob)
+            if ((xGitItem.ObjectType == GitObjectType.Tree || xGitItem.ObjectType == GitObjectType.Commit) && yGitItem.ObjectType == GitObjectType.Blob)
                 return -1;
-            if (xGitItem.IsBlob && (yGitItem.IsTree || yGitItem.IsCommit))
+            if (xGitItem.ObjectType == GitObjectType.Blob && (yGitItem.ObjectType == GitObjectType.Tree || yGitItem.ObjectType == GitObjectType.Commit))
                 return 1;
             return xGitItem.Name.CompareTo(yGitItem.Name);
         }
