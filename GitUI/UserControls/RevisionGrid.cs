@@ -2695,7 +2695,8 @@ namespace GitUI
             {
                 //Add working directory as virtual commit
                 //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
-                string count = AppSettings.UseFastChecks ? "(" + unstaged + ") " : "";
+                //Do not activate if count on Commit button is set, the counters may be inconsistient
+                string count = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar ? "(" + unstaged + ") " : "";
                 var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
                 {
                     Subject = count + Strings.GetCurrentUnstagedChanges(),
@@ -2710,7 +2711,7 @@ namespace GitUI
             if (staged > 0)
             {
                 //Add index as virtual commit
-                string count = AppSettings.UseFastChecks ? "(" + staged + ") " : "";
+                string count = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar ? "(" + staged + ") " : "";
                 var index = new GitRevision(Module, GitRevision.IndexGuid)
                 {
                     Subject = count + Strings.GetCurrentIndex(),
