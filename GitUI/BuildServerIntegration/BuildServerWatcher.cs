@@ -270,7 +270,7 @@ namespace GitUI.BuildServerIntegration
                                 revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
                                 revisions.UpdateCellValue(BuildStatusImageColumnIndex, index.Value);
                             if (BuildStatusMessageColumnIndex != -1 &&
-                                revisions.Rows[index.Value].Cells[BuildStatusImageColumnIndex].Displayed)
+                                revisions.Rows[index.Value].Cells[BuildStatusMessageColumnIndex].Displayed)
                                 revisions.UpdateCellValue(BuildStatusMessageColumnIndex, index.Value);
                         }
                     }

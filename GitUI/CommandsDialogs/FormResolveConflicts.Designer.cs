@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using GitCommands.Git;
+
+namespace GitUI.CommandsDialogs
 {
     partial class FormResolveConflicts
     {
@@ -77,7 +79,6 @@
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.fileNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.modeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.subItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
@@ -89,7 +90,6 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).BeginInit();
             this.tableLayoutPanel4.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
@@ -301,7 +301,7 @@
             // 
             // gitItemBindingSource
             // 
-            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
+            this.gitItemBindingSource.DataSource = typeof(GitItem);
             // 
             // tableLayoutPanel1
             // 
@@ -543,11 +543,6 @@
             this.modeDataGridViewTextBoxColumn.Name = "modeDataGridViewTextBoxColumn";
             this.modeDataGridViewTextBoxColumn.ReadOnly = true;
             // 
-            // subItemsBindingSource
-            // 
-            this.subItemsBindingSource.DataMember = "SubItems";
-            this.subItemsBindingSource.DataSource = this.gitItemBindingSource;
-            // 
             // tableLayoutPanel4
             // 
             this.tableLayoutPanel4.ColumnCount = 2;
@@ -623,7 +618,6 @@
             this.gotoUserManualControl1.Size = new System.Drawing.Size(70, 20);
             this.gotoUserManualControl1.TabIndex = 2;
             // 
-            // 
             // FormResolveConflicts
             // 
             this.AcceptButton = this.merge;
@@ -645,7 +639,6 @@
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.subItemsBindingSource)).EndInit();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
@@ -701,7 +694,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Button merge;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.BindingSource subItemsBindingSource;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem fileHistoryToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileName;

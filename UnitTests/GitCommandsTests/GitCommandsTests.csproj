@@ -71,6 +71,7 @@
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
     <Compile Include="GitExtLinks\GitExtLinksTests.cs" />
+    <Compile Include="GitRevisionInfoProviderTests.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
     <Compile Include="Git\GitBlameHeaderTest.cs" />
     <Compile Include="Git\GitBlameTest.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Git\IndexLockManagerTests.cs" />
     <Compile Include="Git\GitDirectoryResolverTests.cs" />
     <Compile Include="Git\GitTagControllerTest.cs" />
+    <Compile Include="Git\GitTreeParserTests.cs" />
     <Compile Include="Helpers\FileInfoExtensions.cs" />
     <Compile Include="Helpers\FileInfoExtensionsTest.cs" />
     <Compile Include="Helpers\PathUtilTest.cs" />
