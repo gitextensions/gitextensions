@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Threading;
+using FluentAssertions;
 using NUnit.Framework;
 using ReleaseNotesGenerator;
 
@@ -31,7 +32,7 @@ namespace ReleaseNotesGeneratorTests
                 "</body></html>");
         }
 
-        [Test, RequiresSTA]
+        [Test, Apartment(ApartmentState.STA)]
         public void CopyToClipboard()
         {
             HtmlFragment.CopyToClipboard("<p>Hallo</p>");
