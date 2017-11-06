@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using GitCommands.Git;
 
 namespace GitUI.CommandsDialogs
 {
@@ -73,7 +74,7 @@ namespace GitUI.CommandsDialogs
             // 
             // gitItemBindingSource
             // 
-            this.gitItemBindingSource.DataSource = typeof(GitCommands.GitItem);
+            this.gitItemBindingSource.DataSource = typeof(GitItem);
             // 
             // splitContainer1
             // 

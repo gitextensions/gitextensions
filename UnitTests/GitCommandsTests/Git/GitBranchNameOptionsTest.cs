@@ -26,7 +26,6 @@ namespace GitCommandsTests.Git
         }
 
         [TestCase(" ", ' ')]
-        [TestCase("~", '~')]
         [TestCase("^", '^')]
         [TestCase("~", '~')]
         [TestCase(":", ':')]

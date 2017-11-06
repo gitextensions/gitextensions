@@ -90,6 +90,7 @@ namespace GitCommands
         private readonly object _lock = new object();
         private readonly IIndexLockManager _indexLockManager;
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
+        private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
 
         public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
         private const string DiffCommandWithStandardArgs = "diff --no-color ";
@@ -724,8 +725,7 @@ namespace GitCommands
         public void EditNotes(string revision)
         {
             string editor = GetEffectiveSetting("core.editor").ToLower();
-            if (editor.Contains("gitextensions") || editor.Contains("notepad") ||
-                editor.Contains("notepad++"))
+            if (editor.Contains("gitextensions") || editor.Contains("notepad"))
             {
                 RunGitCmd("notes edit " + revision);
             }
@@ -980,8 +980,7 @@ namespace GitCommands
         private IGitItem GetSubmoduleCommitHash(string filename, string refName)
         {
             string str = RunGitCmd("ls-tree " + refName + " \"" + filename + "\"");
-
-            return GitItem.CreateGitItemFromString(this, str);
+            return _gitTreeParser.ParseSingle(str);
         }
 
         public int? GetCommitCount(string parentHash, string childHash)
@@ -2818,7 +2817,7 @@ namespace GitCommands
             return tree.Split(new char[] { '\0', '\n' });
         }
 
-        public IList<IGitItem> GetTree(string id, bool full)
+        public IEnumerable<IGitItem> GetTree(string id, bool full)
         {
             string args = "-z";
             if (full)
@@ -2835,7 +2834,7 @@ namespace GitCommands
                 tree = this.RunCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
             }
 
-            return GitItem.CreateIGitItemsFromString(this, tree);
+            return _gitTreeParser.Parse(tree);
         }
 
         public GitBlame Blame(string filename, string from, Encoding encoding)

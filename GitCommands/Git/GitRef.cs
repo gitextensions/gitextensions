@@ -10,7 +10,6 @@ namespace GitCommands
     {
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
-        private IList<IGitItem> _subItems;
        
         /// <summary>"refs/tags/"</summary>
         public static readonly string RefsTagsPrefix = "refs/tags/";
@@ -151,11 +150,6 @@ namespace GitCommands
 
         public string Guid { get; private set; }
         public string Name { get; private set; }
-
-        public IEnumerable<IGitItem> SubItems
-        {
-            get { return _subItems ?? (_subItems = Module.GetTree(Guid, false)); }
-        }
 
         #endregion
 
