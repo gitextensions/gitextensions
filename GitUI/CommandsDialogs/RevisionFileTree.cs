@@ -278,7 +278,6 @@ namespace GitUI.CommandsDialogs
                 default:
                     {
                         FileText.ViewText("", "");
-                        e.Node.Toggle();
                         break;
                     }
             }
