@@ -295,6 +295,14 @@ namespace GitUI.CommandsDialogs
 
             openWithDifftoolToolStripMenuItem.Enabled = !isAnyCombinedDiff;
             saveAsToolStripMenuItem1.Visible = !isCombinedDiff && isExactlyOneItemSelected && !DiffFiles.SelectedItem.IsSubmodule;
+
+            stageFileToolStripMenuItem.Visible =
+                selectedRevisions.Count() >= 1 && selectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
+                selectedRevisions.Count() >= 2 && selectedRevisions[1].Guid == GitRevision.UnstagedGuid;
+            unstageFileToolStripMenuItem.Visible =
+                selectedRevisions.Count() >= 1 && selectedRevisions[0].Guid == GitRevision.IndexGuid ||
+                selectedRevisions.Count() >= 2 && selectedRevisions[1].Guid == GitRevision.IndexGuid;
+
             cherryPickSelectedDiffFileToolStripMenuItem.Visible = !isCombinedDiff && isExactlyOneItemSelected &&
                 !(DiffFiles.SelectedItem.IsSubmodule || selectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
                 (DiffFiles.SelectedItem.IsNew || DiffFiles.SelectedItem.IsDeleted) && selectedRevisions[0].Guid == GitRevision.IndexGuid);
@@ -354,6 +362,43 @@ namespace GitUI.CommandsDialogs
                 else
                     UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], true, true);
             }
+        }
+
+        private void StageFileToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var files = new List<GitItemStatus>();
+            foreach (var item in DiffFiles.SelectedItems)
+            {
+                files.Add(item);
+            }
+            bool err;
+            Module.StageFiles(files, out err);
+            //TBD RefreshRevisions();
+        }
+
+        private void UnstageFileToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var files = new List<GitItemStatus>();
+            foreach (var item in DiffFiles.SelectedItems)
+            {
+                if (item.IsStaged)
+                {
+                    if (!item.IsNew)
+                    {
+                        Module.UnstageFileToRemove(item.Name);
+
+                        if (item.IsRenamed)
+                            Module.UnstageFileToRemove(item.OldName);
+                    }
+                    else
+                    {
+                        files.Add(item);
+                    }
+                }
+            }
+
+            Module.UnstageFiles(files);
+            //TBD RefreshRevisions();
         }
 
         private void cherryPickSelectedDiffFileToolStripMenuItem_Click(object sender, EventArgs e)
