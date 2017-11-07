@@ -277,7 +277,7 @@ namespace GitUI.CommandsDialogs
             this.diffDeleteFileToolStripMenuItem.Name = "diffDeleteFileToolStripMenuItem";
             this.diffDeleteFileToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.diffDeleteFileToolStripMenuItem.Text = "Delete file";
-            this.diffDeleteFileToolStripMenuItem.Click += new System.EventHandler(this.diffDeleteFileToolStripMenuItemClick);
+            this.diffDeleteFileToolStripMenuItem.Click += new System.EventHandler(this.diffDeleteFileToolStripMenuItem_Click);
             // 
             // diffCommitSubmoduleChanges
             // 
