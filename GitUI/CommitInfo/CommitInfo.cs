@@ -323,19 +323,44 @@ namespace GitUI.CommitInfo
             }
         }
 
-        public void DisplayAvatarOnRight()
+        private void DisplayAvatarSetup(bool right)
         {
             tableLayout.SuspendLayout();
             this.tableLayout.ColumnStyles.Clear();
-            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayout.SetColumn(gravatar1, 1);
-            tableLayout.SetColumn(_RevisionHeader, 0);
-            tableLayout.SetColumn(RevisionInfo, 0);
-            tableLayout.SetRowSpan(gravatar1, 1);
-            tableLayout.SetColumnSpan(RevisionInfo, 2);
+            int gravatarIndex, revInfoIndex, gravatarSpan, revInfoSpan;
+            if (right)
+            {
+                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+                gravatarIndex = 1;
+                revInfoIndex = 0;
+                gravatarSpan = 1;
+                revInfoSpan = 2;
+            } else
+            {
+                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+                this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+                gravatarIndex = 0;
+                revInfoIndex = 1;
+                gravatarSpan = 2;
+                revInfoSpan = 1;
+            }
+            tableLayout.SetColumn(gravatar1, gravatarIndex);
+            tableLayout.SetColumn(_RevisionHeader, revInfoIndex);
+            tableLayout.SetColumn(RevisionInfo, revInfoIndex);
+            tableLayout.SetRowSpan(gravatar1, gravatarSpan);
+            tableLayout.SetColumnSpan(RevisionInfo, revInfoSpan);
             tableLayout.ResumeLayout(true);
+        }
 
+        public void DisplayAvatarOnRight()
+        {
+            DisplayAvatarSetup(true);
+        }
+
+        public void DisplayAvatarOnLeft()
+        {
+            DisplayAvatarSetup(false);
         }
 
         private void updateText()
