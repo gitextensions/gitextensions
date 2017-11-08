@@ -2731,7 +2731,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowRevisionInfoNextToRevisionGrid.Text">
-        <source>Show revision details next to the revision list (restart required)</source>
+        <source>Show revision details next to the revision list</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBoxConsoleSettings.Text">

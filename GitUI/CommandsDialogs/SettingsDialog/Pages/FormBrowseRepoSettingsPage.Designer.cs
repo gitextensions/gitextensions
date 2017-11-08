@@ -73,7 +73,7 @@
             this.chkShowRevisionInfoNextToRevisionGrid.Name = "chkShowRevisionInfoNextToRevisionGrid";
             this.chkShowRevisionInfoNextToRevisionGrid.Size = new System.Drawing.Size(1291, 17);
             this.chkShowRevisionInfoNextToRevisionGrid.TabIndex = 6;
-            this.chkShowRevisionInfoNextToRevisionGrid.Text = "Show revision details next to the revision list (restart required)";
+            this.chkShowRevisionInfoNextToRevisionGrid.Text = "Show revision details next to the revision list";
             this.chkShowRevisionInfoNextToRevisionGrid.UseVisualStyleBackColor = true;
             // 
             // ConEmuGB
