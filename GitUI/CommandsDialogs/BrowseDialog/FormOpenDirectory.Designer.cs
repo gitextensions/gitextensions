@@ -98,7 +98,7 @@
             // 
             // toolTip1
             // 
-            this.toolTip1.AutomaticDelay = 0;
+            this.toolTip1.AutomaticDelay = 100;
             this.toolTip1.ShowAlways = true;
             this.toolTip1.ToolTipTitle = "Help";
             // 
