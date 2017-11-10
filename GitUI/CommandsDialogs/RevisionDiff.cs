@@ -37,16 +37,6 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            DiffFiles.FilterVisible = true;
-            DiffFiles.DescribeRevision = DescribeRevision;
-            DiffText.SetFileLoader(GetNextPatchFile);
-            DiffText.Font = AppSettings.DiffFont;
-
-            GotFocus += (s, e) => DiffFiles.Focus();
-            Load += (s, e) =>
-            {
-                _revisionDiffController = new RevisionDiffController(Module);
-            };
         }
 
         public void ForceRefreshRevisions()
@@ -113,6 +103,21 @@ namespace GitUI.CommandsDialogs
         {
             DiffText.ReloadHotkeys();
             //TBD Shortcut key should be implemented but HotKeyManager is inaccessible in FormBrowse
+        }
+
+
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            _revisionDiffController = new RevisionDiffController(Module);
+
+            DiffFiles.FilterVisible = true;
+            DiffFiles.DescribeRevision = DescribeRevision;
+            DiffText.SetFileLoader(GetNextPatchFile);
+            DiffText.Font = AppSettings.DiffFont;
+
+            GotFocus += (s, e1) => DiffFiles.Focus();
+
+            base.OnRuntimeLoad(e);
         }
 
 
