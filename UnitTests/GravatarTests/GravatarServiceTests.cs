@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Gravatar;
 using GravatarTests.Properties;
@@ -27,7 +28,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void GetAvatarAsync_should_not_call_gravatar_if_exist_in_cache()
+        public async Task GetAvatarAsync_should_not_call_gravatar_if_exist_in_cache()
         {
             var avatar = Resources.User;
             _cache.GetImageAsync(Arg.Any<string>(), null).Returns(avatar);
@@ -61,7 +62,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void RemoveAvatarAsync_should_invoke_cache_remove()
+        public async Task RemoveAvatarAsync_should_invoke_cache_remove()
         {
             await _service.DeleteAvatarAsync(Email);
 

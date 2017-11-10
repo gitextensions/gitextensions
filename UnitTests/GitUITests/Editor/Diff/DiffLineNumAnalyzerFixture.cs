@@ -11,17 +11,10 @@ namespace GitUITests.Editor.Diff
     [TestFixture]
     public class TestDiffLineNumAnalyzer
     {
-        private static readonly string TestDataDir = Path.Combine(GetCallingAssemblyDir(), "Editor", "Diff");
+        private static readonly string TestDataDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "Editor", "Diff");
         private readonly string _sampleDiff;
         private readonly string _sampleCombindedDiff;
         private DiffLineNumAnalyzer _lineNumAnalyzer;
-
-        private static string GetCallingAssemblyDir()
-        {
-            var codeBase = Assembly.GetCallingAssembly().CodeBase;
-            var uri = new UriBuilder(codeBase);
-            return Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
-        }
 
         public TestDiffLineNumAnalyzer()
         {

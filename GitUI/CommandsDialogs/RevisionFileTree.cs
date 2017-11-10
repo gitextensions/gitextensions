@@ -32,23 +32,6 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-
-
-            tvGitTree.ImageList = new ImageList(components)
-            {
-                ColorDepth = ColorDepth.Depth32Bit
-            };
-            tvGitTree.ImageList.Images.Add(Properties.Resources.New); //File
-            tvGitTree.ImageList.Images.Add(Properties.Resources.Folder); //Folder
-            tvGitTree.ImageList.Images.Add(Properties.Resources.IconFolderSubmodule); //Submodule
-
-            GotFocus += (s, e) => tvGitTree.Focus();
-            Load += (s, e) =>
-            {
-                _revisionFileTreeController = new RevisionFileTreeController(Module,
-                                                                             new GitRevisionInfoProvider(Module),
-                                                                             new FileAssociatedIconProvider());
-            };
         }
 
 
@@ -196,6 +179,26 @@ namespace GitUI.CommandsDialogs
         }
 
 
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            _revisionFileTreeController = new RevisionFileTreeController(Module,
+                                                                         new GitRevisionInfoProvider(Module),
+                                                                         new FileAssociatedIconProvider());
+
+            tvGitTree.ImageList = new ImageList(components)
+            {
+                ColorDepth = ColorDepth.Depth32Bit
+            };
+            tvGitTree.ImageList.Images.Add(Properties.Resources.New); //File
+            tvGitTree.ImageList.Images.Add(Properties.Resources.Folder); //Folder
+            tvGitTree.ImageList.Images.Add(Properties.Resources.IconFolderSubmodule); //Submodule
+
+            GotFocus += (s, e1) => tvGitTree.Focus();
+
+            base.OnRuntimeLoad(e);
+        }
+
+
         private IList<string> FindFileMatches(string name)
         {
             var candidates = Module.GetFullTree(_revision.TreeGuid);
@@ -278,7 +281,6 @@ namespace GitUI.CommandsDialogs
                 default:
                     {
                         FileText.ViewText("", "");
-                        e.Node.Toggle();
                         break;
                     }
             }

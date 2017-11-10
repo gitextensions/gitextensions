@@ -129,6 +129,7 @@ namespace GitUI.CommandsDialogs
         private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
 #pragma warning restore 0414
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
+        private static bool _showRevisionInfoNextToRevisionGrid;
 
         /// <summary>
         /// For VS designer
@@ -142,6 +143,8 @@ namespace GitUI.CommandsDialogs
         public FormBrowse(GitUICommands aCommands, string filter)
             : base(true, aCommands)
         {
+            //Save value for commit info panel, may be changed
+            _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
             InitializeComponent();
 
             toolPanel.SplitterDistance = ToolStrip.PreferredSize.Height;
@@ -230,7 +233,7 @@ namespace GitUI.CommandsDialogs
 
         private void LayoutRevisionInfo()
         {
-            if (AppSettings.ShowRevisionInfoNextToRevisionGrid.ValueOrDefault)
+            if (_showRevisionInfoNextToRevisionGrid)
             {
                 RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
                 RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - 420;
@@ -238,12 +241,18 @@ namespace GitUI.CommandsDialogs
                 CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                 CommitInfoTabControl.RemoveIfExists(TreeTabPage);
-                CommitInfoTabControl.TabPages.Insert(1, TreeTabPage);
+                CommitInfoTabControl.TabPages.Insert(0, TreeTabPage);
                 CommitInfoTabControl.SelectedTab = DiffTabPage;
                 CommitInfoTabControl.ResumeLayout(true);
+                RevisionsSplitContainer.Panel2Collapsed = false;
             }
             else
             {
+                RevisionInfo.DisplayAvatarOnLeft();
+                CommitInfoTabControl.SuspendLayout();
+                CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
+                CommitInfoTabControl.ResumeLayout(true);
+                RevisionInfo.Parent = CommitInfoTabControl.Controls[0];
                 RevisionsSplitContainer.Panel2Collapsed = true;
             }
         }
@@ -1028,7 +1037,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillCommitInfo()
         {
-            if (!AppSettings.ShowRevisionInfoNextToRevisionGrid.ValueOrDefault && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
+            if (!_showRevisionInfoNextToRevisionGrid && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
                 return;
 
             if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
@@ -1073,25 +1082,44 @@ namespace GitUI.CommandsDialogs
         private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
         private void RevisionGridSelectionChanged(object sender, EventArgs e)
         {
+            if(_showRevisionInfoNextToRevisionGrid != AppSettings.ShowRevisionInfoNextToRevisionGrid)
+            {
+                _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
+                LayoutRevisionInfo();
+            }
             try
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
+                this.CommitInfoTabControl.SelectedIndexChanged -= new System.EventHandler(this.TabControl1SelectedIndexChanged);
                 if (revisions.Any() && GitRevision.IsArtificial(revisions[0].Guid))
                 {
+                    //Artificial commits cannot show tree (ls-tree) and has no commit info 
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                     CommitInfoTabControl.RemoveIfExists(TreeTabPage);
+                    if (_showRevisionInfoNextToRevisionGrid)
+                    {
+                        RevisionsSplitContainer.Panel2Collapsed = true;
+
+                    }
                 }
                 else
                 {
-                    if (RevisionInfo.Parent == CommitInfoTabPage)
+                    int i = 0;
+                    if (!_showRevisionInfoNextToRevisionGrid)
                     {
-                        CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
+                        CommitInfoTabControl.InsertIfNotExists(i, CommitInfoTabPage);
+                        i++;
                     }
-                    CommitInfoTabControl.InsertIfNotExists(1, TreeTabPage);
+                    CommitInfoTabControl.InsertIfNotExists(i, TreeTabPage);
+                    if (_showRevisionInfoNextToRevisionGrid)
+                    {
+                        RevisionsSplitContainer.Panel2Collapsed = false;
+                    }
                 }
+                this.CommitInfoTabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
 
                 //RevisionGrid.HighlightSelectedBranch();
 
