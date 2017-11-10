@@ -105,6 +105,8 @@ namespace GitStatistics
                 NumberCommentsLines++;
             else if (File.Extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) && (line.Contains("@*") && line.Contains("*@")))
                 NumberCommentsLines++;
+            else if (File.Extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith("%"))
+                NumberCommentsLines++;
 
             if (!_skipResetFlag)
                 ResetCodeBlockFlags(line);
@@ -144,6 +146,9 @@ namespace GitStatistics
             else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.StartsWith("--[["))
                 _inCommentBlock = true;
 
+            if (File.Extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith("%{"))
+                _inCommentBlock = true;
+            
             // If we're not in a code-generated region, we should still check for normal
             // comments. This should help improve accuracy on resx files
             if (File.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
@@ -200,6 +205,9 @@ namespace GitStatistics
             else if (File.Extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.Contains("=end"))
                 _inCommentBlock = false;
             else if (File.Extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.Contains("]]"))
+                _inCommentBlock = false;
+            
+             if (File.Extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.Contains("%}"))
                 _inCommentBlock = false;
 
             if (File.Extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
