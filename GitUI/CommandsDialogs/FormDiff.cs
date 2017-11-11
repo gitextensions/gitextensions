@@ -135,11 +135,9 @@ namespace GitUI.CommandsDialogs
                 diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAB;
             }
 
-            string parentGuid = RevisionGrid.GetSelectedRevisions().Count() == 1 ? DiffFiles.SelectedItemParent : null;
-
             foreach (var selectedItem in DiffFiles.SelectedItems)
             {
-                RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, parentGuid);
+                RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind);
             }
         }
 
