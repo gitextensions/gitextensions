@@ -153,16 +153,16 @@ namespace GitUI.CommandsDialogs
                 // 1. get all lines from text box which are not empty
                 // 2. wrap lines with ""
                 // 3. join together with space as separator
-                return string.Join(" ", textBoxPaths.Lines.Where(a => !a.IsNullOrEmpty()).Select(a => string.Format("\"{0}\"", a)));
+                return string.Join(" ", textBoxPaths.Lines.Select(a => a.QuoteNE()));
             }
             else if (checkboxRevisionFilter.Checked)
             {
 
                 // 1. get all files changed between current revision and selected revision from diff
-                var files = UICommands.Module.GetDiffFiles(this.SelectedRevision.Guid, this.DiffSelectedRevision.Guid);
+                var files = UICommands.Module.GetDiffFiles(this.DiffSelectedRevision.Guid, this.SelectedRevision.Guid);
                 // 2. wrap names with ""
                 // 3. join together with space as separator
-                return string.Join(" ", files.Where(f => !f.IsDeleted).Select(f => string.Format("\"{0}\"", f.Name)));
+                return string.Join(" ", files.Where(f => !f.IsDeleted).Select(f => f.Name.QuoteNE()));
             }
             else
             {

@@ -359,10 +359,8 @@ namespace GitUI.CommandsDialogs
             {
                 IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
-                    UICommands.StartFileHistoryDialog(this, item.Name, null, false, true);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], true, true);
+                GitRevision revision = revisions.Count == 0 ? null : revisions[0];
+                UICommands.StartFileHistoryDialog(this, item.Name, revision, true, true);
             }
         }
 
@@ -454,10 +452,8 @@ namespace GitUI.CommandsDialogs
             {
                 IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
-                    UICommands.StartFileHistoryDialog(this, item.Name);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], false);
+                GitRevision revision = revisions.Count == 0 ? null : revisions[0];
+                UICommands.StartFileHistoryDialog(this, item.Name, revision, false);
             }
         }
 
@@ -483,13 +479,13 @@ namespace GitUI.CommandsDialogs
                 diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBParentLocal;
             else
             {
-                Debug.Assert(sender == aBToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
                 diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAB;
             }
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
                 GitItemStatus selectedItem = itemWithParent.Item;
+
                 _revisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind);
             }
         }
@@ -524,7 +520,6 @@ namespace GitUI.CommandsDialogs
             }
 
             //enable *<->Local items only when local file exists
-            //no simple way to check if A (or A/B parents) is normal, ignore that some menus should be disabled
             foreach (var item in DiffFiles.SelectedItems)
             {
                 bIsNormal = bIsNormal || !(item.IsNew || item.IsDeleted);

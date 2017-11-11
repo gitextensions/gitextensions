@@ -2185,13 +2185,8 @@ namespace GitCommands
 
             //fix refs slashes
             from = from.ToPosixPath();
-            to = to.ToPosixPath();
-            string commitRange = string.Empty;
-            if (!to.IsNullOrEmpty())
-                commitRange = "\"" + to + "\"";
-            if (!from.IsNullOrEmpty())
-                commitRange = string.Join(" ", commitRange, "\"" + from + "\"");
-
+            to = to == null ? "":to.ToPosixPath();
+            string commitRange = RevisionDiffProvider.Get(from, to);
             if (AppSettings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
 
@@ -2234,7 +2229,7 @@ namespace GitCommands
 
         public string GetDiffFilesText(string from, string to, bool noCache)
         {
-            string cmd = DiffCommandWithStandardArgs + "-M -C --name-status \"" + to + "\" \"" + from + "\"";
+            string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + RevisionDiffProvider.Get(from, to);
             return noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
         }
 
@@ -2247,14 +2242,16 @@ namespace GitCommands
 
         public List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache = false)
         {
-            string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status \"" + to + "\" \"" + from + "\"";
+            noCache = noCache || GitRevision.IsArtificial(from) || GitRevision.IsArtificial(to);
+            string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + RevisionDiffProvider.Get(from, to);
             string result = noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
-            return GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
+            var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
+            return resultCollection;
         }
 
         public IList<GitItemStatus> GetStashDiffFiles(string stashName)
         {
-            var resultCollection = GetDiffFiles(stashName, stashName + "^", true);
+            var resultCollection = GetDiffFiles(stashName + "^", stashName, true);
 
             // shows untracked files
             string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
@@ -3019,12 +3016,8 @@ namespace GitCommands
         public string OpenWithDifftool(string filename, string oldFileName = "", string revision1 = null, string revision2 = null, string extraDiffArguments = "")
         {
             var output = "";
-            if (!filename.IsNullOrEmpty())
-                filename = filename.Quote();
-            if (!oldFileName.IsNullOrEmpty())
-                oldFileName = oldFileName.Quote();
 
-            string args = string.Join(" ", extraDiffArguments, revision1.QuoteNE(), revision2.QuoteNE(), "--", filename, oldFileName);
+            string args = string.Join(" ", extraDiffArguments, RevisionDiffProvider.Get(revision1, revision2), "--", filename.QuoteNE(), oldFileName.QuoteNE());
             RunGitCmdDetached("difftool --gui --no-prompt " + args);
             return output;
         }

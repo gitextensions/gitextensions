@@ -1950,11 +1950,11 @@ namespace GitUI.CommandsDialogs
             Clipboard.SetText(fileNames.ToString());
         }
 
-        private void OpenFilesWithDiffTool(IEnumerable<GitItemStatus> items, bool staged)
+        private void OpenFilesWithDiffTool(IEnumerable<GitItemStatus> items, string from, string to)
         {
             foreach (var item in items)
             {
-                string output = Module.OpenWithDifftool(item.Name, null, null, null, staged ? "--cached" : "");
+                string output = Module.OpenWithDifftool(item.Name, null, from, to);
                 if (!string.IsNullOrEmpty(output))
                     MessageBox.Show(this, output);
             }
@@ -1962,7 +1962,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
         {
-            OpenFilesWithDiffTool(Unstaged.SelectedItems, staged: false);
+            OpenFilesWithDiffTool(Unstaged.SelectedItems, GitRevision.IndexGuid, GitRevision.UnstagedGuid);
         }
 
         private void ResetPartOfFileToolStripMenuItemClick(object sender, EventArgs e)
@@ -2624,7 +2624,7 @@ namespace GitUI.CommandsDialogs
 
         private void stagedOpenDifftoolToolStripMenuItem9_Click(object sender, EventArgs e)
         {
-            OpenFilesWithDiffTool(Staged.SelectedItems, staged: true);
+            OpenFilesWithDiffTool(Staged.SelectedItems, "HEAD", GitRevision.IndexGuid);
         }
 
         private void openFolderToolStripMenuItem10_Click(object sender, EventArgs e)

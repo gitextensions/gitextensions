@@ -166,41 +166,14 @@ namespace GitUI
         private static PatchApply.Patch GetItemPatch(GitModule module, GitItemStatus file,
             string firstRevision, string secondRevision, string diffArgs, Encoding encoding)
         {
-            bool cacheResult = true;
-            if (GitRevision.IsArtificial(firstRevision))
-            {
-                bool staged = firstRevision == GitRevision.IndexGuid;
-                if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
-                {
-                    return module.GetCurrentChanges(file.Name, file.OldName, staged,
-                            diffArgs, encoding);
-                }
-
-                cacheResult = false;
-                firstRevision = secondRevision;
-                secondRevision = string.Empty;
-                if (staged)
-                    diffArgs = string.Join(" ", diffArgs, "--cached");
-            }
-            else if (secondRevision == null)
-                secondRevision = firstRevision + "^";
-
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
-                    diffArgs, encoding, cacheResult);
+                    diffArgs, encoding, true);
         }
 
         public static string GetSelectedPatch(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file)
         {
             if (firstRevision == null)
                 return null;
-
-            //to simplify if-ology
-            if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UnstagedGuid)
-            {
-                string temp = firstRevision;
-                firstRevision = secondRevision;
-                secondRevision = temp;
-            }
 
             if (IsItemUntracked(file, firstRevision, secondRevision))
             {
@@ -250,7 +223,7 @@ namespace GitUI
             {
                 diffViewer.ViewPatch(() =>
                     {
-                        string selectedPatch = diffViewer.GetSelectedPatch(revision, parentRevision, file);
+                        string selectedPatch = diffViewer.GetSelectedPatch(parentRevision, revision, file);
                         return selectedPatch ?? defaultText;
                     });
             }

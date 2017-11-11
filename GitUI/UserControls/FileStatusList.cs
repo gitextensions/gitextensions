@@ -980,14 +980,7 @@ namespace GitUI
 
                 case 2: // diff "first clicked revision" --> "second clicked revision"
                     NoFiles.Text = _noDiffFilesChangesDefaultText;
-                    bool artificialRevSelected = revisions[0].IsArtificial() || revisions[1].IsArtificial();
-                    if (artificialRevSelected)
-                    {
-                        NoFiles.Text = _UnsupportedMultiselectAction.Text;
-                        GitItemStatuses = null;
-                    }
-                    else
-                        SetGitItemStatuses(revisions[1].Guid, Module.GetDiffFilesWithSubmodulesStatus(revisions[0].Guid, revisions[1].Guid));
+                    SetGitItemStatuses(revisions[1].Guid, Module.GetDiffFilesWithSubmodulesStatus(revisions[1].Guid, revisions[0].Guid));
                     break;
 
                 default: // more than 2 revisions selected => no diff
@@ -1038,7 +1031,7 @@ namespace GitUI
                     GitItemsWithParents dictionary = new Dictionary<string, IList<GitItemStatus>>();
                     foreach (var parentRev in revision.ParentGuids)
                     {
-                        dictionary.Add(parentRev, Module.GetDiffFilesWithSubmodulesStatus(revision.Guid, parentRev));
+                        dictionary.Add(parentRev, Module.GetDiffFilesWithSubmodulesStatus(parentRev, revision.Guid));
 
                         //Only add the first parent to the dictionary if the setting to show diffs
                         //for app parents is disabled
