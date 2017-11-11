@@ -896,7 +896,7 @@
           <ComponentRef Id="VS$(var.VsVersion)_GitPlugin.resources.dll" />
         </Feature>
         <?endforeach ?>
-        <Feature Id="VS2015FeatureId" Title="Visual Studio 2015 integration" Level="1">
+        <Feature Id="VS2015FeatureId" Title="Visual Studio 2015/2017 integration" Level="1">
           <Condition Level="2">NOT VS2015DEVENV</Condition>
           <ComponentRef Id="VS2015_VSIX" />
         </Feature>

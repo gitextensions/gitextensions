@@ -33,8 +33,6 @@
             // 
             // buttonBrowse
             // 
-            this.buttonBrowse.AutoSize = true;
-            this.buttonBrowse.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonBrowse.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
             this.buttonBrowse.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -50,8 +48,6 @@
             // FolderBrowserButton
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.buttonBrowse);
             this.Name = "FolderBrowserButton";
             this.Size = new System.Drawing.Size(100, 25);

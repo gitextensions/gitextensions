@@ -80,7 +80,7 @@ namespace GitUI
                 {
                     GitRevision revision = revisions[0];
                     if (diffKind == DiffWithRevisionKind.DiffALocal)
-                        revisionToCmp = parentGuid ?? revision.FirstParentGuid;
+                        revisionToCmp = parentGuid ?? revision.FirstParentGuid ?? revision.Guid + '^';
                     else if (diffKind == DiffWithRevisionKind.DiffBLocal)
                         revisionToCmp = revision.Guid;
                     else
@@ -97,10 +97,10 @@ namespace GitUI
                             revisionToCmp = revisions[0].Guid;
                             break;
                         case DiffWithRevisionKind.DiffAParentLocal:
-                            revisionToCmp = revisions[1].FirstParentGuid;
+                            revisionToCmp = revisions[1].FirstParentGuid ?? revisions[1].Guid + '^';
                             break;
                         case DiffWithRevisionKind.DiffBParentLocal:
-                            revisionToCmp = revisions[0].FirstParentGuid;
+                            revisionToCmp = revisions[0].FirstParentGuid ?? revisions[0].Guid + '^';
                             break;
                         default:
                             revisionToCmp = null;

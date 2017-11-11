@@ -65,9 +65,9 @@
             this.Load.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Load.Image = global::GitUI.Properties.Resources.IconRepoOpen;
             this.Load.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Load.Location = new System.Drawing.Point(443, 45);
+            this.Load.Location = new System.Drawing.Point(448, 45);
             this.Load.Name = "Load";
-            this.Load.Size = new System.Drawing.Size(134, 25);
+            this.Load.Size = new System.Drawing.Size(144, 25);
             this.Load.TabIndex = 3;
             this.Load.Text = "Open";
             this.Load.UseVisualStyleBackColor = true;
@@ -77,18 +77,17 @@
             // 
             this.folderBrowserButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.folderBrowserButton1.AutoSize = true;
-            this.folderBrowserButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.folderBrowserButton1.Location = new System.Drawing.Point(477, 8);
+            this.folderBrowserButton1.Location = new System.Drawing.Point(477, 10);
             this.folderBrowserButton1.Name = "folderBrowserButton1";
             this.folderBrowserButton1.PathShowingControl = this._NO_TRANSLATE_Directory;
-            this.folderBrowserButton1.Size = new System.Drawing.Size(100, 25);
+            this.folderBrowserButton1.Size = new System.Drawing.Size(115, 25);
             this.folderBrowserButton1.TabIndex = 4;
             // 
             // folderGoUpbutton
             // 
             this.folderGoUpbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.folderGoUpbutton.Image = global::GitUI.Properties.Resources.levelUp;
-            this.folderGoUpbutton.Location = new System.Drawing.Point(448, 8);
+            this.folderGoUpbutton.Location = new System.Drawing.Point(448, 10);
             this.folderGoUpbutton.Name = "folderGoUpbutton";
             this.folderGoUpbutton.Size = new System.Drawing.Size(26, 25);
             this.folderGoUpbutton.TabIndex = 5;
@@ -98,7 +97,7 @@
             // 
             // toolTip1
             // 
-            this.toolTip1.AutomaticDelay = 0;
+            this.toolTip1.AutomaticDelay = 100;
             this.toolTip1.ShowAlways = true;
             this.toolTip1.ToolTipTitle = "Help";
             // 
@@ -107,7 +106,7 @@
             this.AcceptButton = this.Load;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(581, 81);
+            this.ClientSize = new System.Drawing.Size(595, 81);
             this.Controls.Add(this.folderGoUpbutton);
             this.Controls.Add(this.folderBrowserButton1);
             this.Controls.Add(this.Load);

@@ -84,7 +84,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             toolTip = new ToolTip
                               {
                                   InitialDelay = 1,
-                                  AutomaticDelay = 1,
+                                  AutomaticDelay = 100,
                                   AutoPopDelay = 5000,
                                   UseFading = false,
                                   UseAnimation = false,

@@ -124,7 +124,7 @@ namespace GitCommands
         {
             get
             {
-                return HasParent ? ParentGuids[0] : Guid + "^";
+                return HasParent ? ParentGuids[0] : null;
             }
         }
 
