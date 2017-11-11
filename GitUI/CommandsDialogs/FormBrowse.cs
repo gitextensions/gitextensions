@@ -1255,6 +1255,7 @@ namespace GitUI.CommandsDialogs
         private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UICommands.StartResetChangesDialog(this);
+            revisionDiff.RefreshArtificial();
         }
 
         private void RunMergetoolToolStripMenuItemClick(object sender, EventArgs e)

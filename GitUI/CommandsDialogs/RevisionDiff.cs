@@ -36,7 +36,6 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-
         }
 
         public void ForceRefreshRevisions()
@@ -51,6 +50,17 @@ namespace GitUI.CommandsDialogs
             {
                 _oldRevision = null;
                 _oldDiffItem = null;
+            }
+            RefreshArtificial();
+        }
+
+        public void RefreshArtificial()
+        {
+            var revisions = _revisionGrid.GetSelectedRevisions();
+
+            if (revisions.Count > 0 && revisions[0].IsArtificial())
+            {
+                DiffFiles.SetDiffs(revisions);
             }
         }
 
@@ -366,7 +376,7 @@ namespace GitUI.CommandsDialogs
             }
             bool err;
             Module.StageFiles(files, out err);
-            //TBD RefreshRevisions();
+            RefreshArtificial();
         }
 
         private void UnstageFileToolStripMenuItemClick(object sender, EventArgs e)
@@ -391,7 +401,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Module.UnstageFiles(files);
-            //TBD RefreshRevisions();
+            RefreshArtificial();
         }
 
         private void cherryPickSelectedDiffFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -723,7 +733,7 @@ namespace GitUI.CommandsDialogs
                 {
                     File.Delete(Path.Combine(Module.WorkingDir, item.Name));
                 }
-                //TBD RefreshRevisions();
+                RefreshArtificial();
             }
             catch (Exception ex)
             {
@@ -744,14 +754,14 @@ namespace GitUI.CommandsDialogs
             var fileName = Path.Combine(Module.WorkingDir, item.Name);
 
             UICommands.StartFileEditorDialog(fileName);
-            //TBD RefreshRevisions();
+            RefreshArtificial();
         }
 
         private void diffCommitSubmoduleChanges_Click(object sender, EventArgs e)
         {
             GitUICommands submodulCommands = new GitUICommands(Module.WorkingDir + DiffFiles.SelectedItem.Name.EnsureTrailingPathSeparator());
             submodulCommands.StartCommitDialog(this, false);
-            //TBD RefreshRevisions();
+            RefreshArtificial();
         }
 
         private void diffResetSubmoduleChanges_Click(object sender, EventArgs e)
@@ -791,8 +801,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
             }
-
-            //TBD RefreshRevisions();
+            RefreshArtificial();
         }
 
         private void diffUpdateSubmoduleMenuItem_Click(object sender, EventArgs e)
@@ -805,8 +814,7 @@ namespace GitUI.CommandsDialogs
             {
                 //TBD FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
             }
-
-            //TBD RefreshRevisions();
+            RefreshArtificial();
         }
 
         private void diffStashSubmoduleChangesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -820,8 +828,7 @@ namespace GitUI.CommandsDialogs
                 GitUICommands uiCmds = new GitUICommands(Module.GetSubmodule(item.Name));
                 uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
-
-            //TBD RefreshRevisions();
+            RefreshArtificial();
         }
 
         private void diffSubmoduleSummaryMenuItem_Click(object sender, EventArgs e)
