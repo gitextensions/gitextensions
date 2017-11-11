@@ -34,6 +34,14 @@ namespace GitUI.CommandsDialogs
             Translate();
         }
 
+        public void SetGitModule(GitModule module)
+        {
+            //GitRevisionInfoProvider is not needed in this module but is used in unit tests
+            if (_revisionFileTreeController != null)
+            {
+                _revisionFileTreeController.SetGitModule(module, new GitRevisionInfoProvider(module));
+            }
+        }
 
         public void ExpandToFile(string filePath)
         {
@@ -181,9 +189,8 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
-            _revisionFileTreeController = new RevisionFileTreeController(Module,
-                                                                         new GitRevisionInfoProvider(Module),
-                                                                         new FileAssociatedIconProvider());
+            _revisionFileTreeController = new RevisionFileTreeController(new FileAssociatedIconProvider());
+            this.SetGitModule(Module);
 
             tvGitTree.ImageList = new ImageList(components)
             {
