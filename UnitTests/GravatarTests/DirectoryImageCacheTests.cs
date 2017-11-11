@@ -51,7 +51,7 @@ namespace GravatarTests
         [TestCase(null)]
         [TestCase("")]
         [TestCase("\t")]
-        public async void AddImage_should_exit_if_filename_not_supplied(string fileName)
+        public async Task AddImage_should_exit_if_filename_not_supplied(string fileName)
         {
             var image = await _cache.GetImageAsync(fileName, null);
 
@@ -60,7 +60,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void AddImage_should_exit_if_stream_null()
+        public async Task AddImage_should_exit_if_stream_null()
         {
             await _cache.AddImageAsync("file", null);
 
@@ -68,7 +68,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void AddImage_should_create_if_folder_absent()
+        public async Task AddImage_should_create_if_folder_absent()
         {
             var fileSystem = new MockFileSystem();
             _cache = new DirectoryImageCache(_folderPath, 2, fileSystem);
@@ -83,7 +83,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void AddImage_should_create_image_from_stream()
+        public async Task AddImage_should_create_image_from_stream()
         {
             var currentFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var folderPath = Path.Combine(currentFolder, "Images");
@@ -105,7 +105,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void AddImage_should_raise_invalidate()
+        public async Task AddImage_should_raise_invalidate()
         {
             var currentFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var folderPath = Path.Combine(currentFolder, "Images");
@@ -127,7 +127,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void Clear_should_return_if_folder_absent()
+        public async Task Clear_should_return_if_folder_absent()
         {
             _directory.Exists(Arg.Any<string>()).Returns(false);
 
@@ -137,7 +137,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void Clear_should_remove_all()
+        public async Task Clear_should_remove_all()
         {
             var fileSystem = new MockFileSystem();
             _cache = new DirectoryImageCache(_folderPath, 2, fileSystem);
@@ -152,7 +152,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void Clear_should_raise_invalidate()
+        public async Task Clear_should_raise_invalidate()
         {
             _directory.Exists(Arg.Any<string>()).Returns(true);
 
@@ -185,7 +185,7 @@ namespace GravatarTests
         [TestCase(null)]
         [TestCase("")]
         [TestCase("\t")]
-        public async void DeleteImage_should_exit_if_filename_not_supplied(string fileName)
+        public async Task DeleteImage_should_exit_if_filename_not_supplied(string fileName)
         {
             await _cache.DeleteImageAsync(fileName);
 
@@ -193,7 +193,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void DeleteImage_should_return_if_folder_absent()
+        public async Task DeleteImage_should_return_if_folder_absent()
         {
             _file.Exists(Arg.Any<string>()).Returns(false);
 
@@ -203,7 +203,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void DeleteImage_should_delete()
+        public async Task DeleteImage_should_delete()
         {
             _file.Exists(Arg.Any<string>()).Returns(true);
 
@@ -213,7 +213,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void DeleteImage_should_raise_invalidate()
+        public async Task DeleteImage_should_raise_invalidate()
         {
             _file.Exists(Arg.Any<string>()).Returns(true);
 
@@ -243,7 +243,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void GetImage_return_null_if_filename_not_supplied()
+        public async Task GetImage_return_null_if_filename_not_supplied()
         {
             var image = await _cache.GetImageAsync(null, null);
 
@@ -252,7 +252,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void GetImage_return_null_if_file_absent()
+        public async Task GetImage_return_null_if_file_absent()
         {
             _fileInfo.Exists.Returns(false);
 
@@ -263,7 +263,7 @@ namespace GravatarTests
         }
 
         [Test]
-        public async void GetImage_return_null_if_file_expired()
+        public async Task GetImage_return_null_if_file_expired()
         {
             _fileInfo.Exists.Returns(true);
             _fileInfo.LastWriteTime.Returns(new DateTime(2010, 1, 1));

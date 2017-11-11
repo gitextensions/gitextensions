@@ -13,6 +13,7 @@ using GitCommands.Repository;
 using GitCommands.Settings;
 using Microsoft.Win32;
 using System.Linq;
+using GitCommands.Utils;
 
 namespace GitCommands
 {
@@ -322,7 +323,12 @@ namespace GitCommands
         public static readonly StringSetting ConEmuStyle = new StringSetting("ConEmuStyle", DetailedSettingsPath, "<Solarized Light>");
         public static readonly StringSetting ConEmuTerminal = new StringSetting("ConEmuTerminal", DetailedSettingsPath, "bash");
         public static readonly StringSetting ConEmuFontSize = new StringSetting("ConEmuFontSize", DetailedSettingsPath, "12");
-        public static readonly BoolNullableSetting ShowRevisionInfoNextToRevisionGrid = new BoolNullableSetting("ShowRevisionInfoNextToRevisionGrid", DetailedSettingsPath, false);
+
+        public static bool ShowRevisionInfoNextToRevisionGrid
+        {
+            get { return !EnvUtils.IsMonoRuntime() && DetailedSettingsPath.GetBool("ShowRevisionInfoNextToRevisionGrid", false); }
+            set { DetailedSettingsPath.SetBool("ShowRevisionInfoNextToRevisionGrid", !EnvUtils.IsMonoRuntime() && value); }
+        }
 
         public static bool ProvideAutocompletion
         {

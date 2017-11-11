@@ -52,47 +52,43 @@ namespace GitCommandsTests.Git
         [TestCase(null)]
         [TestCase("")]
         [TestCase("  ")]
-        [ExpectedException(typeof (ArgumentException))]
         public void Tag_name_null(string tagName)
         {
             var args = new GitCreateTagArgs(tagName, Revision);
             var cmd = new GitCreateTagCmd(args, _tagMessageFile);
 
-            cmd.Validate();
+            Assert.Throws<ArgumentException>(() => cmd.Validate());
         }
 
         [TestCase(null)]
         [TestCase("")]
         [TestCase("  ")]
-        [ExpectedException(typeof(ArgumentException))]
         public void Tag_revision_null(string revision)
         {
             var args = new GitCreateTagArgs(TagName, revision);
             var cmd = new GitCreateTagCmd(args, _tagMessageFile);
 
-            cmd.Validate();
+            Assert.Throws<ArgumentException>(() => cmd.Validate());
         }
 
         [TestCase(null)]
         [TestCase("")]
         [TestCase("  ")]
-        [ExpectedException(typeof(ArgumentException))]
         public void Tag_key_id_null(string signKeyId)
         {
             var args = new GitCreateTagArgs(TagName, Revision, TagOperation.SignWithSpecificKey, signKeyId: signKeyId);
             var cmd = new GitCreateTagCmd(args, _tagMessageFile);
 
-            cmd.Validate();
+            Assert.Throws<ArgumentException>(() => cmd.Validate());
         }
 
         [Test]
-        [ExpectedException(typeof(NotSupportedException))]
         public void Tag_operation_not_supported()
         {
             var args = new GitCreateTagArgs(TagName, Revision, (TagOperation)10);
             var cmd = new GitCreateTagCmd(args, _tagMessageFile);
 
-            cmd.ToLine();
+            Assert.Throws<NotSupportedException>(() => cmd.ToLine());
         }
 
         [TestCase(TagOperation.Lightweight)]

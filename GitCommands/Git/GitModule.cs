@@ -93,7 +93,7 @@ namespace GitCommands
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
 
         public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
-        private const string DiffCommandWithStandardArgs = "diff --no-color ";
+        private const string DiffCommandWithStandardArgs = " -c diff.submodule=short diff --no-color ";
 
         public GitModule(string workingdir)
         {

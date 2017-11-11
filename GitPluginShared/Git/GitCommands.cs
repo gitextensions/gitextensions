@@ -91,6 +91,9 @@ namespace GitPluginShared.Git
             }
             catch
             {
+                if (!File.Exists(Path.Combine(path, "GitExtensions.exe")))
+                    MessageBox.Show("This plugin requires Git Extensions to be installed. This application can be downloaded from http://gitextensions.github.io/");
+
                 return null;
             }
         }
