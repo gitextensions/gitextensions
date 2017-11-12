@@ -585,9 +585,16 @@ namespace GitCommands
             }
         }
 
-        public static string MergedBranches()
+        public static string MergedBranches(bool includeRemote = false)
         {
-            return "branch --merged";
+            if (includeRemote)
+            {
+                return "branch -a --merged";
+            }
+            else
+            {
+                return "branch --merged";
+            }
         }
 
         /// <summary>Un-sets the git SSH command path.</summary>

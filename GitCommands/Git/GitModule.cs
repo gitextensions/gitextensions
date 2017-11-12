@@ -2716,9 +2716,25 @@ namespace GitCommands
             ByCommitDateDescending
         }
 
-        public ICollection<string> GetMergedBranches()
+        public ICollection<string> GetMergedBranches(bool includeRemote = false)
         {
-            return RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return RunGitCmd(GitCommandHelpers.MergedBranches(includeRemote)).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public ICollection<string> GetMergedRemoteBranches()
+        {
+            string remoteBranchPrefixForMergedBranches = "remotes/";
+            string refsPrefix = "refs/";
+
+            string[] mergedBranches = RunGitCmd(GitCommandHelpers.MergedBranches(includeRemote: true)).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var remotes = GetRemotes(allowEmpty: false);
+
+            return mergedBranches
+                .Select(b => b.Trim())
+                .Where(b => b.StartsWith(remoteBranchPrefixForMergedBranches))
+                .Select(b => string.Concat(refsPrefix, b))
+                .Where(b => !string.IsNullOrEmpty(GitCommandHelpers.GetRemoteName(b, remotes))).ToList();
         }
 
         private string GetTree(bool tags, bool branches)
