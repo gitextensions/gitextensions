@@ -2695,37 +2695,32 @@ namespace GitUI
 
         private void CheckUncommitedChanged(string filtredCurrentCheckout)
         {
+            bool enabled = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar && (FindForm() as FormBrowse)!=null;
             var staged = ChangedFiles.Result.Count(item => item.IsStaged);
             var unstaged = ChangedFiles.Result.Count() - staged;
 
-            if (unstaged > 0)
+            //Add working directory as virtual commit
+            //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
+            //Do not activate if count on Commit button is set, the counters may be inconsistient
+            string count = enabled ? "(" + unstaged + ") " : "";
+            var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
             {
-                //Add working directory as virtual commit
-                //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
-                //Do not activate if count on Commit button is set, the counters may be inconsistient
-                string count = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar ? "(" + unstaged + ") " : "";
-                var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
-                {
-                    Subject = count + Strings.GetCurrentUnstagedChanges(),
-                    ParentGuids =
-                        staged > 0
-                            ? new[] { GitRevision.IndexGuid }
-                            : new[] { filtredCurrentCheckout }
-                };
-                Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
-            }
+                Subject = count + Strings.GetCurrentUnstagedChanges(),
+                ParentGuids =
+                    staged > 0
+                        ? new[] { GitRevision.IndexGuid }
+                        : new[] { filtredCurrentCheckout }
+            };
+            Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
 
-            if (staged > 0)
+            //Add index as virtual commit
+            count = enabled ? "(" + staged + ") " : "";
+            var index = new GitRevision(Module, GitRevision.IndexGuid)
             {
-                //Add index as virtual commit
-                string count = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar ? "(" + staged + ") " : "";
-                var index = new GitRevision(Module, GitRevision.IndexGuid)
-                {
-                    Subject = count + Strings.GetCurrentIndex(),
-                    ParentGuids = new[] { filtredCurrentCheckout }
-                };
-                Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
-            }
+                Subject = count + Strings.GetCurrentIndex(),
+                ParentGuids = new[] { filtredCurrentCheckout }
+            };
+            Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
         }
 
         internal void DrawNonrelativesGray_ToolStripMenuItemClick(object sender, EventArgs e)
