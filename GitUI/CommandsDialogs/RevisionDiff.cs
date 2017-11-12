@@ -31,7 +31,6 @@ namespace GitUI.CommandsDialogs
         private GitItemStatus _oldDiffItem;
         private IRevisionDiffController _revisionDiffController;
 
-
         public RevisionDiff()
         {
             InitializeComponent();
@@ -331,8 +330,8 @@ namespace GitUI.CommandsDialogs
                 diffResetSubmoduleChanges.Visible =
                 diffStashSubmoduleChangesToolStripMenuItem.Visible =
                 diffUpdateSubmoduleMenuItem.Visible =
-                diffSubmoduleSummaryMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
-            diffUpdateSubmoduleMenuItem.Visible = false; //TBD
+                diffSubmoduleSummaryMenuItem.Visible =
+                diffUpdateSubmoduleMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
 
             diffToolStripSeparator13.Visible = _revisionDiffController.ShouldShowMenuEditFile(selectionInfo) || _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
 
@@ -803,7 +802,7 @@ namespace GitUI.CommandsDialogs
             }
             RefreshArtificial();
         }
-
+        
         private void diffUpdateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
             var unStagedFiles = DiffFiles.SelectedItems.ToList();
@@ -812,7 +811,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                //TBD FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
+                FormProcess.ShowDialog((FindForm() as FormBrowse), GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
             }
             RefreshArtificial();
         }
