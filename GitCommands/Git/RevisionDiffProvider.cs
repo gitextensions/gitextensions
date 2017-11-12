@@ -7,32 +7,8 @@ namespace GitCommands
     /// Translate GitRevision including artificial commits to diff options
     /// Closely related to GitRevision.cs 
     /// </summary>
-    public static class RevisionDiffProvider
+    public class RevisionDiffProvider
     {
-        private const string StagedOpt = "--cached";
-
-        /// <summary>
-        /// Translate the revision string to an option string
-        /// Artificial "commits" are options, handle aliases too
-        /// (order and handling of empty arguments is not handled here)
-        /// </summary>
-        /// <param name="rev"></param>
-        /// <returns></returns>
-        private static string ArtificialToDiffOptions(string rev)
-        {
-            if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid) { rev = string.Empty; }
-            else if (rev == "^" || rev == GitRevision.UnstagedGuid + "^" || rev == GitRevision.IndexGuid) { rev = StagedOpt; }
-            else
-            {
-                //Normal commit
-                if (rev == "^^" || rev == GitRevision.UnstagedGuid + "^^" || rev == GitRevision.IndexGuid + "^") { rev = "HEAD"; }
-                else if (rev == "^^^" || rev == GitRevision.UnstagedGuid + "^^^" || rev == GitRevision.IndexGuid + "^^") { rev = "HEAD^"; }
-                rev = rev.QuoteNE();
-            }
-
-            return rev;
-        }
-
         /// <summary>
         /// options to git-diff from GE arguments, including artificial commits
         /// </summary>
@@ -76,5 +52,29 @@ namespace GitCommands
 
             return string.Join(" ", extra, from, to);
         }
+
+        /// <summary>
+        /// Translate the revision string to an option string
+        /// Artificial "commits" are options, handle aliases too
+        /// (order and handling of empty arguments is not handled here)
+        /// </summary>
+        /// <param name="rev"></param>
+        /// <returns></returns>
+        private static string ArtificialToDiffOptions(string rev)
+        {
+            if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid) { rev = string.Empty; }
+            else if (rev == "^" || rev == GitRevision.UnstagedGuid + "^" || rev == GitRevision.IndexGuid) { rev = StagedOpt; }
+            else
+            {
+                //Normal commit
+                if (rev == "^^" || rev == GitRevision.UnstagedGuid + "^^" || rev == GitRevision.IndexGuid + "^") { rev = "HEAD"; }
+                else if (rev == "^^^" || rev == GitRevision.UnstagedGuid + "^^^" || rev == GitRevision.IndexGuid + "^^") { rev = "HEAD^"; }
+                rev = rev.QuoteNE();
+            }
+
+            return rev;
+        }
+
+        private const string StagedOpt = "--cached";
     }
 }

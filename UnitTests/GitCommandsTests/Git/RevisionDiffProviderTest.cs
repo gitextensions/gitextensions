@@ -1,6 +1,8 @@
+using FluentAssertions;
 using GitCommands;
 using NUnit.Framework;
 using System;
+using System.Diagnostics;
 using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
 
@@ -9,32 +11,73 @@ namespace GitCommandsTests.Git
     [TestClass]
     public class RevisionDiffProviderTest
     {
-        [TestMethod]
-        public void RevisionDiffProvider_diffoptions()
-        {
-            //See ArtificialToDiffOptions() for possible "aliases" for artificial commits
+        //See ArtificialToDiffOptions() for possible "aliases" for artificial commits
+        //All variants are not tested in all situations
 
 #if !DEBUG
-            //Testcases that should assert in debug; should not occur but undefined behavior that should be blocked in GUI
-            //Cannot run in DEBUG
-            //In release build require empty parameters (compare working dir to index)
-            Assert.AreEqual("", RevisionDiffProvider.Get(GitRevision.UnstagedGuid, GitRevision.UnstagedGuid).Trim(), "assert 1");
-            Assert.AreEqual("", RevisionDiffProvider.Get("", GitRevision.UnstagedGuid).Trim(), "assert 2");
-            Assert.AreEqual("", RevisionDiffProvider.Get(null, GitRevision.UnstagedGuid).Trim(), "assert 3");
-            Assert.AreEqual("--cached --cached", RevisionDiffProvider.Get(GitRevision.IndexGuid, GitRevision.IndexGuid).Trim(), "assert 4");
+        //Testcases that should assert in debug; should not occur but undefined behavior that should be blocked in GUI
+        //In release build require empty parameters (compare working dir to index)
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(GitRevision.UnstagedGuid)]
+        public void RevisionDiffProvider_should_return_empty_if_To_is_UnstagedGuid(string from)
+        {
+            RevisionDiffProvider.Get(from, GitRevision.UnstagedGuid).Trim().Should().BeEmpty();
+        }
+
+        [TestCase("^")]
+        [TestCase(GitRevision.IndexGuid)]
+        public void RevisionDiffProvider_should_return_cached_if_both_IndexGuid(string from)
+        {
+            RevisionDiffProvider.Get(from, GitRevision.IndexGuid).Trim().Should().Be("--cached --cached");
+        }
 #endif
+        [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid)]
+        [TestCase("^", "")]
+        [TestCase(GitRevision.IndexGuid, null)]
+        public void RevisionDiffProvider_staged_to_unstaged(string from, string to)
+        {
+            RevisionDiffProvider.Get(from, to).Trim().Should().BeEmpty();
+        }
 
-            Assert.AreEqual("", RevisionDiffProvider.Get(GitRevision.IndexGuid, GitRevision.UnstagedGuid).Trim(), "unstaged staged");
-            Assert.AreEqual("", RevisionDiffProvider.Get("^", GitRevision.UnstagedGuid).Trim(), "unstaged ^");
-            Assert.AreEqual("", RevisionDiffProvider.Get(GitRevision.IndexGuid, "").Trim(), "unstaged empty");
-            Assert.AreEqual("\"HEAD\"", RevisionDiffProvider.Get(GitRevision.IndexGuid + "^", GitRevision.UnstagedGuid).Trim(), "unstaged 4");
-            Assert.AreEqual("-R", RevisionDiffProvider.Get(GitRevision.UnstagedGuid, GitRevision.IndexGuid).Trim(), "unstaged 5");
+        [TestCase(GitRevision.UnstagedGuid, GitRevision.IndexGuid)]
+        [TestCase("", "^")]
+        public void RevisionDiffProvider_unstaged_to_staged(string from, string to)
+        {
+            RevisionDiffProvider.Get(from, to).Trim().Should().Be("-R");
+        }
 
-            Assert.AreEqual("--cached \"HEAD\"", RevisionDiffProvider.Get("HEAD", GitRevision.IndexGuid).Trim(), "staged 1");
-            Assert.AreEqual("-R --cached \"HEAD\"", RevisionDiffProvider.Get(GitRevision.IndexGuid, "HEAD").Trim(), "staged 2");
+        [TestCase(GitRevision.UnstagedGuid + "^^")]
+        [TestCase(GitRevision.IndexGuid + "^")]
+        [TestCase("HEAD")]
+        public void RevisionDiffProvider_head_to_unstaged(string from)
+        {
+            RevisionDiffProvider.Get(from, GitRevision.UnstagedGuid).Trim().Should().Be("\"HEAD\"");
+        }
 
-            Assert.AreEqual("\"HEAD\" \"HEAD\"", RevisionDiffProvider.Get("HEAD", "HEAD").Trim(), "other 1");
-            Assert.AreEqual("\"HEAD\" \"123456789\"", RevisionDiffProvider.Get("HEAD", "123456789").Trim(), "other 2");
+        [TestCase(GitRevision.IndexGuid + "^", "^")]
+        [TestCase("HEAD", GitRevision.IndexGuid)]
+        public void RevisionDiffProvider_head_to_staged(string from, string to)
+        {
+            RevisionDiffProvider.Get(from, to).Trim().Should().Be("--cached \"HEAD\"");
+        }
+
+        [TestCase(GitRevision.IndexGuid, "HEAD")]
+        public void RevisionDiffProvider_staged_to_head(string from, string to)
+        {
+            RevisionDiffProvider.Get(from, to).Trim().Should().Be("-R --cached \"HEAD\"");
+        }
+
+        [TestCase("HEAD", "123456789")]
+        public void RevisionDiffProvider_normal1(string from, string to)
+        {
+            RevisionDiffProvider.Get(from, to).Trim().Should().Be("\"HEAD\" \"123456789\"");
+        }
+
+        [TestCase("123456789", "HEAD")]
+        public void RevisionDiffProvider_normal2(string from, string to)
+        {
+            RevisionDiffProvider.Get(from, to).Trim().Should().Be("\"123456789\" \"HEAD\"");
         }
     }
 }
