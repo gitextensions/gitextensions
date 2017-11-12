@@ -1073,15 +1073,16 @@ namespace GitUI
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
+                GitModule capturedModule = Module;
                 Task<SuperProjectInfo> newSuperPrjectInfo =
-                    Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef));
+                    Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef, capturedModule));
                 newSuperPrjectInfo.ContinueWith((task) => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
                 //Only check for tracked files. This usually makes more sense and it performs a lot
                 //better then checking for untracked files.
                 // TODO: Check FiltredFileName
                 Task<IList<GitItemStatus>> changedFilesTask =
-                    Task.Run(() => Module.GetAllChangedFiles());
+                    Task.Run(() => capturedModule.GetAllChangedFiles());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -1198,17 +1199,17 @@ namespace GitUI
             public Dictionary<string, List<IGitRef>> Refs;
         }
 
-        private SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef)
+        private SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
         {
-            if (Module.SuperprojectModule == null)
+            if (gitModule.SuperprojectModule == null)
                 return null;
 
             SuperProjectInfo spi = new SuperProjectInfo();
-            var currentCheckout = Module.GetSuperprojectCurrentCheckout();
+            var currentCheckout = gitModule.GetSuperprojectCurrentCheckout();
             if (currentCheckout.Key == 'U')
             {
                 // return local and remote hashes
-                var array = Module.SuperprojectModule.GetConflict(Module.SubmodulePath);
+                var array = gitModule.SuperprojectModule.GetConflict(gitModule.SubmodulePath);
                 spi.Conflict_Base = array.Base.Hash;
                 spi.Conflict_Local = array.Local.Hash;
                 spi.Conflict_Remote = array.Remote.Hash;
@@ -1218,7 +1219,7 @@ namespace GitUI
                 spi.CurrentBranch = currentCheckout.Value;
             }
 
-            var refs = Module.SuperprojectModule.GetSubmoduleItemsForEachRef(Module.SubmodulePath, showRemoteRef);
+            var refs = gitModule.SuperprojectModule.GetSubmoduleItemsForEachRef(gitModule.SubmodulePath, showRemoteRef);
 
             if (refs != null)
             {
