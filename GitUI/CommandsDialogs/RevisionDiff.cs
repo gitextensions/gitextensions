@@ -802,7 +802,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                FormProcess.ShowDialog(null, Module, GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
+                FormProcess.ShowDialog((FindForm() as FormBrowse), GitCommandHelpers.SubmoduleUpdateCmd(item.Name));
             }
 
             //TBD RefreshRevisions();
