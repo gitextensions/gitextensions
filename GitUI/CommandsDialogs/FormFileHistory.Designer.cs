@@ -114,6 +114,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator4});
             this.FileHistoryContextMenu.Name = "DiffContextMenu";
             this.FileHistoryContextMenu.Size = new System.Drawing.Size(340, 198);
+            this.FileHistoryContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.FileHistoryContextMenuOpening);
             // 
             // openWithDifftoolToolStripMenuItem
             // 
