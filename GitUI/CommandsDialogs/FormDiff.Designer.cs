@@ -341,6 +341,7 @@
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
+            this.DiffContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.openWithDifftoolToolStripMenuItem_DropDownOpening);
             // 
             // aBToolStripMenuItem
             // 

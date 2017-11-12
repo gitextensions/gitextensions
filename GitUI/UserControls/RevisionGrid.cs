@@ -1053,10 +1053,7 @@ namespace GitUI
         }
 
         [Browsable(false)]
-        public Task<bool> UnstagedChanges { get; private set; }
-
-        [Browsable(false)]
-        public Task<bool> StagedChanges { get; private set; }
+        private Task<IList<GitItemStatus>> ChangedFiles { get; set; }
 
         private string _filtredCurrentCheckout;
 
@@ -1076,17 +1073,16 @@ namespace GitUI
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
+                GitModule capturedModule = Module;
                 Task<SuperProjectInfo> newSuperPrjectInfo =
-                    Task.Factory.StartNew(() => GetSuperprojectCheckout(ShowRemoteRef));
+                    Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef, capturedModule));
                 newSuperPrjectInfo.ContinueWith((task) => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
                 //Only check for tracked files. This usually makes more sense and it performs a lot
                 //better then checking for untracked files.
                 // TODO: Check FiltredFileName
-                Task<bool> unstagedChanges =
-                    Task.Factory.StartNew(() => Module.GetUnstagedFiles().Any());
-                Task<bool> stagedChanges =
-                    Task.Factory.StartNew(() => Module.GetStagedFiles().Any());
+                Task<IList<GitItemStatus>> changedFilesTask =
+                    Task.Run(() => capturedModule.GetAllChangedFiles());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -1105,8 +1101,7 @@ namespace GitUI
                 _filtredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 SuperprojectCurrentCheckout = newSuperPrjectInfo;
-                UnstagedChanges = unstagedChanges;
-                StagedChanges = stagedChanges;
+                ChangedFiles = changedFilesTask;
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -1204,17 +1199,17 @@ namespace GitUI
             public Dictionary<string, List<IGitRef>> Refs;
         }
 
-        private SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef)
+        private SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
         {
-            if (Module.SuperprojectModule == null)
+            if (gitModule.SuperprojectModule == null)
                 return null;
 
             SuperProjectInfo spi = new SuperProjectInfo();
-            var currentCheckout = Module.GetSuperprojectCurrentCheckout();
+            var currentCheckout = gitModule.GetSuperprojectCurrentCheckout();
             if (currentCheckout.Key == 'U')
             {
                 // return local and remote hashes
-                var array = Module.SuperprojectModule.GetConflict(Module.SubmodulePath);
+                var array = gitModule.SuperprojectModule.GetConflict(gitModule.SubmodulePath);
                 spi.Conflict_Base = array.Base.Hash;
                 spi.Conflict_Local = array.Local.Hash;
                 spi.Conflict_Remote = array.Remote.Hash;
@@ -1224,7 +1219,7 @@ namespace GitUI
                 spi.CurrentBranch = currentCheckout.Value;
             }
 
-            var refs = Module.SuperprojectModule.GetSubmoduleItemsForEachRef(Module.SubmodulePath, showRemoteRef);
+            var refs = gitModule.SuperprojectModule.GetSubmoduleItemsForEachRef(gitModule.SubmodulePath, showRemoteRef);
 
             if (refs != null)
             {
@@ -1743,7 +1738,7 @@ namespace GitUI
                 }
                 else if (columnIndex == idColIndex)
                 {
-                    if (!revision.IsArtificial())
+                    if (!revision.IsArtificial()) //do not show artificial GUID
                     {
                         var text = revision.Guid;
                         var rect = RevisionGridUtils.GetCellRectangle(e);
@@ -1852,7 +1847,7 @@ namespace GitUI
             int dateColIndex = DateDataGridViewColumn.Index;
             int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
 
-            if (columnIndex == graphColIndex)
+            if (columnIndex == graphColIndex && !revision.IsArtificial()) //Do not show artificial guid
             {
                 e.Value = revision.Guid;
             }
@@ -2332,7 +2327,7 @@ namespace GitUI
             foreach (var head in branchesWithNoIdenticalRemotes)
             {
                 if (head.CompleteName.Equals(currentBranchRef))
-                    currentBranchPointsToRevision = true;
+                    currentBranchPointsToRevision = !revision.IsArtificial();
                 else
                 {
                     ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
@@ -2414,7 +2409,7 @@ namespace GitUI
                 }
             }
 
-            bool bareRepository = Module.IsBareRepository();
+            bool bareRepositoryOrArtificial = Module.IsBareRepository() || revision.IsArtificial();
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
             deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
 
@@ -2422,21 +2417,27 @@ namespace GitUI
             deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0;
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Enabled = !bareRepository && checkoutBranchDropDown.Items.Count > 0;
+            checkoutBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && checkoutBranchDropDown.Items.Count > 0;
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Enabled = !bareRepository && mergeBranchDropDown.Items.Count > 0;
+            mergeBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && mergeBranchDropDown.Items.Count > 0;
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
-            rebaseOnToolStripMenuItem.Enabled = !bareRepository && rebaseDropDown.Items.Count > 0;
+            rebaseOnToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && rebaseDropDown.Items.Count > 0;
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
 
-            checkoutRevisionToolStripMenuItem.Enabled = !bareRepository;
-            revertCommitToolStripMenuItem.Enabled = !bareRepository;
-            cherryPickCommitToolStripMenuItem.Enabled = !bareRepository;
-            manipulateCommitToolStripMenuItem.Enabled = !bareRepository;
+            checkoutRevisionToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+            revertCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+            cherryPickCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+            manipulateCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+
+            copyToClipboardToolStripMenuItem.Enabled = !revision.IsArtificial();
+            createNewBranchToolStripMenuItem.Enabled = !revision.IsArtificial();
+            resetCurrentBranchToHereToolStripMenuItem.Enabled = !revision.IsArtificial();
+            archiveRevisionToolStripMenuItem.Enabled = !revision.IsArtificial();
+            createTagToolStripMenuItem.Enabled = !revision.IsArtificial();
 
             toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
@@ -2694,26 +2695,33 @@ namespace GitUI
 
         private void CheckUncommitedChanged(string filtredCurrentCheckout)
         {
-            if (UnstagedChanges.Result)
+            var staged = ChangedFiles.Result.Count(item => item.IsStaged);
+            var unstaged = ChangedFiles.Result.Count() - staged;
+
+            if (unstaged > 0)
             {
                 //Add working directory as virtual commit
+                //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
+                //Do not activate if count on Commit button is set, the counters may be inconsistient
+                string count = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar ? "(" + unstaged + ") " : "";
                 var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
                 {
-                    Subject = Strings.GetCurrentUnstagedChanges(),
+                    Subject = count + Strings.GetCurrentUnstagedChanges(),
                     ParentGuids =
-                        StagedChanges.Result
+                        staged > 0
                             ? new[] { GitRevision.IndexGuid }
                             : new[] { filtredCurrentCheckout }
                 };
                 Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
             }
 
-            if (StagedChanges.Result)
+            if (staged > 0)
             {
                 //Add index as virtual commit
+                string count = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar ? "(" + staged + ") " : "";
                 var index = new GitRevision(Module, GitRevision.IndexGuid)
                 {
-                    Subject = Strings.GetCurrentIndex(),
+                    Subject = count + Strings.GetCurrentIndex(),
                     ParentGuids = new[] { filtredCurrentCheckout }
                 };
                 Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);

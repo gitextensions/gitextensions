@@ -121,7 +121,12 @@ namespace GitUI
         public static bool IsItemUntracked(GitItemStatus file,
             string firstRevision, string secondRevision)
         {
-            if (firstRevision == GitRevision.UnstagedGuid) //working directory changes
+            if (firstRevision == GitRevision.UnstagedGuid && file.IsDeleted ||
+                secondRevision == GitRevision.UnstagedGuid && file.IsNew)
+            {
+                return true;
+            }
+            else if (firstRevision == GitRevision.UnstagedGuid) //working directory changes
             {
                 if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
                     return !file.IsTracked;

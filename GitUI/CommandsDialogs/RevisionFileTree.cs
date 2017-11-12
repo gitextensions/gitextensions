@@ -465,6 +465,7 @@ namespace GitUI.CommandsDialogs
             openWithToolStripMenuItem.Visible = enableItems;
             copyFilenameToClipboardToolStripMenuItem.Visible = gitItem != null && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
             editCheckedOutFileToolStripMenuItem.Visible = enableItems;
+            toolStripSeparator18.Visible = enableItems;
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
