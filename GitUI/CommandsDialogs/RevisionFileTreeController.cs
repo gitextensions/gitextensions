@@ -33,6 +33,12 @@ namespace GitUI.CommandsDialogs
         /// Clears the cache of the current revision's loaded children items.
         /// </summary>
         void ResetCache();
+
+        /// <summary>
+        /// Updates the GitModule
+        /// </summary>
+        /// <param name="module">The GitModule</param>
+        void SetGitModule(IGitModule module, IGitRevisionInfoProvider revisionInfoProvider);
     }
 
     internal sealed class RevisionFileTreeController : IRevisionFileTreeController
@@ -43,16 +49,14 @@ namespace GitUI.CommandsDialogs
             public const int Submodule = 2;
         }
 
-        private readonly IGitModule _module;
+        private IGitModule _module;
+        private IGitRevisionInfoProvider _revisionInfoProvider;
         private readonly IFileAssociatedIconProvider _iconProvider;
-        private readonly IGitRevisionInfoProvider _revisionInfoProvider;
         private readonly ConcurrentDictionary<string, IEnumerable<IGitItem>> _cachedItems = new ConcurrentDictionary<string, IEnumerable<IGitItem>>();
 
 
-        public RevisionFileTreeController(IGitModule module, IGitRevisionInfoProvider revisionInfoProvider, IFileAssociatedIconProvider iconProvider)
+        public RevisionFileTreeController(IFileAssociatedIconProvider iconProvider)
         {
-            _module = module;
-            _revisionInfoProvider = revisionInfoProvider;
             _iconProvider = iconProvider;
         }
 
@@ -147,6 +151,16 @@ namespace GitUI.CommandsDialogs
         public void ResetCache()
         {
             _cachedItems.Clear();
+        }
+
+        /// <summary>
+        /// Updates the GitModule
+        /// </summary>
+        /// <param name="module">The GitModule</param>
+        public void SetGitModule(IGitModule module, IGitRevisionInfoProvider revisionInfoProvider)
+        {
+            _module = module;
+            _revisionInfoProvider = revisionInfoProvider;
         }
     }
 }

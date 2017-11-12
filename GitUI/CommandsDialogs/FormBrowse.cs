@@ -1726,6 +1726,7 @@ namespace GitUI.CommandsDialogs
             }
 
             HideDashboard();
+            fileTree.SetGitModule(RevisionGrid.Module);
             UICommands.RepoChangedNotifier.Notify();
             RevisionGrid.IndexWatcher.Reset();
             RegisterPlugins();

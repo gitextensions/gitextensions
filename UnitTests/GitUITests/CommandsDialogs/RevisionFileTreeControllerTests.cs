@@ -29,7 +29,8 @@ namespace GitUITests.CommandsDialogs
             _module = Substitute.For<IGitModule>();
             _revisionInfoProvider = Substitute.For<IGitRevisionInfoProvider>();
             _iconProvider = Substitute.For<IFileAssociatedIconProvider>();
-            _controller = new RevisionFileTreeController(_module, _revisionInfoProvider, _iconProvider);
+            _controller = new RevisionFileTreeController(_iconProvider);
+            _controller.SetGitModule(_module, _revisionInfoProvider);
 
              _rootNode = new TreeNode();
              _imageList = new ImageList();
