@@ -1053,10 +1053,7 @@ namespace GitUI
         }
 
         [Browsable(false)]
-        public Task<bool> UnstagedChanges { get; private set; }
-
-        [Browsable(false)]
-        public Task<bool> StagedChanges { get; private set; }
+        private Task<IList<GitItemStatus>> ChangedFiles { get; set; }
 
         private string _filtredCurrentCheckout;
 
@@ -1078,16 +1075,14 @@ namespace GitUI
                 var newCurrentCheckout = Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
                 Task<SuperProjectInfo> newSuperPrjectInfo =
-                    Task.Factory.StartNew(() => GetSuperprojectCheckout(ShowRemoteRef, capturedModule));
+                    Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef, capturedModule));
                 newSuperPrjectInfo.ContinueWith((task) => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
                 //Only check for tracked files. This usually makes more sense and it performs a lot
                 //better then checking for untracked files.
                 // TODO: Check FiltredFileName
-                Task<bool> unstagedChanges =
-                    Task.Factory.StartNew(() => capturedModule.GetUnstagedFiles().Any());
-                Task<bool> stagedChanges =
-                    Task.Factory.StartNew(() => capturedModule.GetStagedFiles().Any());
+                Task<IList<GitItemStatus>> changedFilesTask =
+                    Task.Run(() => capturedModule.GetAllChangedFiles());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -1106,8 +1101,7 @@ namespace GitUI
                 _filtredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 SuperprojectCurrentCheckout = newSuperPrjectInfo;
-                UnstagedChanges = unstagedChanges;
-                StagedChanges = stagedChanges;
+                ChangedFiles = changedFilesTask;
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -2701,26 +2695,33 @@ namespace GitUI
 
         private void CheckUncommitedChanged(string filtredCurrentCheckout)
         {
-            if (UnstagedChanges.Result)
+            var staged = ChangedFiles.Result.Count(item => item.IsStaged);
+            var unstaged = ChangedFiles.Result.Count() - staged;
+
+            if (unstaged > 0)
             {
                 //Add working directory as virtual commit
+                //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
+                //Do not activate if count on Commit button is set, the counters may be inconsistient
+                string count = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar ? "(" + unstaged + ") " : "";
                 var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
                 {
-                    Subject = Strings.GetCurrentUnstagedChanges(),
+                    Subject = count + Strings.GetCurrentUnstagedChanges(),
                     ParentGuids =
-                        StagedChanges.Result
+                        staged > 0
                             ? new[] { GitRevision.IndexGuid }
                             : new[] { filtredCurrentCheckout }
                 };
                 Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
             }
 
-            if (StagedChanges.Result)
+            if (staged > 0)
             {
                 //Add index as virtual commit
+                string count = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar ? "(" + staged + ") " : "";
                 var index = new GitRevision(Module, GitRevision.IndexGuid)
                 {
-                    Subject = Strings.GetCurrentIndex(),
+                    Subject = count + Strings.GetCurrentIndex(),
                     ParentGuids = new[] { filtredCurrentCheckout }
                 };
                 Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
