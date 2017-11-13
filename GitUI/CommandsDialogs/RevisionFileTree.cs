@@ -181,8 +181,8 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
-            _revisionFileTreeController = new RevisionFileTreeController(Module,
-                                                                         new GitRevisionInfoProvider(Module),
+            _revisionFileTreeController = new RevisionFileTreeController(() => Module.WorkingDir,
+                                                                         new GitRevisionInfoProvider(() => Module),
                                                                          new FileAssociatedIconProvider());
 
             tvGitTree.ImageList = new ImageList(components)

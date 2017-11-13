@@ -15,7 +15,6 @@ namespace GitUITests.CommandsDialogs
     [TestFixture]
     public class RevisionFileTreeControllerTests
     {
-        private IGitModule _module;
         private IFileAssociatedIconProvider _iconProvider;
         private IGitRevisionInfoProvider _revisionInfoProvider;
         private RevisionFileTreeController _controller;
@@ -26,10 +25,9 @@ namespace GitUITests.CommandsDialogs
         [SetUp]
         public void Setup()
         {
-            _module = Substitute.For<IGitModule>();
             _revisionInfoProvider = Substitute.For<IGitRevisionInfoProvider>();
             _iconProvider = Substitute.For<IFileAssociatedIconProvider>();
-            _controller = new RevisionFileTreeController(_module, _revisionInfoProvider, _iconProvider);
+            _controller = new RevisionFileTreeController(() => @"c:\repo", _revisionInfoProvider, _iconProvider);
 
              _rootNode = new TreeNode();
              _imageList = new ImageList();
