@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,15 +44,15 @@ namespace GitUI.CommandsDialogs
             public const int Submodule = 2;
         }
 
-        private readonly IGitModule _module;
         private readonly IFileAssociatedIconProvider _iconProvider;
+        private readonly Func<string> _getWorkingDir;
         private readonly IGitRevisionInfoProvider _revisionInfoProvider;
         private readonly ConcurrentDictionary<string, IEnumerable<IGitItem>> _cachedItems = new ConcurrentDictionary<string, IEnumerable<IGitItem>>();
 
 
-        public RevisionFileTreeController(IGitModule module, IGitRevisionInfoProvider revisionInfoProvider, IFileAssociatedIconProvider iconProvider)
+        public RevisionFileTreeController(Func<string> getWorkingDir, IGitRevisionInfoProvider revisionInfoProvider, IFileAssociatedIconProvider iconProvider)
         {
-            _module = module;
+            _getWorkingDir = getWorkingDir;
             _revisionInfoProvider = revisionInfoProvider;
             _iconProvider = iconProvider;
         }
@@ -92,6 +93,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            string workingDir = null;
             foreach (var childItem in childrenItems.OrderBy(gi => gi, new GitFileTreeComparer()))
             {
                 var subNode = nodes.Add(childItem.Name);
@@ -127,7 +129,10 @@ namespace GitUI.CommandsDialogs
                             }
                             if (!imageCollection.ContainsKey(extension))
                             {
-                                var fileIcon = _iconProvider.Get(_module.WorkingDir, gitItem.FileName);
+                                // a little optimisation - initialise the first time it is required
+                                workingDir = workingDir ?? _getWorkingDir();
+
+                                var fileIcon = _iconProvider.Get(workingDir, gitItem.FileName);
                                 if (fileIcon == null)
                                 {
                                     continue;

@@ -20,7 +20,7 @@ namespace GitCommandsTests
         public void Setup()
         {
             _module = Substitute.For<IGitModule>();
-            _provider = new GitRevisionInfoProvider(_module);
+            _provider = new GitRevisionInfoProvider(() => _module);
         }
 
         [Test]
@@ -36,6 +36,18 @@ namespace GitCommandsTests
         {
             var item = Substitute.For<IGitItem>();
             item.Guid.Returns(guid);
+
+            ((Action)(() => _provider.LoadChildren(item))).ShouldThrow<ArgumentException>();
+        }
+
+        [Test]
+        public void LoadChildren_should_return_if_gitmodule_not_supplied()
+        {
+            var guid = Guid.NewGuid().ToString("N");
+            var item = Substitute.For<IGitItem>();
+            item.Guid.Returns(guid);
+
+            _provider = new GitRevisionInfoProvider(() => null);
 
             ((Action)(() => _provider.LoadChildren(item))).ShouldThrow<ArgumentException>();
         }

@@ -19,11 +19,11 @@ namespace GitCommands
 
     public sealed class GitRevisionInfoProvider : IGitRevisionInfoProvider
     {
-        private readonly IGitModule _module;
+        private readonly Func<IGitModule> _getModule;
 
-        public GitRevisionInfoProvider(IGitModule module)
+        public GitRevisionInfoProvider(Func<IGitModule> getModule)
         {
-            _module = module;
+            _getModule = getModule;
         }
 
         /// <summary>
@@ -43,8 +43,13 @@ namespace GitCommands
             {
                 throw new ArgumentException("Item must have a valid identifier", nameof(item.Guid));
             }
+            var module = _getModule();
+            if (module == null)
+            {
+                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+            }
 
-            var subItems = _module.GetTree(item.Guid, false).ToList();
+            var subItems = module.GetTree(item.Guid, false).ToList();
             foreach (var subItem in subItems.OfType<GitItem>())
             {
                 subItem.FileName = Path.Combine((item as GitItem)?.FileName ?? string.Empty, subItem.FileName ?? string.Empty);
