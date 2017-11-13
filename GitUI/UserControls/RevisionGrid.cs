@@ -2662,6 +2662,7 @@ namespace GitUI
                 return;
             }
 
+
             if (_filtredCurrentCheckout == null)
             {
                 if (rev.Guid == CurrentCheckout)
@@ -2706,10 +2707,7 @@ namespace GitUI
             var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
             {
                 Subject = count + Strings.GetCurrentUnstagedChanges(),
-                ParentGuids =
-                    staged > 0
-                        ? new[] { GitRevision.IndexGuid }
-                        : new[] { filtredCurrentCheckout }
+                ParentGuids = new[] { GitRevision.IndexGuid }
             };
             Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
 
