@@ -630,7 +630,7 @@ namespace GitUI.CommandsDialogs
             this.CommitInfoTabControl.SelectedIndex = 0;
             this.CommitInfoTabControl.Size = new System.Drawing.Size(923, 289);
             this.CommitInfoTabControl.TabIndex = 0;
-            this.CommitInfoTabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
+            this.CommitInfoTabControl.SelectedIndexChanged += new System.EventHandler(this.CommitInfoTabControl_SelectedIndexChanged);
             // 
             // CommitInfoTabPage
             // 
