@@ -2246,6 +2246,25 @@ namespace GitCommands
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + RevisionDiffProvider.Get(from, to);
             string result = noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
+            if (from == GitRevision.UnstagedGuid || to == GitRevision.UnstagedGuid)
+            {
+                //For unstaged the untracked must be added too
+                var files = GetUnstagedFilesWithSubmodulesStatus().Where(item => item.IsNew);
+                if (from == GitRevision.UnstagedGuid)
+                {
+                    var f2 = GetUnstagedFilesWithSubmodulesStatus().Where(item => item.IsNew);
+                    foreach (var item in files)
+                    {
+                        item.IsNew = false;
+                        item.IsDeleted = true;
+                        resultCollection.Add(item);
+                    }
+                }
+                else
+                {
+                    resultCollection.AddRange(files);
+                }
+            }
             return resultCollection;
         }
 

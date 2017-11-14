@@ -261,7 +261,7 @@ namespace GitUI.CommandsDialogs
 
         private void PickAnotherCommit(GitRevision preSelect, ref string displayStr, ref GitRevision revision)
         {
-            using (var form = new FormChooseCommit(UICommands, preselectCommit: preSelect.Guid))
+            using (var form = new FormChooseCommit(UICommands, preselectCommit: preSelect.Guid, showArtificial: true))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
