@@ -101,6 +101,7 @@
     <Compile Include="Git\GitBranchNameOptions.cs" />
     <Compile Include="Git\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitDirectoryResolver.cs" />
+    <Compile Include="Git\RevisionDiffProvider.cs" />
     <Compile Include="Git\GitTagController.cs" />
     <Compile Include="SshPathLocator.cs" />
     <Compile Include="Git\IndexLockManager.cs" />
