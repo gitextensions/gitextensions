@@ -2587,6 +2587,7 @@ namespace GitUI
         {
             AppSettings.ShowRemoteBranches = !AppSettings.ShowRemoteBranches;
             InvalidateRevisions();
+            _revisionGridMenuCommands.TriggerMenuChanged(); // check/uncheck ToolStripMenuItem
         }
 
         internal void ShowSuperprojectTags_ToolStripMenuItemClick(object sender, EventArgs e)
