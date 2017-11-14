@@ -50,7 +50,7 @@ namespace GitCommands
                 to = String.Empty;
             }
 
-            return string.Join(" ", extra, from, to);
+            return string.Join(" ", extra, from, to).Trim();
         }
 
         /// <summary>
