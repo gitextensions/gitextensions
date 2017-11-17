@@ -1165,6 +1165,10 @@ namespace GitUI.Editor
                 _async.Dispose();
                 if (components != null)
                     components.Dispose();
+                if (IsUICommandsInitialized)
+                {
+                    UICommands.PostSettings -= UICommands_PostSettings;
+                }
             }
             base.Dispose(disposing);
         }
