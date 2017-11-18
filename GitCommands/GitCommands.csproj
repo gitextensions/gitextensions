@@ -99,10 +99,13 @@
     <Compile Include="Git\FileDeleteException.cs" />
     <Compile Include="Git\GitBranchNameNormaliser.cs" />
     <Compile Include="Git\GitBranchNameOptions.cs" />
-    <Compile Include="Git\GitCreateTagCmd.cs" />
+    <Compile Include="Git\Tag\GitCreateTagArgs.cs" />
+    <Compile Include="Git\Tag\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitDirectoryResolver.cs" />
     <Compile Include="Git\RevisionDiffProvider.cs" />
-    <Compile Include="Git\GitTagController.cs" />
+    <Compile Include="Git\Tag\GitTagController.cs" />
+    <Compile Include="Git\Tag\TagOperation.cs" />
+    <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="SshPathLocator.cs" />
     <Compile Include="Git\IndexLockManager.cs" />
     <Compile Include="Git\GitTreeParser.cs" />
