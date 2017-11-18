@@ -24,7 +24,8 @@ namespace GitUI.CommandsDialogs
         bool ShouldShowMenuBLocal(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldShowMenuAParentLocal(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldShowMenuBParentLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldShowMenuParents(ContextMenuDiffToolInfo selectionInfo);
+        bool ShouldShowMenuAParent(ContextMenuDiffToolInfo selectionInfo);
+        bool ShouldShowMenuBParent(ContextMenuDiffToolInfo selectionInfo);
     }
 
     public sealed class ContextMenuSelectionInfo
@@ -48,19 +49,19 @@ namespace GitUI.CommandsDialogs
 
     public sealed class ContextMenuDiffToolInfo
     {
-        public ContextMenuDiffToolInfo(bool aIsLocal, bool bIsLocal, bool bIsNormal, bool localExists, bool showParentItems)
+        public ContextMenuDiffToolInfo(bool aIsLocal, bool bIsLocal, bool bIsNormal, bool localExists, bool multipleRevisionsSelected)
         {
             AIsLocal = aIsLocal;
             BIsLocal = bIsLocal;
             BIsNormal = bIsNormal;
             LocalExists = localExists;
-            ShowParentItems = showParentItems;
+            MultipleRevisionsSelected = multipleRevisionsSelected;
         }
         public bool AIsLocal { get; }
         public bool BIsLocal { get; }
         public bool BIsNormal { get; }
         public bool LocalExists { get; }
-        public bool ShowParentItems { get; }
+        public bool MultipleRevisionsSelected { get; }
     }
 
     public sealed class RevisionDiffController : IRevisionDiffController
@@ -164,9 +165,14 @@ namespace GitUI.CommandsDialogs
             return selectionInfo.LocalExists && selectionInfo.BIsNormal;
         }
 
-        public bool ShouldShowMenuParents(ContextMenuDiffToolInfo selectionInfo)
+        public bool ShouldShowMenuAParent(ContextMenuDiffToolInfo selectionInfo)
         {
-            return selectionInfo.ShowParentItems;
+            return ShouldShowMenuALocal(selectionInfo) && selectionInfo.AIsLocal;
+        }
+
+        public bool ShouldShowMenuBParent(ContextMenuDiffToolInfo selectionInfo)
+        {
+            return ShouldShowMenuBLocal(selectionInfo) && (selectionInfo.BIsLocal || selectionInfo.MultipleRevisionsSelected);
         }
     }
 }
