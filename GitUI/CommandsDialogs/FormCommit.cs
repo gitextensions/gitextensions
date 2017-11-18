@@ -1158,8 +1158,6 @@ namespace GitUI.CommandsDialogs
 
             ClearDiffViewIfNoFilesLeft();
 
-            Unstaged.ContextMenuStrip = null;
-
             if (!Unstaged.SelectedItems.Any())
                 return;
 
@@ -1173,6 +1171,12 @@ namespace GitUI.CommandsDialogs
                 Unstaged.ContextMenuStrip = UnstagedFileContext;
             else
                 Unstaged.ContextMenuStrip = UnstagedSubmoduleContext;
+        }
+
+        private void UnstagedContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //Do not show if no item selected
+            e.Cancel = !Unstaged.SelectedItems.Any();
         }
 
         private void Unstaged_Enter(object sender, EventArgs e)
@@ -1313,6 +1317,8 @@ namespace GitUI.CommandsDialogs
 
         private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            //Do not show if no item selected
+            e.Cancel = !Staged.SelectedItems.Any();
             bool isFile = false;
             foreach(GitItemStatus item in Staged.SelectedItems)
             {
@@ -1355,9 +1361,6 @@ namespace GitUI.CommandsDialogs
                 return;
 
             ClearDiffViewIfNoFilesLeft();
-
-            if (!Staged.SelectedItems.Any())
-                return;
 
             Unstaged.ClearSelected();
             _currentSelection = Staged.SelectedItems.ToList();
