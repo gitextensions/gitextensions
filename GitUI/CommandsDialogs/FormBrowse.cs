@@ -534,16 +534,11 @@ namespace GitUI.CommandsDialogs
                 mergeToolStripMenuItem.Enabled = !bareRepository;
                 rebaseToolStripMenuItem1.Enabled = !bareRepository;
                 pullToolStripMenuItem1.Enabled = !bareRepository;
-                resetToolStripMenuItem.Enabled = !bareRepository;
                 cleanupToolStripMenuItem.Enabled = !bareRepository;
                 stashToolStripMenuItem.Enabled = !bareRepository;
                 checkoutBranchToolStripMenuItem.Enabled = !bareRepository;
                 mergeBranchToolStripMenuItem.Enabled = !bareRepository;
                 rebaseToolStripMenuItem.Enabled = !bareRepository;
-                runMergetoolToolStripMenuItem.Enabled = !bareRepository;
-                cherryPickToolStripMenuItem.Enabled = !bareRepository;
-                checkoutToolStripMenuItem.Enabled = !bareRepository;
-                bisectToolStripMenuItem.Enabled = !bareRepository;
                 applyPatchToolStripMenuItem.Enabled = !bareRepository;
                 SvnRebaseToolStripMenuItem.Enabled = !bareRepository;
                 SvnDcommitToolStripMenuItem.Enabled = !bareRepository;
@@ -2015,6 +2010,23 @@ namespace GitUI.CommandsDialogs
             SetWorkingDir("");
 
             base.OnClosed(e);
+        }
+
+        private void CommandsToolStripMenuItem_DropDownOpening(object sender, System.EventArgs e)
+        {
+            //Most options do not make sense for artificial commits or no revision selected at all
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            bool enabled = selectedRevisions.Count == 1 && !selectedRevisions.Single().IsArtificial();
+
+            this.resetToolStripMenuItem.Enabled =
+            this.checkoutBranchToolStripMenuItem.Enabled =
+            this.runMergetoolToolStripMenuItem.Enabled =
+            this.tagToolStripMenuItem.Enabled =
+            this.cherryPickToolStripMenuItem.Enabled =
+            this.archiveToolStripMenuItem.Enabled =
+            this.checkoutToolStripMenuItem.Enabled =
+            this.bisectToolStripMenuItem.Enabled =
+              enabled;
         }
 
         private void CloneSvnToolStripMenuItemClick(object sender, EventArgs e)
