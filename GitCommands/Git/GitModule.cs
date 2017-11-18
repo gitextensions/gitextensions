@@ -100,7 +100,7 @@ namespace GitCommands
             _superprojectInit = false;
             _workingDir = (workingdir ?? "").EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(_workingDir);
-            _indexLockManager = new IndexLockManager(this);
+            _indexLockManager = new IndexLockManager(() => this);
         }
 
         #region IGitCommands

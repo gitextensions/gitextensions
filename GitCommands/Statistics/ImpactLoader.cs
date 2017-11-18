@@ -61,11 +61,11 @@ namespace GitCommands.Statistics
         }
 
         private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
-        private readonly IGitModule Module;
+        private readonly Func<IGitModule> _getModule;
 
-        public ImpactLoader(IGitModule aModule)
+        public ImpactLoader(Func<IGitModule> getModule)
         {
-            Module = aModule;
+            _getModule = getModule;
         }
 
         public void Dispose()
@@ -113,19 +113,25 @@ namespace GitCommands.Statistics
 
         private Task[] GetTasks(CancellationToken token)
         {
+            var module = _getModule();
+            if (module == null)
+            {
+                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+            }
+
             List<Task> tasks = new List<Task>();
             string authorName = RespectMailmap ? "%aN" : "%an";
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
-            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, Module, token), token));
+            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, module, token), token));
 
             if (ShowSubmodules)
             {
-                IList<string> submodules = Module.GetSubmodulesLocalPaths();
+                IList<string> submodules = module.GetSubmodulesLocalPaths();
                 foreach (var submoduleName in submodules)
                 {
-                    IGitModule submodule = Module.GetSubmodule(submoduleName);
+                    IGitModule submodule = module.GetSubmodule(submoduleName);
                     if (submodule.IsValidGitWorkingDir())
                         tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, submodule, token), token));
                 }

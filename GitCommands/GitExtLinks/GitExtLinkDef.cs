@@ -183,11 +183,11 @@ namespace GitCommands.GitExtLinks
 
         public IEnumerable<GitExtLink> Parse(GitRevision revision)
         {
-            GitRemoteController remoteController = new GitRemoteController(revision.Module);
+            GitRemoteController remoteController = new GitRemoteController(() => revision.Module);
             return Parse(revision, remoteController);
         }
 
-        public IEnumerable<GitExtLink> Parse(GitRevision revision, IGitRemoteController remoteController)
+        internal IEnumerable<GitExtLink> Parse(GitRevision revision, IGitRemoteController remoteController)
         {
             IEnumerable<Match> remoteMatches = ParseRemotes(remoteController);
 
@@ -212,7 +212,7 @@ namespace GitCommands.GitExtLinks
             return links.Unwrap();
         }
 
-        public IEnumerable<Match> ParseRemotes(IGitRemoteController remoteController)
+        private IEnumerable<Match> ParseRemotes(IGitRemoteController remoteController)
         {
             IList<Match> allMatches = new List<Match>();
 

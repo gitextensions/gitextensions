@@ -28,16 +28,15 @@ namespace GitCommandsTests.Remote
             _module = Substitute.For<IGitModule>();
             _module.LocalConfigFile.Returns(_configFile);
 
-            _controller = new GitRemoteController(_module);
+            _controller = new GitRemoteController(() => _module);
         }
 
-
         [Test]
-        public void LoadRemotes_should_not_throw_if_module_is_null()
+        public void LoadRemotes_should_throw_if_module_is_null()
         {
             _module = null;
-
-            ((Action)(() => _controller.LoadRemotes(true))).ShouldNotThrow();
+            ((Action)(() => _controller.LoadRemotes(true))).ShouldThrow<ArgumentException>()
+                .WithMessage("Require a valid instance of IGitModule");
         }
 
         [Test]
@@ -102,6 +101,15 @@ namespace GitCommandsTests.Remote
         }
 
         [Test]
+        public void RemoveRemote_should_throw_if_module_is_null()
+        {
+            var remote = new GitRemote { Name = "bla" };
+            _module = null;
+            ((Action)(() => _controller.RemoveRemote(remote))).ShouldThrow<ArgumentException>()
+                .WithMessage("Require a valid instance of IGitModule");
+        }
+
+        [Test]
         public void RemoveRemote_success()
         {
             var remote = new GitRemote { Name = "bla" };
@@ -120,6 +128,14 @@ namespace GitCommandsTests.Remote
                 .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
             ((Action)(() => _controller.SaveRemote(null, "  ", "b", "c", "d"))).ShouldThrow<ArgumentNullException>()
                 .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
+        }
+
+        [Test]
+        public void SaveRemote_should_throw_if_module_is_null()
+        {
+            _module = null;
+            ((Action)(() => _controller.SaveRemote(null, "name", "b", "c", "d"))).ShouldThrow<ArgumentException>()
+                .WithMessage("Require a valid instance of IGitModule");
         }
 
         [Test]
