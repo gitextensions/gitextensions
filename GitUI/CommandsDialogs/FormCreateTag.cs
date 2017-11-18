@@ -5,6 +5,7 @@ using GitCommands;
 using GitUI.Script;
 using ResourceManager;
 using GitCommands.Git;
+using GitCommands.Git.Tag;
 
 namespace GitUI.CommandsDialogs
 {
@@ -41,7 +42,7 @@ namespace GitUI.CommandsDialogs
 
             if (aCommands != null)
             {
-                _gitTagController = new GitTagController(aCommands, aCommands.Module);
+                _gitTagController = new GitTagController(() => aCommands.Module.WorkingDir);
             }
         }
 
@@ -83,7 +84,8 @@ namespace GitUI.CommandsDialogs
                                                      tagMessage.Text,
                                                      textBoxGpgKey.Text,
                                                      ForceTag.Checked);
-            if (!_gitTagController.CreateTag(createTagArgs, this))
+            var cmd = _gitTagController.GetCreateTagCommand(createTagArgs);
+            if (!UICommands.StartCommandLineProcessDialog(cmd, this))
             {
                 return string.Empty;
             }
