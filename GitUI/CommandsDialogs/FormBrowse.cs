@@ -1051,7 +1051,7 @@ namespace GitUI.CommandsDialogs
                 return;
 
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
-            var revision = selectedRevisions.Count == 1 ? selectedRevisions.Single() : null;
+            var revision = selectedRevisions.Count == 1 ? selectedRevisions[0] : null;
 
             if (_buildReportTabPageExtension == null)
                 _buildReportTabPageExtension = new BuildReportTabPageExtension(CommitInfoTabControl, _buildReportTabCaption.Text);
@@ -2016,7 +2016,7 @@ namespace GitUI.CommandsDialogs
         {
             //Most options do not make sense for artificial commits or no revision selected at all
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
-            bool enabled = selectedRevisions.Count == 1 && !selectedRevisions.Single().IsArtificial();
+            bool enabled = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial();
 
             this.resetToolStripMenuItem.Enabled =
             this.checkoutBranchToolStripMenuItem.Enabled =
