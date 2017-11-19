@@ -1158,8 +1158,6 @@ namespace GitUI.CommandsDialogs
 
             ClearDiffViewIfNoFilesLeft();
 
-            Unstaged.ContextMenuStrip = null;
-
             if (!Unstaged.SelectedItems.Any())
                 return;
 
@@ -1173,6 +1171,12 @@ namespace GitUI.CommandsDialogs
                 Unstaged.ContextMenuStrip = UnstagedFileContext;
             else
                 Unstaged.ContextMenuStrip = UnstagedSubmoduleContext;
+        }
+
+        private void UnstagedContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //Do not show if no item selected
+            e.Cancel = !Unstaged.SelectedItems.Any();
         }
 
         private void Unstaged_Enter(object sender, EventArgs e)
@@ -1313,17 +1317,25 @@ namespace GitUI.CommandsDialogs
 
         private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            bool isFile = false;
-            foreach(GitItemStatus item in Staged.SelectedItems)
+            if (!Staged.SelectedItems.Any())
             {
-                if (!item.IsSubmodule) { isFile = true; }
+                //Do not show if no item selected
+                e.Cancel = true;
             }
-            this.stagedToolStripSeparator14.Visible = isFile;
-            this.stagedEditFileToolStripMenuItem11.Visible = isFile;
-            this.stagedOpenDifftoolToolStripMenuItem9.Visible = isFile;
-            this.stagedOpenToolStripMenuItem7.Visible = isFile;
-            this.stagedToolStripSeparator17.Visible = isFile;
-            this.stagedOpenWithToolStripMenuItem8.Visible = isFile;
+            else
+            {
+                bool isFile = false;
+                foreach (GitItemStatus item in Staged.SelectedItems)
+                {
+                    if (!item.IsSubmodule) { isFile = true; }
+                }
+                this.stagedToolStripSeparator14.Visible = isFile;
+                this.stagedEditFileToolStripMenuItem11.Visible = isFile;
+                this.stagedOpenDifftoolToolStripMenuItem9.Visible = isFile;
+                this.stagedOpenToolStripMenuItem7.Visible = isFile;
+                this.stagedToolStripSeparator17.Visible = isFile;
+                this.stagedOpenWithToolStripMenuItem8.Visible = isFile;
+            }
         }
 
         void Unstaged_DoubleClick(object sender, EventArgs e)
@@ -1355,9 +1367,6 @@ namespace GitUI.CommandsDialogs
                 return;
 
             ClearDiffViewIfNoFilesLeft();
-
-            if (!Staged.SelectedItems.Any())
-                return;
 
             Unstaged.ClearSelected();
             _currentSelection = Staged.SelectedItems.ToList();

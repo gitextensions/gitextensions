@@ -203,6 +203,7 @@ namespace GitUI.CommandsDialogs
             this.interactiveAddtoolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
             this.UnstagedFileContext.Size = new System.Drawing.Size(233, 370);
+            this.UnstagedFileContext.Opening += UnstagedContextMenu_Opening;
             // 
             // resetChanges
             // 
@@ -476,6 +477,7 @@ namespace GitUI.CommandsDialogs
             this.copyFolderNameMenuItem});
             this.UnstagedSubmoduleContext.Name = "UnstagedSubmoduleContext";
             this.UnstagedSubmoduleContext.Size = new System.Drawing.Size(229, 264);
+            this.UnstagedSubmoduleContext.Opening += UnstagedContextMenu_Opening;
             // 
             // commitSubmoduleChanges
             // 
