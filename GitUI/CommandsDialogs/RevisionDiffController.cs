@@ -12,9 +12,10 @@ namespace GitUI.CommandsDialogs
         bool ShouldShowMenuResetFile(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo);
+        bool ShouldShowMenuCopyFileName(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo);
-        bool ShouldShowMenuStage(IList<GitRevision> selectedRevisions);
-        bool ShouldShowMenuUnstage(IList<GitRevision> selectedRevisions);
+        bool ShouldShowMenuStage(ContextMenuSelectionInfo selectionInfo);
+        bool ShouldShowMenuUnstage(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo);
 
@@ -28,19 +29,21 @@ namespace GitUI.CommandsDialogs
 
     public sealed class ContextMenuSelectionInfo
     {
-        public ContextMenuSelectionInfo(IList<GitRevision> selectedRevisions, GitItemStatus selectedDiff, bool isAnyCombinedDiff, bool isSingleGitItemSelected, bool isCombinedDiff)
+        public ContextMenuSelectionInfo(IList<GitRevision> selectedRevisions, GitItemStatus selectedDiff, bool isAnyCombinedDiff, bool isSingleGitItemSelected, bool isCombinedDiff, bool isAnyItemSelected)
         {
             SelectedRevisions = selectedRevisions;
             SelectedDiff = selectedDiff;
             IsAnyCombinedDiff  = isAnyCombinedDiff;
             IsSingleGitItemSelected = isSingleGitItemSelected;
             IsCombinedDiff = isCombinedDiff;
+            IsAnyItemSelected = isAnyItemSelected;
         }
         public IList<GitRevision> SelectedRevisions { get; }
         public GitItemStatus SelectedDiff { get; }
         public bool IsAnyCombinedDiff { get; }
         public bool IsSingleGitItemSelected { get; }
         public bool IsCombinedDiff { get; }
+        public bool IsAnyItemSelected { get;  }
     }
 
     public sealed class ContextMenuDiffToolInfo
@@ -71,7 +74,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return !selectionInfo.IsAnyCombinedDiff;
+            return selectionInfo.IsAnyItemSelected && !selectionInfo.IsAnyCombinedDiff;
         }
 
         public bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo)
@@ -93,7 +96,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuResetFile(ContextMenuSelectionInfo selectionInfo)
         {
-            return !selectionInfo.IsCombinedDiff &&
+            return selectionInfo.IsAnyItemSelected && !selectionInfo.IsCombinedDiff &&
                 !(selectionInfo.IsSingleGitItemSelected && (selectionInfo.SelectedDiff.IsSubmodule || selectionInfo.SelectedDiff.IsNew) && selectionInfo.SelectedRevisions[0].Guid == GitRevision.UnstagedGuid);
         }
 
@@ -104,7 +107,12 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo)
         {
-            return !selectionInfo.IsCombinedDiff && selectionInfo.IsSingleGitItemSelected && !selectionInfo.SelectedDiff.IsSubmodule;
+            return selectionInfo.IsAnyItemSelected && !selectionInfo.IsCombinedDiff && selectionInfo.IsSingleGitItemSelected && !selectionInfo.SelectedDiff.IsSubmodule;
+        }
+
+        public bool ShouldShowMenuCopyFileName(ContextMenuSelectionInfo selectionInfo)
+        {
+            return selectionInfo.IsAnyItemSelected;
         }
 
         public bool ShouldShowMenuShowInFileTree(ContextMenuSelectionInfo selectionInfo)
@@ -112,16 +120,18 @@ namespace GitUI.CommandsDialogs
             return selectionInfo.IsSingleGitItemSelected && !selectionInfo.SelectedRevisions[0].IsArtificial();
         }
 
-        public bool ShouldShowMenuStage(IList<GitRevision> selectedRevisions)
+        public bool ShouldShowMenuStage(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectedRevisions.Count >= 1 && selectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
-                   selectedRevisions.Count >= 2 && selectedRevisions[1].Guid == GitRevision.UnstagedGuid;
+            return selectionInfo.IsAnyItemSelected &&
+                   selectionInfo.SelectedRevisions.Count >= 1 && selectionInfo.SelectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
+                   selectionInfo.SelectedRevisions.Count >= 2 && selectionInfo.SelectedRevisions[1].Guid == GitRevision.UnstagedGuid;
         }
 
-        public bool ShouldShowMenuUnstage(IList<GitRevision> selectedRevisions)
+        public bool ShouldShowMenuUnstage(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectedRevisions.Count >= 1 && selectedRevisions[0].Guid == GitRevision.IndexGuid ||
-                   selectedRevisions.Count >= 2 && selectedRevisions[1].Guid == GitRevision.IndexGuid;
+            return selectionInfo.IsAnyItemSelected &&
+                   selectionInfo.SelectedRevisions.Count >= 1 && selectionInfo.SelectedRevisions[0].Guid == GitRevision.IndexGuid ||
+                   selectionInfo.SelectedRevisions.Count >= 2 && selectionInfo.SelectedRevisions[1].Guid == GitRevision.IndexGuid;
         }
 
         public bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo)
