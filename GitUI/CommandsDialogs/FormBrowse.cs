@@ -1809,26 +1809,48 @@ namespace GitUI.CommandsDialogs
         {
             branchSelect.DropDownItems.Clear();
 
-            ToolStripMenuItem item = new ToolStripMenuItem(checkoutBranchToolStripMenuItem.Text);
-            item.ShortcutKeys = checkoutBranchToolStripMenuItem.ShortcutKeys;
-            item.ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString;
-            branchSelect.DropDownItems.Add(item);
-            item.Click += (hs, he) => CheckoutBranchToolStripMenuItemClick(hs, he);
-
+            AddCheckoutBranchMenuItem();
             branchSelect.DropDownItems.Add(new ToolStripSeparator());
-
-            foreach (var branch in Module.GetRefs(false))
-            {
-                var toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
-                toolStripItem.Click += BranchSelectToolStripItem_Click;
-
-                //Make sure there are never more than 100 branches added to the menu
-                //GitExtensions will hang when the drop down is to large...
-                if (branchSelect.DropDownItems.Count > 100)
-                    break;
-            }
+            AddBranchesMenuItems();
 
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+        }
+
+        private void AddCheckoutBranchMenuItem()
+        {
+            var checkoutBranchItem = new ToolStripMenuItem(checkoutBranchToolStripMenuItem.Text)
+            {
+                ShortcutKeys = checkoutBranchToolStripMenuItem.ShortcutKeys,
+                ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString
+            };
+            branchSelect.DropDownItems.Add(checkoutBranchItem);
+            checkoutBranchItem.Click += CheckoutBranchToolStripMenuItemClick;
+        }
+
+        private void AddBranchesMenuItems()
+        {
+            foreach (string branchName in GetBranchNames())
+            {
+                ToolStripItem toolStripItem = branchSelect.DropDownItems.Add(branchName);
+                toolStripItem.Click += BranchSelectToolStripItem_Click;
+
+            }
+        }
+
+        private IEnumerable<string> GetBranchNames()
+        {
+            IList<IGitRef> branches = Module.GetRefs(false);
+            IEnumerable<string> branchNames = branches.Select(b => b.Name);
+            if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
+            {
+                branchNames = branchNames.OrderBy(b => b);
+            }
+
+            // Make sure there are never more than a 100 branches added to the menu
+            // GitExtensions will hang when the drop down is too large...
+            branchNames = branchNames.Take(100);
+
+            return branchNames;
         }
 
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
