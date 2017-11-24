@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
             StashKeepIndex.Checked = AppSettings.StashKeepIndex;
             chkIncludeUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInManualStash;
 
-            splitContainer2_SplitterMoved(null, null);
+            splitContainer1_SplitterMoved(null, null);
         }
 
         GitStash currentWorkingDirStashItem;
@@ -90,7 +90,7 @@ namespace GitUI.CommandsDialogs
 
             Loading.Visible = true;
             Stashes.Enabled = false;
-            toolStripButton1.Enabled = false;
+            refreshToolStripButton.Enabled = false;
             toolStripButton_customMessage.Enabled = false;
             if (gitStash == null)
             {
@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs
             Stashed.GitItemStatuses = gitItemStatuses;
             Loading.Visible = false;
             Stashes.Enabled = true;
-            toolStripButton1.Enabled = true;
+            refreshToolStripButton.Enabled = true;
         }
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
@@ -257,15 +257,15 @@ namespace GitUI.CommandsDialogs
             RefreshAll();
         }
 
-        private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            Stashes.Size = new Size(toolStrip1.Width - 15 - toolStripButton1.Width - toolStripLabel1.Width - toolStripButton_customMessage.Width, Stashes.Size.Height);
-            Stashes.DropDownWidth = Math.Max(Stashes.Size.Width, splitContainer1.Width - 2 * toolStripLabel1.Width);
+            Stashes.Size = new Size(toolStrip1.Width - 15 - refreshToolStripButton.Width - showToolStripLabel.Width - toolStripButton_customMessage.Width, Stashes.Size.Height);
+            Stashes.DropDownWidth = Math.Max(Stashes.Size.Width, splitContainer1.Width - 2 * showToolStripLabel.Width);
         }
 
         private void FormStash_Resize(object sender, EventArgs e)
         {
-            splitContainer2_SplitterMoved(null, null);
+            splitContainer1_SplitterMoved(null, null);
         }
 
         private void toolStripButton_customMessage_Click(object sender, EventArgs e)
