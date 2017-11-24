@@ -259,7 +259,8 @@ namespace GitUI.CommandsDialogs
 
         private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            Stashes.Size = new Size(Math.Min(200, toolStrip1.Width - 25 - toolStripButton1.Width - toolStripLabel1.Width - toolStripButton_customMessage.Width), Stashes.Size.Height);
+            Stashes.Size = new Size(toolStrip1.Width - 15 - toolStripButton1.Width - toolStripLabel1.Width - toolStripButton_customMessage.Width, Stashes.Size.Height);
+            Stashes.DropDownWidth = Math.Max(Stashes.Size.Width, splitContainer1.Width - 2 * toolStripLabel1.Width);
         }
 
         private void FormStash_Resize(object sender, EventArgs e)
