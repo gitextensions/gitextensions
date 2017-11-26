@@ -619,10 +619,16 @@ namespace GitUI.CommandsDialogs
 
             if (selectedRevsCount == 1)
             {
-                resetFileToSelectedToolStripMenuItem.Visible = true;
-                TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
-                resetFileToSelectedToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0]).ShortenTo(50) + ")";
-
+                if (revisions[0].Guid == GitRevision.UnstagedGuid)
+                {
+                    resetFileToSelectedToolStripMenuItem.Visible = false;
+                }
+                else
+                {
+                    resetFileToSelectedToolStripMenuItem.Visible = true;
+                    TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
+                    resetFileToSelectedToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0]).ShortenTo(50) + ")";
+                }
                 if (revisions[0].HasParent)
                 {
                     resetFileToParentToolStripMenuItem.Visible = true;
@@ -646,13 +652,27 @@ namespace GitUI.CommandsDialogs
 
             if (selectedRevsCount == 2)
             {
-                resetFileToFirstToolStripMenuItem.Visible = true;
-                TranslateItem(resetFileToFirstToolStripMenuItem.Name, resetFileToFirstToolStripMenuItem);
-                resetFileToFirstToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[1]).ShortenTo(50) + ")";
+                if (revisions[1].Guid == GitRevision.UnstagedGuid)
+                {
+                    resetFileToFirstToolStripMenuItem.Visible = false;
+                }
+                else
+                {
+                    resetFileToFirstToolStripMenuItem.Visible = true;
+                    TranslateItem(resetFileToFirstToolStripMenuItem.Name, resetFileToFirstToolStripMenuItem);
+                    resetFileToFirstToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[1]).ShortenTo(50) + ")";
+                }
 
-                resetFileToSecondToolStripMenuItem.Visible = true;
-                TranslateItem(resetFileToSecondToolStripMenuItem.Name, resetFileToSecondToolStripMenuItem);
-                resetFileToSecondToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0]).ShortenTo(50) + ")";
+                if (revisions[0].Guid == GitRevision.UnstagedGuid)
+                {
+                    resetFileToSecondToolStripMenuItem.Visible = false;
+                }
+                else
+                {
+                    resetFileToSecondToolStripMenuItem.Visible = true;
+                    TranslateItem(resetFileToSecondToolStripMenuItem.Name, resetFileToSecondToolStripMenuItem);
+                    resetFileToSecondToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0]).ShortenTo(50) + ")";
+                }
             }
             else
             {

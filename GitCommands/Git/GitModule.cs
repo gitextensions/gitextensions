@@ -1526,7 +1526,23 @@ namespace GitCommands
             if (files.IsNullOrWhiteSpace())
                 return string.Empty;
 
-            return RunGitCmd("checkout " + force.AsForce() + revision.Quote() + " -- " + files);
+            //Special handling for artificial commits
+            if (revision == GitRevision.IndexGuid)
+            {
+                revision = "";
+            }
+            else if (revision == GitRevision.UnstagedGuid)
+            {
+                Debug.Assert(false, "Unexpectedly reset to unstaged - should be blocked in GUI");
+                //However, not an error to user, just nothing happens
+                return "";
+            }
+            else
+            {
+                revision = revision.QuoteNE();
+            }
+
+            return RunGitCmd("checkout " + force.AsForce() + revision + " -- " + files);
         }
 
         public string RemoveFiles(IEnumerable<string> fileList, bool force)

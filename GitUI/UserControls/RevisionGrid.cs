@@ -870,16 +870,29 @@ namespace GitUI
 
             string description;
 
-            if (descriptiveRefs.Any())
+            //Special handling for artificial commits (.Subject may contain count)
+            if (revision.Guid == GitRevision.IndexGuid)
             {
-                description = GetRefUnambiguousName(descriptiveRefs.First());
+                description = Strings.GetCurrentIndex();
+            }
+            else if (revision.Guid == GitRevision.UnstagedGuid)
+            {
+                description = Strings.GetCurrentUnstagedChanges();
             }
             else
             {
-                description = revision.Subject;
-            }
+                if (descriptiveRefs.Any())
+                {
+                    description = GetRefUnambiguousName(descriptiveRefs.First());
+                }
+                else
+                {
+                    description = revision.Subject;
+                }
 
-            description = description + " @" + revision.Guid.Substring(0, 4);
+
+                description += " @" + revision.Guid.Substring(0, 4);
+            }
 
             return description;
         }
