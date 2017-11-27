@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
             StashKeepIndex.Checked = AppSettings.StashKeepIndex;
             chkIncludeUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInManualStash;
 
-            ResizeStashedDropdown();
+            ResizeStashesWidth();
         }
 
         GitStash currentWorkingDirStashItem;
@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs
             refreshToolStripButton.Enabled = true;
         }
 
-        private void ResizeStashedDropdown()
+        private void ResizeStashesWidth()
         {
             Stashes.Size = new Size(toolStrip1.Width - 15 - refreshToolStripButton.Width - showToolStripLabel.Width - toolStripButton_customMessage.Width, Stashes.Size.Height);
         }
@@ -270,12 +270,12 @@ namespace GitUI.CommandsDialogs
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            ResizeStashedDropdown();
+            ResizeStashesWidth();
         }
 
         private void FormStash_Resize(object sender, EventArgs e)
         {
-            ResizeStashedDropdown();
+            ResizeStashesWidth();
         }
 
         private void toolStripButton_customMessage_Click(object sender, EventArgs e)

@@ -301,6 +301,7 @@ namespace GitUI.CommandsDialogs
             this.Stashes.Size = new System.Drawing.Size(175, 28);
             this.Stashes.ToolTipText = "Select a stash";
             this.Stashes.SelectedIndexChanged += new System.EventHandler(this.StashesSelectedIndexChanged);
+            this.Stashes.DropDown += Stashes_DropDown;
             // 
             // toolStripButton_customMessage
             // 
