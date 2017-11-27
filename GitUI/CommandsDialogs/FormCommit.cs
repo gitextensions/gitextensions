@@ -302,7 +302,7 @@ namespace GitUI.CommandsDialogs
 
         #region Hotkey commands
 
-        public const string HotkeySettingsName = "Commit";
+        public static readonly string HotkeySettingsName = "Commit";
 
         internal enum Commands
         {

@@ -962,7 +962,7 @@ namespace GitUI.Editor
 
         #region Hotkey commands
 
-        public const string HotkeySettingsName = "FileViewer";
+        public static readonly string HotkeySettingsName = "FileViewer";
 
         internal enum Commands
         {

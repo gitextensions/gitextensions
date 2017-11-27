@@ -1055,7 +1055,7 @@ namespace GitUI.CommandsDialogs
 
         #region Hotkey commands
 
-        public const string HotkeySettingsName = "FormMergeConflicts";
+        public static readonly string HotkeySettingsName = "FormMergeConflicts";
 
         internal enum Commands
         {

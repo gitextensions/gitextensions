@@ -3127,7 +3127,7 @@ namespace GitUI
 
         #region Hotkey commands
 
-        public const string HotkeySettingsName = "RevisionGrid";
+        public static readonly string HotkeySettingsName = "RevisionGrid";
 
         internal enum Commands
         {
