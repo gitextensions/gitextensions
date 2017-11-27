@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.UserControls;
 using PatchApply;
 using ResourceManager;
 
@@ -52,7 +53,7 @@ namespace GitUI.CommandsDialogs
             StashKeepIndex.Checked = AppSettings.StashKeepIndex;
             chkIncludeUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInManualStash;
 
-            splitContainer1_SplitterMoved(null, null);
+            ResizeStashedDropdown();
         }
 
         GitStash currentWorkingDirStashItem;
@@ -117,6 +118,11 @@ namespace GitUI.CommandsDialogs
             Loading.Visible = false;
             Stashes.Enabled = true;
             refreshToolStripButton.Enabled = true;
+        }
+
+        private void ResizeStashedDropdown()
+        {
+            Stashes.Size = new Size(toolStrip1.Width - 15 - refreshToolStripButton.Width - showToolStripLabel.Width - toolStripButton_customMessage.Width, Stashes.Size.Height);
         }
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
@@ -239,6 +245,11 @@ namespace GitUI.CommandsDialogs
             Cursor.Current = Cursors.Default;
         }
 
+        private void Stashes_DropDown(object sender, EventArgs e)
+        {
+            Stashes.ResizeComboBoxDropDownWidth(Stashes.Size.Width, splitContainer1.Width - 2 * showToolStripLabel.Width);
+        }
+
         private void RefreshClick(object sender, EventArgs e)
         {
             RefreshAll();
@@ -259,13 +270,12 @@ namespace GitUI.CommandsDialogs
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            Stashes.Size = new Size(toolStrip1.Width - 15 - refreshToolStripButton.Width - showToolStripLabel.Width - toolStripButton_customMessage.Width, Stashes.Size.Height);
-            Stashes.DropDownWidth = Math.Max(Stashes.Size.Width, splitContainer1.Width - 2 * showToolStripLabel.Width);
+            ResizeStashedDropdown();
         }
 
         private void FormStash_Resize(object sender, EventArgs e)
         {
-            splitContainer1_SplitterMoved(null, null);
+            ResizeStashedDropdown();
         }
 
         private void toolStripButton_customMessage_Click(object sender, EventArgs e)
@@ -308,6 +318,5 @@ namespace GitUI.CommandsDialogs
                 StashMessage.ReadOnly = false;
             }
         }
-
     }
 }

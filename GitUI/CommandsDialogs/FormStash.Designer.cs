@@ -293,6 +293,7 @@ namespace GitUI.CommandsDialogs
             // 
             // Stashes
             // 
+            this.Stashes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Stashes.DropDownWidth = 200;
             this.Stashes.MaxDropDownItems = 30;
             this.Stashes.Name = "Stashes";
