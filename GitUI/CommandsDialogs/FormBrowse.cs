@@ -1898,7 +1898,7 @@ namespace GitUI.CommandsDialogs
 
         #region Hotkey commands
 
-        public const string HotkeySettingsName = "Browse";
+        public static readonly string HotkeySettingsName = "Browse";
 
         internal enum Commands
         {
