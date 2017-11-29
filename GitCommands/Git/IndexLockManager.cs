@@ -30,20 +30,20 @@ namespace GitCommands.Git
     public sealed class IndexLockManager : IIndexLockManager
     {
         private const string IndexLock = "index.lock";
-        private readonly IGitModule _module;
+        private readonly Func<IGitModule> _getModule;
         private readonly IGitDirectoryResolver _gitDirectoryResolver;
         private readonly IFileSystem _fileSystem;
 
 
-        public IndexLockManager(IGitModule module, IGitDirectoryResolver gitDirectoryResolver, IFileSystem fileSystem)
+        public IndexLockManager(Func<IGitModule> getModule, IGitDirectoryResolver gitDirectoryResolver, IFileSystem fileSystem)
         {
-            _module = module;
+            _getModule = getModule;
             _gitDirectoryResolver = gitDirectoryResolver;
             _fileSystem = fileSystem;
         }
 
-        public IndexLockManager(IGitModule module)
-            : this(module, new GitDirectoryResolver(), new FileSystem())
+        public IndexLockManager(Func<IGitModule> getModule)
+            : this(getModule, new GitDirectoryResolver(), new FileSystem())
         {
         }
 
@@ -54,7 +54,8 @@ namespace GitCommands.Git
         /// <returns><see langword="true"/> is index is locked; otherwise <see langword="false"/>.</returns>
         public bool IsIndexLocked()
         {
-            var indexLockFile = Path.Combine(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
+            var module = GetModule();
+            var indexLockFile = Path.Combine(_gitDirectoryResolver.Resolve(module.WorkingDir), IndexLock);
             return _fileSystem.File.Exists(indexLockFile);
         }
 
@@ -67,7 +68,8 @@ namespace GitCommands.Git
         /// <exception cref="FileDeleteException">Unable to delete specific index.lock.</exception>
         public void UnlockIndex(bool includeSubmodules = true)
         {
-            var workingFolderIndexLock = Path.Combine(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
+            var module = GetModule();
+            var workingFolderIndexLock = Path.Combine(_gitDirectoryResolver.Resolve(module.WorkingDir), IndexLock);
             if (!includeSubmodules)
             {
                 DeleteIndexLock(workingFolderIndexLock);
@@ -75,10 +77,10 @@ namespace GitCommands.Git
             }
 
             // get the list of files to delete
-            var submodules = _module.GetSubmodulesLocalPaths();
+            var submodules = module.GetSubmodulesLocalPaths();
             var list = submodules.Select(sm =>
             {
-                var submodulePath = _module.GetSubmoduleFullPath(sm);
+                var submodulePath = module.GetSubmoduleFullPath(sm);
                 var submoduleIndexLock = Path.Combine(_gitDirectoryResolver.Resolve(submodulePath), IndexLock);
                 return submoduleIndexLock;
             }).Union(new[] { workingFolderIndexLock });
@@ -105,6 +107,16 @@ namespace GitCommands.Git
             {
                 throw new FileDeleteException(fileName, ex);
             }
+        }
+
+        private IGitModule GetModule()
+        {
+            var module = _getModule();
+            if (module == null)
+            {
+                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+            }
+            return module;
         }
     }
 }

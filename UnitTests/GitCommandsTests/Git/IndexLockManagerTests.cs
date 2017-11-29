@@ -10,6 +10,8 @@ using NUnit.Framework;
 
 namespace GitCommandsTests.Git
 {
+    [SetCulture("")]
+    [SetUICulture("")]
     [TestFixture]
     public class IndexLockManagerTests
     {
@@ -48,9 +50,17 @@ namespace GitCommandsTests.Git
             _gitDirectoryResolver = Substitute.For<IGitDirectoryResolver>();
             _gitDirectoryResolver.Resolve(_workingDir).Returns(_gitWorkingDir);
 
-            _manager = new IndexLockManager(_module, _gitDirectoryResolver, _fileSystem);
+            _manager = new IndexLockManager(() => _module, _gitDirectoryResolver, _fileSystem);
         }
 
+
+        [Test]
+        public void IsIndexLocked_should_throw_if_module_is_null()
+        {
+            _module = null;
+            ((Action)(() => _manager.IsIndexLocked())).ShouldThrow<ArgumentException>()
+                .WithMessage("Require a valid instance of IGitModule");
+        }
 
         [TestCase(false)]
         [TestCase(true)]
@@ -59,6 +69,14 @@ namespace GitCommandsTests.Git
             _file.Exists(Arg.Any<string>()).Returns(fileExists);
 
             _manager.IsIndexLocked().Should().Be(fileExists);
+        }
+
+        [Test]
+        public void UnlockIndex_should_throw_if_module_is_null()
+        {
+            _module = null;
+            ((Action)(() => _manager.UnlockIndex())).ShouldThrow<ArgumentException>()
+                .WithMessage("Require a valid instance of IGitModule");
         }
 
         [Test]
@@ -181,7 +199,7 @@ namespace GitCommandsTests.Git
                 helper.CreateFile(helper.Module.WorkingDirGitDir, IndexLock, "");
                 helper.CreateFile(submoduleGitHubWorkingDirGitDir, IndexLock, "");
 
-                _manager = new IndexLockManager(helper.Module);
+                _manager = new IndexLockManager(() => helper.Module);
 
                 var indexLock = Path.Combine(helper.Module.WorkingDirGitDir, IndexLock);
                 File.Exists(indexLock).Should().BeTrue();

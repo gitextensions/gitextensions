@@ -255,7 +255,7 @@ Inactive remote is completely invisible to git.");
             {
                 return;
             }
-            _gitRemoteController = new GitRemoteController(Module);
+            _gitRemoteController = new GitRemoteController(() => Module);
             // load the data for the very first time
             Initialize(PreselectRemoteOnLoad);
         }

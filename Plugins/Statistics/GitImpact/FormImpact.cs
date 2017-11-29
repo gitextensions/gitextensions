@@ -22,7 +22,7 @@ namespace GitImpact
             UpdateAuthorInfo("");
             if (Module != null)
             {
-                Impact.Init(Module);
+                Impact.Init(() => Module);
                 Impact.UpdateData();
                 Impact.Invalidated += Impact_Invalidated;
             }

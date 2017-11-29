@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs
 
             if (aCommands != null)
             {
-                _gitRemoteController = new GitRemoteController(Module);
+                _gitRemoteController = new GitRemoteController(() => Module);
                 Init(defaultRemote);
             }
 

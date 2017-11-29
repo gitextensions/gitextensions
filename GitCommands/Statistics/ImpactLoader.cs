@@ -61,11 +61,11 @@ namespace GitCommands.Statistics
         }
 
         private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
-        private readonly IGitModule Module;
+        private readonly Func<string> _getWorkingDir;
 
-        public ImpactLoader(IGitModule aModule)
+        public ImpactLoader(Func<string> getWorkingDir)
         {
-            Module = aModule;
+            _getWorkingDir = getWorkingDir;
         }
 
         public void Dispose()
@@ -113,19 +113,28 @@ namespace GitCommands.Statistics
 
         private Task[] GetTasks(CancellationToken token)
         {
+            var workingDir = _getWorkingDir();
+            if (workingDir == null)
+            {
+                throw new ArgumentNullException($"Require a valid working directory");
+            }
+
+            // create a local gitmodule since we are going to execute async code
+            var module = new GitModule(workingDir);
+
             List<Task> tasks = new List<Task>();
             string authorName = RespectMailmap ? "%aN" : "%an";
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
-            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, Module, token), token));
+            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, module, token), token));
 
             if (ShowSubmodules)
             {
-                IList<string> submodules = Module.GetSubmodulesLocalPaths();
+                IList<string> submodules = module.GetSubmodulesLocalPaths();
                 foreach (var submoduleName in submodules)
                 {
-                    IGitModule submodule = Module.GetSubmodule(submoduleName);
+                    IGitModule submodule = module.GetSubmodule(submoduleName);
                     if (submodule.IsValidGitWorkingDir())
                         tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, submodule, token), token));
                 }
