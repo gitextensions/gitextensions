@@ -409,9 +409,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-
-                GitRevision revision = revisions.Count == 0 ? null : revisions[0];
+                GitRevision revision = _revisionGrid.GetSelectedRevisions().FirstOrDefault();
                 UICommands.StartFileHistoryDialog(this, item.Name, revision, true, true);
             }
         }
@@ -502,9 +500,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-
-                GitRevision revision = revisions.Count == 0 ? null : revisions[0];
+                GitRevision revision = _revisionGrid.GetSelectedRevisions().FirstOrDefault();
                 UICommands.StartFileHistoryDialog(this, item.Name, revision, false);
             }
         }

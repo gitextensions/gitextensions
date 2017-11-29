@@ -157,12 +157,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
-
-                if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
-                    UICommands.StartFileHistoryDialog(this, item.Name);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], false);
+                UICommands.StartFileHistoryDialog(this, item.Name, _baseRevision, false);
             }
         }
 
@@ -172,12 +167,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
-
-                if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
-                    UICommands.StartFileHistoryDialog(this, item.Name, null, false, true);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], true, true);
+                UICommands.StartFileHistoryDialog(this, item.Name, _baseRevision, true, true);
             }
         }
 

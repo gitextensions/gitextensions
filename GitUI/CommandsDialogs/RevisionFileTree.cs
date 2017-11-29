@@ -344,10 +344,7 @@ namespace GitUI.CommandsDialogs
             if (gitItem == null)
                 return;
 
-            if (GitRevision.IsArtificial(_revision.Guid))
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName, null, false, true);
-            else
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, true, true);
+            UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, true, true);
         }
 
         private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -371,10 +368,7 @@ namespace GitUI.CommandsDialogs
             if (gitItem == null)
                 return;
 
-            if (GitRevision.IsArtificial(_revision.Guid))
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName);
-            else
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, false, false);
+            UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, false, false);
         }
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
