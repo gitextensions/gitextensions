@@ -6,6 +6,7 @@ using GitCommands;
 using GitUI.HelperDialogs;
 using ResourceManager;
 using GitCommands.Git;
+using GitCommands.Git.Tag;
 
 namespace GitUI.CommandsDialogs
 {
@@ -46,7 +47,7 @@ namespace GitUI.CommandsDialogs
 
             if (aCommands != null)
             {
-                _gitTagController = new GitTagController(aCommands, aCommands.Module);
+                _gitTagController = new GitTagController(() => aCommands.Module.WorkingDir);
             }
         }
 
@@ -260,7 +261,8 @@ namespace GitUI.CommandsDialogs
             {
                 currentTag++;
                 var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{currentTag}", lostObject.Hash);
-                _gitTagController.CreateTag(createTagArgs, this);
+                var cmd = _gitTagController.GetCreateTagCommand(createTagArgs);
+                UICommands.StartCommandLineProcessDialog(cmd, this);
             }
 
             return currentTag;

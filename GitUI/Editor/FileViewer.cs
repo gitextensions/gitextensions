@@ -962,7 +962,7 @@ namespace GitUI.Editor
 
         #region Hotkey commands
 
-        public const string HotkeySettingsName = "FileViewer";
+        public static readonly string HotkeySettingsName = "FileViewer";
 
         internal enum Commands
         {
@@ -1165,6 +1165,10 @@ namespace GitUI.Editor
                 _async.Dispose();
                 if (components != null)
                     components.Dispose();
+                if (IsUICommandsInitialized)
+                {
+                    UICommands.PostSettings -= UICommands_PostSettings;
+                }
             }
             base.Dispose(disposing);
         }

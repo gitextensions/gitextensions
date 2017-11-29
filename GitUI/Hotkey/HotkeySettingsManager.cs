@@ -308,6 +308,8 @@ namespace GitUI.Hotkey
                     hk(FormResolveConflicts.Commands.ChooseRemote, Keys.R),
                     hk(FormResolveConflicts.Commands.Merge, Keys.M),
                     hk(FormResolveConflicts.Commands.Rescan, Keys.F5)),
+                new HotkeySettings(RevisionDiff.HotkeySettingsName,
+                    hk(RevisionDiff.Commands.DeleteSelectedFiles, Keys.Delete)),
                 new HotkeySettings(FormSettings.HotkeySettingsName,
                     scriptsHotkeys)
               };

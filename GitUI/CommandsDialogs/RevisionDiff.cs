@@ -9,6 +9,7 @@ using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using ResourceManager;
+using GitUI.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
@@ -35,6 +36,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+            this.HotkeysEnabled = true;
         }
 
         public void ForceRefreshRevisions()
@@ -62,6 +64,56 @@ namespace GitUI.CommandsDialogs
                 DiffFiles.SetDiffs(revisions);
             }
         }
+
+        #region Hotkey commands
+
+        public static readonly string HotkeySettingsName = "BrowseDiff";
+
+        internal enum Commands
+        {
+            DeleteSelectedFiles,
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                case Commands.DeleteSelectedFiles: return DeleteSelectedFiles();
+                default: return base.ExecuteCommand(cmd);
+            }
+        }
+
+        /// <summary>
+        /// duplicated from GitExtensionsForm
+        /// </summary>
+        /// <param name="commandCode"></param>
+        /// <returns></returns>
+        private Keys GetShortcutKeys(int commandCode)
+        {
+            var hotkey = GetHotkeyCommand(commandCode);
+            return hotkey == null ? Keys.None : hotkey.KeyData;
+        }
+
+        internal Keys GetShortcutKeys(Commands cmd)
+        {
+            return GetShortcutKeys((int)cmd);
+        }
+
+        /// <summary>
+        /// duplicated from GitExtensionsForm
+        /// </summary>
+        /// <param name="commandCode"></param>
+        /// <returns></returns>
+        private HotkeyCommand GetHotkeyCommand(int commandCode)
+        {
+            if (Hotkeys == null)
+                return null;
+
+            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
+        }
+        #endregion
 
         public string GetTabText()
         {
@@ -106,8 +158,9 @@ namespace GitUI.CommandsDialogs
 
         public void ReloadHotkeys()
         {
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            this.diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
             DiffText.ReloadHotkeys();
-            //TBD Shortcut key should be implemented but HotKeyManager is inaccessible in FormBrowse
         }
 
 
@@ -119,6 +172,7 @@ namespace GitUI.CommandsDialogs
             DiffFiles.DescribeRevision = DescribeRevision;
             DiffText.SetFileLoader(GetNextPatchFile);
             DiffText.Font = AppSettings.DiffFont;
+            ReloadHotkeys();
 
             GotFocus += (s, e1) => DiffFiles.Focus();
 
@@ -191,10 +245,11 @@ namespace GitUI.CommandsDialogs
 
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item == DiffFiles.CombinedDiff.Text);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
+            bool isAnyItemSelected = DiffFiles.SelectedItems.Count() > 0;
             var isCombinedDiff = isExactlyOneItemSelected && DiffFiles.CombinedDiff.Text == DiffFiles.SelectedItemParent;
             var selectedItemStatus = DiffFiles.SelectedItem;
 
-            var selectionInfo = new ContextMenuSelectionInfo(selectedRevisions, selectedItemStatus, isAnyCombinedDiff, isExactlyOneItemSelected, isCombinedDiff);
+            var selectionInfo = new ContextMenuSelectionInfo(selectedRevisions, selectedItemStatus, isAnyCombinedDiff, isExactlyOneItemSelected, isCombinedDiff, isAnyItemSelected);
             return selectionInfo;
         }
 
@@ -308,9 +363,10 @@ namespace GitUI.CommandsDialogs
 
             openWithDifftoolToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowDifftoolMenus(selectionInfo);
             saveAsToolStripMenuItem1.Visible = _revisionDiffController.ShouldShowMenuSaveAs(selectionInfo);
+            copyFilenameToClipboardToolStripMenuItem1.Enabled = _revisionDiffController.ShouldShowMenuCopyFileName(selectionInfo);
 
-            stageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuStage(selectionInfo.SelectedRevisions);
-            unstageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuUnstage(selectionInfo.SelectedRevisions);
+            stageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuStage(selectionInfo);
+            unstageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuUnstage(selectionInfo);
 
             cherryPickSelectedDiffFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuCherryPick(selectionInfo);
             //Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)

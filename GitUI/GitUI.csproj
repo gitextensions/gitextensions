@@ -59,6 +59,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PSTaskDialog">
       <HintPath>..\Bin\PSTaskDialog.dll</HintPath>
     </Reference>
@@ -232,6 +233,12 @@
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.Designer.cs">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.Designer.cs">
+      <DependentUpon>ToolbarSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.cs">
       <SubType>UserControl</SubType>
@@ -1154,6 +1161,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DetailedSettingsPage.resx">
       <DependentUpon>DetailedSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.resx">
+      <DependentUpon>ToolbarSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.resx">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>

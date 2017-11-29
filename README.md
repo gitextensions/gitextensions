@@ -43,13 +43,17 @@ Translation: [![Transifex](https://ds0k0en9abmn1.cloudfront.net/static/charts/im
   </tr>
   <tr>
     <td><strong>Visual Studio VSIX (2015/2017)</strong></td>
-    <td><a href="https://marketplace.visualstudio.com/items?itemName=HenkWesthuis.GitExtensions">[ Download ]</a></td>
+    <td><a href="https://marketplace.visualstudio.com/items?itemName=HenkWesthuis.GitExtensions">[ Download ]</a> or install via Visual Studio</td>
   </tr>
   <tr>
     <td><strong>Visual Studio addin (2010/2012/2013)</strong></td>
     <td><a href="https://github.com/gitextensions/gitextensions/releases/latest">Download and run setup.exe</a></td>
   </tr>
-</table>
+  <tr>
+    <td><strong>Visual Studio Code VSIX</strong><br />Kudos to <a href="/pmiossec" class="author text-inherit">@pmiossec</a></td>
+    <td><a href="https://marketplace.visualstudio.com/items?itemName=pmiossec.vscode-gitextensions">[ Download ]</a> or install via VSCode<br />
+      NB: Please direct all discussions about the VSIX to <a href="https://github.com/pmiossec/vscode-gitextensions">its own repo</a>.</td>
+  </tr></table>
 
 
 

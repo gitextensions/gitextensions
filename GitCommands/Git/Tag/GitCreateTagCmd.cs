@@ -1,63 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GitCommands.Git
+namespace GitCommands.Git.Tag
 {
-    public enum TagOperation
-    {
-        Lightweight = 0,
-        Annotate,
-        SignWithDefaultKey,
-        SignWithSpecificKey
-    };
-
-    public static class TagOperationExtensions
-    {
-        public static bool CanProvideMessage(this TagOperation operation)
-        {
-            switch (operation)
-            {
-                case TagOperation.Lightweight:
-                    return false;
-                case TagOperation.Annotate:
-                case TagOperation.SignWithDefaultKey:
-                case TagOperation.SignWithSpecificKey:
-                    return true;
-                default:
-                    throw new NotSupportedException($"Invalid tag operation: {operation}");
-            }
-        }
-    }
-
-    public class GitCreateTagArgs
-    {
-        /// <summary>
-        /// Creates arguments for creation of a tag.
-        /// </summary>
-        /// <param name="tagName">Name of tag</param>
-        /// <param name="revision">Commit revision to be tagged</param>
-        /// <param name="operation">The operation to perform on the tag</param>
-        /// <param name="tagMessage">Tag Message</param>
-        /// <param name="signKeyId">Specific Key ID to be used instead of default one</param>
-        /// <param name="force">Force parameter</param>
-        public GitCreateTagArgs(string tagName, string revision, TagOperation operation = TagOperation.Lightweight, string tagMessage = "", string signKeyId = "", bool force = false)
-        {
-            TagName = tagName;
-            Revision = revision;
-            Operation = operation;
-            TagMessage = tagMessage;
-            SignKeyId = signKeyId;
-            Force = force;
-        }
-
-        public string Revision { get; }
-        public string TagName { get; }
-        public bool Force { get; }
-        public TagOperation Operation { get; }
-        public string TagMessage { get; }
-        public string SignKeyId { get; }
-    }
-
     public sealed class GitCreateTagCmd : GitCommand
     {
         public GitCreateTagCmd(GitCreateTagArgs args, string tagMessageFileName)
@@ -68,6 +13,7 @@ namespace GitCommands.Git
 
 
         public GitCreateTagArgs Arguments { get; }
+
         public string TagMessageFileName { get; }
 
 
