@@ -61,11 +61,11 @@ namespace GitCommands.Statistics
         }
 
         private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
-        private readonly Func<IGitModule> _getModule;
+        private readonly Func<string> _getWorkingDir;
 
-        public ImpactLoader(Func<IGitModule> getModule)
+        public ImpactLoader(Func<string> getWorkingDir)
         {
-            _getModule = getModule;
+            _getWorkingDir = getWorkingDir;
         }
 
         public void Dispose()
@@ -113,11 +113,14 @@ namespace GitCommands.Statistics
 
         private Task[] GetTasks(CancellationToken token)
         {
-            var module = _getModule();
-            if (module == null)
+            var workingDir = _getWorkingDir();
+            if (workingDir == null)
             {
-                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+                throw new ArgumentNullException($"Require a valid working directory");
             }
+
+            // create a local gitmodule since we are going to execute async code
+            var module = new GitModule(workingDir);
 
             List<Task> tasks = new List<Task>();
             string authorName = RespectMailmap ? "%aN" : "%an";
