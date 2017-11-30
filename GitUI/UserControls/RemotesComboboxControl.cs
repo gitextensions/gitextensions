@@ -37,7 +37,7 @@ namespace GitUI.UserControls
             }
 
             var gitRemoteController = new GitRemoteController(Module);
-            comboBoxRemotes.DataSource = gitRemoteController.Remotes;
+            comboBoxRemotes.DataSource = gitRemoteController.LoadRemotes(false);
         }
     }
 }

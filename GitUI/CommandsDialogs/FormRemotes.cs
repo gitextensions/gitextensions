@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
@@ -106,13 +107,18 @@ Inactive remote is completely invisible to git.");
         /// </summary>
         public string PreselectRemoteOnLoad { get; set; }
 
+        /// <summary>
+        /// Gets the list of remotes configured in .git/config file.
+        /// </summary>
+        private List<GitRemote> UserGitRemotes { get; set; }
+
 
         private void BindRemotes(string preselectRemote)
         {
             // we need to unwire and rewire the events to avoid excessive flickering
             Remotes.SelectedIndexChanged -= Remotes_SelectedIndexChanged;
             Remotes.Items.Clear();
-            Remotes.Items.AddRange(_gitRemoteController.Remotes.Select(remote =>
+            Remotes.Items.AddRange(UserGitRemotes.Select(remote =>
             {
                 var group = remote.Disabled ? _lvgDisabled : _lvgEnabled;
                 var color = remote.Disabled ? SystemColors.GrayText : SystemColors.WindowText;
@@ -121,7 +127,7 @@ Inactive remote is completely invisible to git.");
             Remotes.SelectedIndexChanged += Remotes_SelectedIndexChanged;
 
             Remotes.SelectedIndices.Clear();
-            if (_gitRemoteController.Remotes.Any())
+            if (UserGitRemotes.Any())
             {
                 if (!string.IsNullOrEmpty(preselectRemote))
                 {
@@ -173,7 +179,7 @@ Inactive remote is completely invisible to git.");
         private void Initialize(string preselectRemote = null)
         {
             // refresh registered git remotes
-            _gitRemoteController.LoadRemotes(true);
+            UserGitRemotes = _gitRemoteController.LoadRemotes(true).ToList();
 
             InitialiseTabRemotes(preselectRemote);
             InitialiseTabBehaviors();
@@ -217,7 +223,7 @@ Inactive remote is completely invisible to git.");
             var heads = Module.GetRefs(false, true);
 
             RemoteRepositoryCombo.Sorted = false;
-            RemoteRepositoryCombo.DataSource = new[] { new GitRemote() }.Union(_gitRemoteController.Remotes).ToList();
+            RemoteRepositoryCombo.DataSource = new[] { new GitRemote() }.Union(UserGitRemotes).ToList();
             RemoteRepositoryCombo.DisplayMember = "Name";
 
             RemoteBranches.AutoGenerateColumns = false;
@@ -354,11 +360,11 @@ Inactive remote is completely invisible to git.");
         private void SshBrowseClick(object sender, EventArgs e)
         {
             using (var dialog = new OpenFileDialog
-                {
-                    Filter = _sshKeyOpenFilter.Text + @"|*.ppk",
-                    InitialDirectory = ".",
-                    Title = _sshKeyOpenCaption.Text
-                })
+            {
+                Filter = _sshKeyOpenFilter.Text + @"|*.ppk",
+                InitialDirectory = ".",
+                Title = _sshKeyOpenCaption.Text
+            })
             {
                 if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
@@ -414,7 +420,7 @@ Inactive remote is completely invisible to git.");
 
             LocalBranchNameEdit.Text = head.Name;
             LocalBranchNameEdit.ReadOnly = true;
-            RemoteRepositoryCombo.SelectedItem = _gitRemoteController.Remotes.FirstOrDefault(x => x.Name.Equals(head.TrackingRemote, StringComparison.OrdinalIgnoreCase));
+            RemoteRepositoryCombo.SelectedItem = UserGitRemotes.FirstOrDefault(x => x.Name.Equals(head.TrackingRemote, StringComparison.OrdinalIgnoreCase));
             if (RemoteRepositoryCombo.SelectedItem == null)
             {
                 RemoteRepositoryCombo.SelectedIndex = 0;

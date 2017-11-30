@@ -45,9 +45,9 @@ namespace GitCommandsTests.Remote
         {
             _module.GetRemotes().Returns(x => Enumerable.Empty<string>());
 
-            _controller.LoadRemotes(true);
+            var remotes = _controller.LoadRemotes(true);
 
-            _controller.Remotes.Count.Should().Be(0);
+            remotes.Count().Should().Be(0);
             _module.Received(1).GetRemotes();
             _module.DidNotReceive().GetSetting(Arg.Any<string>());
             _module.DidNotReceive().GetSettings(Arg.Any<string>());
@@ -58,9 +58,9 @@ namespace GitCommandsTests.Remote
         {
             _module.GetRemotes().Returns(x => new[] { null, "", " ", "    ", "\t" });
 
-            _controller.LoadRemotes(true);
+            var remotes = _controller.LoadRemotes(true);
 
-            _controller.Remotes.Count.Should().Be(0);
+            remotes.Count().Should().Be(0);
             _module.Received(1).GetRemotes();
             _module.DidNotReceive().GetSetting(Arg.Any<string>());
             _module.DidNotReceive().GetSettings(Arg.Any<string>());
@@ -76,9 +76,9 @@ namespace GitCommandsTests.Remote
             var sections = new List<IConfigSection> { new ConfigSection($"{GitRemoteController.DisabledSectionPrefix}{GitRemoteController.SectionRemote}.{remoteName2}", true) };
             _configFile.GetConfigSections().Returns(x => sections);
 
-            _controller.LoadRemotes(loadDisabled);
+            var remotes = _controller.LoadRemotes(loadDisabled);
 
-            _controller.Remotes.Count.Should().Be(loadDisabled ? 2 : 1);
+            remotes.Count().Should().Be(loadDisabled ? 2 : 1);
 
             _module.Received(1).GetRemotes();
             _module.Received(1).GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName1));

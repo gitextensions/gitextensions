@@ -21,7 +21,7 @@ namespace GitCommandsTests.GitExtLinks
             GitRevision revision = new GitRevision(null, "");
             revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
             IGitRemoteController remoteController = Substitute.For<IGitRemoteController>();
-            remoteController.Remotes.Returns(GetDefaultRemotes());
+            remoteController.LoadRemotes(false).Returns(GetDefaultRemotes());
             IEnumerable<GitExtLink> actualLinks = linkDef.Parse(revision, remoteController);
             IEnumerable<GitExtLink> expectedLinks = new GitExtLink[]
             {
@@ -43,7 +43,7 @@ namespace GitCommandsTests.GitExtLinks
             GitRevision revision = new GitRevision(null, "");
             revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
             IGitRemoteController remoteController = Substitute.For<IGitRemoteController>();
-            remoteController.Remotes.Returns(GetDefaultRemotes());
+            remoteController.LoadRemotes(false).Returns(GetDefaultRemotes());
             IEnumerable<GitExtLink> actualLinks = linkDef.Parse(revision, remoteController);
             IEnumerable<GitExtLink> expectedLinks = new GitExtLink[]
             {
@@ -66,7 +66,7 @@ namespace GitCommandsTests.GitExtLinks
             GitRevision revision = new GitRevision(null, "");
             revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
             IGitRemoteController remoteController = Substitute.For<IGitRemoteController>();
-            remoteController.Remotes.Returns(GetDefaultRemotes());
+            remoteController.LoadRemotes(false).Returns(GetDefaultRemotes());
             IEnumerable<GitExtLink> actualLinks = linkDef.Parse(revision, remoteController);
             IEnumerable<GitExtLink> expectedLinks = new GitExtLink[]
             {
@@ -94,7 +94,7 @@ namespace GitCommandsTests.GitExtLinks
             GitRevision revision = new GitRevision(null, "");
             revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
             IGitRemoteController remoteController = Substitute.For<IGitRemoteController>();
-            remoteController.Remotes.Returns(GetDefaultRemotes());
+            remoteController.LoadRemotes(false).Returns(GetDefaultRemotes());
             IEnumerable<GitExtLink> actualLinks = linkDef.Parse(revision, remoteController);
             IEnumerable<GitExtLink> expectedLinks = new GitExtLink[]
             {
@@ -126,7 +126,7 @@ namespace GitCommandsTests.GitExtLinks
             GitRevision revision = new GitRevision(null, "");
             revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
             IGitRemoteController remoteController = Substitute.For<IGitRemoteController>();
-            remoteController.Remotes.Returns(GetDefaultRemotes());
+            remoteController.LoadRemotes(false).Returns(GetDefaultRemotes());
             IEnumerable<GitExtLink> actualLinks = linkDef.Parse(revision, remoteController);
             IEnumerable<GitExtLink> expectedLinks = new GitExtLink[]
             {

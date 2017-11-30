@@ -224,9 +224,8 @@ namespace GitCommands.GitExtLinks
             {
                 IList<string> remoteUrls = new List<string>();
 
-                remoteController.LoadRemotes(loadDisabled: false);
-
-                IEnumerable<GitRemote> matchingRemotes = GetMatchingRemotes(remoteController.Remotes);
+                var remotes = remoteController.LoadRemotes(false);
+                IEnumerable<GitRemote> matchingRemotes = GetMatchingRemotes(remotes);
 
                 foreach (GitRemote remote in matchingRemotes)
                 {

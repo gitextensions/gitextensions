@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using GitCommands;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 
@@ -11,11 +9,6 @@ namespace GitCommands.Remote
 {
     public interface IGitRemoteController
     {
-        /// <summary>
-        /// Gets the list of remotes configured in .git/config file.
-        /// </summary>
-        BindingList<GitRemote> Remotes { get; }
-
         void ConfigureRemotes(string remoteName);
 
         /// <summary>
@@ -27,10 +20,10 @@ namespace GitCommands.Remote
         string GetDefaultPushRemote(GitRemote remote, string branch);
 
         /// <summary>
-        /// Loads the remotes from the .git/config.
+        /// Loads the list of remotes configured in .git/config file.
         /// </summary>
         /// <param name="loadDisabled"></param>
-        void LoadRemotes(bool loadDisabled);
+        IEnumerable<GitRemote> LoadRemotes(bool loadDisabled);
 
         /// <summary>
         /// Removes the specified remote from .git/config file.
@@ -68,21 +61,13 @@ namespace GitCommands.Remote
     {
         internal static readonly string DisabledSectionPrefix = "-";
         internal static readonly string SectionRemote = "remote";
-        private static readonly object SyncRoot = new object();
         private readonly IGitModule _module;
 
 
         public GitRemoteController(IGitModule module)
         {
             _module = module;
-            Remotes = new BindingList<GitRemote>();
         }
-
-
-        /// <summary>
-        /// Gets the list of remotes configured in .git/config file.
-        /// </summary>
-        public BindingList<GitRemote> Remotes { get; private set; }
 
 
         // TODO: moved verbatim from FormRemotes.cs, perhaps needs refactoring
@@ -154,32 +139,24 @@ namespace GitCommands.Remote
         }
 
         /// <summary>
-        /// Loads the remotes from the .git/config.
+        /// Loads the list of remotes configured in .git/config file.
         /// </summary>
         // TODO: candidate for Async implementations
-        public void LoadRemotes(bool loadDisabled)
+        public IEnumerable<GitRemote> LoadRemotes(bool loadDisabled)
         {
+            var remotes = new List<GitRemote>();
             if (_module == null)
             {
-                return;
+                return remotes;
             }
 
-            lock (SyncRoot)
+            PopulateRemotes(remotes, true);
+            if (loadDisabled)
             {
-                Remotes.Clear();
-
-                var remotes = new List<GitRemote>();
-                GetRemotes(remotes, true);
-                if (loadDisabled)
-                {
-                    GetRemotes(remotes, false);
-                }
-
-                if (remotes.Count > 0)
-                {
-                    Remotes.AddAll(remotes.OrderBy(x => x.Name));
-                }
+                PopulateRemotes(remotes, false);
             }
+
+            return remotes.OrderBy(x => x.Name);
         }
 
         /// <summary>
@@ -311,7 +288,8 @@ namespace GitCommands.Remote
         }
 
 
-        private void GetRemotes(List<GitRemote> allRemotes, bool enabled)
+        // pass the list in to minimise allocations
+        private void PopulateRemotes(List<GitRemote> allRemotes, bool enabled)
         {
             Func<string[]> func;
             if (enabled)
