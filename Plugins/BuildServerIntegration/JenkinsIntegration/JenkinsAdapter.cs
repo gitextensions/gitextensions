@@ -167,6 +167,7 @@ namespace JenkinsIntegration
                         }
                     }
                 }
+                observer.OnCompleted();
             }
             catch (OperationCanceledException)
             {
