@@ -118,7 +118,7 @@ namespace GitUI
         public static Icon GetApplicationIcon(string iconStyle, string iconColor)
         {
             var colorIndex = (int)GetColorIndexByName(iconColor);
-            if (colorIndex == (int)ColorIndex.Unknown)
+            if (colorIndex == (int) ColorIndex.Unknown)
                 colorIndex = 0;
 
             Icon appIcon;

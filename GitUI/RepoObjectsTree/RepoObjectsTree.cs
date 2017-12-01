@@ -20,7 +20,6 @@ namespace GitUI.UserControls
 
         List<Tree> rootNodes = new List<Tree>();
         /// <summary>Image key for a head branch.</summary>
-        static readonly string headBranchKey = Guid.NewGuid().ToString();
         private SearchControl<string> txtBranchCriterion;
         private readonly HashSet<string> _branchCriterionAutoCompletionSrc = new HashSet<string>();
 

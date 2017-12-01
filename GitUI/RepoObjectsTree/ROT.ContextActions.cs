@@ -45,9 +45,6 @@ namespace GitUI.UserControls
 
             treeMain.NodeMouseClick += OnNodeMouseClick;
 
-            //RegisterClick<BranchesNode>(mnubtnNewBranch, branches => branches.CreateBranch());
-
-
             RegisterClick<BranchNode>(mnuBtnCheckoutLocal, branch => branch.Checkout());
             RegisterClick<BranchNode>(mnubtnBranchDelete, branch => branch.Delete());
             RegisterClick<BranchNode>(mnubtnBranchDeleteForce, branch => branch.DeleteForce());
@@ -58,34 +55,15 @@ namespace GitUI.UserControls
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranchesForce, branchPath => branchPath.DeleteAllForce());
             Node.RegisterContextMenu(typeof (BranchPathNode), menuBranchPath);
 
-            //RegisterClick<RootNode>(mnubtnStashSave, stashes => stashes.UICommands.StartStashDialog());
-            /*
-
-RegisterClick<StashNode>(mnubtnStashPop, stash => stash.Pop());
-RegisterClick<StashNode>(mnubtnStashApply, stash => stash.Apply());
-RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
-
-            RegisterClick<RemoteBranchNode>(mnubtnTrackedFetch, remoteBranch => remoteBranch.Fetch());
-            RegisterClick<RemoteBranchNode>(mnubtnTrackedPull, remoteBranch => remoteBranch.Pull());
-            RegisterClick<RemoteBranchNode>(mnubtnTrackedCreateBranch, remoteBranch => remoteBranch.CreateBranch());
-            RegisterClick<RemoteBranchNode>(mnubtnTrackedUnTrack, remoteBranch => remoteBranch.UnTrack());
-            RegisterClick<RemoteBranchNode>(mnubtnTrackedDelete, remoteBranch => remoteBranch.Delete());
-            */
-            // TODO: context actions for RemoteBranchNode depending on its current state
-            // can either create additional remote branch Node classes OR use method overloads
-
-            //RegisterClick<RemoteBranchUnTrackedNode>(mnubtnUntrackedFetch, remoteBranch => remoteBranch.Fetch());
-            //RegisterClick<RemoteBranchUnTrackedNode>(mnubtnUntrackedTrack, remoteBranch => remoteBranch.Track());
-
-            RegisterClick<RemoteBranchNode>(mnubtnRemoteRemove, remoteBranch => remoteBranch.Delete());
+            RegisterClick<RemoteBranchNode>(mnubtnDeleteRemoteBranch, remoteBranch => remoteBranch.Delete());
             RegisterClick<RemoteBranchNode>(mnubtnBranchCheckout, branch => branch.Checkout());
-            RegisterClick<RemoteBranchNode>(mnubtnNewFetch, remoteBranch => remoteBranch.Fetch());
-            RegisterClick<RemoteBranchNode>(toolbtnRemotePull, remoteBranch =>
+            RegisterClick<RemoteBranchNode>(mnubtnFetchOneBranch, remoteBranch => remoteBranch.Fetch());
+            RegisterClick<RemoteBranchNode>(mnubtnPullFromRemoteBranch, remoteBranch =>
             {
                 remoteBranch.Fetch();
                 remoteBranch.Merge();
             });
-            RegisterClick<RemoteBranchNode>(mnubtnNewCreateBranch, remoteBranch => remoteBranch.CreateBranch());
+            RegisterClick<RemoteBranchNode>(mnubtnCreateBranchBasedOnRemoteBranch, remoteBranch => remoteBranch.CreateBranch());
             RegisterClick<RemoteBranchNode>(mnubtnMergeBranch, remoteBranch => remoteBranch.Merge());
             RegisterClick<RemoteBranchNode>(mnubtnRebase, remoteBranch => remoteBranch.Rebase());
             RegisterClick<RemoteBranchNode>(mnubtnReset, remoteBranch => remoteBranch.Reset());
@@ -107,13 +85,13 @@ RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
             });
             Node.RegisterContextMenu(typeof(RemoteBranchNode), menuRemote);
 
-            RegisterClick<RemoteRepoNode>(mnubtnRemoteFetch, remoteBranch => remoteBranch.Fetch());
+            RegisterClick<RemoteRepoNode>(mnubtnFetchAllBranchesFromARemote, remote => remote.Fetch());
             RegisterClick<RemoteRepoNode>(mnubtnManageRemotes, remoteBranch => PopupManageRemotesForm());
             Node.RegisterContextMenu(typeof(RemoteRepoNode), menuRemoteRepoNode);
 
             RegisterClick<TagNode>(mnubtnCreateBranchForTag, tag => tag.CreateBranch());
             RegisterClick<TagNode>(mnubtnDeleteTag, tag => tag.Delete());
-            RegisterClick<TagNode>(mnuBtnCheckTag, tag => tag.Checkout());
+            RegisterClick<TagNode>(mnuBtnCheckoutTag, tag => tag.Checkout());
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
 
             RegisterClick(mnuBtnManageRemotesFromRootNode, PopupManageRemotesForm);

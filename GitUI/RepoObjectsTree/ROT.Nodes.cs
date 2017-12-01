@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
-using GitUI.Notifications;
-using GitUIPluginInterfaces.Notifications;
 
 namespace GitUI.UserControls
 {
@@ -264,26 +262,6 @@ namespace GitUI.UserControls
             internal virtual void OnClick() { }
             /// <summary>Occurs when the <see cref="Node"/> is double-clicked.</summary>
             internal virtual void OnDoubleClick() { }
-
-            protected INotifier Notifier { get; private set; }
-
-            /// <summary>Wraps <see cref="INotifier.Notify"/>.</summary>
-            protected void Notify(Notification notification)
-            {
-                Notifier.Notify(notification);
-            }
-
-            /// <summary>Depending on a git command's result, publishes a notification.</summary>
-            /// <param name="result">Result of the git command.</param>
-            /// <param name="successNotification">Notification to publish if successful.</param>
-            /// <param name="failNotification">Notification to publish if failed.</param>
-            protected void NotifyIf(
-                        GitCommandResult result,
-                        Func<Notification> successNotification,
-                        Func<Notification> failNotification)
-            {
-                Notifier.NotifyIf(result, successNotification, failNotification);
-            }
 
             /// <summary>Gets the <see cref="Node"/> from a <see cref="TreeViewNode"/>'s tag.</summary>
             public static Node GetNode(TreeNode treeNode)
