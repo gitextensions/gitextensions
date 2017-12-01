@@ -157,6 +157,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         #endregion
 
         private const string _putty = "PuTTY";
+        private readonly ISshPathLocator _sshPathLocator = new SshPathLocator();
 
         /// <summary>
         /// TODO: remove this direct dependency to another SettingsPage later when possible
@@ -486,7 +487,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                         _puttyConfigured.Text);
             }
 
-            var ssh = GitCommandHelpers.GetSsh();
+            var ssh = _sshPathLocator.Find(AppSettings.GitBinDir);
             RenderSettingSet(SshConfig, SshConfig_Fix, string.IsNullOrEmpty(ssh) ? _opensshUsed.Text : string.Format(_unknownSshClient.Text, ssh));
             return true;
         }

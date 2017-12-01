@@ -563,6 +563,7 @@ namespace PatchApply
             if (string.IsNullOrEmpty(text))
                 return null;
 
+            // TODO: handling submodules
             // Divide diff into header and patch
             int patchPos = text.IndexOf("@@");
             if (patchPos < 1)

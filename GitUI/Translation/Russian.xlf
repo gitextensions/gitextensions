@@ -9031,8 +9031,8 @@ global settings.
         
       </trans-unit>
       <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
-        <source>Show current working directory changes in revision graph (slow!)</source>
-        <target>Показывать текущие изменения в списке коммитов (медленно!)</target>
+        <source>Show current working directory changes in revision graph</source>
+        <target>Показывать текущие изменения в списке коммитов</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">

@@ -101,13 +101,13 @@ namespace GitUI.Editor
 
         void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
         {
-            UICommandsSource.GitUICommandsChanged += WorkingDirChanged;
-            WorkingDirChanged(UICommandsSource, null);
+            UICommandsSource.GitUICommandsChanged += UICommandsSourceChanged;
+            UICommandsSourceChanged(UICommandsSource, null);
         }
 
         protected override void DisposeUICommandsSource()
         {
-            UICommandsSource.GitUICommandsChanged -= WorkingDirChanged;
+            UICommandsSource.GitUICommandsChanged -= UICommandsSourceChanged;
             base.DisposeUICommandsSource();
         }
 
@@ -182,9 +182,21 @@ namespace GitUI.Editor
         [Browsable(false)]
         public byte[] FilePreamble { get; private set; }
 
-        private void WorkingDirChanged(object sender, GitUICommandsChangedEventArgs e)
+        private void UICommandsSourceChanged(object sender, GitUICommandsChangedEventArgs e)
         {
+            if(e?.OldCommands != null)
+                e.OldCommands.PostSettings -= UICommands_PostSettings;
+
+            var commandSource = sender as IGitUICommandsSource;
+            if( commandSource?.UICommands != null)
+                commandSource.UICommands.PostSettings += UICommands_PostSettings;
+
             this.Encoding = null;
+        }
+
+        private void UICommands_PostSettings( object sender, GitUIPluginInterfaces.GitUIPostActionEventArgs e )
+        {
+            _internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
@@ -950,7 +962,7 @@ namespace GitUI.Editor
 
         #region Hotkey commands
 
-        public const string HotkeySettingsName = "FileViewer";
+        public static readonly string HotkeySettingsName = "FileViewer";
 
         internal enum Commands
         {
@@ -1153,6 +1165,10 @@ namespace GitUI.Editor
                 _async.Dispose();
                 if (components != null)
                     components.Dispose();
+                if (IsUICommandsInitialized)
+                {
+                    UICommands.PostSettings -= UICommands_PostSettings;
+                }
             }
             base.Dispose(disposing);
         }

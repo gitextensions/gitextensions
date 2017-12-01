@@ -13,7 +13,7 @@ namespace GitUIPluginInterfaces
         string AddRemote(string remoteName, string path);
         IList<IGitRef> GetRefs(bool tags = true, bool branches = true);
         IEnumerable<string> GetSettings(string setting);
-        IList<IGitItem> GetTree(string id, bool full);
+        IEnumerable<IGitItem> GetTree(string id, bool full);
 
         /// <summary>
         /// Removes the registered remote by running <c>git remote rm</c> command.
@@ -57,11 +57,27 @@ namespace GitUIPluginInterfaces
 
         string RunBatchFile(string batchFile);
 
+        /// <summary>
+        /// Determines whether the given repository has index.lock file.
+        /// </summary>
+        /// <returns><see langword="true"/> is index is locked; otherwise <see langword="false"/>.</returns>
+        bool IsIndexLocked();
+
+        /// <summary>
+        /// Delete index.lock in the current working folder.
+        /// </summary>
+        /// <param name="includeSubmodules">
+        ///     If <see langword="true"/> all submodules will be scanned for index.lock files and have them delete, if found.
+        /// </param>
+        void UnlockIndex(bool includeSubmodules);
+
         /// <summary>Gets the directory which contains the git repository.</summary>
         string WorkingDir { get; }
 
-        /// <summary>Gets the ".git" directory path.</summary>
-        string GetGitDirectory();
+        /// <summary>
+        /// Gets the location of .git directory for the current working folder.
+        /// </summary>
+        string WorkingDirGitDir { get; }
 
         /// <summary>
         /// Asks git to resolve the given relativePath
@@ -84,6 +100,8 @@ namespace GitUIPluginInterfaces
         Version AppVersion { get; }
 
         string GravatarCacheDir { get; }
+
+        string GetSubmoduleFullPath(string localPath);
 
         IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
 

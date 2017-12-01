@@ -210,7 +210,7 @@ namespace GitUI.CommandsDialogs
             stagedResetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             deleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
             viewFileHistoryToolStripItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
-            toolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
+            stagedFileHistoryToolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
         }
@@ -302,7 +302,7 @@ namespace GitUI.CommandsDialogs
 
         #region Hotkey commands
 
-        public const string HotkeySettingsName = "Commit";
+        public static readonly string HotkeySettingsName = "Commit";
 
         internal enum Commands
         {
@@ -1158,8 +1158,6 @@ namespace GitUI.CommandsDialogs
 
             ClearDiffViewIfNoFilesLeft();
 
-            Unstaged.ContextMenuStrip = null;
-
             if (!Unstaged.SelectedItems.Any())
                 return;
 
@@ -1173,6 +1171,12 @@ namespace GitUI.CommandsDialogs
                 Unstaged.ContextMenuStrip = UnstagedFileContext;
             else
                 Unstaged.ContextMenuStrip = UnstagedSubmoduleContext;
+        }
+
+        private void UnstagedContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //Do not show if no item selected
+            e.Cancel = !Unstaged.SelectedItems.Any();
         }
 
         private void Unstaged_Enter(object sender, EventArgs e)
@@ -1311,6 +1315,29 @@ namespace GitUI.CommandsDialogs
                 Message.Focus();
         }
 
+        private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!Staged.SelectedItems.Any())
+            {
+                //Do not show if no item selected
+                e.Cancel = true;
+            }
+            else
+            {
+                bool isFile = false;
+                foreach (GitItemStatus item in Staged.SelectedItems)
+                {
+                    if (!item.IsSubmodule) { isFile = true; }
+                }
+                this.stagedToolStripSeparator14.Visible = isFile;
+                this.stagedEditFileToolStripMenuItem11.Visible = isFile;
+                this.stagedOpenDifftoolToolStripMenuItem9.Visible = isFile;
+                this.stagedOpenToolStripMenuItem7.Visible = isFile;
+                this.stagedToolStripSeparator17.Visible = isFile;
+                this.stagedOpenWithToolStripMenuItem8.Visible = isFile;
+            }
+        }
+
         void Unstaged_DoubleClick(object sender, EventArgs e)
         {
             _currentFilesList = Unstaged;
@@ -1340,9 +1367,6 @@ namespace GitUI.CommandsDialogs
                 return;
 
             ClearDiffViewIfNoFilesLeft();
-
-            if (!Staged.SelectedItems.Any())
-                return;
 
             Unstaged.ClearSelected();
             _currentSelection = Staged.SelectedItems.ToList();
@@ -2607,12 +2631,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void toolStripMenuItem9_Click(object sender, EventArgs e)
+        private void stagedOpenDifftoolToolStripMenuItem9_Click(object sender, EventArgs e)
         {
             OpenFilesWithDiffTool(Staged.SelectedItems, staged: true);
         }
 
-        private void toolStripMenuItem10_Click(object sender, EventArgs e)
+        private void openFolderToolStripMenuItem10_Click(object sender, EventArgs e)
         {
             OpenContainingFolder(Staged);
         }
@@ -2685,7 +2709,10 @@ namespace GitUI.CommandsDialogs
                     _interactiveAddBashCloseWaitCts.Dispose();
                     _interactiveAddBashCloseWaitCts = null;
                 }
-                components?.Dispose();
+                if (components != null)
+                {
+                    components.Dispose();
+                }
             }
             base.Dispose(disposing);
         }

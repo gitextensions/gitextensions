@@ -315,7 +315,7 @@ namespace GitUI.UserControls
       // 
       // toolbtnRemotePull
       // 
-      this.toolbtnRemotePull.Image = global::GitUI.Properties.Resources.Icon_4;
+      this.toolbtnRemotePull.Image = global::GitUI.Properties.Resources.IconPull;
       this.toolbtnRemotePull.Name = "toolbtnRemotePull";
       this.toolbtnRemotePull.Size = new System.Drawing.Size(203, 22);
       this.toolbtnRemotePull.Text = "Fetch&&Merge(&Pull)";
@@ -524,7 +524,7 @@ namespace GitUI.UserControls
       // 
       // mnubtnTrackedPull
       // 
-      this.mnubtnTrackedPull.Image = global::GitUI.Properties.Resources.Icon_4;
+      this.mnubtnTrackedPull.Image = global::GitUI.Properties.Resources.PullFetch;
       this.mnubtnTrackedPull.Name = "mnubtnTrackedPull";
       this.mnubtnTrackedPull.Size = new System.Drawing.Size(167, 22);
       this.mnubtnTrackedPull.Text = "Pull";

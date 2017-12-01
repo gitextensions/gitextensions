@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "beyondcompare4":
                     return "bcomp.exe";
                 case "diffmerge":
-                    return "DiffMerge.exe";
+                    return "sgdm.exe";
                 case "kdiff3":
                     return "kdiff3.exe";
                 case "meld":
@@ -155,6 +155,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return FindDiffToolFullPath(settings, exeName, "difftool.beyondcompare4.path",
                                                           @"Beyond Compare 4 (x86)\",
                                                           @"Beyond Compare 4\");
+                case "diffmerge":
+                    return FindDiffToolFullPath(settings, exeName, "difftool.diffmerge.path",
+                        @"SourceGear\Common\DiffMerge\", @"SourceGear\DiffMerge\");
                 case "kdiff3":
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "") + "\\kdiff3.exe";
                     return FindDiffToolFullPath(settings, exeName, "difftool.kdiff3.path", @"KDiff3\", regkdiff3path);
@@ -260,7 +263,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         @"Beyond Compare 4 (x86)\",
                         @"Beyond Compare 4\");
                 case "diffmerge":
-                    return FindFileInFolders(exeName, @"SourceGear\Common\DiffMerge\", @"SourceGear\DiffMerge\");
+                    return FindDiffToolFullPath(settings, exeName, "mergetool.diffmerge.path",
+                        @"SourceGear\Common\DiffMerge\",
+                        @"SourceGear\DiffMerge\");
                 case "kdiff3":
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "");
                     if (regkdiff3path != "")
@@ -317,7 +322,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "beyondcompare4":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
                 case "diffmerge":
-                    return "\"" + exeFile + "\" /m /r=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
+                    return "\"" + exeFile + "\" -merge -result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"";
                 case "meld":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\"";
                 case "p4merge":

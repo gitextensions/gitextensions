@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using GitCommands.Utils;
 
 namespace GitCommands
 {
     public static class PathUtil
     {
+        private static readonly IEnvironmentAbstraction EnvironmentAbstraction = new EnvironmentAbstraction();
+        private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
+
+
         /// <summary>Replaces native path separator with posix path separator.</summary>
         public static string ToPosixPath(this string path)
         {
@@ -109,52 +110,6 @@ namespace GitCommands
             return name;
         }
 
-        public static IEnumerable<string> GetEnvironmentValidPaths()
-        {
-            return GetValidPaths(GetEnvironmentPaths());
-        }
-
-        public static IEnumerable<string> GetValidPaths(IEnumerable<string> paths)
-        {
-            return paths.Where(aPath => IsValidPath(aPath));
-        }
-
-        static IEnumerable<string> GetEnvironmentPaths()
-        {
-            string pathVariable = Environment.GetEnvironmentVariable("PATH");
-            return GetEnvironmentPaths(pathVariable);
-        }
-
-        public static IEnumerable<string> GetEnvironmentPaths(string aPathVariable)
-        {
-            if (aPathVariable.IsNullOrWhiteSpace())
-                yield break;
-
-            foreach (string rawdir in aPathVariable.Split(EnvUtils.EnvVariableSeparator))
-            {
-                string dir = rawdir;
-                // Usually, paths with spaces are not quoted on %PATH%, but it's well possible, and .NET won't consume a quoted path
-                // This does not handle the full grammar of the %PATH%, but at least prevents Illegal Characters in Path exceptions (see #2924)
-                dir = dir.Trim(new char[] { ' ', '"', '\t' });
-                if (dir.Length == 0)
-                    continue;
-                yield return dir;
-            }
-        }
-
-        public static bool IsValidPath(string aPath)
-        {
-            FileInfo fi = null;
-            try
-            {
-                fi = new FileInfo(aPath);
-            }
-            catch (ArgumentException) { }
-            catch (PathTooLongException) { }
-            catch (NotSupportedException) { }
-
-            return fi != null;
-        }
                 
         public static bool TryFindFullPath(string fileName, out string fullPath)
         {
@@ -166,7 +121,7 @@ namespace GitCommands
                     return true;
                 }
 
-                foreach (var path in GetEnvironmentValidPaths())
+                foreach (var path in EnvironmentPathsProvider.GetEnvironmentValidPaths())
                 {
                     fullPath = Path.Combine(path, fileName);
                     if (File.Exists(fullPath))
@@ -187,7 +142,7 @@ namespace GitCommands
         {
             try
             {
-                shellPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", shell);
+                shellPath = Path.Combine(EnvironmentAbstraction.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", shell);
                 if (File.Exists(shellPath))
                 {
                     return true;

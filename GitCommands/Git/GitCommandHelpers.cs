@@ -48,6 +48,8 @@ namespace GitCommands
 
     public static class GitCommandHelpers
     {
+        private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
+
         public static void SetEnvironmentVariable(bool reload = false)
         {
             string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
@@ -122,7 +124,7 @@ namespace GitCommands
             }
         }
 
-	    public static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
+        public static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
             return new ProcessStartInfo
             {
@@ -161,7 +163,7 @@ namespace GitCommands
             return startProcess;
         }
 
-	    public static bool UseSsh(string arguments)
+        public static bool UseSsh(string arguments)
         {
             var x = !Plink() && GetArgumentsRequiresSsh(arguments);
             return x || arguments.Contains("plink");
@@ -604,17 +606,9 @@ namespace GitCommands
         /// <summary>Indicates whether the git SSH command uses Plink.</summary>
         public static bool Plink()
         {
-            var sshString = GetSsh();
+            var sshString = SshPathLocatorInstance.Find(AppSettings.GitBinDir);
 
             return sshString.EndsWith("plink.exe", StringComparison.CurrentCultureIgnoreCase);
-        }
-
-        /// <summary>Gets the git SSH command; or "" if the environment variable is NOT set.</summary>
-        public static string GetSsh()
-        {
-            var ssh = Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process);
-
-            return ssh ?? "";
         }
 
         /// <summary>Pushes multiple sets of local branches to remote branches.</summary>
@@ -916,7 +910,7 @@ namespace GitCommands
 
                 if (line != null)
                 {
-                    var match = Regex.Match(line, @"diff --git (?:a|i|c)/(.+)\s(?:b|w|i)/(.+)");
+                    var match = Regex.Match(line, @"diff --git [abic]/(.+)\s[abwi]/(.+)");
                     if (match.Groups.Count > 1)
                     {
                         status.Name = match.Groups[1].Value;

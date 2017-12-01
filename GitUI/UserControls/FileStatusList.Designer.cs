@@ -105,7 +105,7 @@ namespace GitUI
             // 
             // FilterToolTip
             // 
-            this.FilterToolTip.AutomaticDelay = 0;
+            this.FilterToolTip.AutomaticDelay = 100;
             this.FilterToolTip.ShowAlways = true;
             this.FilterToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Error;
             this.FilterToolTip.ToolTipTitle = "RegEx";

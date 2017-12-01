@@ -55,10 +55,9 @@ namespace GitCommandsTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void CanCreateCommitInformationFromFormatedDataThrowsException()
         {
-            CommitInformation.GetCommitInfo(null, new LinkFactory(), true);
+            Assert.Throws<ArgumentNullException>(() => CommitInformation.GetCommitInfo(null, new LinkFactory(), true));
         }
 
         [TestMethod]

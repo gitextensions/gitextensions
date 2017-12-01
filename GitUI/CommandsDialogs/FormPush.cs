@@ -467,7 +467,7 @@ namespace GitUI.CommandsDialogs
                 if (AppSettings.AutoPullOnPushRejectedAction == null)
                 {
                     bool cancel = false;
-                    string destination = PushToRemote.Checked ? _NO_TRANSLATE_Remotes.Text : PushDestination.Text;
+                    string destination = _NO_TRANSLATE_Remotes.Text;
                     string buttons = _pullRepositoryButtons.Text;
                     switch (Module.LastPullAction)
                     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using GitUI;
 using NUnit.Framework;
 using ResourceManager;
@@ -12,7 +13,7 @@ namespace GitUITests
     public class TranslationTest
     {
         [Test]
-        [STAThread]
+        [Apartment(ApartmentState.STA)]
         public void CreateInstanceOfClass()
         {
             // just reference to GitUI

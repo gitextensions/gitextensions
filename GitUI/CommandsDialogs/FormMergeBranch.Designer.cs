@@ -64,7 +64,7 @@
             // 
             // strategyToolTip
             // 
-            this.strategyToolTip.AutomaticDelay = 1;
+            this.strategyToolTip.AutomaticDelay = 100;
             this.strategyToolTip.AutoPopDelay = 0;
             this.strategyToolTip.InitialDelay = 1;
             this.strategyToolTip.ReshowDelay = 1;

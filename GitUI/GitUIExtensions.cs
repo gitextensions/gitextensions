@@ -80,7 +80,7 @@ namespace GitUI
                 {
                     GitRevision revision = revisions[0];
                     if (diffKind == DiffWithRevisionKind.DiffALocal)
-                        revisionToCmp = parentGuid ?? (revision.ParentGuids.Length == 0 ? null : revision.ParentGuids[0]);
+                        revisionToCmp = parentGuid ?? revision.FirstParentGuid ?? revision.Guid + '^';
                     else if (diffKind == DiffWithRevisionKind.DiffBLocal)
                         revisionToCmp = revision.Guid;
                     else
@@ -97,10 +97,10 @@ namespace GitUI
                             revisionToCmp = revisions[0].Guid;
                             break;
                         case DiffWithRevisionKind.DiffAParentLocal:
-                            revisionToCmp = revisions[1].ParentGuids.Length == 0 ? null : revisions[1].ParentGuids[0];
+                            revisionToCmp = revisions[1].FirstParentGuid ?? revisions[1].Guid + '^';
                             break;
                         case DiffWithRevisionKind.DiffBParentLocal:
-                            revisionToCmp = revisions[0].ParentGuids.Length == 0 ? null : revisions[0].ParentGuids[0];
+                            revisionToCmp = revisions[0].FirstParentGuid ?? revisions[0].Guid + '^';
                             break;
                         default:
                             revisionToCmp = null;
@@ -121,7 +121,12 @@ namespace GitUI
         public static bool IsItemUntracked(GitItemStatus file,
             string firstRevision, string secondRevision)
         {
-            if (firstRevision == GitRevision.UnstagedGuid) //working directory changes
+            if (firstRevision == GitRevision.UnstagedGuid && file.IsDeleted ||
+                secondRevision == GitRevision.UnstagedGuid && file.IsNew)
+            {
+                return true;
+            }
+            else if (firstRevision == GitRevision.UnstagedGuid) //working directory changes
             {
                 if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
                     return !file.IsTracked;
@@ -153,14 +158,6 @@ namespace GitUI
 
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
                     diffArgs, encoding, cacheResult);
-        }
-
-        public static string GetSelectedPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file)
-        {
-            IList<GitRevision> revisions = grid.GetSelectedRevisions();
-            string firstRevision = revisions.Count > 0 ? revisions[0].Guid : null;
-            string secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
-            return GetSelectedPatch(diffViewer, firstRevision, secondRevision, file);
         }
 
         public static string GetSelectedPatch(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file)
@@ -203,8 +200,8 @@ namespace GitUI
             var firstRevision = revisions.Count > 0 ? revisions[0] : null;
             string firstRevisionGuid = firstRevision == null ? null : firstRevision.Guid;
             string parentRevisionGuid = revisions.Count == 2 ? revisions[1].Guid : null;
-            if (parentRevisionGuid == null && firstRevision != null && firstRevision.ParentGuids != null && firstRevision.ParentGuids.Length > 0)
-                parentRevisionGuid = firstRevision.ParentGuids[0];
+            if (parentRevisionGuid == null && firstRevision != null)
+                parentRevisionGuid = firstRevision.FirstParentGuid;
             ViewChanges(diffViewer, firstRevisionGuid, parentRevisionGuid, file, defaultText);
         }
 

@@ -101,29 +101,36 @@ namespace GitCommands
         private static readonly Regex AnsiCodePattern = new Regex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private readonly object _lock = new object();
+        private readonly IIndexLockManager _indexLockManager;
+        private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
+        private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
 
         public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
-        private const string DiffCommandWithStandardArgs = "diff --no-color ";
+        private const string DiffCommandWithStandardArgs = " -c diff.submodule=short diff --no-color ";
 
         public GitModule(string workingdir)
         {
             _superprojectInit = false;
             _workingDir = (workingdir ?? "").EnsureTrailingPathSeparator();
+            WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(_workingDir);
+            _indexLockManager = new IndexLockManager(this);
         }
 
         #region IGitCommands
 
-        [NotNull]
         private readonly string _workingDir;
 
+        /// <summary>
+        /// Gets the directory which contains the git repository.
+        /// </summary>
         [NotNull]
-        public string WorkingDir
-        {
-            get
-            {
-                return _workingDir;
-            }
-        }
+        public string WorkingDir => _workingDir;
+
+        /// <summary>
+        /// Gets the location of .git directory for the current working folder.
+        /// </summary>
+        [NotNull]
+        public string WorkingDirGitDir { get; private set; }
 
         /// <summary>Gets the path to the git application executable.</summary>
         public string GitCommand
@@ -445,35 +452,14 @@ namespace GitCommands
         }
 
         /// <summary>Gets the ".git" directory path.</summary>
-        public string GetGitDirectory()
+        private string GetGitDirectory()
         {
             return GetGitDirectory(_workingDir);
         }
 
         public static string GetGitDirectory(string repositoryPath)
         {
-            var gitpath = Path.Combine(repositoryPath, ".git");
-            if (File.Exists(gitpath))
-            {
-                var lines = File.ReadLines(gitpath);
-                foreach (string line in lines)
-                {
-                    if (line.StartsWith("gitdir:"))
-                    {
-                        string path = line.Substring(7).Trim().ToNativePath();
-                        if (Path.IsPathRooted(path))
-                            return path.EnsureTrailingPathSeparator();
-                        else
-                            return
-                                Path.GetFullPath(Path.Combine(repositoryPath,
-                                    path.EnsureTrailingPathSeparator()));
-                    }
-                }
-            }
-            gitpath = gitpath.EnsureTrailingPathSeparator();
-            if (!Directory.Exists(gitpath))
-                return repositoryPath;
-            return gitpath;
+            return GitDirectoryResolverInstance.Resolve(repositoryPath);
         }
 
         public bool IsBareRepository()
@@ -752,8 +738,7 @@ namespace GitCommands
         public void EditNotes(string revision)
         {
             string editor = GetEffectiveSetting("core.editor").ToLower();
-            if (editor.Contains("gitextensions") || editor.Contains("notepad") ||
-                editor.Contains("notepad++"))
+            if (editor.Contains("gitextensions") || editor.Contains("notepad"))
             {
                 RunGitCmd("notes edit " + revision);
             }
@@ -1008,8 +993,7 @@ namespace GitCommands
         private IGitItem GetSubmoduleCommitHash(string filename, string refName)
         {
             string str = RunGitCmd("ls-tree " + refName + " \"" + filename + "\"");
-
-            return GitItem.CreateGitItemFromString(this, str);
+            return _gitTreeParser.ParseSingle(str);
         }
 
         public int? GetCommitCount(string parentHash, string childHash)
@@ -1131,7 +1115,9 @@ namespace GitCommands
 
         public string Init(bool bare, bool shared)
         {
-            return RunGitCmd(Smart.Format("init{0: --bare|}{1: --shared=all|}", bare, shared));
+            var result = RunGitCmd(Smart.Format("init{0: --bare|}{1: --shared=all|}", bare, shared));
+            WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(_workingDir);
+            return result;
         }
 
         public bool IsMerge(string commit)
@@ -1315,6 +1301,11 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string localPath)
         {
+            if (localPath == null)
+            {
+                Debug.Assert(true, "No path for submodule - incorrectly parsed status?");
+                return "";
+            }
             string dir = Path.Combine(_workingDir, localPath.EnsureTrailingPathSeparator());
             return Path.GetFullPath(dir); // fix slashes
         }
@@ -1543,6 +1534,26 @@ namespace GitCommands
             return RunGitCmd("checkout-index --index --force -- \"" + file + "\"");
         }
 
+        /// <summary>
+        /// Determines whether the given repository has index.lock file.
+        /// </summary>
+        /// <returns><see langword="true"/> is index is locked; otherwise <see langword="false"/>.</returns>
+        public bool IsIndexLocked()
+        {
+            return _indexLockManager.IsIndexLocked();
+        }
+
+        /// <summary>
+        /// Delete index.lock in the current working folder.
+        /// </summary>
+        /// <param name="includeSubmodules">
+        ///     If <see langword="true"/> all submodules will be scanned for index.lock files and have them delete, if found.
+        /// </param>
+        /// <exception cref="FileDeleteException">Unable to delete specific index.lock.</exception>
+        public void UnlockIndex(bool includeSubmodules)
+        {
+            _indexLockManager.UnlockIndex(includeSubmodules);
+        }
 
         public string FormatPatch(string from, string to, string output, int start)
         {
@@ -2353,6 +2364,7 @@ namespace GitCommands
             var patchManager = new PatchManager();
             var arguments = String.Format(DiffCommandWithStandardArgs + "{0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange,
                 fileName.Quote(), oldFileName.Quote());
+            cacheResult = cacheResult && !GitRevision.IsArtificial(to) && !GitRevision.IsArtificial(from) && !to.IsNullOrEmpty() && !from.IsNullOrEmpty();
             string patch;
             if (cacheResult)
                 patch = RunCacheableCmd(AppSettings.GitCommand, arguments, LosslessEncoding);
@@ -3007,7 +3019,7 @@ namespace GitCommands
             return tree.Split(new char[] { '\0', '\n' });
         }
 
-        public IList<IGitItem> GetTree(string id, bool full)
+        public IEnumerable<IGitItem> GetTree(string id, bool full)
         {
             string args = "-z";
             if (full)
@@ -3024,7 +3036,7 @@ namespace GitCommands
                 tree = this.RunCmd(AppSettings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
             }
 
-            return GitItem.CreateIGitItemsFromString(this, tree);
+            return _gitTreeParser.Parse(tree);
         }
 
         public GitBlame Blame(string filename, string from, Encoding encoding)
@@ -3299,22 +3311,9 @@ namespace GitCommands
             return fullBranchName;
         }
 
-        public bool IsLockedIndex()
-        {
-            return IsLockedIndex(_workingDir);
-        }
-
-        public static bool IsLockedIndex(string repositoryPath)
-        {
-            var gitDir = GetGitDirectory(repositoryPath);
-            var indexLockFile = Path.Combine(gitDir, "index.lock");
-
-            return File.Exists(indexLockFile);
-        }
-
         public bool IsRunningGitProcess()
         {
-            if (IsLockedIndex())
+            if (_indexLockManager.IsIndexLocked())
             {
                 return true;
             }

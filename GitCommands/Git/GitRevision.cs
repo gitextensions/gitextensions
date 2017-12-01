@@ -22,7 +22,6 @@ namespace GitCommands
         public static readonly Regex Sha1HashShortRegex = new Regex(string.Format(@"\b{0}\b", Sha1HashShortPattern), RegexOptions.Compiled);
 
         public string[] ParentGuids;
-        private IList<IGitItem> _subItems;
         private readonly List<IGitRef> _refs = new List<IGitRef>();
         public readonly GitModule Module;
         private BuildInfo _buildStatus;
@@ -65,11 +64,6 @@ namespace GitCommands
 
         public string Guid { get; set; }
         public string Name { get; set; }
-
-        public IEnumerable<IGitItem> SubItems
-        {
-            get { return _subItems ?? (_subItems = Module.GetTree(TreeGuid, false)); }
-        }
 
         #endregion
 
@@ -118,9 +112,20 @@ namespace GitCommands
                     guid == IndexGuid;
         }
 
-        public bool HasParent()
+        public bool HasParent
         {
-            return ParentGuids != null && ParentGuids.Length > 0;
+            get
+            {
+                return ParentGuids != null && ParentGuids.Length > 0;
+            }
+        }
+
+        public string FirstParentGuid
+        {
+            get
+            {
+                return HasParent ? ParentGuids[0] : null;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
