@@ -474,8 +474,8 @@ namespace GitUI.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-		
-		/// <summary>
+        
+        /// <summary>
         ///   Looks up a localized string similar to Andréj Telle, Oliver Friedrich.
         /// </summary>
         internal static string Designers {
@@ -740,16 +740,6 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap gitex {
             get {
                 object obj = ResourceManager.GetObject("gitex", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap HeadBranch {
-            get {
-                object obj = ResourceManager.GetObject("HeadBranch", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1707,6 +1697,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap LocalRepo {
+            get {
+                object obj = ResourceManager.GetObject("LocalRepo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Modified {
             get {
                 object obj = ResourceManager.GetObject("Modified", resourceCulture);
@@ -1856,9 +1856,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap RemoteMirror {
+        internal static System.Drawing.Bitmap RemoteBranch {
             get {
-                object obj = ResourceManager.GetObject("RemoteMirror", resourceCulture);
+                object obj = ResourceManager.GetObject("RemoteBranch", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

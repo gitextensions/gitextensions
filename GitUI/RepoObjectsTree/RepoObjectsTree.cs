@@ -87,14 +87,14 @@ namespace GitUI.UserControls
 
             var localBranchesRootNode = new TreeNode(Strings.branches.Text)
             {
-                ImageKey = "RemoteRepo.png",
+                ImageKey = "LocalRepo.png",
             };
             localBranchesRootNode.SelectedImageKey = localBranchesRootNode.ImageKey;
             AddTree(new BranchTree(localBranchesRootNode, newSource));
 
             var remoteBranchesRootNode = new TreeNode(Strings.remotes.Text)
             {
-                ImageKey = "RemoteMirror.png",
+                ImageKey = "RemoteRepo.png",
             };
             remoteBranchesRootNode.SelectedImageKey = remoteBranchesRootNode.ImageKey;
             _remoteTree = new RemoteBranchTree(remoteBranchesRootNode, newSource)

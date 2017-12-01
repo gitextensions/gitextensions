@@ -29,13 +29,6 @@ namespace GitUI.UserControls
         // master <- origin/master
         // pu <- origin/pu
 
-        static readonly string remoteKey = Guid.NewGuid().ToString();
-        static readonly string remotePushMirrorKey = Guid.NewGuid().ToString();
-        static readonly string remotesKey = Guid.NewGuid().ToString();
-        static readonly string remoteBranchStaleKey = Guid.NewGuid().ToString();
-        static readonly string remoteBranchNewKey = Guid.NewGuid().ToString();
-        static readonly string remoteBranchUnTrackedKey = Guid.NewGuid().ToString();
-
         private class RemoteBranchTree : Tree
         {
             public RemoteBranchTree(TreeNode aTreeNode, IGitUICommandsSource uiCommands) : base(aTreeNode, uiCommands)
@@ -253,7 +246,7 @@ namespace GitUI.UserControls
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "Branch.png";
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "RemoteBranch.png";
             }
         }
 
@@ -276,7 +269,7 @@ namespace GitUI.UserControls
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                this.TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "RemoteMirror.png";
+                this.TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = "RemoteRepo.png";
             }
 
             public void ChangeName(string newName)
