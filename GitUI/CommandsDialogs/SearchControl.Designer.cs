@@ -30,44 +30,44 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.listBoxSearchResult = new System.Windows.Forms.ListBox();
+            this.txtSearchBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // listBox1
+            // listBoxSearchResult
             // 
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.listBoxSearchResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(0, 20);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(64, 15);
-            this.listBox1.TabIndex = 2;
-            this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
+            this.listBoxSearchResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listBoxSearchResult.FormattingEnabled = true;
+            this.listBoxSearchResult.Location = new System.Drawing.Point(0, 20);
+            this.listBoxSearchResult.Margin = new System.Windows.Forms.Padding(0);
+            this.listBoxSearchResult.Name = "listBoxSearchResult";
+            this.listBoxSearchResult.Size = new System.Drawing.Size(64, 15);
+            this.listBoxSearchResult.TabIndex = 2;
+            this.listBoxSearchResult.DoubleClick += new System.EventHandler(this.listBoxSearchResult_DoubleClick);
             // 
-            // textBox1
+            // txtSearchBox
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(64, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
-            this.textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyUp);
+            this.txtSearchBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtSearchBox.Location = new System.Drawing.Point(0, 0);
+            this.txtSearchBox.Margin = new System.Windows.Forms.Padding(0);
+            this.txtSearchBox.Name = "txtSearchBox";
+            this.txtSearchBox.Size = new System.Drawing.Size(64, 20);
+            this.txtSearchBox.TabIndex = 1;
+            this.txtSearchBox.TextChanged += new System.EventHandler(this.txtSearchBox_TextChange);
+            this.txtSearchBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearchBox_KeyDown);
+            this.txtSearchBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSearchBox_KeyUp);
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.textBox1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.listBox1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.txtSearchBox, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.listBoxSearchResult, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -96,8 +96,8 @@
 
         #endregion
 
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ListBox listBoxSearchResult;
+        private System.Windows.Forms.TextBox txtSearchBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }
