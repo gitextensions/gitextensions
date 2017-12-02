@@ -9,6 +9,7 @@ using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using ResourceManager;
+using GitUI.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
@@ -35,6 +36,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+            this.HotkeysEnabled = true;
         }
 
         public void ForceRefreshRevisions()
@@ -62,6 +64,56 @@ namespace GitUI.CommandsDialogs
                 DiffFiles.SetDiffs(revisions);
             }
         }
+
+        #region Hotkey commands
+
+        public static readonly string HotkeySettingsName = "BrowseDiff";
+
+        internal enum Commands
+        {
+            DeleteSelectedFiles,
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                case Commands.DeleteSelectedFiles: return DeleteSelectedFiles();
+                default: return base.ExecuteCommand(cmd);
+            }
+        }
+
+        /// <summary>
+        /// duplicated from GitExtensionsForm
+        /// </summary>
+        /// <param name="commandCode"></param>
+        /// <returns></returns>
+        private Keys GetShortcutKeys(int commandCode)
+        {
+            var hotkey = GetHotkeyCommand(commandCode);
+            return hotkey == null ? Keys.None : hotkey.KeyData;
+        }
+
+        internal Keys GetShortcutKeys(Commands cmd)
+        {
+            return GetShortcutKeys((int)cmd);
+        }
+
+        /// <summary>
+        /// duplicated from GitExtensionsForm
+        /// </summary>
+        /// <param name="commandCode"></param>
+        /// <returns></returns>
+        private HotkeyCommand GetHotkeyCommand(int commandCode)
+        {
+            if (Hotkeys == null)
+                return null;
+
+            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
+        }
+        #endregion
 
         public string GetTabText()
         {
@@ -110,8 +162,9 @@ namespace GitUI.CommandsDialogs
 
         public void ReloadHotkeys()
         {
+            this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            this.diffDeleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
             DiffText.ReloadHotkeys();
-            //TBD Shortcut key should be implemented but HotKeyManager is inaccessible in FormBrowse
         }
 
 
@@ -123,6 +176,7 @@ namespace GitUI.CommandsDialogs
             DiffFiles.DescribeRevision = DescribeRevision;
             DiffText.SetFileLoader(GetNextPatchFile);
             DiffText.Font = AppSettings.DiffFont;
+            ReloadHotkeys();
 
             GotFocus += (s, e1) => DiffFiles.Focus();
 

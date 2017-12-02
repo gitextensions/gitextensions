@@ -48,17 +48,15 @@ namespace GitUI.CommandsDialogs
             this.Loading = new System.Windows.Forms.PictureBox();
             this.Stashed = new GitUI.FileStatusList();
             this.toolStrip1 = new GitUI.ToolStripEx();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.showToolStripLabel = new System.Windows.Forms.ToolStripLabel();
             this.Stashes = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripButton_customMessage = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton_customMessage = new System.Windows.Forms.ToolStripButton();
+            this.refreshToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.View = new GitUI.Editor.FileViewer();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).BeginInit();
-
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -93,7 +91,7 @@ namespace GitUI.CommandsDialogs
             this.splitContainer1.SplitterDistance = 280;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
-            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
+            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
             // tableLayoutPanel2
             // 
@@ -263,9 +261,9 @@ namespace GitUI.CommandsDialogs
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripLabel1,
+            this.showToolStripLabel,
             this.Stashes,
+            this.refreshToolStripButton,
             this.toolStripButton_customMessage,
             this.toolStripSeparator1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -274,27 +272,28 @@ namespace GitUI.CommandsDialogs
             this.toolStrip1.Size = new System.Drawing.Size(280, 28);
             this.toolStrip1.TabIndex = 1;
             // 
-            // toolStripButton1
+            // refreshToolStripButton
             // 
-            this.toolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = global::GitUI.Properties.Resources.arrow_refresh;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 25);
-            this.toolStripButton1.Text = "Refresh";
-            this.toolStripButton1.Click += new System.EventHandler(this.RefreshClick);
+            this.refreshToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.refreshToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.refreshToolStripButton.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.refreshToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.refreshToolStripButton.Name = "refreshToolStripButton";
+            this.refreshToolStripButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.refreshToolStripButton.Size = new System.Drawing.Size(23, 25);
+            this.refreshToolStripButton.Text = "Refresh";
+            this.refreshToolStripButton.Click += new System.EventHandler(this.RefreshClick);
             // 
-            // toolStripLabel1
+            // showToolStripLabel
             // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripLabel1.Size = new System.Drawing.Size(48, 25);
-            this.toolStripLabel1.Text = "Show:";
+            this.showToolStripLabel.Name = "showToolStripLabel";
+            this.showToolStripLabel.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.showToolStripLabel.Size = new System.Drawing.Size(48, 25);
+            this.showToolStripLabel.Text = "Show:";
             // 
             // Stashes
             // 
+            this.Stashes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Stashes.DropDownWidth = 200;
             this.Stashes.MaxDropDownItems = 30;
             this.Stashes.Name = "Stashes";
@@ -302,6 +301,7 @@ namespace GitUI.CommandsDialogs
             this.Stashes.Size = new System.Drawing.Size(175, 28);
             this.Stashes.ToolTipText = "Select a stash";
             this.Stashes.SelectedIndexChanged += new System.EventHandler(this.StashesSelectedIndexChanged);
+            this.Stashes.DropDown += Stashes_DropDown;
             // 
             // toolStripButton_customMessage
             // 
@@ -322,6 +322,7 @@ namespace GitUI.CommandsDialogs
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 28);
             // 
             // View
@@ -351,9 +352,7 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-
             this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
@@ -378,8 +377,8 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.RichTextBox StashMessage;
         private FileViewer View;
         private ToolStripEx toolStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripButton refreshToolStripButton;
+        private System.Windows.Forms.ToolStripLabel showToolStripLabel;
         private System.Windows.Forms.ToolStripComboBox Stashes;
         private PictureBox Loading;
         private CheckBox StashKeepIndex;

@@ -262,7 +262,7 @@ namespace GitUI.CommandsDialogs
 
         #region Hotkey commands
 
-        public const string HotkeySettingsName = "Scripts";
+        public static readonly string HotkeySettingsName = "Scripts";
 
         internal enum Commands
         {
