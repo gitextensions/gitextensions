@@ -22,14 +22,14 @@ namespace GitCommandsTests.Git
         [TestCase(GitRevision.UnstagedGuid)]
         public void RevisionDiffProvider_should_return_empty_if_To_is_UnstagedGuid(string from)
         {
-            RevisionDiffProvider.Get(from, GitRevision.UnstagedGuid).Should().BeEmpty();
+            (new RevisionDiffProvider()).Get(from, GitRevision.UnstagedGuid).Should().BeEmpty();
         }
 
         [TestCase("^")]
         [TestCase(GitRevision.IndexGuid)]
         public void RevisionDiffProvider_should_return_cached_if_both_IndexGuid(string from)
         {
-            RevisionDiffProvider.Get(from, GitRevision.IndexGuid).Should().Be("--cached --cached");
+            (new RevisionDiffProvider()).Get(from, GitRevision.IndexGuid).Should().Be("--cached --cached");
         }
 #endif
         [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid)]
