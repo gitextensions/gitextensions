@@ -30,6 +30,7 @@ namespace GitCommands
         {
             Guid = guid;
             Subject = "";
+            SubjectCount = "";
             Module = aModule;
         }
 
@@ -56,6 +57,8 @@ namespace GitCommands
         }
 
         public string Subject { get; set; }
+        //Count for artificial commits (could be changed to object lists)
+        public string SubjectCount { get; set; }
         public string Body { get; set; }
         //UTF-8 when is null or empty
         public string MessageEncoding { get; set; }
@@ -74,7 +77,7 @@ namespace GitCommands
             {
                 sha = sha.Substring(0, 4) + ".." + sha.Substring(sha.Length - 4, 4);
             }
-            return String.Format("{0}:{1}", sha, Subject);
+            return String.Format("{0}:{1}{2}", sha, SubjectCount, Subject);
         }
 
         public static string ToShortSha(String sha)
