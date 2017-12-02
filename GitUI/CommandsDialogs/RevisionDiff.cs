@@ -222,6 +222,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Module.CheckoutFiles(itemsToCheckout.Select(item => item.Name), revision, false);
+            RefreshArtificial();
         }
 
         private void ShowSelectedFileDiff()
