@@ -92,14 +92,6 @@ namespace ResourceManager
         public static readonly TranslationString remotes = new TranslationString("Remotes");
         /// <summary>"tags" translation.</summary>
         public static readonly TranslationString tags = new TranslationString("Tags");
-        /// <summary>"favorites" translation.</summary>
-        public static readonly TranslationString favorites = new TranslationString("Favorites");
-        /// <summary>"'{0}' no longer exists on remote repo and can be pruned."</summary>
-        public static TranslationString RemoteBranchStaleTipFormat = new TranslationString("'{0}' no longer exists on remote repo and can be pruned");
-        /// <summary>"'{0}' is new and may be fetched."</summary>
-        public static TranslationString RemoteBranchNewTipFormat = new TranslationString("'{0}' is new and may be fetched");
-        /// <summary>"Fetch and Push URLs differ"</summary>
-        public static TranslationString RemoteDifferingUrlsTip = new TranslationString("Fetch and Push URLs differ");
 
         public static string GetUninterestingDiffOmitted()
         {

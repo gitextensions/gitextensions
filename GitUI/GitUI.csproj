@@ -314,6 +314,11 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Script\PowerShellHelper.cs" />
     <Compile Include="RepoHosts.cs" />
     <Compile Include="Script\ScriptRunner.cs" />
@@ -659,11 +664,6 @@
     <Compile Include="ProcessOutputTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Custom.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RepoObjectsTree\ROT.ContextActions.cs">
@@ -1613,9 +1613,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>GitUI.Properties</CustomToolNamespace>
       <LogicalName>GitUI.Properties.Resources.resources</LogicalName>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGrid.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
@@ -1964,27 +1964,11 @@
     <Content Include="Resources\Icons\whitespace.png" />
     <Content Include="Resources\Icons\CollapseAll.png" />
     <Content Include="Resources\Icons\ExpandAll.png" />
-    <Content Include="Resources\Icons\StashesClear.png" />
-    <Content Include="Resources\Icons\AddBranch.png" />
-    <Content Include="Resources\Icons\AddConnection.png" />
-    <Content Include="Resources\Icons\ApplyChanges.png" />
     <Content Include="Resources\Icons\Branch.png" />
     <Content Include="Resources\Icons\CheckOut.png" />
     <Content Include="Resources\Icons\DeleteRed.png" />
-    <Content Include="Resources\Icons\Disconnect.png" />
-    <Content Include="Resources\Icons\Rename.png" />
-    <Content Include="Resources\Icons\Stashes.png" />
-    <Content Include="Resources\Icons\StashPop.png" />
-    <Content Include="Resources\Icons\DeleteSoft.png" />
-    <Content Include="Resources\Icons\ShowDiff.png" />
-    <Content Include="Resources\Icons\Cut.png" />
     <Content Include="Resources\Icons\BranchFrom.png" />
-    <Content Include="Resources\Icons\BranchUntracked.png" />
-    <Content Include="Resources\Icons\BranchNew.png" />
-    <Content Include="Resources\Icons\BranchStale.png" />
     <Content Include="Resources\Icons\RemoteBranch.png" />
-    <Content Include="Resources\Icons\Information.png" />
-    <Content Include="Resources\Icons\Namespace.png" />
     <Content Include="Resources\Icons\RemoteRepo.png" />
     <Content Include="Resources\Icons\LocalRepo.png" />
     <Content Include="Translation\Czech.gif">
