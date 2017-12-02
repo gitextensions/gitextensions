@@ -11,11 +11,12 @@ namespace GitCommands
     {
         /// <summary>
         /// options to git-diff from GE arguments, including artificial commits
+        /// This is an instance class to not have static dependencies in GitModule
         /// </summary>
         /// <param name="from">The first revision</param>
         /// <param name="to">The second "current" revision</param>
         /// <returns></returns>
-        public static string Get(string from, string to)
+        public string Get(string from, string to)
         {
             string extra = string.Empty;
             from = ArtificialToDiffOptions(from);
@@ -60,7 +61,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="rev"></param>
         /// <returns></returns>
-        private static string ArtificialToDiffOptions(string rev)
+        private string ArtificialToDiffOptions(string rev)
         {
             if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid) { rev = string.Empty; }
             else if (rev == "^" || rev == GitRevision.UnstagedGuid + "^" || rev == GitRevision.IndexGuid) { rev = StagedOpt; }
@@ -75,6 +76,6 @@ namespace GitCommands
             return rev;
         }
 
-        private const string StagedOpt = "--cached";
+        private static readonly string StagedOpt = "--cached";
     }
 }

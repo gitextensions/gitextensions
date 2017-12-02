@@ -2186,7 +2186,7 @@ namespace GitCommands
             //fix refs slashes
             from = from.ToPosixPath();
             to = to == null ? "":to.ToPosixPath();
-            string commitRange = RevisionDiffProvider.Get(from, to);
+            string commitRange = (new RevisionDiffProvider()).Get(from, to);
             if (AppSettings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
 
@@ -2229,7 +2229,7 @@ namespace GitCommands
 
         public string GetDiffFilesText(string from, string to, bool noCache)
         {
-            string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + RevisionDiffProvider.Get(from, to);
+            string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + (new RevisionDiffProvider()).Get(from, to);
             return noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
         }
 
@@ -2243,7 +2243,7 @@ namespace GitCommands
         public List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache = false)
         {
             noCache = noCache || GitRevision.IsArtificial(from) || GitRevision.IsArtificial(to);
-            string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + RevisionDiffProvider.Get(from, to);
+            string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + (new RevisionDiffProvider()).Get(from, to);
             string result = noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
             if (from == GitRevision.UnstagedGuid || to == GitRevision.UnstagedGuid)
@@ -3036,7 +3036,7 @@ namespace GitCommands
         {
             var output = "";
 
-            string args = string.Join(" ", extraDiffArguments, RevisionDiffProvider.Get(revision1, revision2), "--", filename.QuoteNE(), oldFileName.QuoteNE());
+            string args = string.Join(" ", extraDiffArguments, (new RevisionDiffProvider()).Get(revision1, revision2), "--", filename.QuoteNE(), oldFileName.QuoteNE());
             RunGitCmdDetached("difftool --gui --no-prompt " + args);
             return output;
         }
