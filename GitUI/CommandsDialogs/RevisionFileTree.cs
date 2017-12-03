@@ -497,8 +497,12 @@ See the changes in the commit form.");
             openFileToolStripMenuItem.Visible = enableItems;
             openFileWithToolStripMenuItem.Visible = enableItems;
             openWithToolStripMenuItem.Visible = enableItems;
-            copyFilenameToClipboardToolStripMenuItem.Visible = gitItem != null && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
-            editCheckedOutFileToolStripMenuItem.Visible = enableItems;
+            var isExistingFileOrDirectory = gitItem != null && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
+            copyFilenameToClipboardToolStripMenuItem.Visible = isExistingFileOrDirectory;
+            editCheckedOutFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
+            assumeUnchangedTheFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
+            stopTrackingThisFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
+            toolStripSeparator1.Visible = isExistingFileOrDirectory;
             toolStripSeparator18.Visible = enableItems;
         }
 
