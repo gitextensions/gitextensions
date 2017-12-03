@@ -110,7 +110,6 @@
             this.toolStripSeparator31,
             this.fileHistoryToolStripMenuItem,
             this.blameToolStripMenuItem1,
-            this.findToolStripMenuItem,
             this.toolStripSeparator20,
             this.editCheckedOutFileToolStripMenuItem,
             this.openFileToolStripMenuItem,
@@ -120,6 +119,7 @@
             this.stopTrackingThisFileToolStripMenuItem,
             this.assumeUnchangedTheFileToolStripMenuItem,
             this.toolStripSeparator18,
+            this.findToolStripMenuItem,
             this.expandAllToolStripMenuItem,
             this.collapseAllToolStripMenuItem});
             this.FileTreeContextMenu.Name = "FileTreeContextMenu";
@@ -215,7 +215,7 @@
             this.findToolStripMenuItem.Name = "findToolStripMenuItem";
             this.findToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.findToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
-            this.findToolStripMenuItem.Text = "Find";
+            this.findToolStripMenuItem.Text = "Find in file tree...";
             this.findToolStripMenuItem.Click += new System.EventHandler(this.findToolStripMenuItem_Click);
             // 
             // toolStripSeparator20
