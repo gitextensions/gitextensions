@@ -504,10 +504,10 @@ See the changes in the commit form.");
             openFileToolStripMenuItem.Visible = isFile;
             openFileWithToolStripMenuItem.Visible = isFile;
 
-            toolStripSeparator1.Visible = isFile;
+            toolStripSeparatorGitActions.Visible = isFile;
             stopTrackingThisFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
             assumeUnchangedTheFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
-            toolStripSeparator18.Visible = isFile && isExistingFileOrDirectory;
+            toolStripSeparatorFileTreeActions.Visible = isFile && isExistingFileOrDirectory;
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
