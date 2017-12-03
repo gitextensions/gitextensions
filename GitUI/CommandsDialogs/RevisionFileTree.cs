@@ -446,6 +446,11 @@ See the changes in the commit form.");
             tvGitTree.ExpandAll();
         }
 
+        private void expandSubtreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           tvGitTree.SelectedNode?.ExpandAll();
+        }
+
         private void fileTreeArchiveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
@@ -509,7 +514,9 @@ See the changes in the commit form.");
             toolStripSeparatorGitActions.Visible = isFile;
             stopTrackingThisFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
             assumeUnchangedTheFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
+
             toolStripSeparatorFileTreeActions.Visible = isFile && isExistingFileOrDirectory;
+            expandSubtreeToolStripMenuItem.Visible = isFolder;
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -665,5 +672,6 @@ See the changes in the commit form.");
                 MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }
