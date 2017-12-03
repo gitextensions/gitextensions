@@ -556,6 +556,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
             IList<GitRevision> selectedRevisions = _revisionGrid.GetSelectedRevisions();
+            //Should be blocked in the GUI but not an error to show to the user
             Debug.Assert(selectedRevisions.Count == 1 || selectedRevisions.Count == 2,
                 "Unexpectedly number of revisions for difftool" + selectedRevisions.Count);
             if (selectedRevisions.Count < 1)
@@ -682,7 +683,7 @@ namespace GitUI.CommandsDialogs
                 {
                     resetFileToSelectedToolStripMenuItem.Visible = true;
                     TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
-                    resetFileToSelectedToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0]).ShortenTo(50) + ")";
+                    resetFileToSelectedToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0]) + ")";
                 }
                 if (revisions[0].HasParent)
                 {
@@ -691,7 +692,7 @@ namespace GitUI.CommandsDialogs
                     GitRevision parentRev = _revisionGrid.GetRevision(revisions[0].FirstParentGuid);
                     if (parentRev != null)
                     {
-                        resetFileToParentToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(parentRev).ShortenTo(50) + ")";
+                        resetFileToParentToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(parentRev) + ")";
                     }
                 }
                 else
@@ -715,7 +716,7 @@ namespace GitUI.CommandsDialogs
                 {
                     resetFileToFirstToolStripMenuItem.Visible = true;
                     TranslateItem(resetFileToFirstToolStripMenuItem.Name, resetFileToFirstToolStripMenuItem);
-                    resetFileToFirstToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[1]).ShortenTo(50) + ")";
+                    resetFileToFirstToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[1]) + ")";
                 }
 
                 if (revisions[0].Guid == GitRevision.UnstagedGuid)
@@ -726,7 +727,7 @@ namespace GitUI.CommandsDialogs
                 {
                     resetFileToSecondToolStripMenuItem.Visible = true;
                     TranslateItem(resetFileToSecondToolStripMenuItem.Name, resetFileToSecondToolStripMenuItem);
-                    resetFileToSecondToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0]).ShortenTo(50) + ")";
+                    resetFileToSecondToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0]) + ")";
                 }
             }
             else

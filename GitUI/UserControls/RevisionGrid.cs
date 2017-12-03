@@ -863,7 +863,7 @@ namespace GitUI
             return GetSelectedRevisions(null);
         }
 
-        public string DescribeRevision(GitRevision revision)
+        public string DescribeRevision(GitRevision revision, int maxLength = 50)
         {
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
             var descriptiveRefs = gitRefListsForRevision.AllBranches.Concat(gitRefListsForRevision.AllTags);
@@ -882,6 +882,11 @@ namespace GitUI
             if (!revision.IsArtificial())
             {
                 description += " @" + revision.Guid.Substring(0, 4);
+            }
+
+            if (maxLength > 0)
+            {
+                description = description.ShortenTo(maxLength);
             }
 
             return description;

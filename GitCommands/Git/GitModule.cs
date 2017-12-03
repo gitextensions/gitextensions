@@ -1526,18 +1526,18 @@ namespace GitCommands
             if (files.IsNullOrWhiteSpace())
                 return string.Empty;
 
-            //Special handling for artificial commits
+            if (revision == GitRevision.UnstagedGuid)
+            {
+                Debug.Assert(false, "Unexpectedly reset to unstaged - should be blocked in GUI");
+                //Not an error to user, just nothing happens
+                return "";
+            }
+
             if (revision == GitRevision.IndexGuid)
             {
                 revision = "";
             }
-            else if (revision == GitRevision.UnstagedGuid)
-            {
-                Debug.Assert(false, "Unexpectedly reset to unstaged - should be blocked in GUI");
-                //However, not an error to user, just nothing happens
-                return "";
-            }
-            else
+            else 
             {
                 revision = revision.QuoteNE();
             }
