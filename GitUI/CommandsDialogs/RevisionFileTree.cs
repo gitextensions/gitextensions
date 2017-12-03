@@ -496,7 +496,8 @@ See the changes in the commit form.");
             }
 
             saveAsToolStripMenuItem.Visible = isFile;
-            resetToThisRevisionToolStripMenuItem.Enabled = isFile;
+            resetToThisRevisionToolStripMenuItem.Visible = isFile;
+            toolStripSeparatorFileSystemActions.Visible = isFile;
 
             fileHistoryToolStripMenuItem.Enabled = itemSelected;
             copyFilenameToClipboardToolStripMenuItem.Visible = itemSelected;
