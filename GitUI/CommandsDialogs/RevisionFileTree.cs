@@ -472,7 +472,8 @@ See the changes in the commit form.");
         private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
-            var enableItems = gitItem != null && gitItem.ObjectType == GitObjectType.Blob;
+            var isFile = gitItem != null && gitItem.ObjectType == GitObjectType.Blob;
+            var isFolder = gitItem != null && gitItem.ObjectType == GitObjectType.Tree;
 
             if (gitItem != null && gitItem.ObjectType == GitObjectType.Commit)
             {
@@ -486,25 +487,25 @@ See the changes in the commit form.");
             {
                 openSubmoduleMenuItem.Visible = false;
             }
-            this.fileHistoryToolStripMenuItem.Enabled = gitItem != null;
+            fileHistoryToolStripMenuItem.Enabled = gitItem != null;
 
-            this.resetToThisRevisionToolStripMenuItem.Enabled =
-            this.blameToolStripMenuItem1.Enabled =
-            this.fileTreeArchiveToolStripMenuItem.Enabled =
-              enableItems;
+            resetToThisRevisionToolStripMenuItem.Enabled =
+            blameToolStripMenuItem1.Enabled =
+            fileTreeArchiveToolStripMenuItem.Enabled =
+              isFile;
 
-            fileTreeCleanWorkingTreeToolStripMenuItem.Visible = gitItem != null && gitItem.ObjectType == GitObjectType.Tree;
-            saveAsToolStripMenuItem.Visible = enableItems;
-            openFileToolStripMenuItem.Visible = enableItems;
-            openFileWithToolStripMenuItem.Visible = enableItems;
-            openWithToolStripMenuItem.Visible = enableItems;
+            fileTreeCleanWorkingTreeToolStripMenuItem.Visible = isFolder;
+            saveAsToolStripMenuItem.Visible = isFile;
+            openFileToolStripMenuItem.Visible = isFile;
+            openFileWithToolStripMenuItem.Visible = isFile;
+            openWithToolStripMenuItem.Visible = isFile;
             var isExistingFileOrDirectory = gitItem != null && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
             copyFilenameToClipboardToolStripMenuItem.Visible = isExistingFileOrDirectory;
             editCheckedOutFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
             assumeUnchangedTheFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
             stopTrackingThisFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
             toolStripSeparator1.Visible = isExistingFileOrDirectory;
-            toolStripSeparator18.Visible = enableItems;
+            toolStripSeparator18.Visible = isFile;
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
