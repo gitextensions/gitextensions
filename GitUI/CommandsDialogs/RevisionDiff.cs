@@ -57,11 +57,14 @@ namespace GitUI.CommandsDialogs
 
         public void RefreshArtificial()
         {
-            var revisions = _revisionGrid.GetSelectedRevisions();
-
-            if (revisions.Count > 0 && revisions[0].IsArtificial())
+            if (this.Visible)
             {
-                DiffFiles.SetDiffs(revisions);
+                var revisions = _revisionGrid.GetSelectedRevisions();
+
+                if (revisions.Count > 0 && revisions[0].IsArtificial())
+                {
+                    DiffFiles.SetDiffs(revisions);
+                }
             }
         }
 

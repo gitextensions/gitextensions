@@ -1064,9 +1064,6 @@ namespace GitUI
             return false;
         }
 
-        [Browsable(false)]
-        private Task<IList<GitItemStatus>> ChangedFiles { get; set; }
-
         private string _filtredCurrentCheckout;
 
         public void ForceRefreshRevisions()
@@ -1108,14 +1105,6 @@ namespace GitUI
                 _filtredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 SuperprojectCurrentCheckout = newSuperPrjectInfo;
-                if (ArtificialCountEnabled)
-                {
-                    ChangedFiles = Task.Run(() => capturedModule.GetAllChangedFiles());
-                }
-                else
-                {
-                    ChangedFiles = null;
-                }
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -2735,33 +2724,25 @@ namespace GitUI
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
         }
 
-        private bool ArtificialCountEnabled
+        public void UpdateArtificialCommitCount(IList<GitItemStatus> status)
         {
-            get
+            int staged = status.Count(item => item.IsStaged);
+            int unstaged = status.Count() - staged;
+            GitRevision unstagedRev = GetRevision(GitRevision.UnstagedGuid);
+            if (unstagedRev != null)
             {
-                //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
-                //Do not activate if count on Commit button is set, the counters may be inconsistient
-                return AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar && (FindForm() as FormBrowse) != null;
+                unstagedRev.SubjectCount = "(" + unstaged + ") ";
             }
+            GitRevision stagedRev = GetRevision(GitRevision.IndexGuid);
+            if (stagedRev != null)
+            {
+                stagedRev.SubjectCount = "(" + staged + ") ";
+            }
+            Revisions.Refresh();
         }
 
         private void CheckUncommitedChanged(string filtredCurrentCheckout)
         {
-            string unstageCount;
-            string stageCount;
-            if (ChangedFiles != null)
-            {
-                int staged = ChangedFiles.Result.Count(item => item.IsStaged);
-                int unstaged = ChangedFiles.Result.Count() - staged;
-                unstageCount = "(" + unstaged + ") ";
-                stageCount = "(" + staged + ") ";
-            }
-            else
-            {
-                unstageCount = "";
-                stageCount = "";
-            }
-
             var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
             var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
@@ -2774,7 +2755,6 @@ namespace GitUI
                 Committer = userName,
                 CommitDate = DateTime.MaxValue,
                 CommitterEmail = userEmail,
-                SubjectCount = unstageCount,
                 Subject = Strings.GetCurrentUnstagedChanges(),
                 ParentGuids = new[] { GitRevision.IndexGuid }
             };
@@ -2789,7 +2769,6 @@ namespace GitUI
                 Committer = userName,
                 CommitDate = DateTime.MaxValue,
                 CommitterEmail = userEmail,
-                SubjectCount = stageCount,
                 Subject = Strings.GetCurrentIndex(),
                 ParentGuids = new[] { filtredCurrentCheckout }
             };
