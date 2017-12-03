@@ -490,9 +490,9 @@ See the changes in the commit form.");
             fileHistoryToolStripMenuItem.Enabled = gitItem != null;
 
             resetToThisRevisionToolStripMenuItem.Enabled =
-            blameToolStripMenuItem1.Enabled =
             fileTreeArchiveToolStripMenuItem.Enabled =
               isFile;
+            blameToolStripMenuItem1.Visible = isFile;
 
             fileTreeCleanWorkingTreeToolStripMenuItem.Visible = isFolder;
             saveAsToolStripMenuItem.Visible = isFile;
@@ -501,10 +501,10 @@ See the changes in the commit form.");
             openWithToolStripMenuItem.Visible = isFile;
             var isExistingFileOrDirectory = gitItem != null && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
             copyFilenameToClipboardToolStripMenuItem.Visible = isExistingFileOrDirectory;
-            editCheckedOutFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
+            editCheckedOutFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
             assumeUnchangedTheFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
-            stopTrackingThisFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
-            toolStripSeparator1.Visible = isExistingFileOrDirectory;
+            stopTrackingThisFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
+            toolStripSeparator1.Visible = isFile && isExistingFileOrDirectory;
             toolStripSeparator18.Visible = isFile;
         }
 
