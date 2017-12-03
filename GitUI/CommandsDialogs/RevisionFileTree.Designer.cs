@@ -201,7 +201,7 @@
             this.fileHistoryToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileHistory;
             this.fileHistoryToolStripMenuItem.Name = "fileHistoryToolStripMenuItem";
             this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
-            this.fileHistoryToolStripMenuItem.Text = "File history";
+            this.fileHistoryToolStripMenuItem.Text = "View history";
             this.fileHistoryToolStripMenuItem.Click += new System.EventHandler(this.fileHistoryItem_Click);
             // 
             // blameToolStripMenuItem1
