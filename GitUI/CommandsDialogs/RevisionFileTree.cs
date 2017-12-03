@@ -494,9 +494,9 @@ See the changes in the commit form.");
             resetToThisRevisionToolStripMenuItem.Enabled = isFile;
 
             fileHistoryToolStripMenuItem.Enabled = itemSelected;
-            copyFilenameToClipboardToolStripMenuItem.Visible = itemSelected && isExistingFileOrDirectory;
+            copyFilenameToClipboardToolStripMenuItem.Visible = itemSelected;
             fileTreeOpenContainingFolderToolStripMenuItem.Enabled = isExistingFileOrDirectory;
-            fileTreeArchiveToolStripMenuItem.Enabled = itemSelected && isExistingFileOrDirectory;
+            fileTreeArchiveToolStripMenuItem.Enabled = itemSelected;
             fileTreeCleanWorkingTreeToolStripMenuItem.Visible = isFolder && isExistingFileOrDirectory;
 
             blameToolStripMenuItem1.Visible = isFile;
