@@ -492,7 +492,8 @@ See the changes in the commit form.");
             this.blameToolStripMenuItem1.Enabled =
             this.fileTreeArchiveToolStripMenuItem.Enabled =
               enableItems;
-            
+
+            fileTreeCleanWorkingTreeToolStripMenuItem.Visible = gitItem != null && gitItem.ObjectType == GitObjectType.Tree;
             saveAsToolStripMenuItem.Visible = enableItems;
             openFileToolStripMenuItem.Visible = enableItems;
             openFileWithToolStripMenuItem.Visible = enableItems;
