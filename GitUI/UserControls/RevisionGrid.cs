@@ -863,7 +863,7 @@ namespace GitUI
             return GetSelectedRevisions(null);
         }
 
-        public string DescribeRevision(GitRevision revision)
+        public string DescribeRevision(GitRevision revision, int maxLength = 0)
         {
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
             var descriptiveRefs = gitRefListsForRevision.AllBranches.Concat(gitRefListsForRevision.AllTags);
@@ -879,7 +879,15 @@ namespace GitUI
                 description = revision.Subject;
             }
 
-            description = description + " @" + revision.Guid.Substring(0, 4);
+            if (!revision.IsArtificial())
+            {
+                description += " @" + revision.Guid.Substring(0, 4);
+            }
+
+            if (maxLength > 0)
+            {
+                description = description.ShortenTo(maxLength);
+            }
 
             return description;
         }
@@ -1078,11 +1086,6 @@ namespace GitUI
                     Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef, capturedModule));
                 newSuperPrjectInfo.ContinueWith((task) => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
-                //Only check for tracked files. This usually makes more sense and it performs a lot
-                //better then checking for untracked files.
-                // TODO: Check FiltredFileName
-                Task<IList<GitItemStatus>> changedFilesTask =
-                    Task.Run(() => capturedModule.GetAllChangedFiles());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -1101,7 +1104,14 @@ namespace GitUI
                 _filtredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 SuperprojectCurrentCheckout = newSuperPrjectInfo;
-                ChangedFiles = changedFilesTask;
+                if (ArtificialCountEnabled)
+                {
+                    ChangedFiles = Task.Run(() => capturedModule.GetAllChangedFiles());
+                }
+                else
+                {
+                    ChangedFiles = null;
+                }
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -1853,7 +1863,7 @@ namespace GitUI
             }
             else if (columnIndex == messageColIndex)
             {
-                e.Value = revision.Subject;
+                e.Value = revision.SubjectCount + revision.Subject;
             }
             else if (columnIndex == authorColIndex)
             {
@@ -2695,28 +2705,47 @@ namespace GitUI
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
         }
 
+        private bool ArtificialCountEnabled
+        {
+            get
+            {
+                //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
+                //Do not activate if count on Commit button is set, the counters may be inconsistient
+                return AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar && (FindForm() as FormBrowse) != null;
+            }
+        }
+
         private void CheckUncommitedChanged(string filtredCurrentCheckout)
         {
-            bool enabled = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar && (FindForm() as FormBrowse)!=null;
-            var staged = ChangedFiles.Result.Count(item => item.IsStaged);
-            var unstaged = ChangedFiles.Result.Count() - staged;
+            string unstageCount;
+            string stageCount;
+            if (ChangedFiles != null)
+            {
+                int staged = ChangedFiles.Result.Count(item => item.IsStaged);
+                int unstaged = ChangedFiles.Result.Count() - staged;
+                unstageCount = "(" + unstaged + ") ";
+                stageCount = "(" + staged + ") ";
+            }
+            else
+            {
+                unstageCount ="";
+                stageCount = "";
+            }
 
             //Add working directory as virtual commit
-            //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
-            //Do not activate if count on Commit button is set, the counters may be inconsistient
-            string count = enabled ? "(" + unstaged + ") " : "";
             var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
             {
-                Subject = count + Strings.GetCurrentUnstagedChanges(),
+                SubjectCount = unstageCount,
+                Subject = Strings.GetCurrentUnstagedChanges(),
                 ParentGuids = new[] { GitRevision.IndexGuid }
             };
             Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
 
             //Add index as virtual commit
-            count = enabled ? "(" + staged + ") " : "";
             var index = new GitRevision(Module, GitRevision.IndexGuid)
             {
-                Subject = count + Strings.GetCurrentIndex(),
+                SubjectCount = stageCount,
+                Subject = Strings.GetCurrentIndex(),
                 ParentGuids = new[] { filtredCurrentCheckout }
             };
             Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
