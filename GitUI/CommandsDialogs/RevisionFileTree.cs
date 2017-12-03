@@ -673,5 +673,12 @@ See the changes in the commit form.");
             }
         }
 
+        private void tvGitTree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                tvGitTree.SelectedNode = e.Node;
+            }
+        }
     }
 }

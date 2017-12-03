@@ -94,6 +94,7 @@
             this.tvGitTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvGitTree_BeforeExpand);
             this.tvGitTree.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tvGitTree_ItemDrag);
             this.tvGitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvGitTree_AfterSelect);
+            this.tvGitTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvGitTree_NodeMouseClick);
             this.tvGitTree.DoubleClick += new System.EventHandler(this.tvGitTree_DoubleClick);
             this.tvGitTree.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tvGitTree_KeyDown);
             // 
