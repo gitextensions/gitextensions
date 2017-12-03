@@ -495,6 +495,7 @@ See the changes in the commit form.");
 
             fileHistoryToolStripMenuItem.Enabled = itemSelected;
             copyFilenameToClipboardToolStripMenuItem.Visible = itemSelected && isExistingFileOrDirectory;
+            fileTreeOpenContainingFolderToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             fileTreeArchiveToolStripMenuItem.Enabled = itemSelected && isExistingFileOrDirectory;
             fileTreeCleanWorkingTreeToolStripMenuItem.Visible = isFolder && isExistingFileOrDirectory;
 
