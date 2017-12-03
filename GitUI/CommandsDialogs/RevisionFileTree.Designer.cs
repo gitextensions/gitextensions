@@ -45,9 +45,9 @@
             this.blameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorEditFileActions = new System.Windows.Forms.ToolStripSeparator();
             this.editCheckedOutFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorGitActions = new System.Windows.Forms.ToolStripSeparator();
             this.stopTrackingThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assumeUnchangedTheFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -112,9 +112,9 @@
             this.blameToolStripMenuItem1,
             this.toolStripSeparatorEditFileActions,
             this.editCheckedOutFileToolStripMenuItem,
+            this.openWithToolStripMenuItem,
             this.openFileToolStripMenuItem,
             this.openFileWithToolStripMenuItem,
-            this.openWithToolStripMenuItem,
             this.toolStripSeparatorGitActions,
             this.stopTrackingThisFileToolStripMenuItem,
             this.assumeUnchangedTheFileToolStripMenuItem,
@@ -222,6 +222,14 @@
             this.editCheckedOutFileToolStripMenuItem.Text = "Edit working directory file";
             this.editCheckedOutFileToolStripMenuItem.Click += new System.EventHandler(this.editCheckedOutFileToolStripMenuItem_Click);
             // 
+            // openWithToolStripMenuItem
+            // 
+            this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
+            this.openWithToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(298, 22);
+            this.openWithToolStripMenuItem.Text = "Open working directory file with...";
+            this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
+            // 
             // openFileToolStripMenuItem
             // 
             this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
@@ -235,14 +243,6 @@
             this.openFileWithToolStripMenuItem.Size = new System.Drawing.Size(298, 22);
             this.openFileWithToolStripMenuItem.Text = "Open this revision with... (temp file)";
             this.openFileWithToolStripMenuItem.Click += new System.EventHandler(this.openFileWithToolStripMenuItem_Click);
-            // 
-            // openWithToolStripMenuItem
-            // 
-            this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
-            this.openWithToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openWithToolStripMenuItem.Size = new System.Drawing.Size(298, 22);
-            this.openWithToolStripMenuItem.Text = "Open working directory file with...";
-            this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
             // 
             // toolStripSeparatorGitActions
             // 
