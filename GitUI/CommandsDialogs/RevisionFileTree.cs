@@ -503,20 +503,26 @@ See the changes in the commit form.");
             copyFilenameToClipboardToolStripMenuItem.Visible = itemSelected;
             fileTreeOpenContainingFolderToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             fileTreeArchiveToolStripMenuItem.Enabled = itemSelected;
-            fileTreeCleanWorkingTreeToolStripMenuItem.Visible = isFolder && isExistingFileOrDirectory;
+            fileTreeCleanWorkingTreeToolStripMenuItem.Visible = isFolder;
+            fileTreeCleanWorkingTreeToolStripMenuItem.Enabled = isExistingFileOrDirectory;
 
             blameToolStripMenuItem1.Visible = isFile;
 
-            editCheckedOutFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
-            openWithToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
+            editCheckedOutFileToolStripMenuItem.Visible = isFile;
+            editCheckedOutFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            openWithToolStripMenuItem.Visible = isFile;
+            openWithToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             openFileToolStripMenuItem.Visible = isFile;
             openFileWithToolStripMenuItem.Visible = isFile;
 
             toolStripSeparatorGitActions.Visible = isFile;
-            stopTrackingThisFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
-            assumeUnchangedTheFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
+            stopTrackingThisFileToolStripMenuItem.Visible = isFile;
+            stopTrackingThisFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            assumeUnchangedTheFileToolStripMenuItem.Visible = isFile;
+            assumeUnchangedTheFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
 
-            toolStripSeparatorFileTreeActions.Visible = isFile && isExistingFileOrDirectory;
+            toolStripSeparatorFileTreeActions.Visible = isFile;
+            toolStripSeparatorFileTreeActions.Enabled = isExistingFileOrDirectory;
             expandSubtreeToolStripMenuItem.Visible = isFolder;
         }
 
