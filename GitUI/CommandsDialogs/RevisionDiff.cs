@@ -683,7 +683,7 @@ namespace GitUI.CommandsDialogs
                 {
                     resetFileToSelectedToolStripMenuItem.Visible = true;
                     TranslateItem(resetFileToSelectedToolStripMenuItem.Name, resetFileToSelectedToolStripMenuItem);
-                    resetFileToSelectedToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0]) + ")";
+                    resetFileToSelectedToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0], 50) + ")";
                 }
                 if (revisions[0].HasParent)
                 {
@@ -692,7 +692,7 @@ namespace GitUI.CommandsDialogs
                     GitRevision parentRev = _revisionGrid.GetRevision(revisions[0].FirstParentGuid);
                     if (parentRev != null)
                     {
-                        resetFileToParentToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(parentRev) + ")";
+                        resetFileToParentToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(parentRev, 50) + ")";
                     }
                 }
                 else
@@ -716,7 +716,7 @@ namespace GitUI.CommandsDialogs
                 {
                     resetFileToFirstToolStripMenuItem.Visible = true;
                     TranslateItem(resetFileToFirstToolStripMenuItem.Name, resetFileToFirstToolStripMenuItem);
-                    resetFileToFirstToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[1]) + ")";
+                    resetFileToFirstToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[1], 50) + ")";
                 }
 
                 if (revisions[0].Guid == GitRevision.UnstagedGuid)
@@ -727,7 +727,7 @@ namespace GitUI.CommandsDialogs
                 {
                     resetFileToSecondToolStripMenuItem.Visible = true;
                     TranslateItem(resetFileToSecondToolStripMenuItem.Name, resetFileToSecondToolStripMenuItem);
-                    resetFileToSecondToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0]) + ")";
+                    resetFileToSecondToolStripMenuItem.Text += " (" + _revisionGrid.DescribeRevision(revisions[0], 50) + ")";
                 }
             }
             else
