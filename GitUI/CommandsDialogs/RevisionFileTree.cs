@@ -472,11 +472,12 @@ See the changes in the commit form.");
         private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
-            var isFile = gitItem != null && gitItem.ObjectType == GitObjectType.Blob;
-            var isFolder = gitItem != null && gitItem.ObjectType == GitObjectType.Tree;
-            var isExistingFileOrDirectory = gitItem != null && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
+            var itemSelected = gitItem != null;
+            var isFile = itemSelected && gitItem.ObjectType == GitObjectType.Blob;
+            var isFolder = itemSelected && gitItem.ObjectType == GitObjectType.Tree;
+            var isExistingFileOrDirectory = itemSelected && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
 
-            if (gitItem != null && gitItem.ObjectType == GitObjectType.Commit)
+            if (itemSelected && gitItem.ObjectType == GitObjectType.Commit)
             {
                 openSubmoduleMenuItem.Visible = true;
                 if (!openSubmoduleMenuItem.Font.Bold)
@@ -492,21 +493,21 @@ See the changes in the commit form.");
             saveAsToolStripMenuItem.Visible = isFile;
             resetToThisRevisionToolStripMenuItem.Enabled = isFile;
 
-            fileHistoryToolStripMenuItem.Enabled = gitItem != null;
-            copyFilenameToClipboardToolStripMenuItem.Visible = isExistingFileOrDirectory;
-            fileTreeArchiveToolStripMenuItem.Enabled = isFile;
-            fileTreeCleanWorkingTreeToolStripMenuItem.Visible = isFolder;
+            fileHistoryToolStripMenuItem.Enabled = itemSelected;
+            copyFilenameToClipboardToolStripMenuItem.Visible = itemSelected && isExistingFileOrDirectory;
+            fileTreeArchiveToolStripMenuItem.Enabled = itemSelected && isExistingFileOrDirectory;
+            fileTreeCleanWorkingTreeToolStripMenuItem.Visible = isFolder && isExistingFileOrDirectory;
 
             blameToolStripMenuItem1.Visible = isFile;
 
             editCheckedOutFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
-            openWithToolStripMenuItem.Visible = isFile;
+            openWithToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
             openFileToolStripMenuItem.Visible = isFile;
             openFileWithToolStripMenuItem.Visible = isFile;
 
             toolStripSeparatorGitActions.Visible = isFile;
             stopTrackingThisFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
-            assumeUnchangedTheFileToolStripMenuItem.Visible = isExistingFileOrDirectory;
+            assumeUnchangedTheFileToolStripMenuItem.Visible = isFile && isExistingFileOrDirectory;
             toolStripSeparatorFileTreeActions.Visible = isFile && isExistingFileOrDirectory;
         }
 
