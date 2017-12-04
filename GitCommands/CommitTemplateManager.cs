@@ -58,7 +58,7 @@ namespace GitCommands
         }
 
         public CommitTemplateManager(IGitModule module)
-            : this(module, new FullPathResolver(module), new FileSystem())
+            : this(module, new FullPathResolver(() => module.WorkingDir), new FileSystem())
         {
         }
 

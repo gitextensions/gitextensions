@@ -21,11 +21,11 @@ namespace GitCommands
 
     public sealed class FullPathResolver : IFullPathResolver
     {
-        private readonly IGitModule _module;
+        private readonly Func<string> _getWorkingDir;
 
-        public FullPathResolver(IGitModule module)
+        public FullPathResolver(Func<string> getWorkingDir)
         {
-            _module = module;
+            _getWorkingDir = getWorkingDir;
         }
 
 
@@ -35,7 +35,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="path">Folder or file path to resolve.</param>
         /// <returns>
-        /// <paramref name="path" /> if <paramref name="path" /> is rooted; otherwise resolved path from <see cref="P:GitUIPluginInterfaces.IGitModule.WorkingDir" />.
+        /// <paramref name="path" /> if <paramref name="path" /> is rooted; otherwise resolved path from working directory of the current repository.
         /// </returns>
         /// <exception cref="PathTooLongException">The resolved path is too long (greater than 248 characters).</exception>
         public string Resolve(string path)
@@ -50,7 +50,7 @@ namespace GitCommands
                 return path;
             }
 
-            var fullPath = Path.GetFullPath(Path.Combine(_module.WorkingDir ?? "", path));
+            var fullPath = Path.GetFullPath(Path.Combine(_getWorkingDir () ?? "", path));
             var uri = new Uri(fullPath);
             return uri.LocalPath;
         }
