@@ -7,7 +7,7 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands.Remote
 {
-    public interface IGitRemoteController
+    public interface IGitRemoteManager
     {
         void ConfigureRemotes(string remoteName);
 
@@ -57,14 +57,14 @@ namespace GitCommands.Remote
         void ToggleRemoteState(string remoteName, bool disabled);
     }
 
-    public class GitRemoteController : IGitRemoteController
+    public class GitRemoteManager : IGitRemoteManager
     {
         internal static readonly string DisabledSectionPrefix = "-";
         internal static readonly string SectionRemote = "remote";
         private readonly IGitModule _module;
 
 
-        public GitRemoteController(IGitModule module)
+        public GitRemoteManager(IGitModule module)
         {
             _module = module;
         }

@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
         private string _branch;
         private bool _bInternalUpdate;
         private const string AllRemotes = "[ All ]";
-        private readonly IGitRemoteController _gitRemoteController;
+        private readonly IGitRemoteManager _remoteManager;
 
         private FormPull()
             : this(null, null, null)
@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs
 
             if (aCommands != null)
             {
-                _gitRemoteController = new GitRemoteController(Module);
+                _remoteManager = new GitRemoteManager(Module);
                 Init(defaultRemote);
             }
 
@@ -155,7 +155,7 @@ namespace GitUI.CommandsDialogs
         private void BindRemotesDropDown(string selectedRemoteName)
         {
             // refresh registered git remotes
-            var remotes = _gitRemoteController.LoadRemotes(false);
+            var remotes = _remoteManager.LoadRemotes(false);
 
             _NO_TRANSLATE_Remotes.Sorted = false;
             _NO_TRANSLATE_Remotes.DataSource = new[] { new GitRemote { Name = AllRemotes } }.Union(remotes).ToList();

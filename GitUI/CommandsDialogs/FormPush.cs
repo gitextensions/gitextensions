@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs
         private GitRemote _selectedRemote;
         private string _selectedRemoteBranchName;
         private IList<IGitRef> _gitRefs;
-        private readonly IGitRemoteController _gitRemoteController;
+        private readonly IGitRemoteManager _remoteManager;
 
         public bool ErrorOccurred { get; private set; }
 
@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
             //they are reset to false
             if (aCommands != null)
             {
-                _gitRemoteController = new GitRemoteController(Module);
+                _remoteManager = new GitRemoteManager(Module);
                 Init();
             }
         }
@@ -134,7 +134,7 @@ namespace GitUI.CommandsDialogs
             _currentBranchName = Module.GetSelectedBranch();
 
             // refresh registered git remotes
-            UserGitRemotes = _gitRemoteController.LoadRemotes(false).ToList();
+            UserGitRemotes = _remoteManager.LoadRemotes(false).ToList();
             BindRemotesDropDown(null);
 
             UpdateBranchDropDown();
@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
             {
                 return;
             }
-            _gitRemoteController.LoadRemotes(false);
+            _remoteManager.LoadRemotes(false);
             BindRemotesDropDown(selectedRemoteName);
         }
 
@@ -272,7 +272,7 @@ namespace GitUI.CommandsDialogs
                 //If the current branch is not the default push, and not known by the remote
                 //(as far as we know since we are disconnected....)
                 if (_NO_TRANSLATE_Branch.Text != AllRefs &&
-                    RemoteBranch.Text != _gitRemoteController.GetDefaultPushRemote(_selectedRemote, _NO_TRANSLATE_Branch.Text) &&
+                    RemoteBranch.Text != _remoteManager.GetDefaultPushRemote(_selectedRemote, _NO_TRANSLATE_Branch.Text) &&
                     !IsBranchKnownToRemote(selectedRemoteName, RemoteBranch.Text))
                 {
                     //Ask if this is really what the user wants
@@ -687,7 +687,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (_selectedRemote != null)
                         {
-                            string defaultRemote = _gitRemoteController.GetDefaultPushRemote(_selectedRemote,
+                            string defaultRemote = _remoteManager.GetDefaultPushRemote(_selectedRemote,
                                 branch.Name);
                             if (!defaultRemote.IsNullOrEmpty())
                             {

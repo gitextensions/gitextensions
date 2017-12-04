@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormRemotes : GitModuleForm
     {
-        private IGitRemoteController _gitRemoteController;
+        private IGitRemoteManager _remoteManager;
         private GitRemote _selectedRemote;
         private readonly ListViewGroup _lvgEnabled, _lvgDisabled;
 
@@ -179,7 +179,7 @@ Inactive remote is completely invisible to git.");
         private void Initialize(string preselectRemote = null)
         {
             // refresh registered git remotes
-            UserGitRemotes = _gitRemoteController.LoadRemotes(true).ToList();
+            UserGitRemotes = _remoteManager.LoadRemotes(true).ToList();
 
             InitialiseTabRemotes(preselectRemote);
             InitialiseTabBehaviors();
@@ -261,7 +261,7 @@ Inactive remote is completely invisible to git.");
             {
                 return;
             }
-            _gitRemoteController = new GitRemoteController(Module);
+            _remoteManager = new GitRemoteManager(Module);
             // load the data for the very first time
             Initialize(PreselectRemoteOnLoad);
         }
@@ -274,7 +274,7 @@ Inactive remote is completely invisible to git.");
                 return;
             }
             _selectedRemote.Disabled = !_selectedRemote.Disabled;
-            _gitRemoteController.ToggleRemoteState(_selectedRemote.Name, _selectedRemote.Disabled);
+            _remoteManager.ToggleRemoteState(_selectedRemote.Name, _selectedRemote.Disabled);
             BindBtnToggleState(_selectedRemote.Disabled);
             BindRemotes(_selectedRemote.Name);
         }
@@ -298,7 +298,7 @@ Inactive remote is completely invisible to git.");
                 }
 
                 // update all other remote properties
-                var result = _gitRemoteController.SaveRemote(_selectedRemote,
+                var result = _remoteManager.SaveRemote(_selectedRemote,
                                                              RemoteName.Text,
                                                              Url.Text,
                                                              checkBoxSepPushUrl.Checked ? comboBoxPushUrl.Text : null,
@@ -318,7 +318,7 @@ Inactive remote is completely invisible to git.");
                                                         MessageBoxButtons.YesNo))
                 {
                     FormRemoteProcess.ShowDialog(this, "remote update");
-                    _gitRemoteController.ConfigureRemotes(RemoteName.Text);
+                    _remoteManager.ConfigureRemotes(RemoteName.Text);
                 }
             }
             finally
@@ -347,7 +347,7 @@ Inactive remote is completely invisible to git.");
                                                     _questionDeleteRemoteCaption.Text,
                                                     MessageBoxButtons.YesNo))
             {
-                var output = _gitRemoteController.RemoveRemote(_selectedRemote);
+                var output = _remoteManager.RemoveRemote(_selectedRemote);
                 if (!string.IsNullOrEmpty(output))
                 {
                     MessageBox.Show(this, output, _gitMessage.Text);
