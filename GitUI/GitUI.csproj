@@ -133,6 +133,7 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
+    <Compile Include="CommandsDialogs\FormBrowseController.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" />
@@ -197,6 +198,12 @@
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\RevisionFileTreeController.cs" />
+    <Compile Include="CommandsDialogs\RevisionGpgInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\RevisionGpgInfo.Designer.cs">
+      <DependentUpon>RevisionGpgInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1144,6 +1151,9 @@
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\RevisionGpgInfo.resx">
+      <DependentUpon>RevisionGpgInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.resx">
       <DependentUpon>FormAvailableEncodings.cs</DependentUpon>
     </EmbeddedResource>
@@ -1889,6 +1899,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Icons\commit_error.png" />
+    <Content Include="Resources\Icons\commit_ok.png" />
+    <Content Include="Resources\Icons\commit_warning.png" />
+    <Content Include="Resources\Icons\certificate_error.png" />
+    <Content Include="Resources\Icons\certificate_ok.png" />
     <Content Include="Resources\Icons\14.png" />
     <Content Include="Resources\Icons\2.png" />
     <Content Include="Resources\Icons\21.png" />
@@ -1919,6 +1934,7 @@
     <Content Include="Resources\Icons\IconBrowseFileExplorer.png" />
     <Content Include="Resources\Icons\IconConsole.png" />
     <Content Include="Resources\Icons\IconFolderSubmodule.png" />
+    <Content Include="Resources\Icons\IconKey.png" />
     <Content Include="Resources\Icons\IconManageRemotes.png" />
     <Content Include="Resources\Icons\IconMerge.png" />
     <Content Include="Resources\Icons\IconRebase.png" />
@@ -1929,6 +1945,13 @@
     <Content Include="Resources\Icons\light_bulb_icon_off_16.png" />
     <Content Include="Resources\Icons\light_bulb_icon_on_16.png" />
     <Content Include="Resources\Icons\whitespace.png" />
+    <Content Include="Resources\Icons\tag_error.png" />
+    <Content Include="Resources\Icons\tag_ok.png" />
+    <Content Include="Resources\Icons\tag_many.png" />
+    <Content Include="Resources\Icons\tag_error.png" />
+    <Content Include="Resources\Icons\tag_many.png" />
+    <Content Include="Resources\Icons\tag_ok.png" />
+    <Content Include="Resources\Icons\tag_warning.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
