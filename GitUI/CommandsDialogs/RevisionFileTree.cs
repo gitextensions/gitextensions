@@ -616,18 +616,16 @@ See the changes in the commit form.");
             }
         }
 
-        private string GetSelectedFileInFileTree()
+        private string GetSelectedFile()
         {
-            var item = tvGitTree.SelectedNode.Tag as GitItem;
+            var item = tvGitTree.SelectedNode?.Tag as GitItem;
 
             if (item == null || item.ObjectType == GitObjectType.Tree)
                 return null;
 
-
             var filename = Path.Combine(Module.WorkingDir, item.FileName);
             if (!File.Exists(filename))
             {
-                MessageBox.Show(string.Format("The selected file '{0}' no more exists in the working directory." + Environment.NewLine + "No action could be made on it.", filename), "File not found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return null;
             }
 
@@ -639,7 +637,7 @@ See the changes in the commit form.");
 
             bool wereErrors;
             var itemStatus = new GitItemStatus();
-            itemStatus.Name = GetSelectedFileInFileTree();
+            itemStatus.Name = GetSelectedFile();
             if (itemStatus.Name == null)
                 return;
             var answer = MessageBox.Show(_assumeUnchangedMessage.Text, _assumeUnchangedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -661,7 +659,7 @@ See the changes in the commit form.");
 
         private void stopTrackingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var filename = GetSelectedFileInFileTree();
+            var filename = GetSelectedFile();
             if (filename == null)
                 return;
 
