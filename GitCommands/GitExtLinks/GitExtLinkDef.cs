@@ -183,13 +183,13 @@ namespace GitCommands.GitExtLinks
 
         public IEnumerable<GitExtLink> Parse(GitRevision revision)
         {
-            GitRemoteController remoteController = new GitRemoteController(revision.Module);
-            return Parse(revision, remoteController);
+            GitRemoteManager remoteManager = new GitRemoteManager(revision.Module);
+            return Parse(revision, remoteManager);
         }
 
-        public IEnumerable<GitExtLink> Parse(GitRevision revision, IGitRemoteController remoteController)
+        internal IEnumerable<GitExtLink> Parse(GitRevision revision, IGitRemoteManager remoteManager)
         {
-            IEnumerable<Match> remoteMatches = ParseRemotes(remoteController);
+            IEnumerable<Match> remoteMatches = ParseRemotes(remoteManager);
 
             return remoteMatches.Select(remoteMatch => ParseRevision(remoteMatch, revision)).Unwrap();
         }
@@ -212,7 +212,7 @@ namespace GitCommands.GitExtLinks
             return links.Unwrap();
         }
 
-        public IEnumerable<Match> ParseRemotes(IGitRemoteController remoteController)
+        private IEnumerable<Match> ParseRemotes(IGitRemoteManager remoteManager)
         {
             IList<Match> allMatches = new List<Match>();
 
@@ -224,9 +224,8 @@ namespace GitCommands.GitExtLinks
             {
                 IList<string> remoteUrls = new List<string>();
 
-                remoteController.LoadRemotes(loadDisabled: false);
-
-                IEnumerable<GitRemote> matchingRemotes = GetMatchingRemotes(remoteController.Remotes);
+                var remotes = remoteManager.LoadRemotes(false);
+                IEnumerable<GitRemote> matchingRemotes = GetMatchingRemotes(remotes);
 
                 foreach (GitRemote remote in matchingRemotes)
                 {

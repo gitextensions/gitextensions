@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -28,7 +29,7 @@ namespace GitUI.CommandsDialogs
         private GitRemote _selectedRemote;
         private string _selectedRemoteBranchName;
         private IList<IGitRef> _gitRefs;
-        private readonly IGitRemoteController _gitRemoteController;
+        private readonly IGitRemoteManager _remoteManager;
 
         public bool ErrorOccurred { get; private set; }
 
@@ -102,14 +103,21 @@ namespace GitUI.CommandsDialogs
             //they are reset to false
             if (aCommands != null)
             {
-                _gitRemoteController = new GitRemoteController(Module);
+                _remoteManager = new GitRemoteManager(Module);
                 Init();
             }
         }
 
+
+        /// <summary>
+        /// Gets the list of remotes configured in .git/config file.
+        /// </summary>
+        private List<GitRemote> UserGitRemotes { get; set; }
+
+
         private void Init()
         {
-            _gitRefs = Module.GetRefs(true, true);
+            _gitRefs = Module.GetRefs();
             if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
             {
                 RecursiveSubmodules.Enabled = true;
@@ -126,7 +134,7 @@ namespace GitUI.CommandsDialogs
             _currentBranchName = Module.GetSelectedBranch();
 
             // refresh registered git remotes
-            _gitRemoteController.LoadRemotes(false);
+            UserGitRemotes = _remoteManager.LoadRemotes(false).ToList();
             BindRemotesDropDown(null);
 
             UpdateBranchDropDown();
@@ -155,12 +163,12 @@ namespace GitUI.CommandsDialogs
 
         private bool CheckIfRemoteExist()
         {
-            if (_gitRemoteController.Remotes.Count < 1)
+            if (UserGitRemotes.Count < 1)
             {
                 if (DialogResult.Yes == MessageBox.Show(this, _configureRemote.Text, _errorPushToRemoteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Error))
                 {
                     OpenRemotesDialogAndRefreshList(null);
-                    return _gitRemoteController.Remotes.Count > 0;
+                    return UserGitRemotes.Count > 0;
                 }
                 return false;
             }
@@ -173,7 +181,7 @@ namespace GitUI.CommandsDialogs
             {
                 return;
             }
-            _gitRemoteController.LoadRemotes(false);
+            _remoteManager.LoadRemotes(false);
             BindRemotesDropDown(selectedRemoteName);
         }
 
@@ -187,7 +195,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.SelectedIndexChanged -= RemotesUpdated;
             _NO_TRANSLATE_Remotes.TextUpdate -= RemotesUpdated;
             _NO_TRANSLATE_Remotes.Sorted = false;
-            _NO_TRANSLATE_Remotes.DataSource = _gitRemoteController.Remotes;
+            _NO_TRANSLATE_Remotes.DataSource = UserGitRemotes;
             _NO_TRANSLATE_Remotes.DisplayMember = "Name";
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
 
@@ -199,14 +207,14 @@ namespace GitUI.CommandsDialogs
                 selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _currentBranchName));
             }
 
-            _currentBranchRemote = _gitRemoteController.Remotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
+            _currentBranchRemote = UserGitRemotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
             if (_currentBranchRemote != null)
             {
                 _NO_TRANSLATE_Remotes.SelectedItem = _currentBranchRemote;
             }
-            else if (_gitRemoteController.Remotes.Any())
+            else if (UserGitRemotes.Any())
             {
-                var defaultRemote = _gitRemoteController.Remotes.FirstOrDefault(x => x.Name.Equals("origin", StringComparison.OrdinalIgnoreCase));
+                var defaultRemote = UserGitRemotes.FirstOrDefault(x => x.Name.Equals("origin", StringComparison.OrdinalIgnoreCase));
                 // we couldn't find the default assigned remote for the selected branch
                 // it is usually gets mapped via FormRemotes -> "default pull behavior" tab
                 // so pick the default user remote
@@ -264,7 +272,7 @@ namespace GitUI.CommandsDialogs
                 //If the current branch is not the default push, and not known by the remote
                 //(as far as we know since we are disconnected....)
                 if (_NO_TRANSLATE_Branch.Text != AllRefs &&
-                    RemoteBranch.Text != _gitRemoteController.GetDefaultPushRemote(_selectedRemote, _NO_TRANSLATE_Branch.Text) &&
+                    RemoteBranch.Text != _remoteManager.GetDefaultPushRemote(_selectedRemote, _NO_TRANSLATE_Branch.Text) &&
                     !IsBranchKnownToRemote(selectedRemoteName, RemoteBranch.Text))
                 {
                     //Ask if this is really what the user wants
@@ -304,7 +312,7 @@ namespace GitUI.CommandsDialogs
                 {
                     GitRef selectedLocalBranch = _NO_TRANSLATE_Branch.SelectedItem as GitRef;
                     track = selectedLocalBranch != null && string.IsNullOrEmpty(selectedLocalBranch.TrackingRemote) &&
-                            !_gitRemoteController.Remotes.Any(x => _NO_TRANSLATE_Branch.Text.StartsWith(x.Name, StringComparison.OrdinalIgnoreCase));
+                            !UserGitRemotes.Any(x => _NO_TRANSLATE_Branch.Text.StartsWith(x.Name, StringComparison.OrdinalIgnoreCase));
                     var autoSetupMerge = Module.EffectiveConfigFile.GetValue("branch.autoSetupMerge");
                     if (autoSetupMerge.IsNotNullOrWhitespace() && autoSetupMerge.ToLowerInvariant() == "false")
                     {
@@ -679,7 +687,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (_selectedRemote != null)
                         {
-                            string defaultRemote = _gitRemoteController.GetDefaultPushRemote(_selectedRemote,
+                            string defaultRemote = _remoteManager.GetDefaultPushRemote(_selectedRemote,
                                 branch.Name);
                             if (!defaultRemote.IsNullOrEmpty())
                             {
