@@ -384,7 +384,7 @@ namespace GitUI
             }
             else
             {
-                return _itemsDictionary.Select(pair => pair.Value).Unwrap().Count();
+                return _itemsDictionary.SelectMany(pair => pair.Value).Count();
             }
         }
 
