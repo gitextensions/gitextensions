@@ -191,7 +191,7 @@ namespace GitCommands.GitExtLinks
         {
             IEnumerable<Match> remoteMatches = ParseRemotes(remoteManager);
 
-            return remoteMatches.Select(remoteMatch => ParseRevision(remoteMatch, revision)).Unwrap();
+            return remoteMatches.SelectMany(remoteMatch => ParseRevision(remoteMatch, revision));
         }
 
         public IEnumerable<GitExtLink> ParseRevision(Match remoteMatch, GitRevision revision)
@@ -199,17 +199,27 @@ namespace GitCommands.GitExtLinks
             List<IEnumerable<GitExtLink>> links = new List<IEnumerable<GitExtLink>>();
 
             if (SearchInParts.Contains(RevisionPart.LocalBranches))
+            {
                 foreach (var head in revision.Refs.Where(b => !b.IsRemote))
+                {
                     links.Add(ParseRevisionPart(remoteMatch, head.LocalName, revision));
+                }
+            }
 
             if (SearchInParts.Contains(RevisionPart.RemoteBranches))
+            {
                 foreach (var head in revision.Refs.Where(b => b.IsRemote))
+                {
                     links.Add(ParseRevisionPart(remoteMatch, head.LocalName, revision));
+                }
+            }
 
             if (SearchInParts.Contains(RevisionPart.Message))
+            {
                 links.Add(ParseRevisionPart(remoteMatch, revision.Body, revision));
+            }
 
-            return links.Unwrap();
+            return links.SelectMany(list => list);
         }
 
         private IEnumerable<Match> ParseRemotes(IGitRemoteManager remoteManager)
