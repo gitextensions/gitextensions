@@ -516,19 +516,19 @@ namespace GitUI.CommandsDialogs
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            GitUIExtensions.DiffWithRevisionKind diffKind;
+            GitUI.RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffALocal;
+                diffKind = GitUI.RevisionDiffKind.DiffALocal;
             else if (sender == bLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBLocal;
+                diffKind = GitUI.RevisionDiffKind.DiffBLocal;
             else if (sender == parentOfALocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAParentLocal;
+                diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
             else if (sender == parentOfBLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBParentLocal;
+                diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
             else
             {
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAB;
+                diffKind = GitUI.RevisionDiffKind.DiffAB;
             }
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
