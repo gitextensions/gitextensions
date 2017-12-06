@@ -17,7 +17,8 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         {
             if (durationMilliseconds.HasValue)
             {
-                return " (" + TimeSpan.FromMilliseconds(durationMilliseconds.Value).ToString(@"mm\:ss") + ")";
+                var timeText = TimeSpan.FromMilliseconds(durationMilliseconds.Value).ToString(@"mm\:ss");
+                return $"({timeText})";
             }
 
             return string.Empty;
