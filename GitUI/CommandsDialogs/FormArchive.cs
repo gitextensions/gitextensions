@@ -154,19 +154,19 @@ namespace GitUI.CommandsDialogs
         {
             if (checkBoxPathFilter.Checked)
             {
-                // 1. get all lines from text box which are not empty
-                // 2. wrap lines with ""
+                // 1. get all lines (paths) from text box
+                // 2. wrap lines that are not empty with ""
                 // 3. join together with space as separator
                 return string.Join(" ", textBoxPaths.Lines.Select(a => a.QuoteNE()));
             }
             else if (checkboxRevisionFilter.Checked)
             {
 
-                // 1. get all files changed between current revision and selected revision from diff
-                var files = UICommands.Module.GetDiffFiles(this.DiffSelectedRevision.Guid, this.SelectedRevision.Guid);
-                // 2. wrap names with ""
+                // 1. get all changed (and not deleted files) from selected to current revision
+                var files = UICommands.Module.GetDiffFiles(this.DiffSelectedRevision.Guid, this.SelectedRevision.Guid).Where(f => !f.IsDeleted);
+                // 2. wrap file names with ""
                 // 3. join together with space as separator
-                return string.Join(" ", files.Where(f => !f.IsDeleted).Select(f => f.Name.QuoteNE()));
+                return string.Join(" ", files.Select(f => f.Name.QuoteNE()));
             }
             else
             {
