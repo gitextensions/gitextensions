@@ -78,8 +78,7 @@ namespace GitCommands.GitExtLinks
         {
             return EffectiveLinkDefs.
                 Where(linkDef => linkDef.Enabled).
-                Select(linkDef => linkDef.Parse(revision)).
-                Unwrap();
+                SelectMany(linkDef => linkDef.Parse(revision));
         }
 
         public void LoadFromSettings()

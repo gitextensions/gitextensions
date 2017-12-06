@@ -300,7 +300,7 @@ namespace GitCommands
             }
             else
             {
-                return _refs.Values.Unwrap();
+                return _refs.SelectMany(entry => entry.Value);
             }
         }
 
