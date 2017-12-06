@@ -1117,6 +1117,7 @@ namespace GitUI.CommandsDialogs
 
         void Staged_DoubleClick(object sender, EventArgs e)
         {
+            if (Module.IsBareRepository()) return;
             _currentFilesList = Staged;
             Unstage();
         }
@@ -1176,7 +1177,7 @@ namespace GitUI.CommandsDialogs
         private void UnstagedContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             //Do not show if no item selected
-            e.Cancel = !Unstaged.SelectedItems.Any();
+            e.Cancel = !Unstaged.SelectedItems.Any() || Module.IsBareRepository();
         }
 
         private void Unstaged_Enter(object sender, EventArgs e)
@@ -1196,6 +1197,7 @@ namespace GitUI.CommandsDialogs
 
         private void Unstage(bool canUseUnstageAll = true)
         {
+            if (Module.IsBareRepository()) return;
             if (canUseUnstageAll &&
                 Staged.GitItemStatuses.Count() > 10 &&
                 Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count())
@@ -1308,7 +1310,7 @@ namespace GitUI.CommandsDialogs
 
         private void StageClick(object sender, EventArgs e)
         {
-            if (_currentFilesList != Unstaged)
+            if (_currentFilesList != Unstaged || Module.IsBareRepository())
                 return;
             Stage(Unstaged.SelectedItems.ToList());
             if (Unstaged.IsEmpty)
@@ -1317,7 +1319,7 @@ namespace GitUI.CommandsDialogs
 
         private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!Staged.SelectedItems.Any())
+            if (!Staged.SelectedItems.Any() || Module.IsBareRepository())
             {
                 //Do not show if no item selected
                 e.Cancel = true;
