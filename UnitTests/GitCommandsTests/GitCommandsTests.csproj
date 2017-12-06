@@ -73,6 +73,7 @@
     <Compile Include="GitRevisionInfoProviderTests.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
     <Compile Include="Git\GitBlameHeaderTest.cs" />
+    <Compile Include="Git\Gpg\GitGpgControllerTests.cs" />
     <Compile Include="Git\Tag\GitCreateTagCmdTests.cs" />
     <Compile Include="Git\RevisionDiffProviderTest.cs" />
     <Compile Include="Git\GitBlameTest.cs" />
@@ -93,7 +94,7 @@
     <Compile Include="Patch\PatchTest.cs" />
     <Compile Include="PathEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Remote\GitRemoteControllerTests.cs" />
+    <Compile Include="Remote\GitRemoteManagerTests.cs" />
     <Compile Include="SshPathLocatorTest.cs" />
   </ItemGroup>
   <ItemGroup>

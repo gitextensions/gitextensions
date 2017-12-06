@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using FluentAssertions;
 using GitCommands;
-using GitUIPluginInterfaces;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace GitCommandsTests
@@ -12,7 +10,6 @@ namespace GitCommandsTests
     public class FullPathResolverTests
     {
         private string _workingDir = @"c:\dev\repo";
-        private IGitModule _module;
         private FullPathResolver _resolver;
 
 
@@ -24,10 +21,7 @@ namespace GitCommandsTests
                 _workingDir = "/home/user/repo";
             }
 
-            _module = Substitute.For<IGitModule>();
-            _module.WorkingDir.Returns(_workingDir);
-
-            _resolver = new FullPathResolver(_module);
+            _resolver = new FullPathResolver(() => _workingDir);
         }
 
 
