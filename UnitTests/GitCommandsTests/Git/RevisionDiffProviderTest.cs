@@ -1,14 +1,11 @@
 using FluentAssertions;
 using GitCommands;
+using GitCommands.Git;
 using NUnit.Framework;
-using System;
-using System.Diagnostics;
-using TestClass = NUnit.Framework.TestFixtureAttribute;
-using TestMethod = NUnit.Framework.TestAttribute;
 
 namespace GitCommandsTests.Git
 {
-    [TestClass]
+    [TestFixture]
     public class RevisionDiffProviderTest
     {
         //See ArtificialToDiffOptions() for possible "aliases" for artificial commits
@@ -32,6 +29,7 @@ namespace GitCommandsTests.Git
             (new RevisionDiffProvider()).Get(from, GitRevision.IndexGuid).Should().Be("--cached --cached");
         }
 #endif
+
         [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid)]
         [TestCase("^", "")]
         [TestCase(GitRevision.IndexGuid, null)]

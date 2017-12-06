@@ -1,14 +1,28 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace GitCommands
+namespace GitCommands.Git
 {
+    public interface IRevisionDiffProvider
+    {
+        /// <summary>
+        /// options to git-diff from GE arguments, including artificial commits
+        /// This is an instance class to not have static dependencies in GitModule
+        /// </summary>
+        /// <param name="from">The first revision</param>
+        /// <param name="to">The second "current" revision</param>
+        /// <returns></returns>
+        string Get(string from, string to);
+    }
+
     /// <summary>
     /// Translate GitRevision including artificial commits to diff options
     /// Closely related to GitRevision.cs 
     /// </summary>
-    public class RevisionDiffProvider
+    public sealed class RevisionDiffProvider : IRevisionDiffProvider
     {
+        private static readonly string StagedOpt = "--cached";
+
         /// <summary>
         /// options to git-diff from GE arguments, including artificial commits
         /// This is an instance class to not have static dependencies in GitModule
@@ -75,7 +89,5 @@ namespace GitCommands
 
             return rev;
         }
-
-        private static readonly string StagedOpt = "--cached";
     }
 }

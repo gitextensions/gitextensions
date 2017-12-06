@@ -91,6 +91,8 @@ namespace GitCommands
         private readonly IIndexLockManager _indexLockManager;
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
+        private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
+
 
         public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
         private const string DiffCommandWithStandardArgs = " -c diff.submodule=short diff --no-color ";
@@ -2202,7 +2204,7 @@ namespace GitCommands
             //fix refs slashes
             from = from.ToPosixPath();
             to = to == null ? "":to.ToPosixPath();
-            string commitRange = (new RevisionDiffProvider()).Get(from, to);
+            string commitRange = _revisionDiffProvider.Get(from, to);
             if (AppSettings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
 
@@ -2245,7 +2247,7 @@ namespace GitCommands
 
         public string GetDiffFilesText(string from, string to, bool noCache)
         {
-            string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + (new RevisionDiffProvider()).Get(from, to);
+            string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + _revisionDiffProvider.Get(from, to);
             return noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
         }
 
@@ -2259,7 +2261,7 @@ namespace GitCommands
         public List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache = false)
         {
             noCache = noCache || GitRevision.IsArtificial(from) || GitRevision.IsArtificial(to);
-            string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + (new RevisionDiffProvider()).Get(from, to);
+            string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(from, to);
             string result = noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
             if (from == GitRevision.UnstagedGuid || to == GitRevision.UnstagedGuid)
@@ -3052,7 +3054,7 @@ namespace GitCommands
         {
             var output = "";
 
-            string args = string.Join(" ", extraDiffArguments, (new RevisionDiffProvider()).Get(revision1, revision2), "--", filename.QuoteNE(), oldFileName.QuoteNE());
+            string args = string.Join(" ", extraDiffArguments, _revisionDiffProvider.Get(revision1, revision2), "--", filename.QuoteNE(), oldFileName.QuoteNE());
             RunGitCmdDetached("difftool --gui --no-prompt " + args);
             return output;
         }
