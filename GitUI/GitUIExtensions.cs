@@ -17,124 +17,15 @@ namespace GitUI
 
         public static SynchronizationContext UISynchronizationContext;
 
-        public enum DiffWithRevisionKind
-        {
-            DiffAB,
-            DiffALocal,
-            DiffBLocal,
-            DiffAParentLocal,
-            DiffBParentLocal
-        }
 
-        public class DiffKindRevision
-        {
-            /// <summary>
-            /// One row selected:
-            /// B - Selected row
-            /// A - B's parent
-            ///
-            /// Two rows selected:
-            /// A - first selected row
-            /// B - second selected row
-            /// </summary>
-            public static string Get(IList<GitRevision> revisions, DiffWithRevisionKind diffKind,
-                out string extraDiffArgs, out string firstRevision, out string secondRevision)
-            {
-                //Note: Order in revisions is that first clicked is last in array
-                string error = "";
-                //Detect rename and copy
-                extraDiffArgs = "-M -C";
-
-                if (revisions == null)
-                {
-                    error = "Unexpected null revision argument to difftool";
-                    firstRevision = null;
-                    secondRevision = null;
-                }
-                else if (revisions.Count == 0 || revisions.Count > 2)
-                {
-                    error = "Unexpected number of arguments to difftool: " + revisions.Count;
-                    firstRevision = null;
-                    secondRevision = null;
-                }
-                else if (revisions[0] == null || revisions.Count > 1 && revisions[1] == null)
-                {
-                    error = "Unexpected single null argument to difftool";
-                    firstRevision = null;
-                    secondRevision = null;
-                }
-                else if (diffKind == DiffWithRevisionKind.DiffAB)
-                {
-                    if (revisions.Count == 1)
-                    {
-                        firstRevision = revisions[0].FirstParentGuid ?? revisions[0].Guid + '^';
-                    }
-                    else
-                    {
-                        firstRevision = revisions[1].Guid;
-                    }
-                    secondRevision = revisions[0].Guid;
-                }
-                else
-                {
-                    //Second revision is always local 
-                    secondRevision = null;
-
-                    if (diffKind == DiffWithRevisionKind.DiffBLocal)
-                    {
-                        firstRevision = revisions[0].Guid;
-                    }
-                    else if (diffKind == DiffWithRevisionKind.DiffBParentLocal)
-                    {
-                        firstRevision = revisions[0].FirstParentGuid ?? revisions[0].Guid + '^';
-                    }
-                    else
-                    {
-                        firstRevision = revisions[0].Guid;
-                        if (revisions.Count == 1)
-                        {
-                            if (diffKind == DiffWithRevisionKind.DiffALocal)
-                            {
-                                firstRevision = revisions[0].FirstParentGuid ?? revisions[0].Guid + '^';
-                            }
-                            else if (diffKind == DiffWithRevisionKind.DiffAParentLocal)
-                            {
-                                firstRevision = (revisions[0].FirstParentGuid ?? revisions[0].Guid + '^') + "^";
-                            }
-                            else
-                            {
-                                error = "Unexpected arg to difftool with one revision: " + diffKind;
-                            }
-                        }
-                        else
-                        {
-                            if (diffKind == DiffWithRevisionKind.DiffALocal)
-                            {
-                                firstRevision = revisions[1].Guid;
-                            }
-                            else if (diffKind == DiffWithRevisionKind.DiffAParentLocal)
-                            {
-                                firstRevision = revisions[1].FirstParentGuid ?? revisions[1].Guid + '^';
-                            }
-                            else
-                            {
-                                error = "Unexpected arg to difftool with two revisions: " + diffKind;
-                            }
-                        }
-                    }
-                }
-                return error;
-            }
-        }
-
-        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, DiffWithRevisionKind diffKind)
+        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, GitUI.RevisionDiffKind diffKind)
         {
             //Note: Order in revisions is that first clicked is last in array
             string extraDiffArgs;
             string firstRevision;
             string secondRevision;
 
-            string error = DiffKindRevision.Get(grid.GetSelectedRevisions(), diffKind, out extraDiffArgs, out firstRevision, out secondRevision);
+            string error = RevisionDiffInfoProvider.Get(grid.GetSelectedRevisions(), diffKind, out extraDiffArgs, out firstRevision, out secondRevision);
             if (!string.IsNullOrEmpty(error))
             {
                 MessageBox.Show(grid, error);
@@ -166,41 +57,14 @@ namespace GitUI
         private static PatchApply.Patch GetItemPatch(GitModule module, GitItemStatus file,
             string firstRevision, string secondRevision, string diffArgs, Encoding encoding)
         {
-            bool cacheResult = true;
-            if (GitRevision.IsArtificial(firstRevision))
-            {
-                bool staged = firstRevision == GitRevision.IndexGuid;
-                if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
-                {
-                    return module.GetCurrentChanges(file.Name, file.OldName, staged,
-                            diffArgs, encoding);
-                }
-
-                cacheResult = false;
-                firstRevision = secondRevision;
-                secondRevision = string.Empty;
-                if (staged)
-                    diffArgs = string.Join(" ", diffArgs, "--cached");
-            }
-            else if (secondRevision == null)
-                secondRevision = firstRevision + "^";
-
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
-                    diffArgs, encoding, cacheResult);
+                    diffArgs, encoding, true);
         }
 
         public static string GetSelectedPatch(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file)
         {
             if (firstRevision == null)
                 return null;
-
-            //to simplify if-ology
-            if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UnstagedGuid)
-            {
-                string temp = firstRevision;
-                firstRevision = secondRevision;
-                secondRevision = temp;
-            }
 
             if (IsItemUntracked(file, firstRevision, secondRevision))
             {
@@ -250,7 +114,7 @@ namespace GitUI
             {
                 diffViewer.ViewPatch(() =>
                     {
-                        string selectedPatch = diffViewer.GetSelectedPatch(revision, parentRevision, file);
+                        string selectedPatch = diffViewer.GetSelectedPatch(parentRevision, revision, file);
                         return selectedPatch ?? defaultText;
                     });
             }

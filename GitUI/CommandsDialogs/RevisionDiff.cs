@@ -140,11 +140,7 @@ namespace GitUI.CommandsDialogs
                     break;
 
                 case 2: // diff "first clicked revision" --> "second clicked revision"
-                    bool artificialRevSelected = revisions[0].IsArtificial() || revisions[1].IsArtificial();
-                    if (!artificialRevSelected)
-                        return _diffTwoSelected.Text;
-                    break;
-
+                    return _diffTwoSelected.Text;
             }
             return _diffNotSupported.Text;
         }
@@ -414,12 +410,8 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-
-                if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
-                    UICommands.StartFileHistoryDialog(this, item.Name, null, false, true);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], true, true);
+                GitRevision revision = _revisionGrid.GetSelectedRevisions().FirstOrDefault();
+                UICommands.StartFileHistoryDialog(this, item.Name, revision, true, true);
             }
         }
 
@@ -509,12 +501,8 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
-
-                if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
-                    UICommands.StartFileHistoryDialog(this, item.Name);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], false);
+                GitRevision revision = _revisionGrid.GetSelectedRevisions().FirstOrDefault();
+                UICommands.StartFileHistoryDialog(this, item.Name, revision, false);
             }
         }
 
@@ -528,20 +516,19 @@ namespace GitUI.CommandsDialogs
             if (DiffFiles.SelectedItem == null)
                 return;
 
-            GitUIExtensions.DiffWithRevisionKind diffKind;
+            GitUI.RevisionDiffKind diffKind;
 
             if (sender == aLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffALocal;
+                diffKind = GitUI.RevisionDiffKind.DiffALocal;
             else if (sender == bLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBLocal;
+                diffKind = GitUI.RevisionDiffKind.DiffBLocal;
             else if (sender == parentOfALocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAParentLocal;
+                diffKind = GitUI.RevisionDiffKind.DiffAParentLocal;
             else if (sender == parentOfBLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBParentLocal;
+                diffKind = GitUI.RevisionDiffKind.DiffBParentLocal;
             else
             {
-                Debug.Assert(sender == aBToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAB;
+                diffKind = GitUI.RevisionDiffKind.DiffAB;
             }
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
@@ -582,7 +569,6 @@ namespace GitUI.CommandsDialogs
             }
 
             //enable *<->Local items only when local file exists
-            //no simple way to check if A (or A/B parents) is normal, ignore that some menus should be disabled
             foreach (var item in DiffFiles.SelectedItems)
             {
                 bIsNormal = bIsNormal || !(item.IsNew || item.IsDeleted);
