@@ -238,7 +238,7 @@ namespace AppVeyorIntegration
 
                                 var version = b["version"].ToObject<string>();
                                 var status = ParseBuildStatus(b["status"].ToObject<string>());
-                                string duration = string.Empty;
+                                long? duration = null;
                                 if (status == BuildInfo.BuildStatus.Success || status == BuildInfo.BuildStatus.Failure)
                                     duration = GetBuildDuration(b);
 
@@ -399,11 +399,11 @@ namespace AppVeyorIntegration
             }
         }
 
-        private static string GetBuildDuration(JToken buildData)
+        private static long GetBuildDuration(JToken buildData)
         {
             var startTime = buildData["started"].ToObject<DateTime>();
             var updateTime = buildData["updated"].ToObject<DateTime>();
-            return " (" + (updateTime - startTime).ToString(@"mm\:ss") + ")";
+            return (long)(updateTime - startTime).TotalMilliseconds;
         }
 
         private JObject FetchBuildDetailsManagingVersionUpdate(BuildDetails buildDetails, CancellationToken cancellationToken)
@@ -511,6 +511,7 @@ namespace AppVeyorIntegration
 
     internal class BuildDetails : BuildInfo
     {
+        private static readonly IBuildDurationFormatter _buildDurationFormatter = new BuildDurationFormatter();
         private int _buildProgressCount;
         //From build build list
         public string BuildId { get; set; }
@@ -530,7 +531,7 @@ namespace AppVeyorIntegration
 
         public void UpdateDescription()
         {
-            Description = Id + PullRequestText + " " + DisplayStatus + " " + Duration + TestsResultText;
+            Description = Id + PullRequestText + " " + DisplayStatus + " " + _buildDurationFormatter.Format(Duration) + TestsResultText;
         }
 
         private string DisplayStatus
@@ -545,7 +546,5 @@ namespace AppVeyorIntegration
                 return Status.ToString("G") + new string('.', _buildProgressCount) + new string(' ', 3 - _buildProgressCount);
             }
         }
-
-        public string Duration { get; set; }
     }
 }
