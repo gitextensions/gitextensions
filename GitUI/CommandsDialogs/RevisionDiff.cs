@@ -547,9 +547,7 @@ namespace GitUI.CommandsDialogs
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
                 GitItemStatus selectedItem = itemWithParent.Item;
-                string parentGuid = _revisionGrid.GetSelectedRevisions().Count() == 1 ? itemWithParent.ParentGuid : null;
-
-                _revisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, parentGuid);
+                _revisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind);
             }
         }
 
