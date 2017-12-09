@@ -182,7 +182,7 @@ namespace GitUI.CommandsDialogs
             Translate();
             LayoutRevisionInfo();
 
-            if (AppSettings.ShowGitStatusInBrowseToolbar)
+            if (AppSettings.ShowGitStatusInBrowseToolbar && !Module.IsBareRepository())
             {
                 _toolStripGitStatus = new ToolStripGitStatus
                 {
@@ -499,7 +499,7 @@ namespace GitUI.CommandsDialogs
             branchSelect.Enabled = validWorkingDir;
             toolStripButton1.Enabled = validWorkingDir && !bareRepository;
             if (_toolStripGitStatus != null)
-                _toolStripGitStatus.Enabled = validWorkingDir;
+                _toolStripGitStatus.Enabled = validWorkingDir && !Module.IsBareRepository();
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
             dashboardToolStripMenuItem.Visible = !validWorkingDir;
@@ -1111,7 +1111,7 @@ namespace GitUI.CommandsDialogs
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
                 CommitInfoTabControl.SelectedIndexChanged -= CommitInfoTabControl_SelectedIndexChanged;
-                if (revisions.Any() && GitRevision.IsArtificial(revisions[0].Guid))
+                if (!revisions.Any() || GitRevision.IsArtificial(revisions[0].Guid))
                 {
                     //Artificial commits cannot show tree (ls-tree) and has no commit info 
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
@@ -2087,14 +2087,24 @@ namespace GitUI.CommandsDialogs
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
             bool enabled = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial();
 
+            this.branchToolStripMenuItem.Enabled =
+            this.deleteBranchToolStripMenuItem.Enabled =
+            this.mergeBranchToolStripMenuItem.Enabled =
+            this.rebaseToolStripMenuItem.Enabled =
+            this.stashToolStripMenuItem.Enabled =
+              selectedRevisions.Count>0 && !Module.IsBareRepository();
+
             this.resetToolStripMenuItem.Enabled =
             this.checkoutBranchToolStripMenuItem.Enabled =
             this.runMergetoolToolStripMenuItem.Enabled =
-            this.tagToolStripMenuItem.Enabled =
             this.cherryPickToolStripMenuItem.Enabled =
-            this.archiveToolStripMenuItem.Enabled =
             this.checkoutToolStripMenuItem.Enabled =
             this.bisectToolStripMenuItem.Enabled =
+              enabled && !Module.IsBareRepository();
+
+            this.tagToolStripMenuItem.Enabled =
+            this.deleteTagToolStripMenuItem.Enabled =
+            this.archiveToolStripMenuItem.Enabled =
               enabled;
         }
 

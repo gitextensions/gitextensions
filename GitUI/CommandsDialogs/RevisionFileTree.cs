@@ -490,7 +490,7 @@ See the changes in the commit form.");
             }
 
             saveAsToolStripMenuItem.Visible = isFile;
-            resetToThisRevisionToolStripMenuItem.Visible = isFile;
+            resetToThisRevisionToolStripMenuItem.Visible = isFile && !Module.IsBareRepository();
             toolStripSeparatorFileSystemActions.Visible = isFile;
 
             fileHistoryToolStripMenuItem.Enabled = itemSelected;
@@ -514,6 +514,7 @@ See the changes in the commit form.");
             stopTrackingThisFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             assumeUnchangedTheFileToolStripMenuItem.Visible = isFile;
             assumeUnchangedTheFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            findToolStripMenuItem.Enabled = tvGitTree.Nodes.Count>0;
 
             toolStripSeparatorFileTreeActions.Visible = isFile;
             toolStripSeparatorFileTreeActions.Enabled = isExistingFileOrDirectory;

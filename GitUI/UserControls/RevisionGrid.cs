@@ -2424,16 +2424,16 @@ namespace GitUI
             deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
 
             deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
-            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0;
+            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && checkoutBranchDropDown.Items.Count > 0;
+            checkoutBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && checkoutBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && mergeBranchDropDown.Items.Count > 0;
+            mergeBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && mergeBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
-            rebaseOnToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && rebaseDropDown.Items.Count > 0;
+            rebaseOnToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && rebaseDropDown.Items.Count > 0 && !Module.IsBareRepository();
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
@@ -2444,8 +2444,8 @@ namespace GitUI
             manipulateCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
 
             copyToClipboardToolStripMenuItem.Enabled = !revision.IsArtificial();
-            createNewBranchToolStripMenuItem.Enabled = !revision.IsArtificial();
-            resetCurrentBranchToHereToolStripMenuItem.Enabled = !revision.IsArtificial();
+            createNewBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+            resetCurrentBranchToHereToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
             archiveRevisionToolStripMenuItem.Enabled = !revision.IsArtificial();
             createTagToolStripMenuItem.Enabled = !revision.IsArtificial();
 
@@ -2691,7 +2691,7 @@ namespace GitUI
             }
             string filtredCurrentCheckout = _filtredCurrentCheckout;
 
-            if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges())
+            if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
             {
                 CheckUncommitedChanged(filtredCurrentCheckout);
             }
