@@ -8,25 +8,25 @@ using System.Net.Security;
 using System.Windows.Forms;
 using RestSharp.Authenticators;
 
-namespace Stash
+namespace Bitbucket
 {
-    class StashResponse<T>
+    class BitbucketResponse<T>
     {
         public bool Success { get; set; }
         public IEnumerable<string> Messages { get; set; }
         public T Result { get; set; }
     }
 
-    abstract class StashRequestBase<T>
+    abstract class BitbucketRequestBase<T>
     {
         protected Settings Settings { get; private set; }
 
-        protected StashRequestBase(Settings settings)
+        protected BitbucketRequestBase(Settings settings)
         {
             Settings = settings;
         }
 
-        public StashResponse<T> Send()
+        public BitbucketResponse<T> Send()
         {
             if (Settings.DisableSSL)
             {
@@ -35,7 +35,7 @@ namespace Stash
             }
             var client = new RestClient
             {
-                BaseUrl = new System.Uri(Settings.StashUrl),
+                BaseUrl = new System.Uri(Settings.BitbucketUrl),
                 Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password)
             };
 
@@ -50,7 +50,7 @@ namespace Stash
 
             var response = client.Execute(request);
             if (response.ResponseStatus != ResponseStatus.Completed)
-                return new StashResponse<T>
+                return new BitbucketResponse<T>
                     {
                         Success = false,
                         Messages = new[] {response.ErrorMessage}
@@ -61,7 +61,7 @@ namespace Stash
                 return ParseErrorResponse(response.Content);
             }
 
-            return new StashResponse<T>
+            return new BitbucketResponse<T>
                 {
                     Success = true,
                     Result = ParseResponse(JObject.Parse(response.Content))
@@ -73,7 +73,7 @@ namespace Stash
         protected abstract string ApiUrl { get; }
         protected abstract T ParseResponse(JObject json);
 
-        private static StashResponse<T> ParseErrorResponse(string jsonString)
+        private static BitbucketResponse<T> ParseErrorResponse(string jsonString)
         {
             var json = new JObject();
             try
@@ -84,13 +84,13 @@ namespace Stash
             catch (JsonReaderException)
             {
                 MessageBox.Show(jsonString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var errorResponse = new StashResponse<T> { Success = false };
+                var errorResponse = new BitbucketResponse<T> { Success = false };
                 return errorResponse;
             }
             if (json["errors"] != null)
             {
                 var messages = new List<string>();
-                var errorResponse = new StashResponse<T> {Success = false};
+                var errorResponse = new BitbucketResponse<T> {Success = false};
                 foreach (var error in json["errors"])
                 {
                     var sb = new StringBuilder();
@@ -111,9 +111,9 @@ namespace Stash
             }
             if (json["message"] != null)
             {
-                return new StashResponse<T> {Success = false, Messages = new[] {json["message"].ToString()}};
+                return new BitbucketResponse<T> {Success = false, Messages = new[] {json["message"].ToString()}};
             }
-            return new StashResponse<T> {Success = false, Messages = new[] {"Unknown error."}};
+            return new BitbucketResponse<T> {Success = false, Messages = new[] {"Unknown error."}};
         }
 
     }

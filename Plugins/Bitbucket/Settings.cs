@@ -4,23 +4,23 @@ using GitUIPluginInterfaces;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Stash
+namespace Bitbucket
 {
     class Settings
     {
-        private const string StashHttpRegex =
+        private const string BitbucketHttpRegex =
             @"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([\w\-]+?))\/(?<repo>([\w\-]+)).git";
-        private const string StashSshRegex =
+        private const string BitbucketSshRegex =
             @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([\w\-]+))\/(?<repo>([\w\-]+)).git";
 
-        public static Settings Parse(IGitModule gitModule, ISettingsSource settings, StashPlugin plugin)
+        public static Settings Parse(IGitModule gitModule, ISettingsSource settings, BitbucketPlugin plugin)
         {
             var result = new Settings
                              {
-                                 Username = plugin.StashUsername.ValueOrDefault(settings),
-                                 Password = plugin.StashPassword.ValueOrDefault(settings),
-                                 StashUrl = plugin.StashBaseUrl.ValueOrDefault(settings),
-                                 DisableSSL = plugin.StashDisableSsl.ValueOrDefault(settings)
+                                 Username = plugin.BitbucketUsername.ValueOrDefault(settings),
+                                 Password = plugin.BitbucketPassword.ValueOrDefault(settings),
+                                 BitbucketUrl = plugin.BitbucketBaseUrl.ValueOrDefault(settings),
+                                 DisableSSL = plugin.BitbucketDisableSsl.ValueOrDefault(settings)
                              };
 
             var module = ((GitModule)gitModule);
@@ -31,9 +31,9 @@ namespace Stash
 
             foreach (var url in remotes)
             {
-                var pattern = url.Contains("http") ? StashHttpRegex : StashSshRegex;
+                var pattern = url.Contains("http") ? BitbucketHttpRegex : BitbucketSshRegex;
                 var match = Regex.Match(url, pattern);
-                if (match.Success && result.StashUrl.Contains(match.Groups["url"].Value))
+                if (match.Success && result.BitbucketUrl.Contains(match.Groups["url"].Value))
                 {
                     result.ProjectKey = match.Groups["project"].Value;
                     result.RepoSlug = match.Groups["repo"].Value;
@@ -49,6 +49,6 @@ namespace Stash
         public bool DisableSSL { get; private set; }
         public string ProjectKey { get; private set; }
         public string RepoSlug { get; private set; }
-        public string StashUrl { get; private set; }
+        public string BitbucketUrl { get; private set; }
     }
 }

@@ -4,7 +4,7 @@ using RestSharp;
 using System.Linq;
 using System;
 
-namespace Stash
+namespace Bitbucket
 {
     class PullRequest
     {
@@ -87,7 +87,7 @@ namespace Stash
         }
     }
 
-    class GetPullRequest : StashRequestBase<List<PullRequest>>
+    class GetPullRequest : BitbucketRequestBase<List<PullRequest>>
     {
         private readonly string _projectKey;
         private readonly string _repoName;

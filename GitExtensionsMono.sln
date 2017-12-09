@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildServerIntegration", "B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamCityIntegration", "Plugins\BuildServerIntegration\TeamCityIntegration\TeamCityIntegration.csproj", "{121965D1-4399-4538-B8BF-403EB5B847C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stash", "Plugins\Stash\Stash.csproj", "{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitbucket", "Plugins\Bitbucket\Bitbucket.csproj", "{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUI", "GitUI\GitUI.csproj", "{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}"
 EndProject

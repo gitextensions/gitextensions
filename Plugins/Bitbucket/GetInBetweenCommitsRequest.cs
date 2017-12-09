@@ -2,9 +2,9 @@
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace Stash
+namespace Bitbucket
 {
-    class GetInBetweenCommitsRequest : StashRequestBase<List<Commit>>
+    class GetInBetweenCommitsRequest : BitbucketRequestBase<List<Commit>>
     {
         private readonly Repository _sourceRepo;
         private readonly Repository _targetRepo;

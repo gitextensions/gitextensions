@@ -2,9 +2,9 @@
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace Stash
+namespace Bitbucket
 {
-    class ApprovePullRequest : StashRequestBase<JObject>
+    class ApprovePullRequest : BitbucketRequestBase<JObject>
     {
         private readonly MergeRequestInfo _info;
 
