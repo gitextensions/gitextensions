@@ -546,31 +546,19 @@ namespace GitUI.CommandsDialogs
             //Should be blocked in the GUI but not an error to show to the user
             Debug.Assert(selectedRevisions.Count == 1 || selectedRevisions.Count == 2,
                 "Unexpectedly number of revisions for difftool" + selectedRevisions.Count);
-            if (selectedRevisions.Count < 1)
+            if (selectedRevisions.Count < 1 || selectedRevisions.Count > 2)
             {
                 return null;
             }
 
-            bool aIsLocal = false;
-            bool bIsLocal = false;
-            bool showParentItems = selectedRevisions.Count == 2;
+            bool aIsLocal = selectedRevisions.Count == 2 && selectedRevisions[1].Guid == GitRevision.UnstagedGuid;
+            bool bIsLocal = selectedRevisions[0].Guid == GitRevision.UnstagedGuid;
+            bool multipleRevisionsSelected = selectedRevisions.Count == 2;
 
             bool localExists = false;
-            bool bIsNormal = false; //B is not new or deleted (we cannot easily check A)
-            bIsLocal = selectedRevisions[0].Guid == GitRevision.UnstagedGuid;
+            bool bIsNormal = false; //B is assumed to be new or deleted (check from DiffFiles)
 
-            if (selectedRevisions.Count == 2)
-            {
-                aIsLocal = selectedRevisions[0].Guid == GitRevision.UnstagedGuid;
-            }
-            //Temporary, until parent is set to HEAD instead of staged
-            else
-            {
-                aIsLocal = bIsLocal;
-                bIsLocal = bIsLocal || selectedRevisions[0].Guid == GitRevision.IndexGuid;
-            }
-
-            //enable *<->Local items only when local file exists
+            //enable *<->Local items only when (any) local file exists
             foreach (var item in DiffFiles.SelectedItems)
             {
                 bIsNormal = bIsNormal || !(item.IsNew || item.IsDeleted);
@@ -583,7 +571,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            var selectionInfo = new ContextMenuDiffToolInfo(aIsLocal, bIsLocal, bIsNormal, localExists, showParentItems);
+            var selectionInfo = new ContextMenuDiffToolInfo(aIsLocal, bIsLocal, bIsNormal, localExists, multipleRevisionsSelected);
             return selectionInfo;
         }
 
@@ -596,9 +584,8 @@ namespace GitUI.CommandsDialogs
             bLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBLocal(selectionInfo);
             parentOfALocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuAParentLocal(selectionInfo);
             parentOfBLocalToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBParentLocal(selectionInfo);
-            //Nothing preventing to show the parents (as done in FormDiff)
-            parentOfALocalToolStripMenuItem.Visible =
-                parentOfBLocalToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuParents(selectionInfo);
+            parentOfALocalToolStripMenuItem.Visible = parentOfALocalToolStripMenuItem.Enabled || _revisionDiffController.ShouldShowMenuAParent(selectionInfo);
+            parentOfBLocalToolStripMenuItem.Visible = parentOfBLocalToolStripMenuItem.Enabled || _revisionDiffController.ShouldShowMenuBParent(selectionInfo);
         }
 
         private void resetFileToFirstToolStripMenuItem_Click(object sender, EventArgs e)
