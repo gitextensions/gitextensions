@@ -166,7 +166,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
-            _revisionDiffController = new RevisionDiffController(Module);
+            _revisionDiffController = new RevisionDiffController();
 
             DiffFiles.FilterVisible = true;
             DiffFiles.DescribeRevision = DescribeRevision;

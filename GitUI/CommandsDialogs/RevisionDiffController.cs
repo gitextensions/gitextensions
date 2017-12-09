@@ -65,13 +65,6 @@ namespace GitUI.CommandsDialogs
 
     public sealed class RevisionDiffController : IRevisionDiffController
     {
-        private readonly IGitModule _module;
-
-        public RevisionDiffController(IGitModule module)
-        {
-            _module = module;
-        }
-
         public bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.IsAnyItemSelected && !selectionInfo.IsAnyCombinedDiff;
