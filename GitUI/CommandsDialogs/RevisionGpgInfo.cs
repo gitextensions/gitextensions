@@ -56,7 +56,18 @@ namespace GitUI.CommandsDialogs
 
             if (EnvUtils.IsMonoRuntime())
             {
-                // TODO: RussKie to provide
+                if (txtTagGpgInfo.Visible)
+                {
+                    heightRowCommit =
+                        heightRowTag = (float)tableLayoutPanel1.Height / 2;
+                }
+                else
+                {
+                    heightRowCommit = tableLayoutPanel1.Height;
+                }
+
+                tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Absolute;
+                tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Absolute;
             }
             else
             {
