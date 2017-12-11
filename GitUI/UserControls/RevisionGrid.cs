@@ -105,7 +105,7 @@ namespace GitUI
         /// </summary>
         private IEnumerable<IGitRef> LatestRefs
         {
-            get { return _LatestRefs;  }
+            get { return _LatestRefs; }
             set
             {
                 _LatestRefs = value;
@@ -371,12 +371,12 @@ namespace GitUI
             {
                 _quickSearchLabel
                     = new Label
-                          {
-                              Location = new Point(10, 10),
-                              BorderStyle = BorderStyle.FixedSingle,
-                              ForeColor = SystemColors.InfoText,
-                              BackColor = SystemColors.Info
-                          };
+                    {
+                        Location = new Point(10, 10),
+                        BorderStyle = BorderStyle.FixedSingle,
+                        ForeColor = SystemColors.InfoText,
+                        BackColor = SystemColors.Info
+                    };
                 Controls.Add(_quickSearchLabel);
             }
 
@@ -1509,27 +1509,21 @@ namespace GitUI
             {
                 cellBackgroundBrush = _authoredRevisionsBrush;
             }
+            else if (ShouldRenderAlternateBackColor(e.RowIndex))
+            {
+                cellBackgroundBrush = new SolidBrush(ColorHelper.MakeColorDarker(e.CellStyle.BackColor));
+                // TODO if default background is nearly black, we should make it lighter instead
+            }
             else
             {
-                if (e.RowIndex % 2 == 0)
-                {
-                    //e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
-                    cellBackgroundBrush = new SolidBrush(e.CellStyle.BackColor);
-                }
-                else
-                {
-                    //Brush brush = new SolidBrush(Color.FromArgb(255, 240, 240, 240));
-                    //e.Graphics.FillRectangle(brush, e.CellBounds);
-                    cellBackgroundBrush = new SolidBrush(ColorHelper.MakeColorDarker(e.CellStyle.BackColor));
-                    // TODO if default background is nearly black, we should make it lighter instead
-                }
+                cellBackgroundBrush = new SolidBrush(e.CellStyle.BackColor);
             }
             // Draw cell background
             e.Graphics.FillRectangle(cellBackgroundBrush, e.CellBounds);
             Color? backColor = null;
             if (cellBackgroundBrush is SolidBrush)
                 backColor = (cellBackgroundBrush as SolidBrush).Color;
-            
+
             // Draw graphics column
             if (e.ColumnIndex == graphColIndex)
             {
@@ -1725,8 +1719,6 @@ namespace GitUI
                             authorText = string.Empty;
                         }
 
-
-
                         e.Graphics.DrawString(authorText, rowFont, foreBrush,
                                               new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
                         e.Graphics.DrawString(timeText, rowFont, foreBrush,
@@ -1778,6 +1770,11 @@ namespace GitUI
             return AppSettings.HighlightAuthoredRevisions &&
                    AuthorEmailEqualityComparer.Instance.Equals(revision.AuthorEmail,
                                                                _revisionHighlighting.AuthorEmailToHighlight);
+        }
+
+        private bool ShouldRenderAlternateBackColor(int rowIndex)
+        {
+            return AppSettings.RevisionGraphDrawAlternateBackColor && rowIndex % 2 == 0;
         }
 
         private float DrawRef(DrawRefArgs drawRefArgs, float offset, string name, Color headColor, ArrowType arrowType, bool dashedLine = false, bool fill = false)
@@ -2471,9 +2468,9 @@ namespace GitUI
             set
             {
                 _AmbiguousRefs = value;
-            }            
+            }
         }
-            
+
         private string GetRefUnambiguousName(IGitRef gitRef)
         {
             if (AmbiguousRefs.Contains(gitRef.Name))
@@ -2728,7 +2725,7 @@ namespace GitUI
             }
             else
             {
-                unstageCount ="";
+                unstageCount = "";
                 stageCount = "";
             }
 
