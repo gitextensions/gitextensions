@@ -584,6 +584,12 @@ namespace GitCommands
             set { SetBool("revisiongraphshowworkingdirchanges", value); }
         }
 
+        public static bool RevisionGraphDrawAlternateBackColor
+        {
+            get { return GetBool("RevisionGraphDrawAlternateBackColor", true); }
+            set { SetBool("RevisionGraphDrawAlternateBackColor", value); }
+        }
+
         public static bool RevisionGraphDrawNonRelativesGray
         {
             get { return GetBool("revisiongraphdrawnonrelativesgray", true); }
