@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -127,6 +128,20 @@ namespace ResourceManager
                 }
 
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        protected Keys GetShortcutKeys(int commandCode)
+        {
+            var hotkey = GetHotkeyCommand(commandCode);
+            return hotkey == null ? Keys.None : hotkey.KeyData;
+        }
+
+        protected HotkeyCommand GetHotkeyCommand(int commandCode)
+        {
+            if (Hotkeys == null)
+                return null;
+
+            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
         }
 
         /// <summary>
