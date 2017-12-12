@@ -119,6 +119,13 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _templateNotFoundCaption = new TranslationString("Template Error");
         private readonly TranslationString _templateNotFound = new TranslationString($"Template not found: {{0}}.{Environment.NewLine}{Environment.NewLine}You can set your template:{Environment.NewLine}\t$ git config commit.template ./.git_commit_msg.txt{Environment.NewLine}You can unset the template:{Environment.NewLine}\t$ git config --unset commit.template");
         private readonly TranslationString _templateLoadErrorCapion = new TranslationString("Template could not be loaded");
+
+        private readonly TranslationString _skipWorktreeToolTip = new TranslationString("Hide already tracked files that will change but that you don\'t want to commit."
+            + Environment.NewLine + "Suitable for some config files modified locally.");
+        private readonly TranslationString _assumeUnchangedToolTip = new TranslationString("Tell git to not check the status of this file for performance benefits."
+            + Environment.NewLine + "Use this feature when a file is big and never change."
+            + Environment.NewLine + "Git will never check if the file has changed that will improve status check performance.");
+
         #endregion
 
         private readonly ICommitTemplateManager _commitTemplateManager;
@@ -212,6 +219,8 @@ namespace GitUI.CommandsDialogs
             viewFileHistoryToolStripItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
             stagedFileHistoryToolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
+            skipWorktreeToolStripMenuItem.ToolTipText = _skipWorktreeToolTip.Text;
+            assumeUnchangedToolStripMenuItem.ToolTipText = _assumeUnchangedToolTip.Text;
             toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
         }
 
@@ -490,6 +499,7 @@ namespace GitUI.CommandsDialogs
             Func<IList<GitItemStatus>> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     !showAssumeUnchangedFilesToolStripMenuItem.Checked,
+                    !showSkipWorktreeFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
 
             if (DoAsync)
@@ -1178,6 +1188,16 @@ namespace GitUI.CommandsDialogs
         {
             //Do not show if no item selected
             e.Cancel = !Unstaged.SelectedItems.Any() || Module.IsBareRepository();
+
+            var isTrackedSelected = Unstaged.SelectedItems.Any(s => s.IsTracked);
+            var isSkipWorktreeExist = Unstaged.SelectedItems.Any(s => s.IsSkipWorktree);
+            var isAssumeUnchangedExist = Unstaged.SelectedItems.Any(s => s.IsAssumeUnchanged);
+            var isAssumeUnchangedAll = Unstaged.SelectedItems.All(s => s.IsAssumeUnchanged);
+            var isSkipWorktreeAll = Unstaged.SelectedItems.All(s => s.IsSkipWorktree);
+            assumeUnchangedToolStripMenuItem.Visible = isTrackedSelected && !isSkipWorktreeExist && !isAssumeUnchangedAll;
+            doNotAssumeUnchangedToolStripMenuItem.Visible = showAssumeUnchangedFilesToolStripMenuItem.Checked && !isSkipWorktreeExist && isAssumeUnchangedExist;
+            skipWorktreeToolStripMenuItem.Visible = isTrackedSelected && !isAssumeUnchangedExist && !isSkipWorktreeAll;
+            doNotSkipWorktreeToolStripMenuItem.Visible = showSkipWorktreeFilesToolStripMenuItem.Checked && !isAssumeUnchangedExist && isSkipWorktreeExist;
         }
 
         private void Unstaged_Enter(object sender, EventArgs e)
@@ -1312,7 +1332,7 @@ namespace GitUI.CommandsDialogs
         {
             if (_currentFilesList != Unstaged || Module.IsBareRepository())
                 return;
-            Stage(Unstaged.SelectedItems.ToList());
+            Stage(Unstaged.SelectedItems.Where(s => !s.IsAssumeUnchanged && !s.IsSkipWorktree).ToList());
             if (Unstaged.IsEmpty)
                 Message.Focus();
         }
@@ -1350,7 +1370,7 @@ namespace GitUI.CommandsDialogs
 
         private void StageAllAccordingToFilter()
         {
-            Stage(Unstaged.GitItemFilteredStatuses);
+            Stage(Unstaged.GitItemFilteredStatuses.Where(s => !s.IsAssumeUnchanged && !s.IsSkipWorktree).ToList());
             Unstaged.SetFilter(String.Empty);
             if (Unstaged.IsEmpty)
                 Message.Focus();
@@ -1763,7 +1783,12 @@ namespace GitUI.CommandsDialogs
         private void ShowAssumeUnchangedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
             showAssumeUnchangedFilesToolStripMenuItem.Checked = !showAssumeUnchangedFilesToolStripMenuItem.Checked;
-            doNotAssumeUnchangedToolStripMenuItem.Visible = showAssumeUnchangedFilesToolStripMenuItem.Checked;
+            RescanChanges();
+        }
+
+        private void ShowSkipWorktreeFilesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            showSkipWorktreeFilesToolStripMenuItem.Checked = !showSkipWorktreeFilesToolStripMenuItem.Checked;
             RescanChanges();
         }
 
@@ -1900,6 +1925,29 @@ namespace GitUI.CommandsDialogs
             Initialize();
         }
 
+        private void SkipWorktreeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (!Unstaged.SelectedItems.Any())
+                return;
+
+            SelectedDiff.Clear();
+
+            Module.SkipWorktreeFiles(Unstaged.SelectedItems.ToList(), true);
+
+            Initialize();
+        }
+
+        private void DoNotSkipWorktreeToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (!Unstaged.SelectedItems.Any())
+                return;
+
+            SelectedDiff.Clear();
+
+            Module.SkipWorktreeFiles(Unstaged.SelectedItems.ToList(), false);
+
+            Initialize();
+        }
         private void SelectedDiffExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
             ShowChanges(_currentItem, _currentItemStaged);

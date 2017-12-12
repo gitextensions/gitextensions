@@ -1061,7 +1061,7 @@ namespace GitCommands
             return diffFiles;
         }
 
-        public static List<GitItemStatus> GetAssumeUnchangedFilesFromString(GitModule module, string lsString)
+        public static List<GitItemStatus> GetAssumeUnchangedFilesFromString(string lsString)
         {
             List<GitItemStatus> result = new List<GitItemStatus>();
             string[] lines = lsString.SplitLines();
@@ -1076,6 +1076,26 @@ namespace GitCommands
                 gitItemStatus.IsStaged = false;
                 gitItemStatus.IsAssumeUnchanged = true;
                 result.Add(gitItemStatus);
+            }
+
+            return result;
+        }
+
+        public static List<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString)
+        {
+            List<GitItemStatus> result = new List<GitItemStatus>();
+            string[] lines = lsString.SplitLines();
+            foreach (string line in lines)
+            {
+                char statusCharacter = line[0];
+
+                string fileName = line.Substring(line.IndexOf(' ') + 1);
+                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(fileName, statusCharacter);
+                if (gitItemStatus.IsSkipWorktree)
+                {
+                    gitItemStatus.IsStaged = false;
+                    result.Add(gitItemStatus);
+                }
             }
 
             return result;
@@ -1115,6 +1135,7 @@ namespace GitCommands
             gitItemStatus.IsNew = x == 'A' || x == '?' || x == '!';
             gitItemStatus.IsChanged = x == 'M';
             gitItemStatus.IsDeleted = x == 'D';
+            gitItemStatus.IsSkipWorktree = x == 'S';
             gitItemStatus.IsRenamed = false;
             gitItemStatus.IsTracked = x != '?' && x != '!' && x != ' ' || !gitItemStatus.IsNew;
             gitItemStatus.IsConflict = x == 'U';
