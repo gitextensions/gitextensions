@@ -8,8 +8,6 @@ namespace ResourceManager
 {
     public static class CommitDataExt
     {
-        private const int COMMITHEADER_STRING_LENGTH = 16;
-
         private static string GetEmail(string author)
         {
             if (String.IsNullOrEmpty(author))
@@ -21,6 +19,25 @@ namespace ResourceManager
             return author.Substring(ind, author.LastIndexOf(">") - ind);
         }
 
+        private static int? _headerPadding;
+        private static int GetHeaderPadding()
+        {
+            if (_headerPadding != null)
+                return _headerPadding.GetValueOrDefault();
+
+            var strings = new[]
+            {
+                Strings.GetAuthorText(), Strings.GetAuthorDateText(), Strings.GetCommitterText(),
+                              Strings.GetCommitDateText(), Strings.GetCommitHashText(), Strings.GetChildrenText(),
+                              Strings.GetParentsText()
+            };
+
+            int maxLegnth = strings.Select(s => s.Length).Max();
+
+            _headerPadding = maxLegnth + 2;
+            return _headerPadding.GetValueOrDefault();
+        }
+
         /// <summary>
         /// Generate header.
         /// </summary>
@@ -29,20 +46,31 @@ namespace ResourceManager
         public static string GetHeaderPlain(this CommitData commitData)
         {
             StringBuilder header = new StringBuilder();
-            header.AppendLine(FillToLength(Strings.GetAuthorText() + ":", COMMITHEADER_STRING_LENGTH) +
+            bool authorIsCommiter = String.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
+            bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
+
+            header.AppendLine((Strings.GetAuthorText() + ":").PadRight(GetHeaderPadding()) +
                               commitData.Author);
-            header.AppendLine(FillToLength(Strings.GetAuthorDateText() + ":", COMMITHEADER_STRING_LENGTH) +
+
+            header.AppendLine((datesEqual ? Strings.GetDateText() : Strings.GetAuthorDateText() + ":").PadRight(GetHeaderPadding()) +
                               LocalizationHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.AuthorDate.UtcDateTime) +
                               " (" + LocalizationHelpers.GetFullDateString(commitData.AuthorDate) + ")");
-            header.AppendLine(FillToLength(Strings.GetCommitterText() + ":", COMMITHEADER_STRING_LENGTH) +
-                              commitData.Committer);
-            header.AppendLine(FillToLength(Strings.GetCommitDateText() + ":", COMMITHEADER_STRING_LENGTH) +
-                              LocalizationHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) +
-                              " (" + LocalizationHelpers.GetFullDateString(commitData.CommitDate) + ")");
-            header.Append(FillToLength(Strings.GetCommitHashText() + ":", COMMITHEADER_STRING_LENGTH) +
-                          commitData.Guid);
+            if (!authorIsCommiter)
+            {
+                header.AppendLine((Strings.GetCommitterText() + ":").PadRight(GetHeaderPadding()) +
+                                  commitData.Committer);
+            }
+            if (!datesEqual)
+            {
+                header.AppendLine((Strings.GetCommitDateText() + ":").PadRight(GetHeaderPadding()) +
+                                  LocalizationHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) +
+                                  " (" + LocalizationHelpers.GetFullDateString(commitData.CommitDate) + ")");
 
-            return RemoveRedundancies(header.ToString());
+                header.Append((Strings.GetCommitHashText() + ":").PadRight(GetHeaderPadding()) +
+                              commitData.Guid);
+            }
+
+            return header.ToString();
         }
 
         /// <summary>
@@ -52,30 +80,40 @@ namespace ResourceManager
         public static string GetHeader(this CommitData commitData, LinkFactory linkFactory, bool showRevisionsAsLinks)
         {
             StringBuilder header = new StringBuilder();
+            bool authorIsCommiter = String.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
+            bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
+
             string authorEmail = GetEmail(commitData.Author);
             header.AppendLine(
-                FillToLength(WebUtility.HtmlEncode(Strings.GetAuthorText()) + ":", COMMITHEADER_STRING_LENGTH) +
+                (WebUtility.HtmlEncode(Strings.GetAuthorText()) + ":").PadRight(GetHeaderPadding()) +
                 linkFactory.CreateLink(commitData.Author, "mailto:" + authorEmail));
             header.AppendLine(
-                FillToLength(WebUtility.HtmlEncode(Strings.GetAuthorDateText()) + ":",
-                    COMMITHEADER_STRING_LENGTH) +
+                (WebUtility.HtmlEncode(datesEqual ? Strings.GetDateText() :
+                                       Strings.GetAuthorDateText()) + ":").PadRight(GetHeaderPadding()) +
                 WebUtility.HtmlEncode(
                     LocalizationHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.AuthorDate.UtcDateTime) + " (" +
                     LocalizationHelpers.GetFullDateString(commitData.AuthorDate) + ")"));
-            string committerEmail = GetEmail(commitData.Committer);
-            header.AppendLine(
-                FillToLength(WebUtility.HtmlEncode(Strings.GetCommitterText()) + ":",
-                    COMMITHEADER_STRING_LENGTH) +
-                linkFactory.CreateLink(commitData.Committer, "mailto:" + committerEmail));
-            header.AppendLine(
-                FillToLength(WebUtility.HtmlEncode(Strings.GetCommitDateText()) + ":",
-                    COMMITHEADER_STRING_LENGTH) +
-                WebUtility.HtmlEncode(
-                    LocalizationHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" +
-                    LocalizationHelpers.GetFullDateString(commitData.CommitDate) + ")"));
+
+            if (!authorIsCommiter)
+            {
+                string committerEmail = GetEmail(commitData.Committer);
+                header.AppendLine(
+                    (WebUtility.HtmlEncode(Strings.GetCommitterText()) + ":").PadRight(GetHeaderPadding()) +
+                    "<a href='mailto:" + WebUtility.HtmlEncode(committerEmail) + "'>" +
+                    WebUtility.HtmlEncode(commitData.Committer) + "</a>");
+            }
+
+            if (!datesEqual)
+            {
+                header.AppendLine(
+                    (WebUtility.HtmlEncode(Strings.GetCommitDateText()) + ":").PadRight(GetHeaderPadding()) +
+                    WebUtility.HtmlEncode(
+                        LocalizationHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" +
+                        LocalizationHelpers.GetFullDateString(commitData.CommitDate) + ")"));
+            }
+
             header.Append(
-                FillToLength(WebUtility.HtmlEncode(Strings.GetCommitHashText()) + ":",
-                    COMMITHEADER_STRING_LENGTH) +
+                (WebUtility.HtmlEncode(Strings.GetCommitHashText()) + ":").PadRight(GetHeaderPadding()) +
                 WebUtility.HtmlEncode(commitData.Guid));
 
             if (commitData.ChildrenGuids != null && commitData.ChildrenGuids.Count != 0)
@@ -86,8 +124,8 @@ namespace ResourceManager
                     commitsString = commitData.ChildrenGuids.Select(g => linkFactory.CreateCommitLink(g)).Join(" ");
                 else
                     commitsString = commitData.ChildrenGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
-                header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetChildrenText()) + ":",
-                    COMMITHEADER_STRING_LENGTH) + commitsString);
+                header.Append((WebUtility.HtmlEncode(Strings.GetChildrenText()) + ":").PadRight(GetHeaderPadding()) +
+                              commitsString);
             }
 
             var parentGuids = commitData.ParentGuids.Where(s => !String.IsNullOrEmpty(s));
@@ -99,114 +137,11 @@ namespace ResourceManager
                     commitsString = parentGuids.Select(g => linkFactory.CreateCommitLink(g)).Join(" ");
                 else
                     commitsString = parentGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
-                header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetParentsText()) + ":",
-                    COMMITHEADER_STRING_LENGTH) + commitsString);
+                header.Append((WebUtility.HtmlEncode(Strings.GetParentsText()) + ":").PadRight(GetHeaderPadding())
+                              + commitsString);
             }
 
-            return RemoveRedundancies(header.ToString());
-        }
-
-        private static string RemoveRedundancies(string info)
-        {
-            string author = GetField(info, Strings.GetAuthorText() + ":");
-            string committer = GetField(info, Strings.GetCommitterText() + ":");
-
-            if (String.Equals(author, committer, StringComparison.CurrentCulture))
-            {
-                info = RemoveField(info, Strings.GetCommitterText() + ":");
-            }
-
-            string authorDate = GetField(info, Strings.GetAuthorDateText() + ":");
-            string commitDate = GetField(info, Strings.GetCommitDateText() + ":");
-
-            if (String.Equals(authorDate, commitDate, StringComparison.CurrentCulture))
-            {
-                info =
-                    RemoveField(info, Strings.GetCommitDateText() + ":").Replace(
-                        (string) FillToLength(Strings.GetAuthorDateText() + ":", COMMITHEADER_STRING_LENGTH),
-                        FillToLength(Strings.GetDateText() + ":", COMMITHEADER_STRING_LENGTH));
-            }
-
-            return info;
-        }
-
-        private static string FillToLength(string input, int length)
-        {
-            return FillToLength(input, length, 0);
-        }
-
-        private static string FillToLength(string input, int length, int skip)
-        {
-            // length
-            const int tabsize = 8;
-            if ((input.Length - skip) < length)
-            {
-                int l = length - (input.Length - skip);
-                return input + new string('\t', (l / tabsize) + ((l % tabsize) == 0 ? 0 : 1));
-            }
-
-            return input;
-        }
-
-        private static string RemoveField(string data, string header)
-        {
-            int headerIndex = data.IndexOf(header);
-
-            if (headerIndex == -1)
-                return data;
-
-            int endIndex = data.IndexOf('\n', headerIndex);
-
-            if (endIndex == -1)
-                endIndex = data.Length - 1;
-
-            int length = endIndex - headerIndex + 1;
-
-            return data.Remove(headerIndex, length);
-        }
-
-        private static string GetField(string data, string header)
-        {
-            int valueIndex = IndexOfValue(data, header);
-
-            if (valueIndex == -1)
-                return null;
-
-            int length = LengthOfValue(data, valueIndex);
-            return data.Substring(valueIndex, length);
-        }
-
-        private static int LengthOfValue(string data, int valueIndex)
-        {
-            if (valueIndex == -1)
-                return 0;
-
-            int endIndex = data.IndexOf('\n', valueIndex);
-
-            if (endIndex == -1)
-                endIndex = data.Length - 1;
-
-            return endIndex - valueIndex;
-        }
-
-        private static int IndexOfValue(string data, string header)
-        {
-            int headerIndex = data.IndexOf(header);
-
-            if (headerIndex == -1)
-                return -1;
-
-            int valueIndex = headerIndex + header.Length;
-
-            while (data[valueIndex] == '\t')
-            {
-                valueIndex++;
-
-                if (valueIndex == data.Length)
-                    return -1;
-            }
-
-            return valueIndex;
+            return header.ToString();
         }
     }
 }

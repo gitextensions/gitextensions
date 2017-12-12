@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace GitUI
 {
@@ -19,6 +21,20 @@ namespace GitUI
                 chx.CheckState = Checked.Value ? CheckState.Checked : CheckState.Unchecked;
             else
                 chx.CheckState = CheckState.Indeterminate;
+        }
+
+        public static bool IsFixedWidth(this Font ft, Graphics g)
+        {
+            char[] charSizes = { 'i', 'a', 'Z', '%', '#', 'a', 'B', 'l', 'm', ',', '.' };
+            float charWidth = g.MeasureString("I", ft).Width;
+
+            bool fixedWidth = true;
+
+            foreach (char c in charSizes)
+                if (Math.Abs(g.MeasureString(c.ToString(), ft).Width - charWidth) > float.Epsilon)
+                    fixedWidth = false;
+
+            return fixedWidth;
         }
     }
 }
