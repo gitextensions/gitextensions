@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
         private string _branch;
         private bool _bInternalUpdate;
         private const string AllRemotes = "[ All ]";
-        private readonly IGitRemoteController _gitRemoteController;
+        private readonly IGitRemoteManager _remoteManager;
 
         private FormPull()
             : this(null, null, null)
@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs
 
             if (aCommands != null)
             {
-                _gitRemoteController = new GitRemoteController(Module);
+                _remoteManager = new GitRemoteManager(Module);
                 Init(defaultRemote);
             }
 
@@ -155,25 +155,25 @@ namespace GitUI.CommandsDialogs
         private void BindRemotesDropDown(string selectedRemoteName)
         {
             // refresh registered git remotes
-            _gitRemoteController.LoadRemotes(false);
+            var remotes = _remoteManager.LoadRemotes(false);
 
             _NO_TRANSLATE_Remotes.Sorted = false;
-            _NO_TRANSLATE_Remotes.DataSource = new[] { new GitRemote { Name = AllRemotes } }.Union(_gitRemoteController.Remotes).ToList();
+            _NO_TRANSLATE_Remotes.DataSource = new[] { new GitRemote { Name = AllRemotes } }.Union(remotes).ToList();
             _NO_TRANSLATE_Remotes.DisplayMember = "Name";
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(_NO_TRANSLATE_Remotes, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            _NO_TRANSLATE_Remotes.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
             if (selectedRemoteName.IsNullOrEmpty())
             {
                 selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _branch));
             }
 
-            var currentBranchRemote = _gitRemoteController.Remotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
+            var currentBranchRemote = remotes.FirstOrDefault(x => x.Name.Equals(selectedRemoteName, StringComparison.OrdinalIgnoreCase));
             if (currentBranchRemote != null)
             {
                 _NO_TRANSLATE_Remotes.SelectedItem = currentBranchRemote;
             }
-            else if (_gitRemoteController.Remotes.Any())
+            else if (remotes.Any())
             {
                 // we couldn't find the default assigned remote for the selected branch
                 // it is usually gets mapped via FormRemotes -> "default pull behavior" tab

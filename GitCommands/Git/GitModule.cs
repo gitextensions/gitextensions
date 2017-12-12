@@ -102,6 +102,8 @@ namespace GitCommands
         private readonly IIndexLockManager _indexLockManager;
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
+        private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
+
 
         public const string NoNewLineAtTheEnd = "\\ No newline at end of file";
         private const string DiffCommandWithStandardArgs = " -c diff.submodule=short diff --no-color ";
@@ -1537,7 +1539,23 @@ namespace GitCommands
             if (files.IsNullOrWhiteSpace())
                 return string.Empty;
 
-            return RunGitCmd("checkout " + force.AsForce() + revision.Quote() + " -- " + files);
+            if (revision == GitRevision.UnstagedGuid)
+            {
+                Debug.Assert(false, "Unexpectedly reset to unstaged - should be blocked in GUI");
+                //Not an error to user, just nothing happens
+                return "";
+            }
+
+            if (revision == GitRevision.IndexGuid)
+            {
+                revision = "";
+            }
+            else 
+            {
+                revision = revision.QuoteNE();
+            }
+
+            return RunGitCmd("checkout " + force.AsForce() + revision + " -- " + files);
         }
 
         public string RemoveFiles(IEnumerable<string> fileList, bool force)
@@ -1785,7 +1803,28 @@ namespace GitCommands
             {
                 processReader.Value.Process.StandardInput.Close();
                 processReader.Value.WaitForExit();
-                wereErrors = processReader.Value.Process.ExitCode != 0;
+                output = processReader.Value.OutputString(SystemEncoding);
+                error = processReader.Value.ErrorString(SystemEncoding);
+            }
+
+            return output.Combine(Environment.NewLine, error);
+        }
+
+        public string SkipWorktreeFiles(IList<GitItemStatus> files, bool skipWorktree)
+        {
+            var output = "";
+            string error = "";
+            var startInfo = CreateGitStartInfo("update-index --" + (skipWorktree ? "" : "no-") + "skip-worktree --stdin");
+            var processReader = new Lazy<SynchronizedProcessReader>(() => new SynchronizedProcessReader(Process.Start(startInfo)));
+
+            foreach (var file in files.Where(file => file.IsSkipWorktree != skipWorktree))
+            {
+                UpdateIndex(processReader, file.Name);
+            }
+            if (processReader.IsValueCreated)
+            {
+                processReader.Value.Process.StandardInput.Close();
+                processReader.Value.WaitForExit();
                 output = processReader.Value.OutputString(SystemEncoding);
                 error = processReader.Value.ErrorString(SystemEncoding);
             }
@@ -2196,13 +2235,8 @@ namespace GitCommands
 
             //fix refs slashes
             from = from.ToPosixPath();
-            to = to.ToPosixPath();
-            string commitRange = string.Empty;
-            if (!to.IsNullOrEmpty())
-                commitRange = "\"" + to + "\"";
-            if (!from.IsNullOrEmpty())
-                commitRange = string.Join(" ", commitRange, "\"" + from + "\"");
-
+            to = to == null ? "":to.ToPosixPath();
+            string commitRange = _revisionDiffProvider.Get(from, to);
             if (AppSettings.UsePatienceDiffAlgorithm)
                 extraDiffArguments = string.Concat(extraDiffArguments, " --patience");
 
@@ -2245,7 +2279,7 @@ namespace GitCommands
 
         public string GetDiffFilesText(string from, string to, bool noCache)
         {
-            string cmd = DiffCommandWithStandardArgs + "-M -C --name-status \"" + to + "\" \"" + from + "\"";
+            string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + _revisionDiffProvider.Get(from, to);
             return noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
         }
 
@@ -2258,14 +2292,35 @@ namespace GitCommands
 
         public List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache = false)
         {
-            string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status \"" + to + "\" \"" + from + "\"";
+            noCache = noCache || GitRevision.IsArtificial(from) || GitRevision.IsArtificial(to);
+            string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(from, to);
             string result = noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
-            return GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
+            var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
+            if (from == GitRevision.UnstagedGuid || to == GitRevision.UnstagedGuid)
+            {
+                //For unstaged the untracked must be added too
+                var files = GetUnstagedFilesWithSubmodulesStatus().Where(item => item.IsNew);
+                if (from == GitRevision.UnstagedGuid)
+                {
+                    //The file is seen as "deleted" in 'to' revision
+                    foreach (var item in files)
+                    {
+                        item.IsNew = false;
+                        item.IsDeleted = true;
+                        resultCollection.Add(item);
+                    }
+                }
+                else
+                {
+                    resultCollection.AddRange(files);
+                }
+            }
+            return resultCollection;
         }
 
         public IList<GitItemStatus> GetStashDiffFiles(string stashName)
         {
-            var resultCollection = GetDiffFiles(stashName, stashName + "^", true);
+            var resultCollection = GetDiffFiles(stashName + "^", stashName, true);
 
             // shows untracked files
             string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
@@ -2304,23 +2359,30 @@ namespace GitCommands
             return list;
         }
 
-        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true, bool excludeAssumeUnchangedFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
+        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true,
+            bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
+            UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
             var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
             List<GitItemStatus> result = GitCommandHelpers.GetAllChangedFilesFromString(this, status);
 
-            if (!excludeAssumeUnchangedFiles)
+            if (!excludeAssumeUnchangedFiles || !excludeSkipWorktreeFiles)
             {
                 string lsOutput = RunGitCmd("ls-files -v");
-                result.AddRange(GitCommandHelpers.GetAssumeUnchangedFilesFromString(this, lsOutput));
+                if(!excludeAssumeUnchangedFiles)
+                    result.AddRange(GitCommandHelpers.GetAssumeUnchangedFilesFromString(lsOutput));
+                if (!excludeSkipWorktreeFiles)
+                    result.AddRange(GitCommandHelpers.GetSkipWorktreeFilesFromString(lsOutput));
             }
 
             return result;
         }
 
-        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true, bool excludeAssumeUnchangedFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
+        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true,
+            bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
+            UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
-            var status = GetAllChangedFiles(excludeIgnoredFiles, excludeAssumeUnchangedFiles, untrackedFiles);
+            var status = GetAllChangedFiles(excludeIgnoredFiles, excludeAssumeUnchangedFiles, excludeSkipWorktreeFiles, untrackedFiles);
             GetCurrentSubmoduleStatus(status);
             return status;
         }
@@ -3049,6 +3111,7 @@ namespace GitCommands
             return messages.Select(cm =>
                 {
                     int idx = cm.IndexOf("\n");
+                    if (idx <= 0) return null;
                     string encodingName = cm.Substring(0, idx);
                     cm = cm.Substring(idx + 1, cm.Length - idx - 1);
                     cm = ReEncodeCommitMessage(cm, encodingName);
@@ -3060,12 +3123,8 @@ namespace GitCommands
         public string OpenWithDifftool(string filename, string oldFileName = "", string revision1 = null, string revision2 = null, string extraDiffArguments = "")
         {
             var output = "";
-            if (!filename.IsNullOrEmpty())
-                filename = filename.Quote();
-            if (!oldFileName.IsNullOrEmpty())
-                oldFileName = oldFileName.Quote();
 
-            string args = string.Join(" ", extraDiffArguments, revision2.QuoteNE(), revision1.QuoteNE(), "--", filename, oldFileName);
+            string args = string.Join(" ", extraDiffArguments, _revisionDiffProvider.Get(revision1, revision2), "--", filename.QuoteNE(), oldFileName.QuoteNE());
             RunGitCmdDetached("difftool --gui --no-prompt " + args);
             return output;
         }
@@ -3456,6 +3515,11 @@ namespace GitCommands
         public bool HasLfsSupport()
         {
             return RunGitCmdResult("lfs version").ExitedSuccessfully;
+        }
+
+        public bool StopTrackingFile(string filename)
+        {
+            return RunGitCmdResult("rm --cached " + filename).ExitedSuccessfully;
         }
     }
 }

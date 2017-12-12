@@ -515,7 +515,7 @@
     <value>../Resources/Icons/IconFileTree.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconConsole" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\IconConsole.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>../Resources/Icons/IconConsole.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconFilter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconFilter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -712,18 +712,42 @@ diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh, Vic
 Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   </data>
   <data name="IconShowFirstParent" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\IconShowFirstParent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>../Resources/Icons/IconShowFirstParent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconDeleteRemote" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\86.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>../Resources/Icons/86.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconBlank" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\IconBlank.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>../Resources/Icons/IconBlank.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="gitex" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\gitex.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconUntrackedOnly" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\IconUntrackedOnly.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="commit_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/commit_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="commit_ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/commit_ok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="commit_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/commit_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tag_warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/tag_warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tag_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/tag_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tag_many" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/tag_many.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tag_ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/tag_ok.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconKey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/IconKey.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

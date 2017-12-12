@@ -24,12 +24,13 @@ namespace GitUI.CommandsDialogs
         bool ShouldShowMenuBLocal(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldShowMenuAParentLocal(ContextMenuDiffToolInfo selectionInfo);
         bool ShouldShowMenuBParentLocal(ContextMenuDiffToolInfo selectionInfo);
-        bool ShouldShowMenuParents(ContextMenuDiffToolInfo selectionInfo);
+        bool ShouldShowMenuAParent(ContextMenuDiffToolInfo selectionInfo);
+        bool ShouldShowMenuBParent(ContextMenuDiffToolInfo selectionInfo);
     }
 
     public sealed class ContextMenuSelectionInfo
     {
-        public ContextMenuSelectionInfo(IList<GitRevision> selectedRevisions, GitItemStatus selectedDiff, bool isAnyCombinedDiff, bool isSingleGitItemSelected, bool isCombinedDiff, bool isAnyItemSelected)
+        public ContextMenuSelectionInfo(IList<GitRevision> selectedRevisions, GitItemStatus selectedDiff, bool isAnyCombinedDiff, bool isSingleGitItemSelected, bool isCombinedDiff, bool isAnyItemSelected, bool isBareRepository, bool singleFileExists)
         {
             SelectedRevisions = selectedRevisions;
             SelectedDiff = selectedDiff;
@@ -37,41 +38,38 @@ namespace GitUI.CommandsDialogs
             IsSingleGitItemSelected = isSingleGitItemSelected;
             IsCombinedDiff = isCombinedDiff;
             IsAnyItemSelected = isAnyItemSelected;
+            IsBareRepository = isBareRepository;
+            SingleFileExists = singleFileExists;
         }
         public IList<GitRevision> SelectedRevisions { get; }
         public GitItemStatus SelectedDiff { get; }
         public bool IsAnyCombinedDiff { get; }
         public bool IsSingleGitItemSelected { get; }
         public bool IsCombinedDiff { get; }
-        public bool IsAnyItemSelected { get;  }
+        public bool IsAnyItemSelected { get; }
+        public bool IsBareRepository { get; }
+        public bool SingleFileExists { get; }
     }
 
     public sealed class ContextMenuDiffToolInfo
     {
-        public ContextMenuDiffToolInfo(bool aIsLocal, bool bIsLocal, bool bIsNormal, bool localExists, bool showParentItems)
+        public ContextMenuDiffToolInfo(bool aIsLocal, bool bIsLocal, bool bIsNormal, bool localExists, bool multipleRevisionsSelected)
         {
             AIsLocal = aIsLocal;
             BIsLocal = bIsLocal;
             BIsNormal = bIsNormal;
             LocalExists = localExists;
-            ShowParentItems = showParentItems;
+            MultipleRevisionsSelected = multipleRevisionsSelected;
         }
         public bool AIsLocal { get; }
         public bool BIsLocal { get; }
         public bool BIsNormal { get; }
         public bool LocalExists { get; }
-        public bool ShowParentItems { get; }
+        public bool MultipleRevisionsSelected { get; }
     }
 
     public sealed class RevisionDiffController : IRevisionDiffController
     {
-        private readonly IGitModule _module;
-
-        public RevisionDiffController(IGitModule module)
-        {
-            _module = module;
-        }
-
         public bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.IsAnyItemSelected && !selectionInfo.IsAnyCombinedDiff;
@@ -86,18 +84,18 @@ namespace GitUI.CommandsDialogs
         {
             return !selectionInfo.IsCombinedDiff && selectionInfo.IsSingleGitItemSelected &&
                    !(selectionInfo.SelectedDiff.IsSubmodule || selectionInfo.SelectedRevisions[0].Guid == GitRevision.UnstagedGuid ||
-                     (selectionInfo.SelectedDiff.IsNew || selectionInfo.SelectedDiff.IsDeleted) && selectionInfo.SelectedRevisions[0].Guid == GitRevision.IndexGuid);
+                     (selectionInfo.SelectedDiff.IsNew || selectionInfo.SelectedDiff.IsDeleted) && selectionInfo.SelectedRevisions[0].Guid == GitRevision.IndexGuid) && selectionInfo.SingleFileExists;
         }
 
         public bool ShouldShowMenuEditFile(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.SelectedDiff.IsSubmodule && selectionInfo.SelectedRevisions[0].IsArtificial();
+            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.SelectedDiff.IsSubmodule && selectionInfo.SingleFileExists;
         }
 
         public bool ShouldShowMenuResetFile(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.IsAnyItemSelected && !selectionInfo.IsCombinedDiff &&
-                !(selectionInfo.IsSingleGitItemSelected && (selectionInfo.SelectedDiff.IsSubmodule || selectionInfo.SelectedDiff.IsNew) && selectionInfo.SelectedRevisions[0].Guid == GitRevision.UnstagedGuid);
+                !(selectionInfo.IsSingleGitItemSelected && (selectionInfo.SelectedDiff.IsSubmodule || selectionInfo.SelectedDiff.IsNew) && selectionInfo.SelectedRevisions[0].Guid == GitRevision.UnstagedGuid) && !selectionInfo.IsBareRepository;
         }
 
         public bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo)
@@ -164,9 +162,14 @@ namespace GitUI.CommandsDialogs
             return selectionInfo.LocalExists && selectionInfo.BIsNormal;
         }
 
-        public bool ShouldShowMenuParents(ContextMenuDiffToolInfo selectionInfo)
+        public bool ShouldShowMenuAParent(ContextMenuDiffToolInfo selectionInfo)
         {
-            return selectionInfo.ShowParentItems;
+            return ShouldShowMenuALocal(selectionInfo) && selectionInfo.AIsLocal;
+        }
+
+        public bool ShouldShowMenuBParent(ContextMenuDiffToolInfo selectionInfo)
+        {
+            return ShouldShowMenuBLocal(selectionInfo) && (selectionInfo.BIsLocal || selectionInfo.MultipleRevisionsSelected);
         }
     }
 }

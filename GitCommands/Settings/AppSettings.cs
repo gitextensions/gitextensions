@@ -323,6 +323,7 @@ namespace GitCommands
         public static readonly StringSetting ConEmuStyle = new StringSetting("ConEmuStyle", DetailedSettingsPath, "<Solarized Light>");
         public static readonly StringSetting ConEmuTerminal = new StringSetting("ConEmuTerminal", DetailedSettingsPath, "bash");
         public static readonly StringSetting ConEmuFontSize = new StringSetting("ConEmuFontSize", DetailedSettingsPath, "12");
+        public static readonly BoolNullableSetting ShowGpgInformation = new BoolNullableSetting("ShowGpgInformation", DetailedSettingsPath, false);
 
         public static bool ShowRevisionInfoNextToRevisionGrid
         {
@@ -581,6 +582,12 @@ namespace GitCommands
         {
             get { return GetBool("revisiongraphshowworkingdirchanges", false); }
             set { SetBool("revisiongraphshowworkingdirchanges", value); }
+        }
+
+        public static bool RevisionGraphDrawAlternateBackColor
+        {
+            get { return GetBool("RevisionGraphDrawAlternateBackColor", true); }
+            set { SetBool("RevisionGraphDrawAlternateBackColor", value); }
         }
 
         public static bool RevisionGraphDrawNonRelativesGray

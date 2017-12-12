@@ -1,7 +1,7 @@
 namespace GitCommands.Remote
 {
     /// <summary>
-    /// Represents a result of <see cref="GitRemoteController.SaveRemote"/> operation.
+    /// Represents a result of <see cref="GitRemoteManager.SaveRemote"/> operation.
     /// </summary>
     public class GitRemoteSaveResult
     {

@@ -22,10 +22,11 @@ namespace GitUI.HelperDialogs
             Translate();        
         }
 
-        public FormChooseCommit(GitUICommands aCommands, string preselectCommit)
+        public FormChooseCommit(GitUICommands aCommands, string preselectCommit, bool showArtificial = false)
             : this(aCommands)
         {
             revisionGrid.MultiSelect = false;
+            revisionGrid.ShowUncommitedChangesIfPossible = showArtificial && !revisionGrid.Module.IsBareRepository();
 
             if (!String.IsNullOrEmpty(preselectCommit))
             {

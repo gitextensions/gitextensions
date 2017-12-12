@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Gpg;
 using GitCommands.Repository;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -130,6 +131,7 @@ namespace GitUI.CommandsDialogs
         private readonly FormBrowseMenus _formBrowseMenus;
         private ConEmuControl _terminal;
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
+        private readonly IFormBrowseController _controller;
         private static bool _showRevisionInfoNextToRevisionGrid;
 
         /// <summary>
@@ -157,10 +159,18 @@ namespace GitUI.CommandsDialogs
                 imageList.Images.Add(Resources.IconCommit);
                 imageList.Images.Add(Resources.IconFileTree);
                 imageList.Images.Add(Resources.IconDiff);
+                imageList.Images.Add(Resources.IconKey);
                 CommitInfoTabControl.TabPages[0].ImageIndex = 0;
                 CommitInfoTabControl.TabPages[1].ImageIndex = 1;
                 CommitInfoTabControl.TabPages[2].ImageIndex = 2;
+                CommitInfoTabControl.TabPages[3].ImageIndex = 3;
             }
+
+            if (!AppSettings.ShowGpgInformation.ValueOrDefault)
+            {
+                CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
+            }
+
             if (aCommands != null)
             {
                 RevisionGrid.UICommandsSource = this;
@@ -180,7 +190,7 @@ namespace GitUI.CommandsDialogs
             Translate();
             LayoutRevisionInfo();
 
-            if (AppSettings.ShowGitStatusInBrowseToolbar)
+            if (AppSettings.ShowGitStatusInBrowseToolbar && !Module.IsBareRepository())
             {
                 _toolStripGitStatus = new ToolStripGitStatus
                 {
@@ -224,6 +234,7 @@ namespace GitUI.CommandsDialogs
                 RefreshPullIcon();
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
                 UICommands.BrowseRepo = this;
+                _controller = new FormBrowseController(new GitGpgController(() => Module));
             }
 
             FillBuildReport();  // Ensure correct page visibility
@@ -375,7 +386,7 @@ namespace GitUI.CommandsDialogs
                         new System.Media.SoundPlayer(cowMoo).Play();
                 }
             }
-            catch 
+            catch
             {
                 // This code is just for fun, we do not want the program to crash because of it.
             }
@@ -499,7 +510,7 @@ namespace GitUI.CommandsDialogs
             branchSelect.Enabled = validWorkingDir;
             toolStripButton1.Enabled = validWorkingDir && !bareRepository;
             if (_toolStripGitStatus != null)
-                _toolStripGitStatus.Enabled = validWorkingDir;
+                _toolStripGitStatus.Enabled = validWorkingDir && !Module.IsBareRepository();
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
             dashboardToolStripMenuItem.Visible = !validWorkingDir;
@@ -951,6 +962,7 @@ namespace GitUI.CommandsDialogs
         {
             const string defaultTitle = "Git Extensions";
             const string repositoryTitleFormat = "{0} ({1}) - Git Extensions{2}";
+            // ReSharper disable once RedundantAssignment
             string additionalTitleText = "";
 #if DEBUG
             additionalTitleText = " -> DEBUG <-";
@@ -1007,6 +1019,10 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
+                if (AppSettings.ShowGpgInformation.ValueOrDefault)
+                {
+                    FillGpgInfo();
+                }
                 FillBuildReport();
             }
             RevisionGrid.IndexWatcher.Reset();
@@ -1058,6 +1074,18 @@ namespace GitUI.CommandsDialogs
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
+        private async void FillGpgInfo()
+        {
+            var revisions = RevisionGrid.GetSelectedRevisions();
+            var revision = revisions.FirstOrDefault();
+            if (revision == null)
+            {
+                return;
+            }
+            var info = await _controller.LoadGpgInfoAsync(revision);
+            revisionGpgInfo1.DisplayGpgInfo(info);
+        }
+
         private void FillBuildReport()
         {
             if (EnvUtils.IsMonoRuntime())
@@ -1096,11 +1124,13 @@ namespace GitUI.CommandsDialogs
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
                 CommitInfoTabControl.SelectedIndexChanged -= CommitInfoTabControl_SelectedIndexChanged;
-                if (revisions.Any() && GitRevision.IsArtificial(revisions[0].Guid))
+                if (!revisions.Any() || GitRevision.IsArtificial(revisions[0].Guid))
                 {
                     //Artificial commits cannot show tree (ls-tree) and has no commit info 
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                     CommitInfoTabControl.RemoveIfExists(TreeTabPage);
+                    CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
+
                     if (_showRevisionInfoNextToRevisionGrid)
                     {
                         RevisionsSplitContainer.Panel2Collapsed = true;
@@ -1116,6 +1146,15 @@ namespace GitUI.CommandsDialogs
                         i++;
                     }
                     CommitInfoTabControl.InsertIfNotExists(i, TreeTabPage);
+                    if (AppSettings.ShowGpgInformation.ValueOrDefault)
+                    {
+                        CommitInfoTabControl.InsertIfNotExists(i + 2, GpgInfoTabPage);
+                    }
+                    else
+                    {
+                        CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
+                    }
+
                     if (_showRevisionInfoNextToRevisionGrid)
                     {
                         RevisionsSplitContainer.Panel2Collapsed = false;
@@ -1128,6 +1167,10 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
+                if (AppSettings.ShowGpgInformation.ValueOrDefault)
+                {
+                    FillGpgInfo();
+                }
                 FillBuildReport();
             }
             catch (Exception ex)
@@ -1452,6 +1495,10 @@ namespace GitUI.CommandsDialogs
             FillFileTree();
             FillDiff();
             FillCommitInfo();
+            if (AppSettings.ShowGpgInformation.ValueOrDefault)
+            {
+                FillGpgInfo();
+            }
             FillBuildReport();
             FillTerminalTab();
         }
@@ -2064,14 +2111,24 @@ namespace GitUI.CommandsDialogs
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
             bool enabled = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial();
 
+            this.branchToolStripMenuItem.Enabled =
+            this.deleteBranchToolStripMenuItem.Enabled =
+            this.mergeBranchToolStripMenuItem.Enabled =
+            this.rebaseToolStripMenuItem.Enabled =
+            this.stashToolStripMenuItem.Enabled =
+              selectedRevisions.Count>0 && !Module.IsBareRepository();
+
             this.resetToolStripMenuItem.Enabled =
             this.checkoutBranchToolStripMenuItem.Enabled =
             this.runMergetoolToolStripMenuItem.Enabled =
-            this.tagToolStripMenuItem.Enabled =
             this.cherryPickToolStripMenuItem.Enabled =
-            this.archiveToolStripMenuItem.Enabled =
             this.checkoutToolStripMenuItem.Enabled =
             this.bisectToolStripMenuItem.Enabled =
+              enabled && !Module.IsBareRepository();
+
+            this.tagToolStripMenuItem.Enabled =
+            this.deleteTagToolStripMenuItem.Enabled =
+            this.archiveToolStripMenuItem.Enabled =
               enabled;
         }
 

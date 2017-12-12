@@ -107,7 +107,9 @@
     <Compile Include="Git\Tag\GitTagController.cs" />
     <Compile Include="Git\Tag\TagOperation.cs" />
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
+    <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Settings\BranchOrdering.cs" />
+    <Compile Include="Git\GitGpgController.cs" />
     <Compile Include="SshPathLocator.cs" />
     <Compile Include="Git\IndexLockManager.cs" />
     <Compile Include="Git\GitTreeParser.cs" />
@@ -115,7 +117,6 @@
     <Compile Include="PathEqualityComparer.cs" />
     <Compile Include="RemoteActionResult.cs" />
     <Compile Include="Remote\GitRemote.cs" />
-    <Compile Include="Remote\GitRemoteController.cs" />
     <Compile Include="Remote\GitRemoteSaveResult.cs" />
     <Compile Include="Settings\BasicSettingTypes.cs" />
     <Compile Include="Settings\CommonSettingsTypes.cs" />

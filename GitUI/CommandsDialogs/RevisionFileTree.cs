@@ -22,6 +22,25 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _nodeNotFoundNextAvailableParentSelected = new TranslationString("Node not found. The next available parent node will be selected.");
         private readonly TranslationString _nodeNotFoundSelectionNotChanged = new TranslationString("Node not found. File tree selection was not changed.");
 
+        private readonly TranslationString _assumeUnchangedMessage = new TranslationString(@"This feature should be used for performance purpose when it is costly for git to check the state of a big file.
+
+
+Are you sure to assume this file won't change ?");
+        private readonly TranslationString _assumeUnchangedCaption = new TranslationString("Assume this file won't change");
+        private readonly TranslationString _assumeUnchangedFail = new TranslationString("Fail to assume unchanged the file '{0}'.");
+        private readonly TranslationString _assumeUnchangedSuccess = new TranslationString("File successfully assumed unchanged.");
+
+        private readonly TranslationString _stopTrackingMessage = new TranslationString(@"Are you sure you want to stop tracking the file
+'{0}'?");
+        private readonly TranslationString _stopTrackingCaption = new TranslationString("Stop tracking the file");
+        private readonly TranslationString _stopTrackingFail = new TranslationString("Fail to stop tracking the file '{0}'.");
+        private readonly TranslationString _stopTrackingSuccess = new TranslationString(@"File successfully untracked. Removal has been added to the staging area.
+
+See the changes in the commit form.");
+
+        private readonly TranslationString _success = new TranslationString("Success");
+        private readonly TranslationString _error = new TranslationString("Error");
+
         //store strings to not keep references to nodes
         private readonly Stack<string> _lastSelectedNodes = new Stack<string>();
         private IRevisionFileTreeController _revisionFileTreeController;
@@ -344,10 +363,7 @@ namespace GitUI.CommandsDialogs
             if (gitItem == null)
                 return;
 
-            if (GitRevision.IsArtificial(_revision.Guid))
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName, null, false, true);
-            else
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, true, true);
+            UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, true, true);
         }
 
         private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -371,10 +387,7 @@ namespace GitUI.CommandsDialogs
             if (gitItem == null)
                 return;
 
-            if (GitRevision.IsArtificial(_revision.Guid))
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName);
-            else
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, false, false);
+            UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, false, false);
         }
 
         private void findToolStripMenuItem_Click(object sender, EventArgs e)
@@ -427,6 +440,11 @@ namespace GitUI.CommandsDialogs
             tvGitTree.ExpandAll();
         }
 
+        private void expandSubtreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           tvGitTree.SelectedNode?.ExpandAll();
+        }
+
         private void fileTreeArchiveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
@@ -453,9 +471,12 @@ namespace GitUI.CommandsDialogs
         private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
-            var enableItems = gitItem != null && gitItem.ObjectType == GitObjectType.Blob;
+            var itemSelected = gitItem != null;
+            var isFile = itemSelected && gitItem.ObjectType == GitObjectType.Blob;
+            var isFolder = itemSelected && gitItem.ObjectType == GitObjectType.Tree;
+            var isExistingFileOrDirectory = itemSelected && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
 
-            if (gitItem != null && gitItem.ObjectType == GitObjectType.Commit)
+            if (itemSelected && gitItem.ObjectType == GitObjectType.Commit)
             {
                 openSubmoduleMenuItem.Visible = true;
                 if (!openSubmoduleMenuItem.Font.Bold)
@@ -467,20 +488,37 @@ namespace GitUI.CommandsDialogs
             {
                 openSubmoduleMenuItem.Visible = false;
             }
-            this.fileHistoryToolStripMenuItem.Enabled = gitItem != null;
 
-            this.resetToThisRevisionToolStripMenuItem.Enabled =
-            this.blameToolStripMenuItem1.Enabled =
-            this.fileTreeArchiveToolStripMenuItem.Enabled =
-              enableItems;
-            
-            saveAsToolStripMenuItem.Visible = enableItems;
-            openFileToolStripMenuItem.Visible = enableItems;
-            openFileWithToolStripMenuItem.Visible = enableItems;
-            openWithToolStripMenuItem.Visible = enableItems;
-            copyFilenameToClipboardToolStripMenuItem.Visible = gitItem != null && FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
-            editCheckedOutFileToolStripMenuItem.Visible = enableItems;
-            toolStripSeparator18.Visible = enableItems;
+            saveAsToolStripMenuItem.Visible = isFile;
+            resetToThisRevisionToolStripMenuItem.Visible = isFile && !Module.IsBareRepository();
+            toolStripSeparatorFileSystemActions.Visible = isFile;
+
+            fileHistoryToolStripMenuItem.Enabled = itemSelected;
+            copyFilenameToClipboardToolStripMenuItem.Visible = itemSelected;
+            fileTreeOpenContainingFolderToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            fileTreeArchiveToolStripMenuItem.Enabled = itemSelected;
+            fileTreeCleanWorkingTreeToolStripMenuItem.Visible = isFolder;
+            fileTreeCleanWorkingTreeToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+
+            blameToolStripMenuItem1.Visible = isFile;
+
+            editCheckedOutFileToolStripMenuItem.Visible = isFile;
+            editCheckedOutFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            openWithToolStripMenuItem.Visible = isFile;
+            openWithToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            openFileToolStripMenuItem.Visible = isFile;
+            openFileWithToolStripMenuItem.Visible = isFile;
+
+            toolStripSeparatorGitActions.Visible = isFile;
+            stopTrackingThisFileToolStripMenuItem.Visible = isFile;
+            stopTrackingThisFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            assumeUnchangedTheFileToolStripMenuItem.Visible = isFile;
+            assumeUnchangedTheFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            findToolStripMenuItem.Enabled = tvGitTree.Nodes.Count>0;
+
+            toolStripSeparatorFileTreeActions.Visible = isFile;
+            toolStripSeparatorFileTreeActions.Enabled = isExistingFileOrDirectory;
+            expandSubtreeToolStripMenuItem.Visible = isFolder;
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -570,6 +608,76 @@ namespace GitUI.CommandsDialogs
                 {
                     Module.SaveBlobAs(fileDialog.FileName, gitItem.Guid);
                 }
+            }
+        }
+
+        private string GetSelectedFile()
+        {
+            var item = tvGitTree.SelectedNode?.Tag as GitItem;
+
+            if (item == null || item.ObjectType == GitObjectType.Tree)
+                return null;
+
+            var filename = Path.Combine(Module.WorkingDir, item.FileName);
+            if (!File.Exists(filename))
+            {
+                return null;
+            }
+
+            return filename;
+        }
+
+        private void assumeUnchangedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            bool wereErrors;
+            var itemStatus = new GitItemStatus();
+            itemStatus.Name = GetSelectedFile();
+            if (itemStatus.Name == null)
+                return;
+            var answer = MessageBox.Show(_assumeUnchangedMessage.Text, _assumeUnchangedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (answer == DialogResult.No)
+                return;
+
+            Module.AssumeUnchangedFiles(new List<GitItemStatus> { itemStatus }, true, out wereErrors);
+
+            if (wereErrors)
+            {
+                MessageBox.Show(string.Format(_assumeUnchangedFail.Text, itemStatus.Name), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show(_assumeUnchangedSuccess.Text, _success.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void stopTrackingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var filename = GetSelectedFile();
+            if (filename == null)
+                return;
+
+            var answer = MessageBox.Show(string.Format(_stopTrackingMessage.Text, filename), _stopTrackingCaption.Text,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (answer == DialogResult.No)
+                return;
+
+            if(Module.StopTrackingFile(filename))
+            {
+                MessageBox.Show(_stopTrackingSuccess.Text, _success.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void tvGitTree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                tvGitTree.SelectedNode = e.Node;
             }
         }
     }

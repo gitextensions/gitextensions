@@ -1,21 +1,36 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace GitCommands
+namespace GitCommands.Git
 {
-    /// <summary>
-    /// Translate GitRevision including artificial commits to diff options
-    /// Closely related to GitRevision.cs 
-    /// </summary>
-    public class RevisionDiffProvider
+    public interface IRevisionDiffProvider
     {
         /// <summary>
         /// options to git-diff from GE arguments, including artificial commits
+        /// This is an instance class to not have static dependencies in GitModule
         /// </summary>
         /// <param name="from">The first revision</param>
         /// <param name="to">The second "current" revision</param>
         /// <returns></returns>
-        public static string Get(string from, string to)
+        string Get(string from, string to);
+    }
+
+    /// <summary>
+    /// Translate GitRevision including artificial commits to diff options
+    /// Closely related to GitRevision.cs 
+    /// </summary>
+    public sealed class RevisionDiffProvider : IRevisionDiffProvider
+    {
+        private static readonly string StagedOpt = "--cached";
+
+        /// <summary>
+        /// options to git-diff from GE arguments, including artificial commits
+        /// This is an instance class to not have static dependencies in GitModule
+        /// </summary>
+        /// <param name="from">The first revision</param>
+        /// <param name="to">The second "current" revision</param>
+        /// <returns></returns>
+        public string Get(string from, string to)
         {
             string extra = string.Empty;
             from = ArtificialToDiffOptions(from);
@@ -60,7 +75,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="rev"></param>
         /// <returns></returns>
-        private static string ArtificialToDiffOptions(string rev)
+        private string ArtificialToDiffOptions(string rev)
         {
             if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid) { rev = string.Empty; }
             else if (rev == "^" || rev == GitRevision.UnstagedGuid + "^" || rev == GitRevision.IndexGuid) { rev = StagedOpt; }
@@ -74,7 +89,5 @@ namespace GitCommands
 
             return rev;
         }
-
-        private const string StagedOpt = "--cached";
     }
 }

@@ -106,7 +106,7 @@ namespace GitUI
         /// </summary>
         private IEnumerable<IGitRef> LatestRefs
         {
-            get { return _LatestRefs;  }
+            get { return _LatestRefs; }
             set
             {
                 _LatestRefs = value;
@@ -372,12 +372,12 @@ namespace GitUI
             {
                 _quickSearchLabel
                     = new Label
-                          {
-                              Location = new Point(10, 10),
-                              BorderStyle = BorderStyle.FixedSingle,
-                              ForeColor = SystemColors.InfoText,
-                              BackColor = SystemColors.Info
-                          };
+                    {
+                        Location = new Point(10, 10),
+                        BorderStyle = BorderStyle.FixedSingle,
+                        ForeColor = SystemColors.InfoText,
+                        BackColor = SystemColors.Info
+                    };
                 Controls.Add(_quickSearchLabel);
             }
 
@@ -869,7 +869,7 @@ namespace GitUI
             return GetSelectedRevisions(null);
         }
 
-        public string DescribeRevision(GitRevision revision)
+        public string DescribeRevision(GitRevision revision, int maxLength = 0)
         {
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
             var descriptiveRefs = gitRefListsForRevision.AllBranches.Concat(gitRefListsForRevision.AllTags);
@@ -885,7 +885,15 @@ namespace GitUI
                 description = revision.Subject;
             }
 
-            description = description + " @" + revision.Guid.Substring(0, 4);
+            if (!revision.IsArtificial())
+            {
+                description += " @" + revision.Guid.Substring(0, 4);
+            }
+
+            if (maxLength > 0)
+            {
+                description = description.ShortenTo(maxLength);
+            }
 
             return description;
         }
@@ -1084,11 +1092,6 @@ namespace GitUI
                     Task.Run(() => GetSuperprojectCheckout(ShowRemoteRef, capturedModule));
                 newSuperPrjectInfo.ContinueWith((task) => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
-                //Only check for tracked files. This usually makes more sense and it performs a lot
-                //better then checking for untracked files.
-                // TODO: Check FiltredFileName
-                Task<IList<GitItemStatus>> changedFilesTask =
-                    Task.Run(() => capturedModule.GetAllChangedFiles());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -1107,7 +1110,14 @@ namespace GitUI
                 _filtredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 SuperprojectCurrentCheckout = newSuperPrjectInfo;
-                ChangedFiles = changedFilesTask;
+                if (ArtificialCountEnabled)
+                {
+                    ChangedFiles = Task.Run(() => capturedModule.GetAllChangedFiles());
+                }
+                else
+                {
+                    ChangedFiles = null;
+                }
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -1505,27 +1515,21 @@ namespace GitUI
             {
                 cellBackgroundBrush = _authoredRevisionsBrush;
             }
+            else if (ShouldRenderAlternateBackColor(e.RowIndex))
+            {
+                cellBackgroundBrush = new SolidBrush(ColorHelper.MakeColorDarker(e.CellStyle.BackColor));
+                // TODO if default background is nearly black, we should make it lighter instead
+            }
             else
             {
-                if (e.RowIndex % 2 == 0)
-                {
-                    //e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
-                    cellBackgroundBrush = new SolidBrush(e.CellStyle.BackColor);
-                }
-                else
-                {
-                    //Brush brush = new SolidBrush(Color.FromArgb(255, 240, 240, 240));
-                    //e.Graphics.FillRectangle(brush, e.CellBounds);
-                    cellBackgroundBrush = new SolidBrush(ColorHelper.MakeColorDarker(e.CellStyle.BackColor));
-                    // TODO if default background is nearly black, we should make it lighter instead
-                }
+                cellBackgroundBrush = new SolidBrush(e.CellStyle.BackColor);
             }
             // Draw cell background
             e.Graphics.FillRectangle(cellBackgroundBrush, e.CellBounds);
             Color? backColor = null;
             if (cellBackgroundBrush is SolidBrush)
                 backColor = (cellBackgroundBrush as SolidBrush).Color;
-            
+
             // Draw graphics column
             if (e.ColumnIndex == graphColIndex)
             {
@@ -1721,8 +1725,6 @@ namespace GitUI
                             authorText = string.Empty;
                         }
 
-
-
                         e.Graphics.DrawString(authorText, rowFont, foreBrush,
                                               new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
                         e.Graphics.DrawString(timeText, rowFont, foreBrush,
@@ -1774,6 +1776,11 @@ namespace GitUI
             return AppSettings.HighlightAuthoredRevisions &&
                    AuthorEmailEqualityComparer.Instance.Equals(revision.AuthorEmail,
                                                                _revisionHighlighting.AuthorEmailToHighlight);
+        }
+
+        private bool ShouldRenderAlternateBackColor(int rowIndex)
+        {
+            return AppSettings.RevisionGraphDrawAlternateBackColor && rowIndex % 2 == 0;
         }
 
         private float DrawRef(DrawRefArgs drawRefArgs, float offset, string name, Color headColor, ArrowType arrowType, bool dashedLine = false, bool fill = false)
@@ -1859,7 +1866,7 @@ namespace GitUI
             }
             else if (columnIndex == messageColIndex)
             {
-                e.Value = revision.Subject;
+                e.Value = revision.SubjectCount + revision.Subject;
             }
             else if (columnIndex == authorColIndex)
             {
@@ -2420,16 +2427,16 @@ namespace GitUI
             deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
 
             deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
-            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0;
+            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && checkoutBranchDropDown.Items.Count > 0;
+            checkoutBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && checkoutBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && mergeBranchDropDown.Items.Count > 0;
+            mergeBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && mergeBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
-            rebaseOnToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && rebaseDropDown.Items.Count > 0;
+            rebaseOnToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && rebaseDropDown.Items.Count > 0 && !Module.IsBareRepository();
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
@@ -2440,8 +2447,8 @@ namespace GitUI
             manipulateCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
 
             copyToClipboardToolStripMenuItem.Enabled = !revision.IsArtificial();
-            createNewBranchToolStripMenuItem.Enabled = !revision.IsArtificial();
-            resetCurrentBranchToHereToolStripMenuItem.Enabled = !revision.IsArtificial();
+            createNewBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+            resetCurrentBranchToHereToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
             archiveRevisionToolStripMenuItem.Enabled = !revision.IsArtificial();
             createTagToolStripMenuItem.Enabled = !revision.IsArtificial();
 
@@ -2467,9 +2474,9 @@ namespace GitUI
             set
             {
                 _AmbiguousRefs = value;
-            }            
+            }
         }
-            
+
         private string GetRefUnambiguousName(IGitRef gitRef)
         {
             if (AmbiguousRefs.Contains(gitRef.Name))
@@ -2687,7 +2694,7 @@ namespace GitUI
             }
             string filtredCurrentCheckout = _filtredCurrentCheckout;
 
-            if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges())
+            if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
             {
                 CheckUncommitedChanged(filtredCurrentCheckout);
             }
@@ -2701,28 +2708,47 @@ namespace GitUI
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
         }
 
+        private bool ArtificialCountEnabled
+        {
+            get
+            {
+                //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
+                //Do not activate if count on Commit button is set, the counters may be inconsistient
+                return AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar && (FindForm() as FormBrowse) != null;
+            }
+        }
+
         private void CheckUncommitedChanged(string filtredCurrentCheckout)
         {
-            bool enabled = AppSettings.UseFastChecks && !AppSettings.ShowGitStatusInBrowseToolbar && (FindForm() as FormBrowse)!=null;
-            var staged = ChangedFiles.Result.Count(item => item.IsStaged);
-            var unstaged = ChangedFiles.Result.Count() - staged;
+            string unstageCount;
+            string stageCount;
+            if (ChangedFiles != null)
+            {
+                int staged = ChangedFiles.Result.Count(item => item.IsStaged);
+                int unstaged = ChangedFiles.Result.Count() - staged;
+                unstageCount = "(" + unstaged + ") ";
+                stageCount = "(" + staged + ") ";
+            }
+            else
+            {
+                unstageCount = "";
+                stageCount = "";
+            }
 
             //Add working directory as virtual commit
-            //Add count only if "FileSystemWatcher" option is set, to give a visual clue that the count is out of date
-            //Do not activate if count on Commit button is set, the counters may be inconsistient
-            string count = enabled ? "(" + unstaged + ") " : "";
             var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
             {
-                Subject = count + Strings.GetCurrentUnstagedChanges(),
+                SubjectCount = unstageCount,
+                Subject = Strings.GetCurrentUnstagedChanges(),
                 ParentGuids = new[] { GitRevision.IndexGuid }
             };
             Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
 
             //Add index as virtual commit
-            count = enabled ? "(" + staged + ") " : "";
             var index = new GitRevision(Module, GitRevision.IndexGuid)
             {
-                Subject = count + Strings.GetCurrentIndex(),
+                SubjectCount = stageCount,
+                Subject = Strings.GetCurrentIndex(),
                 ParentGuids = new[] { filtredCurrentCheckout }
             };
             Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);

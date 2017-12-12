@@ -310,8 +310,9 @@ namespace GitUI.Editor
             treatAllFilesAsTextToolStripMenuItem.Visible = visible;
             copyNewVersionToolStripMenuItem.Visible = visible;
             copyOldVersionToolStripMenuItem.Visible = visible;
-            cherrypickSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff;
-            revertSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff;
+            //TODO The following should not be enabled if this is afile and the file does not exist
+            cherrypickSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff && !Module.IsBareRepository();
+            revertSelectedLinesToolStripMenuItem.Visible = visible && !isStaging_diff && !Module.IsBareRepository();
             copyPatchToolStripMenuItem.Visible = visible;
         }
 
