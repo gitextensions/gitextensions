@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -36,6 +37,10 @@ namespace GitUI.CommitInfo
             {
                 _sortedRefs = null;
             };
+
+            using (Graphics g = CreateGraphics())
+                if (!AppSettings.Font.IsFixedWidth(g))
+                    _RevisionHeader.Font = new Font(FontFamily.GenericMonospace, AppSettings.Font.Size);
         }
 
         [DefaultValue(false)]
@@ -138,7 +143,6 @@ namespace GitUI.CommitInfo
             if (string.IsNullOrEmpty(_revision.Guid))
                 return; //is it regular case or should throw an exception
 
-            _RevisionHeader.SelectionTabs = GetRevisionHeaderTabStops();
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
             string error = "";
@@ -160,7 +164,8 @@ namespace GitUI.CommitInfo
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
             _RevisionHeader.Height = GetRevisionHeaderHeight();
             _revisionInfo = commitInformation.Body;
-            updateText();
+
+            UpdateRevisionInfo();
             LoadAuthorImage(data.Author ?? data.Committer);
 
             if (AppSettings.CommitInfoShowContainedInBranches)
@@ -171,36 +176,6 @@ namespace GitUI.CommitInfo
 
             if (AppSettings.CommitInfoShowContainedInTags)
                 ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
-        }
-
-        /// <summary>
-        /// Returns an array of strings contains titles of fields field returned by GetHeader.
-        /// Used to calculate layout in advance
-        /// </summary>
-        /// <returns></returns>
-        private static string[] GetPossibleHeaders()
-        {
-            return new string[]
-                   {
-                       Strings.GetAuthorText(), Strings.GetAuthorDateText(), Strings.GetCommitterText(),
-                       Strings.GetCommitDateText(), Strings.GetCommitHashText(), Strings.GetChildrenText(),
-                       Strings.GetParentsText()
-                   };
-        }
-
-        private int[] _revisionHeaderTabStops;
-        private int[] GetRevisionHeaderTabStops()
-        {
-            if (_revisionHeaderTabStops != null)
-                return _revisionHeaderTabStops;
-            int tabStop = 0;
-            foreach (string s in GetPossibleHeaders())
-            {
-                tabStop = Math.Max(tabStop, TextRenderer.MeasureText(s + "  ", _RevisionHeader.Font).Width);
-            }
-            // simulate a two column layout even when there's more then one tab used
-            _revisionHeaderTabStops = new int[] { tabStop, tabStop + 1, tabStop + 2, tabStop + 3 };
-            return _revisionHeaderTabStops;
         }
 
         private int GetRevisionHeaderHeight()
@@ -214,13 +189,13 @@ namespace GitUI.CommitInfo
         private void loadSortedRefs()
         {
             _sortedRefs = Module.GetSortedRefs();
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
 
         private void loadAnnotatedTagInfo(GitRevision revision)
         {
             _annotatedTagsMessages = GetAnnotatedTagsMessages(revision);
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
 
         private IDictionary<string, string> GetAnnotatedTagsMessages(GitRevision revision)
@@ -272,7 +247,7 @@ namespace GitUI.CommitInfo
         private void loadTagInfo(string revision)
         {
             _tags = Module.GetAllTagsWhichContainGivenCommit(revision).ToList();
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
 
 
@@ -285,7 +260,7 @@ namespace GitUI.CommitInfo
             bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                              AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             _branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
 
         private void loadLinksForRevision(GitRevision revision)
@@ -294,7 +269,7 @@ namespace GitUI.CommitInfo
                 return;
 
             _linksInfo = GetLinksForRevision(revision);
-            this.InvokeAsync(updateText);
+            this.InvokeAsync(UpdateRevisionInfo);
         }
 
         private class ItemTpComparer : IComparer<string>
@@ -364,7 +339,7 @@ namespace GitUI.CommitInfo
             DisplayAvatarSetup(false);
         }
 
-        private void updateText()
+        private void UpdateRevisionInfo()
         {
             if (_sortedRefs != null)
             {
@@ -446,7 +421,7 @@ namespace GitUI.CommitInfo
             _annotatedTagsMessages = null;
             _tags = null;
             _linkFactory.Clear();
-            updateText();
+            UpdateRevisionInfo();
             gravatar1.Visible = AppSettings.ShowAuthorGravatar;
             if (AppSettings.ShowAuthorGravatar)
             {
