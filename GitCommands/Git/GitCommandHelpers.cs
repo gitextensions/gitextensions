@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -142,6 +142,8 @@ namespace GitCommands
             };
         }
 
+        static string _lastLogArguments = "";
+        static DateTime _lastLogTimestamp = DateTime.MinValue;
         internal static Process StartProcess(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
             SetEnvironmentVariable();
@@ -153,11 +155,21 @@ namespace GitCommands
             startProcess.EnableRaisingEvents = true;
             startProcess.Exited += (sender, args) =>
             {
+                var executionEndTimestamp = DateTime.Now;
                 string quotedCmd = fileName;
                 if (quotedCmd.IndexOf(' ') != -1)
                     quotedCmd = quotedCmd.Quote();
-                var executionEndTimestamp = DateTime.Now;
-                AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+
+                //GitHub #4213 Commands are duplicated in GE Gitcommand log
+                string duplicate = "";
+                if (_lastLogArguments == arguments && (_lastLogTimestamp - executionStartTimestamp).TotalMilliseconds == 0)
+                {
+                    duplicate = " #Duplicate?";
+                }
+                _lastLogArguments = arguments;
+                _lastLogTimestamp = executionStartTimestamp;
+
+                AppSettings.GitLog.Log(quotedCmd + " " + arguments + duplicate, executionStartTimestamp, executionEndTimestamp);
             };
 
             return startProcess;
