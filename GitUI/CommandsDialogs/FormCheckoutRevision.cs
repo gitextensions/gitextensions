@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Script;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -51,13 +51,16 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
+                ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
+                string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
                 FormProcess.ShowDialog(this, command);
 
                 UICommands.UpdateSubmodules(this);
 
-                DialogResult = System.Windows.Forms.DialogResult.OK;
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
+
+                DialogResult = DialogResult.OK;
 
                 Close();
             }
