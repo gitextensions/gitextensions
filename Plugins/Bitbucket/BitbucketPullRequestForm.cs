@@ -7,6 +7,7 @@ using GitUIPluginInterfaces;
 using System.Linq;
 using System.Threading;
 using ResourceManager;
+using GitCommands;
 
 namespace Bitbucket
 {
@@ -33,6 +34,8 @@ namespace Bitbucket
             _plugin = plugin;
             _settingsContainer = settings;
             _gitUiCommands = gitUiCommands;
+            //TODO Retrieve all users and set default reviewers
+            ReviewersDataGrid.Visible = false;
         }
 
         private void BitbucketPullRequestFormLoad(object sender, EventArgs e)
@@ -160,6 +163,7 @@ namespace Bitbucket
             }
             return list;
         }
+
         Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
         private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
@@ -206,7 +210,10 @@ namespace Bitbucket
         private void RefreshDDLBranch(ComboBox comboBox, object selectedValue)
         {
             List<string> lsNames = (GetBitbucketBranches((Repository)selectedValue)).ToList();
-            lsNames.Sort();
+            if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
+            {
+                lsNames.Sort();
+            }
             lsNames.Insert(0, "");
             comboBox.DataSource = lsNames;
         }

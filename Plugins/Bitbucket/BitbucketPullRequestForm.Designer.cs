@@ -687,6 +687,8 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "BitbucketPullRequestForm";
             this.Text = "Create Pull Request";
+            this.Load += BitbucketPullRequestFormLoad;
+            this.Load += BitbucketViewPullRequestFormLoad;
             ((System.ComponentModel.ISupportInitialize)(this.ReviewersDataGrid)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
