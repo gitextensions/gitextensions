@@ -13,7 +13,7 @@ namespace Bitbucket
 
         public BitbucketPlugin()
         {
-            SetNameAndDescription("Create Bitbucket Pull Request");
+            SetNameAndDescription("Bitbucket Server");
             Translate();
         }
 
