@@ -46,6 +46,9 @@ namespace GitUI
         public event GitUIEventHandler PreDeleteBranch;
         public event GitUIPostActionEventHandler PostDeleteBranch;
 
+        public event GitUIEventHandler PreDeleteRemoteBranch;
+        public event GitUIPostActionEventHandler PostDeleteRemoteBranch;
+
         public event GitUIEventHandler PreCheckoutRevision;
         public event GitUIPostActionEventHandler PostCheckoutRevision;
 
@@ -292,6 +295,19 @@ namespace GitUI
                 {
                     using (var form = new FormDeleteBranch(this, branch))
                         form.ShowDialog(owner);
+                    return true;
+                }
+            );
+        }
+
+        public bool StartDeleteRemoteBranchDialog(IWin32Window owner, string remoteBranch)
+        {
+            return DoActionOnRepo(owner, true, false, PreDeleteRemoteBranch, PostDeleteRemoteBranch, () =>
+                {
+                    using (var form = new FormDeleteRemoteBranch(this, remoteBranch))
+                    {
+                        form.ShowDialog(owner);
+                    }
                     return true;
                 }
             );
@@ -1006,7 +1022,7 @@ namespace GitUI
             if (resetAction == FormResetChanges.ActionEnum.Cancel)
             {
                 return false;
-        }
+            }
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -1040,7 +1056,7 @@ namespace GitUI
 
         public bool StartResetChangesDialog()
         {
-            return StartResetChangesDialog((IWin32Window) null);
+            return StartResetChangesDialog((IWin32Window)null);
         }
 
         public bool StartRevertCommitDialog(IWin32Window owner, GitRevision revision)
@@ -1760,7 +1776,7 @@ namespace GitUI
             WrapRepoHostingCall("View pull requests", gitHoster,
                                 gh =>
                                 {
-                                    var frm = new ViewPullRequestsForm(this, gitHoster) {ShowInTaskbar = true};
+                                    var frm = new ViewPullRequestsForm(this, gitHoster) { ShowInTaskbar = true };
                                     frm.Show();
                                 });
         }

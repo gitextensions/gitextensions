@@ -101,6 +101,7 @@
     <Compile Include="Git\GitBranchNameOptions.cs" />
     <Compile Include="Git\Tag\GitCreateTagArgs.cs" />
     <Compile Include="Git\Tag\GitCreateTagCmd.cs" />
+    <Compile Include="Git\GitDeleteRemoteBranchCmd.cs" />
     <Compile Include="Git\GitDirectoryResolver.cs" />
     <Compile Include="Git\RevisionDiffProvider.cs" />
     <Compile Include="Git\Tag\GitTagController.cs" />

@@ -169,6 +169,12 @@
       <DependentUpon>FormReflog.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FormSparseWorkingCopyViewModel.cs" />
+    <Compile Include="CommandsDialogs\FormDeleteRemoteBranch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormDeleteRemoteBranch.Designer.cs">
+      <DependentUpon>FormDeleteRemoteBranch.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\FormMergeSubmodule.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1129,6 +1135,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormCompareToBranch.resx">
       <DependentUpon>FormCompareToBranch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\FormDeleteRemoteBranch.resx">
+      <DependentUpon>FormDeleteRemoteBranch.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormDiff.resx">
       <DependentUpon>FormDiff.cs</DependentUpon>
