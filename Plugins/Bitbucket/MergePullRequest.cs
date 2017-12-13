@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace Stash
+namespace Bitbucket
 {
     class MergeRequestInfo
     {
@@ -12,7 +12,7 @@ namespace Stash
         public string TargetRepo { get; set; }
     }
 
-    class MergePullRequest : StashRequestBase<JObject>
+    class MergePullRequest : BitbucketRequestBase<JObject>
     {
         private readonly MergeRequestInfo _info;
 

@@ -266,8 +266,10 @@
       <Component Id="ProxySwitcher.dll" Guid="*">
         <File Source="..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll" />
       </Component>
-      <Component Id="Stash.dll" Guid="*">
-        <File Source="..\Plugins\Stash\bin\Release\Stash.dll" />
+      <Component Id="Bitbucket.dll" Guid="*">
+        <File Source="..\Plugins\Bitbucket\bin\Release\Bitbucket.dll" />
+        <!--Renamed dll, installed in versions <= 2.50.02-->
+        <RemoveFile Name="Stash.dll" Id="Stash.dll" On="both" />
       </Component>
       <Component Id="TeamCityIntegration.dll" Guid="*">
         <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll" />
@@ -723,8 +725,8 @@
         <Feature Id="ReleaseNotesGenerator" Title="Release notes generator" Level="1">
           <ComponentRef Id="ReleaseNotesGenerator.dll" />
         </Feature>
-        <Feature Id="Stash" Title="Atlassian Stash integration" Level="1">
-          <ComponentRef Id="Stash.dll" />
+        <Feature Id="Bitbucket" Title="Atlassian Bitbucket Server integration" Level="1">
+          <ComponentRef Id="Bitbucket.dll" />
           <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="AppVeyorIntegration" Title="AppVeyor integration" Level="1">

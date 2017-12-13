@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace Stash
+namespace Bitbucket
 {
     class Commit
     {
@@ -20,7 +20,7 @@ namespace Stash
         public string AuthorName { get; set; }
         public bool IsMerge { get; set; }
     }
-    class GetHeadCommitRequest : StashRequestBase<Commit>
+    class GetHeadCommitRequest : BitbucketRequestBase<Commit>
     {
         private readonly Repository _repo;
         private readonly string _branch;

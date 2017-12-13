@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace Stash
+namespace Bitbucket
 {
     class PullRequestInfo
     {
@@ -12,10 +12,10 @@ namespace Stash
         public Repository TargetRepo { get; set; }
         public string SourceBranch { get; set; }
         public string TargetBranch { get; set; }
-        public IEnumerable<StashUser> Reviewers { get; set; }
+        public IEnumerable<BitbucketUser> Reviewers { get; set; }
     }
 
-    class CreatePullRequestRequest : StashRequestBase<JObject>
+    class CreatePullRequestRequest : BitbucketRequestBase<JObject>
     {
         private readonly PullRequestInfo _info;
 

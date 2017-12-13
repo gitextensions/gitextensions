@@ -1,18 +1,16 @@
 ﻿using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace Stash
+namespace Bitbucket
 {
-    public class StashUser
+    class GetBranchesRequest : BitbucketRequestBase<JObject>
     {
-        public string Slug { get; set; }
-    }
+        private readonly Repository _repo;
 
-    class GetUserRequest : StashRequestBase<JObject>
-    {
-        public GetUserRequest(Settings settings)
+        public GetBranchesRequest(Repository repo, Settings settings)
             : base(settings)
         {
+            _repo = repo;
         }
 
         protected override object RequestBody
@@ -27,7 +25,11 @@ namespace Stash
 
         protected override string ApiUrl
         {
-            get { return "/rest/api/1.0/users?limit=1000"; }
+            get
+            {
+                return string.Format("/rest/api/1.0/projects/{0}/repos/{1}/branches?limit=1000",
+                                     _repo.ProjectKey, _repo.RepoName);
+            }
         }
 
         protected override JObject ParseResponse(JObject json)

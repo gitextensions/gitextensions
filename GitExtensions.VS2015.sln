@@ -102,7 +102,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Git.hub", "Externals\Git.hu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBug", "Externals\NBug\NBug\NBug.csproj", "{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stash", "Plugins\Stash\Stash.csproj", "{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bitbucket", "Plugins\Bitbucket\Bitbucket.csproj", "{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JenkinsIntegration", "Plugins\BuildServerIntegration\JenkinsIntegration\JenkinsIntegration.csproj", "{E6AAC693-815B-4D1A-83D7-F4DE36072793}"
 EndProject
@@ -704,5 +704,8 @@ Global
 		{D9C9D8EF-E0BC-4CCD-829D-3523E750D0FE} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{93CE3A27-5A63-4436-8C64-CBCA75322C5B} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{626CA9EB-DB83-4BEB-87D5-15E3B397EF57} = {3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}
 	EndGlobalSection
 EndGlobal
