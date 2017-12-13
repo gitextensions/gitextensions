@@ -1,6 +1,6 @@
-﻿namespace Stash
+﻿namespace Bitbucket
 {
-    partial class StashPullRequestForm
+    partial class BitbucketPullRequestForm
     {
         /// <summary>
         /// Required designer variable.
@@ -678,14 +678,14 @@
             this.label18.TabIndex = 4;
             this.label18.Text = "Branch";
             // 
-            // StashPullRequestForm
+            // BitbucketPullRequestForm
             // 
             this.AcceptButton = this.btnCreate;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(827, 667);
             this.Controls.Add(this.tabControl1);
-            this.Name = "StashPullRequestForm";
+            this.Name = "BitbucketPullRequestForm";
             this.Text = "Create Pull Request";
             ((System.ComponentModel.ISupportInitialize)(this.ReviewersDataGrid)).EndInit();
             this.groupBox1.ResumeLayout(false);

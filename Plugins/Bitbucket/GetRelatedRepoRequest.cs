@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace Stash
+namespace Bitbucket
 {
     class Repository
     {
@@ -26,7 +26,7 @@ namespace Stash
         }
     }
     
-    class GetRelatedRepoRequest : StashRequestBase<List<Repository>>
+    class GetRelatedRepoRequest : BitbucketRequestBase<List<Repository>>
     {
         public GetRelatedRepoRequest(Settings settings) : base(settings)
         {

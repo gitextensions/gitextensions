@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace Stash
+namespace Bitbucket
 {
-    class GetRepoRequest : StashRequestBase<Repository>
+    class GetRepoRequest : BitbucketRequestBase<Repository>
     {
         private readonly string _projectKey;
         private readonly string _repoName;

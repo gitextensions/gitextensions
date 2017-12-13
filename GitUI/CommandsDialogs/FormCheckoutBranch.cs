@@ -337,6 +337,8 @@ namespace GitUI.CommandsDialogs
                     UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
             }
 
+            var originalHash = Module.GetCurrentCheckout();
+
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
             if (UICommands.StartCommandLineProcessDialog(cmd, owner))
@@ -367,7 +369,11 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                UICommands.UpdateSubmodules(this);
+                var currentHash = Module.GetCurrentCheckout();
+                if (!string.Equals(originalHash, currentHash, StringComparison.OrdinalIgnoreCase))
+                {
+                    UICommands.UpdateSubmodules(this);
+                }
 
                 ScriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
 

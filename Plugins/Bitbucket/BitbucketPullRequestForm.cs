@@ -8,24 +8,24 @@ using System.Linq;
 using System.Threading;
 using ResourceManager;
 
-namespace Stash
+namespace Bitbucket
 {
-    public partial class StashPullRequestForm : GitExtensionsFormBase
+    public partial class BitbucketPullRequestForm : GitExtensionsFormBase
     {
-        private readonly TranslationString _yourRepositoryIsNotInStash = new TranslationString("Your repository is not hosted in Bitbucket.");
+        private readonly TranslationString _yourRepositoryIsNotInBitbucket = new TranslationString("Your repository is not hosted in Bitbucket.");
         private readonly TranslationString _commited = new TranslationString("{0} committed\n{1}");
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
 
         private Settings _settings;
-        private readonly StashPlugin _plugin;
+        private readonly BitbucketPlugin _plugin;
         private readonly GitUIBaseEventArgs _gitUiCommands;
         private readonly ISettingsSource _settingsContainer;
-        private readonly BindingList<StashUser> _reviewers = new BindingList<StashUser>();
-        private readonly List<string> _stashUsers = new List<string>();
+        private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
+        private readonly List<string> _bitbucketUsers = new List<string>();
 
 
-        public StashPullRequestForm(StashPlugin plugin, ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
+        public BitbucketPullRequestForm(BitbucketPlugin plugin, ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();
@@ -35,16 +35,16 @@ namespace Stash
             _gitUiCommands = gitUiCommands;
         }
 
-        private void StashPullRequestFormLoad(object sender, EventArgs e)
+        private void BitbucketPullRequestFormLoad(object sender, EventArgs e)
         {
             _settings = Settings.Parse(_gitUiCommands.GitModule, _settingsContainer, _plugin);
             if (_settings == null)
             {
-                MessageBox.Show(_yourRepositoryIsNotInStash.Text);
+                MessageBox.Show(_yourRepositoryIsNotInBitbucket.Text);
                 Close();
                 return;
             }
-            //_stashUsers.AddRange(GetStashUsers().Select(a => a.Slug));
+            //_bitbucketUsers.AddRange(GetBitbucketUsers().Select(a => a.Slug));
             ThreadPool.QueueUserWorkItem(state =>
             {
                 var repositories = GetRepositories();
@@ -64,7 +64,7 @@ namespace Stash
             });
         }
 
-        private void StashViewPullRequestFormLoad(object sender, EventArgs e)
+        private void BitbucketViewPullRequestFormLoad(object sender, EventArgs e)
         {
             if (_settings == null)
                 return;
@@ -139,29 +139,29 @@ namespace Stash
             if (response.Success)
             {
                 MessageBox.Show(_success.Text);
-                StashViewPullRequestFormLoad(null, null);
+                BitbucketViewPullRequestFormLoad(null, null);
             }
             else
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
                     _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private IEnumerable<StashUser> GetStashUsers()
+        private IEnumerable<BitbucketUser> GetBitbucketUsers()
         {
-            var list = new List<StashUser>();
+            var list = new List<BitbucketUser>();
             var getUser = new GetUserRequest(_settings);
             var result = getUser.Send();
             if (result.Success)
             {
                 foreach (var value in result.Result["values"])
                 {
-                    list.Add(new StashUser { Slug = value["slug"].ToString() });
+                    list.Add(new BitbucketUser { Slug = value["slug"].ToString() });
                 }
             }
             return list;
         }
         Dictionary<Repository, IEnumerable<string>> Branches = new Dictionary<Repository,IEnumerable<string>>();
-        private IEnumerable<string> GetStashBranches(Repository selectedRepo)
+        private IEnumerable<string> GetBitbucketBranches(Repository selectedRepo)
         {
             if (Branches.ContainsKey(selectedRepo))
             {
@@ -189,7 +189,7 @@ namespace Stash
                 cellEdit.AutoCompleteCustomSource = new AutoCompleteStringCollection();
                 cellEdit.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 cellEdit.AutoCompleteSource = AutoCompleteSource.CustomSource;
-                cellEdit.AutoCompleteCustomSource.AddRange(_stashUsers.ToArray());
+                cellEdit.AutoCompleteCustomSource.AddRange(_bitbucketUsers.ToArray());
             }
         }
 
@@ -205,7 +205,7 @@ namespace Stash
 
         private void RefreshDDLBranch(ComboBox comboBox, object selectedValue)
         {
-            List<string> lsNames = (GetStashBranches((Repository)selectedValue)).ToList();
+            List<string> lsNames = (GetBitbucketBranches((Repository)selectedValue)).ToList();
             lsNames.Sort();
             lsNames.Insert(0, "");
             comboBox.DataSource = lsNames;
@@ -314,7 +314,7 @@ namespace Stash
             if (response.Success)
             {
                 MessageBox.Show(_success.Text);
-                StashViewPullRequestFormLoad(null, null);
+                BitbucketViewPullRequestFormLoad(null, null);
             }
             else
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
@@ -339,7 +339,7 @@ namespace Stash
             if (response.Success)
             {
                 MessageBox.Show(_success.Text);
-                    StashViewPullRequestFormLoad(null, null);
+                    BitbucketViewPullRequestFormLoad(null, null);
             }
             else
                 MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
