@@ -44,24 +44,27 @@ namespace GitUI.CommandsDialogs
             try
             {
                 var commitHash = commitPickerSmallControl1.SelectedCommitHash;
-
                 if (commitHash.IsNullOrEmpty())
                 {
                     MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text);
                     return;
                 }
 
+                var originalHash = Module.GetCurrentCheckout();
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
                 string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
-                FormProcess.ShowDialog(this, command);
-
-                UICommands.UpdateSubmodules(this);
+                if (FormProcess.ShowDialog(this, command))
+                {
+                    if (!string.Equals(commitHash, originalHash, StringComparison.OrdinalIgnoreCase))
+                    {
+                        UICommands.UpdateSubmodules(this);
+                    }
+                }
 
                 ScriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
 
                 DialogResult = DialogResult.OK;
-
                 Close();
             }
             catch (Exception ex)

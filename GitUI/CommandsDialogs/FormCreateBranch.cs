@@ -86,8 +86,14 @@ namespace GitUI.CommandsDialogs
             Ok.Focus();
 
             string commitGuid = commitPickerSmallControl1.SelectedCommitHash;
-            var branchName = BranchNameTextBox.Text.Trim();
+            if (commitGuid == null)
+            {
+                MessageBox.Show(this, _noRevisionSelected.Text, Text);
+                DialogResult = DialogResult.None;
+                return;
+            }
 
+            var branchName = BranchNameTextBox.Text.Trim();
             if (branchName.IsNullOrWhiteSpace())
             {
                 MessageBox.Show(_branchNameIsEmpty.Text, Text);
@@ -100,13 +106,10 @@ namespace GitUI.CommandsDialogs
                 DialogResult = DialogResult.None;
                 return;
             }
+
             try
             {
-                if (commitGuid == null)
-                {
-                    MessageBox.Show(this, _noRevisionSelected.Text, Text);
-                    return;
-                }
+                var originalHash = Module.GetCurrentCheckout();
 
                 string cmd;
                 if (Orphan.Checked)
@@ -125,7 +128,7 @@ namespace GitUI.CommandsDialogs
                     FormProcess.ShowDialog(this, cmd);
                 }
 
-                if (wasSuccessFul && chkbxCheckoutAfterCreate.Checked)
+                if (wasSuccessFul && chkbxCheckoutAfterCreate.Checked && !string.Equals(commitGuid, originalHash, StringComparison.OrdinalIgnoreCase))
                 {
                     UICommands.UpdateSubmodules(this);
                 }
