@@ -207,15 +207,15 @@ namespace Bitbucket
             RefreshDDLBranch(ddlBranchTarget, ((ComboBox)sender).SelectedValue);
         }
 
-        private void RefreshDDLBranch(ComboBox comboBox, object selectedValue)
+        private void RefreshDDLBranch(ComboBox branchComboBox, object selectedValue)
         {
-            List<string> lsNames = (GetBitbucketBranches((Repository)selectedValue)).ToList();
+            List<string> branchNames = (GetBitbucketBranches((Repository)selectedValue)).ToList();
             if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
             {
-                lsNames.Sort();
+                branchNames.Sort();
             }
-            lsNames.Insert(0, "");
-            comboBox.DataSource = lsNames;
+            branchNames.Insert(0, "");
+            branchComboBox.DataSource = branchNames;
         }
 
         private void DdlBranchSourceSelectedValueChanged(object sender, EventArgs e)

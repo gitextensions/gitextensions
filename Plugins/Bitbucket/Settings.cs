@@ -26,7 +26,9 @@ namespace Bitbucket
             var module = ((GitModule)gitModule);
 
             var remotes = module.GetRemotes()
-                .Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().Select(r => module.GetSetting(string.Format(SettingKeyString.RemoteUrl, r)))
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Distinct()
+                .Select(r => module.GetSetting(string.Format(SettingKeyString.RemoteUrl, r)))
                 .ToArray();
 
             foreach (var url in remotes)
