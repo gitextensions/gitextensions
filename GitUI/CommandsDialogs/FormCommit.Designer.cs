@@ -149,6 +149,7 @@ namespace GitUI.CommandsDialogs
             this.commitCursorColumnLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitCursorColumn = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitEndPadding = new System.Windows.Forms.ToolStripStatusLabel();
+            this.emptyLabel = new System.Windows.Forms.Label();
             this.UnstagedFileContext.SuspendLayout();
             this.StagedFileContext.SuspendLayout();
             this.UnstagedSubmoduleContext.SuspendLayout();
@@ -1119,10 +1120,11 @@ namespace GitUI.CommandsDialogs
             this.flowCommitButtons.AutoSize = true;
             this.flowCommitButtons.Controls.Add(this.Commit);
             this.flowCommitButtons.Controls.Add(this.CommitAndPush);
-            this.flowCommitButtons.Controls.Add(this.Reset);
-            this.flowCommitButtons.Controls.Add(this.ResetUnStaged);
             this.flowCommitButtons.Controls.Add(this.StageInSuperproject);
             this.flowCommitButtons.Controls.Add(this.Amend);
+            this.flowCommitButtons.Controls.Add(this.emptyLabel);
+            this.flowCommitButtons.Controls.Add(this.Reset);
+            this.flowCommitButtons.Controls.Add(this.ResetUnStaged);
             this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowCommitButtons.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowCommitButtons.Location = new System.Drawing.Point(0, 0);
@@ -1416,6 +1418,14 @@ namespace GitUI.CommandsDialogs
             this.commitEndPadding.Name = "commitEndPadding";
             this.commitEndPadding.Size = new System.Drawing.Size(1, 17);
             //
+            // emptyLabel
+            // 
+            this.emptyLabel.AutoSize = true;
+            this.emptyLabel.Location = new System.Drawing.Point(3, 80);
+            this.emptyLabel.Name = "emptyLabel";
+            this.emptyLabel.Size = new System.Drawing.Size(0, 17);
+            this.emptyLabel.TabIndex = 15;
+            // 
             // FormCommit
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1610,5 +1620,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem resetUnstagedChangesToolStripMenuItem;
         private ToolStripMenuItem noVerifyToolStripMenuItem;
         private ToolStripButton createBranchToolStripButton;
+        private Label emptyLabel;
     }
 }
