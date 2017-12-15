@@ -3363,33 +3363,9 @@ namespace GitUI
             }
         }
 
-        /// <summary>
-        /// duplicated from GitExtensionsForm
-        /// </summary>
-        /// <param name="commandCode"></param>
-        /// <returns></returns>
-        private Keys GetShortcutKeys(int commandCode)
-        {
-            var hotkey = GetHotkeyCommand(commandCode);
-            return hotkey == null ? Keys.None : hotkey.KeyData;
-        }
-
         internal Keys GetShortcutKeys(Commands cmd)
         {
             return GetShortcutKeys((int)cmd);
-        }
-
-        /// <summary>
-        /// duplicated from GitExtensionsForm
-        /// </summary>
-        /// <param name="commandCode"></param>
-        /// <returns></returns>
-        private HotkeyCommand GetHotkeyCommand(int commandCode)
-        {
-            if (Hotkeys == null)
-                return null;
-
-            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
         }
 
         internal RevisionGridMenuCommands MenuCommands { get { return _revisionGridMenuCommands; } }
