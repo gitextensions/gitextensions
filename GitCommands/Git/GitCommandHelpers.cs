@@ -151,14 +151,19 @@ namespace GitCommands
             var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
             var startProcess = Process.Start(startInfo);
             startProcess.EnableRaisingEvents = true;
-            startProcess.Exited += (sender, args) =>
+
+            EventHandler processExited = null;
+            processExited = (sender, args) =>
             {
+                startProcess.Exited -= processExited;
+
                 string quotedCmd = fileName;
                 if (quotedCmd.IndexOf(' ') != -1)
                     quotedCmd = quotedCmd.Quote();
                 var executionEndTimestamp = DateTime.Now;
                 AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
             };
+            startProcess.Exited += processExited;
 
             return startProcess;
         }
@@ -585,9 +590,16 @@ namespace GitCommands
             }
         }
 
-        public static string MergedBranches()
+        public static string MergedBranches(bool includeRemote = false)
         {
-            return "branch --merged";
+            if (includeRemote)
+            {
+                return "branch -a --merged";
+            }
+            else
+            {
+                return "branch --merged";
+            }
         }
 
         /// <summary>Un-sets the git SSH command path.</summary>
