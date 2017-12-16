@@ -41,5 +41,10 @@ namespace GitCommands.Config
         /// user.email
         /// </summary>
         public static string UserEmail = "user.email";
+
+        /// <summary>
+        /// core.commentChar
+        /// </summary>
+        public static string CommentChar = "core.commentChar";
     }
 }

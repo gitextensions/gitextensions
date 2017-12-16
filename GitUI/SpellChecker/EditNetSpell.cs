@@ -70,7 +70,6 @@ namespace GitUI.SpellChecker
             _wordAtCursorExtractor = new WordAtCursorExtractor();
         }
 
-
         public override string Text
         {
             get
@@ -97,31 +96,25 @@ namespace GitUI.SpellChecker
             }
         }
 
-        public string Line(int line)
+        /// <summary>
+        /// Get a copy of the lines.
+        /// Contrary to MS recommandation, TextBoxBase.Lines is rather expensive,
+        /// so it is exposed here as a method which conveys a bit more this.
+        /// </summary>
+        public string[] GetLines()
         {
-            return TextBox.Lines[line];
+            return TextBox.Lines;
         }
 
-        public void ReplaceLine(int line, string withText)
+        /// <summary>
+        /// Set the content by specifying the lines, along with where the cursor should be.
+        /// Note that here again, this works only if TextBox.WordWrap is false
+        /// </summary>
+        public void SetLines(string[] lines, int cursorLine, int cursorColumn)
         {
-            var oldPos = TextBox.SelectionStart + TextBox.SelectionLength;
-            var startIdx = TextBox.GetFirstCharIndexFromLine(line);
+            TextBox.Lines = lines;
+            TextBox.SelectionStart = TextBox.GetFirstCharIndexFromLine(cursorLine) + cursorColumn;
             TextBox.SelectionLength = 0;
-            TextBox.SelectionStart = startIdx;
-            TextBox.SelectionLength = Line(line).Length;
-            TextBox.SelectedText = withText;
-            TextBox.SelectionLength = 0;
-            TextBox.SelectionStart = oldPos;
-        }
-
-        public int LineLength(int line)
-        {
-            return LineCount() <= line ? 0 : TextBox.Lines[line].Length;
-        }
-
-        public int LineCount()
-        {
-            return TextBox.Lines.Length;
         }
 
         [Browsable(false)]
@@ -767,6 +760,9 @@ namespace GitUI.SpellChecker
         {
             var oldPos = TextBox.SelectionStart;
             var oldColor = TextBox.SelectionColor;
+            // Warning : GetFirstCharIndexFromLine takes a *displayed* line number
+            // this only matches the physical line of same number if there is no
+            // wrapping done in TextBox (TextBox.WordWrap set to false).
             var lineIndex = TextBox.GetFirstCharIndexFromLine(line);
             TextBox.SelectionStart = Math.Max(lineIndex + offset, 0);
             TextBox.SelectionLength = length;
@@ -780,26 +776,6 @@ namespace GitUI.SpellChecker
                 TextBox.SelectionColor = oldColor;
             //undoes all recent selections while ctrl-z pressed
             skipSelectionUndo = true;
-        }
-
-        /// <summary>
-        /// Make sure this line is empty by inserting a newline at its start.
-        /// </summary>
-        public void EnsureEmptyLine(bool addBullet, int afterLine)
-        {
-            var lineLength = LineLength(afterLine);
-            if (lineLength > 0)
-            {
-                var bullet = addBullet ? " - " : String.Empty;
-                var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
-                var newLine = Environment.NewLine;
-                var newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
-                TextBox.SelectionLength = 0;
-                TextBox.SelectionStart = indexOfLine;
-                TextBox.SelectedText = newLine + bullet;
-                TextBox.SelectionLength = 0;
-                TextBox.SelectionStart = newCursorPos;
-            }
         }
 
         public void RefreshAutoCompleteWords()

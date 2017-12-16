@@ -1113,7 +1113,7 @@
     </Compile>
     <Compile Include="WebBrowserEmulationMode.cs" />
     <Compile Include="WindowPositionList.cs" />
-    <Compile Include="CommandsDialogs\CommitDialog\WordWrapper.cs" />
+    <Compile Include="CommandsDialogs\CommitDialog\FormattedCommitMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CommandsDialogs\AboutBox.resx">
