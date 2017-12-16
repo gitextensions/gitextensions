@@ -47,7 +47,8 @@ namespace GitCommandsTests
                                "Notes (p4notes):" + Environment.NewLine +
                                "\tP4@547123";
 
-            var commitData = CommitData.CreateFromFormatedData(rawData, new GitModule(""));
+            // TEMP, will be refactored in the follow up refactor
+            var commitData = new CommitDataManager(() => new GitModule("")).CreateFromFormatedData(rawData);
             var commitInformation = CommitInformation.GetCommitInfo(commitData, linkFactory, true);
 
             Assert.AreEqual(expectedHeader, commitInformation.Header);

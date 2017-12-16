@@ -136,5 +136,9 @@ namespace GitUIPluginInterfaces
         bool IsRunningGitProcess();
 
         ISettingsSource GetEffectiveSettings();
+
+        string ReEncodeStringFromLossless(string s);
+
+        string ReEncodeCommitMessage(string s, string toEncodingName);
     }
 }
