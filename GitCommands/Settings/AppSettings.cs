@@ -615,7 +615,7 @@ namespace GitCommands
 
         public static bool RevisionGraphShowWorkingDirChanges
         {
-            get => GetBool("revisiongraphshowworkingdirchanges", false);
+            get => GetBool("revisiongraphshowworkingdirchanges", true);
             set => SetBool("revisiongraphshowworkingdirchanges", value);
         }
 
