@@ -131,6 +131,7 @@ namespace GitUI.CommandsDialogs
         private ConEmuControl _terminal;
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
         private readonly IFormBrowseController _controller;
+        private readonly ICommitDataManager _commitDataManager;
         private static bool _showRevisionInfoNextToRevisionGrid;
 
         /// <summary>
@@ -225,6 +226,7 @@ namespace GitUI.CommandsDialogs
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
                 UICommands.BrowseRepo = this;
                 _controller = new FormBrowseController(new GitGpgController(() => Module));
+                _commitDataManager = new CommitDataManager(() => Module);
             }
 
             FillBuildReport();  // Ensure correct page visibility
@@ -2289,7 +2291,7 @@ namespace GitUI.CommandsDialogs
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
                 string error = "";
-                CommitData commit = CommitData.GetCommitData(Module, e.Data, ref error);
+                CommitData commit = _commitDataManager.GetCommitData(e.Data, ref error);
                 if (commit != null)
                     RevisionGrid.SetSelectedRevision(new GitRevision(Module, commit.Guid));
             }

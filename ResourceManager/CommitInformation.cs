@@ -15,19 +15,23 @@ namespace ResourceManager
             Body = body;
         }
 
-        public string Header {get; private set;}
-        public string Body {get; private set;}
+        public string Header { get; private set; }
+        public string Body { get; private set; }
 
         /// <summary>
         /// Gets the commit info for module.
         /// </summary>
         /// <param name="module">Git module.</param>
+        /// <param name="linkFactory"></param>
         /// <param name="sha1">The sha1.</param>
         /// <returns></returns>
         public static CommitInformation GetCommitInfo(GitModule module, LinkFactory linkFactory, string sha1)
         {
+            // TEMP, will be moved in the follow up refactor
+            ICommitDataManager commitDataManager = new CommitDataManager(() => module);
+
             string error = "";
-            CommitData data = CommitData.GetCommitData(module, sha1, ref error);
+            CommitData data = commitDataManager.GetCommitData(sha1, ref error);
             if (data == null)
                 return new CommitInformation(error, "");
 

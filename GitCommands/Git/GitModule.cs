@@ -89,6 +89,7 @@ namespace GitCommands
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private readonly object _lock = new object();
         private readonly IIndexLockManager _indexLockManager;
+        private readonly ICommitDataManager _commitDataManager;
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
@@ -103,6 +104,7 @@ namespace GitCommands
             _workingDir = (workingdir ?? "").EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(_workingDir);
             _indexLockManager = new IndexLockManager(this);
+            _commitDataManager = new CommitDataManager(() => this);
         }
 
         #region IGitCommands
@@ -1977,7 +1979,7 @@ namespace GitCommands
                     if (parts.Length >= 3)
                     {
                         string error = string.Empty;
-                        CommitData data = CommitData.GetCommitData(this, parts[1], ref error);
+                        CommitData data = _commitDataManager.GetCommitData(parts[1], ref error);
 
                         PatchFile nextCommitPatch = new PatchFile();
                         nextCommitPatch.Author = string.IsNullOrEmpty(error) ? data.Author : error;
@@ -3131,11 +3133,11 @@ namespace GitCommands
 
             string error = "";
             if (loaddata)
-                olddata = CommitData.GetCommitData(this, oldCommit, ref error);
+                olddata = _commitDataManager.GetCommitData(oldCommit, ref error);
             if (olddata == null)
                 return SubmoduleStatus.NewSubmodule;
             if (loaddata)
-                data = CommitData.GetCommitData(this, commit, ref error);
+                data = _commitDataManager.GetCommitData(commit, ref error);
             if (data == null)
                 return SubmoduleStatus.Unknown;
             if (data.CommitDate > olddata.CommitDate)

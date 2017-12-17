@@ -27,7 +27,8 @@ namespace GitUI.CommitInfo
         private readonly TranslationString trsLinksRelatedToRevision = new TranslationString("Related links:");
 
         private const int MaximumDisplayedRefs = 20;
-        private LinkFactory _linkFactory = new LinkFactory();
+        private readonly LinkFactory _linkFactory = new LinkFactory();
+        private readonly ICommitDataManager _commitDataManager;
 
         public CommitInfo()
         {
@@ -37,6 +38,7 @@ namespace GitUI.CommitInfo
             {
                 _sortedRefs = null;
             };
+            _commitDataManager = new CommitDataManager(() => Module);
 
             using (Graphics g = CreateGraphics())
                 if (!AppSettings.Font.IsFixedWidth(g))
@@ -146,10 +148,10 @@ namespace GitUI.CommitInfo
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
             string error = "";
-            CommitData data = CommitData.CreateFromRevision(_revision);
+            CommitData data = _commitDataManager.CreateFromRevision(_revision);
             if (_revision.Body == null)
             {
-                CommitData.UpdateCommitMessage(data, Module, _revision.Guid, ref error);
+                _commitDataManager.UpdateCommitMessage(data, _revision.Guid, ref error);
                 _revision.Body = data.Body;
             }
 
