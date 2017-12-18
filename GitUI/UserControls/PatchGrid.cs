@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using PatchApply;
 using ResourceManager;
@@ -32,10 +34,18 @@ namespace GitUI
 
         public void Initialize()
         {
+            IList<PatchFile> patchFiles;
+
             if (Module.InTheMiddleOfInteractiveRebase())
-                Patches.DataSource = Module.GetInteractiveRebasePatchFiles();
+                Patches.DataSource = patchFiles = Module.GetInteractiveRebasePatchFiles();
             else
-                Patches.DataSource = Module.GetRebasePatchFiles();
+                Patches.DataSource = patchFiles = Module.GetRebasePatchFiles();
+
+            if (patchFiles.Any())
+            {
+                int rowsInView = Patches.DisplayedRowCount(false);
+                Patches.FirstDisplayedScrollingRowIndex = Math.Max(0, patchFiles.TakeWhile(pf => !pf.IsNext).Count() - rowsInView / 2);
+            }
         }
 
         private void Patches_DoubleClick(object sender, EventArgs e)
