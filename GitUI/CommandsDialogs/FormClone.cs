@@ -37,6 +37,7 @@ namespace GitUI.CommandsDialogs
         private bool openedFromProtocolHandler;
         private readonly string url;
         private EventHandler<GitModuleEventArgs> GitModuleChanged;
+        private string _puttySshKey;
         private readonly IList<string> _defaultBranchItems;
 
         // for translation only
@@ -200,6 +201,13 @@ namespace GitUI.CommandsDialogs
 
                 Repositories.AddMostRecentRepository(dirTo);
 
+                if (!String.IsNullOrEmpty(_puttySshKey))
+                {
+                    var clonedGitModule = new GitModule(dirTo);
+                    clonedGitModule.SetSetting(string.Format(SettingKeyString.RemotePuttySshKey, "origin"), _puttySshKey);
+                    clonedGitModule.LocalConfigFile.Save();
+                }
+
                 if (openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     Hide();
@@ -273,7 +281,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
-            BrowseForPrivateKey.BrowseAndLoad(this);
+            _puttySshKey = BrowseForPrivateKey.BrowseAndLoad(this);
         }
 
         private void FormCloneLoad(object sender, EventArgs e)
