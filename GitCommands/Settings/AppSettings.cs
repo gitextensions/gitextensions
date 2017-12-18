@@ -1134,6 +1134,21 @@ namespace GitCommands
             }
         }
 
+        public static bool IgnoreAllWhitespaceChanges
+        {
+            get
+            {
+                return RememberIgnoreWhiteSpacePreference && GetBool("IgnoreAllWhitespaceChanges", false);
+            }
+            set
+            {
+                if (RememberIgnoreWhiteSpacePreference)
+                {
+                    SetBool("IgnoreAllWhitespaceChanges", value);
+                }
+            }
+        }
+
         public static bool RememberIgnoreWhiteSpacePreference
         {
             get { return GetBool("rememberIgnoreWhiteSpacePreference", true); }
