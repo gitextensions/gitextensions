@@ -30,6 +30,7 @@ namespace ResourceManager
     /// </summary>
     public sealed class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
     {
+        private static int? _headerPadding;
         private readonly ILinkFactory _linkFactory;
 
 
@@ -38,43 +39,6 @@ namespace ResourceManager
             _linkFactory = linkFactory;
         }
 
-
-        private static string GetEmail(string author)
-        {
-            if (string.IsNullOrEmpty(author))
-                return "";
-            var ind = author.IndexOf("<", StringComparison.Ordinal);
-            if (ind == -1)
-                return "";
-            ++ind;
-            return author.Substring(ind, author.LastIndexOf(">", StringComparison.Ordinal) - ind);
-        }
-
-        private static int? _headerPadding;
-
-        private static int GetHeaderPadding()
-        {
-            if (_headerPadding != null)
-            {
-                return _headerPadding.GetValueOrDefault();
-            }
-
-            var strings = new[]
-            {
-                Strings.GetAuthorText(),
-                Strings.GetAuthorDateText(),
-                Strings.GetCommitterText(),
-                Strings.GetCommitDateText(),
-                Strings.GetCommitHashText(),
-                Strings.GetChildrenText(),
-                Strings.GetParentsText()
-            };
-
-            var maxLegnth = strings.Select(s => s.Length).Max();
-
-            _headerPadding = maxLegnth + 2;
-            return _headerPadding.GetValueOrDefault();
-        }
 
         /// <inheritdoc />
         /// <summary>
@@ -198,5 +162,40 @@ namespace ResourceManager
             return header.ToString();
         }
 
+
+        private static string GetEmail(string author)
+        {
+            if (string.IsNullOrEmpty(author))
+                return "";
+            var ind = author.IndexOf("<", StringComparison.Ordinal);
+            if (ind == -1)
+                return "";
+            ++ind;
+            return author.Substring(ind, author.LastIndexOf(">", StringComparison.Ordinal) - ind);
+        }
+
+        private static int GetHeaderPadding()
+        {
+            if (_headerPadding != null)
+            {
+                return _headerPadding.GetValueOrDefault();
+            }
+
+            var strings = new[]
+            {
+                Strings.GetAuthorText(),
+                Strings.GetAuthorDateText(),
+                Strings.GetCommitterText(),
+                Strings.GetCommitDateText(),
+                Strings.GetCommitHashText(),
+                Strings.GetChildrenText(),
+                Strings.GetParentsText()
+            };
+
+            var maxLegnth = strings.Select(s => s.Length).Max();
+
+            _headerPadding = maxLegnth + 2;
+            return _headerPadding.GetValueOrDefault();
+        }
     }
 }
