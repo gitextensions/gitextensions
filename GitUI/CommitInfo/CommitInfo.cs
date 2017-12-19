@@ -42,6 +42,8 @@ namespace GitUI.CommitInfo
             };
             _commitDataManager = new CommitDataManager(() => Module);
 
+            RevisionInfo.Font = AppSettings.Font;
+
             using (Graphics g = CreateGraphics())
             {
                 if (!AppSettings.Font.IsFixedWidth(g))
