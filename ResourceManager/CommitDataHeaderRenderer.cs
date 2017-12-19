@@ -6,47 +6,91 @@ using GitCommands;
 
 namespace ResourceManager
 {
-    public static class CommitDataExt
+    /// <summary>
+    /// Provides the ability to render commit information.
+    /// </summary>
+    public interface ICommitDataHeaderRenderer
     {
-        private static string GetEmail(string author)
-        {
-            if (String.IsNullOrEmpty(author))
-                return "";
-            int ind = author.IndexOf("<");
-            if (ind == -1)
-                return "";
-            ++ind;
-            return author.Substring(ind, author.LastIndexOf(">") - ind);
-        }
-
-        private static int? _headerPadding;
-        private static int GetHeaderPadding()
-        {
-            if (_headerPadding != null)
-                return _headerPadding.GetValueOrDefault();
-
-            var strings = new[]
-            {
-                Strings.GetAuthorText(), Strings.GetAuthorDateText(), Strings.GetCommitterText(),
-                              Strings.GetCommitDateText(), Strings.GetCommitHashText(), Strings.GetChildrenText(),
-                              Strings.GetParentsText()
-            };
-
-            int maxLegnth = strings.Select(s => s.Length).Max();
-
-            _headerPadding = maxLegnth + 2;
-            return _headerPadding.GetValueOrDefault();
-        }
+        /// <summary>
+        /// Generate header.
+        /// </summary>
+        /// <returns></returns>
+        string Render(CommitData commitData, bool showRevisionsAsLinks);
 
         /// <summary>
         /// Generate header.
         /// </summary>
         /// <param name="commitData"></param>
         /// <returns></returns>
-        public static string GetHeaderPlain(this CommitData commitData)
+        string RenderPlain(CommitData commitData);
+    }
+
+    /// <summary>
+    /// Renders commit information in a tabular format with data columns aligned with spaces.
+    /// </summary>
+    public sealed class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
+    {
+        private readonly ILinkFactory _linkFactory;
+
+
+        public CommitDataHeaderRenderer(ILinkFactory linkFactory)
         {
+            _linkFactory = linkFactory;
+        }
+
+
+        private static string GetEmail(string author)
+        {
+            if (string.IsNullOrEmpty(author))
+                return "";
+            var ind = author.IndexOf("<", StringComparison.Ordinal);
+            if (ind == -1)
+                return "";
+            ++ind;
+            return author.Substring(ind, author.LastIndexOf(">", StringComparison.Ordinal) - ind);
+        }
+
+        private static int? _headerPadding;
+
+        private static int GetHeaderPadding()
+        {
+            if (_headerPadding != null)
+            {
+                return _headerPadding.GetValueOrDefault();
+            }
+
+            var strings = new[]
+            {
+                Strings.GetAuthorText(),
+                Strings.GetAuthorDateText(),
+                Strings.GetCommitterText(),
+                Strings.GetCommitDateText(),
+                Strings.GetCommitHashText(),
+                Strings.GetChildrenText(),
+                Strings.GetParentsText()
+            };
+
+            var maxLegnth = strings.Select(s => s.Length).Max();
+
+            _headerPadding = maxLegnth + 2;
+            return _headerPadding.GetValueOrDefault();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Generate header.
+        /// </summary>
+        /// <param name="commitData"></param>
+        /// <returns></returns>
+        public string RenderPlain(CommitData commitData)
+        {
+            if (commitData == null)
+            {
+                throw new ArgumentNullException(nameof(commitData));
+            }
+
             StringBuilder header = new StringBuilder();
-            bool authorIsCommiter = String.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
+            bool authorIsCommiter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
 
             header.AppendLine((Strings.GetAuthorText() + ":").PadRight(GetHeaderPadding()) +
@@ -70,23 +114,33 @@ namespace ResourceManager
                               commitData.Guid);
             }
 
+            header.Append(
+                (WebUtility.HtmlEncode(Strings.GetCommitHashText()) + ":").PadRight(GetHeaderPadding()) +
+                WebUtility.HtmlEncode(commitData.Guid));
+
             return header.ToString();
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Generate header.
         /// </summary>
         /// <returns></returns>
-        public static string GetHeader(this CommitData commitData, LinkFactory linkFactory, bool showRevisionsAsLinks)
+        public string Render(CommitData commitData, bool showRevisionsAsLinks)
         {
+            if (commitData == null)
+            {
+                throw new ArgumentNullException(nameof(commitData));
+            }
+
             StringBuilder header = new StringBuilder();
-            bool authorIsCommiter = String.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
+            bool authorIsCommiter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
 
             string authorEmail = GetEmail(commitData.Author);
             header.AppendLine(
                 (WebUtility.HtmlEncode(Strings.GetAuthorText()) + ":").PadRight(GetHeaderPadding()) +
-                linkFactory.CreateLink(commitData.Author, "mailto:" + authorEmail));
+                _linkFactory.CreateLink(commitData.Author, "mailto:" + authorEmail));
             header.AppendLine(
                 (WebUtility.HtmlEncode(datesEqual ? Strings.GetDateText() :
                                        Strings.GetAuthorDateText()) + ":").PadRight(GetHeaderPadding()) +
@@ -121,20 +175,20 @@ namespace ResourceManager
                 header.AppendLine();
                 string commitsString;
                 if (showRevisionsAsLinks)
-                    commitsString = commitData.ChildrenGuids.Select(g => linkFactory.CreateCommitLink(g)).Join(" ");
+                    commitsString = commitData.ChildrenGuids.Select(g => _linkFactory.CreateCommitLink(g)).Join(" ");
                 else
                     commitsString = commitData.ChildrenGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
                 header.Append((WebUtility.HtmlEncode(Strings.GetChildrenText()) + ":").PadRight(GetHeaderPadding()) +
                               commitsString);
             }
 
-            var parentGuids = commitData.ParentGuids.Where(s => !String.IsNullOrEmpty(s));
+            var parentGuids = commitData.ParentGuids.Where(s => !string.IsNullOrEmpty(s)).ToList();
             if (parentGuids.Any())
             {
                 header.AppendLine();
                 string commitsString;
                 if (showRevisionsAsLinks)
-                    commitsString = parentGuids.Select(g => linkFactory.CreateCommitLink(g)).Join(" ");
+                    commitsString = parentGuids.Select(g => _linkFactory.CreateCommitLink(g)).Join(" ");
                 else
                     commitsString = parentGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
                 header.Append((WebUtility.HtmlEncode(Strings.GetParentsText()) + ":").PadRight(GetHeaderPadding())
@@ -143,5 +197,6 @@ namespace ResourceManager
 
             return header.ToString();
         }
+
     }
 }
