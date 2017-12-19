@@ -133,6 +133,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFormBrowseController _controller;
         private readonly ICommitDataManager _commitDataManager;
         private static bool _showRevisionInfoNextToRevisionGrid;
+        private TabPage _lastSelectedTab = null;
 
         /// <summary>
         /// For VS designer
@@ -238,6 +239,8 @@ namespace GitUI.CommandsDialogs
 
             FillTerminalTab();
             ManageWorktreeSupport();
+
+            CommitInfoTabControl.SelectedTab = _lastSelectedTab = CommitInfoTabPage;
         }
 
         private void LayoutRevisionInfo()
@@ -249,9 +252,10 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.DisplayAvatarOnRight();
                 CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
-                CommitInfoTabControl.RemoveIfExists(TreeTabPage);
-                CommitInfoTabControl.TabPages.Insert(0, TreeTabPage);
-                CommitInfoTabControl.SelectedTab = DiffTabPage;
+                if (_lastSelectedTab == null || !CommitInfoTabControl.TabPages.Contains(_lastSelectedTab))
+                {
+                    CommitInfoTabControl.SelectedTab = DiffTabPage;
+                }
                 CommitInfoTabControl.ResumeLayout(true);
                 RevisionsSplitContainer.Panel2Collapsed = false;
             }
@@ -260,6 +264,11 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.DisplayAvatarOnLeft();
                 CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
+                //All tabs available - select the last selected
+                if (_lastSelectedTab != null && CommitInfoTabControl.TabPages.Contains(_lastSelectedTab))
+                {
+                    CommitInfoTabControl.SelectedTab = _lastSelectedTab;
+                }
                 CommitInfoTabControl.ResumeLayout(true);
                 RevisionInfo.Parent = CommitInfoTabControl.Controls[0];
                 RevisionsSplitContainer.Panel2Collapsed = true;
@@ -1116,9 +1125,15 @@ namespace GitUI.CommandsDialogs
                 if (!revisions.Any() || GitRevision.IsArtificial(revisions[0].Guid))
                 {
                     //Artificial commits cannot show tree (ls-tree) and has no commit info 
+                    CommitInfoTabControl.SuspendLayout();
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                     CommitInfoTabControl.RemoveIfExists(TreeTabPage);
                     CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
+                    if (_lastSelectedTab == null || !CommitInfoTabControl.TabPages.Contains(_lastSelectedTab))
+                    {
+                        CommitInfoTabControl.SelectedTab = DiffTabPage;
+                    }
+                    CommitInfoTabControl.ResumeLayout();
 
                     if (_showRevisionInfoNextToRevisionGrid)
                     {
@@ -1128,6 +1143,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
+                    CommitInfoTabControl.SuspendLayout();
                     int i = 0;
                     if (!_showRevisionInfoNextToRevisionGrid)
                     {
@@ -1143,6 +1159,11 @@ namespace GitUI.CommandsDialogs
                     {
                         CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
                     }
+                    if (_lastSelectedTab != null && CommitInfoTabControl.TabPages.Contains(_lastSelectedTab))
+                    {
+                        CommitInfoTabControl.SelectedTab = _lastSelectedTab;
+                    }
+                    CommitInfoTabControl.ResumeLayout();
 
                     if (_showRevisionInfoNextToRevisionGrid)
                     {
@@ -1481,6 +1502,7 @@ namespace GitUI.CommandsDialogs
 
         private void CommitInfoTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
+            _lastSelectedTab = CommitInfoTabControl.SelectedTab;
             FillFileTree();
             FillDiff();
             FillCommitInfo();
