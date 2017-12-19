@@ -125,24 +125,22 @@ namespace GitCommands.Settings
         {
             try
             {
-                var tmpFile = SettingsFilePath + ".tmp";
-
                 if (!LastModificationDate.HasValue || (LastFileRead.HasValue
                         && LastModificationDate.Value < LastFileRead.Value))
                 {
                     return;
                 }
 
+                var tmpFile = SettingsFilePath + ".tmp";
                 WriteSettings(tmpFile);
 
                 if (File.Exists(SettingsFilePath))
                 {
-                    File.Replace(tmpFile, SettingsFilePath, SettingsFilePath + ".backup", true);
+                    var backupName = SettingsFilePath + ".backup";
+                    File.Copy(SettingsFilePath, backupName, true);
                 }
-                else
-                {
-                    File.Move(tmpFile, SettingsFilePath);
-                }
+                File.Copy(tmpFile, SettingsFilePath, true);
+                File.Delete(tmpFile);
 
                 LastFileModificationDate = GetLastFileModificationUTC();
                 LastFileRead = DateTime.UtcNow;
