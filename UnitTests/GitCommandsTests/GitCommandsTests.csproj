@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommitDataManagerTest.cs" />
-    <Compile Include="CommitInformationTest.cs" />
+    <Compile Include="CommitInformationProviderTests.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
     <Compile Include="EnvironmentPathsProviderTests.cs" />

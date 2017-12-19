@@ -5,8 +5,11 @@ using JetBrains.Annotations;
 
 namespace ResourceManager
 {
-    static public class LocalizationHelpers
+    public static class LocalizationHelpers
     {
+        private static readonly ICommitDataHeaderRenderer CommitDataHeaderRenderer = new CommitDataHeaderRenderer(null);
+
+
         private static DateTime RoundDateTime(DateTime dateTime)
         {
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
@@ -84,7 +87,7 @@ namespace ResourceManager
                     return sb.ToString();
                 }
 
-                string header = data.GetHeaderPlain();
+                string header = CommitDataHeaderRenderer.RenderPlain(data);
                 string body = "\n" + data.Body.Trim();
                 sb.AppendLine(header);
                 sb.Append(body);

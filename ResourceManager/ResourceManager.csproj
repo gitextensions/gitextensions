@@ -72,8 +72,9 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CommitDataExt.cs" />
+    <Compile Include="CommitDataHeaderRenderer.cs" />
     <Compile Include="CommitInformation.cs" />
+    <Compile Include="CommitInformationProvider.cs" />
     <Compile Include="GitExtensionsFormBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,6 +141,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\FxCop.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
